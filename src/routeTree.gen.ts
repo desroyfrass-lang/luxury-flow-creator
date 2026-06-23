@@ -10,14 +10,17 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as MusicMediaRouteImport } from './routes/music-media'
+import { Route as LookbookRouteImport } from './routes/lookbook'
 import { Route as FrassKicksRouteImport } from './routes/frass-kicks'
 import { Route as FrassDripRouteImport } from './routes/frass-drip'
 import { Route as BareDripRouteImport } from './routes/bare-drip'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as LookbookIndexRouteImport } from './routes/lookbook.index'
 import { Route as FrassKicksIndexRouteImport } from './routes/frass-kicks.index'
 import { Route as FrassDripIndexRouteImport } from './routes/frass-drip.index'
 import { Route as BareDripIndexRouteImport } from './routes/bare-drip.index'
 import { Route as ProductHandleRouteImport } from './routes/product.$handle'
+import { Route as LookbookStoryRouteImport } from './routes/lookbook.$story'
 import { Route as FrassKicksWomenRouteImport } from './routes/frass-kicks.women'
 import { Route as FrassKicksSideKicksRouteImport } from './routes/frass-kicks.side-kicks'
 import { Route as FrassKicksMenRouteImport } from './routes/frass-kicks.men'
@@ -47,6 +50,11 @@ const MusicMediaRoute = MusicMediaRouteImport.update({
   path: '/music-media',
   getParentRoute: () => rootRouteImport,
 } as any)
+const LookbookRoute = LookbookRouteImport.update({
+  id: '/lookbook',
+  path: '/lookbook',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const FrassKicksRoute = FrassKicksRouteImport.update({
   id: '/frass-kicks',
   path: '/frass-kicks',
@@ -67,6 +75,11 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const LookbookIndexRoute = LookbookIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => LookbookRoute,
+} as any)
 const FrassKicksIndexRoute = FrassKicksIndexRouteImport.update({
   id: '/',
   path: '/',
@@ -86,6 +99,11 @@ const ProductHandleRoute = ProductHandleRouteImport.update({
   id: '/product/$handle',
   path: '/product/$handle',
   getParentRoute: () => rootRouteImport,
+} as any)
+const LookbookStoryRoute = LookbookStoryRouteImport.update({
+  id: '/$story',
+  path: '/$story',
+  getParentRoute: () => LookbookRoute,
 } as any)
 const FrassKicksWomenRoute = FrassKicksWomenRouteImport.update({
   id: '/women',
@@ -212,6 +230,7 @@ export interface FileRoutesByFullPath {
   '/bare-drip': typeof BareDripRouteWithChildren
   '/frass-drip': typeof FrassDripRouteWithChildren
   '/frass-kicks': typeof FrassKicksRouteWithChildren
+  '/lookbook': typeof LookbookRouteWithChildren
   '/music-media': typeof MusicMediaRoute
   '/bare-drip/men': typeof BareDripMenRouteWithChildren
   '/bare-drip/women': typeof BareDripWomenRouteWithChildren
@@ -222,10 +241,12 @@ export interface FileRoutesByFullPath {
   '/frass-kicks/men': typeof FrassKicksMenRoute
   '/frass-kicks/side-kicks': typeof FrassKicksSideKicksRouteWithChildren
   '/frass-kicks/women': typeof FrassKicksWomenRoute
+  '/lookbook/$story': typeof LookbookStoryRoute
   '/product/$handle': typeof ProductHandleRoute
   '/bare-drip/': typeof BareDripIndexRoute
   '/frass-drip/': typeof FrassDripIndexRoute
   '/frass-kicks/': typeof FrassKicksIndexRoute
+  '/lookbook/': typeof LookbookIndexRoute
   '/bare-drip/men/$category': typeof BareDripMenCategoryRoute
   '/bare-drip/women/$category': typeof BareDripWomenCategoryRoute
   '/frass-drip/men/$category': typeof FrassDripMenCategoryRoute
@@ -247,10 +268,12 @@ export interface FileRoutesByTo {
   '/collection/$handle': typeof CollectionHandleRoute
   '/frass-kicks/men': typeof FrassKicksMenRoute
   '/frass-kicks/women': typeof FrassKicksWomenRoute
+  '/lookbook/$story': typeof LookbookStoryRoute
   '/product/$handle': typeof ProductHandleRoute
   '/bare-drip': typeof BareDripIndexRoute
   '/frass-drip': typeof FrassDripIndexRoute
   '/frass-kicks': typeof FrassKicksIndexRoute
+  '/lookbook': typeof LookbookIndexRoute
   '/bare-drip/men/$category': typeof BareDripMenCategoryRoute
   '/bare-drip/women/$category': typeof BareDripWomenCategoryRoute
   '/frass-drip/men/$category': typeof FrassDripMenCategoryRoute
@@ -272,6 +295,7 @@ export interface FileRoutesById {
   '/bare-drip': typeof BareDripRouteWithChildren
   '/frass-drip': typeof FrassDripRouteWithChildren
   '/frass-kicks': typeof FrassKicksRouteWithChildren
+  '/lookbook': typeof LookbookRouteWithChildren
   '/music-media': typeof MusicMediaRoute
   '/bare-drip/men': typeof BareDripMenRouteWithChildren
   '/bare-drip/women': typeof BareDripWomenRouteWithChildren
@@ -282,10 +306,12 @@ export interface FileRoutesById {
   '/frass-kicks/men': typeof FrassKicksMenRoute
   '/frass-kicks/side-kicks': typeof FrassKicksSideKicksRouteWithChildren
   '/frass-kicks/women': typeof FrassKicksWomenRoute
+  '/lookbook/$story': typeof LookbookStoryRoute
   '/product/$handle': typeof ProductHandleRoute
   '/bare-drip/': typeof BareDripIndexRoute
   '/frass-drip/': typeof FrassDripIndexRoute
   '/frass-kicks/': typeof FrassKicksIndexRoute
+  '/lookbook/': typeof LookbookIndexRoute
   '/bare-drip/men/$category': typeof BareDripMenCategoryRoute
   '/bare-drip/women/$category': typeof BareDripWomenCategoryRoute
   '/frass-drip/men/$category': typeof FrassDripMenCategoryRoute
@@ -308,6 +334,7 @@ export interface FileRouteTypes {
     | '/bare-drip'
     | '/frass-drip'
     | '/frass-kicks'
+    | '/lookbook'
     | '/music-media'
     | '/bare-drip/men'
     | '/bare-drip/women'
@@ -318,10 +345,12 @@ export interface FileRouteTypes {
     | '/frass-kicks/men'
     | '/frass-kicks/side-kicks'
     | '/frass-kicks/women'
+    | '/lookbook/$story'
     | '/product/$handle'
     | '/bare-drip/'
     | '/frass-drip/'
     | '/frass-kicks/'
+    | '/lookbook/'
     | '/bare-drip/men/$category'
     | '/bare-drip/women/$category'
     | '/frass-drip/men/$category'
@@ -343,10 +372,12 @@ export interface FileRouteTypes {
     | '/collection/$handle'
     | '/frass-kicks/men'
     | '/frass-kicks/women'
+    | '/lookbook/$story'
     | '/product/$handle'
     | '/bare-drip'
     | '/frass-drip'
     | '/frass-kicks'
+    | '/lookbook'
     | '/bare-drip/men/$category'
     | '/bare-drip/women/$category'
     | '/frass-drip/men/$category'
@@ -367,6 +398,7 @@ export interface FileRouteTypes {
     | '/bare-drip'
     | '/frass-drip'
     | '/frass-kicks'
+    | '/lookbook'
     | '/music-media'
     | '/bare-drip/men'
     | '/bare-drip/women'
@@ -377,10 +409,12 @@ export interface FileRouteTypes {
     | '/frass-kicks/men'
     | '/frass-kicks/side-kicks'
     | '/frass-kicks/women'
+    | '/lookbook/$story'
     | '/product/$handle'
     | '/bare-drip/'
     | '/frass-drip/'
     | '/frass-kicks/'
+    | '/lookbook/'
     | '/bare-drip/men/$category'
     | '/bare-drip/women/$category'
     | '/frass-drip/men/$category'
@@ -402,6 +436,7 @@ export interface RootRouteChildren {
   BareDripRoute: typeof BareDripRouteWithChildren
   FrassDripRoute: typeof FrassDripRouteWithChildren
   FrassKicksRoute: typeof FrassKicksRouteWithChildren
+  LookbookRoute: typeof LookbookRouteWithChildren
   MusicMediaRoute: typeof MusicMediaRoute
   CollectionHandleRoute: typeof CollectionHandleRoute
   ProductHandleRoute: typeof ProductHandleRoute
@@ -414,6 +449,13 @@ declare module '@tanstack/react-router' {
       path: '/music-media'
       fullPath: '/music-media'
       preLoaderRoute: typeof MusicMediaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/lookbook': {
+      id: '/lookbook'
+      path: '/lookbook'
+      fullPath: '/lookbook'
+      preLoaderRoute: typeof LookbookRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/frass-kicks': {
@@ -444,6 +486,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/lookbook/': {
+      id: '/lookbook/'
+      path: '/'
+      fullPath: '/lookbook/'
+      preLoaderRoute: typeof LookbookIndexRouteImport
+      parentRoute: typeof LookbookRoute
+    }
     '/frass-kicks/': {
       id: '/frass-kicks/'
       path: '/'
@@ -471,6 +520,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/product/$handle'
       preLoaderRoute: typeof ProductHandleRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/lookbook/$story': {
+      id: '/lookbook/$story'
+      path: '/$story'
+      fullPath: '/lookbook/$story'
+      preLoaderRoute: typeof LookbookStoryRouteImport
+      parentRoute: typeof LookbookRoute
     }
     '/frass-kicks/women': {
       id: '/frass-kicks/women'
@@ -774,11 +830,26 @@ const FrassKicksRouteWithChildren = FrassKicksRoute._addFileChildren(
   FrassKicksRouteChildren,
 )
 
+interface LookbookRouteChildren {
+  LookbookStoryRoute: typeof LookbookStoryRoute
+  LookbookIndexRoute: typeof LookbookIndexRoute
+}
+
+const LookbookRouteChildren: LookbookRouteChildren = {
+  LookbookStoryRoute: LookbookStoryRoute,
+  LookbookIndexRoute: LookbookIndexRoute,
+}
+
+const LookbookRouteWithChildren = LookbookRoute._addFileChildren(
+  LookbookRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   BareDripRoute: BareDripRouteWithChildren,
   FrassDripRoute: FrassDripRouteWithChildren,
   FrassKicksRoute: FrassKicksRouteWithChildren,
+  LookbookRoute: LookbookRouteWithChildren,
   MusicMediaRoute: MusicMediaRoute,
   CollectionHandleRoute: CollectionHandleRoute,
   ProductHandleRoute: ProductHandleRoute,
