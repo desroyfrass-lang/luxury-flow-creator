@@ -1,6 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useMemo, useRef, useState } from "react";
 import { SiteShell } from "@/components/site-shell";
-import { Play, Headphones, Radio, Mic2 } from "lucide-react";
+import { Play, Pause, Headphones, Radio, Mic2 } from "lucide-react";
+import { useMediaItems, type MediaItem } from "@/hooks/use-media-items";
 
 export const Route = createFileRoute("/music-media")({
   head: () => ({
@@ -14,20 +16,28 @@ export const Route = createFileRoute("/music-media")({
   component: MusicMedia,
 });
 
-const TRACKS = [
-  { title: "Showroom Anthem", artist: "Frass Hill", length: "3:42", tag: "New" },
-  { title: "Chrome Block", artist: "Frass Hill x DJ Lane", length: "4:08", tag: "Mix" },
-  { title: "Original Street Luxury", artist: "Frass Hill", length: "2:56", tag: "Single" },
-  { title: "Bare Drip Riddim", artist: "Frass Hill", length: "3:24", tag: "Visual" },
-];
+function isEmbed(url: string | null | undefined) {
+  if (!url) return false;
+  return /youtube\.com|youtu\.be|vimeo\.com|spotify\.com|soundcloud\.com/.test(url);
+}
 
-const MEDIA = [
-  { title: "Behind the lookbook", kind: "Film", length: "06:12" },
-  { title: "Late night in the showroom", kind: "Mix", length: "42:00" },
-  { title: "Frass Hill on the block", kind: "Interview", length: "11:24" },
-];
+function toEmbedUrl(url: string) {
+  const yt = url.match(/(?:youtube\.com\/(?:watch\?v=|embed\/)|youtu\.be\/)([\w-]+)/);
+  if (yt) return `https://www.youtube.com/embed/${yt[1]}`;
+  const vimeo = url.match(/vimeo\.com\/(\d+)/);
+  if (vimeo) return `https://player.vimeo.com/video/${vimeo[1]}`;
+  const spotify = url.match(/open\.spotify\.com\/(track|album|playlist|episode)\/([\w]+)/);
+  if (spotify) return `https://open.spotify.com/embed/${spotify[1]}/${spotify[2]}`;
+  if (/soundcloud\.com/.test(url))
+    return `https://w.soundcloud.com/player/?url=${encodeURIComponent(url)}&color=%23d4af37`;
+  return url;
+}
 
 function MusicMedia() {
+  const { data: items } = useMediaItems();
+  const tracks = useMemo(() => (items ?? []).filter((i) => i.kind === "track"), [items]);
+  const videos = useMemo(() => (items ?? []).filter((i) => i.kind === "video"), [items]);
+
   return (
     <SiteShell>
       <section className="mx-auto max-w-[1600px] px-6 lg:px-12 pt-16">
@@ -56,20 +66,12 @@ function MusicMedia() {
         </div>
 
         <div className="rounded-2xl border border-border/60 bg-background/60 backdrop-blur divide-y divide-border/60 overflow-hidden">
-          {TRACKS.map((t, i) => (
-            <div key={t.title} className="group flex items-center gap-5 px-5 md:px-8 py-5 hover:bg-secondary/40 transition">
-              <button className="h-11 w-11 inline-flex items-center justify-center rounded-full border border-border group-hover:border-[color:var(--gold)] group-hover:text-[color:var(--gold)] transition">
-                <Play className="h-4 w-4" />
-              </button>
-              <div className="w-8 text-xs tabular-nums text-muted-foreground">{String(i + 1).padStart(2, "0")}</div>
-              <div className="flex-1 min-w-0">
-                <div className="font-display text-xl md:text-2xl truncate">{t.title}</div>
-                <div className="text-xs uppercase tracking-[0.25em] text-muted-foreground mt-1">{t.artist}</div>
-              </div>
-              <span className="hidden md:inline-flex text-[10px] uppercase tracking-[0.3em] text-[color:var(--gold)] border border-[color:var(--gold)]/40 px-2 py-1 rounded">{t.tag}</span>
-              <div className="text-sm tabular-nums text-muted-foreground">{t.length}</div>
-            </div>
+          {tracks.map((t, i) => (
+            <TrackRow key={t.id} item={t} index={i} />
           ))}
+          {tracks.length === 0 && (
+            <div className="p-10 text-center text-sm text-muted-foreground">No tracks yet.</div>
+          )}
         </div>
       </section>
 
@@ -86,18 +88,14 @@ function MusicMedia() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {MEDIA.map((m) => (
-            <div key={m.title} className="group relative overflow-hidden rounded-2xl border border-border/60 bg-secondary/40 aspect-[4/5]">
-              <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-background/90" />
-              <div className="absolute inset-0 flex flex-col justify-end p-6">
-                <div className="text-[10px] uppercase tracking-[0.3em] text-[color:var(--gold)]">{m.kind} · {m.length}</div>
-                <div className="mt-2 font-display text-2xl md:text-3xl leading-tight">{m.title}</div>
-              </div>
-              <button className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-16 w-16 rounded-full border border-[color:var(--gold)] bg-background/40 backdrop-blur inline-flex items-center justify-center group-hover:scale-110 transition">
-                <Play className="h-5 w-5 text-[color:var(--gold)]" />
-              </button>
-            </div>
+          {videos.map((m) => (
+            <VideoCard key={m.id} item={m} />
           ))}
+          {videos.length === 0 && (
+            <div className="col-span-full rounded-2xl border border-dashed border-border/60 p-10 text-center text-sm text-muted-foreground">
+              No visuals yet.
+            </div>
+          )}
         </div>
       </section>
 
@@ -114,5 +112,130 @@ function MusicMedia() {
         </div>
       </section>
     </SiteShell>
+  );
+}
+
+function TrackRow({ item, index }: { item: MediaItem; index: number }) {
+  const audioRef = useRef<HTMLAudioElement>(null);
+  const [playing, setPlaying] = useState(false);
+  const [showEmbed, setShowEmbed] = useState(false);
+
+  const toggle = () => {
+    if (!item.source_url) return;
+    if (isEmbed(item.source_url)) {
+      setShowEmbed((s) => !s);
+      return;
+    }
+    const a = audioRef.current;
+    if (!a) return;
+    if (a.paused) {
+      a.play();
+      setPlaying(true);
+    } else {
+      a.pause();
+      setPlaying(false);
+    }
+  };
+
+  return (
+    <div className="group">
+      <div className="flex items-center gap-5 px-5 md:px-8 py-5 hover:bg-secondary/40 transition">
+        <button
+          onClick={toggle}
+          disabled={!item.source_url}
+          className="h-11 w-11 inline-flex items-center justify-center rounded-full border border-border group-hover:border-[color:var(--gold)] group-hover:text-[color:var(--gold)] transition disabled:opacity-40 disabled:cursor-not-allowed"
+          aria-label={playing ? "Pause" : "Play"}
+        >
+          {playing ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4" />}
+        </button>
+        <div className="w-8 text-xs tabular-nums text-muted-foreground">{String(index + 1).padStart(2, "0")}</div>
+        <div className="flex-1 min-w-0">
+          <div className="font-display text-xl md:text-2xl truncate">{item.title}</div>
+          {item.subtitle && (
+            <div className="text-xs uppercase tracking-[0.25em] text-muted-foreground mt-1">{item.subtitle}</div>
+          )}
+        </div>
+        {item.tag && (
+          <span className="hidden md:inline-flex text-[10px] uppercase tracking-[0.3em] text-[color:var(--gold)] border border-[color:var(--gold)]/40 px-2 py-1 rounded">
+            {item.tag}
+          </span>
+        )}
+        {item.length && <div className="text-sm tabular-nums text-muted-foreground">{item.length}</div>}
+      </div>
+
+      {item.source_url && !isEmbed(item.source_url) && (
+        <audio
+          ref={audioRef}
+          src={item.source_url}
+          onEnded={() => setPlaying(false)}
+          onPause={() => setPlaying(false)}
+          onPlay={() => setPlaying(true)}
+          preload="none"
+          className="hidden"
+        />
+      )}
+      {showEmbed && item.source_url && isEmbed(item.source_url) && (
+        <div className="px-5 md:px-8 pb-5">
+          <iframe
+            src={toEmbedUrl(item.source_url)}
+            className="w-full rounded-lg border border-border/60"
+            style={{ height: /spotify/.test(item.source_url) ? 152 : 166 }}
+            allow="autoplay; clipboard-write; encrypted-media; picture-in-picture"
+            loading="lazy"
+          />
+        </div>
+      )}
+    </div>
+  );
+}
+
+function VideoCard({ item }: { item: MediaItem }) {
+  const [open, setOpen] = useState(false);
+  const hasSource = Boolean(item.source_url);
+  const embed = item.source_url && isEmbed(item.source_url);
+
+  return (
+    <div
+      className="group relative overflow-hidden rounded-2xl border border-border/60 bg-secondary/40 aspect-[4/5]"
+      style={
+        item.poster_url
+          ? { backgroundImage: `url(${item.poster_url})`, backgroundSize: "cover", backgroundPosition: "center" }
+          : undefined
+      }
+    >
+      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-background/90" />
+
+      {open && hasSource && embed && (
+        <iframe
+          src={toEmbedUrl(item.source_url!)}
+          className="absolute inset-0 h-full w-full"
+          allow="autoplay; encrypted-media; picture-in-picture; fullscreen"
+          allowFullScreen
+          loading="lazy"
+        />
+      )}
+      {open && hasSource && !embed && (
+        <video src={item.source_url!} className="absolute inset-0 h-full w-full object-cover" controls autoPlay />
+      )}
+
+      {!open && (
+        <>
+          <div className="absolute inset-0 flex flex-col justify-end p-6">
+            <div className="text-[10px] uppercase tracking-[0.3em] text-[color:var(--gold)]">
+              {item.tag ?? "Video"}{item.length ? ` · ${item.length}` : ""}
+            </div>
+            <div className="mt-2 font-display text-2xl md:text-3xl leading-tight">{item.title}</div>
+          </div>
+          <button
+            onClick={() => hasSource && setOpen(true)}
+            disabled={!hasSource}
+            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-16 w-16 rounded-full border border-[color:var(--gold)] bg-background/40 backdrop-blur inline-flex items-center justify-center group-hover:scale-110 transition disabled:opacity-40"
+            aria-label="Play"
+          >
+            <Play className="h-5 w-5 text-[color:var(--gold)]" />
+          </button>
+        </>
+      )}
+    </div>
   );
 }

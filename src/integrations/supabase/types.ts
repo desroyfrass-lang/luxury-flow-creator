@@ -41,6 +41,48 @@ export type Database = {
         }
         Relationships: []
       }
+      media_items: {
+        Row: {
+          created_at: string
+          id: string
+          kind: string
+          length: string | null
+          position: number
+          poster_url: string | null
+          source_url: string | null
+          subtitle: string | null
+          tag: string | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          kind: string
+          length?: string | null
+          position?: number
+          poster_url?: string | null
+          source_url?: string | null
+          subtitle?: string | null
+          tag?: string | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          kind?: string
+          length?: string | null
+          position?: number
+          poster_url?: string | null
+          source_url?: string | null
+          subtitle?: string | null
+          tag?: string | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       product_image_overrides: {
         Row: {
           alt: string | null
