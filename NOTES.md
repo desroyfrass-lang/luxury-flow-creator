@@ -73,3 +73,12 @@ Required tags per product:
 - Built site-wide text CMS (`site_text` table, `useSiteText` hook, `/admin/text` editor)
 - Wired every visible piece of homepage copy + nav labels + footer copy through the CMS
 - Added cinematic "Frass Hill Presents" title-card above the navigation on the homepage
+
+## Music & Media CMS (added)
+- Table: `media_items` (kind=track|video, title, subtitle/artist, tag, length, source_url, poster_url, position).
+- Storage bucket: `site-media` (private, signed URLs).
+- Admin page: `/admin/media` — add/edit/delete tracks & visuals. Each row supports BOTH a URL paste AND a file upload for source + poster.
+- URL types supported on the public page:
+  - Tracks: direct audio file URL (MP3/WAV) → inline player; or Spotify / SoundCloud / YouTube link → embedded player.
+  - Videos: direct video file URL (MP4) → inline `<video>`; or YouTube / Vimeo link → embedded iframe.
+- For Shopify duplication: replicate as a metaobject "Media Item" with the same fields, or two separate metaobjects (Track, Visual).
