@@ -102,12 +102,12 @@ function Header() {
         </div>
       </div>
       <div className="relative md:hidden border-t border-border/60 bg-background/60 backdrop-blur">
-        <div className="flex justify-around px-2 py-2">
+        <div className="flex overflow-x-auto no-scrollbar px-2 py-2 gap-1">
           {NAV.map((n) => (
             <Link
               key={n.to}
               to={n.to}
-              className="text-[10px] uppercase tracking-[0.2em] py-1 px-2 text-muted-foreground"
+              className="shrink-0 whitespace-nowrap text-[10px] uppercase tracking-[0.2em] py-1 px-3 text-muted-foreground"
               activeProps={{ className: "text-foreground" }}
             >
               {n.label}
