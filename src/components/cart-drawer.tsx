@@ -8,7 +8,8 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { ShoppingBag, Minus, Plus, Trash2, ExternalLink, Loader2 } from "lucide-react";
+import { ShoppingBag, Minus, Plus, Trash2, ExternalLink, Loader2, Sparkles } from "lucide-react";
+import { Link } from "@tanstack/react-router";
 import { useCartStore } from "@/lib/cart-store";
 
 export function CartDrawer() {
@@ -128,6 +129,13 @@ export function CartDrawer() {
                     {currency} {totalPrice.toFixed(2)}
                   </span>
                 </div>
+                <Link
+                  to="/try-on"
+                  onClick={() => setOpen(false)}
+                  className="w-full h-12 inline-flex items-center justify-center gap-2 rounded-full border border-[color:var(--gold)] text-[color:var(--gold)] uppercase tracking-[0.2em] text-xs font-medium transition hover:bg-[color:var(--gold)] hover:text-[color:var(--ink)]"
+                >
+                  <Sparkles className="h-4 w-4" /> Try it on
+                </Link>
                 <button
                   onClick={checkout}
                   disabled={isLoading || isSyncing}
@@ -142,7 +150,7 @@ export function CartDrawer() {
                   )}
                 </button>
                 <p className="text-[10px] text-center text-muted-foreground uppercase tracking-[0.2em]">
-                  Secure Shopify Checkout
+                  Secure Shopify Checkout · AI Try-On preview
                 </p>
               </div>
             </>
