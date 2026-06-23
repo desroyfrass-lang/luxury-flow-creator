@@ -6,27 +6,13 @@ import cardWomen from "@/assets/card-women.jpg";
 import cardBare from "@/assets/card-bare.jpg";
 import cardDrip from "@/assets/card-drip.jpg";
 
-const CARDS = [
-  ["casual-drip", "Casual Drip"],
-  ["street-drip", "Street Drip"],
-  ["vacay-drip", "Vacay Drip"],
-  ["work-drip", "Work Drip"],
-  ["resort-dresses", "Resort Dresses"],
-  ["maxi-dresses", "Maxi Dresses"],
-  ["vacation-sets", "Vacation Sets"],
-  ["vacation-fits", "Vacation Fits"],
-  ["cover-ups", "Cover Ups"],
-  ["beachwear", "Beachwear"],
-  ["resort-essentials", "Resort Essentials"],
-  ["rompers", "Rompers"],
-  ["denim", "Denim"],
-  ["tops", "Tops"],
-  ["bottoms", "Bottoms"],
-  ["sports-drip-training-essentials", "Sports — Training Essentials"],
-  ["sports-drip-activewear-sets", "Sports — Activewear Sets"],
-  ["sports-drip-running-performance", "Sports — Running & Performance"],
-  ["sports-drip-studio-yoga", "Sports — Studio & Yoga"],
-  ["sports-drip-active-shapewear", "Sports — Active Shapewear"],
+const PARENTS = [
+  ["work-drip", "Work Drip", "Blouses, blazers & professional sets."],
+  ["party-drip", "Party Drip", "Dresses, clubwear & sequin looks."],
+  ["casual-drip", "Casual Drip", "Sweats, denim, crop tops & basics."],
+  ["street-drip", "Street Drip", "Jackets, cargo & tracksuits."],
+  ["vacay-drip", "Vacay Drip", "Beachwear, resort fits & cover-ups."],
+  ["sports-drip", "Sports Drip", "Training, studio & active shapewear."],
 ] as const;
 
 const IMAGES = [cardWomen, cardBare, cardDrip];
@@ -35,7 +21,7 @@ export const Route = createFileRoute("/frass-drip/women")({
   head: () => ({
     meta: [
       { title: "Women's Frass Drip" },
-      { name: "description", content: "Women's fashion — resort, vacation, denim, tops and more." },
+      { name: "description", content: "Women's fashion across work, party, casual, street, vacay and sports." },
       { property: "og:image", content: cardWomen },
     ],
   }),
@@ -52,15 +38,16 @@ export const Route = createFileRoute("/frass-drip/women")({
       />
       <section className="mx-auto max-w-[1600px] px-6 lg:px-12">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
-          {CARDS.map(([slug, title], i) => (
+          {PARENTS.map(([slug, title, description], i) => (
             <CollectionCard
               key={slug}
-              to="/collection/$handle"
-              params={{ handle: `frass-drip-women-${slug}` }}
+              to="/frass-drip/women/$category"
+              params={{ category: slug }}
               image={IMAGES[i % IMAGES.length]}
               eyebrow="Women"
               title={title}
-              size="md"
+              description={description}
+              size="lg"
             />
           ))}
         </div>
