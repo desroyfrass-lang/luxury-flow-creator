@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { SiteShell } from "@/components/site-shell";
 import { CollectionCard } from "@/components/collection-card";
+import { FeaturedDrop } from "@/components/featured-drop";
 import { ProductGrid } from "@/components/product-grid";
 import heroImg from "@/assets/hero-frass.jpg";
 import cardKicks from "@/assets/card-kicks.jpg";
@@ -103,6 +104,8 @@ function Home() {
           </div>
         </div>
       </section>
+
+      <FeaturedDrop />
 
       <section className="mx-auto max-w-[1600px] px-6 lg:px-12 mt-20">
         <div className="flex items-end justify-between gap-6 mb-10">
