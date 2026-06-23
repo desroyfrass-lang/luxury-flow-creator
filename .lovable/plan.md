@@ -1,64 +1,65 @@
-# Admin Image Manager
+## Frass Try-On — Virtual Fitting Room
 
-A protected `/admin/images` page where you log in once and swap any image on the site without going through chat. Built on Lovable Cloud (auth + storage + a small mapping table).
+A "Try It On" mode tied to the cart. Anything in the cart can be tried on a photo of the customer using AI image generation. No camera AR — that needs native apps and a much heavier build. This is image-based and works on every device.
 
-## What you get
+### User flow
 
-- A single owner login at `/auth` (email + password — your email, password you set on first sign-in).
-- `/admin/images` — one page, grouped sections, every slot shows the current image with a "Replace" button. Upload → preview updates → live site updates within seconds (no rebuild).
-- A "Reset to default" button per slot to fall back to the original art shipped in code.
-- All images served from Lovable Cloud Storage (public bucket, CDN-cached).
+1. Customer adds products to cart as normal.
+2. In the cart drawer, a new **"Try it on"** button opens a full-screen Fitting Room.
+3. First time: customer uploads or snaps a full-body photo (front-facing, plain background works best). Photo is saved to their account so they don't have to redo it.
+4. Fitting Room shows their photo on the left, cart items on the right.
+5. They pick one or more items → tap **Generate look** → AI composites the garments onto their photo.
+6. Result shows side-by-side with the original. They can save the look, share it, swap items, or go straight to checkout.
 
-## Slots covered
+### What gets built
 
-**Brand**
-- Homepage hero
-- Header/footer logo (full + symbol)
+**Frontend**
+- `/try-on` route (auth-required, lives under `_authenticated/`).
+- "Try it on" entry point inside the cart drawer.
+- Photo capture/upload component (webcam + file upload, with guidelines: full body, good light, plain background).
+- Item picker pulling from the live cart.
+- Generated-look gallery with save / share / delete.
 
-**Division cards** (homepage "Three Worlds")
-- Frass Kicks, Frass Drip, Bare Drip
-- Men card, Women card (reused inside sub-pages)
+**Backend (Lovable Cloud)**
+- `customer_photos` table — one or more reference photos per signed-in customer.
+- `tryon_looks` table — each generated image with the cart items used, prompt, and a link to the source photo.
+- `tryon-photos` private storage bucket for both source photos and generated looks (signed URLs).
+- `generateTryOn` server function — gathers the source photo + selected cart item images (already fetched from Shopify), calls the Lovable AI Gateway image-edit model (Gemini 2.5 Flash Image / "nano-banana"), saves the result.
 
-**Lookbook covers** (7)
-- Work, Party, Street, Casual, Vacay, Sports, Bare
+**AI**
+- Lovable AI Gateway, image edit model. No external API key required.
+- Prompt template: "Compose a realistic photo of the person in image 1 wearing the garments shown in the following images. Keep their face, body shape, pose, and the background unchanged." Tunable per garment category (kicks vs full fit).
 
-**Lookbook story spreads**
-- Each volume has 4–5 editorial images — managed as a gallery per story (add / remove / reorder / replace).
+### What it does NOT do (on purpose, for scope)
 
-**Product imagery overrides**
-- Per Shopify product, set up to 4 override images that replace the Shopify gallery on the product page and collection cards.
-- Searchable product picker inside the admin.
+- No live AR / camera overlay — that's a native-app project.
+- No size recommendation engine. We can add a size guide later.
+- No video, no 360°. Single still image per look.
 
-## How it works (technical)
+### Honest limitations
 
-```text
-Lovable Cloud
-├─ Auth: email/password, single allowed admin email seeded via user_roles
-├─ Storage bucket: site-images (public read, authenticated write)
-└─ Tables:
-   ├─ user_roles            (id, user_id, role)  ← admin gate
-   ├─ site_images           (slot_key PK, url, alt, updated_at)        ← single-image slots
-   ├─ lookbook_story_images (id, story_slug, position, url, alt)       ← per-story galleries
-   └─ product_image_overrides (id, product_id, position, url, alt)     ← Shopify per-product overrides
-```
+AI try-on is a preview, not a mirror. Results are best for tops, jackets, hoodies, and overall vibe. Shoes and tight-fit garments will sometimes warp. We'll set expectations in the UI ("AI preview — actual fit may vary"). The Lovable AI Gateway has usage limits; once exceeded, the button gracefully disables with a message.
 
-- `useSiteImage(slot, fallback)` hook reads `site_images` via TanStack Query, falls back to the default static asset when no override exists.
-- `useLookbookImages(slug, fallback)` and `useProductOverrides(productId)` for the gallery cases.
-- RLS: public SELECT on all three image tables (so the live site reads without auth). INSERT/UPDATE/DELETE restricted to `has_role(auth.uid(), 'admin')`.
-- File uploads go through a `createServerFn` that verifies admin role, uploads to storage, and writes the URL to the table in one transaction.
+### Cost / credits
 
-## Build order
+Each generated look uses one image-edit call against the Lovable AI Gateway (covered by Cloud credits, no extra setup). We can throttle to e.g. 5 looks per session and cache results so repeat views are free.
 
-1. Enable Lovable Cloud.
-2. Migration: `user_roles` (admin enum + `has_role` function), `site_images`, `lookbook_story_images`, `product_image_overrides`, RLS + grants. Seed slot keys with `null` URLs.
-3. Create `site-images` storage bucket (public).
-4. Build `/auth` (email + password) and `/admin` layout under `_authenticated/` gated by `has_role` admin check.
-5. Build `/admin/images` with three tabs: **Site**, **Lookbook**, **Products**.
-6. Add `useSiteImage` / `useLookbookImages` / `useProductOverrides` hooks.
-7. Wire hooks into: homepage hero, division cards, men/women cards, lookbook index covers, lookbook story spreads, product page gallery, collection-card thumbnails.
-8. Seed your admin role: I'll ask for your email after Cloud is enabled, then run an insert.
+### Rollout
 
-## What I need from you
+I'd ship this in two passes:
 
-- The email you want to use as the owner login.
-- (Optional) Any images you want pre-loaded now — drop them in chat and I'll upload them as the initial values so the live site reflects them immediately.
+1. **MVP (this build):** auth, photo upload, single-item try-on, save to looks.
+2. **Polish (next build):** multi-item outfits in one image, share-to-IG, "compare with original" slider, public lookbook of customer-approved looks.
+
+### Technical notes
+
+- Auth-gated route under `src/routes/_authenticated/try-on.tsx` so the photo + looks stay tied to a user.
+- New tables `customer_photos` and `tryon_looks` with RLS scoping rows to `auth.uid()`.
+- Private `tryon-photos` bucket; we hand out long-lived signed URLs the same way `site-media` already works.
+- `generateTryOn` is a `createServerFn` with `requireSupabaseAuth`; it reads the photo + Shopify image URLs, calls the AI Gateway, stores the result, returns the new look row.
+- Cart items already carry product image URLs from Shopify, so no extra fetch is needed for the garment side.
+
+### Confirm before I build
+
+1. Ship the MVP scope above? (auth required, single source photo, one generated look at a time)
+2. OK with AI try-on being a styled preview rather than a true-to-fit simulation? I'll word the UI accordingly.
