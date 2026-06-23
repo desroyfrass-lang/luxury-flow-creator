@@ -107,6 +107,13 @@ function AdminLayout() {
             >
               Text
             </Link>
+            <Link
+              to="/admin/media"
+              activeProps={{ className: "text-[color:var(--gold)]" }}
+              className="text-muted-foreground hover:text-foreground"
+            >
+              Music & Media
+            </Link>
             <Link to="/" className="text-muted-foreground hover:text-foreground">
               View site
             </Link>
