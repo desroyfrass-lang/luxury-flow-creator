@@ -4,16 +4,17 @@ import { CartDrawer } from "./cart-drawer";
 import { LuxuryBackground } from "./luxury-background";
 import { Search, User, Instagram, Music2, Youtube, Facebook } from "lucide-react";
 import { useCartSync } from "@/hooks/use-cart-sync";
+import { useSiteText } from "@/hooks/use-site-text";
 import fullLogo from "@/assets/frass-logo-full.asset.json";
 import symbolLogo from "@/assets/frass-logo-symbol.asset.json";
 
-const NAV = [
-  { to: "/frass-kicks", label: "Frass Kicks" },
-  { to: "/frass-drip", label: "Frass Drip" },
-  { to: "/bare-drip", label: "Bare Drip" },
-  { to: "/lookbook", label: "Lookbook" },
-  { to: "/music-media", label: "Music & Media" },
-];
+const NAV_ITEMS = [
+  { to: "/frass-kicks", slot: "nav-frass-kicks", fallback: "Frass Kicks" },
+  { to: "/frass-drip", slot: "nav-frass-drip", fallback: "Frass Drip" },
+  { to: "/bare-drip", slot: "nav-bare-drip", fallback: "Bare Drip" },
+  { to: "/lookbook", slot: "nav-lookbook", fallback: "Lookbook" },
+  { to: "/music-media", slot: "nav-music-media", fallback: "Music & Media" },
+] as const;
 
 const SOCIALS = [
   { href: "https://instagram.com", label: "Instagram", Icon: Instagram },
@@ -45,23 +46,7 @@ function Header() {
       <div className="absolute inset-0 bg-background/70 backdrop-blur-xl border-b border-border/60" />
       <div className="relative mx-auto max-w-[1600px] px-6 lg:px-12 h-20 flex items-center justify-between gap-4">
         <div className="flex-1 hidden md:flex items-center gap-1">
-          {NAV.map((n) => {
-            const active = path.startsWith(n.to);
-            return (
-              <Link
-                key={n.to}
-                to={n.to}
-                className={`relative px-4 py-2 text-xs uppercase tracking-[0.25em] transition-colors ${
-                  active ? "text-foreground" : "text-muted-foreground hover:text-foreground"
-                }`}
-              >
-                {n.label}
-                {active && (
-                  <span className="absolute left-4 right-4 -bottom-0.5 h-px bg-[color:var(--gold)]" />
-                )}
-              </Link>
-            );
-          })}
+          {NAV_ITEMS.map((n) => <HeaderNavLink key={n.to} item={n} active={path.startsWith(n.to)} />)}
         </div>
         <div className="shrink-0">
           <div className="hidden md:block">
@@ -103,32 +88,55 @@ function Header() {
       </div>
       <div className="relative md:hidden border-t border-border/60 bg-background/60 backdrop-blur">
         <div className="flex overflow-x-auto no-scrollbar px-2 py-2 gap-1">
-          {NAV.map((n) => (
-            <Link
-              key={n.to}
-              to={n.to}
-              className="shrink-0 whitespace-nowrap text-[10px] uppercase tracking-[0.2em] py-1 px-3 text-muted-foreground"
-              activeProps={{ className: "text-foreground" }}
-            >
-              {n.label}
-            </Link>
-          ))}
+          {NAV_ITEMS.map((n) => <MobileNavLink key={n.to} item={n} />)}
         </div>
       </div>
     </header>
   );
 }
 
+type NavItem = (typeof NAV_ITEMS)[number];
+
+function HeaderNavLink({ item, active }: { item: NavItem; active: boolean }) {
+  const label = useSiteText(item.slot, item.fallback);
+  return (
+    <Link
+      to={item.to}
+      className={`relative px-4 py-2 text-xs uppercase tracking-[0.25em] transition-colors ${
+        active ? "text-foreground" : "text-muted-foreground hover:text-foreground"
+      }`}
+    >
+      {label}
+      {active && (
+        <span className="absolute left-4 right-4 -bottom-0.5 h-px bg-[color:var(--gold)]" />
+      )}
+    </Link>
+  );
+}
+
+function MobileNavLink({ item }: { item: NavItem }) {
+  const label = useSiteText(item.slot, item.fallback);
+  return (
+    <Link
+      to={item.to}
+      className="shrink-0 whitespace-nowrap text-[10px] uppercase tracking-[0.2em] py-1 px-3 text-muted-foreground"
+      activeProps={{ className: "text-foreground" }}
+    >
+      {label}
+    </Link>
+  );
+}
+
 function Footer() {
+  const blurb = useSiteText("footer-blurb");
+  const subscribeLabel = useSiteText("footer-newsletter-cta");
+  const tagline = useSiteText("footer-tagline");
   return (
     <footer className="relative mt-32 border-t border-border/60 bg-background/70 backdrop-blur">
       <div className="mx-auto max-w-[1600px] px-6 lg:px-12 py-20 grid grid-cols-2 md:grid-cols-5 gap-10">
         <div className="col-span-2">
           <img src={fullLogo.url} alt="Frass Kicks logo" className="h-12 w-auto object-contain" />
-          <p className="mt-4 max-w-sm text-sm text-muted-foreground">
-            A luxury fashion destination — footwear, apparel, swim &amp; intimates.
-            Made for movement. Built for confidence.
-          </p>
+          <p className="mt-4 max-w-sm text-sm text-muted-foreground">{blurb}</p>
           <form className="mt-8 flex max-w-md items-center gap-2 rounded-full border border-border bg-background p-1.5">
             <input
               type="email"
@@ -139,7 +147,7 @@ function Footer() {
               type="button"
               className="rounded-full bg-foreground px-5 py-2 text-xs uppercase tracking-[0.2em] text-background"
             >
-              Subscribe
+              {subscribeLabel}
             </button>
           </form>
         </div>
@@ -165,7 +173,7 @@ function Footer() {
           <span>© {new Date().getFullYear()} Frass Kicks</span>
           <span className="flex items-center gap-2">
             <span className="h-px w-8 bg-[color:var(--gold)]" />
-            Luxury · Confidence · Style
+            {tagline}
             <span className="h-px w-8 bg-[color:var(--gold)]" />
           </span>
         </div>
@@ -174,11 +182,20 @@ function Footer() {
   );
 }
 
-export function SiteShell({ children, background = true }: { children: ReactNode; background?: boolean }) {
+export function SiteShell({
+  children,
+  background = true,
+  preHeader,
+}: {
+  children: ReactNode;
+  background?: boolean;
+  preHeader?: ReactNode;
+}) {
   useCartSync();
   return (
     <div className="relative min-h-screen">
       {background && <LuxuryBackground />}
+      {preHeader}
       <Header />
       <main className="relative">{children}</main>
       <Footer />

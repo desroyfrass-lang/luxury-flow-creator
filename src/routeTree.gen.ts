@@ -48,6 +48,7 @@ import { Route as FrassDripWomenCategoryRouteImport } from './routes/frass-drip.
 import { Route as FrassDripMenCategoryRouteImport } from './routes/frass-drip.men.$category'
 import { Route as BareDripWomenCategoryRouteImport } from './routes/bare-drip.women.$category'
 import { Route as BareDripMenCategoryRouteImport } from './routes/bare-drip.men.$category'
+import { Route as AuthenticatedAdminTextRouteImport } from './routes/_authenticated/admin.text'
 import { Route as AuthenticatedAdminImagesRouteImport } from './routes/_authenticated/admin.images'
 
 const MusicMediaRoute = MusicMediaRouteImport.update({
@@ -248,6 +249,11 @@ const BareDripMenCategoryRoute = BareDripMenCategoryRouteImport.update({
   path: '/$category',
   getParentRoute: () => BareDripMenRoute,
 } as any)
+const AuthenticatedAdminTextRoute = AuthenticatedAdminTextRouteImport.update({
+  id: '/text',
+  path: '/text',
+  getParentRoute: () => AuthenticatedAdminRoute,
+} as any)
 const AuthenticatedAdminImagesRoute =
   AuthenticatedAdminImagesRouteImport.update({
     id: '/images',
@@ -280,6 +286,7 @@ export interface FileRoutesByFullPath {
   '/frass-kicks/': typeof FrassKicksIndexRoute
   '/lookbook/': typeof LookbookIndexRoute
   '/admin/images': typeof AuthenticatedAdminImagesRoute
+  '/admin/text': typeof AuthenticatedAdminTextRoute
   '/bare-drip/men/$category': typeof BareDripMenCategoryRoute
   '/bare-drip/women/$category': typeof BareDripWomenCategoryRoute
   '/frass-drip/men/$category': typeof FrassDripMenCategoryRoute
@@ -310,6 +317,7 @@ export interface FileRoutesByTo {
   '/frass-kicks': typeof FrassKicksIndexRoute
   '/lookbook': typeof LookbookIndexRoute
   '/admin/images': typeof AuthenticatedAdminImagesRoute
+  '/admin/text': typeof AuthenticatedAdminTextRoute
   '/bare-drip/men/$category': typeof BareDripMenCategoryRoute
   '/bare-drip/women/$category': typeof BareDripWomenCategoryRoute
   '/frass-drip/men/$category': typeof FrassDripMenCategoryRoute
@@ -353,6 +361,7 @@ export interface FileRoutesById {
   '/frass-kicks/': typeof FrassKicksIndexRoute
   '/lookbook/': typeof LookbookIndexRoute
   '/_authenticated/admin/images': typeof AuthenticatedAdminImagesRoute
+  '/_authenticated/admin/text': typeof AuthenticatedAdminTextRoute
   '/bare-drip/men/$category': typeof BareDripMenCategoryRoute
   '/bare-drip/women/$category': typeof BareDripWomenCategoryRoute
   '/frass-drip/men/$category': typeof FrassDripMenCategoryRoute
@@ -396,6 +405,7 @@ export interface FileRouteTypes {
     | '/frass-kicks/'
     | '/lookbook/'
     | '/admin/images'
+    | '/admin/text'
     | '/bare-drip/men/$category'
     | '/bare-drip/women/$category'
     | '/frass-drip/men/$category'
@@ -426,6 +436,7 @@ export interface FileRouteTypes {
     | '/frass-kicks'
     | '/lookbook'
     | '/admin/images'
+    | '/admin/text'
     | '/bare-drip/men/$category'
     | '/bare-drip/women/$category'
     | '/frass-drip/men/$category'
@@ -468,6 +479,7 @@ export interface FileRouteTypes {
     | '/frass-kicks/'
     | '/lookbook/'
     | '/_authenticated/admin/images'
+    | '/_authenticated/admin/text'
     | '/bare-drip/men/$category'
     | '/bare-drip/women/$category'
     | '/frass-drip/men/$category'
@@ -773,6 +785,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BareDripMenCategoryRouteImport
       parentRoute: typeof BareDripMenRoute
     }
+    '/_authenticated/admin/text': {
+      id: '/_authenticated/admin/text'
+      path: '/text'
+      fullPath: '/admin/text'
+      preLoaderRoute: typeof AuthenticatedAdminTextRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
     '/_authenticated/admin/images': {
       id: '/_authenticated/admin/images'
       path: '/images'
@@ -785,11 +804,13 @@ declare module '@tanstack/react-router' {
 
 interface AuthenticatedAdminRouteChildren {
   AuthenticatedAdminImagesRoute: typeof AuthenticatedAdminImagesRoute
+  AuthenticatedAdminTextRoute: typeof AuthenticatedAdminTextRoute
   AuthenticatedAdminIndexRoute: typeof AuthenticatedAdminIndexRoute
 }
 
 const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
   AuthenticatedAdminImagesRoute: AuthenticatedAdminImagesRoute,
+  AuthenticatedAdminTextRoute: AuthenticatedAdminTextRoute,
   AuthenticatedAdminIndexRoute: AuthenticatedAdminIndexRoute,
 }
 

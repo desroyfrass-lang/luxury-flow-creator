@@ -89,6 +89,24 @@ export type Database = {
         }
         Relationships: []
       }
+      site_text: {
+        Row: {
+          slot_key: string
+          updated_at: string
+          value: string
+        }
+        Insert: {
+          slot_key: string
+          updated_at?: string
+          value: string
+        }
+        Update: {
+          slot_key?: string
+          updated_at?: string
+          value?: string
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           created_at: string

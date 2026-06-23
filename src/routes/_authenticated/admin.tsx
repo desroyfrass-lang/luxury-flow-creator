@@ -96,9 +96,16 @@ function AdminLayout() {
             <Link
               to="/admin/images"
               activeProps={{ className: "text-[color:var(--gold)]" }}
-              className="hover:text-foreground"
+              className="text-muted-foreground hover:text-foreground"
             >
               Images
+            </Link>
+            <Link
+              to="/admin/text"
+              activeProps={{ className: "text-[color:var(--gold)]" }}
+              className="text-muted-foreground hover:text-foreground"
+            >
+              Text
             </Link>
             <Link to="/" className="text-muted-foreground hover:text-foreground">
               View site
