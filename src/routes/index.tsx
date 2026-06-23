@@ -31,6 +31,7 @@ export const Route = createFileRoute("/")({
 function Home() {
   const heroSrc = useSiteImageUrl("hero-home", heroImg);
   const logoSrc = useSiteImageUrl("logo-full", fullLogo.url);
+  const { data: overrides } = useSiteImages();
   return (
     <SiteShell>
       <section className="relative">
