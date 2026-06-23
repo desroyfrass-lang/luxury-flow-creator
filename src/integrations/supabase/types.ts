@@ -59,6 +59,36 @@ export type Database = {
         }
         Relationships: []
       }
+      customer_photos: {
+        Row: {
+          created_at: string
+          id: string
+          image_url: string
+          is_primary: boolean
+          label: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          image_url: string
+          is_primary?: boolean
+          label?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          image_url?: string
+          is_primary?: boolean
+          label?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       lookbook_story_images: {
         Row: {
           alt: string | null
@@ -193,6 +223,56 @@ export type Database = {
           value?: string
         }
         Relationships: []
+      }
+      tryon_looks: {
+        Row: {
+          cart_items: Json
+          created_at: string
+          error: string | null
+          id: string
+          prompt: string | null
+          result_url: string | null
+          source_photo_id: string | null
+          source_photo_url: string
+          status: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          cart_items?: Json
+          created_at?: string
+          error?: string | null
+          id?: string
+          prompt?: string | null
+          result_url?: string | null
+          source_photo_id?: string | null
+          source_photo_url: string
+          status?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          cart_items?: Json
+          created_at?: string
+          error?: string | null
+          id?: string
+          prompt?: string | null
+          result_url?: string | null
+          source_photo_id?: string | null
+          source_photo_url?: string
+          status?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tryon_looks_source_photo_id_fkey"
+            columns: ["source_photo_id"]
+            isOneToOne: false
+            referencedRelation: "customer_photos"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       user_roles: {
         Row: {
