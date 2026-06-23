@@ -43,7 +43,7 @@ function Home() {
                 The Frass Kicks Experience
               </div>
               <h1 className="font-display text-5xl md:text-7xl lg:text-[8rem] leading-[0.9] max-w-5xl">
-                Where luxury <span className="gold-text italic">moves</span>.
+                Where luxury <span className="font-script gold-text normal-case" style={{letterSpacing:0}}>moves</span>.
               </h1>
               <p className="mt-6 max-w-xl text-base md:text-lg text-white/85">
                 A cinematic destination for premium footwear, fashion, swim &amp; intimates.
@@ -52,7 +52,7 @@ function Home() {
               <div className="mt-10 flex flex-wrap gap-3">
                 <Link
                   to="/frass-kicks"
-                  className="lux-press inline-flex items-center gap-2 rounded-full bg-white text-foreground px-7 py-3.5 text-xs uppercase tracking-[0.25em] hover:bg-[color:var(--gold)] transition"
+                  className="lux-press inline-flex items-center gap-2 rounded-sm bg-[color:var(--gold)] text-[color:var(--ink)] px-7 py-3.5 text-xs uppercase tracking-[0.3em] font-bold hover:bg-[color:var(--gold-soft)] transition"
                 >
                   Shop Frass Kicks <ArrowUpRight className="h-4 w-4" />
                 </Link>
@@ -83,7 +83,7 @@ function Home() {
               Three Worlds
             </div>
             <h2 className="font-display text-5xl md:text-7xl leading-[0.95]">
-              Choose your <span className="italic">drip</span>.
+              Choose your <span className="font-script gold-text normal-case" style={{letterSpacing:0}}>drip</span>.
             </h2>
           </div>
           <p className="hidden md:block max-w-sm text-sm text-muted-foreground">

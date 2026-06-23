@@ -41,7 +41,7 @@ export function CartDrawer() {
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger asChild>
         <button
-          className="relative inline-flex h-10 w-10 items-center justify-center rounded-full border border-border bg-white/70 backdrop-blur transition hover:border-[color:var(--gold)] hover:shadow-[0_0_0_4px_oklch(0.92_0.08_85_/_0.25)]"
+          className="relative inline-flex h-10 w-10 items-center justify-center rounded-full border border-border bg-background/70 backdrop-blur transition hover:border-[color:var(--gold)] hover:shadow-[0_0_0_4px_oklch(0.92_0.08_85_/_0.25)]"
           aria-label="Cart"
         >
           <ShoppingBag className="h-4 w-4" />

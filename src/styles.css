@@ -43,8 +43,9 @@
   --color-chrome-soft: var(--chrome-soft);
   --color-ink: var(--ink);
 
-  --font-display: "Cormorant Garamond", "Times New Roman", serif;
-  --font-sans: "Inter Tight", system-ui, sans-serif;
+  --font-display: "Anton", "Bebas Neue", "Archivo Narrow", "Impact", sans-serif;
+  --font-sans: "Archivo", system-ui, sans-serif;
+  --font-script: "Caveat", cursive;
 
   --shadow-luxury: 0 30px 80px -30px oklch(0.2 0.02 80 / 0.18), 0 8px 24px -12px oklch(0.2 0.02 80 / 0.10);
   --shadow-glow-gold: 0 0 0 1px oklch(0.85 0.13 85 / 0.35), 0 30px 90px -20px oklch(0.78 0.16 80 / 0.45), 0 0 80px -10px oklch(0.85 0.14 85 / 0.35);
@@ -58,55 +59,55 @@
 }
 
 :root {
-  --radius: 1rem;
+  --radius: 0.5rem;
 
-  --background: oklch(0.995 0.002 90);
-  --foreground: oklch(0.16 0.01 250);
+  --background: oklch(0.13 0.005 80);
+  --foreground: oklch(0.96 0.01 85);
 
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.16 0.01 250);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.16 0.01 250);
+  --card: oklch(0.16 0.006 80);
+  --card-foreground: oklch(0.96 0.01 85);
+  --popover: oklch(0.16 0.006 80);
+  --popover-foreground: oklch(0.96 0.01 85);
 
-  --primary: oklch(0.16 0.01 250);
-  --primary-foreground: oklch(0.99 0.002 90);
+  --primary: oklch(0.96 0.01 85);
+  --primary-foreground: oklch(0.13 0.005 80);
 
-  --secondary: oklch(0.97 0.003 250);
-  --secondary-foreground: oklch(0.16 0.01 250);
+  --secondary: oklch(0.20 0.006 80);
+  --secondary-foreground: oklch(0.96 0.01 85);
 
-  --muted: oklch(0.96 0.003 250);
-  --muted-foreground: oklch(0.48 0.01 250);
+  --muted: oklch(0.22 0.006 80);
+  --muted-foreground: oklch(0.72 0.015 85);
 
-  --accent: oklch(0.82 0.14 80); /* gold */
-  --accent-foreground: oklch(0.16 0.01 250);
+  --accent: oklch(0.78 0.14 78); /* gold */
+  --accent-foreground: oklch(0.13 0.005 80);
 
-  --destructive: oklch(0.55 0.22 27);
+  --destructive: oklch(0.60 0.22 27);
   --destructive-foreground: oklch(0.99 0 0);
 
-  --border: oklch(0.92 0.005 250);
-  --input: oklch(0.92 0.005 250);
-  --ring: oklch(0.82 0.14 80);
+  --border: oklch(1 0 0 / 0.10);
+  --input: oklch(1 0 0 / 0.12);
+  --ring: oklch(0.78 0.14 78);
 
-  --gold: oklch(0.82 0.14 80);
-  --gold-soft: oklch(0.92 0.08 85);
-  --chrome: oklch(0.78 0.01 250);
-  --chrome-soft: oklch(0.94 0.005 250);
-  --ink: oklch(0.12 0.01 250);
+  --gold: oklch(0.78 0.14 78);
+  --gold-soft: oklch(0.88 0.10 85);
+  --chrome: oklch(0.82 0.01 250);
+  --chrome-soft: oklch(0.92 0.005 250);
+  --ink: oklch(0.10 0.005 80);
 
-  --sidebar: oklch(0.99 0.002 90);
-  --sidebar-foreground: oklch(0.16 0.01 250);
-  --sidebar-primary: oklch(0.16 0.01 250);
-  --sidebar-primary-foreground: oklch(0.99 0.002 90);
-  --sidebar-accent: oklch(0.96 0.003 250);
-  --sidebar-accent-foreground: oklch(0.16 0.01 250);
-  --sidebar-border: oklch(0.92 0.005 250);
-  --sidebar-ring: oklch(0.82 0.14 80);
+  --sidebar: oklch(0.13 0.005 80);
+  --sidebar-foreground: oklch(0.96 0.01 85);
+  --sidebar-primary: oklch(0.96 0.01 85);
+  --sidebar-primary-foreground: oklch(0.13 0.005 80);
+  --sidebar-accent: oklch(0.20 0.006 80);
+  --sidebar-accent-foreground: oklch(0.96 0.01 85);
+  --sidebar-border: oklch(1 0 0 / 0.10);
+  --sidebar-ring: oklch(0.78 0.14 78);
 
-  --chart-1: oklch(0.82 0.14 80);
-  --chart-2: oklch(0.78 0.01 250);
+  --chart-1: oklch(0.78 0.14 78);
+  --chart-2: oklch(0.82 0.01 250);
   --chart-3: oklch(0.55 0.02 250);
-  --chart-4: oklch(0.92 0.08 85);
-  --chart-5: oklch(0.16 0.01 250);
+  --chart-4: oklch(0.88 0.10 85);
+  --chart-5: oklch(0.96 0.01 85);
 }
 
 .dark {
@@ -138,7 +139,14 @@
     font-family: var(--font-sans);
     font-feature-settings: "ss01", "cv11";
   }
-  h1, h2, h3, h4 { font-family: var(--font-display); font-weight: 500; letter-spacing: -0.02em; }
+  h1, h2, h3, h4 {
+    font-family: var(--font-display);
+    font-weight: 400;
+    letter-spacing: 0.005em;
+    text-transform: uppercase;
+    line-height: 0.92;
+  }
+  .font-script { font-family: var(--font-script); text-transform: none; letter-spacing: 0; }
 }
 
 /* ===== Luxury Card hover ===== */

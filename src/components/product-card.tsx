@@ -54,7 +54,7 @@ export function ProductCard({ product }: { product: ShopifyProduct }) {
         <button
           onClick={handleAdd}
           disabled={isLoading || !variant}
-          className="absolute bottom-4 right-4 inline-flex h-11 w-11 items-center justify-center rounded-full bg-white/95 text-foreground shadow-[var(--shadow-luxury)] backdrop-blur transition-all duration-300 hover:bg-[color:var(--gold)] hover:scale-110 disabled:opacity-60"
+          className="absolute bottom-4 right-4 inline-flex h-11 w-11 items-center justify-center rounded-full bg-background/90 text-foreground shadow-[var(--shadow-luxury)] backdrop-blur transition-all duration-300 hover:bg-[color:var(--gold)] hover:scale-110 disabled:opacity-60"
           aria-label="Quick add"
         >
           {isLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Plus className="h-5 w-5" />}

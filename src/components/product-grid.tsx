@@ -37,7 +37,7 @@ export function ProductGrid({
 
   if (products.length === 0) {
     return (
-      <div className="rounded-3xl border border-dashed border-border bg-white/60 backdrop-blur p-16 text-center">
+      <div className="rounded-3xl border border-dashed border-border bg-background/60 backdrop-blur p-16 text-center">
         <h3 className="font-display text-3xl">{emptyTitle}</h3>
         {emptyHint && <p className="mt-3 text-sm text-muted-foreground max-w-md mx-auto">{emptyHint}</p>}
       </div>
