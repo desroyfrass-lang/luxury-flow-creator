@@ -6,7 +6,6 @@ import heroImg from "@/assets/hero-frass.jpg";
 import cardKicks from "@/assets/card-kicks.jpg";
 import cardDrip from "@/assets/card-drip.jpg";
 import cardBare from "@/assets/card-bare.jpg";
-import cardMen from "@/assets/card-men.jpg";
 import fullLogo from "@/assets/frass-logo-full.asset.json";
 import { ArrowUpRight } from "lucide-react";
 
@@ -85,12 +84,6 @@ function Home() {
                     className="lux-press inline-flex items-center gap-2 rounded-sm border border-border/80 bg-background/35 px-7 py-3.5 text-xs uppercase tracking-[0.28em] text-foreground backdrop-blur transition hover:border-[color:var(--gold)] hover:text-[color:var(--gold)]"
                   >
                     Shop Frass Drip
-                  </Link>
-                  <Link
-                    to="/sports-drip"
-                    className="lux-press inline-flex items-center gap-2 rounded-sm border border-border/80 bg-background/35 px-7 py-3.5 text-xs uppercase tracking-[0.28em] text-foreground backdrop-blur transition hover:border-[color:var(--gold)] hover:text-[color:var(--gold)]"
-                  >
-                    Shop Sports Drip
                   </Link>
                   <Link
                     to="/bare-drip"

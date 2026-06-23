@@ -9,14 +9,11 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as SportsDripRouteImport } from './routes/sports-drip'
 import { Route as MusicMediaRouteImport } from './routes/music-media'
 import { Route as FrassKicksRouteImport } from './routes/frass-kicks'
 import { Route as FrassDripRouteImport } from './routes/frass-drip'
 import { Route as BareDripRouteImport } from './routes/bare-drip'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as SportsDripWomenRouteImport } from './routes/sports-drip.women'
-import { Route as SportsDripMenRouteImport } from './routes/sports-drip.men'
 import { Route as ProductHandleRouteImport } from './routes/product.$handle'
 import { Route as FrassKicksWomenRouteImport } from './routes/frass-kicks.women'
 import { Route as FrassKicksMenRouteImport } from './routes/frass-kicks.men'
@@ -26,11 +23,6 @@ import { Route as CollectionHandleRouteImport } from './routes/collection.$handl
 import { Route as BareDripWomenRouteImport } from './routes/bare-drip.women'
 import { Route as BareDripMenRouteImport } from './routes/bare-drip.men'
 
-const SportsDripRoute = SportsDripRouteImport.update({
-  id: '/sports-drip',
-  path: '/sports-drip',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const MusicMediaRoute = MusicMediaRouteImport.update({
   id: '/music-media',
   path: '/music-media',
@@ -55,16 +47,6 @@ const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
-} as any)
-const SportsDripWomenRoute = SportsDripWomenRouteImport.update({
-  id: '/women',
-  path: '/women',
-  getParentRoute: () => SportsDripRoute,
-} as any)
-const SportsDripMenRoute = SportsDripMenRouteImport.update({
-  id: '/men',
-  path: '/men',
-  getParentRoute: () => SportsDripRoute,
 } as any)
 const ProductHandleRoute = ProductHandleRouteImport.update({
   id: '/product/$handle',
@@ -113,7 +95,6 @@ export interface FileRoutesByFullPath {
   '/frass-drip': typeof FrassDripRouteWithChildren
   '/frass-kicks': typeof FrassKicksRouteWithChildren
   '/music-media': typeof MusicMediaRoute
-  '/sports-drip': typeof SportsDripRouteWithChildren
   '/bare-drip/men': typeof BareDripMenRoute
   '/bare-drip/women': typeof BareDripWomenRoute
   '/collection/$handle': typeof CollectionHandleRoute
@@ -122,8 +103,6 @@ export interface FileRoutesByFullPath {
   '/frass-kicks/men': typeof FrassKicksMenRoute
   '/frass-kicks/women': typeof FrassKicksWomenRoute
   '/product/$handle': typeof ProductHandleRoute
-  '/sports-drip/men': typeof SportsDripMenRoute
-  '/sports-drip/women': typeof SportsDripWomenRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -131,7 +110,6 @@ export interface FileRoutesByTo {
   '/frass-drip': typeof FrassDripRouteWithChildren
   '/frass-kicks': typeof FrassKicksRouteWithChildren
   '/music-media': typeof MusicMediaRoute
-  '/sports-drip': typeof SportsDripRouteWithChildren
   '/bare-drip/men': typeof BareDripMenRoute
   '/bare-drip/women': typeof BareDripWomenRoute
   '/collection/$handle': typeof CollectionHandleRoute
@@ -140,8 +118,6 @@ export interface FileRoutesByTo {
   '/frass-kicks/men': typeof FrassKicksMenRoute
   '/frass-kicks/women': typeof FrassKicksWomenRoute
   '/product/$handle': typeof ProductHandleRoute
-  '/sports-drip/men': typeof SportsDripMenRoute
-  '/sports-drip/women': typeof SportsDripWomenRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -150,7 +126,6 @@ export interface FileRoutesById {
   '/frass-drip': typeof FrassDripRouteWithChildren
   '/frass-kicks': typeof FrassKicksRouteWithChildren
   '/music-media': typeof MusicMediaRoute
-  '/sports-drip': typeof SportsDripRouteWithChildren
   '/bare-drip/men': typeof BareDripMenRoute
   '/bare-drip/women': typeof BareDripWomenRoute
   '/collection/$handle': typeof CollectionHandleRoute
@@ -159,8 +134,6 @@ export interface FileRoutesById {
   '/frass-kicks/men': typeof FrassKicksMenRoute
   '/frass-kicks/women': typeof FrassKicksWomenRoute
   '/product/$handle': typeof ProductHandleRoute
-  '/sports-drip/men': typeof SportsDripMenRoute
-  '/sports-drip/women': typeof SportsDripWomenRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -170,7 +143,6 @@ export interface FileRouteTypes {
     | '/frass-drip'
     | '/frass-kicks'
     | '/music-media'
-    | '/sports-drip'
     | '/bare-drip/men'
     | '/bare-drip/women'
     | '/collection/$handle'
@@ -179,8 +151,6 @@ export interface FileRouteTypes {
     | '/frass-kicks/men'
     | '/frass-kicks/women'
     | '/product/$handle'
-    | '/sports-drip/men'
-    | '/sports-drip/women'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -188,7 +158,6 @@ export interface FileRouteTypes {
     | '/frass-drip'
     | '/frass-kicks'
     | '/music-media'
-    | '/sports-drip'
     | '/bare-drip/men'
     | '/bare-drip/women'
     | '/collection/$handle'
@@ -197,8 +166,6 @@ export interface FileRouteTypes {
     | '/frass-kicks/men'
     | '/frass-kicks/women'
     | '/product/$handle'
-    | '/sports-drip/men'
-    | '/sports-drip/women'
   id:
     | '__root__'
     | '/'
@@ -206,7 +173,6 @@ export interface FileRouteTypes {
     | '/frass-drip'
     | '/frass-kicks'
     | '/music-media'
-    | '/sports-drip'
     | '/bare-drip/men'
     | '/bare-drip/women'
     | '/collection/$handle'
@@ -215,8 +181,6 @@ export interface FileRouteTypes {
     | '/frass-kicks/men'
     | '/frass-kicks/women'
     | '/product/$handle'
-    | '/sports-drip/men'
-    | '/sports-drip/women'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -225,20 +189,12 @@ export interface RootRouteChildren {
   FrassDripRoute: typeof FrassDripRouteWithChildren
   FrassKicksRoute: typeof FrassKicksRouteWithChildren
   MusicMediaRoute: typeof MusicMediaRoute
-  SportsDripRoute: typeof SportsDripRouteWithChildren
   CollectionHandleRoute: typeof CollectionHandleRoute
   ProductHandleRoute: typeof ProductHandleRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/sports-drip': {
-      id: '/sports-drip'
-      path: '/sports-drip'
-      fullPath: '/sports-drip'
-      preLoaderRoute: typeof SportsDripRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/music-media': {
       id: '/music-media'
       path: '/music-media'
@@ -273,20 +229,6 @@ declare module '@tanstack/react-router' {
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
-    }
-    '/sports-drip/women': {
-      id: '/sports-drip/women'
-      path: '/women'
-      fullPath: '/sports-drip/women'
-      preLoaderRoute: typeof SportsDripWomenRouteImport
-      parentRoute: typeof SportsDripRoute
-    }
-    '/sports-drip/men': {
-      id: '/sports-drip/men'
-      path: '/men'
-      fullPath: '/sports-drip/men'
-      preLoaderRoute: typeof SportsDripMenRouteImport
-      parentRoute: typeof SportsDripRoute
     }
     '/product/$handle': {
       id: '/product/$handle'
@@ -389,27 +331,12 @@ const FrassKicksRouteWithChildren = FrassKicksRoute._addFileChildren(
   FrassKicksRouteChildren,
 )
 
-interface SportsDripRouteChildren {
-  SportsDripMenRoute: typeof SportsDripMenRoute
-  SportsDripWomenRoute: typeof SportsDripWomenRoute
-}
-
-const SportsDripRouteChildren: SportsDripRouteChildren = {
-  SportsDripMenRoute: SportsDripMenRoute,
-  SportsDripWomenRoute: SportsDripWomenRoute,
-}
-
-const SportsDripRouteWithChildren = SportsDripRoute._addFileChildren(
-  SportsDripRouteChildren,
-)
-
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   BareDripRoute: BareDripRouteWithChildren,
   FrassDripRoute: FrassDripRouteWithChildren,
   FrassKicksRoute: FrassKicksRouteWithChildren,
   MusicMediaRoute: MusicMediaRoute,
-  SportsDripRoute: SportsDripRouteWithChildren,
   CollectionHandleRoute: CollectionHandleRoute,
   ProductHandleRoute: ProductHandleRoute,
 }
