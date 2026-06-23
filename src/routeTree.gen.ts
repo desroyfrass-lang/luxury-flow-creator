@@ -35,6 +35,7 @@ import { Route as CollectionHandleRouteImport } from './routes/collection.$handl
 import { Route as BlogSlugRouteImport } from './routes/blog.$slug'
 import { Route as BareDripWomenRouteImport } from './routes/bare-drip.women'
 import { Route as BareDripMenRouteImport } from './routes/bare-drip.men'
+import { Route as AuthenticatedTryOnRouteImport } from './routes/_authenticated/try-on'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
 import { Route as FrassKicksSideKicksIndexRouteImport } from './routes/frass-kicks.side-kicks.index'
 import { Route as FrassKicksCrownKicksIndexRouteImport } from './routes/frass-kicks.crown-kicks.index'
@@ -185,6 +186,11 @@ const BareDripMenRoute = BareDripMenRouteImport.update({
   path: '/men',
   getParentRoute: () => BareDripRoute,
 } as any)
+const AuthenticatedTryOnRoute = AuthenticatedTryOnRouteImport.update({
+  id: '/try-on',
+  path: '/try-on',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedAdminRoute = AuthenticatedAdminRouteImport.update({
   id: '/admin',
   path: '/admin',
@@ -301,6 +307,7 @@ export interface FileRoutesByFullPath {
   '/lookbook': typeof LookbookRouteWithChildren
   '/music-media': typeof MusicMediaRoute
   '/admin': typeof AuthenticatedAdminRouteWithChildren
+  '/try-on': typeof AuthenticatedTryOnRoute
   '/bare-drip/men': typeof BareDripMenRouteWithChildren
   '/bare-drip/women': typeof BareDripWomenRouteWithChildren
   '/blog/$slug': typeof BlogSlugRoute
@@ -342,6 +349,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/music-media': typeof MusicMediaRoute
+  '/try-on': typeof AuthenticatedTryOnRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/collection/$handle': typeof CollectionHandleRoute
   '/frass-kicks/men': typeof FrassKicksMenRoute
@@ -385,6 +393,7 @@ export interface FileRoutesById {
   '/lookbook': typeof LookbookRouteWithChildren
   '/music-media': typeof MusicMediaRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRouteWithChildren
+  '/_authenticated/try-on': typeof AuthenticatedTryOnRoute
   '/bare-drip/men': typeof BareDripMenRouteWithChildren
   '/bare-drip/women': typeof BareDripWomenRouteWithChildren
   '/blog/$slug': typeof BlogSlugRoute
@@ -434,6 +443,7 @@ export interface FileRouteTypes {
     | '/lookbook'
     | '/music-media'
     | '/admin'
+    | '/try-on'
     | '/bare-drip/men'
     | '/bare-drip/women'
     | '/blog/$slug'
@@ -475,6 +485,7 @@ export interface FileRouteTypes {
     | '/'
     | '/auth'
     | '/music-media'
+    | '/try-on'
     | '/blog/$slug'
     | '/collection/$handle'
     | '/frass-kicks/men'
@@ -517,6 +528,7 @@ export interface FileRouteTypes {
     | '/lookbook'
     | '/music-media'
     | '/_authenticated/admin'
+    | '/_authenticated/try-on'
     | '/bare-drip/men'
     | '/bare-drip/women'
     | '/blog/$slug'
@@ -753,6 +765,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BareDripMenRouteImport
       parentRoute: typeof BareDripRoute
     }
+    '/_authenticated/try-on': {
+      id: '/_authenticated/try-on'
+      path: '/try-on'
+      fullPath: '/try-on'
+      preLoaderRoute: typeof AuthenticatedTryOnRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/admin': {
       id: '/_authenticated/admin'
       path: '/admin'
@@ -917,10 +936,12 @@ const AuthenticatedAdminRouteWithChildren =
 
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedAdminRoute: typeof AuthenticatedAdminRouteWithChildren
+  AuthenticatedTryOnRoute: typeof AuthenticatedTryOnRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedAdminRoute: AuthenticatedAdminRouteWithChildren,
+  AuthenticatedTryOnRoute: AuthenticatedTryOnRoute,
 }
 
 const AuthenticatedRouteRouteWithChildren =
