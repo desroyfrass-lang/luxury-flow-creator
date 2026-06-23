@@ -71,7 +71,7 @@ function Header() {
           </div>
         </div>
         <div className="flex-1 flex items-center justify-end gap-2">
-          <div className="hidden lg:flex items-center gap-1 mr-2">
+          <div className="flex items-center gap-0.5 md:gap-1 mr-1 md:mr-2">
             {SOCIALS.map(({ href, label, Icon }) => (
               <a
                 key={label}
