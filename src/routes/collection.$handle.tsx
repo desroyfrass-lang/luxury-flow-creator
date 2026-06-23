@@ -3,18 +3,18 @@ import { useMemo, useState } from "react";
 import { SiteShell } from "@/components/site-shell";
 import { PageHeader } from "@/components/page-header";
 import { ProductGrid } from "@/components/product-grid";
-import { COLLECTION_MAP } from "@/lib/shopify";
+import { getCollectionMeta } from "@/lib/shopify";
 
 type Sort = "featured" | "newest" | "best" | "price-asc" | "price-desc";
 
 export const Route = createFileRoute("/collection/$handle")({
   head: ({ params }) => {
-    const meta = COLLECTION_MAP[params.handle];
-    const title = meta?.title ?? "Collection";
+    const meta = getCollectionMeta(params.handle);
+    const title = meta.title;
     return {
       meta: [
         { title: `${title} — Frass Kicks` },
-        { name: "description", content: meta?.description ?? `Shop ${title} at Frass Kicks.` },
+        { name: "description", content: meta.description ?? `Shop ${title} at Frass Kicks.` },
         { property: "og:title", content: `${title} — Frass Kicks` },
       ],
     };
@@ -32,23 +32,23 @@ const SORTS: { id: Sort; label: string }[] = [
 
 function CollectionPage() {
   const { handle } = Route.useParams();
-  const meta = COLLECTION_MAP[handle];
+  const meta = getCollectionMeta(handle);
   const [sort, setSort] = useState<Sort>("featured");
 
   const query = useMemo(() => {
-    const base = meta?.query ?? `tag:"${handle}"`;
+    const base = meta.query;
     // Storefront search syntax: append sort cues; product sort key is handled by API default — we pass base only.
     return base;
-  }, [handle, meta]);
+  }, [meta]);
 
-  const title = meta?.title ?? handle.replace(/-/g, " ");
+  const title = meta.title;
 
   return (
     <SiteShell>
       <PageHeader
         eyebrow="Collection"
         title={title}
-        description={meta?.description}
+        description={meta.description}
         crumbs={[{ label: "Home", to: "/" }, { label: title }]}
       />
 

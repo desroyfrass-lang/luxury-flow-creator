@@ -1,5 +1,5 @@
 import { createFileRoute, Outlet } from "@tanstack/react-router";
 
-export const Route = createFileRoute("/frass-drip")({
+export const Route = createFileRoute("/frass-kicks/crown-kicks")({
   component: () => <Outlet />,
 });

@@ -14,16 +14,33 @@ import { Route as FrassKicksRouteImport } from './routes/frass-kicks'
 import { Route as FrassDripRouteImport } from './routes/frass-drip'
 import { Route as BareDripRouteImport } from './routes/bare-drip'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as FrassKicksIndexRouteImport } from './routes/frass-kicks.index'
+import { Route as FrassDripIndexRouteImport } from './routes/frass-drip.index'
+import { Route as BareDripIndexRouteImport } from './routes/bare-drip.index'
 import { Route as ProductHandleRouteImport } from './routes/product.$handle'
 import { Route as FrassKicksWomenRouteImport } from './routes/frass-kicks.women'
+import { Route as FrassKicksSideKicksRouteImport } from './routes/frass-kicks.side-kicks'
 import { Route as FrassKicksMenRouteImport } from './routes/frass-kicks.men'
+import { Route as FrassKicksCrownKicksRouteImport } from './routes/frass-kicks.crown-kicks'
 import { Route as FrassDripWomenRouteImport } from './routes/frass-drip.women'
 import { Route as FrassDripMenRouteImport } from './routes/frass-drip.men'
 import { Route as CollectionHandleRouteImport } from './routes/collection.$handle'
 import { Route as BareDripWomenRouteImport } from './routes/bare-drip.women'
 import { Route as BareDripMenRouteImport } from './routes/bare-drip.men'
+import { Route as FrassKicksSideKicksIndexRouteImport } from './routes/frass-kicks.side-kicks.index'
+import { Route as FrassKicksCrownKicksIndexRouteImport } from './routes/frass-kicks.crown-kicks.index'
+import { Route as FrassDripWomenIndexRouteImport } from './routes/frass-drip.women.index'
+import { Route as FrassDripMenIndexRouteImport } from './routes/frass-drip.men.index'
+import { Route as BareDripWomenIndexRouteImport } from './routes/bare-drip.women.index'
+import { Route as BareDripMenIndexRouteImport } from './routes/bare-drip.men.index'
+import { Route as FrassKicksSideKicksWomenRouteImport } from './routes/frass-kicks.side-kicks.women'
+import { Route as FrassKicksSideKicksMenRouteImport } from './routes/frass-kicks.side-kicks.men'
+import { Route as FrassKicksCrownKicksWomenRouteImport } from './routes/frass-kicks.crown-kicks.women'
+import { Route as FrassKicksCrownKicksMenRouteImport } from './routes/frass-kicks.crown-kicks.men'
 import { Route as FrassDripWomenCategoryRouteImport } from './routes/frass-drip.women.$category'
 import { Route as FrassDripMenCategoryRouteImport } from './routes/frass-drip.men.$category'
+import { Route as BareDripWomenCategoryRouteImport } from './routes/bare-drip.women.$category'
+import { Route as BareDripMenCategoryRouteImport } from './routes/bare-drip.men.$category'
 
 const MusicMediaRoute = MusicMediaRouteImport.update({
   id: '/music-media',
@@ -50,6 +67,21 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const FrassKicksIndexRoute = FrassKicksIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => FrassKicksRoute,
+} as any)
+const FrassDripIndexRoute = FrassDripIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => FrassDripRoute,
+} as any)
+const BareDripIndexRoute = BareDripIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => BareDripRoute,
+} as any)
 const ProductHandleRoute = ProductHandleRouteImport.update({
   id: '/product/$handle',
   path: '/product/$handle',
@@ -60,9 +92,19 @@ const FrassKicksWomenRoute = FrassKicksWomenRouteImport.update({
   path: '/women',
   getParentRoute: () => FrassKicksRoute,
 } as any)
+const FrassKicksSideKicksRoute = FrassKicksSideKicksRouteImport.update({
+  id: '/side-kicks',
+  path: '/side-kicks',
+  getParentRoute: () => FrassKicksRoute,
+} as any)
 const FrassKicksMenRoute = FrassKicksMenRouteImport.update({
   id: '/men',
   path: '/men',
+  getParentRoute: () => FrassKicksRoute,
+} as any)
+const FrassKicksCrownKicksRoute = FrassKicksCrownKicksRouteImport.update({
+  id: '/crown-kicks',
+  path: '/crown-kicks',
   getParentRoute: () => FrassKicksRoute,
 } as any)
 const FrassDripWomenRoute = FrassDripWomenRouteImport.update({
@@ -90,6 +132,60 @@ const BareDripMenRoute = BareDripMenRouteImport.update({
   path: '/men',
   getParentRoute: () => BareDripRoute,
 } as any)
+const FrassKicksSideKicksIndexRoute =
+  FrassKicksSideKicksIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => FrassKicksSideKicksRoute,
+  } as any)
+const FrassKicksCrownKicksIndexRoute =
+  FrassKicksCrownKicksIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => FrassKicksCrownKicksRoute,
+  } as any)
+const FrassDripWomenIndexRoute = FrassDripWomenIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => FrassDripWomenRoute,
+} as any)
+const FrassDripMenIndexRoute = FrassDripMenIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => FrassDripMenRoute,
+} as any)
+const BareDripWomenIndexRoute = BareDripWomenIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => BareDripWomenRoute,
+} as any)
+const BareDripMenIndexRoute = BareDripMenIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => BareDripMenRoute,
+} as any)
+const FrassKicksSideKicksWomenRoute =
+  FrassKicksSideKicksWomenRouteImport.update({
+    id: '/women',
+    path: '/women',
+    getParentRoute: () => FrassKicksSideKicksRoute,
+  } as any)
+const FrassKicksSideKicksMenRoute = FrassKicksSideKicksMenRouteImport.update({
+  id: '/men',
+  path: '/men',
+  getParentRoute: () => FrassKicksSideKicksRoute,
+} as any)
+const FrassKicksCrownKicksWomenRoute =
+  FrassKicksCrownKicksWomenRouteImport.update({
+    id: '/women',
+    path: '/women',
+    getParentRoute: () => FrassKicksCrownKicksRoute,
+  } as any)
+const FrassKicksCrownKicksMenRoute = FrassKicksCrownKicksMenRouteImport.update({
+  id: '/men',
+  path: '/men',
+  getParentRoute: () => FrassKicksCrownKicksRoute,
+} as any)
 const FrassDripWomenCategoryRoute = FrassDripWomenCategoryRouteImport.update({
   id: '/$category',
   path: '/$category',
@@ -100,6 +196,16 @@ const FrassDripMenCategoryRoute = FrassDripMenCategoryRouteImport.update({
   path: '/$category',
   getParentRoute: () => FrassDripMenRoute,
 } as any)
+const BareDripWomenCategoryRoute = BareDripWomenCategoryRouteImport.update({
+  id: '/$category',
+  path: '/$category',
+  getParentRoute: () => BareDripWomenRoute,
+} as any)
+const BareDripMenCategoryRoute = BareDripMenCategoryRouteImport.update({
+  id: '/$category',
+  path: '/$category',
+  getParentRoute: () => BareDripMenRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -107,33 +213,58 @@ export interface FileRoutesByFullPath {
   '/frass-drip': typeof FrassDripRouteWithChildren
   '/frass-kicks': typeof FrassKicksRouteWithChildren
   '/music-media': typeof MusicMediaRoute
-  '/bare-drip/men': typeof BareDripMenRoute
-  '/bare-drip/women': typeof BareDripWomenRoute
+  '/bare-drip/men': typeof BareDripMenRouteWithChildren
+  '/bare-drip/women': typeof BareDripWomenRouteWithChildren
   '/collection/$handle': typeof CollectionHandleRoute
   '/frass-drip/men': typeof FrassDripMenRouteWithChildren
   '/frass-drip/women': typeof FrassDripWomenRouteWithChildren
+  '/frass-kicks/crown-kicks': typeof FrassKicksCrownKicksRouteWithChildren
   '/frass-kicks/men': typeof FrassKicksMenRoute
+  '/frass-kicks/side-kicks': typeof FrassKicksSideKicksRouteWithChildren
   '/frass-kicks/women': typeof FrassKicksWomenRoute
   '/product/$handle': typeof ProductHandleRoute
+  '/bare-drip/': typeof BareDripIndexRoute
+  '/frass-drip/': typeof FrassDripIndexRoute
+  '/frass-kicks/': typeof FrassKicksIndexRoute
+  '/bare-drip/men/$category': typeof BareDripMenCategoryRoute
+  '/bare-drip/women/$category': typeof BareDripWomenCategoryRoute
   '/frass-drip/men/$category': typeof FrassDripMenCategoryRoute
   '/frass-drip/women/$category': typeof FrassDripWomenCategoryRoute
+  '/frass-kicks/crown-kicks/men': typeof FrassKicksCrownKicksMenRoute
+  '/frass-kicks/crown-kicks/women': typeof FrassKicksCrownKicksWomenRoute
+  '/frass-kicks/side-kicks/men': typeof FrassKicksSideKicksMenRoute
+  '/frass-kicks/side-kicks/women': typeof FrassKicksSideKicksWomenRoute
+  '/bare-drip/men/': typeof BareDripMenIndexRoute
+  '/bare-drip/women/': typeof BareDripWomenIndexRoute
+  '/frass-drip/men/': typeof FrassDripMenIndexRoute
+  '/frass-drip/women/': typeof FrassDripWomenIndexRoute
+  '/frass-kicks/crown-kicks/': typeof FrassKicksCrownKicksIndexRoute
+  '/frass-kicks/side-kicks/': typeof FrassKicksSideKicksIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/bare-drip': typeof BareDripRouteWithChildren
-  '/frass-drip': typeof FrassDripRouteWithChildren
-  '/frass-kicks': typeof FrassKicksRouteWithChildren
   '/music-media': typeof MusicMediaRoute
-  '/bare-drip/men': typeof BareDripMenRoute
-  '/bare-drip/women': typeof BareDripWomenRoute
   '/collection/$handle': typeof CollectionHandleRoute
-  '/frass-drip/men': typeof FrassDripMenRouteWithChildren
-  '/frass-drip/women': typeof FrassDripWomenRouteWithChildren
   '/frass-kicks/men': typeof FrassKicksMenRoute
   '/frass-kicks/women': typeof FrassKicksWomenRoute
   '/product/$handle': typeof ProductHandleRoute
+  '/bare-drip': typeof BareDripIndexRoute
+  '/frass-drip': typeof FrassDripIndexRoute
+  '/frass-kicks': typeof FrassKicksIndexRoute
+  '/bare-drip/men/$category': typeof BareDripMenCategoryRoute
+  '/bare-drip/women/$category': typeof BareDripWomenCategoryRoute
   '/frass-drip/men/$category': typeof FrassDripMenCategoryRoute
   '/frass-drip/women/$category': typeof FrassDripWomenCategoryRoute
+  '/frass-kicks/crown-kicks/men': typeof FrassKicksCrownKicksMenRoute
+  '/frass-kicks/crown-kicks/women': typeof FrassKicksCrownKicksWomenRoute
+  '/frass-kicks/side-kicks/men': typeof FrassKicksSideKicksMenRoute
+  '/frass-kicks/side-kicks/women': typeof FrassKicksSideKicksWomenRoute
+  '/bare-drip/men': typeof BareDripMenIndexRoute
+  '/bare-drip/women': typeof BareDripWomenIndexRoute
+  '/frass-drip/men': typeof FrassDripMenIndexRoute
+  '/frass-drip/women': typeof FrassDripWomenIndexRoute
+  '/frass-kicks/crown-kicks': typeof FrassKicksCrownKicksIndexRoute
+  '/frass-kicks/side-kicks': typeof FrassKicksSideKicksIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -142,16 +273,33 @@ export interface FileRoutesById {
   '/frass-drip': typeof FrassDripRouteWithChildren
   '/frass-kicks': typeof FrassKicksRouteWithChildren
   '/music-media': typeof MusicMediaRoute
-  '/bare-drip/men': typeof BareDripMenRoute
-  '/bare-drip/women': typeof BareDripWomenRoute
+  '/bare-drip/men': typeof BareDripMenRouteWithChildren
+  '/bare-drip/women': typeof BareDripWomenRouteWithChildren
   '/collection/$handle': typeof CollectionHandleRoute
   '/frass-drip/men': typeof FrassDripMenRouteWithChildren
   '/frass-drip/women': typeof FrassDripWomenRouteWithChildren
+  '/frass-kicks/crown-kicks': typeof FrassKicksCrownKicksRouteWithChildren
   '/frass-kicks/men': typeof FrassKicksMenRoute
+  '/frass-kicks/side-kicks': typeof FrassKicksSideKicksRouteWithChildren
   '/frass-kicks/women': typeof FrassKicksWomenRoute
   '/product/$handle': typeof ProductHandleRoute
+  '/bare-drip/': typeof BareDripIndexRoute
+  '/frass-drip/': typeof FrassDripIndexRoute
+  '/frass-kicks/': typeof FrassKicksIndexRoute
+  '/bare-drip/men/$category': typeof BareDripMenCategoryRoute
+  '/bare-drip/women/$category': typeof BareDripWomenCategoryRoute
   '/frass-drip/men/$category': typeof FrassDripMenCategoryRoute
   '/frass-drip/women/$category': typeof FrassDripWomenCategoryRoute
+  '/frass-kicks/crown-kicks/men': typeof FrassKicksCrownKicksMenRoute
+  '/frass-kicks/crown-kicks/women': typeof FrassKicksCrownKicksWomenRoute
+  '/frass-kicks/side-kicks/men': typeof FrassKicksSideKicksMenRoute
+  '/frass-kicks/side-kicks/women': typeof FrassKicksSideKicksWomenRoute
+  '/bare-drip/men/': typeof BareDripMenIndexRoute
+  '/bare-drip/women/': typeof BareDripWomenIndexRoute
+  '/frass-drip/men/': typeof FrassDripMenIndexRoute
+  '/frass-drip/women/': typeof FrassDripWomenIndexRoute
+  '/frass-kicks/crown-kicks/': typeof FrassKicksCrownKicksIndexRoute
+  '/frass-kicks/side-kicks/': typeof FrassKicksSideKicksIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -166,28 +314,53 @@ export interface FileRouteTypes {
     | '/collection/$handle'
     | '/frass-drip/men'
     | '/frass-drip/women'
+    | '/frass-kicks/crown-kicks'
     | '/frass-kicks/men'
+    | '/frass-kicks/side-kicks'
     | '/frass-kicks/women'
     | '/product/$handle'
+    | '/bare-drip/'
+    | '/frass-drip/'
+    | '/frass-kicks/'
+    | '/bare-drip/men/$category'
+    | '/bare-drip/women/$category'
     | '/frass-drip/men/$category'
     | '/frass-drip/women/$category'
+    | '/frass-kicks/crown-kicks/men'
+    | '/frass-kicks/crown-kicks/women'
+    | '/frass-kicks/side-kicks/men'
+    | '/frass-kicks/side-kicks/women'
+    | '/bare-drip/men/'
+    | '/bare-drip/women/'
+    | '/frass-drip/men/'
+    | '/frass-drip/women/'
+    | '/frass-kicks/crown-kicks/'
+    | '/frass-kicks/side-kicks/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
-    | '/bare-drip'
-    | '/frass-drip'
-    | '/frass-kicks'
     | '/music-media'
-    | '/bare-drip/men'
-    | '/bare-drip/women'
     | '/collection/$handle'
-    | '/frass-drip/men'
-    | '/frass-drip/women'
     | '/frass-kicks/men'
     | '/frass-kicks/women'
     | '/product/$handle'
+    | '/bare-drip'
+    | '/frass-drip'
+    | '/frass-kicks'
+    | '/bare-drip/men/$category'
+    | '/bare-drip/women/$category'
     | '/frass-drip/men/$category'
     | '/frass-drip/women/$category'
+    | '/frass-kicks/crown-kicks/men'
+    | '/frass-kicks/crown-kicks/women'
+    | '/frass-kicks/side-kicks/men'
+    | '/frass-kicks/side-kicks/women'
+    | '/bare-drip/men'
+    | '/bare-drip/women'
+    | '/frass-drip/men'
+    | '/frass-drip/women'
+    | '/frass-kicks/crown-kicks'
+    | '/frass-kicks/side-kicks'
   id:
     | '__root__'
     | '/'
@@ -200,11 +373,28 @@ export interface FileRouteTypes {
     | '/collection/$handle'
     | '/frass-drip/men'
     | '/frass-drip/women'
+    | '/frass-kicks/crown-kicks'
     | '/frass-kicks/men'
+    | '/frass-kicks/side-kicks'
     | '/frass-kicks/women'
     | '/product/$handle'
+    | '/bare-drip/'
+    | '/frass-drip/'
+    | '/frass-kicks/'
+    | '/bare-drip/men/$category'
+    | '/bare-drip/women/$category'
     | '/frass-drip/men/$category'
     | '/frass-drip/women/$category'
+    | '/frass-kicks/crown-kicks/men'
+    | '/frass-kicks/crown-kicks/women'
+    | '/frass-kicks/side-kicks/men'
+    | '/frass-kicks/side-kicks/women'
+    | '/bare-drip/men/'
+    | '/bare-drip/women/'
+    | '/frass-drip/men/'
+    | '/frass-drip/women/'
+    | '/frass-kicks/crown-kicks/'
+    | '/frass-kicks/side-kicks/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -254,6 +444,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/frass-kicks/': {
+      id: '/frass-kicks/'
+      path: '/'
+      fullPath: '/frass-kicks/'
+      preLoaderRoute: typeof FrassKicksIndexRouteImport
+      parentRoute: typeof FrassKicksRoute
+    }
+    '/frass-drip/': {
+      id: '/frass-drip/'
+      path: '/'
+      fullPath: '/frass-drip/'
+      preLoaderRoute: typeof FrassDripIndexRouteImport
+      parentRoute: typeof FrassDripRoute
+    }
+    '/bare-drip/': {
+      id: '/bare-drip/'
+      path: '/'
+      fullPath: '/bare-drip/'
+      preLoaderRoute: typeof BareDripIndexRouteImport
+      parentRoute: typeof BareDripRoute
+    }
     '/product/$handle': {
       id: '/product/$handle'
       path: '/product/$handle'
@@ -268,11 +479,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof FrassKicksWomenRouteImport
       parentRoute: typeof FrassKicksRoute
     }
+    '/frass-kicks/side-kicks': {
+      id: '/frass-kicks/side-kicks'
+      path: '/side-kicks'
+      fullPath: '/frass-kicks/side-kicks'
+      preLoaderRoute: typeof FrassKicksSideKicksRouteImport
+      parentRoute: typeof FrassKicksRoute
+    }
     '/frass-kicks/men': {
       id: '/frass-kicks/men'
       path: '/men'
       fullPath: '/frass-kicks/men'
       preLoaderRoute: typeof FrassKicksMenRouteImport
+      parentRoute: typeof FrassKicksRoute
+    }
+    '/frass-kicks/crown-kicks': {
+      id: '/frass-kicks/crown-kicks'
+      path: '/crown-kicks'
+      fullPath: '/frass-kicks/crown-kicks'
+      preLoaderRoute: typeof FrassKicksCrownKicksRouteImport
       parentRoute: typeof FrassKicksRoute
     }
     '/frass-drip/women': {
@@ -310,6 +535,76 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BareDripMenRouteImport
       parentRoute: typeof BareDripRoute
     }
+    '/frass-kicks/side-kicks/': {
+      id: '/frass-kicks/side-kicks/'
+      path: '/'
+      fullPath: '/frass-kicks/side-kicks/'
+      preLoaderRoute: typeof FrassKicksSideKicksIndexRouteImport
+      parentRoute: typeof FrassKicksSideKicksRoute
+    }
+    '/frass-kicks/crown-kicks/': {
+      id: '/frass-kicks/crown-kicks/'
+      path: '/'
+      fullPath: '/frass-kicks/crown-kicks/'
+      preLoaderRoute: typeof FrassKicksCrownKicksIndexRouteImport
+      parentRoute: typeof FrassKicksCrownKicksRoute
+    }
+    '/frass-drip/women/': {
+      id: '/frass-drip/women/'
+      path: '/'
+      fullPath: '/frass-drip/women/'
+      preLoaderRoute: typeof FrassDripWomenIndexRouteImport
+      parentRoute: typeof FrassDripWomenRoute
+    }
+    '/frass-drip/men/': {
+      id: '/frass-drip/men/'
+      path: '/'
+      fullPath: '/frass-drip/men/'
+      preLoaderRoute: typeof FrassDripMenIndexRouteImport
+      parentRoute: typeof FrassDripMenRoute
+    }
+    '/bare-drip/women/': {
+      id: '/bare-drip/women/'
+      path: '/'
+      fullPath: '/bare-drip/women/'
+      preLoaderRoute: typeof BareDripWomenIndexRouteImport
+      parentRoute: typeof BareDripWomenRoute
+    }
+    '/bare-drip/men/': {
+      id: '/bare-drip/men/'
+      path: '/'
+      fullPath: '/bare-drip/men/'
+      preLoaderRoute: typeof BareDripMenIndexRouteImport
+      parentRoute: typeof BareDripMenRoute
+    }
+    '/frass-kicks/side-kicks/women': {
+      id: '/frass-kicks/side-kicks/women'
+      path: '/women'
+      fullPath: '/frass-kicks/side-kicks/women'
+      preLoaderRoute: typeof FrassKicksSideKicksWomenRouteImport
+      parentRoute: typeof FrassKicksSideKicksRoute
+    }
+    '/frass-kicks/side-kicks/men': {
+      id: '/frass-kicks/side-kicks/men'
+      path: '/men'
+      fullPath: '/frass-kicks/side-kicks/men'
+      preLoaderRoute: typeof FrassKicksSideKicksMenRouteImport
+      parentRoute: typeof FrassKicksSideKicksRoute
+    }
+    '/frass-kicks/crown-kicks/women': {
+      id: '/frass-kicks/crown-kicks/women'
+      path: '/women'
+      fullPath: '/frass-kicks/crown-kicks/women'
+      preLoaderRoute: typeof FrassKicksCrownKicksWomenRouteImport
+      parentRoute: typeof FrassKicksCrownKicksRoute
+    }
+    '/frass-kicks/crown-kicks/men': {
+      id: '/frass-kicks/crown-kicks/men'
+      path: '/men'
+      fullPath: '/frass-kicks/crown-kicks/men'
+      preLoaderRoute: typeof FrassKicksCrownKicksMenRouteImport
+      parentRoute: typeof FrassKicksCrownKicksRoute
+    }
     '/frass-drip/women/$category': {
       id: '/frass-drip/women/$category'
       path: '/$category'
@@ -324,17 +619,61 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof FrassDripMenCategoryRouteImport
       parentRoute: typeof FrassDripMenRoute
     }
+    '/bare-drip/women/$category': {
+      id: '/bare-drip/women/$category'
+      path: '/$category'
+      fullPath: '/bare-drip/women/$category'
+      preLoaderRoute: typeof BareDripWomenCategoryRouteImport
+      parentRoute: typeof BareDripWomenRoute
+    }
+    '/bare-drip/men/$category': {
+      id: '/bare-drip/men/$category'
+      path: '/$category'
+      fullPath: '/bare-drip/men/$category'
+      preLoaderRoute: typeof BareDripMenCategoryRouteImport
+      parentRoute: typeof BareDripMenRoute
+    }
   }
 }
 
+interface BareDripMenRouteChildren {
+  BareDripMenCategoryRoute: typeof BareDripMenCategoryRoute
+  BareDripMenIndexRoute: typeof BareDripMenIndexRoute
+}
+
+const BareDripMenRouteChildren: BareDripMenRouteChildren = {
+  BareDripMenCategoryRoute: BareDripMenCategoryRoute,
+  BareDripMenIndexRoute: BareDripMenIndexRoute,
+}
+
+const BareDripMenRouteWithChildren = BareDripMenRoute._addFileChildren(
+  BareDripMenRouteChildren,
+)
+
+interface BareDripWomenRouteChildren {
+  BareDripWomenCategoryRoute: typeof BareDripWomenCategoryRoute
+  BareDripWomenIndexRoute: typeof BareDripWomenIndexRoute
+}
+
+const BareDripWomenRouteChildren: BareDripWomenRouteChildren = {
+  BareDripWomenCategoryRoute: BareDripWomenCategoryRoute,
+  BareDripWomenIndexRoute: BareDripWomenIndexRoute,
+}
+
+const BareDripWomenRouteWithChildren = BareDripWomenRoute._addFileChildren(
+  BareDripWomenRouteChildren,
+)
+
 interface BareDripRouteChildren {
-  BareDripMenRoute: typeof BareDripMenRoute
-  BareDripWomenRoute: typeof BareDripWomenRoute
+  BareDripMenRoute: typeof BareDripMenRouteWithChildren
+  BareDripWomenRoute: typeof BareDripWomenRouteWithChildren
+  BareDripIndexRoute: typeof BareDripIndexRoute
 }
 
 const BareDripRouteChildren: BareDripRouteChildren = {
-  BareDripMenRoute: BareDripMenRoute,
-  BareDripWomenRoute: BareDripWomenRoute,
+  BareDripMenRoute: BareDripMenRouteWithChildren,
+  BareDripWomenRoute: BareDripWomenRouteWithChildren,
+  BareDripIndexRoute: BareDripIndexRoute,
 }
 
 const BareDripRouteWithChildren = BareDripRoute._addFileChildren(
@@ -343,10 +682,12 @@ const BareDripRouteWithChildren = BareDripRoute._addFileChildren(
 
 interface FrassDripMenRouteChildren {
   FrassDripMenCategoryRoute: typeof FrassDripMenCategoryRoute
+  FrassDripMenIndexRoute: typeof FrassDripMenIndexRoute
 }
 
 const FrassDripMenRouteChildren: FrassDripMenRouteChildren = {
   FrassDripMenCategoryRoute: FrassDripMenCategoryRoute,
+  FrassDripMenIndexRoute: FrassDripMenIndexRoute,
 }
 
 const FrassDripMenRouteWithChildren = FrassDripMenRoute._addFileChildren(
@@ -355,10 +696,12 @@ const FrassDripMenRouteWithChildren = FrassDripMenRoute._addFileChildren(
 
 interface FrassDripWomenRouteChildren {
   FrassDripWomenCategoryRoute: typeof FrassDripWomenCategoryRoute
+  FrassDripWomenIndexRoute: typeof FrassDripWomenIndexRoute
 }
 
 const FrassDripWomenRouteChildren: FrassDripWomenRouteChildren = {
   FrassDripWomenCategoryRoute: FrassDripWomenCategoryRoute,
+  FrassDripWomenIndexRoute: FrassDripWomenIndexRoute,
 }
 
 const FrassDripWomenRouteWithChildren = FrassDripWomenRoute._addFileChildren(
@@ -368,25 +711,63 @@ const FrassDripWomenRouteWithChildren = FrassDripWomenRoute._addFileChildren(
 interface FrassDripRouteChildren {
   FrassDripMenRoute: typeof FrassDripMenRouteWithChildren
   FrassDripWomenRoute: typeof FrassDripWomenRouteWithChildren
+  FrassDripIndexRoute: typeof FrassDripIndexRoute
 }
 
 const FrassDripRouteChildren: FrassDripRouteChildren = {
   FrassDripMenRoute: FrassDripMenRouteWithChildren,
   FrassDripWomenRoute: FrassDripWomenRouteWithChildren,
+  FrassDripIndexRoute: FrassDripIndexRoute,
 }
 
 const FrassDripRouteWithChildren = FrassDripRoute._addFileChildren(
   FrassDripRouteChildren,
 )
 
+interface FrassKicksCrownKicksRouteChildren {
+  FrassKicksCrownKicksMenRoute: typeof FrassKicksCrownKicksMenRoute
+  FrassKicksCrownKicksWomenRoute: typeof FrassKicksCrownKicksWomenRoute
+  FrassKicksCrownKicksIndexRoute: typeof FrassKicksCrownKicksIndexRoute
+}
+
+const FrassKicksCrownKicksRouteChildren: FrassKicksCrownKicksRouteChildren = {
+  FrassKicksCrownKicksMenRoute: FrassKicksCrownKicksMenRoute,
+  FrassKicksCrownKicksWomenRoute: FrassKicksCrownKicksWomenRoute,
+  FrassKicksCrownKicksIndexRoute: FrassKicksCrownKicksIndexRoute,
+}
+
+const FrassKicksCrownKicksRouteWithChildren =
+  FrassKicksCrownKicksRoute._addFileChildren(FrassKicksCrownKicksRouteChildren)
+
+interface FrassKicksSideKicksRouteChildren {
+  FrassKicksSideKicksMenRoute: typeof FrassKicksSideKicksMenRoute
+  FrassKicksSideKicksWomenRoute: typeof FrassKicksSideKicksWomenRoute
+  FrassKicksSideKicksIndexRoute: typeof FrassKicksSideKicksIndexRoute
+}
+
+const FrassKicksSideKicksRouteChildren: FrassKicksSideKicksRouteChildren = {
+  FrassKicksSideKicksMenRoute: FrassKicksSideKicksMenRoute,
+  FrassKicksSideKicksWomenRoute: FrassKicksSideKicksWomenRoute,
+  FrassKicksSideKicksIndexRoute: FrassKicksSideKicksIndexRoute,
+}
+
+const FrassKicksSideKicksRouteWithChildren =
+  FrassKicksSideKicksRoute._addFileChildren(FrassKicksSideKicksRouteChildren)
+
 interface FrassKicksRouteChildren {
+  FrassKicksCrownKicksRoute: typeof FrassKicksCrownKicksRouteWithChildren
   FrassKicksMenRoute: typeof FrassKicksMenRoute
+  FrassKicksSideKicksRoute: typeof FrassKicksSideKicksRouteWithChildren
   FrassKicksWomenRoute: typeof FrassKicksWomenRoute
+  FrassKicksIndexRoute: typeof FrassKicksIndexRoute
 }
 
 const FrassKicksRouteChildren: FrassKicksRouteChildren = {
+  FrassKicksCrownKicksRoute: FrassKicksCrownKicksRouteWithChildren,
   FrassKicksMenRoute: FrassKicksMenRoute,
+  FrassKicksSideKicksRoute: FrassKicksSideKicksRouteWithChildren,
   FrassKicksWomenRoute: FrassKicksWomenRoute,
+  FrassKicksIndexRoute: FrassKicksIndexRoute,
 }
 
 const FrassKicksRouteWithChildren = FrassKicksRoute._addFileChildren(

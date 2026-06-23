@@ -131,7 +131,9 @@ export async function fetchProductByHandle(handle: string): Promise<ShopifyProdu
  * Maps URL collection handles to Shopify Storefront API search queries.
  * Easy to extend as the catalog grows.
  */
-export const COLLECTION_MAP: Record<string, { title: string; query: string; description?: string }> = {
+export type CollectionMeta = { title: string; query: string; description?: string };
+
+export const COLLECTION_MAP: Record<string, CollectionMeta> = {
   // Frass Kicks (footwear)
   "frass-kicks": { title: "Frass Kicks", query: 'vendor:"FRASS KICKS"', description: "The complete footwear collection." },
   "frass-kicks-men": { title: "Men's Footwear", query: 'vendor:"FRASS KICKS"' },
@@ -168,3 +170,67 @@ export const COLLECTION_MAP: Record<string, { title: string; query: string; desc
   "new-arrivals": { title: "New Arrivals", query: '' },
   "best-sellers": { title: "Best Sellers", query: '' },
 };
+
+function titleize(slug: string) {
+  return slug
+    .split("-")
+    .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+    .join(" ")
+    .replace(/\bAnd\b/g, "&")
+    .replace(/\bTops\b/g, "Tops")
+    .replace(/\bTees\b/g, "Tees");
+}
+
+export function getCollectionMeta(handle: string): CollectionMeta {
+  const exact = COLLECTION_MAP[handle];
+  if (exact) return exact;
+
+  const frassDrip = handle.match(/^frass-drip-(men|women)-(.+)-(.+)$/);
+  if (frassDrip) {
+    const [, gender, category, sub] = frassDrip;
+    const genderTitle = gender === "men" ? "Men's" : "Women's";
+    return {
+      title: `${genderTitle} ${titleize(sub)}`,
+      query: `tag:"frass-drip" tag:"${gender}" tag:"${category}" tag:"${sub}"`,
+      description: `Part of ${genderTitle} ${titleize(category)}.`,
+    };
+  }
+
+  const bareDrip = handle.match(/^bare-drip-(men|women)-(.+)-(.+)$/);
+  if (bareDrip) {
+    const [, gender, category, sub] = bareDrip;
+    const genderTitle = gender === "men" ? "Men's" : "Women's";
+    return {
+      title: `${genderTitle} ${titleize(sub)}`,
+      query: `tag:"bare-drip" tag:"${gender}" tag:"${category}" tag:"${sub}"`,
+      description: `Part of ${genderTitle} Bare Drip ${titleize(category)}.`,
+    };
+  }
+
+  const crownKicks = handle.match(/^crown-kicks-(men|women)-(.+)$/);
+  if (crownKicks) {
+    const [, gender, sub] = crownKicks;
+    const genderTitle = gender === "men" ? "Men's" : "Women's";
+    return {
+      title: `${genderTitle} ${titleize(sub)}`,
+      query: `tag:"crown-kicks" tag:"${gender}" tag:"${sub}"`,
+      description: `Part of ${genderTitle} Crown Kicks.`,
+    };
+  }
+
+  const sideKicks = handle.match(/^side-kicks-(men|women)-(.+)$/);
+  if (sideKicks) {
+    const [, gender, sub] = sideKicks;
+    const genderTitle = gender === "men" ? "Men's" : "Women's";
+    return {
+      title: `${genderTitle} ${titleize(sub)}`,
+      query: `tag:"side-kicks" tag:"${gender}" tag:"${sub}"`,
+      description: `Part of ${genderTitle} Side Kicks.`,
+    };
+  }
+
+  return {
+    title: titleize(handle),
+    query: `tag:"${handle}"`,
+  };
+}
