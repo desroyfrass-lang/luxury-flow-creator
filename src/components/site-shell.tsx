@@ -88,19 +88,42 @@ function Header() {
       </div>
       <div className="relative md:hidden border-t border-border/60 bg-background/60 backdrop-blur">
         <div className="flex overflow-x-auto no-scrollbar px-2 py-2 gap-1">
-          {NAV.map((n) => (
-            <Link
-              key={n.to}
-              to={n.to}
-              className="shrink-0 whitespace-nowrap text-[10px] uppercase tracking-[0.2em] py-1 px-3 text-muted-foreground"
-              activeProps={{ className: "text-foreground" }}
-            >
-              {n.label}
-            </Link>
-          ))}
+          {NAV_ITEMS.map((n) => <MobileNavLink key={n.to} item={n} />)}
         </div>
       </div>
     </header>
+  );
+}
+
+type NavItem = (typeof NAV_ITEMS)[number];
+
+function HeaderNavLink({ item, active }: { item: NavItem; active: boolean }) {
+  const label = useSiteText(item.slot, item.fallback);
+  return (
+    <Link
+      to={item.to}
+      className={`relative px-4 py-2 text-xs uppercase tracking-[0.25em] transition-colors ${
+        active ? "text-foreground" : "text-muted-foreground hover:text-foreground"
+      }`}
+    >
+      {label}
+      {active && (
+        <span className="absolute left-4 right-4 -bottom-0.5 h-px bg-[color:var(--gold)]" />
+      )}
+    </Link>
+  );
+}
+
+function MobileNavLink({ item }: { item: NavItem }) {
+  const label = useSiteText(item.slot, item.fallback);
+  return (
+    <Link
+      to={item.to}
+      className="shrink-0 whitespace-nowrap text-[10px] uppercase tracking-[0.2em] py-1 px-3 text-muted-foreground"
+      activeProps={{ className: "text-foreground" }}
+    >
+      {label}
+    </Link>
   );
 }
 
