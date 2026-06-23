@@ -9,7 +9,8 @@ import cardDrip from "@/assets/card-drip.jpg";
 import cardBare from "@/assets/card-bare.jpg";
 import fullLogo from "@/assets/frass-logo-full.asset.json";
 import { ArrowUpRight } from "lucide-react";
-import { useSiteImageUrl } from "@/hooks/use-site-images";
+import { useSiteImageUrl, useSiteImages } from "@/hooks/use-site-images";
+import { LOOKBOOK_STORIES } from "@/lib/lookbook";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -30,6 +31,7 @@ export const Route = createFileRoute("/")({
 function Home() {
   const heroSrc = useSiteImageUrl("hero-home", heroImg);
   const logoSrc = useSiteImageUrl("logo-full", fullLogo.url);
+  const { data: overrides } = useSiteImages();
   return (
     <SiteShell>
       <section className="relative">
@@ -153,6 +155,65 @@ function Home() {
           />
         </div>
       </section>
+
+      <section className="mx-auto max-w-[1600px] px-6 lg:px-12 mt-24">
+        <div className="flex items-end justify-between gap-6 mb-10">
+          <div>
+            <div className="mb-3 inline-flex items-center gap-3 text-[11px] uppercase tracking-[0.3em] text-muted-foreground">
+              <span className="h-px w-8 bg-[color:var(--gold)]" />
+              The Lookbook
+            </div>
+            <h2 className="font-display text-5xl md:text-7xl leading-[0.95] text-foreground">
+              Stories, not catalogs.
+            </h2>
+          </div>
+          <Link
+            to="/lookbook"
+            className="hidden md:inline-flex items-center gap-2 text-xs uppercase tracking-[0.25em] hover:text-[color:var(--gold)] transition"
+          >
+            View all volumes <ArrowUpRight className="h-4 w-4" />
+          </Link>
+        </div>
+
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 lg:gap-6">
+          {LOOKBOOK_STORIES.slice(0, 4).map((story) => (
+            <Link
+              key={story.slug}
+              to="/lookbook/$story"
+              params={{ story: story.slug }}
+              className="lux-card group relative block overflow-hidden rounded-2xl bg-card aspect-[3/4]"
+            >
+              <img
+                src={overrides?.get(`lookbook-cover-${story.slug}`)?.url ?? story.cover}
+                alt={story.title}
+                loading="lazy"
+                className="absolute inset-0 h-full w-full object-cover transition-transform duration-[1400ms] ease-out group-hover:scale-[1.04]"
+              />
+              <div className="absolute inset-0 bg-[linear-gradient(180deg,oklch(0.07_0.005_80_/_0.25)_0%,oklch(0.07_0.005_80_/_0.55)_55%,oklch(0.07_0.005_80_/_0.92)_100%)]" />
+              <div className="absolute inset-3 ring-1 ring-[color:var(--gold)]/25 rounded-xl pointer-events-none" />
+              <div className="absolute inset-x-0 bottom-0 p-5 md:p-6">
+                <div className="text-[10px] uppercase tracking-[0.3em] text-[color:var(--gold)]/90 mb-2">
+                  {story.kicker}
+                </div>
+                <h3 className="title-glow font-display uppercase text-2xl md:text-3xl leading-[0.95] tracking-[0.01em] text-[color:var(--gold-soft,#f0d78c)]">
+                  {story.title}
+                </h3>
+              </div>
+            </Link>
+          ))}
+        </div>
+
+        <div className="mt-6 md:hidden">
+          <Link
+            to="/lookbook"
+            className="lux-press inline-flex items-center gap-2 rounded-sm border border-[color:var(--gold)] px-6 py-3 text-[11px] font-bold uppercase tracking-[0.32em] text-[color:var(--gold)]"
+          >
+            View all volumes <ArrowUpRight className="h-4 w-4" />
+          </Link>
+        </div>
+      </section>
+
+
 
       <section className="mx-auto max-w-[1600px] px-6 lg:px-12 mt-28">
         <div className="flex items-end justify-between gap-6 mb-10">

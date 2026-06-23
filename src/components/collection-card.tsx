@@ -64,11 +64,7 @@ export function CollectionCard({
 
         <div className="absolute inset-x-0 bottom-0 p-8 md:p-10 text-foreground">
           <h3
-            className="font-display uppercase text-[clamp(1.5rem,4.2vw,3.25rem)] leading-[0.95] tracking-[0.01em] text-[color:var(--gold-soft,#f0d78c)] [display:-webkit-box] [-webkit-line-clamp:2] [-webkit-box-orient:vertical] overflow-hidden text-balance"
-            style={{
-              textShadow:
-                "0 0 18px oklch(0.92 0.12 85 / 0.55), 0 0 38px oklch(0.92 0.12 85 / 0.25), 0 2px 0 oklch(0 0 0 / 0.55)",
-            }}
+            className="title-glow font-display uppercase text-[clamp(1.5rem,4.2vw,3.25rem)] leading-[0.95] tracking-[0.01em] text-[color:var(--gold-soft,#f0d78c)] [display:-webkit-box] [-webkit-line-clamp:2] [-webkit-box-orient:vertical] overflow-hidden text-balance"
           >
             {title}
           </h3>
