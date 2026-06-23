@@ -152,7 +152,7 @@ function StoryPage() {
               key={item.handle}
               to={item.to}
               params={{ handle: item.handle }}
-              image={s.images[i % s.images.length]}
+              image={images[i % images.length]}
               eyebrow={s.kicker}
               title={item.title}
               size="md"
