@@ -173,9 +173,10 @@
   text-shadow: 0 0 18px oklch(0.92 0.12 85 / 0.55), 0 0 38px oklch(0.92 0.12 85 / 0.25), 0 2px 0 oklch(0 0 0 / 0.55);
   transition: text-shadow 600ms var(--ease-luxury), color 600ms var(--ease-luxury);
 }
-.group:hover .title-glow {
-  text-shadow: 0 0 26px oklch(0.96 0.18 85 / 0.95), 0 0 60px oklch(0.95 0.18 85 / 0.6), 0 0 110px oklch(0.95 0.18 85 / 0.35), 0 2px 0 oklch(0 0 0 / 0.6);
-  color: oklch(0.97 0.11 88);
+.group:hover .title-glow,
+.title-glow:hover {
+  text-shadow: 0 0 32px oklch(1 0.2 88 / 1), 0 0 80px oklch(0.98 0.2 85 / 0.85), 0 0 150px oklch(0.95 0.2 85 / 0.55), 0 0 240px oklch(0.95 0.2 85 / 0.3), 0 2px 0 oklch(0 0 0 / 0.6);
+  color: oklch(0.99 0.13 90);
 }
 
 @utility chrome-surface {
