@@ -15,7 +15,7 @@ function Header() {
   const path = useRouterState({ select: (r) => r.location.pathname });
   return (
     <header className="sticky top-0 z-50">
-      <div className="absolute inset-0 bg-white/70 backdrop-blur-xl border-b border-border/60" />
+      <div className="absolute inset-0 bg-background/70 backdrop-blur-xl border-b border-border/60" />
       <div className="relative mx-auto max-w-[1600px] px-6 lg:px-12 h-20 flex items-center justify-between">
         <div className="flex-1 hidden md:flex items-center gap-1">
           {NAV.map((n) => {
@@ -41,13 +41,13 @@ function Header() {
         </Link>
         <div className="flex-1 flex items-center justify-end gap-2">
           <button
-            className="hidden md:inline-flex h-10 w-10 items-center justify-center rounded-full border border-border bg-white/70 backdrop-blur hover:border-[color:var(--gold)] transition"
+            className="hidden md:inline-flex h-10 w-10 items-center justify-center rounded-full border border-border bg-background/70 backdrop-blur hover:border-[color:var(--gold)] transition"
             aria-label="Search"
           >
             <Search className="h-4 w-4" />
           </button>
           <button
-            className="hidden md:inline-flex h-10 w-10 items-center justify-center rounded-full border border-border bg-white/70 backdrop-blur hover:border-[color:var(--gold)] transition"
+            className="hidden md:inline-flex h-10 w-10 items-center justify-center rounded-full border border-border bg-background/70 backdrop-blur hover:border-[color:var(--gold)] transition"
             aria-label="Wishlist"
           >
             <Heart className="h-4 w-4" />
@@ -56,7 +56,7 @@ function Header() {
         </div>
       </div>
       {/* mobile nav */}
-      <div className="relative md:hidden border-t border-border/60 bg-white/60 backdrop-blur">
+      <div className="relative md:hidden border-t border-border/60 bg-background/60 backdrop-blur">
         <div className="flex justify-around px-2 py-2">
           {NAV.map((n) => (
             <Link
@@ -76,7 +76,7 @@ function Header() {
 
 function Footer() {
   return (
-    <footer className="relative mt-32 border-t border-border/60 bg-white/70 backdrop-blur">
+    <footer className="relative mt-32 border-t border-border/60 bg-background/70 backdrop-blur">
       <div className="mx-auto max-w-[1600px] px-6 lg:px-12 py-20 grid grid-cols-2 md:grid-cols-5 gap-10">
         <div className="col-span-2">
           <div className="font-display text-3xl">FRASS<span className="gold-text">·</span>KICKS</div>
@@ -84,7 +84,7 @@ function Footer() {
             A luxury fashion destination — footwear, apparel, swim &amp; intimates.
             Made for movement. Built for confidence.
           </p>
-          <form className="mt-8 flex max-w-md items-center gap-2 rounded-full border border-border bg-white p-1.5">
+          <form className="mt-8 flex max-w-md items-center gap-2 rounded-full border border-border bg-background p-1.5">
             <input
               type="email"
               placeholder="your@email.com"
