@@ -128,15 +128,15 @@ function MobileNavLink({ item }: { item: NavItem }) {
 }
 
 function Footer() {
+  const blurb = useSiteText("footer-blurb");
+  const subscribeLabel = useSiteText("footer-newsletter-cta");
+  const tagline = useSiteText("footer-tagline");
   return (
     <footer className="relative mt-32 border-t border-border/60 bg-background/70 backdrop-blur">
       <div className="mx-auto max-w-[1600px] px-6 lg:px-12 py-20 grid grid-cols-2 md:grid-cols-5 gap-10">
         <div className="col-span-2">
           <img src={fullLogo.url} alt="Frass Kicks logo" className="h-12 w-auto object-contain" />
-          <p className="mt-4 max-w-sm text-sm text-muted-foreground">
-            A luxury fashion destination — footwear, apparel, swim &amp; intimates.
-            Made for movement. Built for confidence.
-          </p>
+          <p className="mt-4 max-w-sm text-sm text-muted-foreground">{blurb}</p>
           <form className="mt-8 flex max-w-md items-center gap-2 rounded-full border border-border bg-background p-1.5">
             <input
               type="email"
@@ -147,7 +147,7 @@ function Footer() {
               type="button"
               className="rounded-full bg-foreground px-5 py-2 text-xs uppercase tracking-[0.2em] text-background"
             >
-              Subscribe
+              {subscribeLabel}
             </button>
           </form>
         </div>
@@ -173,7 +173,7 @@ function Footer() {
           <span>© {new Date().getFullYear()} Frass Kicks</span>
           <span className="flex items-center gap-2">
             <span className="h-px w-8 bg-[color:var(--gold)]" />
-            Luxury · Confidence · Style
+            {tagline}
             <span className="h-px w-8 bg-[color:var(--gold)]" />
           </span>
         </div>
