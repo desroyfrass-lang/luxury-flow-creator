@@ -151,7 +151,20 @@ function Header() {
   );
 }
 
-type NavItem = (typeof NAV_ITEMS)[number];
+type NavItem = { to: string; slot: string; fallback: string };
+
+function MenuLink({ item }: { item: NavItem }) {
+  const label = useSiteText(item.slot, item.fallback);
+  return (
+    <Link
+      to={item.to}
+      className="block rounded-xl px-4 py-3 text-xs uppercase tracking-[0.25em] text-muted-foreground hover:text-foreground hover:bg-foreground/5 transition"
+      activeProps={{ className: "text-foreground bg-foreground/5" }}
+    >
+      {label}
+    </Link>
+  );
+}
 
 function HeaderNavLink({ item, active }: { item: NavItem; active: boolean }) {
   const label = useSiteText(item.slot, item.fallback);
