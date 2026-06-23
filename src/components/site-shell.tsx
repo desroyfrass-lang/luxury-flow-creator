@@ -174,11 +174,20 @@ function Footer() {
   );
 }
 
-export function SiteShell({ children, background = true }: { children: ReactNode; background?: boolean }) {
+export function SiteShell({
+  children,
+  background = true,
+  preHeader,
+}: {
+  children: ReactNode;
+  background?: boolean;
+  preHeader?: ReactNode;
+}) {
   useCartSync();
   return (
     <div className="relative min-h-screen">
       {background && <LuxuryBackground />}
+      {preHeader}
       <Header />
       <main className="relative">{children}</main>
       <Footer />
