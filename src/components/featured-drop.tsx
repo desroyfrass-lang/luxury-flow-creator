@@ -2,6 +2,7 @@ import { Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { ArrowUpRight } from "lucide-react";
 import { LOOKBOOK_STORIES } from "@/lib/lookbook";
+import { useSiteImageUrl } from "@/hooks/use-site-images";
 
 const ROTATE_MS = 6000;
 
@@ -47,14 +48,7 @@ export function FeaturedDrop() {
       <div className="relative overflow-hidden rounded-[2rem] border border-border/60 lux-card">
         <div className="relative h-[64vh] min-h-[480px] w-full">
           {stories.map((s, idx) => (
-            <img
-              key={s.slug}
-              src={s.cover}
-              alt={s.title}
-              className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-1000 ${
-                idx === i ? "opacity-100" : "opacity-0"
-              }`}
-            />
+            <StoryCover key={s.slug} slug={s.slug} cover={s.cover} title={s.title} active={idx === i} />
           ))}
           <div className="absolute inset-0 bg-[linear-gradient(90deg,oklch(0.07_0.005_80_/_0.88)_0%,oklch(0.07_0.005_80_/_0.55)_50%,transparent_100%)]" />
           <div className="absolute inset-0 bg-[linear-gradient(180deg,transparent_40%,oklch(0.07_0.005_80_/_0.7)_100%)]" />
@@ -114,5 +108,18 @@ export function FeaturedDrop() {
         </div>
       </div>
     </section>
+  );
+}
+
+function StoryCover({ slug, cover, title, active }: { slug: string; cover: string; title: string; active: boolean }) {
+  const src = useSiteImageUrl(`lookbook-cover-${slug}`, cover);
+  return (
+    <img
+      src={src}
+      alt={title}
+      className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-1000 ${
+        active ? "opacity-100" : "opacity-0"
+      }`}
+    />
   );
 }

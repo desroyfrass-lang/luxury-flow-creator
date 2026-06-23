@@ -14,6 +14,8 @@ import { Route as LookbookRouteImport } from './routes/lookbook'
 import { Route as FrassKicksRouteImport } from './routes/frass-kicks'
 import { Route as FrassDripRouteImport } from './routes/frass-drip'
 import { Route as BareDripRouteImport } from './routes/bare-drip'
+import { Route as AuthRouteImport } from './routes/auth'
+import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as LookbookIndexRouteImport } from './routes/lookbook.index'
 import { Route as FrassKicksIndexRouteImport } from './routes/frass-kicks.index'
@@ -30,12 +32,14 @@ import { Route as FrassDripMenRouteImport } from './routes/frass-drip.men'
 import { Route as CollectionHandleRouteImport } from './routes/collection.$handle'
 import { Route as BareDripWomenRouteImport } from './routes/bare-drip.women'
 import { Route as BareDripMenRouteImport } from './routes/bare-drip.men'
+import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
 import { Route as FrassKicksSideKicksIndexRouteImport } from './routes/frass-kicks.side-kicks.index'
 import { Route as FrassKicksCrownKicksIndexRouteImport } from './routes/frass-kicks.crown-kicks.index'
 import { Route as FrassDripWomenIndexRouteImport } from './routes/frass-drip.women.index'
 import { Route as FrassDripMenIndexRouteImport } from './routes/frass-drip.men.index'
 import { Route as BareDripWomenIndexRouteImport } from './routes/bare-drip.women.index'
 import { Route as BareDripMenIndexRouteImport } from './routes/bare-drip.men.index'
+import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated/admin.index'
 import { Route as FrassKicksSideKicksWomenRouteImport } from './routes/frass-kicks.side-kicks.women'
 import { Route as FrassKicksSideKicksMenRouteImport } from './routes/frass-kicks.side-kicks.men'
 import { Route as FrassKicksCrownKicksWomenRouteImport } from './routes/frass-kicks.crown-kicks.women'
@@ -44,6 +48,7 @@ import { Route as FrassDripWomenCategoryRouteImport } from './routes/frass-drip.
 import { Route as FrassDripMenCategoryRouteImport } from './routes/frass-drip.men.$category'
 import { Route as BareDripWomenCategoryRouteImport } from './routes/bare-drip.women.$category'
 import { Route as BareDripMenCategoryRouteImport } from './routes/bare-drip.men.$category'
+import { Route as AuthenticatedAdminImagesRouteImport } from './routes/_authenticated/admin.images'
 
 const MusicMediaRoute = MusicMediaRouteImport.update({
   id: '/music-media',
@@ -68,6 +73,15 @@ const FrassDripRoute = FrassDripRouteImport.update({
 const BareDripRoute = BareDripRouteImport.update({
   id: '/bare-drip',
   path: '/bare-drip',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthRoute = AuthRouteImport.update({
+  id: '/auth',
+  path: '/auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
+  id: '/_authenticated',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -150,6 +164,11 @@ const BareDripMenRoute = BareDripMenRouteImport.update({
   path: '/men',
   getParentRoute: () => BareDripRoute,
 } as any)
+const AuthenticatedAdminRoute = AuthenticatedAdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const FrassKicksSideKicksIndexRoute =
   FrassKicksSideKicksIndexRouteImport.update({
     id: '/',
@@ -181,6 +200,11 @@ const BareDripMenIndexRoute = BareDripMenIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => BareDripMenRoute,
+} as any)
+const AuthenticatedAdminIndexRoute = AuthenticatedAdminIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AuthenticatedAdminRoute,
 } as any)
 const FrassKicksSideKicksWomenRoute =
   FrassKicksSideKicksWomenRouteImport.update({
@@ -224,14 +248,22 @@ const BareDripMenCategoryRoute = BareDripMenCategoryRouteImport.update({
   path: '/$category',
   getParentRoute: () => BareDripMenRoute,
 } as any)
+const AuthenticatedAdminImagesRoute =
+  AuthenticatedAdminImagesRouteImport.update({
+    id: '/images',
+    path: '/images',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/auth': typeof AuthRoute
   '/bare-drip': typeof BareDripRouteWithChildren
   '/frass-drip': typeof FrassDripRouteWithChildren
   '/frass-kicks': typeof FrassKicksRouteWithChildren
   '/lookbook': typeof LookbookRouteWithChildren
   '/music-media': typeof MusicMediaRoute
+  '/admin': typeof AuthenticatedAdminRouteWithChildren
   '/bare-drip/men': typeof BareDripMenRouteWithChildren
   '/bare-drip/women': typeof BareDripWomenRouteWithChildren
   '/collection/$handle': typeof CollectionHandleRoute
@@ -247,6 +279,7 @@ export interface FileRoutesByFullPath {
   '/frass-drip/': typeof FrassDripIndexRoute
   '/frass-kicks/': typeof FrassKicksIndexRoute
   '/lookbook/': typeof LookbookIndexRoute
+  '/admin/images': typeof AuthenticatedAdminImagesRoute
   '/bare-drip/men/$category': typeof BareDripMenCategoryRoute
   '/bare-drip/women/$category': typeof BareDripWomenCategoryRoute
   '/frass-drip/men/$category': typeof FrassDripMenCategoryRoute
@@ -255,6 +288,7 @@ export interface FileRoutesByFullPath {
   '/frass-kicks/crown-kicks/women': typeof FrassKicksCrownKicksWomenRoute
   '/frass-kicks/side-kicks/men': typeof FrassKicksSideKicksMenRoute
   '/frass-kicks/side-kicks/women': typeof FrassKicksSideKicksWomenRoute
+  '/admin/': typeof AuthenticatedAdminIndexRoute
   '/bare-drip/men/': typeof BareDripMenIndexRoute
   '/bare-drip/women/': typeof BareDripWomenIndexRoute
   '/frass-drip/men/': typeof FrassDripMenIndexRoute
@@ -264,6 +298,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/auth': typeof AuthRoute
   '/music-media': typeof MusicMediaRoute
   '/collection/$handle': typeof CollectionHandleRoute
   '/frass-kicks/men': typeof FrassKicksMenRoute
@@ -274,6 +309,7 @@ export interface FileRoutesByTo {
   '/frass-drip': typeof FrassDripIndexRoute
   '/frass-kicks': typeof FrassKicksIndexRoute
   '/lookbook': typeof LookbookIndexRoute
+  '/admin/images': typeof AuthenticatedAdminImagesRoute
   '/bare-drip/men/$category': typeof BareDripMenCategoryRoute
   '/bare-drip/women/$category': typeof BareDripWomenCategoryRoute
   '/frass-drip/men/$category': typeof FrassDripMenCategoryRoute
@@ -282,6 +318,7 @@ export interface FileRoutesByTo {
   '/frass-kicks/crown-kicks/women': typeof FrassKicksCrownKicksWomenRoute
   '/frass-kicks/side-kicks/men': typeof FrassKicksSideKicksMenRoute
   '/frass-kicks/side-kicks/women': typeof FrassKicksSideKicksWomenRoute
+  '/admin': typeof AuthenticatedAdminIndexRoute
   '/bare-drip/men': typeof BareDripMenIndexRoute
   '/bare-drip/women': typeof BareDripWomenIndexRoute
   '/frass-drip/men': typeof FrassDripMenIndexRoute
@@ -292,11 +329,14 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
+  '/auth': typeof AuthRoute
   '/bare-drip': typeof BareDripRouteWithChildren
   '/frass-drip': typeof FrassDripRouteWithChildren
   '/frass-kicks': typeof FrassKicksRouteWithChildren
   '/lookbook': typeof LookbookRouteWithChildren
   '/music-media': typeof MusicMediaRoute
+  '/_authenticated/admin': typeof AuthenticatedAdminRouteWithChildren
   '/bare-drip/men': typeof BareDripMenRouteWithChildren
   '/bare-drip/women': typeof BareDripWomenRouteWithChildren
   '/collection/$handle': typeof CollectionHandleRoute
@@ -312,6 +352,7 @@ export interface FileRoutesById {
   '/frass-drip/': typeof FrassDripIndexRoute
   '/frass-kicks/': typeof FrassKicksIndexRoute
   '/lookbook/': typeof LookbookIndexRoute
+  '/_authenticated/admin/images': typeof AuthenticatedAdminImagesRoute
   '/bare-drip/men/$category': typeof BareDripMenCategoryRoute
   '/bare-drip/women/$category': typeof BareDripWomenCategoryRoute
   '/frass-drip/men/$category': typeof FrassDripMenCategoryRoute
@@ -320,6 +361,7 @@ export interface FileRoutesById {
   '/frass-kicks/crown-kicks/women': typeof FrassKicksCrownKicksWomenRoute
   '/frass-kicks/side-kicks/men': typeof FrassKicksSideKicksMenRoute
   '/frass-kicks/side-kicks/women': typeof FrassKicksSideKicksWomenRoute
+  '/_authenticated/admin/': typeof AuthenticatedAdminIndexRoute
   '/bare-drip/men/': typeof BareDripMenIndexRoute
   '/bare-drip/women/': typeof BareDripWomenIndexRoute
   '/frass-drip/men/': typeof FrassDripMenIndexRoute
@@ -331,11 +373,13 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/auth'
     | '/bare-drip'
     | '/frass-drip'
     | '/frass-kicks'
     | '/lookbook'
     | '/music-media'
+    | '/admin'
     | '/bare-drip/men'
     | '/bare-drip/women'
     | '/collection/$handle'
@@ -351,6 +395,7 @@ export interface FileRouteTypes {
     | '/frass-drip/'
     | '/frass-kicks/'
     | '/lookbook/'
+    | '/admin/images'
     | '/bare-drip/men/$category'
     | '/bare-drip/women/$category'
     | '/frass-drip/men/$category'
@@ -359,6 +404,7 @@ export interface FileRouteTypes {
     | '/frass-kicks/crown-kicks/women'
     | '/frass-kicks/side-kicks/men'
     | '/frass-kicks/side-kicks/women'
+    | '/admin/'
     | '/bare-drip/men/'
     | '/bare-drip/women/'
     | '/frass-drip/men/'
@@ -368,6 +414,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/auth'
     | '/music-media'
     | '/collection/$handle'
     | '/frass-kicks/men'
@@ -378,6 +425,7 @@ export interface FileRouteTypes {
     | '/frass-drip'
     | '/frass-kicks'
     | '/lookbook'
+    | '/admin/images'
     | '/bare-drip/men/$category'
     | '/bare-drip/women/$category'
     | '/frass-drip/men/$category'
@@ -386,6 +434,7 @@ export interface FileRouteTypes {
     | '/frass-kicks/crown-kicks/women'
     | '/frass-kicks/side-kicks/men'
     | '/frass-kicks/side-kicks/women'
+    | '/admin'
     | '/bare-drip/men'
     | '/bare-drip/women'
     | '/frass-drip/men'
@@ -395,11 +444,14 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/_authenticated'
+    | '/auth'
     | '/bare-drip'
     | '/frass-drip'
     | '/frass-kicks'
     | '/lookbook'
     | '/music-media'
+    | '/_authenticated/admin'
     | '/bare-drip/men'
     | '/bare-drip/women'
     | '/collection/$handle'
@@ -415,6 +467,7 @@ export interface FileRouteTypes {
     | '/frass-drip/'
     | '/frass-kicks/'
     | '/lookbook/'
+    | '/_authenticated/admin/images'
     | '/bare-drip/men/$category'
     | '/bare-drip/women/$category'
     | '/frass-drip/men/$category'
@@ -423,6 +476,7 @@ export interface FileRouteTypes {
     | '/frass-kicks/crown-kicks/women'
     | '/frass-kicks/side-kicks/men'
     | '/frass-kicks/side-kicks/women'
+    | '/_authenticated/admin/'
     | '/bare-drip/men/'
     | '/bare-drip/women/'
     | '/frass-drip/men/'
@@ -433,6 +487,8 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
+  AuthRoute: typeof AuthRoute
   BareDripRoute: typeof BareDripRouteWithChildren
   FrassDripRoute: typeof FrassDripRouteWithChildren
   FrassKicksRoute: typeof FrassKicksRouteWithChildren
@@ -477,6 +533,20 @@ declare module '@tanstack/react-router' {
       path: '/bare-drip'
       fullPath: '/bare-drip'
       preLoaderRoute: typeof BareDripRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/auth': {
+      id: '/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated': {
+      id: '/_authenticated'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AuthenticatedRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -591,6 +661,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BareDripMenRouteImport
       parentRoute: typeof BareDripRoute
     }
+    '/_authenticated/admin': {
+      id: '/_authenticated/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AuthenticatedAdminRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/frass-kicks/side-kicks/': {
       id: '/frass-kicks/side-kicks/'
       path: '/'
@@ -632,6 +709,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/bare-drip/men/'
       preLoaderRoute: typeof BareDripMenIndexRouteImport
       parentRoute: typeof BareDripMenRoute
+    }
+    '/_authenticated/admin/': {
+      id: '/_authenticated/admin/'
+      path: '/'
+      fullPath: '/admin/'
+      preLoaderRoute: typeof AuthenticatedAdminIndexRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
     }
     '/frass-kicks/side-kicks/women': {
       id: '/frass-kicks/side-kicks/women'
@@ -689,8 +773,39 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BareDripMenCategoryRouteImport
       parentRoute: typeof BareDripMenRoute
     }
+    '/_authenticated/admin/images': {
+      id: '/_authenticated/admin/images'
+      path: '/images'
+      fullPath: '/admin/images'
+      preLoaderRoute: typeof AuthenticatedAdminImagesRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
   }
 }
+
+interface AuthenticatedAdminRouteChildren {
+  AuthenticatedAdminImagesRoute: typeof AuthenticatedAdminImagesRoute
+  AuthenticatedAdminIndexRoute: typeof AuthenticatedAdminIndexRoute
+}
+
+const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
+  AuthenticatedAdminImagesRoute: AuthenticatedAdminImagesRoute,
+  AuthenticatedAdminIndexRoute: AuthenticatedAdminIndexRoute,
+}
+
+const AuthenticatedAdminRouteWithChildren =
+  AuthenticatedAdminRoute._addFileChildren(AuthenticatedAdminRouteChildren)
+
+interface AuthenticatedRouteRouteChildren {
+  AuthenticatedAdminRoute: typeof AuthenticatedAdminRouteWithChildren
+}
+
+const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedAdminRoute: AuthenticatedAdminRouteWithChildren,
+}
+
+const AuthenticatedRouteRouteWithChildren =
+  AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
 
 interface BareDripMenRouteChildren {
   BareDripMenCategoryRoute: typeof BareDripMenCategoryRoute
@@ -846,6 +961,8 @@ const LookbookRouteWithChildren = LookbookRoute._addFileChildren(
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
+  AuthRoute: AuthRoute,
   BareDripRoute: BareDripRouteWithChildren,
   FrassDripRoute: FrassDripRouteWithChildren,
   FrassKicksRoute: FrassKicksRouteWithChildren,
@@ -857,13 +974,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}

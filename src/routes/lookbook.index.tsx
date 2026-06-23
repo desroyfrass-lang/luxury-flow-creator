@@ -2,6 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { SiteShell } from "@/components/site-shell";
 import { PageHeader } from "@/components/page-header";
 import { LOOKBOOK_STORIES } from "@/lib/lookbook";
+import { useSiteImages } from "@/hooks/use-site-images";
 
 export const Route = createFileRoute("/lookbook/")({
   head: () => ({
@@ -23,6 +24,7 @@ export const Route = createFileRoute("/lookbook/")({
 });
 
 function LookbookIndex() {
+  const { data: overrides } = useSiteImages();
   return (
     <SiteShell>
       <PageHeader
@@ -54,7 +56,7 @@ function LookbookIndex() {
                 className={`lux-card group relative block overflow-hidden rounded-2xl bg-card ${span}`}
               >
                 <img
-                  src={story.cover}
+                  src={overrides?.get(`lookbook-cover-${story.slug}`)?.url ?? story.cover}
                   alt={story.title}
                   loading="lazy"
                   className="absolute inset-0 h-full w-full object-cover transition-transform duration-[1600ms] ease-out group-hover:scale-[1.04]"

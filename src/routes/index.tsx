@@ -9,6 +9,7 @@ import cardDrip from "@/assets/card-drip.jpg";
 import cardBare from "@/assets/card-bare.jpg";
 import fullLogo from "@/assets/frass-logo-full.asset.json";
 import { ArrowUpRight } from "lucide-react";
+import { useSiteImageUrl } from "@/hooks/use-site-images";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -27,13 +28,15 @@ export const Route = createFileRoute("/")({
 });
 
 function Home() {
+  const heroSrc = useSiteImageUrl("hero-home", heroImg);
+  const logoSrc = useSiteImageUrl("logo-full", fullLogo.url);
   return (
     <SiteShell>
       <section className="relative">
         <div className="mx-auto max-w-[1600px] px-6 lg:px-12 pt-10 lg:pt-16">
           <div className="relative overflow-hidden rounded-[2rem] border border-border/60 lux-card">
             <img
-              src={heroImg}
+              src={heroSrc}
               alt="Frass Kicks luxury showroom"
               className="h-[78vh] min-h-[560px] w-full object-cover"
             />
@@ -47,7 +50,7 @@ function Home() {
                     FRASS HILL <span className="font-script normal-case tracking-normal text-2xl md:text-3xl text-foreground/95">presents</span>
                   </div>
                   <div className="mt-4">
-                    <img src={fullLogo.url} alt="Frass Kicks logo" className="h-18 md:h-24 w-auto object-contain drop-shadow-[0_0_40px_oklch(1_0_0_/_0.12)]" />
+                    <img src={logoSrc} alt="Frass Kicks logo" className="h-18 md:h-24 w-auto object-contain drop-shadow-[0_0_40px_oklch(1_0_0_/_0.12)]" />
                   </div>
                 </div>
 
@@ -126,6 +129,7 @@ function Home() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
           <CollectionCard
             to="/frass-kicks"
+            slot="card-frass-kicks"
             image={cardKicks}
             eyebrow="Division 01"
             title="Frass Kicks"
@@ -133,6 +137,7 @@ function Home() {
           />
           <CollectionCard
             to="/frass-drip"
+            slot="card-frass-drip"
             image={cardDrip}
             eyebrow="Division 02"
             title="Frass Drip"
@@ -140,6 +145,7 @@ function Home() {
           />
           <CollectionCard
             to="/bare-drip"
+            slot="card-bare-drip"
             image={cardBare}
             eyebrow="Division 03"
             title="Bare Drip"
