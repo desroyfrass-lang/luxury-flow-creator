@@ -11,6 +11,7 @@ const NAV = [
   { to: "/frass-kicks", label: "Frass Kicks" },
   { to: "/frass-drip", label: "Frass Drip" },
   { to: "/bare-drip", label: "Bare Drip" },
+  { to: "/lookbook", label: "Lookbook" },
   { to: "/music-media", label: "Music & Media" },
 ];
 
@@ -145,7 +146,7 @@ function Footer() {
         {[
           { title: "Shop", links: [["Frass Kicks", "/frass-kicks"], ["Frass Drip", "/frass-drip"], ["Bare Drip", "/bare-drip"]] },
           { title: "Help", links: [["Shipping", "#"], ["Returns", "#"], ["Sizing", "#"]] },
-          { title: "Brand", links: [["About", "#"], ["Lookbook", "#"], ["Contact", "#"]] },
+          { title: "Brand", links: [["About", "#"], ["Lookbook", "/lookbook"], ["Contact", "#"]] },
         ].map((col) => (
           <div key={col.title}>
             <h4 className="text-xs uppercase tracking-[0.3em] text-muted-foreground">{col.title}</h4>
