@@ -153,7 +153,7 @@ function Home() {
               Best Sellers
             </div>
             <h2 className="font-display text-4xl md:text-6xl leading-[0.95] text-foreground">
-              The shelf everyone's reaching for.
+              Must-have pieces.
             </h2>
           </div>
           <Link
@@ -164,7 +164,54 @@ function Home() {
             View all <ArrowUpRight className="h-4 w-4" />
           </Link>
         </div>
-        <ProductGrid first={8} emptyHint="Add products in Shopify and they'll appear here automatically." />
+        <ProductGrid first={4} emptyHint="Add products in Shopify and they'll appear here automatically." />
+      </section>
+
+      <section className="mx-auto max-w-[1600px] px-6 lg:px-12 mt-28">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8 items-stretch">
+          <Link
+            to="/music-media"
+            className="group relative overflow-hidden rounded-[2rem] border border-border/60 bg-gradient-to-br from-secondary/60 via-background to-background p-10 md:p-14 min-h-[420px] flex flex-col justify-between"
+          >
+            <div className="absolute inset-0 opacity-50" style={{ background: "radial-gradient(70% 80% at 80% 20%, oklch(0.78 0.14 78 / 0.22), transparent 70%)" }} />
+            <div className="relative">
+              <div className="text-[11px] uppercase tracking-[0.3em] text-[color:var(--gold)]">Frass Hill Sound</div>
+              <h2 className="mt-4 font-display text-4xl md:text-6xl leading-[0.92]">
+                The music behind the brand.
+              </h2>
+              <p className="mt-5 max-w-md text-sm md:text-base text-muted-foreground">
+                Frass Hill isn't just a wardrobe — it's a sound. Original tracks, mixes and films from the camp soundtrack every drop.
+              </p>
+            </div>
+            <div className="relative inline-flex items-center gap-2 text-xs uppercase tracking-[0.3em] text-foreground group-hover:text-[color:var(--gold)] transition">
+              Enter Music &amp; Media <ArrowUpRight className="h-4 w-4" />
+            </div>
+          </Link>
+
+          <div className="relative overflow-hidden rounded-[2rem] border border-border/60 bg-secondary/40 p-10 md:p-14 min-h-[420px] flex flex-col justify-between">
+            <div className="relative">
+              <div className="text-[11px] uppercase tracking-[0.3em] text-[color:var(--gold)]">Journal</div>
+              <h2 className="mt-4 font-display text-4xl md:text-6xl leading-[0.92]">From the blog.</h2>
+              <ul className="mt-8 divide-y divide-border/60">
+                {[
+                  { tag: "Style", title: "Block letters & chrome: building the Frass identity." },
+                  { tag: "Studio", title: "Inside the late-night sessions of Frass Hill." },
+                  { tag: "Drop", title: "Behind the lens of the FW lookbook." },
+                ].map((post) => (
+                  <li key={post.title} className="py-4 flex items-start gap-4 group cursor-pointer">
+                    <span className="mt-1 text-[10px] uppercase tracking-[0.3em] text-[color:var(--gold)] border border-[color:var(--gold)]/40 px-2 py-1 rounded">
+                      {post.tag}
+                    </span>
+                    <span className="flex-1 font-display text-lg md:text-xl leading-snug group-hover:text-[color:var(--gold)] transition">
+                      {post.title}
+                    </span>
+                    <ArrowUpRight className="h-4 w-4 mt-1 text-muted-foreground group-hover:text-[color:var(--gold)] transition" />
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        </div>
       </section>
 
       <section className="mx-auto max-w-[1600px] px-6 lg:px-12 mt-28">
