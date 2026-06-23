@@ -109,7 +109,7 @@ function Home() {
           <div>
             <div className="mb-3 inline-flex items-center gap-3 text-[11px] uppercase tracking-[0.3em] text-muted-foreground">
               <span className="h-px w-8 bg-[color:var(--gold)]" />
-              Four Worlds
+              Three Worlds
             </div>
             <h2 className="font-display text-5xl md:text-7xl leading-[0.95] text-foreground">
               Choose your lane.
@@ -120,7 +120,7 @@ function Home() {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
           <CollectionCard
             to="/frass-kicks"
             image={cardKicks}
@@ -133,7 +133,7 @@ function Home() {
             image={cardDrip}
             eyebrow="Division 02"
             title="Frass Drip"
-            description="Fashion-forward apparel for the everyday icon."
+            description="Fashion-forward apparel for the everyday icon. Sports Drip lives inside Men's & Women's."
           />
           <CollectionCard
             to="/bare-drip"
@@ -141,13 +141,6 @@ function Home() {
             eyebrow="Division 03"
             title="Bare Drip"
             description="Swim, intimates & lifestyle essentials."
-          />
-          <CollectionCard
-            to="/sports-drip"
-            image={cardMen}
-            eyebrow="Division 04"
-            title="Sports Drip"
-            description="Built for performance. Styled for confidence."
           />
         </div>
       </section>
