@@ -68,11 +68,7 @@ function LookbookIndex() {
                     {story.kicker}
                   </div>
                   <h3
-                    className="font-display uppercase text-4xl md:text-6xl leading-[0.95] tracking-[0.01em] text-[color:var(--gold-soft,#f0d78c)]"
-                    style={{
-                      textShadow:
-                        "0 0 18px oklch(0.92 0.12 85 / 0.5), 0 2px 0 oklch(0 0 0 / 0.55)",
-                    }}
+                    className="title-glow font-display uppercase text-4xl md:text-6xl leading-[0.95] tracking-[0.01em] text-[color:var(--gold-soft,#f0d78c)]"
                   >
                     {story.title}
                   </h3>
