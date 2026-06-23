@@ -4,6 +4,8 @@ import { CartDrawer } from "./cart-drawer";
 import { LuxuryBackground } from "./luxury-background";
 import { Search, Heart } from "lucide-react";
 import { useCartSync } from "@/hooks/use-cart-sync";
+import fullLogo from "@/assets/frass-logo-full.asset.json";
+import symbolLogo from "@/assets/frass-logo-symbol.asset.json";
 
 const NAV = [
   { to: "/frass-kicks", label: "Frass Kicks" },
@@ -11,12 +13,28 @@ const NAV = [
   { to: "/bare-drip", label: "Bare Drip" },
 ];
 
+function BrandMark({ compact = false }: { compact?: boolean }) {
+  return (
+    <Link
+      to="/"
+      className={`inline-flex items-center ${compact ? "gap-3" : "gap-4"}`}
+      aria-label="Frass Kicks home"
+    >
+      <img
+        src={compact ? symbolLogo.url : fullLogo.url}
+        alt="Frass Kicks logo"
+        className={compact ? "h-9 w-auto object-contain" : "h-11 md:h-14 w-auto object-contain"}
+      />
+    </Link>
+  );
+}
+
 function Header() {
   const path = useRouterState({ select: (r) => r.location.pathname });
   return (
     <header className="sticky top-0 z-50">
       <div className="absolute inset-0 bg-background/70 backdrop-blur-xl border-b border-border/60" />
-      <div className="relative mx-auto max-w-[1600px] px-6 lg:px-12 h-20 flex items-center justify-between">
+      <div className="relative mx-auto max-w-[1600px] px-6 lg:px-12 h-20 flex items-center justify-between gap-4">
         <div className="flex-1 hidden md:flex items-center gap-1">
           {NAV.map((n) => {
             const active = path.startsWith(n.to);
@@ -36,9 +54,14 @@ function Header() {
             );
           })}
         </div>
-        <Link to="/" className="font-display text-2xl md:text-3xl tracking-tight leading-none">
-          FRASS<span className="gold-text">·</span>KICKS
-        </Link>
+        <div className="shrink-0">
+          <div className="hidden md:block">
+            <BrandMark />
+          </div>
+          <div className="md:hidden">
+            <BrandMark compact />
+          </div>
+        </div>
         <div className="flex-1 flex items-center justify-end gap-2">
           <button
             className="hidden md:inline-flex h-10 w-10 items-center justify-center rounded-full border border-border bg-background/70 backdrop-blur hover:border-[color:var(--gold)] transition"
@@ -55,7 +78,6 @@ function Header() {
           <CartDrawer />
         </div>
       </div>
-      {/* mobile nav */}
       <div className="relative md:hidden border-t border-border/60 bg-background/60 backdrop-blur">
         <div className="flex justify-around px-2 py-2">
           {NAV.map((n) => (
@@ -79,7 +101,7 @@ function Footer() {
     <footer className="relative mt-32 border-t border-border/60 bg-background/70 backdrop-blur">
       <div className="mx-auto max-w-[1600px] px-6 lg:px-12 py-20 grid grid-cols-2 md:grid-cols-5 gap-10">
         <div className="col-span-2">
-          <div className="font-display text-3xl">FRASS<span className="gold-text">·</span>KICKS</div>
+          <img src={fullLogo.url} alt="Frass Kicks logo" className="h-12 w-auto object-contain" />
           <p className="mt-4 max-w-sm text-sm text-muted-foreground">
             A luxury fashion destination — footwear, apparel, swim &amp; intimates.
             Made for movement. Built for confidence.
