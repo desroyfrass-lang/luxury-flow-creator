@@ -10,6 +10,7 @@ import symbolLogo from "@/assets/frass-logo-symbol.asset.json";
 const NAV = [
   { to: "/frass-kicks", label: "Frass Kicks" },
   { to: "/frass-drip", label: "Frass Drip" },
+  { to: "/sports-drip", label: "Sports Drip" },
   { to: "/bare-drip", label: "Bare Drip" },
   { to: "/music-media", label: "Music & Media" },
 ];
@@ -143,7 +144,7 @@ function Footer() {
           </form>
         </div>
         {[
-          { title: "Shop", links: [["Frass Kicks", "/frass-kicks"], ["Frass Drip", "/frass-drip"], ["Bare Drip", "/bare-drip"]] },
+          { title: "Shop", links: [["Frass Kicks", "/frass-kicks"], ["Frass Drip", "/frass-drip"], ["Sports Drip", "/sports-drip"], ["Bare Drip", "/bare-drip"]] },
           { title: "Help", links: [["Shipping", "#"], ["Returns", "#"], ["Sizing", "#"]] },
           { title: "Brand", links: [["About", "#"], ["Lookbook", "#"], ["Contact", "#"]] },
         ].map((col) => (
