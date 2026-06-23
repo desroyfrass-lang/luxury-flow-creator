@@ -110,3 +110,16 @@ export function FeaturedDrop() {
     </section>
   );
 }
+
+function StoryCover({ slug, cover, title, active }: { slug: string; cover: string; title: string; active: boolean }) {
+  const src = useSiteImageUrl(`lookbook-cover-${slug}`, cover);
+  return (
+    <img
+      src={src}
+      alt={title}
+      className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-1000 ${
+        active ? "opacity-100" : "opacity-0"
+      }`}
+    />
+  );
+}
