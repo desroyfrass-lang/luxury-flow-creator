@@ -9,7 +9,8 @@ import cardDrip from "@/assets/card-drip.jpg";
 import cardBare from "@/assets/card-bare.jpg";
 import fullLogo from "@/assets/frass-logo-full.asset.json";
 import { ArrowUpRight } from "lucide-react";
-import { useSiteImageUrl } from "@/hooks/use-site-images";
+import { useSiteImageUrl, useSiteImages } from "@/hooks/use-site-images";
+import { LOOKBOOK_STORIES } from "@/lib/lookbook";
 
 export const Route = createFileRoute("/")({
   head: () => ({
