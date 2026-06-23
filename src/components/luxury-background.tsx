@@ -89,7 +89,7 @@ export function LuxuryBackground({ intensity = 1 }: { intensity?: number }) {
         className="absolute inset-0"
         style={{
           background:
-            "radial-gradient(80% 60% at 50% 40%, transparent, oklch(0.99 0.002 90 / 0.55) 100%)",
+            "radial-gradient(80% 60% at 50% 40%, transparent, oklch(0.07 0.005 80 / 0.75) 100%)",
         }}
       />
     </div>
