@@ -1,8 +1,8 @@
 import { Link, useRouterState } from "@tanstack/react-router";
-import type { ReactNode } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import { CartDrawer } from "./cart-drawer";
 import { LuxuryBackground } from "./luxury-background";
-import { Search, User, Instagram, Music2, Youtube, Facebook } from "lucide-react";
+import { Search, User, Instagram, Music2, Youtube, Facebook, Menu, X } from "lucide-react";
 import { useCartSync } from "@/hooks/use-cart-sync";
 import { useSiteText } from "@/hooks/use-site-text";
 import fullLogo from "@/assets/frass-logo-full.asset.json";
@@ -12,9 +12,12 @@ const NAV_ITEMS = [
   { to: "/frass-kicks", slot: "nav-frass-kicks", fallback: "Frass Kicks" },
   { to: "/frass-drip", slot: "nav-frass-drip", fallback: "Frass Drip" },
   { to: "/bare-drip", slot: "nav-bare-drip", fallback: "Bare Drip" },
+] as const;
+
+const MENU_ITEMS = [
   { to: "/lookbook", slot: "nav-lookbook", fallback: "Lookbook" },
   { to: "/music-media", slot: "nav-music-media", fallback: "Music & Media" },
-  { to: "/blog", slot: "nav-blog", fallback: "Journal" },
+  { to: "/blog", slot: "nav-blog", fallback: "Frass Blog" },
 ] as const;
 
 const SOCIALS = [
@@ -42,6 +45,29 @@ function BrandMark({ compact = false }: { compact?: boolean }) {
 
 function Header() {
   const path = useRouterState({ select: (r) => r.location.pathname });
+  const [menuOpen, setMenuOpen] = useState(false);
+  const menuRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    setMenuOpen(false);
+  }, [path]);
+
+  useEffect(() => {
+    if (!menuOpen) return;
+    const onClick = (e: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(e.target as Node)) setMenuOpen(false);
+    };
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setMenuOpen(false);
+    };
+    document.addEventListener("mousedown", onClick);
+    document.addEventListener("keydown", onKey);
+    return () => {
+      document.removeEventListener("mousedown", onClick);
+      document.removeEventListener("keydown", onKey);
+    };
+  }, [menuOpen]);
+
   return (
     <header className="sticky top-0 z-50">
       <div className="absolute inset-0 bg-background/70 backdrop-blur-xl border-b border-border/60" />
@@ -58,7 +84,7 @@ function Header() {
           </div>
         </div>
         <div className="flex-1 flex items-center justify-end gap-2">
-          <div className="flex items-center gap-0.5 md:gap-1 mr-1 md:mr-2">
+          <div className="hidden md:flex items-center gap-0.5 mr-1">
             {SOCIALS.map(({ href, label, Icon }) => (
               <a
                 key={label}
@@ -84,19 +110,61 @@ function Header() {
           >
             <User className="h-4 w-4" />
           </button>
+          <div ref={menuRef} className="relative">
+            <button
+              type="button"
+              onClick={() => setMenuOpen((o) => !o)}
+              aria-label="Open menu"
+              aria-expanded={menuOpen}
+              className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-border bg-background/70 backdrop-blur hover:border-[color:var(--gold)] transition"
+            >
+              {menuOpen ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
+            </button>
+            {menuOpen && (
+              <div className="absolute right-0 mt-3 w-64 rounded-2xl border border-border/70 bg-background/95 backdrop-blur-xl shadow-2xl p-2 z-50">
+                <div className="md:hidden">
+                  {NAV_ITEMS.map((n) => <MenuLink key={n.to} item={n} />)}
+                  <div className="my-2 h-px bg-border/60" />
+                </div>
+                {MENU_ITEMS.map((n) => <MenuLink key={n.to} item={n} />)}
+                <div className="md:hidden mt-2 border-t border-border/60 pt-2 flex items-center justify-around">
+                  {SOCIALS.map(({ href, label, Icon }) => (
+                    <a
+                      key={label}
+                      href={href}
+                      target="_blank"
+                      rel="noreferrer"
+                      aria-label={label}
+                      className="inline-flex h-9 w-9 items-center justify-center rounded-full text-muted-foreground hover:text-[color:var(--gold)] transition"
+                    >
+                      <Icon className="h-4 w-4" />
+                    </a>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
           <CartDrawer />
-        </div>
-      </div>
-      <div className="relative md:hidden border-t border-border/60 bg-background/60 backdrop-blur">
-        <div className="flex overflow-x-auto no-scrollbar px-2 py-2 gap-1">
-          {NAV_ITEMS.map((n) => <MobileNavLink key={n.to} item={n} />)}
         </div>
       </div>
     </header>
   );
 }
 
-type NavItem = (typeof NAV_ITEMS)[number];
+type NavItem = { to: string; slot: string; fallback: string };
+
+function MenuLink({ item }: { item: NavItem }) {
+  const label = useSiteText(item.slot, item.fallback);
+  return (
+    <Link
+      to={item.to}
+      className="block rounded-xl px-4 py-3 text-xs uppercase tracking-[0.25em] text-muted-foreground hover:text-foreground hover:bg-foreground/5 transition"
+      activeProps={{ className: "text-foreground bg-foreground/5" }}
+    >
+      {label}
+    </Link>
+  );
+}
 
 function HeaderNavLink({ item, active }: { item: NavItem; active: boolean }) {
   const label = useSiteText(item.slot, item.fallback);
