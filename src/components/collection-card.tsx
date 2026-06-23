@@ -1,10 +1,13 @@
 import { Link } from "@tanstack/react-router";
 import type { ReactNode } from "react";
+import { useSiteImageUrl } from "@/hooks/use-site-images";
 
 interface CollectionCardProps {
   to: string;
   params?: Record<string, string>;
   image: string;
+  /** Optional override slot key; when set, looks up `site_images` for live-editable image. */
+  slot?: string;
   eyebrow?: string;
   title: string;
   description?: string;
@@ -25,11 +28,14 @@ export function CollectionCard({
   to,
   params,
   image,
+  slot,
   title,
   description,
   size = "lg",
   cta = "Shop Now",
 }: CollectionCardProps) {
+  const resolvedSrc = useSiteImageUrl(slot ?? "__none__", image);
+  const src = slot ? resolvedSrc : image;
   return (
     <Link
       to={to}
@@ -38,7 +44,7 @@ export function CollectionCard({
     >
       <div className={`relative w-full overflow-hidden rounded-2xl ${heightClass[size]}`}>
         <img
-          src={image}
+          src={src}
           alt={title}
           loading="lazy"
           className="absolute inset-0 h-full w-full object-contain transition-transform duration-[1400ms] ease-out group-hover:scale-[1.04]"
