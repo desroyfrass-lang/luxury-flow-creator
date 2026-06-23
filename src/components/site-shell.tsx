@@ -46,23 +46,7 @@ function Header() {
       <div className="absolute inset-0 bg-background/70 backdrop-blur-xl border-b border-border/60" />
       <div className="relative mx-auto max-w-[1600px] px-6 lg:px-12 h-20 flex items-center justify-between gap-4">
         <div className="flex-1 hidden md:flex items-center gap-1">
-          {NAV.map((n) => {
-            const active = path.startsWith(n.to);
-            return (
-              <Link
-                key={n.to}
-                to={n.to}
-                className={`relative px-4 py-2 text-xs uppercase tracking-[0.25em] transition-colors ${
-                  active ? "text-foreground" : "text-muted-foreground hover:text-foreground"
-                }`}
-              >
-                {n.label}
-                {active && (
-                  <span className="absolute left-4 right-4 -bottom-0.5 h-px bg-[color:var(--gold)]" />
-                )}
-              </Link>
-            );
-          })}
+          {NAV_ITEMS.map((n) => <HeaderNavLink key={n.to} item={n} active={path.startsWith(n.to)} />)}
         </div>
         <div className="shrink-0">
           <div className="hidden md:block">
