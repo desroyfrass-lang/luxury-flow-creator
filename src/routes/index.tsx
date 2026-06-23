@@ -52,7 +52,7 @@ function Home() {
               <div className="mt-10 flex flex-wrap gap-3">
                 <Link
                   to="/frass-kicks"
-                  className="lux-press inline-flex items-center gap-2 rounded-full bg-white text-foreground px-7 py-3.5 text-xs uppercase tracking-[0.25em] hover:bg-[color:var(--gold)] transition"
+                  className="lux-press inline-flex items-center gap-2 rounded-sm bg-[color:var(--gold)] text-[color:var(--ink)] px-7 py-3.5 text-xs uppercase tracking-[0.3em] font-bold hover:bg-[color:var(--gold-soft)] transition"
                 >
                   Shop Frass Kicks <ArrowUpRight className="h-4 w-4" />
                 </Link>
