@@ -2,6 +2,7 @@ import { Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { ArrowUpRight } from "lucide-react";
 import { LOOKBOOK_STORIES } from "@/lib/lookbook";
+import { useSiteImageUrl } from "@/hooks/use-site-images";
 
 const ROTATE_MS = 6000;
 
