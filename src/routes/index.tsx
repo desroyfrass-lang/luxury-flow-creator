@@ -43,7 +43,7 @@ function Home() {
               <div className="flex items-start justify-between gap-6">
                 <div className="max-w-md">
                   <div className="text-xl md:text-2xl uppercase tracking-[0.35em] text-[color:var(--gold)] font-display">
-                    FRAS HILL <span className="font-script normal-case tracking-normal text-2xl md:text-3xl text-foreground/95">presents</span>
+                    FRASS HILL <span className="font-script normal-case tracking-normal text-2xl md:text-3xl text-foreground/95">presents</span>
                   </div>
                   <div className="mt-4">
                     <img src={fullLogo.url} alt="Frass Kicks logo" className="h-18 md:h-24 w-auto object-contain drop-shadow-[0_0_40px_oklch(1_0_0_/_0.12)]" />
