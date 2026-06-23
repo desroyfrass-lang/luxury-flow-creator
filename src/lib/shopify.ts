@@ -134,19 +134,21 @@ export async function fetchProductByHandle(handle: string): Promise<ShopifyProdu
 export type CollectionMeta = { title: string; query: string; description?: string };
 
 export const COLLECTION_MAP: Record<string, CollectionMeta> = {
-  // Frass Kicks (footwear)
+  // Frass Kicks (footwear) — products live in Shopify under vendor "FRASS KICKS"
+  // with product_type one of: "Casual Kicks", "Street Kicks", "Classic Kicks"
+  // and gender tags "Men's" / "Women's".
   "frass-kicks": { title: "Frass Kicks", query: 'vendor:"FRASS KICKS"', description: "The complete footwear collection." },
-  "frass-kicks-men": { title: "Men's Footwear", query: 'vendor:"FRASS KICKS"' },
-  "frass-kicks-women": { title: "Women's Footwear", query: 'vendor:"FRASS KICKS"' },
-  "frass-kicks-casual": { title: "Casual Kicks", query: 'product_type:"Casual Kicks"' },
-  "frass-kicks-street": { title: "Street Kicks", query: 'product_type:"Street Kicks"' },
-  "frass-kicks-classic": { title: "Classic Kicks", query: 'product_type:"Classic Kicks"' },
-  "frass-kicks-men-casual": { title: "Men's Casual Kicks", query: 'product_type:"Casual Kicks"' },
-  "frass-kicks-men-street": { title: "Men's Street Kicks", query: 'product_type:"Street Kicks"' },
-  "frass-kicks-men-classic": { title: "Men's Classic Kicks", query: 'product_type:"Classic Kicks"' },
-  "frass-kicks-women-casual": { title: "Women's Casual Kicks", query: 'product_type:"Casual Kicks"' },
-  "frass-kicks-women-street": { title: "Women's Street Kicks", query: 'product_type:"Street Kicks"' },
-  "frass-kicks-women-classic": { title: "Women's Classic Kicks", query: 'product_type:"Classic Kicks"' },
+  "frass-kicks-men": { title: "Men's Footwear", query: 'vendor:"FRASS KICKS" tag:"Men\'s"' },
+  "frass-kicks-women": { title: "Women's Footwear", query: 'vendor:"FRASS KICKS" tag:"Women\'s"' },
+  "frass-kicks-casual": { title: "Casual Kicks", query: 'vendor:"FRASS KICKS" product_type:"Casual Kicks"' },
+  "frass-kicks-street": { title: "Street Kicks", query: 'vendor:"FRASS KICKS" product_type:"Street Kicks"' },
+  "frass-kicks-classic": { title: "Classic Kicks", query: 'vendor:"FRASS KICKS" product_type:"Classic Kicks"' },
+  "frass-kicks-men-casual": { title: "Men's Casual Kicks", query: 'vendor:"FRASS KICKS" tag:"Men\'s" product_type:"Casual Kicks"' },
+  "frass-kicks-men-street": { title: "Men's Street Kicks", query: 'vendor:"FRASS KICKS" tag:"Men\'s" product_type:"Street Kicks"' },
+  "frass-kicks-men-classic": { title: "Men's Classic Kicks", query: 'vendor:"FRASS KICKS" tag:"Men\'s" product_type:"Classic Kicks"' },
+  "frass-kicks-women-casual": { title: "Women's Casual Kicks", query: 'vendor:"FRASS KICKS" tag:"Women\'s" product_type:"Casual Kicks"' },
+  "frass-kicks-women-street": { title: "Women's Street Kicks", query: 'vendor:"FRASS KICKS" tag:"Women\'s" product_type:"Street Kicks"' },
+  "frass-kicks-women-classic": { title: "Women's Classic Kicks", query: 'vendor:"FRASS KICKS" tag:"Women\'s" product_type:"Classic Kicks"' },
   // Frass Drip (apparel) — placeholders until you stock these
   "frass-drip": { title: "Frass Drip", query: 'tag:"frass-drip"' },
   "frass-drip-men": { title: "Men's Drip", query: 'tag:"frass-drip" tag:"men"' },
@@ -167,8 +169,8 @@ export const COLLECTION_MAP: Record<string, CollectionMeta> = {
   "frass-drip-women-sports-drip-studio-yoga": { title: "Women's Studio & Yoga", query: 'tag:"sports-drip" tag:"women" tag:"yoga"' },
   "frass-drip-women-sports-drip-active-shapewear": { title: "Women's Active Shapewear", query: 'tag:"sports-drip" tag:"women" tag:"shapewear"' },
   // featured
-  "new-arrivals": { title: "New Arrivals", query: '' },
-  "best-sellers": { title: "Best Sellers", query: '' },
+  "new-arrivals": { title: "New Arrivals", query: 'vendor:"FRASS KICKS"' },
+  "best-sellers": { title: "Best Sellers", query: 'vendor:"FRASS KICKS"' },
 };
 
 function titleize(slug: string) {
@@ -179,6 +181,16 @@ function titleize(slug: string) {
     .replace(/\bAnd\b/g, "&")
     .replace(/\bTops\b/g, "Tops")
     .replace(/\bTees\b/g, "Tees");
+}
+
+/** Map a "Crown/Side Kicks" sub-slug onto a real product_type query. */
+function kicksSubTypeQuery(sub: string): string | null {
+  if (sub.startsWith("street-")) return 'product_type:"Street Kicks"';
+  if (sub.startsWith("classic-")) return 'product_type:"Classic Kicks"';
+  if (sub.startsWith("casual-")) return 'product_type:"Casual Kicks"';
+  if (sub.endsWith("-on-sale")) return 'tag:"sale"';
+  // bare "crown-kicks" / "side-kicks" landing — show all of that gender
+  return null;
 }
 
 export function getCollectionMeta(handle: string): CollectionMeta {
@@ -211,9 +223,11 @@ export function getCollectionMeta(handle: string): CollectionMeta {
   if (crownKicks) {
     const [, gender, sub] = crownKicks;
     const genderTitle = gender === "men" ? "Men's" : "Women's";
+    const genderTag = gender === "men" ? `tag:"Men's"` : `tag:"Women's"`;
+    const subQuery = kicksSubTypeQuery(sub);
     return {
       title: `${genderTitle} ${titleize(sub)}`,
-      query: `tag:"crown-kicks" tag:"${gender}" tag:"${sub}"`,
+      query: `vendor:"FRASS KICKS" ${genderTag}${subQuery ? ` ${subQuery}` : ""}`,
       description: `Part of ${genderTitle} Crown Kicks.`,
     };
   }
@@ -222,9 +236,11 @@ export function getCollectionMeta(handle: string): CollectionMeta {
   if (sideKicks) {
     const [, gender, sub] = sideKicks;
     const genderTitle = gender === "men" ? "Men's" : "Women's";
+    const genderTag = gender === "men" ? `tag:"Men's"` : `tag:"Women's"`;
+    const subQuery = kicksSubTypeQuery(sub);
     return {
       title: `${genderTitle} ${titleize(sub)}`,
-      query: `tag:"side-kicks" tag:"${gender}" tag:"${sub}"`,
+      query: `vendor:"FRASS KICKS" ${genderTag}${subQuery ? ` ${subQuery}` : ""}`,
       description: `Part of ${genderTitle} Side Kicks.`,
     };
   }
