@@ -22,6 +22,7 @@ import { Route as FrassDripMenRouteImport } from './routes/frass-drip.men'
 import { Route as CollectionHandleRouteImport } from './routes/collection.$handle'
 import { Route as BareDripWomenRouteImport } from './routes/bare-drip.women'
 import { Route as BareDripMenRouteImport } from './routes/bare-drip.men'
+import { Route as FrassDripMenCategoryRouteImport } from './routes/frass-drip.men.$category'
 
 const MusicMediaRoute = MusicMediaRouteImport.update({
   id: '/music-media',
@@ -88,6 +89,11 @@ const BareDripMenRoute = BareDripMenRouteImport.update({
   path: '/men',
   getParentRoute: () => BareDripRoute,
 } as any)
+const FrassDripMenCategoryRoute = FrassDripMenCategoryRouteImport.update({
+  id: '/$category',
+  path: '/$category',
+  getParentRoute: () => FrassDripMenRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -98,11 +104,12 @@ export interface FileRoutesByFullPath {
   '/bare-drip/men': typeof BareDripMenRoute
   '/bare-drip/women': typeof BareDripWomenRoute
   '/collection/$handle': typeof CollectionHandleRoute
-  '/frass-drip/men': typeof FrassDripMenRoute
+  '/frass-drip/men': typeof FrassDripMenRouteWithChildren
   '/frass-drip/women': typeof FrassDripWomenRoute
   '/frass-kicks/men': typeof FrassKicksMenRoute
   '/frass-kicks/women': typeof FrassKicksWomenRoute
   '/product/$handle': typeof ProductHandleRoute
+  '/frass-drip/men/$category': typeof FrassDripMenCategoryRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -113,11 +120,12 @@ export interface FileRoutesByTo {
   '/bare-drip/men': typeof BareDripMenRoute
   '/bare-drip/women': typeof BareDripWomenRoute
   '/collection/$handle': typeof CollectionHandleRoute
-  '/frass-drip/men': typeof FrassDripMenRoute
+  '/frass-drip/men': typeof FrassDripMenRouteWithChildren
   '/frass-drip/women': typeof FrassDripWomenRoute
   '/frass-kicks/men': typeof FrassKicksMenRoute
   '/frass-kicks/women': typeof FrassKicksWomenRoute
   '/product/$handle': typeof ProductHandleRoute
+  '/frass-drip/men/$category': typeof FrassDripMenCategoryRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -129,11 +137,12 @@ export interface FileRoutesById {
   '/bare-drip/men': typeof BareDripMenRoute
   '/bare-drip/women': typeof BareDripWomenRoute
   '/collection/$handle': typeof CollectionHandleRoute
-  '/frass-drip/men': typeof FrassDripMenRoute
+  '/frass-drip/men': typeof FrassDripMenRouteWithChildren
   '/frass-drip/women': typeof FrassDripWomenRoute
   '/frass-kicks/men': typeof FrassKicksMenRoute
   '/frass-kicks/women': typeof FrassKicksWomenRoute
   '/product/$handle': typeof ProductHandleRoute
+  '/frass-drip/men/$category': typeof FrassDripMenCategoryRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -151,6 +160,7 @@ export interface FileRouteTypes {
     | '/frass-kicks/men'
     | '/frass-kicks/women'
     | '/product/$handle'
+    | '/frass-drip/men/$category'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -166,6 +176,7 @@ export interface FileRouteTypes {
     | '/frass-kicks/men'
     | '/frass-kicks/women'
     | '/product/$handle'
+    | '/frass-drip/men/$category'
   id:
     | '__root__'
     | '/'
@@ -181,6 +192,7 @@ export interface FileRouteTypes {
     | '/frass-kicks/men'
     | '/frass-kicks/women'
     | '/product/$handle'
+    | '/frass-drip/men/$category'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -286,6 +298,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BareDripMenRouteImport
       parentRoute: typeof BareDripRoute
     }
+    '/frass-drip/men/$category': {
+      id: '/frass-drip/men/$category'
+      path: '/$category'
+      fullPath: '/frass-drip/men/$category'
+      preLoaderRoute: typeof FrassDripMenCategoryRouteImport
+      parentRoute: typeof FrassDripMenRoute
+    }
   }
 }
 
@@ -303,13 +322,25 @@ const BareDripRouteWithChildren = BareDripRoute._addFileChildren(
   BareDripRouteChildren,
 )
 
+interface FrassDripMenRouteChildren {
+  FrassDripMenCategoryRoute: typeof FrassDripMenCategoryRoute
+}
+
+const FrassDripMenRouteChildren: FrassDripMenRouteChildren = {
+  FrassDripMenCategoryRoute: FrassDripMenCategoryRoute,
+}
+
+const FrassDripMenRouteWithChildren = FrassDripMenRoute._addFileChildren(
+  FrassDripMenRouteChildren,
+)
+
 interface FrassDripRouteChildren {
-  FrassDripMenRoute: typeof FrassDripMenRoute
+  FrassDripMenRoute: typeof FrassDripMenRouteWithChildren
   FrassDripWomenRoute: typeof FrassDripWomenRoute
 }
 
 const FrassDripRouteChildren: FrassDripRouteChildren = {
-  FrassDripMenRoute: FrassDripMenRoute,
+  FrassDripMenRoute: FrassDripMenRouteWithChildren,
   FrassDripWomenRoute: FrassDripWomenRoute,
 }
 
