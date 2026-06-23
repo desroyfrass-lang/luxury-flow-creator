@@ -22,6 +22,11 @@ const CARDS = [
   ["denim", "Denim"],
   ["tops", "Tops"],
   ["bottoms", "Bottoms"],
+  ["sports-drip-training-essentials", "Sports — Training Essentials"],
+  ["sports-drip-activewear-sets", "Sports — Activewear Sets"],
+  ["sports-drip-running-performance", "Sports — Running & Performance"],
+  ["sports-drip-studio-yoga", "Sports — Studio & Yoga"],
+  ["sports-drip-active-shapewear", "Sports — Active Shapewear"],
 ] as const;
 
 const IMAGES = [cardWomen, cardBare, cardDrip];
