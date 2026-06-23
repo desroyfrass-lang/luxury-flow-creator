@@ -54,7 +54,7 @@ export function CollectionCard({
           }}
         />
         {/* gold inset border to echo the reference frame */}
-        <div className="absolute inset-3 ring-1 ring-[color:var(--gold)]/25 rounded-sm pointer-events-none" />
+        <div className="absolute inset-3 ring-1 ring-[color:var(--gold)]/25 rounded-xl pointer-events-none" />
 
         <div className="absolute inset-x-0 bottom-0 p-8 md:p-10 text-foreground">
           <h3
