@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as MusicMediaRouteImport } from './routes/music-media'
 import { Route as FrassKicksRouteImport } from './routes/frass-kicks'
 import { Route as FrassDripRouteImport } from './routes/frass-drip'
 import { Route as BareDripRouteImport } from './routes/bare-drip'
@@ -22,6 +23,11 @@ import { Route as CollectionHandleRouteImport } from './routes/collection.$handl
 import { Route as BareDripWomenRouteImport } from './routes/bare-drip.women'
 import { Route as BareDripMenRouteImport } from './routes/bare-drip.men'
 
+const MusicMediaRoute = MusicMediaRouteImport.update({
+  id: '/music-media',
+  path: '/music-media',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const FrassKicksRoute = FrassKicksRouteImport.update({
   id: '/frass-kicks',
   path: '/frass-kicks',
@@ -88,6 +94,7 @@ export interface FileRoutesByFullPath {
   '/bare-drip': typeof BareDripRouteWithChildren
   '/frass-drip': typeof FrassDripRouteWithChildren
   '/frass-kicks': typeof FrassKicksRouteWithChildren
+  '/music-media': typeof MusicMediaRoute
   '/bare-drip/men': typeof BareDripMenRoute
   '/bare-drip/women': typeof BareDripWomenRoute
   '/collection/$handle': typeof CollectionHandleRoute
@@ -102,6 +109,7 @@ export interface FileRoutesByTo {
   '/bare-drip': typeof BareDripRouteWithChildren
   '/frass-drip': typeof FrassDripRouteWithChildren
   '/frass-kicks': typeof FrassKicksRouteWithChildren
+  '/music-media': typeof MusicMediaRoute
   '/bare-drip/men': typeof BareDripMenRoute
   '/bare-drip/women': typeof BareDripWomenRoute
   '/collection/$handle': typeof CollectionHandleRoute
@@ -117,6 +125,7 @@ export interface FileRoutesById {
   '/bare-drip': typeof BareDripRouteWithChildren
   '/frass-drip': typeof FrassDripRouteWithChildren
   '/frass-kicks': typeof FrassKicksRouteWithChildren
+  '/music-media': typeof MusicMediaRoute
   '/bare-drip/men': typeof BareDripMenRoute
   '/bare-drip/women': typeof BareDripWomenRoute
   '/collection/$handle': typeof CollectionHandleRoute
@@ -133,6 +142,7 @@ export interface FileRouteTypes {
     | '/bare-drip'
     | '/frass-drip'
     | '/frass-kicks'
+    | '/music-media'
     | '/bare-drip/men'
     | '/bare-drip/women'
     | '/collection/$handle'
@@ -147,6 +157,7 @@ export interface FileRouteTypes {
     | '/bare-drip'
     | '/frass-drip'
     | '/frass-kicks'
+    | '/music-media'
     | '/bare-drip/men'
     | '/bare-drip/women'
     | '/collection/$handle'
@@ -161,6 +172,7 @@ export interface FileRouteTypes {
     | '/bare-drip'
     | '/frass-drip'
     | '/frass-kicks'
+    | '/music-media'
     | '/bare-drip/men'
     | '/bare-drip/women'
     | '/collection/$handle'
@@ -176,12 +188,20 @@ export interface RootRouteChildren {
   BareDripRoute: typeof BareDripRouteWithChildren
   FrassDripRoute: typeof FrassDripRouteWithChildren
   FrassKicksRoute: typeof FrassKicksRouteWithChildren
+  MusicMediaRoute: typeof MusicMediaRoute
   CollectionHandleRoute: typeof CollectionHandleRoute
   ProductHandleRoute: typeof ProductHandleRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/music-media': {
+      id: '/music-media'
+      path: '/music-media'
+      fullPath: '/music-media'
+      preLoaderRoute: typeof MusicMediaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/frass-kicks': {
       id: '/frass-kicks'
       path: '/frass-kicks'
@@ -316,6 +336,7 @@ const rootRouteChildren: RootRouteChildren = {
   BareDripRoute: BareDripRouteWithChildren,
   FrassDripRoute: FrassDripRouteWithChildren,
   FrassKicksRoute: FrassKicksRouteWithChildren,
+  MusicMediaRoute: MusicMediaRoute,
   CollectionHandleRoute: CollectionHandleRoute,
   ProductHandleRoute: ProductHandleRoute,
 }

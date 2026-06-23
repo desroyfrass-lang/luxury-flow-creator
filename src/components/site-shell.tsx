@@ -2,7 +2,7 @@ import { Link, useRouterState } from "@tanstack/react-router";
 import type { ReactNode } from "react";
 import { CartDrawer } from "./cart-drawer";
 import { LuxuryBackground } from "./luxury-background";
-import { Search, Heart } from "lucide-react";
+import { Search, User, Instagram, Music2, Youtube, Facebook } from "lucide-react";
 import { useCartSync } from "@/hooks/use-cart-sync";
 import fullLogo from "@/assets/frass-logo-full.asset.json";
 import symbolLogo from "@/assets/frass-logo-symbol.asset.json";
@@ -11,6 +11,14 @@ const NAV = [
   { to: "/frass-kicks", label: "Frass Kicks" },
   { to: "/frass-drip", label: "Frass Drip" },
   { to: "/bare-drip", label: "Bare Drip" },
+  { to: "/music-media", label: "Music & Media" },
+];
+
+const SOCIALS = [
+  { href: "https://instagram.com", label: "Instagram", Icon: Instagram },
+  { href: "https://tiktok.com", label: "TikTok", Icon: Music2 },
+  { href: "https://youtube.com", label: "YouTube", Icon: Youtube },
+  { href: "https://facebook.com", label: "Facebook", Icon: Facebook },
 ];
 
 function BrandMark({ compact = false }: { compact?: boolean }) {
