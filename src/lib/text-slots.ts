@@ -108,6 +108,7 @@ export const TEXT_SECTIONS: TextSection[] = [
       { key: "nav-bare-drip", label: "Nav — Bare Drip", defaultValue: "Bare Drip" },
       { key: "nav-lookbook", label: "Nav — Lookbook", defaultValue: "Lookbook" },
       { key: "nav-music-media", label: "Nav — Music & Media", defaultValue: "Music & Media" },
+      { key: "nav-blog", label: "Nav — Journal", defaultValue: "Journal" },
       { key: "footer-blurb", label: "Footer blurb", defaultValue: "A luxury fashion destination — footwear, apparel, swim & intimates. Made for movement. Built for confidence.", multiline: true },
       { key: "footer-newsletter-cta", label: "Footer subscribe button", defaultValue: "Subscribe" },
       { key: "footer-tagline", label: "Footer bottom tagline", defaultValue: "Luxury · Confidence · Style" },

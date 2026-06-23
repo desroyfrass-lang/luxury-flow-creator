@@ -14,6 +14,7 @@ const NAV_ITEMS = [
   { to: "/bare-drip", slot: "nav-bare-drip", fallback: "Bare Drip" },
   { to: "/lookbook", slot: "nav-lookbook", fallback: "Lookbook" },
   { to: "/music-media", slot: "nav-music-media", fallback: "Music & Media" },
+  { to: "/blog", slot: "nav-blog", fallback: "Journal" },
 ] as const;
 
 const SOCIALS = [
