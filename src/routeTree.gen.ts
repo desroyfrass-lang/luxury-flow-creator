@@ -27,8 +27,12 @@ import { Route as BareDripWomenRouteImport } from './routes/bare-drip.women'
 import { Route as BareDripMenRouteImport } from './routes/bare-drip.men'
 import { Route as FrassDripWomenIndexRouteImport } from './routes/frass-drip.women.index'
 import { Route as FrassDripMenIndexRouteImport } from './routes/frass-drip.men.index'
+import { Route as BareDripWomenIndexRouteImport } from './routes/bare-drip.women.index'
+import { Route as BareDripMenIndexRouteImport } from './routes/bare-drip.men.index'
 import { Route as FrassDripWomenCategoryRouteImport } from './routes/frass-drip.women.$category'
 import { Route as FrassDripMenCategoryRouteImport } from './routes/frass-drip.men.$category'
+import { Route as BareDripWomenCategoryRouteImport } from './routes/bare-drip.women.$category'
+import { Route as BareDripMenCategoryRouteImport } from './routes/bare-drip.men.$category'
 
 const MusicMediaRoute = MusicMediaRouteImport.update({
   id: '/music-media',
@@ -120,6 +124,16 @@ const FrassDripMenIndexRoute = FrassDripMenIndexRouteImport.update({
   path: '/',
   getParentRoute: () => FrassDripMenRoute,
 } as any)
+const BareDripWomenIndexRoute = BareDripWomenIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => BareDripWomenRoute,
+} as any)
+const BareDripMenIndexRoute = BareDripMenIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => BareDripMenRoute,
+} as any)
 const FrassDripWomenCategoryRoute = FrassDripWomenCategoryRouteImport.update({
   id: '/$category',
   path: '/$category',
@@ -130,6 +144,16 @@ const FrassDripMenCategoryRoute = FrassDripMenCategoryRouteImport.update({
   path: '/$category',
   getParentRoute: () => FrassDripMenRoute,
 } as any)
+const BareDripWomenCategoryRoute = BareDripWomenCategoryRouteImport.update({
+  id: '/$category',
+  path: '/$category',
+  getParentRoute: () => BareDripWomenRoute,
+} as any)
+const BareDripMenCategoryRoute = BareDripMenCategoryRouteImport.update({
+  id: '/$category',
+  path: '/$category',
+  getParentRoute: () => BareDripMenRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -137,8 +161,8 @@ export interface FileRoutesByFullPath {
   '/frass-drip': typeof FrassDripRouteWithChildren
   '/frass-kicks': typeof FrassKicksRouteWithChildren
   '/music-media': typeof MusicMediaRoute
-  '/bare-drip/men': typeof BareDripMenRoute
-  '/bare-drip/women': typeof BareDripWomenRoute
+  '/bare-drip/men': typeof BareDripMenRouteWithChildren
+  '/bare-drip/women': typeof BareDripWomenRouteWithChildren
   '/collection/$handle': typeof CollectionHandleRoute
   '/frass-drip/men': typeof FrassDripMenRouteWithChildren
   '/frass-drip/women': typeof FrassDripWomenRouteWithChildren
@@ -148,16 +172,18 @@ export interface FileRoutesByFullPath {
   '/bare-drip/': typeof BareDripIndexRoute
   '/frass-drip/': typeof FrassDripIndexRoute
   '/frass-kicks/': typeof FrassKicksIndexRoute
+  '/bare-drip/men/$category': typeof BareDripMenCategoryRoute
+  '/bare-drip/women/$category': typeof BareDripWomenCategoryRoute
   '/frass-drip/men/$category': typeof FrassDripMenCategoryRoute
   '/frass-drip/women/$category': typeof FrassDripWomenCategoryRoute
+  '/bare-drip/men/': typeof BareDripMenIndexRoute
+  '/bare-drip/women/': typeof BareDripWomenIndexRoute
   '/frass-drip/men/': typeof FrassDripMenIndexRoute
   '/frass-drip/women/': typeof FrassDripWomenIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/music-media': typeof MusicMediaRoute
-  '/bare-drip/men': typeof BareDripMenRoute
-  '/bare-drip/women': typeof BareDripWomenRoute
   '/collection/$handle': typeof CollectionHandleRoute
   '/frass-kicks/men': typeof FrassKicksMenRoute
   '/frass-kicks/women': typeof FrassKicksWomenRoute
@@ -165,8 +191,12 @@ export interface FileRoutesByTo {
   '/bare-drip': typeof BareDripIndexRoute
   '/frass-drip': typeof FrassDripIndexRoute
   '/frass-kicks': typeof FrassKicksIndexRoute
+  '/bare-drip/men/$category': typeof BareDripMenCategoryRoute
+  '/bare-drip/women/$category': typeof BareDripWomenCategoryRoute
   '/frass-drip/men/$category': typeof FrassDripMenCategoryRoute
   '/frass-drip/women/$category': typeof FrassDripWomenCategoryRoute
+  '/bare-drip/men': typeof BareDripMenIndexRoute
+  '/bare-drip/women': typeof BareDripWomenIndexRoute
   '/frass-drip/men': typeof FrassDripMenIndexRoute
   '/frass-drip/women': typeof FrassDripWomenIndexRoute
 }
@@ -177,8 +207,8 @@ export interface FileRoutesById {
   '/frass-drip': typeof FrassDripRouteWithChildren
   '/frass-kicks': typeof FrassKicksRouteWithChildren
   '/music-media': typeof MusicMediaRoute
-  '/bare-drip/men': typeof BareDripMenRoute
-  '/bare-drip/women': typeof BareDripWomenRoute
+  '/bare-drip/men': typeof BareDripMenRouteWithChildren
+  '/bare-drip/women': typeof BareDripWomenRouteWithChildren
   '/collection/$handle': typeof CollectionHandleRoute
   '/frass-drip/men': typeof FrassDripMenRouteWithChildren
   '/frass-drip/women': typeof FrassDripWomenRouteWithChildren
@@ -188,8 +218,12 @@ export interface FileRoutesById {
   '/bare-drip/': typeof BareDripIndexRoute
   '/frass-drip/': typeof FrassDripIndexRoute
   '/frass-kicks/': typeof FrassKicksIndexRoute
+  '/bare-drip/men/$category': typeof BareDripMenCategoryRoute
+  '/bare-drip/women/$category': typeof BareDripWomenCategoryRoute
   '/frass-drip/men/$category': typeof FrassDripMenCategoryRoute
   '/frass-drip/women/$category': typeof FrassDripWomenCategoryRoute
+  '/bare-drip/men/': typeof BareDripMenIndexRoute
+  '/bare-drip/women/': typeof BareDripWomenIndexRoute
   '/frass-drip/men/': typeof FrassDripMenIndexRoute
   '/frass-drip/women/': typeof FrassDripWomenIndexRoute
 }
@@ -212,16 +246,18 @@ export interface FileRouteTypes {
     | '/bare-drip/'
     | '/frass-drip/'
     | '/frass-kicks/'
+    | '/bare-drip/men/$category'
+    | '/bare-drip/women/$category'
     | '/frass-drip/men/$category'
     | '/frass-drip/women/$category'
+    | '/bare-drip/men/'
+    | '/bare-drip/women/'
     | '/frass-drip/men/'
     | '/frass-drip/women/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/music-media'
-    | '/bare-drip/men'
-    | '/bare-drip/women'
     | '/collection/$handle'
     | '/frass-kicks/men'
     | '/frass-kicks/women'
@@ -229,8 +265,12 @@ export interface FileRouteTypes {
     | '/bare-drip'
     | '/frass-drip'
     | '/frass-kicks'
+    | '/bare-drip/men/$category'
+    | '/bare-drip/women/$category'
     | '/frass-drip/men/$category'
     | '/frass-drip/women/$category'
+    | '/bare-drip/men'
+    | '/bare-drip/women'
     | '/frass-drip/men'
     | '/frass-drip/women'
   id:
@@ -251,8 +291,12 @@ export interface FileRouteTypes {
     | '/bare-drip/'
     | '/frass-drip/'
     | '/frass-kicks/'
+    | '/bare-drip/men/$category'
+    | '/bare-drip/women/$category'
     | '/frass-drip/men/$category'
     | '/frass-drip/women/$category'
+    | '/bare-drip/men/'
+    | '/bare-drip/women/'
     | '/frass-drip/men/'
     | '/frass-drip/women/'
   fileRoutesById: FileRoutesById
@@ -395,6 +439,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof FrassDripMenIndexRouteImport
       parentRoute: typeof FrassDripMenRoute
     }
+    '/bare-drip/women/': {
+      id: '/bare-drip/women/'
+      path: '/'
+      fullPath: '/bare-drip/women/'
+      preLoaderRoute: typeof BareDripWomenIndexRouteImport
+      parentRoute: typeof BareDripWomenRoute
+    }
+    '/bare-drip/men/': {
+      id: '/bare-drip/men/'
+      path: '/'
+      fullPath: '/bare-drip/men/'
+      preLoaderRoute: typeof BareDripMenIndexRouteImport
+      parentRoute: typeof BareDripMenRoute
+    }
     '/frass-drip/women/$category': {
       id: '/frass-drip/women/$category'
       path: '/$category'
@@ -409,18 +467,60 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof FrassDripMenCategoryRouteImport
       parentRoute: typeof FrassDripMenRoute
     }
+    '/bare-drip/women/$category': {
+      id: '/bare-drip/women/$category'
+      path: '/$category'
+      fullPath: '/bare-drip/women/$category'
+      preLoaderRoute: typeof BareDripWomenCategoryRouteImport
+      parentRoute: typeof BareDripWomenRoute
+    }
+    '/bare-drip/men/$category': {
+      id: '/bare-drip/men/$category'
+      path: '/$category'
+      fullPath: '/bare-drip/men/$category'
+      preLoaderRoute: typeof BareDripMenCategoryRouteImport
+      parentRoute: typeof BareDripMenRoute
+    }
   }
 }
 
+interface BareDripMenRouteChildren {
+  BareDripMenCategoryRoute: typeof BareDripMenCategoryRoute
+  BareDripMenIndexRoute: typeof BareDripMenIndexRoute
+}
+
+const BareDripMenRouteChildren: BareDripMenRouteChildren = {
+  BareDripMenCategoryRoute: BareDripMenCategoryRoute,
+  BareDripMenIndexRoute: BareDripMenIndexRoute,
+}
+
+const BareDripMenRouteWithChildren = BareDripMenRoute._addFileChildren(
+  BareDripMenRouteChildren,
+)
+
+interface BareDripWomenRouteChildren {
+  BareDripWomenCategoryRoute: typeof BareDripWomenCategoryRoute
+  BareDripWomenIndexRoute: typeof BareDripWomenIndexRoute
+}
+
+const BareDripWomenRouteChildren: BareDripWomenRouteChildren = {
+  BareDripWomenCategoryRoute: BareDripWomenCategoryRoute,
+  BareDripWomenIndexRoute: BareDripWomenIndexRoute,
+}
+
+const BareDripWomenRouteWithChildren = BareDripWomenRoute._addFileChildren(
+  BareDripWomenRouteChildren,
+)
+
 interface BareDripRouteChildren {
-  BareDripMenRoute: typeof BareDripMenRoute
-  BareDripWomenRoute: typeof BareDripWomenRoute
+  BareDripMenRoute: typeof BareDripMenRouteWithChildren
+  BareDripWomenRoute: typeof BareDripWomenRouteWithChildren
   BareDripIndexRoute: typeof BareDripIndexRoute
 }
 
 const BareDripRouteChildren: BareDripRouteChildren = {
-  BareDripMenRoute: BareDripMenRoute,
-  BareDripWomenRoute: BareDripWomenRoute,
+  BareDripMenRoute: BareDripMenRouteWithChildren,
+  BareDripWomenRoute: BareDripWomenRouteWithChildren,
   BareDripIndexRoute: BareDripIndexRoute,
 }
 
