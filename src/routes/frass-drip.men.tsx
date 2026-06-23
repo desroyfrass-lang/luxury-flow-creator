@@ -6,24 +6,13 @@ import cardDrip from "@/assets/card-drip.jpg";
 import cardMen from "@/assets/card-men.jpg";
 import cardKicks from "@/assets/card-kicks.jpg";
 
-const CARDS = [
-  ["casual-drip", "Casual Drip"],
-  ["street-drip", "Street Drip"],
-  ["vacay-drip", "Vacay Drip"],
-  ["work-drip", "Work Drip"],
-  ["hoodie-drip", "Hoodie Drip"],
-  ["denim-drip", "Denim Drip"],
-  ["matching-sets", "Matching Sets"],
-  ["sweat-suits", "Sweat Suits"],
-  ["tank-tops", "Tank Tops"],
-  ["shorts", "Shorts"],
-  ["button-downs", "Button Downs"],
-  ["graphic-tees", "Graphic Tees"],
-  ["sports-drip-training-gear", "Sports — Training Gear"],
-  ["sports-drip-activewear-sets", "Sports — Activewear Sets"],
-  ["sports-drip-running-performance", "Sports — Running & Performance"],
-  ["sports-drip-basketball-court", "Sports — Basketball & Court"],
-  ["sports-drip-gym-fits", "Sports — Gym Fits"],
+const PARENTS = [
+  ["work-drip", "Work Drip", "Tailored essentials for the boardroom."],
+  ["party-drip", "Party Drip", "Nightlife fits & luxury streetwear."],
+  ["casual-drip", "Casual Drip", "Everyday staples, elevated."],
+  ["street-drip", "Street Drip", "Cargo, denim & statement pieces."],
+  ["vacay-drip", "Vacay Drip", "Tropical shirts & resort essentials."],
+  ["sports-drip", "Sports Drip", "Training, gym & court performance."],
 ] as const;
 
 const IMAGES = [cardDrip, cardMen, cardKicks];
@@ -32,7 +21,7 @@ export const Route = createFileRoute("/frass-drip/men")({
   head: () => ({
     meta: [
       { title: "Men's Frass Drip" },
-      { name: "description", content: "Men's fashion across casual, street, vacay, work and more." },
+      { name: "description", content: "Men's fashion across work, party, casual, street, vacay and sports." },
       { property: "og:image", content: cardDrip },
     ],
   }),
@@ -49,15 +38,16 @@ export const Route = createFileRoute("/frass-drip/men")({
       />
       <section className="mx-auto max-w-[1600px] px-6 lg:px-12">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
-          {CARDS.map(([slug, title], i) => (
+          {PARENTS.map(([slug, title, description], i) => (
             <CollectionCard
               key={slug}
-              to="/collection/$handle"
-              params={{ handle: `frass-drip-men-${slug}` }}
+              to="/frass-drip/men/$category"
+              params={{ category: slug }}
               image={IMAGES[i % IMAGES.length]}
               eyebrow="Men"
               title={title}
-              size="md"
+              description={description}
+              size="lg"
             />
           ))}
         </div>
