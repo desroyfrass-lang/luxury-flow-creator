@@ -6,6 +6,7 @@ import heroImg from "@/assets/hero-frass.jpg";
 import cardKicks from "@/assets/card-kicks.jpg";
 import cardDrip from "@/assets/card-drip.jpg";
 import cardBare from "@/assets/card-bare.jpg";
+import fullLogo from "@/assets/frass-logo-full.asset.json";
 import { ArrowUpRight } from "lucide-react";
 
 export const Route = createFileRoute("/")({
@@ -27,67 +28,95 @@ export const Route = createFileRoute("/")({
 function Home() {
   return (
     <SiteShell>
-      {/* HERO */}
       <section className="relative">
         <div className="mx-auto max-w-[1600px] px-6 lg:px-12 pt-10 lg:pt-16">
-          <div className="relative overflow-hidden rounded-[2rem] lux-card">
+          <div className="relative overflow-hidden rounded-[2rem] border border-border/60 lux-card">
             <img
               src={heroImg}
               alt="Frass Kicks luxury showroom"
               className="h-[78vh] min-h-[560px] w-full object-cover"
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/65 via-black/15 to-transparent" />
-            <div className="absolute inset-0 flex flex-col justify-end p-8 md:p-16 text-white animate-fade-up">
-              <div className="mb-6 inline-flex items-center gap-3 text-[11px] uppercase tracking-[0.35em] text-white/85">
-                <span className="h-px w-10 bg-[color:var(--gold)]" />
-                The Frass Kicks Experience
+            <div className="absolute inset-0 bg-[linear-gradient(90deg,oklch(0.07_0.005_80_/_0.88)_0%,oklch(0.07_0.005_80_/_0.62)_40%,oklch(0.07_0.005_80_/_0.35)_65%,transparent_100%)]" />
+            <div className="absolute inset-0 bg-[linear-gradient(180deg,oklch(0.07_0.005_80_/_0.32)_0%,transparent_35%,oklch(0.07_0.005_80_/_0.72)_100%)]" />
+
+            <div className="absolute inset-0 flex flex-col justify-between p-8 md:p-12 lg:p-16 animate-fade-up">
+              <div className="flex items-start justify-between gap-6">
+                <div className="max-w-md">
+                  <div className="text-[11px] uppercase tracking-[0.45em] text-[color:var(--gold)]">
+                    Frass Hill presents
+                  </div>
+                  <div className="mt-4">
+                    <img src={fullLogo.url} alt="Frass Kicks logo" className="h-18 md:h-24 w-auto object-contain drop-shadow-[0_0_40px_oklch(1_0_0_/_0.12)]" />
+                  </div>
+                </div>
+
+                <div className="hidden md:flex flex-col items-end gap-5 text-foreground/90">
+                  <div className="flex gap-3">
+                    <button className="inline-flex h-11 min-w-11 items-center justify-center rounded-full border border-border/70 bg-background/40 px-4 text-[color:var(--gold)] backdrop-blur transition hover:border-[color:var(--gold)]">Menu</button>
+                    <button className="inline-flex h-11 min-w-11 items-center justify-center rounded-full border border-border/70 bg-background/40 px-4 backdrop-blur transition hover:border-[color:var(--gold)]">Account</button>
+                    <button className="inline-flex h-11 min-w-11 items-center justify-center rounded-full border border-border/70 bg-background/40 px-4 backdrop-blur transition hover:border-[color:var(--gold)]">Search</button>
+                  </div>
+                  <div className="flex gap-3 text-xs uppercase tracking-[0.28em] text-muted-foreground">
+                    <span>Instagram</span>
+                    <span>TikTok</span>
+                    <span>Facebook</span>
+                    <span>YouTube</span>
+                  </div>
+                </div>
               </div>
-              <h1 className="font-display text-5xl md:text-7xl lg:text-[8rem] leading-[0.9] max-w-5xl">
-                Where luxury <span className="font-script gold-text normal-case" style={{letterSpacing:0}}>moves</span>.
-              </h1>
-              <p className="mt-6 max-w-xl text-base md:text-lg text-white/85">
-                A cinematic destination for premium footwear, fashion, swim &amp; intimates.
-                Step into the showroom.
-              </p>
-              <div className="mt-10 flex flex-wrap gap-3">
-                <Link
-                  to="/frass-kicks"
-                  className="lux-press inline-flex items-center gap-2 rounded-sm bg-[color:var(--gold)] text-[color:var(--ink)] px-7 py-3.5 text-xs uppercase tracking-[0.3em] font-bold hover:bg-[color:var(--gold-soft)] transition"
-                >
-                  Shop Frass Kicks <ArrowUpRight className="h-4 w-4" />
-                </Link>
-                <Link
-                  to="/frass-drip"
-                  className="lux-press inline-flex items-center gap-2 rounded-full border border-white/60 text-white px-7 py-3.5 text-xs uppercase tracking-[0.25em] hover:border-[color:var(--gold)] hover:text-[color:var(--gold)] transition"
-                >
-                  Shop Frass Drip
-                </Link>
-                <Link
-                  to="/bare-drip"
-                  className="lux-press inline-flex items-center gap-2 rounded-full border border-white/60 text-white px-7 py-3.5 text-xs uppercase tracking-[0.25em] hover:border-[color:var(--gold)] hover:text-[color:var(--gold)] transition"
-                >
-                  Shop Bare Drip
-                </Link>
+
+              <div className="max-w-3xl text-foreground">
+                <h1 className="max-w-2xl font-display text-6xl md:text-8xl lg:text-[8.5rem] text-foreground leading-[0.88]">
+                  Original street luxury.
+                </h1>
+                <p className="mt-5 max-w-xl text-sm md:text-base tracking-[0.04em] text-foreground/78">
+                  Block-letter attitude, chrome identity, and a darker cinematic showroom that stays closer to your original Frass Kicks site.
+                </p>
+                <div className="mt-8 flex flex-wrap gap-3">
+                  <Link
+                    to="/frass-kicks"
+                    className="lux-press inline-flex items-center gap-2 rounded-sm border border-[color:var(--gold)] bg-[color:var(--gold)] px-7 py-3.5 text-xs font-bold uppercase tracking-[0.32em] text-[color:var(--ink)] transition hover:bg-[color:var(--gold-soft)]"
+                  >
+                    Shop Frass Kicks <ArrowUpRight className="h-4 w-4" />
+                  </Link>
+                  <Link
+                    to="/frass-drip"
+                    className="lux-press inline-flex items-center gap-2 rounded-sm border border-border/80 bg-background/35 px-7 py-3.5 text-xs uppercase tracking-[0.28em] text-foreground backdrop-blur transition hover:border-[color:var(--gold)] hover:text-[color:var(--gold)]"
+                  >
+                    Shop Frass Drip
+                  </Link>
+                  <Link
+                    to="/bare-drip"
+                    className="lux-press inline-flex items-center gap-2 rounded-sm border border-border/80 bg-background/35 px-7 py-3.5 text-xs uppercase tracking-[0.28em] text-foreground backdrop-blur transition hover:border-[color:var(--gold)] hover:text-[color:var(--gold)]"
+                  >
+                    Shop Bare Drip
+                  </Link>
+                </div>
               </div>
+            </div>
+          </div>
+
+          <div className="mt-4 overflow-hidden rounded-sm border border-[color:var(--gold)]/35 bg-background/70 backdrop-blur">
+            <div className="px-6 py-3 text-center text-sm font-semibold uppercase tracking-[0.28em] text-[color:var(--gold)]">
+              Use code 15FRASS at checkout for your discount
             </div>
           </div>
         </div>
       </section>
 
-      {/* DIVISIONS */}
-      <section className="mx-auto max-w-[1600px] px-6 lg:px-12 mt-28">
+      <section className="mx-auto max-w-[1600px] px-6 lg:px-12 mt-20">
         <div className="flex items-end justify-between gap-6 mb-10">
           <div>
             <div className="mb-3 inline-flex items-center gap-3 text-[11px] uppercase tracking-[0.3em] text-muted-foreground">
               <span className="h-px w-8 bg-[color:var(--gold)]" />
               Three Worlds
             </div>
-            <h2 className="font-display text-5xl md:text-7xl leading-[0.95]">
-              Choose your <span className="font-script gold-text normal-case" style={{letterSpacing:0}}>drip</span>.
+            <h2 className="font-display text-5xl md:text-7xl leading-[0.95] text-foreground">
+              Choose your lane.
             </h2>
           </div>
           <p className="hidden md:block max-w-sm text-sm text-muted-foreground">
-            Each division is its own universe — explore through imagery, not menus.
+            Each division stays visual, bold, and closer to the editorial streetwear feeling of the original store.
           </p>
         </div>
 
@@ -116,7 +145,6 @@ function Home() {
         </div>
       </section>
 
-      {/* BEST SELLERS */}
       <section className="mx-auto max-w-[1600px] px-6 lg:px-12 mt-28">
         <div className="flex items-end justify-between gap-6 mb-10">
           <div>
@@ -124,7 +152,7 @@ function Home() {
               <span className="h-px w-8 bg-[color:var(--gold)]" />
               Best Sellers
             </div>
-            <h2 className="font-display text-4xl md:text-6xl leading-[0.95]">
+            <h2 className="font-display text-4xl md:text-6xl leading-[0.95] text-foreground">
               The shelf everyone's reaching for.
             </h2>
           </div>
@@ -139,16 +167,17 @@ function Home() {
         <ProductGrid first={8} emptyHint="Add products in Shopify and they'll appear here automatically." />
       </section>
 
-      {/* PROMO BANNER */}
       <section className="mx-auto max-w-[1600px] px-6 lg:px-12 mt-28">
-        <div className="relative overflow-hidden rounded-[2rem] p-10 md:p-20 chrome-surface">
-          <div className="absolute inset-0 opacity-60"
-               style={{ background: "radial-gradient(60% 80% at 50% 50%, oklch(0.95 0.08 85 / 0.55), transparent 70%)" }} />
+        <div className="relative overflow-hidden rounded-[2rem] border border-border/60 p-10 md:p-20 bg-secondary/45 backdrop-blur">
+          <div
+            className="absolute inset-0 opacity-60"
+            style={{ background: "radial-gradient(60% 80% at 50% 50%, oklch(0.78 0.14 78 / 0.18), transparent 70%)" }}
+          />
           <div className="relative max-w-2xl">
-            <div className="mb-4 text-[11px] uppercase tracking-[0.3em] text-foreground/70">
+            <div className="mb-4 text-[11px] uppercase tracking-[0.3em] text-[color:var(--gold)]">
               Signature Service
             </div>
-            <h2 className="font-display text-4xl md:text-6xl leading-[0.95]">
+            <h2 className="font-display text-4xl md:text-6xl leading-[0.95] text-foreground">
               Complimentary shipping. Effortless returns.
             </h2>
             <p className="mt-5 max-w-md text-sm md:text-base text-muted-foreground">
