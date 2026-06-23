@@ -84,7 +84,7 @@ function Header() {
           </div>
         </div>
         <div className="flex-1 flex items-center justify-end gap-2">
-          <div className="hidden md:flex items-center gap-0.5 mr-1">
+          <div className="flex items-center gap-0.5 md:gap-1 mr-1 md:mr-2">
             {SOCIALS.map(({ href, label, Icon }) => (
               <a
                 key={label}
@@ -122,29 +122,16 @@ function Header() {
             </button>
             {menuOpen && (
               <div className="absolute right-0 mt-3 w-64 rounded-2xl border border-border/70 bg-background/95 backdrop-blur-xl shadow-2xl p-2 z-50">
-                <div className="md:hidden">
-                  {NAV_ITEMS.map((n) => <MenuLink key={n.to} item={n} />)}
-                  <div className="my-2 h-px bg-border/60" />
-                </div>
                 {MENU_ITEMS.map((n) => <MenuLink key={n.to} item={n} />)}
-                <div className="md:hidden mt-2 border-t border-border/60 pt-2 flex items-center justify-around">
-                  {SOCIALS.map(({ href, label, Icon }) => (
-                    <a
-                      key={label}
-                      href={href}
-                      target="_blank"
-                      rel="noreferrer"
-                      aria-label={label}
-                      className="inline-flex h-9 w-9 items-center justify-center rounded-full text-muted-foreground hover:text-[color:var(--gold)] transition"
-                    >
-                      <Icon className="h-4 w-4" />
-                    </a>
-                  ))}
-                </div>
               </div>
             )}
           </div>
           <CartDrawer />
+        </div>
+      </div>
+      <div className="relative md:hidden border-t border-border/60 bg-background/60 backdrop-blur">
+        <div className="flex overflow-x-auto no-scrollbar px-2 py-2 gap-1">
+          {NAV_ITEMS.map((n) => <MobileNavLink key={n.to} item={n} />)}
         </div>
       </div>
     </header>
