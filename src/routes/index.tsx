@@ -10,6 +10,7 @@ import cardBare from "@/assets/card-bare.jpg";
 import fullLogo from "@/assets/frass-logo-full.asset.json";
 import { ArrowUpRight } from "lucide-react";
 import { useSiteImageUrl, useSiteImages } from "@/hooks/use-site-images";
+import { useSiteText } from "@/hooks/use-site-text";
 import { LOOKBOOK_STORIES } from "@/lib/lookbook";
 
 export const Route = createFileRoute("/")({
@@ -28,12 +29,81 @@ export const Route = createFileRoute("/")({
   component: Home,
 });
 
+function CinematicTitleCard() {
+  const presents = useSiteText("home-title-presents");
+  const tagline = useSiteText("home-title-tagline");
+  const logoSrc = useSiteImageUrl("logo-full", fullLogo.url);
+  return (
+    <div className="relative overflow-hidden border-b border-[color:var(--gold)]/25 bg-[color:var(--ink,#0a0a0a)]">
+      {/* film-grain / vignette */}
+      <div className="absolute inset-0 bg-[radial-gradient(120%_80%_at_50%_-20%,oklch(0.78_0.14_78_/_0.18),transparent_60%)]" />
+      <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[color:var(--gold)]/60 to-transparent" />
+      <div className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-[color:var(--gold)]/40 to-transparent" />
+
+      <div className="relative mx-auto max-w-[1600px] px-6 lg:px-12 py-7 md:py-10 flex flex-col items-center text-center">
+        <div className="font-display uppercase text-[10px] md:text-[11px] tracking-[0.55em] text-[color:var(--gold)] animate-fade-up">
+          {presents}
+        </div>
+        <div className="mt-3 md:mt-4 animate-fade-up [animation-delay:120ms]">
+          <img
+            src={logoSrc}
+            alt="Frass logo"
+            className="h-12 md:h-16 w-auto object-contain drop-shadow-[0_0_30px_oklch(0.78_0.14_78_/_0.35)]"
+          />
+        </div>
+        {tagline && (
+          <div className="mt-3 md:mt-4 text-[10px] md:text-[11px] uppercase tracking-[0.4em] text-foreground/60 animate-fade-up [animation-delay:240ms]">
+            {tagline}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
 function Home() {
   const heroSrc = useSiteImageUrl("hero-home", heroImg);
-  const logoSrc = useSiteImageUrl("logo-full", fullLogo.url);
   const { data: overrides } = useSiteImages();
+
+  const heroEyebrow = useSiteText("home-hero-eyebrow");
+  const heroHeadline = useSiteText("home-hero-headline");
+  const heroParagraph = useSiteText("home-hero-paragraph");
+  const ctaKicks = useSiteText("home-hero-cta-kicks");
+  const ctaDrip = useSiteText("home-hero-cta-drip");
+  const ctaBare = useSiteText("home-hero-cta-bare");
+  const discountBar = useSiteText("home-hero-discount");
+
+  const worldsEyebrow = useSiteText("home-worlds-eyebrow");
+  const worldsTitle = useSiteText("home-worlds-title");
+  const worldsParagraph = useSiteText("home-worlds-paragraph");
+  const cardKicksTitle = useSiteText("home-card-kicks-title");
+  const cardKicksDesc = useSiteText("home-card-kicks-desc");
+  const cardDripTitle = useSiteText("home-card-drip-title");
+  const cardDripDesc = useSiteText("home-card-drip-desc");
+  const cardBareTitle = useSiteText("home-card-bare-title");
+  const cardBareDesc = useSiteText("home-card-bare-desc");
+
+  const lookbookEyebrow = useSiteText("home-lookbook-eyebrow");
+  const lookbookTitle = useSiteText("home-lookbook-title");
+  const lookbookCta = useSiteText("home-lookbook-cta");
+
+  const bestEyebrow = useSiteText("home-best-eyebrow");
+  const bestTitle = useSiteText("home-best-title");
+  const bestEmpty = useSiteText("home-best-empty");
+
+  const musicEyebrow = useSiteText("home-music-eyebrow");
+  const musicTitle = useSiteText("home-music-title");
+  const musicParagraph = useSiteText("home-music-paragraph");
+  const musicCta = useSiteText("home-music-cta");
+  const journalEyebrow = useSiteText("home-journal-eyebrow");
+  const journalTitle = useSiteText("home-journal-title");
+
+  const serviceEyebrow = useSiteText("home-service-eyebrow");
+  const serviceTitle = useSiteText("home-service-title");
+  const serviceParagraph = useSiteText("home-service-paragraph");
+
   return (
-    <SiteShell>
+    <SiteShell preHeader={<CinematicTitleCard />}>
       <section className="relative">
         <div className="mx-auto max-w-[1600px] px-6 lg:px-12 pt-10 lg:pt-16">
           <div className="relative overflow-hidden rounded-[2rem] border border-border/60 lux-card">
@@ -45,57 +115,35 @@ function Home() {
             <div className="absolute inset-0 bg-[linear-gradient(90deg,oklch(0.07_0.005_80_/_0.88)_0%,oklch(0.07_0.005_80_/_0.62)_40%,oklch(0.07_0.005_80_/_0.35)_65%,transparent_100%)]" />
             <div className="absolute inset-0 bg-[linear-gradient(180deg,oklch(0.07_0.005_80_/_0.32)_0%,transparent_35%,oklch(0.07_0.005_80_/_0.72)_100%)]" />
 
-            <div className="absolute inset-0 flex flex-col justify-between p-8 md:p-12 lg:p-16 animate-fade-up">
-              <div className="flex items-start justify-between gap-6">
-                <div className="max-w-md">
-                  <div className="text-xl md:text-2xl uppercase tracking-[0.35em] text-[color:var(--gold)] font-display">
-                    FRASS HILL <span className="font-script normal-case tracking-normal text-2xl md:text-3xl text-foreground/95">presents</span>
-                  </div>
-                  <div className="mt-4">
-                    <img src={logoSrc} alt="Frass Kicks logo" className="h-18 md:h-24 w-auto object-contain drop-shadow-[0_0_40px_oklch(1_0_0_/_0.12)]" />
-                  </div>
-                </div>
-
-                <div className="hidden md:flex flex-col items-end gap-5 text-foreground/90">
-                  <div className="flex gap-3">
-                    <button className="inline-flex h-11 min-w-11 items-center justify-center rounded-full border border-border/70 bg-background/40 px-4 text-[color:var(--gold)] backdrop-blur transition hover:border-[color:var(--gold)]">Menu</button>
-                    <button className="inline-flex h-11 min-w-11 items-center justify-center rounded-full border border-border/70 bg-background/40 px-4 backdrop-blur transition hover:border-[color:var(--gold)]">Account</button>
-                    <button className="inline-flex h-11 min-w-11 items-center justify-center rounded-full border border-border/70 bg-background/40 px-4 backdrop-blur transition hover:border-[color:var(--gold)]">Search</button>
-                  </div>
-                  <div className="flex gap-3 text-xs uppercase tracking-[0.28em] text-muted-foreground">
-                    <span>Instagram</span>
-                    <span>TikTok</span>
-                    <span>Facebook</span>
-                    <span>YouTube</span>
-                  </div>
-                </div>
-              </div>
-
+            <div className="absolute inset-0 flex flex-col justify-end p-8 md:p-12 lg:p-16 animate-fade-up">
               <div className="max-w-3xl text-foreground">
+                <div className="text-xs md:text-sm uppercase tracking-[0.35em] text-[color:var(--gold)] font-display mb-4">
+                  {heroEyebrow}
+                </div>
                 <h1 className="max-w-2xl font-display text-6xl md:text-8xl lg:text-[8.5rem] text-foreground leading-[0.88]">
-                  Original street luxury.
+                  {heroHeadline}
                 </h1>
                 <p className="mt-5 max-w-xl text-sm md:text-base tracking-[0.04em] text-foreground/78">
-                  Block-letter attitude, chrome identity, and a darker cinematic showroom that stays closer to your original Frass Kicks site.
+                  {heroParagraph}
                 </p>
                 <div className="mt-8 flex flex-wrap gap-3">
                   <Link
                     to="/frass-kicks"
                     className="lux-press inline-flex items-center gap-2 rounded-sm border border-[color:var(--gold)] bg-[color:var(--gold)] px-7 py-3.5 text-xs font-bold uppercase tracking-[0.32em] text-[color:var(--ink)] transition hover:bg-[color:var(--gold-soft)]"
                   >
-                    Shop Frass Kicks <ArrowUpRight className="h-4 w-4" />
+                    {ctaKicks} <ArrowUpRight className="h-4 w-4" />
                   </Link>
                   <Link
                     to="/frass-drip"
                     className="lux-press inline-flex items-center gap-2 rounded-sm border border-border/80 bg-background/35 px-7 py-3.5 text-xs uppercase tracking-[0.28em] text-foreground backdrop-blur transition hover:border-[color:var(--gold)] hover:text-[color:var(--gold)]"
                   >
-                    Shop Frass Drip
+                    {ctaDrip}
                   </Link>
                   <Link
                     to="/bare-drip"
                     className="lux-press inline-flex items-center gap-2 rounded-sm border border-border/80 bg-background/35 px-7 py-3.5 text-xs uppercase tracking-[0.28em] text-foreground backdrop-blur transition hover:border-[color:var(--gold)] hover:text-[color:var(--gold)]"
                   >
-                    Shop Bare Drip
+                    {ctaBare}
                   </Link>
                 </div>
               </div>
@@ -104,7 +152,7 @@ function Home() {
 
           <div className="mt-4 overflow-hidden rounded-sm border border-[color:var(--gold)]/35 bg-background/70 backdrop-blur">
             <div className="px-6 py-3 text-center text-sm font-semibold uppercase tracking-[0.28em] text-[color:var(--gold)]">
-              Use code 15FRASS at checkout for your discount
+              {discountBar}
             </div>
           </div>
         </div>
@@ -117,14 +165,14 @@ function Home() {
           <div>
             <div className="mb-3 inline-flex items-center gap-3 text-[11px] uppercase tracking-[0.3em] text-muted-foreground">
               <span className="h-px w-8 bg-[color:var(--gold)]" />
-              Three Worlds
+              {worldsEyebrow}
             </div>
             <h2 className="font-display text-5xl md:text-7xl leading-[0.95] text-foreground">
-              Choose your lane.
+              {worldsTitle}
             </h2>
           </div>
           <p className="hidden md:block max-w-sm text-sm text-muted-foreground">
-            Each division stays visual, bold, and closer to the editorial streetwear feeling of the original store.
+            {worldsParagraph}
           </p>
         </div>
 
@@ -134,24 +182,24 @@ function Home() {
             slot="card-frass-kicks"
             image={cardKicks}
             eyebrow="Division 01"
-            title="Frass Kicks"
-            description="Premium footwear — casual, street, classic."
+            title={cardKicksTitle}
+            description={cardKicksDesc}
           />
           <CollectionCard
             to="/frass-drip"
             slot="card-frass-drip"
             image={cardDrip}
             eyebrow="Division 02"
-            title="Frass Drip"
-            description="Fashion-forward apparel for the everyday icon. Sports Drip lives inside Men's & Women's."
+            title={cardDripTitle}
+            description={cardDripDesc}
           />
           <CollectionCard
             to="/bare-drip"
             slot="card-bare-drip"
             image={cardBare}
             eyebrow="Division 03"
-            title="Bare Drip"
-            description="Swim, intimates & lifestyle essentials."
+            title={cardBareTitle}
+            description={cardBareDesc}
           />
         </div>
       </section>
@@ -161,17 +209,17 @@ function Home() {
           <div>
             <div className="mb-3 inline-flex items-center gap-3 text-[11px] uppercase tracking-[0.3em] text-muted-foreground">
               <span className="h-px w-8 bg-[color:var(--gold)]" />
-              The Lookbook
+              {lookbookEyebrow}
             </div>
             <h2 className="font-display text-5xl md:text-7xl leading-[0.95] text-foreground">
-              Stories, not catalogs.
+              {lookbookTitle}
             </h2>
           </div>
           <Link
             to="/lookbook"
             className="hidden md:inline-flex items-center gap-2 text-xs uppercase tracking-[0.25em] hover:text-[color:var(--gold)] transition"
           >
-            View all volumes <ArrowUpRight className="h-4 w-4" />
+            {lookbookCta} <ArrowUpRight className="h-4 w-4" />
           </Link>
         </div>
 
@@ -208,22 +256,20 @@ function Home() {
             to="/lookbook"
             className="lux-press inline-flex items-center gap-2 rounded-sm border border-[color:var(--gold)] px-6 py-3 text-[11px] font-bold uppercase tracking-[0.32em] text-[color:var(--gold)]"
           >
-            View all volumes <ArrowUpRight className="h-4 w-4" />
+            {lookbookCta} <ArrowUpRight className="h-4 w-4" />
           </Link>
         </div>
       </section>
-
-
 
       <section className="mx-auto max-w-[1600px] px-6 lg:px-12 mt-28">
         <div className="flex items-end justify-between gap-6 mb-10">
           <div>
             <div className="mb-3 inline-flex items-center gap-3 text-[11px] uppercase tracking-[0.3em] text-muted-foreground">
               <span className="h-px w-8 bg-[color:var(--gold)]" />
-              Best Sellers
+              {bestEyebrow}
             </div>
             <h2 className="font-display text-4xl md:text-6xl leading-[0.95] text-foreground">
-              Must-have pieces.
+              {bestTitle}
             </h2>
           </div>
           <Link
@@ -234,7 +280,7 @@ function Home() {
             View all <ArrowUpRight className="h-4 w-4" />
           </Link>
         </div>
-        <ProductGrid first={4} emptyHint="Add products in Shopify and they'll appear here automatically." />
+        <ProductGrid first={4} emptyHint={bestEmpty} />
       </section>
 
       <section className="mx-auto max-w-[1600px] px-6 lg:px-12 mt-28">
@@ -245,23 +291,23 @@ function Home() {
           >
             <div className="absolute inset-0 opacity-50" style={{ background: "radial-gradient(70% 80% at 80% 20%, oklch(0.78 0.14 78 / 0.22), transparent 70%)" }} />
             <div className="relative">
-              <div className="text-[11px] uppercase tracking-[0.3em] text-[color:var(--gold)]">Frass Hill Sound</div>
+              <div className="text-[11px] uppercase tracking-[0.3em] text-[color:var(--gold)]">{musicEyebrow}</div>
               <h2 className="mt-4 font-display text-4xl md:text-6xl leading-[0.92]">
-                The music behind the brand.
+                {musicTitle}
               </h2>
               <p className="mt-5 max-w-md text-sm md:text-base text-muted-foreground">
-                Frass Hill isn't just a wardrobe — it's a sound. Original tracks, mixes and films from the camp soundtrack every drop.
+                {musicParagraph}
               </p>
             </div>
             <div className="relative inline-flex items-center gap-2 text-xs uppercase tracking-[0.3em] text-foreground group-hover:text-[color:var(--gold)] transition">
-              Enter Music &amp; Media <ArrowUpRight className="h-4 w-4" />
+              {musicCta} <ArrowUpRight className="h-4 w-4" />
             </div>
           </Link>
 
           <div className="relative overflow-hidden rounded-[2rem] border border-border/60 bg-secondary/40 p-10 md:p-14 min-h-[420px] flex flex-col justify-between">
             <div className="relative">
-              <div className="text-[11px] uppercase tracking-[0.3em] text-[color:var(--gold)]">Journal</div>
-              <h2 className="mt-4 font-display text-4xl md:text-6xl leading-[0.92]">From the blog.</h2>
+              <div className="text-[11px] uppercase tracking-[0.3em] text-[color:var(--gold)]">{journalEyebrow}</div>
+              <h2 className="mt-4 font-display text-4xl md:text-6xl leading-[0.92]">{journalTitle}</h2>
               <ul className="mt-8 divide-y divide-border/60">
                 {[
                   { tag: "Style", title: "Block letters & chrome: building the Frass identity." },
@@ -292,13 +338,13 @@ function Home() {
           />
           <div className="relative max-w-2xl">
             <div className="mb-4 text-[11px] uppercase tracking-[0.3em] text-[color:var(--gold)]">
-              Signature Service
+              {serviceEyebrow}
             </div>
             <h2 className="font-display text-4xl md:text-6xl leading-[0.95] text-foreground">
-              Complimentary shipping. Effortless returns.
+              {serviceTitle}
             </h2>
             <p className="mt-5 max-w-md text-sm md:text-base text-muted-foreground">
-              Every order is treated like a private client appointment.
+              {serviceParagraph}
             </p>
           </div>
         </div>
