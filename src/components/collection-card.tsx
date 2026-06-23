@@ -34,14 +34,14 @@ export function CollectionCard({
     <Link
       to={to}
       params={params as never}
-      className="lux-card group relative block overflow-hidden rounded-sm bg-card"
+      className="lux-card group relative block overflow-hidden rounded-2xl bg-card"
     >
-      <div className={`relative w-full overflow-hidden ${heightClass[size]}`}>
+      <div className={`relative w-full overflow-hidden rounded-2xl ${heightClass[size]}`}>
         <img
           src={image}
           alt={title}
           loading="lazy"
-          className="absolute inset-0 h-full w-full object-cover transition-transform duration-[1400ms] ease-out group-hover:scale-[1.06]"
+          className="absolute inset-0 h-full w-full object-contain transition-transform duration-[1400ms] ease-out group-hover:scale-[1.04]"
         />
         {/* dark cinematic wash so the title pops like the reference */}
         <div className="absolute inset-0 bg-[linear-gradient(180deg,oklch(0.07_0.005_80_/_0.45)_0%,oklch(0.07_0.005_80_/_0.55)_45%,oklch(0.07_0.005_80_/_0.85)_100%)]" />
