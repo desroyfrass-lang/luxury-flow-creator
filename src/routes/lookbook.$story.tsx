@@ -3,6 +3,7 @@ import { SiteShell } from "@/components/site-shell";
 import { PageHeader } from "@/components/page-header";
 import { CollectionCard } from "@/components/collection-card";
 import { LOOKBOOK_BY_SLUG, LOOKBOOK_STORIES } from "@/lib/lookbook";
+import { useSiteImageUrl, useLookbookStoryImages } from "@/hooks/use-site-images";
 
 export const Route = createFileRoute("/lookbook/$story")({
   beforeLoad: ({ params }) => {
@@ -38,6 +39,11 @@ function StoryPage() {
   const { story } = Route.useParams();
   const s = LOOKBOOK_BY_SLUG[story]!;
 
+  const coverSrc = useSiteImageUrl(`lookbook-cover-${story}`, s.cover);
+  const { data: overrideImages } = useLookbookStoryImages(story);
+  const images =
+    overrideImages && overrideImages.length > 0 ? overrideImages.map((i) => i.url) : s.images;
+
   // index of next story for the "next chapter" link
   const idx = LOOKBOOK_STORIES.findIndex((x) => x.slug === story);
   const next = LOOKBOOK_STORIES[(idx + 1) % LOOKBOOK_STORIES.length];
@@ -47,7 +53,7 @@ function StoryPage() {
       {/* Cinematic cover */}
       <section className="relative h-[78vh] min-h-[560px] w-full overflow-hidden">
         <img
-          src={s.cover}
+          src={coverSrc}
           alt={s.title}
           className="absolute inset-0 h-full w-full object-cover"
         />
@@ -92,10 +98,10 @@ function StoryPage() {
         <div className="grid grid-cols-12 gap-4 md:gap-6">
           {/* hero image */}
           <figure className="col-span-12 md:col-span-8 relative overflow-hidden rounded-2xl bg-card aspect-[16/10]">
-            <img src={s.images[0]} alt="" className="absolute inset-0 h-full w-full object-cover" />
+            <img src={images[0]} alt="" className="absolute inset-0 h-full w-full object-cover" />
           </figure>
           <figure className="col-span-12 md:col-span-4 relative overflow-hidden rounded-2xl bg-card aspect-[3/4]">
-            <img src={s.images[1] ?? s.images[0]} alt="" className="absolute inset-0 h-full w-full object-cover" />
+            <img src={images[1] ?? images[0]} alt="" className="absolute inset-0 h-full w-full object-cover" />
           </figure>
 
           <div className="col-span-12 md:col-span-4 flex items-center">
@@ -110,14 +116,14 @@ function StoryPage() {
             </div>
           </div>
           <figure className="col-span-12 md:col-span-8 relative overflow-hidden rounded-2xl bg-card aspect-[16/9]">
-            <img src={s.images[2] ?? s.images[0]} alt="" className="absolute inset-0 h-full w-full object-cover" />
+            <img src={images[2] ?? images[0]} alt="" className="absolute inset-0 h-full w-full object-cover" />
           </figure>
 
           <figure className="col-span-6 md:col-span-6 relative overflow-hidden rounded-2xl bg-card aspect-[4/5]">
-            <img src={s.images[3] ?? s.images[0]} alt="" className="absolute inset-0 h-full w-full object-cover" />
+            <img src={images[3] ?? images[0]} alt="" className="absolute inset-0 h-full w-full object-cover" />
           </figure>
           <figure className="col-span-6 md:col-span-6 relative overflow-hidden rounded-2xl bg-card aspect-[4/5]">
-            <img src={s.images[4] ?? s.images[1] ?? s.images[0]} alt="" className="absolute inset-0 h-full w-full object-cover" />
+            <img src={images[4] ?? images[1] ?? images[0]} alt="" className="absolute inset-0 h-full w-full object-cover" />
           </figure>
         </div>
       </section>
