@@ -139,7 +139,14 @@
     font-family: var(--font-sans);
     font-feature-settings: "ss01", "cv11";
   }
-  h1, h2, h3, h4 { font-family: var(--font-display); font-weight: 500; letter-spacing: -0.02em; }
+  h1, h2, h3, h4 {
+    font-family: var(--font-display);
+    font-weight: 400;
+    letter-spacing: 0.005em;
+    text-transform: uppercase;
+    line-height: 0.92;
+  }
+  .font-script { font-family: var(--font-script); text-transform: none; letter-spacing: 0; }
 }
 
 /* ===== Luxury Card hover ===== */
