@@ -2,7 +2,7 @@ import { Link, useRouterState } from "@tanstack/react-router";
 import type { ReactNode } from "react";
 import { CartDrawer } from "./cart-drawer";
 import { LuxuryBackground } from "./luxury-background";
-import { Search, Heart } from "lucide-react";
+import { Search, User, Instagram, Music2, Youtube, Facebook } from "lucide-react";
 import { useCartSync } from "@/hooks/use-cart-sync";
 import fullLogo from "@/assets/frass-logo-full.asset.json";
 import symbolLogo from "@/assets/frass-logo-symbol.asset.json";
@@ -11,6 +11,14 @@ const NAV = [
   { to: "/frass-kicks", label: "Frass Kicks" },
   { to: "/frass-drip", label: "Frass Drip" },
   { to: "/bare-drip", label: "Bare Drip" },
+  { to: "/music-media", label: "Music & Media" },
+];
+
+const SOCIALS = [
+  { href: "https://instagram.com", label: "Instagram", Icon: Instagram },
+  { href: "https://tiktok.com", label: "TikTok", Icon: Music2 },
+  { href: "https://youtube.com", label: "YouTube", Icon: Youtube },
+  { href: "https://facebook.com", label: "Facebook", Icon: Facebook },
 ];
 
 function BrandMark({ compact = false }: { compact?: boolean }) {
@@ -63,6 +71,20 @@ function Header() {
           </div>
         </div>
         <div className="flex-1 flex items-center justify-end gap-2">
+          <div className="hidden lg:flex items-center gap-1 mr-2">
+            {SOCIALS.map(({ href, label, Icon }) => (
+              <a
+                key={label}
+                href={href}
+                target="_blank"
+                rel="noreferrer"
+                aria-label={label}
+                className="inline-flex h-9 w-9 items-center justify-center rounded-full text-muted-foreground hover:text-[color:var(--gold)] transition"
+              >
+                <Icon className="h-4 w-4" />
+              </a>
+            ))}
+          </div>
           <button
             className="hidden md:inline-flex h-10 w-10 items-center justify-center rounded-full border border-border bg-background/70 backdrop-blur hover:border-[color:var(--gold)] transition"
             aria-label="Search"
@@ -71,9 +93,9 @@ function Header() {
           </button>
           <button
             className="hidden md:inline-flex h-10 w-10 items-center justify-center rounded-full border border-border bg-background/70 backdrop-blur hover:border-[color:var(--gold)] transition"
-            aria-label="Wishlist"
+            aria-label="Account"
           >
-            <Heart className="h-4 w-4" />
+            <User className="h-4 w-4" />
           </button>
           <CartDrawer />
         </div>
