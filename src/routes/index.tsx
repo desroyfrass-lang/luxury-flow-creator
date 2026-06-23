@@ -161,6 +161,60 @@ function Home() {
       <FeaturedDrop />
 
       <section className="mx-auto max-w-[1600px] px-6 lg:px-12 mt-20">
+        <Link
+          to="/try-on"
+          className="lux-card group relative block overflow-hidden rounded-[2rem] border border-[color:var(--gold)]/40 bg-gradient-to-br from-[color:var(--ink,#0a0a0a)] via-background to-secondary/40 p-8 md:p-12"
+        >
+          <div
+            className="absolute inset-0 opacity-60"
+            style={{ background: "radial-gradient(70% 90% at 85% 20%, oklch(0.78 0.14 78 / 0.28), transparent 70%)" }}
+          />
+          <div className="absolute -right-10 -top-10 h-56 w-56 rounded-full bg-[color:var(--gold)]/10 blur-3xl" />
+          <div className="relative grid md:grid-cols-[1.4fr_1fr] gap-8 items-center">
+            <div>
+              <div className="inline-flex items-center gap-2 rounded-full border border-[color:var(--gold)]/50 bg-background/40 backdrop-blur px-3 py-1 text-[10px] uppercase tracking-[0.35em] text-[color:var(--gold)]">
+                <Sparkles className="h-3 w-3" /> New · AI Fitting Room
+              </div>
+              <h2 className="mt-4 font-display text-4xl md:text-6xl leading-[0.92] text-foreground">
+                Try it on before you check out.
+              </h2>
+              <p className="mt-4 max-w-xl text-sm md:text-base text-muted-foreground">
+                Drop anything from Frass Kicks, Drip, or Bare into your cart, upload a photo, and our AI styles the look on you in seconds. See the fit, share the drip, then buy with confidence.
+              </p>
+              <div className="mt-7 flex flex-wrap gap-3">
+                <span className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.28em] text-foreground/80">
+                  <Camera className="h-4 w-4 text-[color:var(--gold)]" /> Upload a photo
+                </span>
+                <span className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.28em] text-foreground/80">
+                  <Shirt className="h-4 w-4 text-[color:var(--gold)]" /> Pick cart items
+                </span>
+                <span className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.28em] text-foreground/80">
+                  <Sparkles className="h-4 w-4 text-[color:var(--gold)]" /> See the fit
+                </span>
+              </div>
+              <div className="mt-8 inline-flex items-center gap-2 rounded-sm border border-[color:var(--gold)] bg-[color:var(--gold)] px-7 py-3.5 text-xs font-bold uppercase tracking-[0.32em] text-[color:var(--ink)] transition group-hover:bg-[color:var(--gold-soft)]">
+                Enter the Fitting Room <ArrowUpRight className="h-4 w-4" />
+              </div>
+            </div>
+            <div className="relative hidden md:block">
+              <div className="relative aspect-[3/4] overflow-hidden rounded-2xl border border-[color:var(--gold)]/30 bg-background/50">
+                <img
+                  src={heroSrc}
+                  alt="AI try-on preview"
+                  className="absolute inset-0 h-full w-full object-cover opacity-80"
+                />
+                <div className="absolute inset-0 bg-[linear-gradient(180deg,transparent_30%,oklch(0.07_0.005_80_/_0.85)_100%)]" />
+                <div className="absolute inset-x-4 bottom-4 rounded-xl border border-[color:var(--gold)]/40 bg-background/70 backdrop-blur px-4 py-3">
+                  <div className="text-[10px] uppercase tracking-[0.3em] text-[color:var(--gold)]">Live preview</div>
+                  <div className="text-sm font-display text-foreground">Your fit, rendered by AI</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </Link>
+      </section>
+
+      <section className="mx-auto max-w-[1600px] px-6 lg:px-12 mt-20">
         <div className="flex items-end justify-between gap-6 mb-10">
           <div>
             <div className="mb-3 inline-flex items-center gap-3 text-[11px] uppercase tracking-[0.3em] text-muted-foreground">
