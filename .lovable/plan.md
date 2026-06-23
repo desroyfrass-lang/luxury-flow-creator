@@ -1,42 +1,47 @@
-## Vision
+# Roadmap
 
-A bright luxury fashion destination — white environments, chrome reflections, gold light streaks, soft drifting smoke, floating particles, and oversized cinematic image cards as the primary navigation. No traditional "Shopify clone" feel. Cards lift, scale, and glow on hover. Backgrounds remain alive across pages so the journey feels continuous (Home → Division → Category → Collection → Product).
+A prioritized task list for the next phase of Frass. Starting with the Lookbook since it best showcases the mood-based merchandising the site is already built around.
 
-## Scope of this build
+---
 
-Because the full spec covers ~25+ category pages, I'll build it in two passes so the foundation is rock-solid before scaling up. **This plan covers Pass 1.** Pass 2 fills in remaining sub-category pages once we confirm the look.
+## 1. Lookbook (this task)
 
-### Pass 1 — Foundation + primary journey (this build)
+Build an editorial Lookbook section that turns the Drip categories into visual stories instead of product grids.
 
-1. **Design system** — white luxury palette, chrome/gold tokens, gold-glow shadows, oversized type, smooth easing tokens, large radius. Typography: display serif (e.g. Cormorant/Instrument Serif) paired with refined sans (Inter Tight). All semantic tokens in `src/styles.css`.
-2. **Signature background system** — reusable `<LuxuryBackground />` component layering: chrome light trails, gold laser streaks, drifting smoke, floating particles. GPU-accelerated CSS animations, reduced intensity on mobile. Lives behind every major page.
-3. **Luxury card component** — oversized `<CollectionCard />` with rounded corners, layered depth, gold-glow hover (translate -8px, scale 1.02, gold shadow, 400ms luxury easing). The single reusable building block for all navigation.
-4. **Shared shell** — sticky translucent chrome header with logo, minimal nav (Frass Kicks / Frass Drip / Bare Drip), cart drawer trigger. Footer with sections + newsletter.
-5. **Home page** — full-bleed hero with cinematic background + 3 CTAs, then 3 massive division cards (Frass Kicks / Frass Drip / Bare Drip), featured collections strip, new arrivals (live Shopify products), promo banner, newsletter.
-6. **Division landing pages** — `/frass-kicks`, `/frass-drip`, `/bare-drip`, each showing the two large Men/Women cards.
-7. **Gender landing pages** — `/frass-kicks/men`, `/frass-kicks/women`, etc. Show the sub-category cards (Casual / Street / Classic for footwear; the full lists for Drip and Bare Drip).
-8. **Collection page** — `/collection/$handle`. Live Shopify products via Storefront API (tag/handle-based filtering), sticky luxury background, sort bar, luxury product grid with hover.
-9. **Product page** — `/product/$handle`. Large gallery, variant/size selector, Add to Cart, trust row, related products.
-10. **Cart + checkout** — Zustand store, Storefront API cartCreate/cartLinesAdd/Update/Remove, slide-in cart drawer, checkout opens in new tab with `channel=online_store`.
-11. **Shopify wiring** — `storefrontApiRequest` helper with 2025-07 API, product fetch/by-handle queries, collection-by-handle query. Real products only — empty state if none exist.
+**Routes**
+- `/lookbook` — index. Hero + grid of "stories," one per mood (Work, Party, Casual, Street, Vacay, Sports + Bare).
+- `/lookbook/$story` — single story page. Full-bleed cinematic layout: oversized imagery, sparse gold typography, scroll-driven pacing, and a "Shop the Look" rail at the bottom linking to the relevant `/collection/...` handles.
 
-### Pass 2 (after you approve Pass 1's look)
+**Nav**
+- Add `Lookbook` to the primary nav in `src/components/site-shell.tsx`, positioned between `Frass Drip` and `Bare Drip` (or wherever reads best).
+- Add `head()` metadata on both routes (distinct title, description, og:title, og:description; og:image on the leaf story page only).
 
-- All remaining sub-category routes (Vacay Drip, Hoodie Drip, Resort Dresses, Lingerie Sets, etc.) — each is a thin route that filters the Shopify catalog by handle/tag.
-- Sticky video background support in the theme.
-- Wishlist, advanced filters (size/color/price/availability), pagination polish.
+**Visual direction**
+- Dark, gallery-feel layout — not another card grid. Asymmetric image blocks, generous negative space, script + block-letter type pairing already used on the site.
+- Each story carries: kicker, title, short script tagline, 4–6 images, 3–6 product links via `CollectionCard` or a slimmer "shop the look" tile.
+- Reuse existing `card-*.jpg` placeholders for now; flag for real photography later.
+
+**Data**
+- Static config in `src/lib/lookbook.ts`: `LOOKBOOK_STORIES: Record<slug, { title, kicker, tagline, images[], shop[] }>`. No CMS, no Shopify metaobjects yet — keep it editable in code.
+
+---
+
+## 2. Follow-on tasks (in suggested order)
+
+1. **Homepage drop campaign** — replace the static category cards on `/` with a rotating featured-drop hero (image + tagline + CTA into the matching Lookbook story or collection).
+2. **Real product photography pipeline** — define image specs (1:1 product, 4:5 lifestyle, 16:9 hero) and swap placeholders division-by-division.
+3. **Collection page polish** — filter bar (size, color, price), sort, and a sticky sub-nav showing sibling sub-collections.
+4. **Product detail upgrade** — gallery with thumbnails, size guide drawer, "Complete the Fit" recommendations pulling from the same parent category.
+5. **Search** — global search across products + collections, opened from the nav.
+6. **Account area** — order history, saved addresses, wishlist (requires Lovable Cloud auth — flag before starting).
+7. **Editorial / Journal** — long-form drops, behind-the-scenes, music + media tie-ins to `/music-media`.
+8. **SEO + sharing pass** — verify every route has unique meta, og:image on leaf pages, sitemap, robots.
+
+---
 
 ## Technical notes
 
-- TanStack Start routes under `src/routes/` using flat dot-naming (`frass-kicks.men.tsx`, `collection.$handle.tsx`, `product.$handle.tsx`).
-- Storefront token + domain pulled from connected Shopify env vars; `SHOPIFY_API_VERSION = '2025-07'`.
-- Cart state in Zustand with `persist`; cart drawer syncs on open and on tab focus via `useCartSync`.
-- Category-to-Shopify mapping uses Shopify collection handles (e.g. `frass-kicks-men-casual`). I'll wire the routes to those handles; you can later rename collections in Shopify admin and we'll adjust the map in one place.
-- All hover/motion uses CSS + Tailwind tokens (no heavy JS animation libs for Pass 1).
-- No fake products, no fake reviews — empty states everywhere data is missing.
-
-## What you'll need to do
-
-Nothing right now — I'll build against your connected store. After Pass 1 you'll tell me which sub-categories to wire up to which Shopify collection handles, and I'll knock out Pass 2.
-
-Approve and I'll start with the design system + background system + home page, then move through the journey.
+- File-based routing: `src/routes/lookbook.tsx` (layout w/ `<Outlet />`), `src/routes/lookbook.index.tsx`, `src/routes/lookbook.$story.tsx` with `beforeLoad` `notFound()` guard.
+- New component `src/components/lookbook-story-card.tsx` for the index grid; reuse `CollectionCard` for the "Shop the Look" rail.
+- Nav link added once in `site-shell.tsx`; uses `<Link to="/lookbook">` with `activeProps`.
+- No Shopify changes required for task 1.
