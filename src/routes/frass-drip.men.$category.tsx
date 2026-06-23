@@ -139,6 +139,19 @@ function CategoryPage() {
               size="md"
             />
           ))}
+          {!cat.subs.some(([s]) => s === "on-sale") && (
+            <CollectionCard
+              key="on-sale"
+              to="/collection/$handle"
+              params={{ handle: `frass-drip-men-${category}-on-sale` }}
+              image={IMAGES[cat.subs.length % IMAGES.length]}
+              eyebrow={cat.title}
+              title={`${cat.title} On Sale`}
+              description="Marked-down pieces from this drop."
+              size="md"
+              cta="Shop Sale"
+            />
+          )}
         </div>
       </section>
     </SiteShell>
