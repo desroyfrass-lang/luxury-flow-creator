@@ -1,8 +1,8 @@
 import { Link, useRouterState } from "@tanstack/react-router";
-import type { ReactNode } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import { CartDrawer } from "./cart-drawer";
 import { LuxuryBackground } from "./luxury-background";
-import { Search, User, Instagram, Music2, Youtube, Facebook } from "lucide-react";
+import { Search, User, Instagram, Music2, Youtube, Facebook, Menu, X } from "lucide-react";
 import { useCartSync } from "@/hooks/use-cart-sync";
 import { useSiteText } from "@/hooks/use-site-text";
 import fullLogo from "@/assets/frass-logo-full.asset.json";
@@ -12,9 +12,12 @@ const NAV_ITEMS = [
   { to: "/frass-kicks", slot: "nav-frass-kicks", fallback: "Frass Kicks" },
   { to: "/frass-drip", slot: "nav-frass-drip", fallback: "Frass Drip" },
   { to: "/bare-drip", slot: "nav-bare-drip", fallback: "Bare Drip" },
+] as const;
+
+const MENU_ITEMS = [
   { to: "/lookbook", slot: "nav-lookbook", fallback: "Lookbook" },
   { to: "/music-media", slot: "nav-music-media", fallback: "Music & Media" },
-  { to: "/blog", slot: "nav-blog", fallback: "Journal" },
+  { to: "/blog", slot: "nav-blog", fallback: "Frass Blog" },
 ] as const;
 
 const SOCIALS = [
