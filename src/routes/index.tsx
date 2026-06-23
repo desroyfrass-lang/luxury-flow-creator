@@ -43,7 +43,7 @@ function Home() {
                 The Frass Kicks Experience
               </div>
               <h1 className="font-display text-5xl md:text-7xl lg:text-[8rem] leading-[0.9] max-w-5xl">
-                Where luxury <span className="gold-text italic">moves</span>.
+                Where luxury <span className="font-script gold-text normal-case" style={{letterSpacing:0}}>moves</span>.
               </h1>
               <p className="mt-6 max-w-xl text-base md:text-lg text-white/85">
                 A cinematic destination for premium footwear, fashion, swim &amp; intimates.
@@ -83,7 +83,7 @@ function Home() {
               Three Worlds
             </div>
             <h2 className="font-display text-5xl md:text-7xl leading-[0.95]">
-              Choose your <span className="italic">drip</span>.
+              Choose your <span className="font-script gold-text normal-case" style={{letterSpacing:0}}>drip</span>.
             </h2>
           </div>
           <p className="hidden md:block max-w-sm text-sm text-muted-foreground">
