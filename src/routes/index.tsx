@@ -129,6 +129,7 @@ function Home() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
           <CollectionCard
             to="/frass-kicks"
+            slot="card-frass-kicks"
             image={cardKicks}
             eyebrow="Division 01"
             title="Frass Kicks"
@@ -136,6 +137,7 @@ function Home() {
           />
           <CollectionCard
             to="/frass-drip"
+            slot="card-frass-drip"
             image={cardDrip}
             eyebrow="Division 02"
             title="Frass Drip"
@@ -143,6 +145,7 @@ function Home() {
           />
           <CollectionCard
             to="/bare-drip"
+            slot="card-bare-drip"
             image={cardBare}
             eyebrow="Division 03"
             title="Bare Drip"
