@@ -2,6 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { SiteShell } from "@/components/site-shell";
 import { PageHeader } from "@/components/page-header";
 import { LOOKBOOK_STORIES } from "@/lib/lookbook";
+import { useSiteImageUrl } from "@/hooks/use-site-images";
 
 export const Route = createFileRoute("/lookbook/")({
   head: () => ({
