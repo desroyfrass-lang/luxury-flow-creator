@@ -13,6 +13,7 @@ import { Route as MusicMediaRouteImport } from './routes/music-media'
 import { Route as LookbookRouteImport } from './routes/lookbook'
 import { Route as FrassKicksRouteImport } from './routes/frass-kicks'
 import { Route as FrassDripRouteImport } from './routes/frass-drip'
+import { Route as CheckoutRouteImport } from './routes/checkout'
 import { Route as BlogRouteImport } from './routes/blog'
 import { Route as BareDripRouteImport } from './routes/bare-drip'
 import { Route as AuthRouteImport } from './routes/auth'
@@ -67,6 +68,11 @@ const FrassKicksRoute = FrassKicksRouteImport.update({
 const FrassDripRoute = FrassDripRouteImport.update({
   id: '/frass-drip',
   path: '/frass-drip',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CheckoutRoute = CheckoutRouteImport.update({
+  id: '/checkout',
+  path: '/checkout',
   getParentRoute: () => rootRouteImport,
 } as any)
 const BlogRoute = BlogRouteImport.update({
@@ -250,6 +256,7 @@ export interface FileRoutesByFullPath {
   '/auth': typeof AuthRoute
   '/bare-drip': typeof BareDripRouteWithChildren
   '/blog': typeof BlogRouteWithChildren
+  '/checkout': typeof CheckoutRoute
   '/frass-drip': typeof FrassDripRouteWithChildren
   '/frass-kicks': typeof FrassKicksRouteWithChildren
   '/lookbook': typeof LookbookRouteWithChildren
@@ -288,6 +295,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/checkout': typeof CheckoutRoute
   '/music-media': typeof MusicMediaRoute
   '/try-on': typeof AuthenticatedTryOnRoute
   '/blog/$slug': typeof BlogSlugRoute
@@ -322,6 +330,7 @@ export interface FileRoutesById {
   '/auth': typeof AuthRoute
   '/bare-drip': typeof BareDripRouteWithChildren
   '/blog': typeof BlogRouteWithChildren
+  '/checkout': typeof CheckoutRoute
   '/frass-drip': typeof FrassDripRouteWithChildren
   '/frass-kicks': typeof FrassKicksRouteWithChildren
   '/lookbook': typeof LookbookRouteWithChildren
@@ -364,6 +373,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/bare-drip'
     | '/blog'
+    | '/checkout'
     | '/frass-drip'
     | '/frass-kicks'
     | '/lookbook'
@@ -402,6 +412,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/auth'
+    | '/checkout'
     | '/music-media'
     | '/try-on'
     | '/blog/$slug'
@@ -435,6 +446,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/bare-drip'
     | '/blog'
+    | '/checkout'
     | '/frass-drip'
     | '/frass-kicks'
     | '/lookbook'
@@ -477,6 +489,7 @@ export interface RootRouteChildren {
   AuthRoute: typeof AuthRoute
   BareDripRoute: typeof BareDripRouteWithChildren
   BlogRoute: typeof BlogRouteWithChildren
+  CheckoutRoute: typeof CheckoutRoute
   FrassDripRoute: typeof FrassDripRouteWithChildren
   FrassKicksRoute: typeof FrassKicksRouteWithChildren
   LookbookRoute: typeof LookbookRouteWithChildren
@@ -513,6 +526,13 @@ declare module '@tanstack/react-router' {
       path: '/frass-drip'
       fullPath: '/frass-drip'
       preLoaderRoute: typeof FrassDripRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/checkout': {
+      id: '/checkout'
+      path: '/checkout'
+      fullPath: '/checkout'
+      preLoaderRoute: typeof CheckoutRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/blog': {
@@ -931,6 +951,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthRoute: AuthRoute,
   BareDripRoute: BareDripRouteWithChildren,
   BlogRoute: BlogRouteWithChildren,
+  CheckoutRoute: CheckoutRoute,
   FrassDripRoute: FrassDripRouteWithChildren,
   FrassKicksRoute: FrassKicksRouteWithChildren,
   LookbookRoute: LookbookRouteWithChildren,
@@ -941,13 +962,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}

@@ -19,7 +19,7 @@ export function CartDrawer() {
   const isSyncing = useCartStore((s) => s.isSyncing);
   const updateQuantity = useCartStore((s) => s.updateQuantity);
   const removeItem = useCartStore((s) => s.removeItem);
-  const getCheckoutUrl = useCartStore((s) => s.getCheckoutUrl);
+  
   const syncCart = useCartStore((s) => s.syncCart);
 
   const totalItems = items.reduce((s, i) => s + i.quantity, 0);
@@ -30,13 +30,8 @@ export function CartDrawer() {
     if (open) syncCart();
   }, [open, syncCart]);
 
-  const checkout = () => {
-    const url = getCheckoutUrl();
-    if (url) {
-      window.open(url, "_blank");
-      setOpen(false);
-    }
-  };
+  // Checkout now happens in-app on /checkout (payments are wired later).
+  const closeAndGoCheckout = () => setOpen(false);
 
   return (
     <Sheet open={open} onOpenChange={setOpen}>
@@ -136,10 +131,10 @@ export function CartDrawer() {
                 >
                   <Sparkles className="h-4 w-4" /> Try it on
                 </Link>
-                <button
-                  onClick={checkout}
-                  disabled={isLoading || isSyncing}
-                  className="w-full h-12 inline-flex items-center justify-center gap-2 rounded-full bg-foreground text-background uppercase tracking-[0.2em] text-xs font-medium transition hover:bg-foreground/90 disabled:opacity-60"
+                <Link
+                  to="/checkout"
+                  onClick={closeAndGoCheckout}
+                  className="w-full h-12 inline-flex items-center justify-center gap-2 rounded-full bg-foreground text-background uppercase tracking-[0.2em] text-xs font-medium transition hover:bg-foreground/90"
                 >
                   {isLoading || isSyncing ? (
                     <Loader2 className="h-4 w-4 animate-spin" />
@@ -148,9 +143,9 @@ export function CartDrawer() {
                       <ExternalLink className="h-4 w-4" /> Checkout
                     </>
                   )}
-                </button>
+                </Link>
                 <p className="text-[10px] text-center text-muted-foreground uppercase tracking-[0.2em]">
-                  Secure Shopify Checkout · AI Try-On preview
+                  Secure Checkout · AI Try-On preview
                 </p>
               </div>
             </>

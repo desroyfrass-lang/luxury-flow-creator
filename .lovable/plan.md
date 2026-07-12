@@ -1,74 +1,71 @@
-# Refactor Collection Tree
+## Goal
+Migrate the entire storefront off Shopify onto Lovable Cloud (Supabase), then build the Curated Capsules page on top. Payments deferred.
 
-Restructure routes, nav, and Shopify collection map to match your final tree. Sub-items under each drip category (Dress Shirts, Bikini Tops, etc.) become their own product-grid pages driven by tag queries.
+## Phase 1 — Catalog on Lovable Cloud
 
-## URL structure
+Replace Shopify Storefront API with a native catalog stored in Supabase.
 
-**Frass Kicks** (remove Crown/Side Kicks middle layer)
-```
-/frass-kicks                          → Men / Women cards
-/frass-kicks/men                      → Street / Classic / Casual cards
-/frass-kicks/men/street|classic|casual → product grid
-/frass-kicks/women                    → same as men
-/frass-kicks/women/street|classic|casual → product grid
-```
+**Schema (migration):**
+- `products` — handle, title, description, vendor, product_type, tags[], gender, status, min_price, currency, hero_image, created_at, updated_at
+- `product_images` — product_id, url, alt, position
+- `product_options` — product_id, name, values[]
+- `product_variants` — product_id, title, price, compare_at_price, sku, available, selected_options (jsonb), position
+- `collections` — handle, title, description, hero_image, parent_handle, sort_order
+- `collection_products` — collection_id, product_id, position (curated ordering)
 
-**Frass Drip** (8 sub-collections per gender)
-```
-/frass-drip                           → Men / Women cards
-/frass-drip/men                       → 8 category cards (Work, Party, Casual, Street, Vacay, Sport, Crown, Extra)
-/frass-drip/men/work                  → sub-item cards (Dress Shirts, Polo Shirts, ...)
-/frass-drip/men/work/dress-shirts     → product grid
-   (same shape for party, casual, street, vacay, sport, crown, extra)
-/frass-drip/women/...                 → mirror
-```
+All public-readable (`anon` SELECT on active rows), admin-writable via `has_role(admin)`.
 
-**Bare Drip**
-```
-/bare-drip                            → Men / Women cards
-/bare-drip/men                        → Swimwear / Underwear cards
-/bare-drip/men/swimwear               → sub-item cards (Swim Shorts, Trunks, ...)
-/bare-drip/men/swimwear/swim-shorts   → product grid
-/bare-drip/men/underwear/...          → same shape
-/bare-drip/women/swimwear/...         → same
-/bare-drip/women/lingerie/...         → same
-```
+**Code:**
+- Rewrite `src/lib/shopify.ts` → `src/lib/catalog.ts` with the same `ShopifyProduct`-shaped types (keep field names to minimize churn) but backed by `supabase.from('products')...`.
+- `fetchProducts({ query, first })` — parse the existing tag/vendor query strings (`tag:"frass-drip" tag:"men"`) into Postgres filters against `tags`/`vendor`/`product_type`. Keep `getCollectionMeta` unchanged so all routes keep working.
+- `fetchProductByHandle(handle)` → Supabase query.
+- Delete `SHOPIFY_STOREFRONT_TOKEN`, `SHOPIFY_STORE_PERMANENT_DOMAIN` constants and the `.env` Shopify vars from client code.
 
-## What changes
+## Phase 2 — Cart & Checkout
 
-1. **`src/lib/shopify.ts`** — rewrite `COLLECTION_MAP` + `getCollectionMeta` with the full tree above. Each sub-item maps to a Shopify tag query like `vendor:"FRASS KICKS" tag:"Men's" product_type:"Street Kicks"` for kicks, `tag:"frass-drip" tag:"men" tag:"work" tag:"dress-shirts"` for drip, etc. Also export a `CATEGORY_TREE` constant so pages can render their child cards from one source.
+- Rewrite `src/lib/cart-store.ts`: remove all `cartCreate`/`cartLinesAdd`/`cartLinesUpdate`/`cartLinesRemove` GraphQL. Keep it as a local Zustand cart persisted to localStorage, plus a Supabase `orders` + `order_items` table for saved carts / order history once the user is logged in.
+- `src/components/cart-drawer.tsx`: swap "Checkout with Shopify" for a "Checkout" button that opens a placeholder checkout page (`/checkout`) explaining payments will be enabled later. The cart still works end-to-end (add / update / remove / persist).
+- Remove `useCartSync` visibility-based Shopify sync.
 
-2. **Route files — delete**
-   - `frass-kicks.crown-kicks.*` (5 files)
-   - `frass-kicks.side-kicks.*` (5 files)
+## Phase 3 — Admin product management
 
-3. **Route files — replace / add**
-   - `frass-kicks.men.tsx` → landing showing Street/Classic/Casual cards
-   - `frass-kicks.women.tsx` → same
-   - `frass-kicks.men.$sub.tsx` + `frass-kicks.women.$sub.tsx` → product grid
-   - `frass-drip.men.index.tsx` → 8 category cards
-   - `frass-drip.men.$category.tsx` → sub-item cards for that category
-   - `frass-drip.men.$category.$sub.tsx` → product grid
-   - Same 3 for women
-   - `bare-drip.men.index.tsx` → Swimwear/Underwear cards
-   - `bare-drip.men.$category.tsx` → sub-item cards
-   - `bare-drip.men.$category.$sub.tsx` → product grid
-   - Same for women (Swimwear/Lingerie)
+- New admin route `/admin/products` (under existing `_authenticated/admin`) — list, create, edit, delete products, images, variants; assign to collections.
+- New admin route `/admin/collections` — CRUD collections + curate product ordering per collection.
+- Image uploads to existing `site-media` bucket (or a new `product-images` bucket).
 
-4. **`src/components/site-shell.tsx`** — update mega-menu nav to match new tree (remove Crown/Side Kicks; add all 8 drip categories per gender; simplify Bare Drip menu).
+## Phase 4 — Data migration path (one-time)
 
-## Rules I'll follow
+- Admin utility button "Import from Shopify (one-time)" that calls a server function which uses the current Shopify Storefront token to pull all products/variants/images and upsert them into the new tables. After the user confirms everything imported, we delete the Shopify code and secrets entirely.
 
-- Every route file gets its own `head()` with unique title + description.
-- Sub-item pages that return empty from Shopify show "No products found" (per Shopify policy) — no mock products.
-- Tag conventions I'll use in queries so you know how to tag products in Shopify:
-  - Kicks: `vendor:"FRASS KICKS"`, `tag:"Men's"|"Women's"`, `product_type:"Street Kicks"|"Classic Kicks"|"Casual Kicks"`
-  - Drip: `tag:"frass-drip"`, `tag:"men"|"women"`, `tag:"<category>"` (e.g. `work`, `party`), `tag:"<sub>"` (e.g. `dress-shirts`, `polo-shirts`)
-  - Bare: `tag:"bare-drip"`, `tag:"men"|"women"`, `tag:"<category>"` (`swimwear`, `underwear`, `lingerie`), `tag:"<sub>"`
+## Phase 5 — Curated Capsules
 
-## Two quick confirmations before I ship
+Only after Phase 1 is live and stable.
 
-- **Bikini Tops & Bottoms** — you marked it legacy. I'll drop it from the tree. OK?
-- **Crown Drip / Extra Drip sub-items** ("Street / Classic / Casual / On Sale") — same names as kicks sub-types. Should these link to the same product grids as `/frass-kicks/men/street` etc., or are they separate apparel collections tagged differently?
+**Schema:**
+- `capsules` — handle, name, description, style, gender, occasion, season, hero_image, bundle_discount_pct, published, position
+- `capsule_items` — capsule_id, product_id, slot (hat/sunglasses/shirt/…/shoes/fragrance/accessory), variant_id (optional default), position, required
+- `capsule_collections` — grouping (Street Luxury, Executive Drip, Date Night, Vacation Ready, Airport Looks, Summer, Winter, Festival, Luxury Essentials, Monochrome, Couples, New Arrivals, Trending)
 
-Total: ~40 file writes + 10 deletes + 2 rewrites. One pass once you confirm the two above.
+**Routes:**
+- `/capsules` — landing: filter bar (Gender · Style · Occasion · Season · Color · Budget · Collection · New · Trending), sectioned by capsule_collection, capsule cards (hero image, name, item chips, total price w/ optional strike-through savings, buttons: View · Buy Complete · Customize).
+- `/capsules/$handle` — detail: hero, breakdown of every item (image, name, price, color/size selectors, individual add, remove-from-capsule), "Buy Entire Capsule" (adds all selected variants to cart in one click), Complete-the-Look strip, Similar Capsules.
+- `/capsules/$handle/customize` — swap panel per slot, showing same-slot alternatives from catalog matching the capsule's style tags; live total updates.
+
+**Explicit non-scope:** no Virtual Try-On integration on this page — keep it separate as you asked. Try-On stays on its existing route.
+
+**Admin:**
+- `/admin/capsules` CRUD: pick products per slot, tag with style/occasion/season, upload hero image, publish toggle, drag-to-reorder within a collection.
+
+## Visual language
+Keep current brand system (dark streetwear, chrome/gold, block letters). Capsule cards use glassmorphism panels with gold-glow hover and floating product thumbnails — inside the existing dark theme rather than switching to the "bright white luxury background" the spec mentions. Confirm if you want a bright-white theme override just for Capsules.
+
+## Suggested execution order
+1. **This turn** — approve plan, then run Phase 1 migration + rewrite `catalog.ts` + `cart-store.ts` + admin product/collection screens. Site will show "No products found" until you import.
+2. **Next turn** — Shopify import utility, then run it, verify catalog.
+3. **After** — delete all Shopify code, connectors, secrets.
+4. **Then** — Capsules schema, admin, and public pages.
+5. **Later** — wire Stripe or Paddle checkout.
+
+## Confirm before I start
+- OK to ship Phase 1 in one turn (empty catalog + admin CRUD + placeholder checkout), then handle Shopify import in the next turn?
+- Keep the current dark aesthetic for Capsules, or force a bright-white "Louis Vuitton / Dior" theme just on that page?
