@@ -49,7 +49,7 @@ function FrassKicks() {
       <section className="mx-auto max-w-[1600px] px-6 lg:px-12 mt-24">
         <div className="mb-10 flex items-end justify-between gap-6">
           <h2 className="font-display text-4xl md:text-5xl">The full catalog</h2>
-          <span className="text-[11px] uppercase tracking-[0.25em] text-muted-foreground">Live from Shopify</span>
+          <span className="text-[11px] uppercase tracking-[0.25em] text-muted-foreground">Live catalog</span>
         </div>
         <ProductGrid query='vendor:"FRASS KICKS"' first={24} />
       </section>

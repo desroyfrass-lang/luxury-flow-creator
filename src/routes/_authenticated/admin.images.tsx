@@ -288,13 +288,13 @@ function ProductOverridesTab() {
     <div>
       <div className="mb-8 rounded-xl border border-border/60 bg-card p-5">
         <div className="text-xs uppercase tracking-[0.25em] text-muted-foreground">
-          Shopify product ID
+          Product ID
         </div>
         <div className="mt-3 flex gap-2">
           <input
             value={productId}
             onChange={(e) => setProductId(e.target.value)}
-            placeholder="e.g. 7891234567890"
+            placeholder="Catalog product UUID"
             className="flex-1 rounded-sm border border-border bg-background/60 px-4 py-2.5 text-sm outline-none focus:border-[color:var(--gold)]"
           />
           <button
@@ -305,7 +305,7 @@ function ProductOverridesTab() {
           </button>
         </div>
         <p className="mt-3 text-[11px] text-muted-foreground">
-          Find the ID in the Shopify admin URL when editing a product. Overrides here replace the Shopify gallery on the product page.
+          Paste a catalog product ID (from Admin › Catalog). Overrides here replace the default gallery on the product page.
         </p>
       </div>
       {active && <ProductOverrideEditor productId={active} />}
@@ -387,7 +387,7 @@ function ProductOverrideEditor({ productId }: { productId: string }) {
         </div>
       ) : (
         <div className="rounded-xl border border-dashed border-border bg-card/40 p-12 text-center text-sm text-muted-foreground">
-          No overrides yet — the product page will show Shopify's gallery.
+          No overrides yet — the product page will show the default gallery.
         </div>
       )}
     </div>
