@@ -39,10 +39,10 @@ export const LOOKBOOK_STORIES: LookbookStory[] = [
     cover: cardMen,
     images: [cardMen, cardDrip, cardWomen, hero, cardKicks],
     shop: [
-      shop("frass-drip-men-work-drip-blazers-suit-jackets", "Men · Blazers"),
-      shop("frass-drip-women-work-drip-blazers", "Women · Blazers"),
-      shop("frass-drip-men-work-drip-dress-shirts", "Dress Shirts"),
-      shop("frass-drip-women-work-drip-pencil-skirts", "Pencil Skirts"),
+      shop("mens-work-drip-blazers-suit-jackets", "Men · Blazers"),
+      shop("womens-work-drip-blazers", "Women · Blazers"),
+      shop("mens-work-drip-dress-shirts", "Dress Shirts"),
+      shop("womens-work-drip-pencil-skirts", "Pencil Skirts"),
     ],
   },
   {
@@ -55,10 +55,10 @@ export const LOOKBOOK_STORIES: LookbookStory[] = [
     cover: cardWomen,
     images: [cardWomen, cardDrip, cardBare, hero, cardMen],
     shop: [
-      shop("frass-drip-women-party-drip-party-dresses", "Party Dresses"),
-      shop("frass-drip-women-party-drip-sequin-looks", "Sequin Looks"),
-      shop("frass-drip-men-party-drip-party-blazers", "Party Blazers"),
-      shop("frass-drip-men-party-drip-nightlife-fits", "Nightlife Fits"),
+      shop("womens-party-drip-party-dresses", "Party Dresses"),
+      shop("womens-party-drip-sequin-looks", "Sequin Looks"),
+      shop("mens-party-drip-party-blazers", "Party Blazers"),
+      shop("mens-party-drip-nightlife-fits", "Nightlife Fits"),
     ],
   },
   {
@@ -71,9 +71,9 @@ export const LOOKBOOK_STORIES: LookbookStory[] = [
     cover: cardDrip,
     images: [cardDrip, cardKicks, cardMen, cardWomen, hero],
     shop: [
-      shop("frass-drip-men-street-drip-cargo", "Men · Cargo"),
-      shop("frass-drip-women-street-drip-jackets", "Women · Jackets"),
-      shop("frass-drip-men-street-drip-statement-pieces", "Statement Pieces"),
+      shop("mens-street-drip-cargo", "Men · Cargo"),
+      shop("womens-street-drip-jackets", "Women · Jackets"),
+      shop("mens-street-drip-statement-pieces", "Statement Pieces"),
       shop("frass-kicks-men", "Street Kicks"),
     ],
   },
@@ -87,10 +87,10 @@ export const LOOKBOOK_STORIES: LookbookStory[] = [
     cover: cardKicks,
     images: [cardKicks, cardMen, cardWomen, cardDrip, hero],
     shop: [
-      shop("frass-drip-men-casual-drip-hoodies", "Hoodies"),
-      shop("frass-drip-women-casual-drip-crop-tops", "Crop Tops"),
-      shop("frass-drip-men-casual-drip-denim", "Men · Denim"),
-      shop("frass-drip-women-casual-drip-denim", "Women · Denim"),
+      shop("mens-casual-drip-hoodies", "Hoodies"),
+      shop("womens-casual-drip-crop-tops", "Crop Tops"),
+      shop("mens-casual-drip-denim", "Men · Denim"),
+      shop("womens-casual-drip-denim", "Women · Denim"),
     ],
   },
   {
@@ -103,10 +103,10 @@ export const LOOKBOOK_STORIES: LookbookStory[] = [
     cover: cardBare,
     images: [cardBare, hero, cardWomen, cardMen, cardDrip],
     shop: [
-      shop("frass-drip-men-vacay-drip-tropical-shirts", "Tropical Shirts"),
-      shop("frass-drip-women-vacay-drip-resort-dresses", "Resort Dresses"),
-      shop("bare-drip-men-swimwear-swim-shorts", "Swim Shorts"),
-      shop("bare-drip-women-swimwear-bikini-sets", "Bikini Sets"),
+      shop("mens-vacay-drip-tropical-shirts", "Tropical Shirts"),
+      shop("womens-vacay-drip-resort-dresses", "Resort Dresses"),
+      shop("mens-bare-drip-swimwear-swim-shorts", "Swim Shorts"),
+      shop("womens-bare-drip-swimwear-bikini-sets", "Bikini Sets"),
     ],
   },
   {
@@ -119,10 +119,10 @@ export const LOOKBOOK_STORIES: LookbookStory[] = [
     cover: cardKicks,
     images: [cardKicks, cardMen, cardWomen, hero, cardDrip],
     shop: [
-      shop("frass-drip-men-sports-drip-training-gear", "Training Gear"),
-      shop("frass-drip-women-sports-drip-studio-yoga", "Studio & Yoga"),
-      shop("frass-drip-men-sports-drip-basketball-court", "Court Style"),
-      shop("frass-drip-women-sports-drip-activewear-sets", "Activewear Sets"),
+      shop("mens-sport-drip-training-gear", "Training Gear"),
+      shop("womens-sport-drip-studio-yoga", "Studio & Yoga"),
+      shop("mens-sport-drip-basketball-court", "Court Style"),
+      shop("womens-sport-drip-activewear-sets", "Activewear Sets"),
     ],
   },
   {
@@ -135,10 +135,10 @@ export const LOOKBOOK_STORIES: LookbookStory[] = [
     cover: cardBare,
     images: [cardBare, cardWomen, cardMen, hero, cardDrip],
     shop: [
-      shop("bare-drip-women-lingerie-bras-panty-sets", "Bra & Panty Sets"),
-      shop("bare-drip-women-lingerie-bodysuits", "Bodysuits"),
-      shop("bare-drip-men-underwear-boxer-briefs", "Boxer Briefs"),
-      shop("bare-drip-men-swimwear-performance-swimwear", "Performance Swim"),
+      shop("womens-bare-drip-lingerie-bras-panty-sets", "Bra & Panty Sets"),
+      shop("womens-bare-drip-lingerie-bodysuits", "Bodysuits"),
+      shop("mens-bare-drip-underwear-boxer-briefs", "Boxer Briefs"),
+      shop("mens-bare-drip-swimwear-performance-swimwear", "Performance Swim"),
     ],
   },
 ];
