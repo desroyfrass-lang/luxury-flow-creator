@@ -9,86 +9,110 @@ import cardDrip from "@/assets/card-drip.jpg";
 type Sub = readonly [slug: string, title: string];
 
 const WOMEN_CATEGORIES: Record<string, { title: string; tagline: string; subs: readonly Sub[] }> = {
-  "work-drip": {
-    title: "Work Drip",
-    tagline: "Blouses, blazers & professional sets.",
+  work: {
+    title: "Women's Work Drip",
+    tagline: "Blazers, blouses, dresses & professional sets.",
     subs: [
-      ["work-blouses", "Work Blouses"],
-      ["work-dresses", "Work Dresses"],
       ["blazers", "Blazers"],
-      ["business-casual", "Business Casual"],
-      ["professional-sets", "Professional Sets"],
-      ["dress-pants", "Dress Pants"],
+      ["work-dresses", "Work Dresses"],
       ["pencil-skirts", "Pencil Skirts"],
+      ["dress-pants", "Dress Pants"],
       ["wide-leg-trousers", "Wide-Leg Trousers"],
+      ["work-blouses", "Work Blouses"],
+      ["professional-sets", "Professional Sets"],
+      ["business-casual", "Business Casual"],
     ],
   },
-  "party-drip": {
-    title: "Party Drip",
+  party: {
+    title: "Women's Party Drip",
     tagline: "Dresses, clubwear & sequin looks.",
     subs: [
       ["party-dresses", "Party Dresses"],
-      ["clubwear", "Clubwear"],
-      ["nightlife-fits", "Nightlife Fits"],
-      ["sequin-looks", "Sequin Looks"],
-      ["maxi-dresses", "Maxi Dresses"],
-      ["mini-dresses", "Mini Dresses"],
       ["birthday-dresses", "Birthday Dresses"],
+      ["mini-dresses", "Mini Dresses"],
+      ["maxi-dresses", "Maxi Dresses"],
       ["two-piece-sets", "Two-Piece Sets"],
+      ["clubwear", "Clubwear"],
+      ["sequin-looks", "Sequin Looks"],
+      ["nightlife-fits", "Nightlife Fits"],
     ],
   },
-  "casual-drip": {
-    title: "Casual Drip",
+  casual: {
+    title: "Women's Casual Drip",
     tagline: "Sweats, denim, crop tops & basics.",
     subs: [
       ["casual-dresses", "Casual Dresses"],
-      ["sweats", "Sweats"],
-      ["shorts", "Shorts"],
-      ["denim", "Denim"],
-      ["leggings", "Leggings"],
-      ["bodysuits", "Bodysuits"],
-      ["crop-tops", "Crop Tops"],
-      ["graphic-tees", "Graphic Tees"],
+      ["matching-sets", "Matching Sets"],
       ["basic-tops", "Basic Tops"],
-    ],
-  },
-  "street-drip": {
-    title: "Street Drip",
-    tagline: "Jackets, cargo & tracksuits.",
-    subs: [
-      ["jackets", "Jackets"],
-      ["sweats", "Sweats"],
+      ["graphic-tees", "Graphic Tees"],
+      ["crop-tops", "Crop Tops"],
+      ["bodysuits", "Bodysuits"],
+      ["leggings", "Leggings"],
       ["denim", "Denim"],
-      ["hoodies", "Hoodies"],
-      ["tracksuits", "Tracksuits"],
-      ["cargo", "Cargo"],
-      ["jumpsuits-rompers", "Jumpsuits & Rompers"],
-      ["statement-pieces", "Statement Pieces"],
-      ["streetwear-sets", "Streetwear Sets"],
+      ["shorts", "Shorts"],
+      ["sweats", "Sweats"],
     ],
   },
-  "vacay-drip": {
-    title: "Vacay Drip",
+  street: {
+    title: "Women's Street Drip",
+    tagline: "Jackets, cargo, tracksuits & statement pieces.",
+    subs: [
+      ["oversized-graphic-tees", "Oversized & Graphic Tees"],
+      ["cargo", "Cargo"],
+      ["streetwear-sets", "Streetwear Sets"],
+      ["tracksuits", "Tracksuits"],
+      ["hoodies", "Hoodies"],
+      ["denim", "Denim"],
+      ["statement-pieces", "Statement Pieces"],
+      ["jumpsuits-rompers", "Jumpsuits & Rompers"],
+      ["sweats", "Sweats"],
+      ["jackets", "Jackets"],
+    ],
+  },
+  vacay: {
+    title: "Women's Vacay Drip",
     tagline: "Beachwear, resort fits & cover-ups.",
     subs: [
-      ["beachwear", "Beachwear"],
-      ["rompers-jumpsuits", "Rompers & Jumpsuits"],
-      ["resort-essentials", "Resort Essentials"],
-      ["cover-ups", "Cover-Ups"],
-      ["vacation-fits", "Vacation Fits"],
-      ["vacation-sets", "Vacation Sets"],
       ["resort-dresses", "Resort Dresses"],
+      ["maxi-dresses", "Maxi Dresses"],
+      ["vacation-sets", "Vacation Sets"],
+      ["vacation-fits", "Vacation Fits"],
+      ["cover-ups", "Cover-Ups"],
+      ["beachwear", "Beachwear"],
+      ["resort-essentials", "Resort Essentials"],
+      ["rompers-jumpsuits", "Rompers & Jumpsuits"],
     ],
   },
-  "sports-drip": {
-    title: "Sports Drip",
-    tagline: "Training, studio & active shapewear.",
+  sport: {
+    title: "Women's Sport Drip",
+    tagline: "Training, studio, running & active shapewear.",
     subs: [
       ["training-essentials", "Training Essentials"],
       ["activewear-sets", "Activewear Sets"],
       ["running-performance", "Running & Performance"],
       ["studio-yoga", "Studio & Yoga"],
       ["active-shapewear", "Active Shapewear"],
+      ["gym-fits", "Gym Fits"],
+    ],
+  },
+  crown: {
+    title: "Women's Crown Drip",
+    tagline: "Signature Crown drops.",
+    subs: [
+      ["street-crowns", "Street Crowns"],
+      ["classic-crowns", "Classic Crowns"],
+      ["casual-crowns", "Casual Crowns"],
+      ["on-sale", "On Sale"],
+    ],
+  },
+  extra: {
+    title: "Women's Extra Drip",
+    tagline: "Overflow drops & seasonal extras.",
+    subs: [
+      ["street", "Street"],
+      ["classic", "Classic"],
+      ["casual", "Casual"],
+      ["on-sale", "On Sale"],
     ],
   },
 };
@@ -103,7 +127,7 @@ export const Route = createFileRoute("/frass-drip/women/$category")({
     const cat = WOMEN_CATEGORIES[params.category];
     return {
       meta: [
-        { title: `Women's ${cat?.title ?? "Drip"} — Frass` },
+        { title: `${cat?.title ?? "Women's Drip"} — Frass` },
         { name: "description", content: cat?.tagline ?? "" },
       ],
     };
@@ -138,26 +162,13 @@ function CategoryPage() {
             <CollectionCard
               key={slug}
               to="/collection/$handle"
-              params={{ handle: `frass-drip-women-${category}-${slug}` }}
+              params={{ handle: `womens-${category}-drip-${slug}` }}
               image={IMAGES[i % IMAGES.length]}
               eyebrow={cat.title}
               title={title}
               size="md"
             />
           ))}
-          {!cat.subs.some(([s]) => s === "on-sale") && (
-            <CollectionCard
-              key="on-sale"
-              to="/collection/$handle"
-              params={{ handle: `frass-drip-women-${category}-on-sale` }}
-              image={IMAGES[cat.subs.length % IMAGES.length]}
-              eyebrow={cat.title}
-              title={`${cat.title} On Sale`}
-              description="Marked-down pieces from this drop."
-              size="md"
-              cta="Shop Sale"
-            />
-          )}
         </div>
       </section>
     </SiteShell>

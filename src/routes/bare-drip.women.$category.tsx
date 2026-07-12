@@ -10,21 +10,21 @@ type Sub = readonly [slug: string, title: string];
 
 const WOMEN_CATEGORIES: Record<string, { title: string; tagline: string; subs: readonly Sub[] }> = {
   swimwear: {
-    title: "Bare Drip Swimwear",
+    title: "Women's Bare Drip Swimwear",
     tagline: "Bikinis, one-pieces, cover-ups and swim skirts.",
     subs: [
       ["bikini-sets", "Bikini Sets"],
       ["bikini-tops", "Bikini Tops"],
       ["bikini-bottoms", "Bikini Bottoms"],
-      ["one-piece-swimwear", "One-Piece Swimwear"],
+      ["one-piece-monokinis", "One-Piece & Monokinis"],
       ["cover-ups", "Cover-Ups"],
       ["photo-shoot-worthy", "Photo Shoot Worthy"],
       ["swim-skirts", "Swim Skirts"],
     ],
   },
   lingerie: {
-    title: "Bare Drip Lingerie",
-    tagline: "Bras, panties, sets, bodysuits and shapewear.",
+    title: "Women's Bare Drip Lingerie",
+    tagline: "Bras, panties, sets, bodysuits, sleepwear & shapewear.",
     subs: [
       ["bras", "Bras"],
       ["panties", "Panties"],
@@ -49,7 +49,7 @@ export const Route = createFileRoute("/bare-drip/women/$category")({
     const cat = WOMEN_CATEGORIES[params.category];
     return {
       meta: [
-        { title: `Women's ${cat?.title ?? "Bare Drip"} — Frass` },
+        { title: `${cat?.title ?? "Women's Bare Drip"} — Frass` },
         { name: "description", content: cat?.tagline ?? "" },
       ],
     };
@@ -84,26 +84,13 @@ function CategoryPage() {
             <CollectionCard
               key={slug}
               to="/collection/$handle"
-              params={{ handle: `bare-drip-women-${category}-${slug}` }}
+              params={{ handle: `womens-bare-drip-${category}-${slug}` }}
               image={IMAGES[i % IMAGES.length]}
               eyebrow={cat.title}
               title={title}
               size="md"
             />
           ))}
-          {!cat.subs.some(([s]) => s === "on-sale") && (
-            <CollectionCard
-              key="on-sale"
-              to="/collection/$handle"
-              params={{ handle: `bare-drip-women-${category}-on-sale` }}
-              image={IMAGES[cat.subs.length % IMAGES.length]}
-              eyebrow={cat.title}
-              title={`${cat.title} On Sale`}
-              description="Marked-down pieces from this drop."
-              size="md"
-              cta="Shop Sale"
-            />
-          )}
         </div>
       </section>
     </SiteShell>

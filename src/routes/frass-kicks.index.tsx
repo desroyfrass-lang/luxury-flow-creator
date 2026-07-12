@@ -29,38 +29,20 @@ function FrassKicks() {
         crumbs={[{ label: "Home", to: "/" }, { label: "Frass Kicks" }]}
       />
       <section className="mx-auto max-w-[1600px] px-6 lg:px-12">
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 lg:gap-10">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-10">
           <CollectionCard
             to="/frass-kicks/men"
             image={cardMen}
             eyebrow="Frass Kicks"
             title="Men's Footwear"
-            description="Casual · Street · Classic"
-            ratio="wide"
+            description="Street · Classic · Casual"
           />
           <CollectionCard
             to="/frass-kicks/women"
             image={cardWomen}
             eyebrow="Frass Kicks"
             title="Women's Footwear"
-            description="Casual · Street · Classic"
-            ratio="wide"
-          />
-          <CollectionCard
-            to="/frass-kicks/crown-kicks"
-            image={cardKicks}
-            eyebrow="Frass Kicks"
-            title="Crown Kicks"
-            description="Crown · Street · Classic · Casual"
-            ratio="wide"
-          />
-          <CollectionCard
-            to="/frass-kicks/side-kicks"
-            image={cardKicks}
-            eyebrow="Frass Kicks"
-            title="Side Kicks"
-            description="Side · Street · Classic · Casual"
-            ratio="wide"
+            description="Street · Classic · Casual"
           />
         </div>
       </section>

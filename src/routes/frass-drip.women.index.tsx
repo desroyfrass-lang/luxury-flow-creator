@@ -7,12 +7,14 @@ import cardBare from "@/assets/card-bare.jpg";
 import cardDrip from "@/assets/card-drip.jpg";
 
 const PARENTS = [
-  ["work-drip", "Work Drip", "Blouses, blazers & professional sets."],
-  ["party-drip", "Party Drip", "Dresses, clubwear & sequin looks."],
-  ["casual-drip", "Casual Drip", "Sweats, denim, crop tops & basics."],
-  ["street-drip", "Street Drip", "Jackets, cargo & tracksuits."],
-  ["vacay-drip", "Vacay Drip", "Beachwear, resort fits & cover-ups."],
-  ["sports-drip", "Sports Drip", "Training, studio & active shapewear."],
+  ["work", "Work Drip", "Blouses, blazers & professional sets."],
+  ["party", "Party Drip", "Dresses, clubwear & sequin looks."],
+  ["casual", "Casual Drip", "Sweats, denim, crop tops & basics."],
+  ["street", "Street Drip", "Jackets, cargo & tracksuits."],
+  ["vacay", "Vacay Drip", "Beachwear, resort fits & cover-ups."],
+  ["sport", "Sport Drip", "Training, studio & active shapewear."],
+  ["crown", "Crown Drip", "Signature drops from the Crown line."],
+  ["extra", "Extra Drip", "Overflow drops & seasonal extras."],
 ] as const;
 
 const IMAGES = [cardWomen, cardBare, cardDrip];
@@ -21,7 +23,7 @@ export const Route = createFileRoute("/frass-drip/women/")({
   head: () => ({
     meta: [
       { title: "Women's Frass Drip" },
-      { name: "description", content: "Women's fashion across work, party, casual, street, vacay and sports." },
+      { name: "description", content: "Women's fashion — work, party, casual, street, vacay, sport, crown and extra." },
       { property: "og:image", content: cardWomen },
     ],
   }),

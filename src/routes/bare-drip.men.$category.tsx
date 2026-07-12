@@ -10,7 +10,7 @@ type Sub = readonly [slug: string, title: string];
 
 const MEN_CATEGORIES: Record<string, { title: string; tagline: string; subs: readonly Sub[] }> = {
   swimwear: {
-    title: "Bare Drip Swimwear",
+    title: "Men's Bare Drip Swimwear",
     tagline: "Swim shorts, trunks, beach shorts and performance swimwear.",
     subs: [
       ["swim-shorts", "Swim Shorts"],
@@ -20,7 +20,7 @@ const MEN_CATEGORIES: Record<string, { title: string; tagline: string; subs: rea
     ],
   },
   underwear: {
-    title: "Bare Drip Underwear",
+    title: "Men's Bare Drip Underwear",
     tagline: "Boxers, briefs, tanks, undershirts and sleepwear.",
     subs: [
       ["boxers", "Boxers"],
@@ -44,7 +44,7 @@ export const Route = createFileRoute("/bare-drip/men/$category")({
     const cat = MEN_CATEGORIES[params.category];
     return {
       meta: [
-        { title: `Men's ${cat?.title ?? "Bare Drip"} — Frass` },
+        { title: `${cat?.title ?? "Men's Bare Drip"} — Frass` },
         { name: "description", content: cat?.tagline ?? "" },
       ],
     };
@@ -79,26 +79,13 @@ function CategoryPage() {
             <CollectionCard
               key={slug}
               to="/collection/$handle"
-              params={{ handle: `bare-drip-men-${category}-${slug}` }}
+              params={{ handle: `mens-bare-drip-${category}-${slug}` }}
               image={IMAGES[i % IMAGES.length]}
               eyebrow={cat.title}
               title={title}
               size="md"
             />
           ))}
-          {!cat.subs.some(([s]) => s === "on-sale") && (
-            <CollectionCard
-              key="on-sale"
-              to="/collection/$handle"
-              params={{ handle: `bare-drip-men-${category}-on-sale` }}
-              image={IMAGES[cat.subs.length % IMAGES.length]}
-              eyebrow={cat.title}
-              title={`${cat.title} On Sale`}
-              description="Marked-down pieces from this drop."
-              size="md"
-              cta="Shop Sale"
-            />
-          )}
         </div>
       </section>
     </SiteShell>

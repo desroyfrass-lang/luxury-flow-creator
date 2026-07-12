@@ -10,7 +10,7 @@ export const Route = createFileRoute("/frass-kicks/women")({
   head: () => ({
     meta: [
       { title: "Women's Footwear — Frass Kicks" },
-      { name: "description", content: "Casual, street and classic women's kicks." },
+      { name: "description", content: "Street, classic and casual women's kicks." },
       { property: "og:image", content: cardWomen },
     ],
   }),
@@ -18,9 +18,9 @@ export const Route = createFileRoute("/frass-kicks/women")({
 });
 
 const CARDS = [
-  { handle: "frass-kicks-women-casual", title: "Casual", image: cardWomen, blurb: "Daily essentials, refined." },
-  { handle: "frass-kicks-women-street", title: "Street", image: cardKicks, blurb: "Statement steppers." },
-  { handle: "frass-kicks-women-classic", title: "Classic", image: cardBare, blurb: "Heels & icons, reimagined." },
+  { handle: "street-kicks-women", title: "Street Kicks", image: cardKicks, blurb: "Statement steppers." },
+  { handle: "classic-kicks-women", title: "Classic Kicks", image: cardBare, blurb: "Heels & icons, reimagined." },
+  { handle: "casual-kicks-women", title: "Casual Kicks", image: cardWomen, blurb: "Daily essentials, refined." },
 ];
 
 function WomensKicks() {
