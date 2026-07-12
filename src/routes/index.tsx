@@ -3,6 +3,7 @@ import { SiteShell } from "@/components/site-shell";
 import { CollectionCard } from "@/components/collection-card";
 import { FeaturedDrop } from "@/components/featured-drop";
 import { ProductGrid } from "@/components/product-grid";
+import { StickyProductRail } from "@/components/sticky-product-rail";
 import heroImg from "@/assets/hero-frass.jpg";
 import cardKicks from "@/assets/card-kicks.jpg";
 import cardDrip from "@/assets/card-drip.jpg";
@@ -104,6 +105,13 @@ function Home() {
 
   return (
     <SiteShell preHeader={<CinematicTitleCard />}>
+      <StickyProductRail
+        image="https://cdn.shopify.com/s/files/1/0738/7575/1068/files/1383dd80-1139-4af9-8bae-1b14c7cb8920.jpg?v=1779150092"
+        title="Camo High-Steppers"
+        eyebrow="Now stepping"
+        handle="camo-high-steppers"
+      />
+
       <section className="relative">
         <div className="mx-auto max-w-[1600px] px-6 lg:px-12 pt-10 lg:pt-16">
           <div className="relative overflow-hidden rounded-[2rem] border border-border/60 lux-card">
