@@ -40,6 +40,7 @@ export const Route = createFileRoute("/bare-drip/men/")({
               key={category}
               to="/bare-drip/men/$category"
               params={{ category }}
+              slot={`bare-men-${category}`}
               image={IMAGES[i % IMAGES.length]}
               eyebrow="Men"
               title={title}
@@ -47,6 +48,7 @@ export const Route = createFileRoute("/bare-drip/men/")({
               size="lg"
             />
           ))}
+
         </div>
       </section>
     </SiteShell>
