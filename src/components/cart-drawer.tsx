@@ -131,10 +131,10 @@ export function CartDrawer() {
                 >
                   <Sparkles className="h-4 w-4" /> Try it on
                 </Link>
-                <button
-                  onClick={checkout}
-                  disabled={isLoading || isSyncing}
-                  className="w-full h-12 inline-flex items-center justify-center gap-2 rounded-full bg-foreground text-background uppercase tracking-[0.2em] text-xs font-medium transition hover:bg-foreground/90 disabled:opacity-60"
+                <Link
+                  to="/checkout"
+                  onClick={closeAndGoCheckout}
+                  className="w-full h-12 inline-flex items-center justify-center gap-2 rounded-full bg-foreground text-background uppercase tracking-[0.2em] text-xs font-medium transition hover:bg-foreground/90"
                 >
                   {isLoading || isSyncing ? (
                     <Loader2 className="h-4 w-4 animate-spin" />
@@ -143,9 +143,9 @@ export function CartDrawer() {
                       <ExternalLink className="h-4 w-4" /> Checkout
                     </>
                   )}
-                </button>
+                </Link>
                 <p className="text-[10px] text-center text-muted-foreground uppercase tracking-[0.2em]">
-                  Secure Shopify Checkout · AI Try-On preview
+                  Secure Checkout · AI Try-On preview
                 </p>
               </div>
             </>
