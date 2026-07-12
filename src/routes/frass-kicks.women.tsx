@@ -18,10 +18,11 @@ export const Route = createFileRoute("/frass-kicks/women")({
 });
 
 const CARDS = [
-  { handle: "street-kicks-women", title: "Street Kicks", image: cardKicks, blurb: "Statement steppers." },
-  { handle: "classic-kicks-women", title: "Classic Kicks", image: cardBare, blurb: "Heels & icons, reimagined." },
-  { handle: "casual-kicks-women", title: "Casual Kicks", image: cardWomen, blurb: "Daily essentials, refined." },
+  { handle: "street-kicks-women", slot: "kicks-women-street", title: "Street Kicks", image: cardKicks, blurb: "Statement steppers." },
+  { handle: "classic-kicks-women", slot: "kicks-women-classic", title: "Classic Kicks", image: cardBare, blurb: "Heels & icons, reimagined." },
+  { handle: "casual-kicks-women", slot: "kicks-women-casual", title: "Casual Kicks", image: cardWomen, blurb: "Daily essentials, refined." },
 ];
+
 
 function WomensKicks() {
   return (
