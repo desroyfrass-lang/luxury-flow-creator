@@ -43,11 +43,13 @@ function MensKicks() {
               key={c.handle}
               to="/collection/$handle"
               params={{ handle: c.handle }}
+              slot={c.slot}
               image={c.image}
               eyebrow="Men"
               title={c.title}
               description={c.blurb}
             />
+
           ))}
         </div>
       </section>
