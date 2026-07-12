@@ -73,6 +73,8 @@ export const SLOT_SECTIONS: SlotSection[] = [
       { key: "drip-men-street", label: "Street Drip (men)", fallback: cardDrip },
       { key: "drip-men-vacay", label: "Vacay Drip (men)", fallback: cardMen },
       { key: "drip-men-sport", label: "Sport Drip (men)", fallback: cardKicks },
+      { key: "drip-men-main-event", label: "Main Event Drip (men)", fallback: cardDrip },
+      { key: "drip-men-photoshoot", label: "Photoshoot Ready Drip (men)", fallback: cardMen },
       { key: "drip-men-crown", label: "Crown Drip (men)", fallback: cardDrip },
       { key: "drip-men-extra", label: "Extra Drip (men)", fallback: cardMen },
     ],
