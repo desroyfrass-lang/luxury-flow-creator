@@ -89,6 +89,8 @@ export const SLOT_SECTIONS: SlotSection[] = [
       { key: "drip-women-street", label: "Street Drip (women)", fallback: cardWomen },
       { key: "drip-women-vacay", label: "Vacay Drip (women)", fallback: cardBare },
       { key: "drip-women-sport", label: "Sport Drip (women)", fallback: cardDrip },
+      { key: "drip-women-main-event", label: "Main Event Drip (women)", fallback: cardWomen },
+      { key: "drip-women-photoshoot", label: "Photoshoot Ready Drip (women)", fallback: cardBare },
       { key: "drip-women-crown", label: "Crown Drip (women)", fallback: cardWomen },
       { key: "drip-women-extra", label: "Extra Drip (women)", fallback: cardBare },
     ],
