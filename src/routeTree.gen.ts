@@ -14,6 +14,7 @@ import { Route as LookbookRouteImport } from './routes/lookbook'
 import { Route as FrassKicksRouteImport } from './routes/frass-kicks'
 import { Route as FrassDripRouteImport } from './routes/frass-drip'
 import { Route as CheckoutRouteImport } from './routes/checkout'
+import { Route as CapsulesRouteImport } from './routes/capsules'
 import { Route as BlogRouteImport } from './routes/blog'
 import { Route as BareDripRouteImport } from './routes/bare-drip'
 import { Route as AuthRouteImport } from './routes/auth'
@@ -22,6 +23,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as LookbookIndexRouteImport } from './routes/lookbook.index'
 import { Route as FrassKicksIndexRouteImport } from './routes/frass-kicks.index'
 import { Route as FrassDripIndexRouteImport } from './routes/frass-drip.index'
+import { Route as CapsulesIndexRouteImport } from './routes/capsules.index'
 import { Route as BlogIndexRouteImport } from './routes/blog.index'
 import { Route as BareDripIndexRouteImport } from './routes/bare-drip.index'
 import { Route as ProductHandleRouteImport } from './routes/product.$handle'
@@ -31,6 +33,7 @@ import { Route as FrassKicksMenRouteImport } from './routes/frass-kicks.men'
 import { Route as FrassDripWomenRouteImport } from './routes/frass-drip.women'
 import { Route as FrassDripMenRouteImport } from './routes/frass-drip.men'
 import { Route as CollectionHandleRouteImport } from './routes/collection.$handle'
+import { Route as CapsulesHandleRouteImport } from './routes/capsules.$handle'
 import { Route as BlogSlugRouteImport } from './routes/blog.$slug'
 import { Route as BareDripWomenRouteImport } from './routes/bare-drip.women'
 import { Route as BareDripMenRouteImport } from './routes/bare-drip.men'
@@ -48,6 +51,7 @@ import { Route as BareDripMenCategoryRouteImport } from './routes/bare-drip.men.
 import { Route as AuthenticatedAdminTextRouteImport } from './routes/_authenticated/admin.text'
 import { Route as AuthenticatedAdminMediaRouteImport } from './routes/_authenticated/admin.media'
 import { Route as AuthenticatedAdminImagesRouteImport } from './routes/_authenticated/admin.images'
+import { Route as AuthenticatedAdminCapsulesRouteImport } from './routes/_authenticated/admin.capsules'
 import { Route as AuthenticatedAdminBlogRouteImport } from './routes/_authenticated/admin.blog'
 
 const MusicMediaRoute = MusicMediaRouteImport.update({
@@ -73,6 +77,11 @@ const FrassDripRoute = FrassDripRouteImport.update({
 const CheckoutRoute = CheckoutRouteImport.update({
   id: '/checkout',
   path: '/checkout',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CapsulesRoute = CapsulesRouteImport.update({
+  id: '/capsules',
+  path: '/capsules',
   getParentRoute: () => rootRouteImport,
 } as any)
 const BlogRoute = BlogRouteImport.update({
@@ -113,6 +122,11 @@ const FrassDripIndexRoute = FrassDripIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => FrassDripRoute,
+} as any)
+const CapsulesIndexRoute = CapsulesIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => CapsulesRoute,
 } as any)
 const BlogIndexRoute = BlogIndexRouteImport.update({
   id: '/',
@@ -158,6 +172,11 @@ const CollectionHandleRoute = CollectionHandleRouteImport.update({
   id: '/collection/$handle',
   path: '/collection/$handle',
   getParentRoute: () => rootRouteImport,
+} as any)
+const CapsulesHandleRoute = CapsulesHandleRouteImport.update({
+  id: '/$handle',
+  path: '/$handle',
+  getParentRoute: () => CapsulesRoute,
 } as any)
 const BlogSlugRoute = BlogSlugRouteImport.update({
   id: '/$slug',
@@ -245,6 +264,12 @@ const AuthenticatedAdminImagesRoute =
     path: '/images',
     getParentRoute: () => AuthenticatedAdminRoute,
   } as any)
+const AuthenticatedAdminCapsulesRoute =
+  AuthenticatedAdminCapsulesRouteImport.update({
+    id: '/capsules',
+    path: '/capsules',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
 const AuthenticatedAdminBlogRoute = AuthenticatedAdminBlogRouteImport.update({
   id: '/blog',
   path: '/blog',
@@ -256,6 +281,7 @@ export interface FileRoutesByFullPath {
   '/auth': typeof AuthRoute
   '/bare-drip': typeof BareDripRouteWithChildren
   '/blog': typeof BlogRouteWithChildren
+  '/capsules': typeof CapsulesRouteWithChildren
   '/checkout': typeof CheckoutRoute
   '/frass-drip': typeof FrassDripRouteWithChildren
   '/frass-kicks': typeof FrassKicksRouteWithChildren
@@ -266,6 +292,7 @@ export interface FileRoutesByFullPath {
   '/bare-drip/men': typeof BareDripMenRouteWithChildren
   '/bare-drip/women': typeof BareDripWomenRouteWithChildren
   '/blog/$slug': typeof BlogSlugRoute
+  '/capsules/$handle': typeof CapsulesHandleRoute
   '/collection/$handle': typeof CollectionHandleRoute
   '/frass-drip/men': typeof FrassDripMenRouteWithChildren
   '/frass-drip/women': typeof FrassDripWomenRouteWithChildren
@@ -275,10 +302,12 @@ export interface FileRoutesByFullPath {
   '/product/$handle': typeof ProductHandleRoute
   '/bare-drip/': typeof BareDripIndexRoute
   '/blog/': typeof BlogIndexRoute
+  '/capsules/': typeof CapsulesIndexRoute
   '/frass-drip/': typeof FrassDripIndexRoute
   '/frass-kicks/': typeof FrassKicksIndexRoute
   '/lookbook/': typeof LookbookIndexRoute
   '/admin/blog': typeof AuthenticatedAdminBlogRoute
+  '/admin/capsules': typeof AuthenticatedAdminCapsulesRoute
   '/admin/images': typeof AuthenticatedAdminImagesRoute
   '/admin/media': typeof AuthenticatedAdminMediaRoute
   '/admin/text': typeof AuthenticatedAdminTextRoute
@@ -299,6 +328,7 @@ export interface FileRoutesByTo {
   '/music-media': typeof MusicMediaRoute
   '/try-on': typeof AuthenticatedTryOnRoute
   '/blog/$slug': typeof BlogSlugRoute
+  '/capsules/$handle': typeof CapsulesHandleRoute
   '/collection/$handle': typeof CollectionHandleRoute
   '/frass-kicks/men': typeof FrassKicksMenRoute
   '/frass-kicks/women': typeof FrassKicksWomenRoute
@@ -306,10 +336,12 @@ export interface FileRoutesByTo {
   '/product/$handle': typeof ProductHandleRoute
   '/bare-drip': typeof BareDripIndexRoute
   '/blog': typeof BlogIndexRoute
+  '/capsules': typeof CapsulesIndexRoute
   '/frass-drip': typeof FrassDripIndexRoute
   '/frass-kicks': typeof FrassKicksIndexRoute
   '/lookbook': typeof LookbookIndexRoute
   '/admin/blog': typeof AuthenticatedAdminBlogRoute
+  '/admin/capsules': typeof AuthenticatedAdminCapsulesRoute
   '/admin/images': typeof AuthenticatedAdminImagesRoute
   '/admin/media': typeof AuthenticatedAdminMediaRoute
   '/admin/text': typeof AuthenticatedAdminTextRoute
@@ -330,6 +362,7 @@ export interface FileRoutesById {
   '/auth': typeof AuthRoute
   '/bare-drip': typeof BareDripRouteWithChildren
   '/blog': typeof BlogRouteWithChildren
+  '/capsules': typeof CapsulesRouteWithChildren
   '/checkout': typeof CheckoutRoute
   '/frass-drip': typeof FrassDripRouteWithChildren
   '/frass-kicks': typeof FrassKicksRouteWithChildren
@@ -340,6 +373,7 @@ export interface FileRoutesById {
   '/bare-drip/men': typeof BareDripMenRouteWithChildren
   '/bare-drip/women': typeof BareDripWomenRouteWithChildren
   '/blog/$slug': typeof BlogSlugRoute
+  '/capsules/$handle': typeof CapsulesHandleRoute
   '/collection/$handle': typeof CollectionHandleRoute
   '/frass-drip/men': typeof FrassDripMenRouteWithChildren
   '/frass-drip/women': typeof FrassDripWomenRouteWithChildren
@@ -349,10 +383,12 @@ export interface FileRoutesById {
   '/product/$handle': typeof ProductHandleRoute
   '/bare-drip/': typeof BareDripIndexRoute
   '/blog/': typeof BlogIndexRoute
+  '/capsules/': typeof CapsulesIndexRoute
   '/frass-drip/': typeof FrassDripIndexRoute
   '/frass-kicks/': typeof FrassKicksIndexRoute
   '/lookbook/': typeof LookbookIndexRoute
   '/_authenticated/admin/blog': typeof AuthenticatedAdminBlogRoute
+  '/_authenticated/admin/capsules': typeof AuthenticatedAdminCapsulesRoute
   '/_authenticated/admin/images': typeof AuthenticatedAdminImagesRoute
   '/_authenticated/admin/media': typeof AuthenticatedAdminMediaRoute
   '/_authenticated/admin/text': typeof AuthenticatedAdminTextRoute
@@ -373,6 +409,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/bare-drip'
     | '/blog'
+    | '/capsules'
     | '/checkout'
     | '/frass-drip'
     | '/frass-kicks'
@@ -383,6 +420,7 @@ export interface FileRouteTypes {
     | '/bare-drip/men'
     | '/bare-drip/women'
     | '/blog/$slug'
+    | '/capsules/$handle'
     | '/collection/$handle'
     | '/frass-drip/men'
     | '/frass-drip/women'
@@ -392,10 +430,12 @@ export interface FileRouteTypes {
     | '/product/$handle'
     | '/bare-drip/'
     | '/blog/'
+    | '/capsules/'
     | '/frass-drip/'
     | '/frass-kicks/'
     | '/lookbook/'
     | '/admin/blog'
+    | '/admin/capsules'
     | '/admin/images'
     | '/admin/media'
     | '/admin/text'
@@ -416,6 +456,7 @@ export interface FileRouteTypes {
     | '/music-media'
     | '/try-on'
     | '/blog/$slug'
+    | '/capsules/$handle'
     | '/collection/$handle'
     | '/frass-kicks/men'
     | '/frass-kicks/women'
@@ -423,10 +464,12 @@ export interface FileRouteTypes {
     | '/product/$handle'
     | '/bare-drip'
     | '/blog'
+    | '/capsules'
     | '/frass-drip'
     | '/frass-kicks'
     | '/lookbook'
     | '/admin/blog'
+    | '/admin/capsules'
     | '/admin/images'
     | '/admin/media'
     | '/admin/text'
@@ -446,6 +489,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/bare-drip'
     | '/blog'
+    | '/capsules'
     | '/checkout'
     | '/frass-drip'
     | '/frass-kicks'
@@ -456,6 +500,7 @@ export interface FileRouteTypes {
     | '/bare-drip/men'
     | '/bare-drip/women'
     | '/blog/$slug'
+    | '/capsules/$handle'
     | '/collection/$handle'
     | '/frass-drip/men'
     | '/frass-drip/women'
@@ -465,10 +510,12 @@ export interface FileRouteTypes {
     | '/product/$handle'
     | '/bare-drip/'
     | '/blog/'
+    | '/capsules/'
     | '/frass-drip/'
     | '/frass-kicks/'
     | '/lookbook/'
     | '/_authenticated/admin/blog'
+    | '/_authenticated/admin/capsules'
     | '/_authenticated/admin/images'
     | '/_authenticated/admin/media'
     | '/_authenticated/admin/text'
@@ -489,6 +536,7 @@ export interface RootRouteChildren {
   AuthRoute: typeof AuthRoute
   BareDripRoute: typeof BareDripRouteWithChildren
   BlogRoute: typeof BlogRouteWithChildren
+  CapsulesRoute: typeof CapsulesRouteWithChildren
   CheckoutRoute: typeof CheckoutRoute
   FrassDripRoute: typeof FrassDripRouteWithChildren
   FrassKicksRoute: typeof FrassKicksRouteWithChildren
@@ -533,6 +581,13 @@ declare module '@tanstack/react-router' {
       path: '/checkout'
       fullPath: '/checkout'
       preLoaderRoute: typeof CheckoutRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/capsules': {
+      id: '/capsules'
+      path: '/capsules'
+      fullPath: '/capsules'
+      preLoaderRoute: typeof CapsulesRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/blog': {
@@ -590,6 +645,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/frass-drip/'
       preLoaderRoute: typeof FrassDripIndexRouteImport
       parentRoute: typeof FrassDripRoute
+    }
+    '/capsules/': {
+      id: '/capsules/'
+      path: '/'
+      fullPath: '/capsules/'
+      preLoaderRoute: typeof CapsulesIndexRouteImport
+      parentRoute: typeof CapsulesRoute
     }
     '/blog/': {
       id: '/blog/'
@@ -653,6 +715,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/collection/$handle'
       preLoaderRoute: typeof CollectionHandleRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/capsules/$handle': {
+      id: '/capsules/$handle'
+      path: '/$handle'
+      fullPath: '/capsules/$handle'
+      preLoaderRoute: typeof CapsulesHandleRouteImport
+      parentRoute: typeof CapsulesRoute
     }
     '/blog/$slug': {
       id: '/blog/$slug'
@@ -773,6 +842,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminImagesRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
+    '/_authenticated/admin/capsules': {
+      id: '/_authenticated/admin/capsules'
+      path: '/capsules'
+      fullPath: '/admin/capsules'
+      preLoaderRoute: typeof AuthenticatedAdminCapsulesRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
     '/_authenticated/admin/blog': {
       id: '/_authenticated/admin/blog'
       path: '/blog'
@@ -785,6 +861,7 @@ declare module '@tanstack/react-router' {
 
 interface AuthenticatedAdminRouteChildren {
   AuthenticatedAdminBlogRoute: typeof AuthenticatedAdminBlogRoute
+  AuthenticatedAdminCapsulesRoute: typeof AuthenticatedAdminCapsulesRoute
   AuthenticatedAdminImagesRoute: typeof AuthenticatedAdminImagesRoute
   AuthenticatedAdminMediaRoute: typeof AuthenticatedAdminMediaRoute
   AuthenticatedAdminTextRoute: typeof AuthenticatedAdminTextRoute
@@ -793,6 +870,7 @@ interface AuthenticatedAdminRouteChildren {
 
 const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
   AuthenticatedAdminBlogRoute: AuthenticatedAdminBlogRoute,
+  AuthenticatedAdminCapsulesRoute: AuthenticatedAdminCapsulesRoute,
   AuthenticatedAdminImagesRoute: AuthenticatedAdminImagesRoute,
   AuthenticatedAdminMediaRoute: AuthenticatedAdminMediaRoute,
   AuthenticatedAdminTextRoute: AuthenticatedAdminTextRoute,
@@ -870,6 +948,20 @@ const BlogRouteChildren: BlogRouteChildren = {
 }
 
 const BlogRouteWithChildren = BlogRoute._addFileChildren(BlogRouteChildren)
+
+interface CapsulesRouteChildren {
+  CapsulesHandleRoute: typeof CapsulesHandleRoute
+  CapsulesIndexRoute: typeof CapsulesIndexRoute
+}
+
+const CapsulesRouteChildren: CapsulesRouteChildren = {
+  CapsulesHandleRoute: CapsulesHandleRoute,
+  CapsulesIndexRoute: CapsulesIndexRoute,
+}
+
+const CapsulesRouteWithChildren = CapsulesRoute._addFileChildren(
+  CapsulesRouteChildren,
+)
 
 interface FrassDripMenRouteChildren {
   FrassDripMenCategoryRoute: typeof FrassDripMenCategoryRoute
@@ -951,6 +1043,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthRoute: AuthRoute,
   BareDripRoute: BareDripRouteWithChildren,
   BlogRoute: BlogRouteWithChildren,
+  CapsulesRoute: CapsulesRouteWithChildren,
   CheckoutRoute: CheckoutRoute,
   FrassDripRoute: FrassDripRouteWithChildren,
   FrassKicksRoute: FrassKicksRouteWithChildren,
