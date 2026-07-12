@@ -13,6 +13,8 @@ const PARENTS = [
   ["street", "Street Drip", "Cargo, denim & statement pieces."],
   ["vacay", "Vacay Drip", "Tropical shirts & resort essentials."],
   ["sport", "Sport Drip", "Training, gym & court performance."],
+  ["main-event", "Main Event Drip", "Show-stopping fits for the big night."],
+  ["photoshoot", "Photoshoot Ready Drip", "Camera-ready looks built to pop on film."],
   ["crown", "Crown Drip", "Signature drops from the Crown line."],
   ["extra", "Extra Drip", "Overflow drops & seasonal extras."],
 ] as const;
