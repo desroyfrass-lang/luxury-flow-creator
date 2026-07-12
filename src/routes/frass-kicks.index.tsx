@@ -32,6 +32,7 @@ function FrassKicks() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-10">
           <CollectionCard
             to="/frass-kicks/men"
+            slot="card-men"
             image={cardMen}
             eyebrow="Frass Kicks"
             title="Men's Footwear"
@@ -39,11 +40,13 @@ function FrassKicks() {
           />
           <CollectionCard
             to="/frass-kicks/women"
+            slot="card-women"
             image={cardWomen}
             eyebrow="Frass Kicks"
             title="Women's Footwear"
             description="Street · Classic · Casual"
           />
+
         </div>
       </section>
       <section className="mx-auto max-w-[1600px] px-6 lg:px-12 mt-24">

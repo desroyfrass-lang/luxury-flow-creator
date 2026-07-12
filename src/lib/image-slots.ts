@@ -46,6 +46,68 @@ export const SLOT_SECTIONS: SlotSection[] = [
     ],
   },
   {
+    title: "Frass Kicks — Men categories",
+    description: "Tiles on /frass-kicks/men.",
+    slots: [
+      { key: "kicks-men-street", label: "Street Kicks (men)", fallback: cardDrip },
+      { key: "kicks-men-classic", label: "Classic Kicks (men)", fallback: cardMen },
+      { key: "kicks-men-casual", label: "Casual Kicks (men)", fallback: cardKicks },
+    ],
+  },
+  {
+    title: "Frass Kicks — Women categories",
+    description: "Tiles on /frass-kicks/women.",
+    slots: [
+      { key: "kicks-women-street", label: "Street Kicks (women)", fallback: cardKicks },
+      { key: "kicks-women-classic", label: "Classic Kicks (women)", fallback: cardBare },
+      { key: "kicks-women-casual", label: "Casual Kicks (women)", fallback: cardWomen },
+    ],
+  },
+  {
+    title: "Frass Drip — Men categories",
+    description: "Tiles on /frass-drip/men.",
+    slots: [
+      { key: "drip-men-work", label: "Work Drip (men)", fallback: cardDrip },
+      { key: "drip-men-party", label: "Party Drip (men)", fallback: cardMen },
+      { key: "drip-men-casual", label: "Casual Drip (men)", fallback: cardKicks },
+      { key: "drip-men-street", label: "Street Drip (men)", fallback: cardDrip },
+      { key: "drip-men-vacay", label: "Vacay Drip (men)", fallback: cardMen },
+      { key: "drip-men-sport", label: "Sport Drip (men)", fallback: cardKicks },
+      { key: "drip-men-crown", label: "Crown Drip (men)", fallback: cardDrip },
+      { key: "drip-men-extra", label: "Extra Drip (men)", fallback: cardMen },
+    ],
+  },
+  {
+    title: "Frass Drip — Women categories",
+    description: "Tiles on /frass-drip/women.",
+    slots: [
+      { key: "drip-women-work", label: "Work Drip (women)", fallback: cardWomen },
+      { key: "drip-women-party", label: "Party Drip (women)", fallback: cardBare },
+      { key: "drip-women-casual", label: "Casual Drip (women)", fallback: cardDrip },
+      { key: "drip-women-street", label: "Street Drip (women)", fallback: cardWomen },
+      { key: "drip-women-vacay", label: "Vacay Drip (women)", fallback: cardBare },
+      { key: "drip-women-sport", label: "Sport Drip (women)", fallback: cardDrip },
+      { key: "drip-women-crown", label: "Crown Drip (women)", fallback: cardWomen },
+      { key: "drip-women-extra", label: "Extra Drip (women)", fallback: cardBare },
+    ],
+  },
+  {
+    title: "Bare Drip — Men categories",
+    description: "Tiles on /bare-drip/men.",
+    slots: [
+      { key: "bare-men-swimwear", label: "Bare Drip Swimwear (men)", fallback: cardMen },
+      { key: "bare-men-underwear", label: "Bare Drip Underwear (men)", fallback: cardKicks },
+    ],
+  },
+  {
+    title: "Bare Drip — Women categories",
+    description: "Tiles on /bare-drip/women.",
+    slots: [
+      { key: "bare-women-swimwear", label: "Bare Drip Swimwear (women)", fallback: cardWomen },
+      { key: "bare-women-lingerie", label: "Bare Drip Lingerie (women)", fallback: cardBare },
+    ],
+  },
+  {
     title: "Lookbook covers",
     description: "Cover image for each editorial volume.",
     slots: [
@@ -58,6 +120,7 @@ export const SLOT_SECTIONS: SlotSection[] = [
       { key: "lookbook-cover-bare-drip", label: "Volume 07 — Bare Drip", fallback: cardBare },
     ],
   },
+
 ];
 
 export const ALL_SLOTS: SlotDef[] = SLOT_SECTIONS.flatMap((s) => s.slots);

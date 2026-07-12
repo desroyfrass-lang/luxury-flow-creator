@@ -45,6 +45,7 @@ export const Route = createFileRoute("/frass-drip/women/")({
               key={slug}
               to="/frass-drip/women/$category"
               params={{ category: slug }}
+              slot={`drip-women-${slug}`}
               image={IMAGES[i % IMAGES.length]}
               eyebrow="Women"
               title={title}
@@ -52,6 +53,7 @@ export const Route = createFileRoute("/frass-drip/women/")({
               size="lg"
             />
           ))}
+
         </div>
       </section>
     </SiteShell>
