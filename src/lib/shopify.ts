@@ -1,9 +1,8 @@
-import { toast } from "sonner";
-
-export const SHOPIFY_API_VERSION = "2025-07";
-export const SHOPIFY_STORE_PERMANENT_DOMAIN = "3hekgw-kr.myshopify.com";
-export const SHOPIFY_STOREFRONT_TOKEN = "6ee86780a35c2ce25a4c9e8878ba3d99";
-export const SHOPIFY_STOREFRONT_URL = `https://${SHOPIFY_STORE_PERMANENT_DOMAIN}/api/${SHOPIFY_API_VERSION}/graphql.json`;
+// Catalog module — backed by Lovable Cloud (Supabase).
+// The type shape mirrors the old Shopify Storefront responses so every
+// existing consumer (ProductCard, ProductGrid, product detail, cart) keeps
+// working unchanged while we migrate off Shopify.
+import { supabase } from "@/integrations/supabase/client";
 
 export interface ShopifyMoney {
   amount: string;
@@ -41,99 +40,170 @@ export interface ShopifyProduct {
   node: ShopifyProductNode;
 }
 
-const PRODUCT_FRAGMENT = `
-  id
-  title
-  description
-  handle
-  productType
-  vendor
-  tags
-  priceRange { minVariantPrice { amount currencyCode } }
-  images(first: 8) { edges { node { url altText } } }
-  variants(first: 50) {
-    edges {
-      node {
-        id
-        title
-        price { amount currencyCode }
-        availableForSale
-        selectedOptions { name value }
-      }
-    }
+// ---------------------------------------------------------------
+// Query-string parser (kept for compatibility with getCollectionMeta,
+// which historically returns Shopify Storefront search syntax).
+// Supports: vendor:"..."   product_type:"..."   tag:"..."
+// ---------------------------------------------------------------
+function parseCatalogQuery(q?: string | null): {
+  vendor?: string;
+  productType?: string;
+  tags: string[];
+} {
+  if (!q) return { tags: [] };
+  const tags: string[] = [];
+  let vendor: string | undefined;
+  let productType: string | undefined;
+  const re = /(vendor|product_type|tag):"([^"]+)"/g;
+  let m: RegExpExecArray | null;
+  while ((m = re.exec(q)) !== null) {
+    const key = m[1];
+    const val = m[2];
+    if (key === "vendor") vendor = val;
+    else if (key === "product_type") productType = val;
+    else tags.push(val);
   }
-  options { name values }
-`;
-
-export const PRODUCTS_QUERY = `
-  query GetProducts($first: Int!, $query: String) {
-    products(first: $first, query: $query, sortKey: BEST_SELLING) {
-      edges { node { ${PRODUCT_FRAGMENT} } }
-    }
-  }
-`;
-
-export const PRODUCT_BY_HANDLE_QUERY = `
-  query GetProduct($handle: String!) {
-    productByHandle(handle: $handle) { ${PRODUCT_FRAGMENT} }
-  }
-`;
-
-export async function storefrontApiRequest<T = any>(
-  query: string,
-  variables: Record<string, unknown> = {},
-): Promise<{ data?: T } | undefined> {
-  const response = await fetch(SHOPIFY_STOREFRONT_URL, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "X-Shopify-Storefront-Access-Token": SHOPIFY_STOREFRONT_TOKEN,
-    },
-    body: JSON.stringify({ query, variables }),
-  });
-
-  if (response.status === 402) {
-    toast.error("Shopify: Payment required", {
-      description:
-        "Shopify API access requires an active billing plan. Upgrade at https://admin.shopify.com",
-    });
-    return;
-  }
-
-  if (!response.ok) {
-    throw new Error(`Shopify HTTP error ${response.status}`);
-  }
-
-  const data = await response.json();
-  if (data.errors) {
-    throw new Error(`Shopify error: ${data.errors.map((e: any) => e.message).join(", ")}`);
-  }
-  return data;
+  return { vendor, productType, tags };
 }
 
-export async function fetchProducts(opts: { first?: number; query?: string } = {}): Promise<ShopifyProduct[]> {
-  const data = await storefrontApiRequest<{ products: { edges: ShopifyProduct[] } }>(PRODUCTS_QUERY, {
-    first: opts.first ?? 24,
-    query: opts.query ?? null,
-  });
-  return data?.data?.products?.edges ?? [];
+interface DbProduct {
+  id: string;
+  handle: string;
+  title: string;
+  description: string;
+  vendor: string | null;
+  product_type: string | null;
+  tags: string[];
+  min_price: number;
+  currency: string;
+  hero_image: string | null;
+}
+
+interface DbImage { id: string; url: string; alt: string | null; position: number }
+interface DbOption { id: string; name: string; values: string[]; position: number }
+interface DbVariant {
+  id: string;
+  title: string;
+  price: number;
+  currency: string;
+  available: boolean;
+  selected_options: Array<{ name: string; value: string }>;
+  position: number;
+}
+
+function mapProduct(
+  p: DbProduct,
+  images: DbImage[],
+  options: DbOption[],
+  variants: DbVariant[],
+): ShopifyProduct {
+  const sortedImgs = [...images].sort((a, b) => a.position - b.position);
+  const sortedVars = [...variants].sort((a, b) => a.position - b.position);
+  const sortedOpts = [...options].sort((a, b) => a.position - b.position);
+  return {
+    node: {
+      id: p.id,
+      handle: p.handle,
+      title: p.title,
+      description: p.description ?? "",
+      vendor: p.vendor ?? undefined,
+      productType: p.product_type ?? undefined,
+      tags: p.tags ?? [],
+      priceRange: {
+        minVariantPrice: {
+          amount: String(p.min_price ?? 0),
+          currencyCode: p.currency || "USD",
+        },
+      },
+      images: {
+        edges: sortedImgs.map((i) => ({ node: { url: i.url, altText: i.alt } })),
+      },
+      variants: {
+        edges: sortedVars.map((v) => ({
+          node: {
+            id: v.id,
+            title: v.title,
+            price: { amount: String(v.price), currencyCode: v.currency || p.currency || "USD" },
+            availableForSale: v.available,
+            selectedOptions: v.selected_options ?? [],
+          },
+        })),
+      },
+      options: sortedOpts.map((o) => ({ name: o.name, values: o.values ?? [] })),
+    },
+  };
+}
+
+async function loadRelated(productIds: string[]) {
+  if (productIds.length === 0) {
+    return { imgs: [], opts: [], vars: [] };
+  }
+  const [imgsRes, optsRes, varsRes] = await Promise.all([
+    supabase.from("product_images").select("*").in("product_id", productIds),
+    supabase.from("product_options").select("*").in("product_id", productIds),
+    supabase.from("product_variants").select("*").in("product_id", productIds),
+  ]);
+  return {
+    imgs: (imgsRes.data ?? []) as Array<DbImage & { product_id: string }>,
+    opts: (optsRes.data ?? []) as Array<DbOption & { product_id: string }>,
+    vars: (varsRes.data ?? []) as Array<DbVariant & { product_id: string }>,
+  };
+}
+
+export async function fetchProducts(
+  opts: { first?: number; query?: string } = {},
+): Promise<ShopifyProduct[]> {
+  const { first = 24, query } = opts;
+  const parsed = parseCatalogQuery(query);
+
+  let req = supabase
+    .from("products")
+    .select("id, handle, title, description, vendor, product_type, tags, min_price, currency, hero_image")
+    .eq("status", "active")
+    .order("position", { ascending: true })
+    .limit(first);
+
+  if (parsed.vendor) req = req.eq("vendor", parsed.vendor);
+  if (parsed.productType) req = req.eq("product_type", parsed.productType);
+  if (parsed.tags.length > 0) req = req.contains("tags", parsed.tags);
+
+  const { data, error } = await req;
+  if (error) {
+    console.error("fetchProducts error", error);
+    return [];
+  }
+  const products = (data ?? []) as DbProduct[];
+  const ids = products.map((p) => p.id);
+  const { imgs, opts: allOpts, vars } = await loadRelated(ids);
+
+  return products.map((p) =>
+    mapProduct(
+      p,
+      imgs.filter((i) => i.product_id === p.id),
+      allOpts.filter((o) => o.product_id === p.id),
+      vars.filter((v) => v.product_id === p.id),
+    ),
+  );
 }
 
 export async function fetchProductByHandle(handle: string): Promise<ShopifyProductNode | null> {
-  const data = await storefrontApiRequest<{ productByHandle: ShopifyProductNode | null }>(
-    PRODUCT_BY_HANDLE_QUERY,
-    { handle },
-  );
-  return data?.data?.productByHandle ?? null;
+  const { data, error } = await supabase
+    .from("products")
+    .select("id, handle, title, description, vendor, product_type, tags, min_price, currency, hero_image")
+    .eq("handle", handle)
+    .eq("status", "active")
+    .maybeSingle();
+  if (error || !data) return null;
+  const p = data as DbProduct;
+  const { imgs, opts, vars } = await loadRelated([p.id]);
+  return mapProduct(p, imgs, opts, vars).node;
 }
 
-// =============================================================
-// COLLECTION HANDLE → title + Shopify Storefront search query
-// Handles follow the exact tree the user defined in Shopify:
-//   Kicks: {street|classic|casual}-kicks-{men|women}
-//   Drip:  {mens|womens}-{work|party|casual|street|vacay|sport|crown|extra}-drip[-<sub>]
-//   Bare:  {mens|womens}-bare-drip-{swimwear|underwear|lingerie}[-<sub>]
-// =============================================================
+// ============================================================
+// Collection metadata (unchanged public API — routes keep working)
+// The "query" string uses Shopify-style tokens which we now parse
+// into Supabase filters in fetchProducts.
+// ============================================================
 export type CollectionMeta = { title: string; query: string; description?: string };
 
 const KICKS_TYPE: Record<string, string> = {
@@ -168,19 +238,15 @@ function titleize(slug: string) {
 }
 
 const STATIC_MAP: Record<string, CollectionMeta> = {
-  // ── Kicks ─────────────────────────────────────────────
   "frass-kicks": { title: "Frass Kicks", query: 'vendor:"FRASS KICKS"', description: "The complete footwear collection." },
   "frass-kicks-men": { title: "Men's Footwear", query: 'vendor:"FRASS KICKS" tag:"Men\'s"' },
   "frass-kicks-women": { title: "Women's Footwear", query: 'vendor:"FRASS KICKS" tag:"Women\'s"' },
-  // ── Drip parents ──────────────────────────────────────
   "frass-drip": { title: "Frass Drip", query: 'tag:"frass-drip"', description: "Fashion-forward apparel." },
   "frass-drip-men": { title: "Men's Frass Drip", query: 'tag:"frass-drip" tag:"men"' },
   "frass-drip-women": { title: "Women's Frass Drip", query: 'tag:"frass-drip" tag:"women"' },
-  // ── Bare parents ──────────────────────────────────────
   "bare-drip": { title: "Bare Drip", query: 'tag:"bare-drip"', description: "Swim, underwear & lingerie." },
   "mens-bare-drip": { title: "Men's Bare Drip", query: 'tag:"bare-drip" tag:"men"' },
   "womens-bare-drip": { title: "Women's Bare Drip", query: 'tag:"bare-drip" tag:"women"' },
-  // ── featured ──────────────────────────────────────────
   "new-arrivals": { title: "New Arrivals", query: 'vendor:"FRASS KICKS"' },
   "best-sellers": { title: "Best Sellers", query: 'vendor:"FRASS KICKS"' },
 };
@@ -189,7 +255,6 @@ export function getCollectionMeta(handle: string): CollectionMeta {
   const exact = STATIC_MAP[handle];
   if (exact) return exact;
 
-  // Kicks type per gender: e.g. `street-kicks-men`
   const kicks = handle.match(/^(street|classic|casual)-kicks-(men|women)$/);
   if (kicks) {
     const [, type, gender] = kicks;
@@ -201,7 +266,6 @@ export function getCollectionMeta(handle: string): CollectionMeta {
     };
   }
 
-  // Drip category: `mens-work-drip`, `womens-sport-drip`, ...
   const dripCat = handle.match(/^(mens|womens)-(work|party|casual|street|vacay|sport|crown|extra)-drip$/);
   if (dripCat) {
     const [, gender, cat] = dripCat;
@@ -213,7 +277,6 @@ export function getCollectionMeta(handle: string): CollectionMeta {
     };
   }
 
-  // Drip sub-item: `mens-work-drip-dress-shirts`
   const dripSub = handle.match(/^(mens|womens)-(work|party|casual|street|vacay|sport|crown|extra)-drip-(.+)$/);
   if (dripSub) {
     const [, gender, cat, sub] = dripSub;
@@ -226,7 +289,6 @@ export function getCollectionMeta(handle: string): CollectionMeta {
     };
   }
 
-  // Bare sub-collection: `mens-bare-drip-swimwear`
   const bareCat = handle.match(/^(mens|womens)-bare-drip-(swimwear|underwear|lingerie)$/);
   if (bareCat) {
     const [, gender, cat] = bareCat;
@@ -238,7 +300,6 @@ export function getCollectionMeta(handle: string): CollectionMeta {
     };
   }
 
-  // Bare sub-item: `mens-bare-drip-swimwear-swim-shorts`
   const bareSub = handle.match(/^(mens|womens)-bare-drip-(swimwear|underwear|lingerie)-(.+)$/);
   if (bareSub) {
     const [, gender, cat, sub] = bareSub;
