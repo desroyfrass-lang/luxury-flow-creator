@@ -18,10 +18,11 @@ export const Route = createFileRoute("/frass-kicks/men")({
 });
 
 const CARDS = [
-  { handle: "street-kicks-men", title: "Street Kicks", image: cardDrip, blurb: "Bold silhouettes for the city." },
-  { handle: "classic-kicks-men", title: "Classic Kicks", image: cardMen, blurb: "Timeless icons, modern feel." },
-  { handle: "casual-kicks-men", title: "Casual Kicks", image: cardKicks, blurb: "Everyday comfort, elevated." },
+  { handle: "street-kicks-men", slot: "kicks-men-street", title: "Street Kicks", image: cardDrip, blurb: "Bold silhouettes for the city." },
+  { handle: "classic-kicks-men", slot: "kicks-men-classic", title: "Classic Kicks", image: cardMen, blurb: "Timeless icons, modern feel." },
+  { handle: "casual-kicks-men", slot: "kicks-men-casual", title: "Casual Kicks", image: cardKicks, blurb: "Everyday comfort, elevated." },
 ];
+
 
 function MensKicks() {
   return (
