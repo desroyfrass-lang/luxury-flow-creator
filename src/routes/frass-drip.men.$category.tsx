@@ -9,73 +9,76 @@ import cardKicks from "@/assets/card-kicks.jpg";
 type Sub = readonly [slug: string, title: string];
 
 const MEN_CATEGORIES: Record<string, { title: string; tagline: string; subs: readonly Sub[] }> = {
-  "work-drip": {
-    title: "Work Drip",
-    tagline: "Tailored essentials for the boardroom.",
+  work: {
+    title: "Men's Work Drip",
+    tagline: "Dress shirts, blazers, suits & business casual.",
     subs: [
       ["dress-shirts", "Dress Shirts"],
-      ["blazers-suit-jackets", "Blazers & Suit Jackets"],
-      ["dress-pants", "Dress Pants"],
-      ["polo-shirts", "Polo Shirts"],
       ["button-down-shirts", "Button Down Shirts"],
+      ["polo-shirts", "Polo Shirts"],
+      ["business-casual", "Business Casual"],
+      ["dress-pants", "Dress Pants"],
+      ["quarter-zips", "Quarter Zips"],
+      ["blazers-suit-jackets", "Blazers & Suit Jackets"],
+      ["full-suits", "Full Suits"],
     ],
   },
-  "party-drip": {
-    title: "Party Drip",
+  party: {
+    title: "Men's Party Drip",
     tagline: "Nightlife fits & luxury streetwear.",
     subs: [
-      ["dress-shirts", "Dress Shirts"],
-      ["party-blazers", "Party Blazers"],
-      ["dress-pants", "Dress Pants"],
-      ["matching-sets", "Matching Sets"],
       ["night-out-shirts", "Night Out Shirts"],
+      ["dress-shirts", "Dress Shirts"],
+      ["matching-sets", "Matching Sets"],
+      ["party-blazers", "Party Blazers"],
+      ["luxury-streetwear", "Luxury Streetwear"],
+      ["dress-pants", "Dress Pants"],
       ["nightlife-fits", "Nightlife Fits"],
       ["party-fits", "Party Fits"],
-      ["luxury-streetwear", "Luxury Streetwear"],
     ],
   },
-  "casual-drip": {
-    title: "Casual Drip",
+  casual: {
+    title: "Men's Casual Drip",
     tagline: "Everyday staples, elevated.",
     subs: [
-      ["casual-shirts", "Casual Shirts"],
-      ["shorts", "Shorts"],
-      ["hoodies", "Hoodies"],
-      ["denim", "Denim"],
-      ["tank-tops", "Tank Tops"],
       ["casual-button-down", "Casual Button Down"],
-      ["matching-sets", "Matching Sets"],
+      ["tank-tops", "Tank Tops"],
+      ["shorts", "Shorts"],
+      ["denim", "Denim"],
+      ["casual-shirts", "Casual Shirts"],
+      ["hoodies", "Hoodies"],
       ["sweat-suits", "Sweat Suits"],
+      ["matching-sets", "Matching Sets"],
     ],
   },
-  "street-drip": {
-    title: "Street Drip",
+  street: {
+    title: "Men's Street Drip",
     tagline: "Cargo, denim & statement pieces.",
     subs: [
-      ["streetwear-sets", "Streetwear Sets"],
-      ["cargo", "Cargo"],
-      ["hoodies", "Hoodies"],
-      ["tracksuits", "Tracksuits"],
       ["oversized-tees", "Oversized Tees"],
-      ["denim", "Denim"],
       ["graphic-tees", "Graphic Tees"],
+      ["cargo", "Cargo"],
+      ["streetwear-sets", "Streetwear Sets"],
+      ["tracksuits", "Tracksuits"],
+      ["hoodies", "Hoodies"],
+      ["denim", "Denim"],
       ["statement-pieces", "Statement Pieces"],
       ["jackets", "Jackets"],
     ],
   },
-  "vacay-drip": {
-    title: "Vacay Drip",
+  vacay: {
+    title: "Men's Vacay Drip",
     tagline: "Tropical shirts & resort essentials.",
     subs: [
+      ["vacation-cruise-sets", "Vacation & Cruise Sets"],
       ["tropical-shirts", "Tropical Shirts"],
       ["vacation-shorts", "Vacation Shorts"],
-      ["vacation-cruise-sets", "Vacation & Cruise Sets"],
       ["resort-essentials", "Resort Essentials"],
       ["summer-styles", "Summer Styles"],
     ],
   },
-  "sports-drip": {
-    title: "Sports Drip",
+  sport: {
+    title: "Men's Sport Drip",
     tagline: "Training, gym & court performance.",
     subs: [
       ["training-gear", "Training Gear"],
@@ -83,6 +86,26 @@ const MEN_CATEGORIES: Record<string, { title: string; tagline: string; subs: rea
       ["running-performance", "Running & Performance"],
       ["basketball-court", "Basketball & Court Style"],
       ["gym-fits", "Gym Fits"],
+    ],
+  },
+  crown: {
+    title: "Men's Crown Drip",
+    tagline: "Signature Crown drops.",
+    subs: [
+      ["street-crowns", "Street Crowns"],
+      ["classic-crowns", "Classic Crowns"],
+      ["casual-crowns", "Casual Crowns"],
+      ["on-sale", "On Sale"],
+    ],
+  },
+  extra: {
+    title: "Men's Extra Drip",
+    tagline: "Overflow drops & seasonal extras.",
+    subs: [
+      ["street", "Street"],
+      ["classic", "Classic"],
+      ["casual", "Casual"],
+      ["on-sale", "On Sale"],
     ],
   },
 };
@@ -97,7 +120,7 @@ export const Route = createFileRoute("/frass-drip/men/$category")({
     const cat = MEN_CATEGORIES[params.category];
     return {
       meta: [
-        { title: `Men's ${cat?.title ?? "Drip"} — Frass` },
+        { title: `${cat?.title ?? "Men's Drip"} — Frass` },
         { name: "description", content: cat?.tagline ?? "" },
       ],
     };
@@ -132,26 +155,13 @@ function CategoryPage() {
             <CollectionCard
               key={slug}
               to="/collection/$handle"
-              params={{ handle: `frass-drip-men-${category}-${slug}` }}
+              params={{ handle: `mens-${category}-drip-${slug}` }}
               image={IMAGES[i % IMAGES.length]}
               eyebrow={cat.title}
               title={title}
               size="md"
             />
           ))}
-          {!cat.subs.some(([s]) => s === "on-sale") && (
-            <CollectionCard
-              key="on-sale"
-              to="/collection/$handle"
-              params={{ handle: `frass-drip-men-${category}-on-sale` }}
-              image={IMAGES[cat.subs.length % IMAGES.length]}
-              eyebrow={cat.title}
-              title={`${cat.title} On Sale`}
-              description="Marked-down pieces from this drop."
-              size="md"
-              cta="Shop Sale"
-            />
-          )}
         </div>
       </section>
     </SiteShell>

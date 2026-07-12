@@ -127,126 +127,129 @@ export async function fetchProductByHandle(handle: string): Promise<ShopifyProdu
   return data?.data?.productByHandle ?? null;
 }
 
-/**
- * Maps URL collection handles to Shopify Storefront API search queries.
- * Easy to extend as the catalog grows.
- */
+// =============================================================
+// COLLECTION HANDLE → title + Shopify Storefront search query
+// Handles follow the exact tree the user defined in Shopify:
+//   Kicks: {street|classic|casual}-kicks-{men|women}
+//   Drip:  {mens|womens}-{work|party|casual|street|vacay|sport|crown|extra}-drip[-<sub>]
+//   Bare:  {mens|womens}-bare-drip-{swimwear|underwear|lingerie}[-<sub>]
+// =============================================================
 export type CollectionMeta = { title: string; query: string; description?: string };
 
-export const COLLECTION_MAP: Record<string, CollectionMeta> = {
-  // Frass Kicks (footwear) — products live in Shopify under vendor "FRASS KICKS"
-  // with product_type one of: "Casual Kicks", "Street Kicks", "Classic Kicks"
-  // and gender tags "Men's" / "Women's".
-  "frass-kicks": { title: "Frass Kicks", query: 'vendor:"FRASS KICKS"', description: "The complete footwear collection." },
-  "frass-kicks-men": { title: "Men's Footwear", query: 'vendor:"FRASS KICKS" tag:"Men\'s"' },
-  "frass-kicks-women": { title: "Women's Footwear", query: 'vendor:"FRASS KICKS" tag:"Women\'s"' },
-  "frass-kicks-casual": { title: "Casual Kicks", query: 'vendor:"FRASS KICKS" product_type:"Casual Kicks"' },
-  "frass-kicks-street": { title: "Street Kicks", query: 'vendor:"FRASS KICKS" product_type:"Street Kicks"' },
-  "frass-kicks-classic": { title: "Classic Kicks", query: 'vendor:"FRASS KICKS" product_type:"Classic Kicks"' },
-  "frass-kicks-men-casual": { title: "Men's Casual Kicks", query: 'vendor:"FRASS KICKS" tag:"Men\'s" product_type:"Casual Kicks"' },
-  "frass-kicks-men-street": { title: "Men's Street Kicks", query: 'vendor:"FRASS KICKS" tag:"Men\'s" product_type:"Street Kicks"' },
-  "frass-kicks-men-classic": { title: "Men's Classic Kicks", query: 'vendor:"FRASS KICKS" tag:"Men\'s" product_type:"Classic Kicks"' },
-  "frass-kicks-women-casual": { title: "Women's Casual Kicks", query: 'vendor:"FRASS KICKS" tag:"Women\'s" product_type:"Casual Kicks"' },
-  "frass-kicks-women-street": { title: "Women's Street Kicks", query: 'vendor:"FRASS KICKS" tag:"Women\'s" product_type:"Street Kicks"' },
-  "frass-kicks-women-classic": { title: "Women's Classic Kicks", query: 'vendor:"FRASS KICKS" tag:"Women\'s" product_type:"Classic Kicks"' },
-  // Frass Drip (apparel) — placeholders until you stock these
-  "frass-drip": { title: "Frass Drip", query: 'tag:"frass-drip"' },
-  "frass-drip-men": { title: "Men's Drip", query: 'tag:"frass-drip" tag:"men"' },
-  "frass-drip-women": { title: "Women's Drip", query: 'tag:"frass-drip" tag:"women"' },
-  // Bare Drip (swim + intimates)
-  "bare-drip": { title: "Bare Drip", query: 'tag:"bare-drip"' },
-  "bare-drip-men": { title: "Men's Bare Drip", query: 'tag:"bare-drip" tag:"men"' },
-  "bare-drip-women": { title: "Women's Bare Drip", query: 'tag:"bare-drip" tag:"women"' },
-  // Sports Drip — nested under Frass Drip men & women
-  "frass-drip-men-sports-drip-training-gear": { title: "Men's Training Gear", query: 'tag:"sports-drip" tag:"men" tag:"training"' },
-  "frass-drip-men-sports-drip-activewear-sets": { title: "Men's Activewear Sets", query: 'tag:"sports-drip" tag:"men" tag:"sets"' },
-  "frass-drip-men-sports-drip-running-performance": { title: "Men's Running & Performance", query: 'tag:"sports-drip" tag:"men" tag:"running"' },
-  "frass-drip-men-sports-drip-basketball-court": { title: "Men's Basketball & Court Style", query: 'tag:"sports-drip" tag:"men" tag:"basketball"' },
-  "frass-drip-men-sports-drip-gym-fits": { title: "Men's Gym Fits", query: 'tag:"sports-drip" tag:"men" tag:"gym"' },
-  "frass-drip-women-sports-drip-training-essentials": { title: "Women's Training Essentials", query: 'tag:"sports-drip" tag:"women" tag:"training"' },
-  "frass-drip-women-sports-drip-activewear-sets": { title: "Women's Activewear Sets", query: 'tag:"sports-drip" tag:"women" tag:"sets"' },
-  "frass-drip-women-sports-drip-running-performance": { title: "Women's Running & Performance", query: 'tag:"sports-drip" tag:"women" tag:"running"' },
-  "frass-drip-women-sports-drip-studio-yoga": { title: "Women's Studio & Yoga", query: 'tag:"sports-drip" tag:"women" tag:"yoga"' },
-  "frass-drip-women-sports-drip-active-shapewear": { title: "Women's Active Shapewear", query: 'tag:"sports-drip" tag:"women" tag:"shapewear"' },
-  // featured
-  "new-arrivals": { title: "New Arrivals", query: 'vendor:"FRASS KICKS"' },
-  "best-sellers": { title: "Best Sellers", query: 'vendor:"FRASS KICKS"' },
+const KICKS_TYPE: Record<string, string> = {
+  street: "Street Kicks",
+  classic: "Classic Kicks",
+  casual: "Casual Kicks",
+};
+
+const DRIP_CATEGORY_LABEL: Record<string, string> = {
+  work: "Work Drip",
+  party: "Party Drip",
+  casual: "Casual Drip",
+  street: "Street Drip",
+  vacay: "Vacay Drip",
+  sport: "Sport Drip",
+  crown: "Crown Drip",
+  extra: "Extra Drip",
+};
+
+const BARE_CATEGORY_LABEL: Record<string, string> = {
+  swimwear: "Swimwear",
+  underwear: "Underwear",
+  lingerie: "Lingerie",
 };
 
 function titleize(slug: string) {
   return slug
     .split("-")
-    .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+    .map((p) => p.charAt(0).toUpperCase() + p.slice(1))
     .join(" ")
-    .replace(/\bAnd\b/g, "&")
-    .replace(/\bTops\b/g, "Tops")
-    .replace(/\bTees\b/g, "Tees");
+    .replace(/\bAnd\b/g, "&");
 }
 
-/** Map a "Crown/Side Kicks" sub-slug onto a real product_type query. */
-function kicksSubTypeQuery(sub: string): string | null {
-  if (sub.startsWith("street-")) return 'product_type:"Street Kicks"';
-  if (sub.startsWith("classic-")) return 'product_type:"Classic Kicks"';
-  if (sub.startsWith("casual-")) return 'product_type:"Casual Kicks"';
-  if (sub.endsWith("-on-sale")) return 'tag:"sale"';
-  // bare "crown-kicks" / "side-kicks" landing — show all of that gender
-  return null;
-}
+const STATIC_MAP: Record<string, CollectionMeta> = {
+  // ── Kicks ─────────────────────────────────────────────
+  "frass-kicks": { title: "Frass Kicks", query: 'vendor:"FRASS KICKS"', description: "The complete footwear collection." },
+  "frass-kicks-men": { title: "Men's Footwear", query: 'vendor:"FRASS KICKS" tag:"Men\'s"' },
+  "frass-kicks-women": { title: "Women's Footwear", query: 'vendor:"FRASS KICKS" tag:"Women\'s"' },
+  // ── Drip parents ──────────────────────────────────────
+  "frass-drip": { title: "Frass Drip", query: 'tag:"frass-drip"', description: "Fashion-forward apparel." },
+  "frass-drip-men": { title: "Men's Frass Drip", query: 'tag:"frass-drip" tag:"men"' },
+  "frass-drip-women": { title: "Women's Frass Drip", query: 'tag:"frass-drip" tag:"women"' },
+  // ── Bare parents ──────────────────────────────────────
+  "bare-drip": { title: "Bare Drip", query: 'tag:"bare-drip"', description: "Swim, underwear & lingerie." },
+  "mens-bare-drip": { title: "Men's Bare Drip", query: 'tag:"bare-drip" tag:"men"' },
+  "womens-bare-drip": { title: "Women's Bare Drip", query: 'tag:"bare-drip" tag:"women"' },
+  // ── featured ──────────────────────────────────────────
+  "new-arrivals": { title: "New Arrivals", query: 'vendor:"FRASS KICKS"' },
+  "best-sellers": { title: "Best Sellers", query: 'vendor:"FRASS KICKS"' },
+};
 
 export function getCollectionMeta(handle: string): CollectionMeta {
-  const exact = COLLECTION_MAP[handle];
+  const exact = STATIC_MAP[handle];
   if (exact) return exact;
 
-  const frassDrip = handle.match(/^frass-drip-(men|women)-(.+)-(.+)$/);
-  if (frassDrip) {
-    const [, gender, category, sub] = frassDrip;
-    const genderTitle = gender === "men" ? "Men's" : "Women's";
-    return {
-      title: `${genderTitle} ${titleize(sub)}`,
-      query: `tag:"frass-drip" tag:"${gender}" tag:"${category}" tag:"${sub}"`,
-      description: `Part of ${genderTitle} ${titleize(category)}.`,
-    };
-  }
-
-  const bareDrip = handle.match(/^bare-drip-(men|women)-(.+)-(.+)$/);
-  if (bareDrip) {
-    const [, gender, category, sub] = bareDrip;
-    const genderTitle = gender === "men" ? "Men's" : "Women's";
-    return {
-      title: `${genderTitle} ${titleize(sub)}`,
-      query: `tag:"bare-drip" tag:"${gender}" tag:"${category}" tag:"${sub}"`,
-      description: `Part of ${genderTitle} Bare Drip ${titleize(category)}.`,
-    };
-  }
-
-  const crownKicks = handle.match(/^crown-kicks-(men|women)-(.+)$/);
-  if (crownKicks) {
-    const [, gender, sub] = crownKicks;
+  // Kicks type per gender: e.g. `street-kicks-men`
+  const kicks = handle.match(/^(street|classic|casual)-kicks-(men|women)$/);
+  if (kicks) {
+    const [, type, gender] = kicks;
     const genderTitle = gender === "men" ? "Men's" : "Women's";
     const genderTag = gender === "men" ? `tag:"Men's"` : `tag:"Women's"`;
-    const subQuery = kicksSubTypeQuery(sub);
     return {
-      title: `${genderTitle} ${titleize(sub)}`,
-      query: `vendor:"FRASS KICKS" ${genderTag}${subQuery ? ` ${subQuery}` : ""}`,
-      description: `Part of ${genderTitle} Crown Kicks.`,
+      title: `${genderTitle} ${KICKS_TYPE[type]}`,
+      query: `vendor:"FRASS KICKS" ${genderTag} product_type:"${KICKS_TYPE[type]}"`,
     };
   }
 
-  const sideKicks = handle.match(/^side-kicks-(men|women)-(.+)$/);
-  if (sideKicks) {
-    const [, gender, sub] = sideKicks;
-    const genderTitle = gender === "men" ? "Men's" : "Women's";
-    const genderTag = gender === "men" ? `tag:"Men's"` : `tag:"Women's"`;
-    const subQuery = kicksSubTypeQuery(sub);
+  // Drip category: `mens-work-drip`, `womens-sport-drip`, ...
+  const dripCat = handle.match(/^(mens|womens)-(work|party|casual|street|vacay|sport|crown|extra)-drip$/);
+  if (dripCat) {
+    const [, gender, cat] = dripCat;
+    const genderKey = gender === "mens" ? "men" : "women";
+    const genderTitle = gender === "mens" ? "Men's" : "Women's";
     return {
-      title: `${genderTitle} ${titleize(sub)}`,
-      query: `vendor:"FRASS KICKS" ${genderTag}${subQuery ? ` ${subQuery}` : ""}`,
-      description: `Part of ${genderTitle} Side Kicks.`,
+      title: `${genderTitle} ${DRIP_CATEGORY_LABEL[cat]}`,
+      query: `tag:"frass-drip" tag:"${genderKey}" tag:"${cat}-drip"`,
     };
   }
 
-  return {
-    title: titleize(handle),
-    query: `tag:"${handle}"`,
-  };
+  // Drip sub-item: `mens-work-drip-dress-shirts`
+  const dripSub = handle.match(/^(mens|womens)-(work|party|casual|street|vacay|sport|crown|extra)-drip-(.+)$/);
+  if (dripSub) {
+    const [, gender, cat, sub] = dripSub;
+    const genderKey = gender === "mens" ? "men" : "women";
+    const genderTitle = gender === "mens" ? "Men's" : "Women's";
+    return {
+      title: `${genderTitle} ${titleize(sub)}`,
+      query: `tag:"frass-drip" tag:"${genderKey}" tag:"${cat}-drip" tag:"${sub}"`,
+      description: `Part of ${genderTitle} ${DRIP_CATEGORY_LABEL[cat]}.`,
+    };
+  }
+
+  // Bare sub-collection: `mens-bare-drip-swimwear`
+  const bareCat = handle.match(/^(mens|womens)-bare-drip-(swimwear|underwear|lingerie)$/);
+  if (bareCat) {
+    const [, gender, cat] = bareCat;
+    const genderKey = gender === "mens" ? "men" : "women";
+    const genderTitle = gender === "mens" ? "Men's" : "Women's";
+    return {
+      title: `${genderTitle} ${BARE_CATEGORY_LABEL[cat]}`,
+      query: `tag:"bare-drip" tag:"${genderKey}" tag:"${cat}"`,
+    };
+  }
+
+  // Bare sub-item: `mens-bare-drip-swimwear-swim-shorts`
+  const bareSub = handle.match(/^(mens|womens)-bare-drip-(swimwear|underwear|lingerie)-(.+)$/);
+  if (bareSub) {
+    const [, gender, cat, sub] = bareSub;
+    const genderKey = gender === "mens" ? "men" : "women";
+    const genderTitle = gender === "mens" ? "Men's" : "Women's";
+    return {
+      title: `${genderTitle} ${titleize(sub)}`,
+      query: `tag:"bare-drip" tag:"${genderKey}" tag:"${cat}" tag:"${sub}"`,
+      description: `Part of ${genderTitle} Bare Drip ${BARE_CATEGORY_LABEL[cat]}.`,
+    };
+  }
+
+  return { title: titleize(handle), query: `tag:"${handle}"` };
 }

@@ -1,65 +1,74 @@
-## Frass Try-On — Virtual Fitting Room
+# Refactor Collection Tree
 
-A "Try It On" mode tied to the cart. Anything in the cart can be tried on a photo of the customer using AI image generation. No camera AR — that needs native apps and a much heavier build. This is image-based and works on every device.
+Restructure routes, nav, and Shopify collection map to match your final tree. Sub-items under each drip category (Dress Shirts, Bikini Tops, etc.) become their own product-grid pages driven by tag queries.
 
-### User flow
+## URL structure
 
-1. Customer adds products to cart as normal.
-2. In the cart drawer, a new **"Try it on"** button opens a full-screen Fitting Room.
-3. First time: customer uploads or snaps a full-body photo (front-facing, plain background works best). Photo is saved to their account so they don't have to redo it.
-4. Fitting Room shows their photo on the left, cart items on the right.
-5. They pick one or more items → tap **Generate look** → AI composites the garments onto their photo.
-6. Result shows side-by-side with the original. They can save the look, share it, swap items, or go straight to checkout.
+**Frass Kicks** (remove Crown/Side Kicks middle layer)
+```
+/frass-kicks                          → Men / Women cards
+/frass-kicks/men                      → Street / Classic / Casual cards
+/frass-kicks/men/street|classic|casual → product grid
+/frass-kicks/women                    → same as men
+/frass-kicks/women/street|classic|casual → product grid
+```
 
-### What gets built
+**Frass Drip** (8 sub-collections per gender)
+```
+/frass-drip                           → Men / Women cards
+/frass-drip/men                       → 8 category cards (Work, Party, Casual, Street, Vacay, Sport, Crown, Extra)
+/frass-drip/men/work                  → sub-item cards (Dress Shirts, Polo Shirts, ...)
+/frass-drip/men/work/dress-shirts     → product grid
+   (same shape for party, casual, street, vacay, sport, crown, extra)
+/frass-drip/women/...                 → mirror
+```
 
-**Frontend**
-- `/try-on` route (auth-required, lives under `_authenticated/`).
-- "Try it on" entry point inside the cart drawer.
-- Photo capture/upload component (webcam + file upload, with guidelines: full body, good light, plain background).
-- Item picker pulling from the live cart.
-- Generated-look gallery with save / share / delete.
+**Bare Drip**
+```
+/bare-drip                            → Men / Women cards
+/bare-drip/men                        → Swimwear / Underwear cards
+/bare-drip/men/swimwear               → sub-item cards (Swim Shorts, Trunks, ...)
+/bare-drip/men/swimwear/swim-shorts   → product grid
+/bare-drip/men/underwear/...          → same shape
+/bare-drip/women/swimwear/...         → same
+/bare-drip/women/lingerie/...         → same
+```
 
-**Backend (Lovable Cloud)**
-- `customer_photos` table — one or more reference photos per signed-in customer.
-- `tryon_looks` table — each generated image with the cart items used, prompt, and a link to the source photo.
-- `tryon-photos` private storage bucket for both source photos and generated looks (signed URLs).
-- `generateTryOn` server function — gathers the source photo + selected cart item images (already fetched from Shopify), calls the Lovable AI Gateway image-edit model (Gemini 2.5 Flash Image / "nano-banana"), saves the result.
+## What changes
 
-**AI**
-- Lovable AI Gateway, image edit model. No external API key required.
-- Prompt template: "Compose a realistic photo of the person in image 1 wearing the garments shown in the following images. Keep their face, body shape, pose, and the background unchanged." Tunable per garment category (kicks vs full fit).
+1. **`src/lib/shopify.ts`** — rewrite `COLLECTION_MAP` + `getCollectionMeta` with the full tree above. Each sub-item maps to a Shopify tag query like `vendor:"FRASS KICKS" tag:"Men's" product_type:"Street Kicks"` for kicks, `tag:"frass-drip" tag:"men" tag:"work" tag:"dress-shirts"` for drip, etc. Also export a `CATEGORY_TREE` constant so pages can render their child cards from one source.
 
-### What it does NOT do (on purpose, for scope)
+2. **Route files — delete**
+   - `frass-kicks.crown-kicks.*` (5 files)
+   - `frass-kicks.side-kicks.*` (5 files)
 
-- No live AR / camera overlay — that's a native-app project.
-- No size recommendation engine. We can add a size guide later.
-- No video, no 360°. Single still image per look.
+3. **Route files — replace / add**
+   - `frass-kicks.men.tsx` → landing showing Street/Classic/Casual cards
+   - `frass-kicks.women.tsx` → same
+   - `frass-kicks.men.$sub.tsx` + `frass-kicks.women.$sub.tsx` → product grid
+   - `frass-drip.men.index.tsx` → 8 category cards
+   - `frass-drip.men.$category.tsx` → sub-item cards for that category
+   - `frass-drip.men.$category.$sub.tsx` → product grid
+   - Same 3 for women
+   - `bare-drip.men.index.tsx` → Swimwear/Underwear cards
+   - `bare-drip.men.$category.tsx` → sub-item cards
+   - `bare-drip.men.$category.$sub.tsx` → product grid
+   - Same for women (Swimwear/Lingerie)
 
-### Honest limitations
+4. **`src/components/site-shell.tsx`** — update mega-menu nav to match new tree (remove Crown/Side Kicks; add all 8 drip categories per gender; simplify Bare Drip menu).
 
-AI try-on is a preview, not a mirror. Results are best for tops, jackets, hoodies, and overall vibe. Shoes and tight-fit garments will sometimes warp. We'll set expectations in the UI ("AI preview — actual fit may vary"). The Lovable AI Gateway has usage limits; once exceeded, the button gracefully disables with a message.
+## Rules I'll follow
 
-### Cost / credits
+- Every route file gets its own `head()` with unique title + description.
+- Sub-item pages that return empty from Shopify show "No products found" (per Shopify policy) — no mock products.
+- Tag conventions I'll use in queries so you know how to tag products in Shopify:
+  - Kicks: `vendor:"FRASS KICKS"`, `tag:"Men's"|"Women's"`, `product_type:"Street Kicks"|"Classic Kicks"|"Casual Kicks"`
+  - Drip: `tag:"frass-drip"`, `tag:"men"|"women"`, `tag:"<category>"` (e.g. `work`, `party`), `tag:"<sub>"` (e.g. `dress-shirts`, `polo-shirts`)
+  - Bare: `tag:"bare-drip"`, `tag:"men"|"women"`, `tag:"<category>"` (`swimwear`, `underwear`, `lingerie`), `tag:"<sub>"`
 
-Each generated look uses one image-edit call against the Lovable AI Gateway (covered by Cloud credits, no extra setup). We can throttle to e.g. 5 looks per session and cache results so repeat views are free.
+## Two quick confirmations before I ship
 
-### Rollout
+- **Bikini Tops & Bottoms** — you marked it legacy. I'll drop it from the tree. OK?
+- **Crown Drip / Extra Drip sub-items** ("Street / Classic / Casual / On Sale") — same names as kicks sub-types. Should these link to the same product grids as `/frass-kicks/men/street` etc., or are they separate apparel collections tagged differently?
 
-I'd ship this in two passes:
-
-1. **MVP (this build):** auth, photo upload, single-item try-on, save to looks.
-2. **Polish (next build):** multi-item outfits in one image, share-to-IG, "compare with original" slider, public lookbook of customer-approved looks.
-
-### Technical notes
-
-- Auth-gated route under `src/routes/_authenticated/try-on.tsx` so the photo + looks stay tied to a user.
-- New tables `customer_photos` and `tryon_looks` with RLS scoping rows to `auth.uid()`.
-- Private `tryon-photos` bucket; we hand out long-lived signed URLs the same way `site-media` already works.
-- `generateTryOn` is a `createServerFn` with `requireSupabaseAuth`; it reads the photo + Shopify image URLs, calls the AI Gateway, stores the result, returns the new look row.
-- Cart items already carry product image URLs from Shopify, so no extra fetch is needed for the garment side.
-
-### Confirm before I build
-
-1. Ship the MVP scope above? (auth required, single source photo, one generated look at a time)
-2. OK with AI try-on being a styled preview rather than a true-to-fit simulation? I'll word the UI accordingly.
+Total: ~40 file writes + 10 deletes + 2 rewrites. One pass once you confirm the two above.
