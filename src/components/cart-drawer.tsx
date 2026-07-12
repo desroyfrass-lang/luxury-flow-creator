@@ -30,13 +30,8 @@ export function CartDrawer() {
     if (open) syncCart();
   }, [open, syncCart]);
 
-  const checkout = () => {
-    const url = getCheckoutUrl();
-    if (url) {
-      window.open(url, "_blank");
-      setOpen(false);
-    }
-  };
+  // Checkout now happens in-app on /checkout (payments are wired later).
+  const closeAndGoCheckout = () => setOpen(false);
 
   return (
     <Sheet open={open} onOpenChange={setOpen}>
