@@ -144,9 +144,9 @@ async function loadRelated(productIds: string[]) {
     supabase.from("product_variants").select("*").in("product_id", productIds),
   ]);
   return {
-    imgs: (imgsRes.data ?? []) as Array<DbImage & { product_id: string }>,
-    opts: (optsRes.data ?? []) as Array<DbOption & { product_id: string }>,
-    vars: (varsRes.data ?? []) as Array<DbVariant & { product_id: string }>,
+    imgs: (imgsRes.data ?? []) as unknown as Array<DbImage & { product_id: string }>,
+    opts: (optsRes.data ?? []) as unknown as Array<DbOption & { product_id: string }>,
+    vars: (varsRes.data ?? []) as unknown as Array<DbVariant & { product_id: string }>,
   };
 }
 
