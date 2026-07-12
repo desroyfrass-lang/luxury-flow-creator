@@ -78,7 +78,7 @@ export const TEXT_SECTIONS: TextSection[] = [
     slots: [
       { key: "home-best-eyebrow", label: "Eyebrow", defaultValue: "Best Sellers" },
       { key: "home-best-title", label: "Section title", defaultValue: "Must-have pieces." },
-      { key: "home-best-empty", label: "Empty-state hint", defaultValue: "Add products in Shopify and they'll appear here automatically.", multiline: true },
+      { key: "home-best-empty", label: "Empty-state hint", defaultValue: "Add products in Admin and they'll appear here automatically.", multiline: true },
     ],
   },
   {

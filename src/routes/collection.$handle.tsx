@@ -78,7 +78,7 @@ function CollectionPage() {
           query={query}
           first={24}
           emptyTitle="This collection is being curated"
-          emptyHint="Tag products in Shopify with the corresponding tag and they'll appear here automatically."
+          emptyHint="Tag products with the matching tag in Admin and they'll appear here automatically."
         />
       </div>
     </SiteShell>
