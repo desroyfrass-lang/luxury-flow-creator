@@ -12,6 +12,7 @@ const NAV_ITEMS = [
   { to: "/frass-kicks", slot: "nav-frass-kicks", fallback: "Frass Kicks" },
   { to: "/frass-drip", slot: "nav-frass-drip", fallback: "Frass Drip" },
   { to: "/bare-drip", slot: "nav-bare-drip", fallback: "Bare Drip" },
+  { to: "/capsules", slot: "nav-capsules", fallback: "Capsules" },
 ] as const;
 
 const MENU_ITEMS = [
