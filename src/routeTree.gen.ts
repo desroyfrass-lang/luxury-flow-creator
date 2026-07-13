@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as MusicMediaRouteImport } from './routes/music-media'
+import { Route as McpRouteImport } from './routes/mcp'
 import { Route as LookbookRouteImport } from './routes/lookbook'
 import { Route as FrassKicksRouteImport } from './routes/frass-kicks'
 import { Route as FrassDripRouteImport } from './routes/frass-drip'
@@ -39,6 +40,8 @@ import { Route as BareDripWomenRouteImport } from './routes/bare-drip.women'
 import { Route as BareDripMenRouteImport } from './routes/bare-drip.men'
 import { Route as AuthenticatedTryOnRouteImport } from './routes/_authenticated/try-on'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
+import { Route as Char91DotwellKnownChar93OauthProtectedResourceRouteImport } from './routes/[.well-known]/oauth-protected-resource'
+import { Route as Char91DotmcpChar93ListToolsRouteImport } from './routes/[.mcp]/list-tools'
 import { Route as FrassDripWomenIndexRouteImport } from './routes/frass-drip.women.index'
 import { Route as FrassDripMenIndexRouteImport } from './routes/frass-drip.men.index'
 import { Route as BareDripWomenIndexRouteImport } from './routes/bare-drip.women.index'
@@ -53,11 +56,17 @@ import { Route as AuthenticatedAdminMediaRouteImport } from './routes/_authentic
 import { Route as AuthenticatedAdminImagesRouteImport } from './routes/_authenticated/admin.images'
 import { Route as AuthenticatedAdminCapsulesRouteImport } from './routes/_authenticated/admin.capsules'
 import { Route as AuthenticatedAdminBlogRouteImport } from './routes/_authenticated/admin.blog'
+import { Route as Char91DotmcpChar93InvokeToolToolRouteImport } from './routes/[.mcp]/invoke-tool/$tool'
 import { Route as DotlovableOauthConsentRouteImport } from './routes/[.]lovable.oauth.consent'
 
 const MusicMediaRoute = MusicMediaRouteImport.update({
   id: '/music-media',
   path: '/music-media',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const McpRoute = McpRouteImport.update({
+  id: '/mcp',
+  path: '/mcp',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LookbookRoute = LookbookRouteImport.update({
@@ -204,6 +213,18 @@ const AuthenticatedAdminRoute = AuthenticatedAdminRouteImport.update({
   path: '/admin',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const Char91DotwellKnownChar93OauthProtectedResourceRoute =
+  Char91DotwellKnownChar93OauthProtectedResourceRouteImport.update({
+    id: '/.well-known/oauth-protected-resource',
+    path: '/.well-known/oauth-protected-resource',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const Char91DotmcpChar93ListToolsRoute =
+  Char91DotmcpChar93ListToolsRouteImport.update({
+    id: '/.mcp/list-tools',
+    path: '/.mcp/list-tools',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const FrassDripWomenIndexRoute = FrassDripWomenIndexRouteImport.update({
   id: '/',
   path: '/',
@@ -276,6 +297,12 @@ const AuthenticatedAdminBlogRoute = AuthenticatedAdminBlogRouteImport.update({
   path: '/blog',
   getParentRoute: () => AuthenticatedAdminRoute,
 } as any)
+const Char91DotmcpChar93InvokeToolToolRoute =
+  Char91DotmcpChar93InvokeToolToolRouteImport.update({
+    id: '/.mcp/invoke-tool/$tool',
+    path: '/.mcp/invoke-tool/$tool',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const DotlovableOauthConsentRoute = DotlovableOauthConsentRouteImport.update({
   id: '/.lovable/oauth/consent',
   path: '/.lovable/oauth/consent',
@@ -292,7 +319,10 @@ export interface FileRoutesByFullPath {
   '/frass-drip': typeof FrassDripRouteWithChildren
   '/frass-kicks': typeof FrassKicksRouteWithChildren
   '/lookbook': typeof LookbookRouteWithChildren
+  '/mcp': typeof McpRoute
   '/music-media': typeof MusicMediaRoute
+  '/.mcp/list-tools': typeof Char91DotmcpChar93ListToolsRoute
+  '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/admin': typeof AuthenticatedAdminRouteWithChildren
   '/try-on': typeof AuthenticatedTryOnRoute
   '/bare-drip/men': typeof BareDripMenRouteWithChildren
@@ -313,6 +343,7 @@ export interface FileRoutesByFullPath {
   '/frass-kicks/': typeof FrassKicksIndexRoute
   '/lookbook/': typeof LookbookIndexRoute
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
+  '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
   '/admin/blog': typeof AuthenticatedAdminBlogRoute
   '/admin/capsules': typeof AuthenticatedAdminCapsulesRoute
   '/admin/images': typeof AuthenticatedAdminImagesRoute
@@ -332,7 +363,10 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/checkout': typeof CheckoutRoute
+  '/mcp': typeof McpRoute
   '/music-media': typeof MusicMediaRoute
+  '/.mcp/list-tools': typeof Char91DotmcpChar93ListToolsRoute
+  '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/try-on': typeof AuthenticatedTryOnRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/capsules/$handle': typeof CapsulesHandleRoute
@@ -348,6 +382,7 @@ export interface FileRoutesByTo {
   '/frass-kicks': typeof FrassKicksIndexRoute
   '/lookbook': typeof LookbookIndexRoute
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
+  '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
   '/admin/blog': typeof AuthenticatedAdminBlogRoute
   '/admin/capsules': typeof AuthenticatedAdminCapsulesRoute
   '/admin/images': typeof AuthenticatedAdminImagesRoute
@@ -375,7 +410,10 @@ export interface FileRoutesById {
   '/frass-drip': typeof FrassDripRouteWithChildren
   '/frass-kicks': typeof FrassKicksRouteWithChildren
   '/lookbook': typeof LookbookRouteWithChildren
+  '/mcp': typeof McpRoute
   '/music-media': typeof MusicMediaRoute
+  '/.mcp/list-tools': typeof Char91DotmcpChar93ListToolsRoute
+  '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRouteWithChildren
   '/_authenticated/try-on': typeof AuthenticatedTryOnRoute
   '/bare-drip/men': typeof BareDripMenRouteWithChildren
@@ -396,6 +434,7 @@ export interface FileRoutesById {
   '/frass-kicks/': typeof FrassKicksIndexRoute
   '/lookbook/': typeof LookbookIndexRoute
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
+  '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
   '/_authenticated/admin/blog': typeof AuthenticatedAdminBlogRoute
   '/_authenticated/admin/capsules': typeof AuthenticatedAdminCapsulesRoute
   '/_authenticated/admin/images': typeof AuthenticatedAdminImagesRoute
@@ -423,7 +462,10 @@ export interface FileRouteTypes {
     | '/frass-drip'
     | '/frass-kicks'
     | '/lookbook'
+    | '/mcp'
     | '/music-media'
+    | '/.mcp/list-tools'
+    | '/.well-known/oauth-protected-resource'
     | '/admin'
     | '/try-on'
     | '/bare-drip/men'
@@ -444,6 +486,7 @@ export interface FileRouteTypes {
     | '/frass-kicks/'
     | '/lookbook/'
     | '/.lovable/oauth/consent'
+    | '/.mcp/invoke-tool/$tool'
     | '/admin/blog'
     | '/admin/capsules'
     | '/admin/images'
@@ -463,7 +506,10 @@ export interface FileRouteTypes {
     | '/'
     | '/auth'
     | '/checkout'
+    | '/mcp'
     | '/music-media'
+    | '/.mcp/list-tools'
+    | '/.well-known/oauth-protected-resource'
     | '/try-on'
     | '/blog/$slug'
     | '/capsules/$handle'
@@ -479,6 +525,7 @@ export interface FileRouteTypes {
     | '/frass-kicks'
     | '/lookbook'
     | '/.lovable/oauth/consent'
+    | '/.mcp/invoke-tool/$tool'
     | '/admin/blog'
     | '/admin/capsules'
     | '/admin/images'
@@ -505,7 +552,10 @@ export interface FileRouteTypes {
     | '/frass-drip'
     | '/frass-kicks'
     | '/lookbook'
+    | '/mcp'
     | '/music-media'
+    | '/.mcp/list-tools'
+    | '/.well-known/oauth-protected-resource'
     | '/_authenticated/admin'
     | '/_authenticated/try-on'
     | '/bare-drip/men'
@@ -526,6 +576,7 @@ export interface FileRouteTypes {
     | '/frass-kicks/'
     | '/lookbook/'
     | '/.lovable/oauth/consent'
+    | '/.mcp/invoke-tool/$tool'
     | '/_authenticated/admin/blog'
     | '/_authenticated/admin/capsules'
     | '/_authenticated/admin/images'
@@ -553,10 +604,14 @@ export interface RootRouteChildren {
   FrassDripRoute: typeof FrassDripRouteWithChildren
   FrassKicksRoute: typeof FrassKicksRouteWithChildren
   LookbookRoute: typeof LookbookRouteWithChildren
+  McpRoute: typeof McpRoute
   MusicMediaRoute: typeof MusicMediaRoute
+  Char91DotmcpChar93ListToolsRoute: typeof Char91DotmcpChar93ListToolsRoute
+  Char91DotwellKnownChar93OauthProtectedResourceRoute: typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   CollectionHandleRoute: typeof CollectionHandleRoute
   ProductHandleRoute: typeof ProductHandleRoute
   DotlovableOauthConsentRoute: typeof DotlovableOauthConsentRoute
+  Char91DotmcpChar93InvokeToolToolRoute: typeof Char91DotmcpChar93InvokeToolToolRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -566,6 +621,13 @@ declare module '@tanstack/react-router' {
       path: '/music-media'
       fullPath: '/music-media'
       preLoaderRoute: typeof MusicMediaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/mcp': {
+      id: '/mcp'
+      path: '/mcp'
+      fullPath: '/mcp'
+      preLoaderRoute: typeof McpRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/lookbook': {
@@ -771,6 +833,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/.well-known/oauth-protected-resource': {
+      id: '/.well-known/oauth-protected-resource'
+      path: '/.well-known/oauth-protected-resource'
+      fullPath: '/.well-known/oauth-protected-resource'
+      preLoaderRoute: typeof Char91DotwellKnownChar93OauthProtectedResourceRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/.mcp/list-tools': {
+      id: '/.mcp/list-tools'
+      path: '/.mcp/list-tools'
+      fullPath: '/.mcp/list-tools'
+      preLoaderRoute: typeof Char91DotmcpChar93ListToolsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/frass-drip/women/': {
       id: '/frass-drip/women/'
       path: '/'
@@ -868,6 +944,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/admin/blog'
       preLoaderRoute: typeof AuthenticatedAdminBlogRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/.mcp/invoke-tool/$tool': {
+      id: '/.mcp/invoke-tool/$tool'
+      path: '/.mcp/invoke-tool/$tool'
+      fullPath: '/.mcp/invoke-tool/$tool'
+      preLoaderRoute: typeof Char91DotmcpChar93InvokeToolToolRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/.lovable/oauth/consent': {
       id: '/.lovable/oauth/consent'
@@ -1068,10 +1151,15 @@ const rootRouteChildren: RootRouteChildren = {
   FrassDripRoute: FrassDripRouteWithChildren,
   FrassKicksRoute: FrassKicksRouteWithChildren,
   LookbookRoute: LookbookRouteWithChildren,
+  McpRoute: McpRoute,
   MusicMediaRoute: MusicMediaRoute,
+  Char91DotmcpChar93ListToolsRoute: Char91DotmcpChar93ListToolsRoute,
+  Char91DotwellKnownChar93OauthProtectedResourceRoute:
+    Char91DotwellKnownChar93OauthProtectedResourceRoute,
   CollectionHandleRoute: CollectionHandleRoute,
   ProductHandleRoute: ProductHandleRoute,
   DotlovableOauthConsentRoute: DotlovableOauthConsentRoute,
+  Char91DotmcpChar93InvokeToolToolRoute: Char91DotmcpChar93InvokeToolToolRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
