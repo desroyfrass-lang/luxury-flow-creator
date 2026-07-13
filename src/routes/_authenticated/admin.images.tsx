@@ -124,7 +124,7 @@ function SlotCard({ slot, currentUrl }: { slot: SlotDef; currentUrl?: string }) 
   return (
     <div className="overflow-hidden rounded-xl border border-border/60 bg-card">
       <div className="relative aspect-[4/3] bg-secondary/30">
-        <img src={displayUrl} alt={slot.label} className="absolute inset-0 h-full w-full object-contain p-2" />
+        <img src={displayUrl} alt={slot.label} className="absolute inset-0 h-full w-full rounded-xl object-contain p-2" />
         {isOverride && (
           <span className="absolute left-3 top-3 rounded-full bg-[color:var(--gold)] px-2.5 py-1 text-[9px] font-bold uppercase tracking-[0.2em] text-[color:var(--ink)]">
             Custom
@@ -260,7 +260,7 @@ function StoryGallery({ slug }: { slug: string }) {
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
           {images.map((img) => (
             <div key={img.id} className="group relative aspect-[3/4] overflow-hidden rounded-lg border border-border/60">
-              <img src={img.url} alt={img.alt ?? ""} className="absolute inset-0 h-full w-full object-contain p-2" />
+              <img src={img.url} alt={img.alt ?? ""} className="absolute inset-0 h-full w-full rounded-lg object-contain p-2" />
               <button
                 onClick={() => onDelete(img.id)}
                 className="absolute right-2 top-2 inline-flex h-8 w-8 items-center justify-center rounded-full bg-background/80 opacity-0 transition group-hover:opacity-100 hover:text-destructive"
@@ -375,7 +375,7 @@ function ProductOverrideEditor({ productId }: { productId: string }) {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           {images.map((img) => (
             <div key={img.id} className="group relative aspect-square overflow-hidden rounded-lg border border-border/60">
-              <img src={img.url} alt="" className="absolute inset-0 h-full w-full object-contain p-2" />
+              <img src={img.url} alt="" className="absolute inset-0 h-full w-full rounded-lg object-contain p-2" />
               <button
                 onClick={() => onDelete(img.id)}
                 className="absolute right-2 top-2 inline-flex h-8 w-8 items-center justify-center rounded-full bg-background/80 opacity-0 transition group-hover:opacity-100 hover:text-destructive"
