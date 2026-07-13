@@ -5,6 +5,9 @@ import { SiteShell } from "@/components/site-shell";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/auth")({
+  validateSearch: (s: Record<string, unknown>) => ({
+    next: typeof s.next === "string" && s.next.startsWith("/") && !s.next.startsWith("//") ? s.next : "",
+  }),
   head: () => ({
     meta: [
       { title: "Sign in — Frass" },
@@ -16,17 +19,19 @@ export const Route = createFileRoute("/auth")({
 
 function AuthPage() {
   const navigate = useNavigate();
+  const { next } = Route.useSearch();
+  const dest = next || "/admin/images";
   const [mode, setMode] = useState<"signin" | "signup">("signin");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [busy, setBusy] = useState(false);
 
-  // If already signed in, bounce to /admin
+  // If already signed in, bounce to destination
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => {
-      if (data.session) navigate({ to: "/admin/images" });
+      if (data.session) window.location.assign(dest);
     });
-  }, [navigate]);
+  }, [dest]);
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -40,18 +45,19 @@ function AuthPage() {
         const { error } = await supabase.auth.signUp({
           email,
           password,
-          options: { emailRedirectTo: window.location.origin + "/admin/images" },
+          options: { emailRedirectTo: window.location.origin + dest },
         });
         if (error) throw error;
         toast.success("Account created — signing you in");
       }
-      navigate({ to: "/admin/images" });
+      window.location.assign(dest);
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "Could not sign in");
     } finally {
       setBusy(false);
     }
   };
+
 
   return (
     <SiteShell>

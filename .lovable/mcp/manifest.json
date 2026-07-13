@@ -1,0 +1,213 @@
+{
+  "version": 1,
+  "sdk_version": "0.20.1",
+  "path": "/mcp",
+  "auth": {
+    "type": "oauth",
+    "issuer": "https://ddzfyvpynnnnjinffjar.supabase.co/auth/v1",
+    "accepted_audiences": [
+      "authenticated"
+    ]
+  },
+  "mcp": {
+    "server": {
+      "name": "frass-mcp",
+      "version": "0.1.0",
+      "title": "Frass"
+    },
+    "tools": [
+      {
+        "name": "list_site_text",
+        "title": "List site text",
+        "description": "List editable text slots on the Frass site (key + current value).",
+        "annotations": {
+          "readOnlyHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "search": {
+              "description": "Optional substring to filter slot keys.",
+              "type": "string"
+            }
+          }
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "update_site_text",
+        "title": "Update site text",
+        "description": "Update (or insert) a text slot on the Frass site by slot_key.",
+        "annotations": {
+          "readOnlyHint": false,
+          "destructiveHint": false,
+          "idempotentHint": true
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "slot_key": {
+              "type": "string",
+              "minLength": 1,
+              "description": "The slot key to update, e.g. 'home.hero.title'."
+            },
+            "value": {
+              "type": "string",
+              "description": "New text value for the slot."
+            }
+          },
+          "required": [
+            "slot_key",
+            "value"
+          ]
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "list_site_images",
+        "title": "List site images",
+        "description": "List image slots on the Frass site (slot key, URL, alt text).",
+        "annotations": {
+          "readOnlyHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "search": {
+              "description": "Optional substring to filter slot keys.",
+              "type": "string"
+            }
+          }
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "update_site_image",
+        "title": "Update site image",
+        "description": "Point a site image slot at a new URL (and optional alt text). The image must already be hosted at an accessible URL.",
+        "annotations": {
+          "readOnlyHint": false,
+          "destructiveHint": false,
+          "idempotentHint": true
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "slot_key": {
+              "type": "string",
+              "minLength": 1,
+              "description": "Image slot key, e.g. 'home.hero.background'."
+            },
+            "url": {
+              "type": "string",
+              "format": "uri",
+              "description": "Publicly accessible image URL."
+            },
+            "alt": {
+              "description": "Alt text for accessibility.",
+              "type": "string"
+            }
+          },
+          "required": [
+            "slot_key",
+            "url"
+          ]
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "list_capsules",
+        "title": "List capsules",
+        "description": "List Frass capsules with their handle, name, and metadata.",
+        "annotations": {
+          "readOnlyHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "search": {
+              "description": "Optional substring to filter by name or handle.",
+              "type": "string"
+            }
+          }
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "get_capsule",
+        "title": "Get capsule",
+        "description": "Get one capsule with its items (products and slots).",
+        "annotations": {
+          "readOnlyHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "handle": {
+              "type": "string",
+              "minLength": 1,
+              "description": "Capsule handle (URL slug)."
+            }
+          },
+          "required": [
+            "handle"
+          ]
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "update_capsule",
+        "title": "Update capsule",
+        "description": "Update editable fields on a Frass capsule (name, description, style, gender, occasion, season).",
+        "annotations": {
+          "readOnlyHint": false,
+          "destructiveHint": false,
+          "idempotentHint": true
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "handle": {
+              "type": "string",
+              "minLength": 1,
+              "description": "Capsule handle (URL slug)."
+            },
+            "name": {
+              "type": "string"
+            },
+            "description": {
+              "type": "string"
+            },
+            "style": {
+              "type": "string"
+            },
+            "gender": {
+              "type": "string"
+            },
+            "occasion": {
+              "type": "string"
+            },
+            "season": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "handle"
+          ]
+        },
+        "outputSchema": null
+      }
+    ]
+  }
+}
