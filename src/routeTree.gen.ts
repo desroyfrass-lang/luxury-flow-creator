@@ -53,6 +53,7 @@ import { Route as AuthenticatedAdminMediaRouteImport } from './routes/_authentic
 import { Route as AuthenticatedAdminImagesRouteImport } from './routes/_authenticated/admin.images'
 import { Route as AuthenticatedAdminCapsulesRouteImport } from './routes/_authenticated/admin.capsules'
 import { Route as AuthenticatedAdminBlogRouteImport } from './routes/_authenticated/admin.blog'
+import { Route as DotlovableOauthConsentRouteImport } from './routes/[.]lovable.oauth.consent'
 
 const MusicMediaRoute = MusicMediaRouteImport.update({
   id: '/music-media',
@@ -275,6 +276,11 @@ const AuthenticatedAdminBlogRoute = AuthenticatedAdminBlogRouteImport.update({
   path: '/blog',
   getParentRoute: () => AuthenticatedAdminRoute,
 } as any)
+const DotlovableOauthConsentRoute = DotlovableOauthConsentRouteImport.update({
+  id: '/.lovable/oauth/consent',
+  path: '/.lovable/oauth/consent',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -306,6 +312,7 @@ export interface FileRoutesByFullPath {
   '/frass-drip/': typeof FrassDripIndexRoute
   '/frass-kicks/': typeof FrassKicksIndexRoute
   '/lookbook/': typeof LookbookIndexRoute
+  '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
   '/admin/blog': typeof AuthenticatedAdminBlogRoute
   '/admin/capsules': typeof AuthenticatedAdminCapsulesRoute
   '/admin/images': typeof AuthenticatedAdminImagesRoute
@@ -340,6 +347,7 @@ export interface FileRoutesByTo {
   '/frass-drip': typeof FrassDripIndexRoute
   '/frass-kicks': typeof FrassKicksIndexRoute
   '/lookbook': typeof LookbookIndexRoute
+  '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
   '/admin/blog': typeof AuthenticatedAdminBlogRoute
   '/admin/capsules': typeof AuthenticatedAdminCapsulesRoute
   '/admin/images': typeof AuthenticatedAdminImagesRoute
@@ -387,6 +395,7 @@ export interface FileRoutesById {
   '/frass-drip/': typeof FrassDripIndexRoute
   '/frass-kicks/': typeof FrassKicksIndexRoute
   '/lookbook/': typeof LookbookIndexRoute
+  '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
   '/_authenticated/admin/blog': typeof AuthenticatedAdminBlogRoute
   '/_authenticated/admin/capsules': typeof AuthenticatedAdminCapsulesRoute
   '/_authenticated/admin/images': typeof AuthenticatedAdminImagesRoute
@@ -434,6 +443,7 @@ export interface FileRouteTypes {
     | '/frass-drip/'
     | '/frass-kicks/'
     | '/lookbook/'
+    | '/.lovable/oauth/consent'
     | '/admin/blog'
     | '/admin/capsules'
     | '/admin/images'
@@ -468,6 +478,7 @@ export interface FileRouteTypes {
     | '/frass-drip'
     | '/frass-kicks'
     | '/lookbook'
+    | '/.lovable/oauth/consent'
     | '/admin/blog'
     | '/admin/capsules'
     | '/admin/images'
@@ -514,6 +525,7 @@ export interface FileRouteTypes {
     | '/frass-drip/'
     | '/frass-kicks/'
     | '/lookbook/'
+    | '/.lovable/oauth/consent'
     | '/_authenticated/admin/blog'
     | '/_authenticated/admin/capsules'
     | '/_authenticated/admin/images'
@@ -544,6 +556,7 @@ export interface RootRouteChildren {
   MusicMediaRoute: typeof MusicMediaRoute
   CollectionHandleRoute: typeof CollectionHandleRoute
   ProductHandleRoute: typeof ProductHandleRoute
+  DotlovableOauthConsentRoute: typeof DotlovableOauthConsentRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -856,6 +869,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminBlogRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
+    '/.lovable/oauth/consent': {
+      id: '/.lovable/oauth/consent'
+      path: '/.lovable/oauth/consent'
+      fullPath: '/.lovable/oauth/consent'
+      preLoaderRoute: typeof DotlovableOauthConsentRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -1051,6 +1071,7 @@ const rootRouteChildren: RootRouteChildren = {
   MusicMediaRoute: MusicMediaRoute,
   CollectionHandleRoute: CollectionHandleRoute,
   ProductHandleRoute: ProductHandleRoute,
+  DotlovableOauthConsentRoute: DotlovableOauthConsentRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
