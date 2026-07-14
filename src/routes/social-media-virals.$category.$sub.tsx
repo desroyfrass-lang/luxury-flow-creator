@@ -3,6 +3,7 @@ import { SiteShell } from "@/components/site-shell";
 import { PageHeader } from "@/components/page-header";
 import { ViralProductCard } from "@/components/viral-product-card";
 import { getViralSub } from "@/lib/social-virals";
+import { useMergedSubProducts } from "@/hooks/use-merged-sub-products";
 
 export const Route = createFileRoute("/social-media-virals/$category/$sub")({
   beforeLoad: ({ params }) => {
