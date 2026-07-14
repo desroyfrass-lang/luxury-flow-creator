@@ -21,13 +21,50 @@ export const Route = createFileRoute("/product/$handle")({
   },
   head: ({ loaderData }) => {
     const product = loaderData;
+    const imageUrl = product?.images?.edges?.[0]?.node?.url;
+    const schema = product
+      ? {
+          "@context": "https://schema.org",
+          "@type": "Product",
+          name: product.title,
+          description: product.description,
+          image: imageUrl,
+          brand: { "@type": "Brand", name: product.vendor ?? "Frass" },
+          offers: {
+            "@type": "AggregateOffer",
+            lowPrice: product.priceRange.minVariantPrice.amount,
+            highPrice: product.priceRange.minVariantPrice.amount,
+            priceCurrency: product.priceRange.minVariantPrice.currencyCode,
+            availability: "https://schema.org/InStock",
+          },
+        }
+      : null;
+
+    const meta = [
+      { title: `${product?.title ?? "Product"} — Frass Kicks` },
+      { name: "description", content: product?.description?.slice(0, 160) ?? "Premium product from the Frass Kicks collection." },
+      { property: "og:title", content: `${product?.title ?? "Product"} — Frass Kicks` },
+      { property: "og:description", content: product?.description?.slice(0, 160) ?? "" },
+      { property: "og:type", content: "product" },
+      { property: "twitter:card", content: "summary_large_image" },
+    ];
+
+    if (imageUrl) {
+      meta.push({ property: "og:image", content: imageUrl });
+      meta.push({ property: "twitter:image", content: imageUrl });
+    }
+
     return {
-      meta: [
-        { title: `${product?.title ?? "Product"} — Frass Kicks` },
-        { name: "description", content: product?.description?.slice(0, 160) ?? "Premium product from the Frass Kicks collection." },
-        { property: "og:title", content: `${product?.title ?? "Product"} — Frass Kicks` },
-        { property: "og:description", content: product?.description?.slice(0, 160) ?? "" },
-      ],
+      meta,
+      links: [{ rel: "canonical", href: `/product/${product?.handle ?? ""}` }],
+      scripts: schema
+        ? [
+            {
+              type: "application/ld+json",
+              children: JSON.stringify(schema),
+            },
+          ]
+        : undefined,
     };
   },
   errorComponent: ({ error }) => (
