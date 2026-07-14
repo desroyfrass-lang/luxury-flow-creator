@@ -1,67 +1,75 @@
-# Afro Designers — Caribbean Luxury Marketplace
+# Headless Shopify Integration Plan
 
-A new destination inside the Frass Kicks site (not a separate Shopify store — one connected Shopify account is the limit, and you asked for a *store experience*, so this ships as a themed section with its own routes, palette, and Frassy variant).
+## Goal
+Keep the existing Lovable frontend exactly as designed. Replace the commerce backend with Shopify: products, variants, inventory, cart, checkout, discounts, and customer accounts all flow through Shopify Storefront API. The customer never feels like they leave Frass.
 
-## Visual direction
+## Current State
+- Shopify store is connected: `3hekgw-kr.myshopify.com`
+- Storefront token is available.
+- **43 products already exist in Shopify**, including all Frass Kicks footwear and the 3 Frass merch items (hoodie, jacket, pants).
+- The site currently reads products from Lovable Cloud (Supabase `products` / `product_variants` tables).
+- Cart is local-only; checkout page is disabled.
 
-- **Palette:** bright white base, crystal aqua (#7DD3E8), ocean deep (#0E7C9E), sandy beige (#EBD9B4), champagne gold (#D4AF37) + glitter gold accents, polished chrome trim.
-- **Type:** display serif for headlines (resort-boutique feel), refined sans for body — distinct from the dark Frass Kicks streetwear direction so entering the section feels like a new world.
-- **Effects:** soft wave gradients, shimmering gold particle overlay, chrome-bordered cards with gold-glow hover, subtle floating animation on hero elements.
-- **Frassy emblem:** same SVG shape, recolored to polished gold (gradient + inner highlight) — used as the section's signature mark.
+## Scope Decisions (from your answers)
+1. **All shoppable products** come from Shopify.
+2. **Rewards/coupons** will create real Shopify discount codes and pass them into Shopify checkout.
+3. **Checkout** stays on Frass until the final payment step, then redirects to Shopify Checkout (best non-Plus experience).
 
-The dark Frass Kicks theme stays intact everywhere else; the Afro Designers routes wrap in a scoped `.afro-theme` class so light tokens only apply inside this section.
+## Implementation Steps
 
-## Routes
+### 1. Restore Shopify Storefront API layer
+- Replace the Supabase-backed `src/lib/shopify.ts` with Storefront API queries.
+- Fetch products, collections, product handles, variants, images, prices, and inventory via GraphQL.
+- Keep the existing `ShopifyProduct` / `ShopifyVariant` type shapes so every consumer (ProductCard, ProductGrid, product detail, cart) works unchanged.
 
-```text
-/afro-designers                       hero + featured designers + spotlight
-/afro-designers/designers             all designers grid, filter by region
-/afro-designers/designers/$slug       designer profile (story, gallery, products)
-/afro-designers/collections/$slug     regional/category collection page
-```
+### 2. Product grid & product cards
+- Update `ProductGrid` to call Shopify Storefront API instead of Supabase.
+- Keep existing cards, hover effects, typography, spacing, and quick-add button exactly as designed.
+- Preserve the Shopify-style query parsing so collection filters (`vendor:`, `product_type:`, `tag:`) still work.
 
-Each route sets its own head() (title, description, og:*). No hash anchors.
+### 3. Product detail page
+- Update `src/routes/product.$handle.tsx` to load from Shopify by handle.
+- Keep current layout, image gallery, variant selector, add-to-cart UX, and animations.
+- Pull meta title/description from Shopify product data for SEO.
 
-## Sections on the landing page
+### 4. Re-implement Shopify cart
+- Rewrite `src/lib/cart-store.ts` to use Shopify Cart API:
+  - `cartCreate` on first add
+  - `cartLinesAdd` / `cartLinesUpdate` / `cartLinesRemove` for mutations
+  - Persist `cartId`, `checkoutUrl`, and line IDs in Zustand + localStorage
+  - Append `channel=online_store` to checkout URL
+- Keep `CartDrawer` visuals identical; only the data source and checkout button change.
 
-1. **Cinematic hero** — full-bleed Caribbean scene (AI-generated image: ocean, sand, palms, editorial fashion), gold Frassy emblem floating above title "AFRO DESIGNERS / Where Culture Meets Luxury", two CTAs (Explore Designers, Shop Collections), shimmering particle layer.
-2. **Regional pillars** — 5 cards: African, African American, Caribbean, Jamaican, Global Diaspora — each links to `/afro-designers/collections/$slug`.
-3. **Featured Designers** — carousel/grid of designer cards (image, name, country w/ flag, brand tagline, Shop button).
-4. **Island Collections** — resort wear, linen, swim, sandals, jewelry tiles.
-5. **Designer Spotlight** — weekly feature block (large editorial layout: portrait + story + collection thumbnails).
-6. **Caribbean Marketplace strip** — artisan/handmade highlights.
-7. **Footer band** — brand statement "Culture. Creativity. Heritage. Luxury."
+### 5. Checkout redirect
+- Update `src/routes/checkout.tsx` to display the cart summary as today, then redirect to Shopify Checkout when the customer proceeds to payment.
+- Remove the disabled "Payments coming soon" state.
+- Pass any applied Shopify discount code through to the checkout URL.
 
-## Data
+### 6. Rewards → Shopify discount codes
+- Update `src/lib/rewards.functions.ts` so claiming a reward creates a Shopify price rule + discount code via Admin API.
+- The generated code is what the customer enters at checkout; Shopify validates it.
 
-Designers and collections start as a typed seed file (`src/data/afro-designers.ts`) so the visual build can ship immediately. Placeholder designer imagery is AI-generated. Once you're ready to sell real products, we'll wire each designer to Shopify products via tag/vendor (e.g. `vendor:"Afro — <designer>"`) — that hookup is a follow-up, not this turn.
+### 7. Collection pages
+- Update all collection routes (`/frass-kicks`, `/frass-drip`, `/bare-drip`, etc.) to pull products from Shopify using the existing query mapping.
+- Keep every existing layout, animation, and card style.
 
-No fabricated reviews, testimonials, or fake bios attributed to real names — designer placeholders use generic studio names until you supply real ones.
+### 8. SEO / structured data
+- Use Shopify product/collection titles and descriptions for `head()` meta.
+- Add JSON-LD product schema from Shopify data.
+- Preserve existing URL structure.
 
-## Navigation
+### 9. Performance & UX guardrails
+- Lazy-load product images (already in place).
+- Cache Storefront API responses with TanStack Query where possible.
+- Show loading states inside the existing luxury UI, never a default Shopify widget.
 
-- Header gets a new "Afro Designers" link with a small gold Frassy mark.
-- A subtle gold ribbon on the Frass Kicks homepage teases the section.
+### 10. Verification
+- Test product grid, product detail, add-to-cart, cart drawer, quantity updates, removal, and checkout redirect.
+- Confirm checkout URL opens correctly and discount codes apply.
 
-## Technical notes
+## What Will NOT Change
+- Colors, typography, spacing, layouts, navigation, animations, hover effects, hero sections, videos, Afro Designers, Capsules, Frass Hill Media, or any brand styling.
+- The homepage and all content pages remain untouched except where commerce data is displayed.
 
-- New files:
-  - `src/routes/afro-designers.tsx` (layout w/ `<Outlet />` + scoped theme wrapper)
-  - `src/routes/afro-designers.index.tsx` (landing)
-  - `src/routes/afro-designers.designers.tsx`
-  - `src/routes/afro-designers.designers.$slug.tsx`
-  - `src/routes/afro-designers.collections.$slug.tsx`
-  - `src/components/afro/FrassyGold.tsx` (recolored SVG variant)
-  - `src/components/afro/DesignerCard.tsx`, `RegionPillar.tsx`, `Shimmer.tsx`, `WaveBg.tsx`
-  - `src/data/afro-designers.ts`
-- `src/styles.css`: add `.afro-theme` scope with light ocean tokens, gold gradient token, chrome token, shimmer keyframes.
-- Hero image generated via imagegen (premium quality for the leaf og:image).
-- Motion via CSS keyframes + existing animation utilities; no new heavy libs.
-
-## Out of scope this turn
-
-- Real Shopify product linkage per designer (structure ready, wired next turn once you have vendor tags).
-- Designer onboarding form / auth.
-- Weekly spotlight CMS (hardcoded for now).
-
-Approve and I'll build it.
+## Note on Checkout Domain
+Without Shopify Plus, the final payment page is hosted on `3hekgw-kr.myshopify.com`. We will make the transition seamless (same-tab redirect, branded cart summary on Frass, discount pre-applied). A fully same-domain checkout requires Shopify Plus and is outside this scope.
