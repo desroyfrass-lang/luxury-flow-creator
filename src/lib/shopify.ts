@@ -216,6 +216,9 @@ const BARE_CATEGORY_LABEL: Record<string, string> = {
   swimwear: "Swimwear",
   underwear: "Underwear",
   lingerie: "Lingerie",
+  shapewear: "Shapewear",
+  panties: "Panties",
+  bras: "Bras",
 };
 
 function titleize(slug: string) {
