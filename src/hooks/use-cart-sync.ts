@@ -1,5 +1,17 @@
-// Cart sync used to reconcile a local cart with a remote Shopify cart.
-// The cart is now purely local (Lovable Cloud); nothing to sync.
+import { useEffect } from "react";
+import { useCartStore } from "@/lib/cart-store";
+
 export function useCartSync() {
-  /* no-op */
+  const syncCart = useCartStore((state) => state.syncCart);
+
+  useEffect(() => {
+    syncCart();
+
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === "visible") syncCart();
+    };
+
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+    return () => document.removeEventListener("visibilitychange", handleVisibilityChange);
+  }, [syncCart]);
 }
