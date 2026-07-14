@@ -4,54 +4,106 @@ import { Loader2, ShieldCheck, Truck, Sparkles, Undo2 } from "lucide-react";
 import { SiteShell } from "@/components/site-shell";
 import { fetchProductByHandle, type ShopifyProductNode, type ShopifyVariant } from "@/lib/shopify";
 import { useCartStore } from "@/lib/cart-store";
+import { queryOptions } from "@tanstack/react-query";
+import { useSuspenseQuery } from "@tanstack/react-query";
+
+const productQueryOptions = (handle: string) =>
+  queryOptions({
+    queryKey: ["product", handle],
+    queryFn: () => fetchProductByHandle(handle),
+  });
 
 export const Route = createFileRoute("/product/$handle")({
-  head: ({ params }) => ({
-    meta: [
-      { title: `${params.handle.replace(/-/g, " ")} — Frass Kicks` },
-      { name: "description", content: "Premium product from the Frass Kicks collection." },
-    ],
-  }),
+  loader: async ({ params, context }) => {
+    const product = await context.queryClient.ensureQueryData(productQueryOptions(params.handle));
+    if (!product) throw notFound();
+    return product;
+  },
+  head: ({ loaderData }) => {
+    const product = loaderData;
+    const imageUrl = product?.images?.edges?.[0]?.node?.url;
+    const schema = product
+      ? {
+          "@context": "https://schema.org",
+          "@type": "Product",
+          name: product.title,
+          description: product.description,
+          image: imageUrl,
+          brand: { "@type": "Brand", name: product.vendor ?? "Frass" },
+          offers: {
+            "@type": "AggregateOffer",
+            lowPrice: product.priceRange.minVariantPrice.amount,
+            highPrice: product.priceRange.minVariantPrice.amount,
+            priceCurrency: product.priceRange.minVariantPrice.currencyCode,
+            availability: "https://schema.org/InStock",
+          },
+        }
+      : null;
+
+    const meta = [
+      { title: `${product?.title ?? "Product"} — Frass Kicks` },
+      { name: "description", content: product?.description?.slice(0, 160) ?? "Premium product from the Frass Kicks collection." },
+      { property: "og:title", content: `${product?.title ?? "Product"} — Frass Kicks` },
+      { property: "og:description", content: product?.description?.slice(0, 160) ?? "" },
+      { property: "og:type", content: "product" },
+      { property: "twitter:card", content: "summary_large_image" },
+    ];
+
+    if (imageUrl) {
+      meta.push({ property: "og:image", content: imageUrl });
+      meta.push({ property: "twitter:image", content: imageUrl });
+    }
+
+    return {
+      meta,
+      links: [{ rel: "canonical", href: `/product/${product?.handle ?? ""}` }],
+      scripts: schema
+        ? [
+            {
+              type: "application/ld+json",
+              children: JSON.stringify(schema),
+            },
+          ]
+        : undefined,
+    };
+  },
+  errorComponent: ({ error }) => (
+    <SiteShell>
+      <div className="mx-auto max-w-2xl py-32 px-6 text-center">
+        <h1 className="font-display text-5xl">Error</h1>
+        <p className="mt-4 text-muted-foreground">{error.message}</p>
+      </div>
+    </SiteShell>
+  ),
+  notFoundComponent: () => (
+    <SiteShell>
+      <div className="mx-auto max-w-2xl py-32 px-6 text-center">
+        <h1 className="font-display text-5xl">Not found</h1>
+        <p className="mt-4 text-muted-foreground">This piece isn't in the showroom.</p>
+        <Link to="/" className="mt-8 inline-block underline">
+          Return home
+        </Link>
+      </div>
+    </SiteShell>
+  ),
   component: ProductPage,
 });
 
 function ProductPage() {
   const { handle } = Route.useParams();
-  const [product, setProduct] = useState<ShopifyProductNode | null | undefined>(undefined);
+  const { data: product } = useSuspenseQuery(productQueryOptions(handle));
   const [activeImg, setActiveImg] = useState(0);
   const [variantId, setVariantId] = useState<string | null>(null);
   const addItem = useCartStore((s) => s.addItem);
   const isLoading = useCartStore((s) => s.isLoading);
 
   useEffect(() => {
-    fetchProductByHandle(handle).then((p) => {
-      setProduct(p);
-      const first = p?.variants.edges[0]?.node.id ?? null;
-      setVariantId(first);
-    }).catch(() => setProduct(null));
-  }, [handle]);
+    const first = product?.variants.edges[0]?.node.id ?? null;
+    setVariantId(first);
+    setActiveImg(0);
+  }, [product]);
 
-  if (product === undefined) {
-    return (
-      <SiteShell>
-        <div className="min-h-[60vh] flex items-center justify-center text-muted-foreground">
-          <Loader2 className="h-6 w-6 animate-spin" />
-        </div>
-      </SiteShell>
-    );
-  }
-
-  if (!product) {
-    return (
-      <SiteShell>
-        <div className="mx-auto max-w-2xl py-32 px-6 text-center">
-          <h1 className="font-display text-5xl">Not found</h1>
-          <p className="mt-4 text-muted-foreground">This piece isn't in the showroom.</p>
-          <Link to="/" className="mt-8 inline-block underline">Return home</Link>
-        </div>
-      </SiteShell>
-    );
-  }
+  if (!product) return null;
 
   const images = product.images.edges;
   const variants = product.variants.edges.map((e) => e.node);
@@ -76,9 +128,13 @@ function ProductPage() {
     <SiteShell>
       <section className="mx-auto max-w-[1600px] px-6 lg:px-12 pt-10 pb-24">
         <nav className="mb-8 flex items-center gap-2 text-[11px] uppercase tracking-[0.25em] text-muted-foreground">
-          <Link to="/" className="hover:text-foreground">Home</Link>
+          <Link to="/" className="hover:text-foreground">
+            Home
+          </Link>
           <span className="opacity-40">/</span>
-          <Link to="/frass-kicks" className="hover:text-foreground">Shop</Link>
+          <Link to="/frass-kicks" className="hover:text-foreground">
+            Shop
+          </Link>
           <span className="opacity-40">/</span>
           <span className="text-foreground">{product.title}</span>
         </nav>
@@ -183,7 +239,10 @@ function ProductPage() {
                 { Icon: Undo2, label: "Easy Returns" },
                 { Icon: Sparkles, label: "Quality Guarantee" },
               ].map(({ Icon, label }) => (
-                <div key={label} className="flex items-center gap-3 text-xs uppercase tracking-[0.2em] text-muted-foreground">
+                <div
+                  key={label}
+                  className="flex items-center gap-3 text-xs uppercase tracking-[0.2em] text-muted-foreground"
+                >
                   <Icon className="h-4 w-4 text-[color:var(--gold)]" />
                   {label}
                 </div>

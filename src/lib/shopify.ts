@@ -1,8 +1,10 @@
-// Catalog module — backed by Lovable Cloud (Supabase).
-// The type shape mirrors the old Shopify Storefront responses so every
-// existing consumer (ProductCard, ProductGrid, product detail, cart) keeps
-// working unchanged while we migrate off Shopify.
-import { supabase } from "@/integrations/supabase/client";
+// Headless Shopify integration — Storefront API.
+// Lovable owns the frontend; Shopify owns products, inventory, cart, and checkout.
+
+const SHOPIFY_API_VERSION = "2025-07";
+const SHOPIFY_STORE_PERMANENT_DOMAIN = "3hekgw-kr.myshopify.com";
+const SHOPIFY_STOREFRONT_URL = `https://${SHOPIFY_STORE_PERMANENT_DOMAIN}/api/${SHOPIFY_API_VERSION}/graphql.json`;
+const SHOPIFY_STOREFRONT_TOKEN = "6ee86780a35c2ce25a4c9e8878ba3d99";
 
 export interface ShopifyMoney {
   amount: string;
@@ -40,169 +42,156 @@ export interface ShopifyProduct {
   node: ShopifyProductNode;
 }
 
-// ---------------------------------------------------------------
-// Query-string parser (kept for compatibility with getCollectionMeta,
-// which historically returns Shopify Storefront search syntax).
-// Supports: vendor:"..."   product_type:"..."   tag:"..."
-// ---------------------------------------------------------------
-function parseCatalogQuery(q?: string | null): {
-  vendor?: string;
-  productType?: string;
-  tags: string[];
-} {
-  if (!q) return { tags: [] };
-  const tags: string[] = [];
-  let vendor: string | undefined;
-  let productType: string | undefined;
-  const re = /(vendor|product_type|tag):"([^"]+)"/g;
-  let m: RegExpExecArray | null;
-  while ((m = re.exec(q)) !== null) {
-    const key = m[1];
-    const val = m[2];
-    if (key === "vendor") vendor = val;
-    else if (key === "product_type") productType = val;
-    else tags.push(val);
-  }
-  return { vendor, productType, tags };
-}
-
-interface DbProduct {
+export interface ShopifyCollection {
   id: string;
+  title: string;
   handle: string;
-  title: string;
   description: string;
-  vendor: string | null;
-  product_type: string | null;
-  tags: string[];
-  min_price: number;
-  currency: string;
-  hero_image: string | null;
+  products: { edges: ShopifyProduct[] };
 }
 
-interface DbImage { id: string; url: string; alt: string | null; position: number }
-interface DbOption { id: string; name: string; values: string[]; position: number }
-interface DbVariant {
-  id: string;
-  title: string;
-  price: number;
-  currency: string;
-  available: boolean;
-  selected_options: Array<{ name: string; value: string }>;
-  position: number;
-}
-
-function mapProduct(
-  p: DbProduct,
-  images: DbImage[],
-  options: DbOption[],
-  variants: DbVariant[],
-): ShopifyProduct {
-  const sortedImgs = [...images].sort((a, b) => a.position - b.position);
-  const sortedVars = [...variants].sort((a, b) => a.position - b.position);
-  const sortedOpts = [...options].sort((a, b) => a.position - b.position);
-  return {
-    node: {
-      id: p.id,
-      handle: p.handle,
-      title: p.title,
-      description: p.description ?? "",
-      vendor: p.vendor ?? undefined,
-      productType: p.product_type ?? undefined,
-      tags: p.tags ?? [],
-      priceRange: {
-        minVariantPrice: {
-          amount: String(p.min_price ?? 0),
-          currencyCode: p.currency || "USD",
-        },
-      },
-      images: {
-        edges: sortedImgs.map((i) => ({ node: { url: i.url, altText: i.alt } })),
-      },
-      variants: {
-        edges: sortedVars.map((v) => ({
-          node: {
-            id: v.id,
-            title: v.title,
-            price: { amount: String(v.price), currencyCode: v.currency || p.currency || "USD" },
-            availableForSale: v.available,
-            selectedOptions: v.selected_options ?? [],
-          },
-        })),
-      },
-      options: sortedOpts.map((o) => ({ name: o.name, values: o.values ?? [] })),
+// ------------------------------------------------------------------
+// Storefront API request helper
+// ------------------------------------------------------------------
+export async function storefrontApiRequest<T = unknown>(
+  query: string,
+  variables: Record<string, unknown> = {},
+): Promise<T> {
+  const response = await fetch(SHOPIFY_STOREFRONT_URL, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "X-Shopify-Storefront-Access-Token": SHOPIFY_STOREFRONT_TOKEN,
     },
-  };
-}
+    body: JSON.stringify({ query, variables }),
+  });
 
-async function loadRelated(productIds: string[]) {
-  if (productIds.length === 0) {
-    return { imgs: [], opts: [], vars: [] };
+  if (response.status === 402) {
+    throw new Error("Shopify: Payment required — store needs an active Shopify plan.");
   }
-  const [imgsRes, optsRes, varsRes] = await Promise.all([
-    supabase.from("product_images").select("*").in("product_id", productIds),
-    supabase.from("product_options").select("*").in("product_id", productIds),
-    supabase.from("product_variants").select("*").in("product_id", productIds),
-  ]);
-  return {
-    imgs: (imgsRes.data ?? []) as unknown as Array<DbImage & { product_id: string }>,
-    opts: (optsRes.data ?? []) as unknown as Array<DbOption & { product_id: string }>,
-    vars: (varsRes.data ?? []) as unknown as Array<DbVariant & { product_id: string }>,
-  };
+
+  if (!response.ok) {
+    throw new Error(`Shopify Storefront API error: ${response.status} ${response.statusText}`);
+  }
+
+  const data = (await response.json()) as { errors?: Array<{ message: string }>; data?: T };
+
+  if (data.errors?.length) {
+    throw new Error(`Shopify GraphQL error: ${data.errors.map((e) => e.message).join(", ")}`);
+  }
+
+  return data.data as T;
 }
 
+// ------------------------------------------------------------------
+// GraphQL ID helpers
+// ------------------------------------------------------------------
+export function toVariantGid(numericId: string | number) {
+  return `gid://shopify/ProductVariant/${numericId}`;
+}
+
+export function fromVariantGid(gid: string) {
+  const m = gid.match(/ProductVariant\/(\d+)$/);
+  return m?.[1] ?? gid;
+}
+
+// ------------------------------------------------------------------
+// Queries
+// ------------------------------------------------------------------
+const PRODUCT_FRAGMENT = `
+  id
+  title
+  description
+  handle
+  vendor
+  productType
+  tags
+  priceRange {
+    minVariantPrice {
+      amount
+      currencyCode
+    }
+  }
+  images(first: 5) {
+    edges {
+      node {
+        url
+        altText
+      }
+    }
+  }
+  variants(first: 50) {
+    edges {
+      node {
+        id
+        title
+        price {
+          amount
+          currencyCode
+        }
+        availableForSale
+        selectedOptions {
+          name
+          value
+        }
+      }
+    }
+  }
+  options {
+    name
+    values
+  }
+`;
+
+const STOREFRONT_PRODUCTS_QUERY = `
+  query GetProducts($first: Int!, $query: String) {
+    products(first: $first, query: $query) {
+      edges {
+        node {
+          ${PRODUCT_FRAGMENT}
+        }
+      }
+    }
+  }
+`;
+
+const STOREFRONT_PRODUCT_BY_HANDLE_QUERY = `
+  query GetProductByHandle($handle: String!) {
+    product(handle: $handle) {
+      ${PRODUCT_FRAGMENT}
+    }
+  }
+`;
+
+// ------------------------------------------------------------------
+// Fetch products
+// ------------------------------------------------------------------
 export async function fetchProducts(
   opts: { first?: number; query?: string } = {},
 ): Promise<ShopifyProduct[]> {
   const { first = 24, query } = opts;
-  const parsed = parseCatalogQuery(query);
+  const data = await storefrontApiRequest<{
+    products: { edges: ShopifyProduct[] };
+  }>(STOREFRONT_PRODUCTS_QUERY, { first, query: query || null });
 
-  let req = supabase
-    .from("products")
-    .select("id, handle, title, description, vendor, product_type, tags, min_price, currency, hero_image")
-    .eq("status", "active")
-    .order("position", { ascending: true })
-    .limit(first);
-
-  if (parsed.vendor) req = req.eq("vendor", parsed.vendor);
-  if (parsed.productType) req = req.eq("product_type", parsed.productType);
-  if (parsed.tags.length > 0) req = req.contains("tags", parsed.tags);
-
-  const { data, error } = await req;
-  if (error) {
-    console.error("fetchProducts error", error);
-    return [];
-  }
-  const products = (data ?? []) as DbProduct[];
-  const ids = products.map((p) => p.id);
-  const { imgs, opts: allOpts, vars } = await loadRelated(ids);
-
-  return products.map((p) =>
-    mapProduct(
-      p,
-      imgs.filter((i) => i.product_id === p.id),
-      allOpts.filter((o) => o.product_id === p.id),
-      vars.filter((v) => v.product_id === p.id),
-    ),
-  );
+  return data?.products?.edges ?? [];
 }
 
+// ------------------------------------------------------------------
+// Fetch single product by handle
+// ------------------------------------------------------------------
 export async function fetchProductByHandle(handle: string): Promise<ShopifyProductNode | null> {
-  const { data, error } = await supabase
-    .from("products")
-    .select("id, handle, title, description, vendor, product_type, tags, min_price, currency, hero_image")
-    .eq("handle", handle)
-    .eq("status", "active")
-    .maybeSingle();
-  if (error || !data) return null;
-  const p = data as DbProduct;
-  const { imgs, opts, vars } = await loadRelated([p.id]);
-  return mapProduct(p, imgs, opts, vars).node;
+  const data = await storefrontApiRequest<{
+    product: ShopifyProductNode | null;
+  }>(STOREFRONT_PRODUCT_BY_HANDLE_QUERY, { handle });
+
+  return data?.product ?? null;
 }
 
 // ============================================================
-// Collection metadata (unchanged public API — routes keep working)
-// The "query" string uses Shopify-style tokens which we now parse
-// into Supabase filters in fetchProducts.
+// Collection metadata (kept for route compatibility)
+// The "query" string uses Shopify Storefront search syntax:
+//   vendor:"..."   product_type:"..."   tag:"..."
 // ============================================================
 export type CollectionMeta = { title: string; query: string; description?: string };
 
@@ -238,7 +227,11 @@ function titleize(slug: string) {
 }
 
 const STATIC_MAP: Record<string, CollectionMeta> = {
-  "frass-kicks": { title: "Frass Kicks", query: 'vendor:"FRASS KICKS"', description: "The complete footwear collection." },
+  "frass-kicks": {
+    title: "Frass Kicks",
+    query: 'vendor:"FRASS KICKS"',
+    description: "The complete footwear collection.",
+  },
   "frass-kicks-men": { title: "Men's Footwear", query: 'vendor:"FRASS KICKS" tag:"Men\'s"' },
   "frass-kicks-women": { title: "Women's Footwear", query: 'vendor:"FRASS KICKS" tag:"Women\'s"' },
   "frass-drip": { title: "Frass Drip", query: 'tag:"frass-drip"', description: "Fashion-forward apparel." },

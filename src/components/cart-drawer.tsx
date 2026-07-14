@@ -134,7 +134,7 @@ export function CartDrawer() {
                 <Link
                   to="/checkout"
                   onClick={closeAndGoCheckout}
-                  className="w-full h-12 inline-flex items-center justify-center gap-2 rounded-full bg-foreground text-background uppercase tracking-[0.2em] text-xs font-medium transition hover:bg-foreground/90"
+                  className="w-full h-12 inline-flex items-center justify-center gap-2 rounded-full bg-foreground text-background uppercase tracking-[0.2em] text-xs font-medium transition hover:bg-foreground/90 disabled:opacity-50"
                 >
                   {isLoading || isSyncing ? (
                     <Loader2 className="h-4 w-4 animate-spin" />
@@ -145,7 +145,7 @@ export function CartDrawer() {
                   )}
                 </Link>
                 <p className="text-[10px] text-center text-muted-foreground uppercase tracking-[0.2em]">
-                  Secure Checkout · AI Try-On preview
+                  Secure Shopify Checkout · Taxes & shipping calculated next step
                 </p>
               </div>
             </>
