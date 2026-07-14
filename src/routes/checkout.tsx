@@ -1,7 +1,11 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { SiteShell } from "@/components/site-shell";
 import { useCartStore } from "@/lib/cart-store";
-import { Trash2, ArrowLeft, Lock } from "lucide-react";
+import { Trash2, ArrowLeft, Lock, Gift } from "lucide-react";
+import { useState } from "react";
+import { useServerFn } from "@tanstack/react-start";
+import { validateCoupon } from "@/lib/rewards.functions";
+import { toast } from "sonner";
 
 export const Route = createFileRoute("/checkout")({
   head: () => ({
@@ -21,9 +25,36 @@ function CheckoutPage() {
   const subtotal = items.reduce((s, i) => s + parseFloat(i.price.amount) * i.quantity, 0);
   const currency = items[0]?.price.currencyCode ?? "USD";
 
+  const [couponInput, setCouponInput] = useState("");
+  const [applied, setApplied] = useState<{ code: string; percentOff: number } | null>(null);
+  const [checking, setChecking] = useState(false);
+  const validate = useServerFn(validateCoupon);
+  const discount = applied ? subtotal * (applied.percentOff / 100) : 0;
+  const total = Math.max(0, subtotal - discount);
+
+  const applyCoupon = async () => {
+    const code = couponInput.trim().toUpperCase();
+    if (!code) return;
+    setChecking(true);
+    try {
+      const res = await validate({ data: { code } });
+      if (res.valid) {
+        setApplied({ code, percentOff: res.percentOff });
+        toast.success(`${res.percentOff}% OFF applied`);
+      } else {
+        toast.error(res.reason);
+      }
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Sign in to apply your reward coupon");
+    } finally {
+      setChecking(false);
+    }
+  };
+
   return (
     <SiteShell>
       <section className="mx-auto max-w-5xl px-6 lg:px-12 pt-12 pb-24">
+
         <Link
           to="/"
           className="inline-flex items-center gap-2 text-[11px] uppercase tracking-[0.25em] text-muted-foreground hover:text-foreground"
