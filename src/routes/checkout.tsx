@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { SiteShell } from "@/components/site-shell";
 import { useCartStore } from "@/lib/cart-store";
-import { Trash2, ArrowLeft, Lock, Gift } from "lucide-react";
+import { Trash2, ArrowLeft, Lock, Gift, Loader2 } from "lucide-react";
 import { useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import { validateCoupon } from "@/lib/rewards.functions";
@@ -21,6 +21,8 @@ function CheckoutPage() {
   const items = useCartStore((s) => s.items);
   const removeItem = useCartStore((s) => s.removeItem);
   const updateQuantity = useCartStore((s) => s.updateQuantity);
+  const getCheckoutUrl = useCartStore((s) => s.getCheckoutUrl);
+  const isLoading = useCartStore((s) => s.isLoading);
 
   const subtotal = items.reduce((s, i) => s + parseFloat(i.price.amount) * i.quantity, 0);
   const currency = items[0]?.price.currencyCode ?? "USD";
@@ -36,6 +38,7 @@ function CheckoutPage() {
   const [couponInput, setCouponInput] = useState("");
   const [applied, setApplied] = useState<{ code: string; percentOff: number } | null>(null);
   const [checking, setChecking] = useState(false);
+  const [redirecting, setRedirecting] = useState(false);
   const validate = useServerFn(validateCoupon);
   const discount = applied ? eligibleSubtotal * (applied.percentOff / 100) : 0;
   const total = Math.max(0, subtotal - discount);
@@ -59,10 +62,24 @@ function CheckoutPage() {
     }
   };
 
+  const handleCheckout = () => {
+    const checkoutUrl = getCheckoutUrl();
+    if (!checkoutUrl) {
+      toast.error("Cart is not ready. Try adding an item again.");
+      return;
+    }
+    setRedirecting(true);
+    const url = new URL(checkoutUrl);
+    url.searchParams.set("channel", "online_store");
+    if (applied?.code) {
+      url.searchParams.set("discount", applied.code);
+    }
+    window.location.href = url.toString();
+  };
+
   return (
     <SiteShell>
       <section className="mx-auto max-w-5xl px-6 lg:px-12 pt-12 pb-24">
-
         <Link
           to="/"
           className="inline-flex items-center gap-2 text-[11px] uppercase tracking-[0.25em] text-muted-foreground hover:text-foreground"
@@ -85,10 +102,7 @@ function CheckoutPage() {
           <div className="mt-12 grid grid-cols-1 lg:grid-cols-[1fr_380px] gap-10">
             <div className="space-y-6">
               {items.map((item) => (
-                <div
-                  key={item.variantId}
-                  className="flex gap-5 border-b border-border pb-6"
-                >
+                <div key={item.variantId} className="flex gap-5 border-b border-border pb-6">
                   <div className="w-24 h-28 bg-muted rounded-xl overflow-hidden flex-shrink-0">
                     {item.product.node.images?.edges?.[0]?.node && (
                       <img
@@ -104,16 +118,12 @@ function CheckoutPage() {
                       {item.selectedOptions.map((o) => o.value).join(" • ")}
                     </p>
                     <div className="mt-3 flex items-center gap-3">
-                      <label className="text-xs uppercase tracking-[0.2em] text-muted-foreground">
-                        Qty
-                      </label>
+                      <label className="text-xs uppercase tracking-[0.2em] text-muted-foreground">Qty</label>
                       <input
                         type="number"
                         min={1}
                         value={item.quantity}
-                        onChange={(e) =>
-                          updateQuantity(item.variantId, Math.max(1, Number(e.target.value)))
-                        }
+                        onChange={(e) => updateQuantity(item.variantId, Math.max(1, Number(e.target.value)))}
                         className="w-16 rounded-md border border-border bg-background px-2 py-1 text-sm"
                       />
                       <button
@@ -125,8 +135,7 @@ function CheckoutPage() {
                     </div>
                   </div>
                   <div className="text-right font-semibold tabular-nums">
-                    {item.price.currencyCode}{" "}
-                    {(parseFloat(item.price.amount) * item.quantity).toFixed(2)}
+                    {item.price.currencyCode} {(parseFloat(item.price.amount) * item.quantity).toFixed(2)}
                   </div>
                 </div>
               ))}
@@ -147,9 +156,7 @@ function CheckoutPage() {
                       <span className="inline-flex items-center gap-1">
                         <Gift className="h-3.5 w-3.5" /> {applied.code} ({applied.percentOff}% OFF)
                       </span>
-                      <span className="tabular-nums">
-                        -{currency} {discount.toFixed(2)}
-                      </span>
+                      <span className="tabular-nums">-{currency} {discount.toFixed(2)}</span>
                     </div>
                     {hasExcluded && (
                       <p className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground">
@@ -210,15 +217,21 @@ function CheckoutPage() {
                 </button>
               )}
 
-
               <button
-                disabled
-                className="mt-6 w-full h-12 inline-flex items-center justify-center gap-2 rounded-full bg-foreground text-background uppercase tracking-[0.2em] text-xs font-medium opacity-60 cursor-not-allowed"
+                onClick={handleCheckout}
+                disabled={isLoading || redirecting}
+                className="mt-6 w-full h-12 inline-flex items-center justify-center gap-2 rounded-full bg-foreground text-background uppercase tracking-[0.2em] text-xs font-medium transition hover:bg-foreground/90 disabled:opacity-60"
               >
-                <Lock className="h-4 w-4" /> Complete purchase
+                {redirecting || isLoading ? (
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                ) : (
+                  <>
+                    <Lock className="h-4 w-4" /> Complete purchase
+                  </>
+                )}
               </button>
               <p className="mt-3 text-[11px] text-center text-muted-foreground uppercase tracking-[0.2em]">
-                Payments coming soon
+                Secure Shopify Checkout · Taxes & shipping calculated next step
               </p>
             </aside>
           </div>
