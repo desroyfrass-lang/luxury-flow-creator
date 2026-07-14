@@ -120,59 +120,49 @@ function Home() {
             <img
               src={heroSrc}
               alt="Frass Kicks luxury showroom"
-              className="h-[78vh] min-h-[560px] w-full object-cover"
+              className="h-[62vh] min-h-[440px] w-full object-cover"
             />
             <div className="absolute inset-0 bg-[linear-gradient(90deg,oklch(0.07_0.005_80_/_0.78)_0%,oklch(0.07_0.005_80_/_0.42)_35%,oklch(0.07_0.005_80_/_0.18)_60%,transparent_100%)]" />
             <div className="absolute inset-0 bg-[linear-gradient(180deg,oklch(0.07_0.005_80_/_0.22)_0%,transparent_22%,oklch(0.07_0.005_80_/_0.65)_100%)]" />
 
-            <div className="absolute inset-0 flex flex-col justify-end items-start p-6 md:p-10 lg:p-12 pb-5 md:pb-7 lg:pb-8 animate-fade-up">
-              <div className="max-w-3xl text-foreground">
-                <div className="mb-5 flex flex-wrap items-center gap-x-4 gap-y-2 font-display uppercase">
-                  <img
-                    src={chromeText.url}
-                    alt="Frass Kicks"
-                    className="h-8 md:h-11 lg:h-14 w-auto object-contain drop-shadow-[0_0_18px_oklch(0.78_0.14_78_/_0.35)]"
-                  />
-                  <span className="text-sm md:text-lg lg:text-xl tracking-[0.3em] text-[color:var(--gold)]">
-                    Original Luxury Streetwear
-                  </span>
-                  <img
-                    src={symbolLogo.url}
-                    alt=""
-                    aria-hidden
-                    className="h-9 md:h-12 lg:h-16 w-auto object-contain drop-shadow-[0_0_18px_oklch(0.78_0.14_78_/_0.35)]"
-                  />
+            <div className="absolute inset-0 flex flex-col justify-end items-start p-5 md:p-8 lg:p-10 pb-4 md:pb-6 animate-fade-up">
+              <div className="max-w-2xl text-foreground">
+                <div className="font-display uppercase text-[10px] md:text-xs tracking-[0.4em] text-[color:var(--gold)]">
+                  Frass Hill Presents
                 </div>
-                <h1 className="max-w-2xl font-display text-6xl md:text-8xl lg:text-[8.5rem] text-foreground leading-[0.88]">
-                  {heroHeadline}
+                <h1 className="mt-2 font-display uppercase text-4xl md:text-6xl lg:text-7xl text-foreground leading-[0.9]">
+                  Frass Kicks
                 </h1>
-                <p className="mt-5 max-w-xl text-sm md:text-base tracking-[0.04em] text-foreground/78">
+                <div className="mt-1 font-display uppercase text-2xl md:text-4xl lg:text-5xl text-foreground leading-[0.95]">
+                  Original Luxury Streetwear
+                </div>
+                <p className="mt-3 max-w-lg text-xs md:text-sm tracking-[0.04em] text-foreground/75">
                   {heroParagraph}
                 </p>
-                <div className="mt-8 flex flex-wrap gap-3">
+                <div className="mt-5 flex flex-wrap gap-2">
                   <Link
                     to="/frass-kicks"
-                    className="lux-press inline-flex items-center gap-2 rounded-sm border border-[color:var(--gold)] bg-[color:var(--gold)] px-7 py-3.5 text-xs font-bold uppercase tracking-[0.32em] text-[color:var(--ink)] transition hover:bg-[color:var(--gold-soft)]"
+                    className="lux-press inline-flex items-center gap-2 rounded-sm border border-[color:var(--gold)] bg-[color:var(--gold)] px-5 py-2.5 text-[11px] font-bold uppercase tracking-[0.28em] text-[color:var(--ink)] transition hover:bg-[color:var(--gold-soft)]"
                   >
-                    {ctaKicks} <ArrowUpRight className="h-4 w-4" />
+                    {ctaKicks} <ArrowUpRight className="h-3.5 w-3.5" />
                   </Link>
                   <Link
                     to="/frass-drip"
-                    className="lux-press inline-flex items-center gap-2 rounded-sm border border-border/80 bg-background/35 px-7 py-3.5 text-xs uppercase tracking-[0.28em] text-foreground backdrop-blur transition hover:border-[color:var(--gold)] hover:text-[color:var(--gold)]"
+                    className="lux-press inline-flex items-center gap-2 rounded-sm border border-border/80 bg-background/35 px-5 py-2.5 text-[11px] uppercase tracking-[0.26em] text-foreground backdrop-blur transition hover:border-[color:var(--gold)] hover:text-[color:var(--gold)]"
                   >
                     {ctaDrip}
                   </Link>
                   <Link
                     to="/bare-drip"
-                    className="lux-press inline-flex items-center gap-2 rounded-sm border border-border/80 bg-background/35 px-7 py-3.5 text-xs uppercase tracking-[0.28em] text-foreground backdrop-blur transition hover:border-[color:var(--gold)] hover:text-[color:var(--gold)]"
+                    className="lux-press inline-flex items-center gap-2 rounded-sm border border-border/80 bg-background/35 px-5 py-2.5 text-[11px] uppercase tracking-[0.26em] text-foreground backdrop-blur transition hover:border-[color:var(--gold)] hover:text-[color:var(--gold)]"
                   >
                     {ctaBare}
                   </Link>
                   <Link
                     to="/capsules"
-                    className="lux-press inline-flex items-center gap-2 rounded-sm border border-[color:var(--gold)] bg-[color:var(--gold)] px-7 py-3.5 text-xs font-bold uppercase tracking-[0.32em] text-[color:var(--ink)] transition hover:bg-[color:var(--gold-soft)]"
+                    className="lux-press inline-flex items-center gap-2 rounded-sm border border-[color:var(--gold)] bg-[color:var(--gold)] px-5 py-2.5 text-[11px] font-bold uppercase tracking-[0.28em] text-[color:var(--ink)] transition hover:bg-[color:var(--gold-soft)]"
                   >
-                    Shop Capsules <ArrowUpRight className="h-4 w-4" />
+                    Shop Capsules <ArrowUpRight className="h-3.5 w-3.5" />
                   </Link>
                 </div>
               </div>
@@ -187,7 +177,7 @@ function Home() {
         </div>
       </section>
 
-      <FeaturedDrop />
+
 
       <section className="mx-auto max-w-[1600px] px-6 lg:px-12 mt-20">
         <Link
