@@ -1,69 +1,67 @@
-# Unlock 40% OFF — First Purchase Rewards
+# Afro Designers — Caribbean Luxury Marketplace
 
-A guided 4-step rewards flow that walks new customers through Profile, Newsletter, Email Verify, and Social Follow to earn a one-time `FIRST40` coupon, then hands them off to Capsules and Try-On.
+A new destination inside the Frass Kicks site (not a separate Shopify store — one connected Shopify account is the limit, and you asked for a *store experience*, so this ships as a themed section with its own routes, palette, and Frassy variant).
 
-## User flow
+## Visual direction
 
-1. Floating "Unlock 40% OFF" ribbon + hero banner on home → opens Rewards drawer/page.
-2. Rewards page shows 4 checkpoints with progress bar (0/40 → 40/40).
-3. Each step has a clear CTA that navigates the user and auto-marks complete when the action is verified server-side.
-4. On 100%, reveal coupon `FIRST40`, copy button, and two follow-up cards: **Explore Capsules** and **Try It On**.
-5. Coupon is enforced at checkout: single-use, one-per-email, first order only, no stacking.
+- **Palette:** bright white base, crystal aqua (#7DD3E8), ocean deep (#0E7C9E), sandy beige (#EBD9B4), champagne gold (#D4AF37) + glitter gold accents, polished chrome trim.
+- **Type:** display serif for headlines (resort-boutique feel), refined sans for body — distinct from the dark Frass Kicks streetwear direction so entering the section feels like a new world.
+- **Effects:** soft wave gradients, shimmering gold particle overlay, chrome-bordered cards with gold-glow hover, subtle floating animation on hero elements.
+- **Frassy emblem:** same SVG shape, recolored to polished gold (gradient + inner highlight) — used as the section's signature mark.
 
-## Steps & unlock logic
+The dark Frass Kicks theme stays intact everywhere else; the Afro Designers routes wrap in a scoped `.afro-theme` class so light tokens only apply inside this section.
 
-| # | Step | +% | Unlocks when |
-|---|------|----|--------------|
-| 1 | Create profile + fill info (name, birthday optional, style prefs, gender, favorite categories) | 10 | All required profile fields saved |
-| 2 | Join newsletter | 10 | `newsletter_opt_in = true` |
-| 3 | Verify email | 10 | `auth.users.email_confirmed_at` present |
-| 4 | Follow TikTok + Instagram + Facebook | 10 | User clicks each icon (opens new tab) and confirms "I Followed" |
+## Routes
 
-Progress auto-saves. Signed-out users see steps but must sign in to start step 1.
+```text
+/afro-designers                       hero + featured designers + spotlight
+/afro-designers/designers             all designers grid, filter by region
+/afro-designers/designers/$slug       designer profile (story, gallery, products)
+/afro-designers/collections/$slug     regional/category collection page
+```
 
-## Data model (Lovable Cloud)
+Each route sets its own head() (title, description, og:*). No hash anchors.
 
-Extend `profiles` (or create if absent) with:
-- `full_name`, `birthday`, `gender`, `style_preferences text[]`, `favorite_categories text[]`
-- `newsletter_opt_in bool`, `social_followed bool`
-- `reward_coupon_code text`, `reward_unlocked_at timestamptz`, `reward_redeemed_at timestamptz`
+## Sections on the landing page
 
-New table `newsletter_subscribers(email unique, user_id, created_at)`.
+1. **Cinematic hero** — full-bleed Caribbean scene (AI-generated image: ocean, sand, palms, editorial fashion), gold Frassy emblem floating above title "AFRO DESIGNERS / Where Culture Meets Luxury", two CTAs (Explore Designers, Shop Collections), shimmering particle layer.
+2. **Regional pillars** — 5 cards: African, African American, Caribbean, Jamaican, Global Diaspora — each links to `/afro-designers/collections/$slug`.
+3. **Featured Designers** — carousel/grid of designer cards (image, name, country w/ flag, brand tagline, Shop button).
+4. **Island Collections** — resort wear, linen, swim, sandals, jewelry tiles.
+5. **Designer Spotlight** — weekly feature block (large editorial layout: portrait + story + collection thumbnails).
+6. **Caribbean Marketplace strip** — artisan/handmade highlights.
+7. **Footer band** — brand statement "Culture. Creativity. Heritage. Luxury."
 
-New table `reward_coupons(code unique = 'FIRST40'-per-user, user_id unique, email unique, unlocked_at, redeemed_at, order_id)` to enforce one-per-email/one-time.
+## Data
 
-RLS: users can read/update own profile & coupon; insert own newsletter row.
+Designers and collections start as a typed seed file (`src/data/afro-designers.ts`) so the visual build can ship immediately. Placeholder designer imagery is AI-generated. Once you're ready to sell real products, we'll wire each designer to Shopify products via tag/vendor (e.g. `vendor:"Afro — <designer>"`) — that hookup is a follow-up, not this turn.
 
-## Files
+No fabricated reviews, testimonials, or fake bios attributed to real names — designer placeholders use generic studio names until you supply real ones.
 
-**New**
-- `src/routes/rewards.tsx` — public Rewards page with 4 step cards, progress bar, coupon reveal, capsules/try-on CTAs.
-- `src/components/rewards-ribbon.tsx` — dismissible top ribbon on home.
-- `src/components/rewards-progress.tsx` — reusable progress + checklist.
-- `src/lib/rewards.functions.ts` — server fns: `getRewardStatus`, `updateProfileInfo`, `subscribeNewsletter`, `confirmSocialFollow`, `claimCoupon`, `validateCouponAtCheckout`.
-- `supabase/migrations/*_rewards.sql` — schema + RLS + grants.
+## Navigation
 
-**Edited**
-- `src/routes/index.tsx` — mount `<RewardsRibbon />`.
-- `src/routes/_authenticated/route.tsx` unchanged; profile edit lives at `/rewards` (works signed-in).
-- `src/routes/checkout.tsx` — apply coupon field; validate + mark redeemed on order create.
-- `src/components/frassy-chat.tsx` — Frassy learns about the offer; adds "Unlock 40% OFF" quick action.
+- Header gets a new "Afro Designers" link with a small gold Frassy mark.
+- A subtle gold ribbon on the Frass Kicks homepage teases the section.
 
-## Design
+## Technical notes
 
-Keep dark streetwear aesthetic (per memory). Chrome/gold accents on the reward badges, block-letter headers ("UNLOCK 40%"), progress bar with gold fill on dark card. Social icons row: TikTok / Instagram / Facebook, large tap targets.
+- New files:
+  - `src/routes/afro-designers.tsx` (layout w/ `<Outlet />` + scoped theme wrapper)
+  - `src/routes/afro-designers.index.tsx` (landing)
+  - `src/routes/afro-designers.designers.tsx`
+  - `src/routes/afro-designers.designers.$slug.tsx`
+  - `src/routes/afro-designers.collections.$slug.tsx`
+  - `src/components/afro/FrassyGold.tsx` (recolored SVG variant)
+  - `src/components/afro/DesignerCard.tsx`, `RegionPillar.tsx`, `Shimmer.tsx`, `WaveBg.tsx`
+  - `src/data/afro-designers.ts`
+- `src/styles.css`: add `.afro-theme` scope with light ocean tokens, gold gradient token, chrome token, shimmer keyframes.
+- Hero image generated via imagegen (premium quality for the leaf og:image).
+- Motion via CSS keyframes + existing animation utilities; no new heavy libs.
 
-## Rules enforced
+## Out of scope this turn
 
-- Coupon only issued after all 4 = true.
-- `reward_coupons.email` unique → one per email.
-- Checkout rejects if `redeemed_at` set, or if user has any prior paid order.
-- Not combinable (checkout ignores other promo when `FIRST40` applied).
+- Real Shopify product linkage per designer (structure ready, wired next turn once you have vendor tags).
+- Designer onboarding form / auth.
+- Weekly spotlight CMS (hardcoded for now).
 
-## Out of scope (ask if wanted)
-
-- Real email verification emails (uses Supabase's built-in confirmation status).
-- Automated verification that a user actually followed on TikTok/IG/FB (uses self-attestation, industry standard).
-- Newsletter delivery integration (stores opt-in only).
-
-Confirm and I'll build it.
+Approve and I'll build it.
