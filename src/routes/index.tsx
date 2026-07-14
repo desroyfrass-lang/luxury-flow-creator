@@ -122,10 +122,10 @@ function Home() {
               alt="Frass Kicks luxury showroom"
               className="h-[78vh] min-h-[560px] w-full object-cover"
             />
-            <div className="absolute inset-0 bg-[linear-gradient(90deg,oklch(0.07_0.005_80_/_0.88)_0%,oklch(0.07_0.005_80_/_0.62)_40%,oklch(0.07_0.005_80_/_0.35)_65%,transparent_100%)]" />
-            <div className="absolute inset-0 bg-[linear-gradient(180deg,oklch(0.07_0.005_80_/_0.32)_0%,transparent_35%,oklch(0.07_0.005_80_/_0.72)_100%)]" />
+            <div className="absolute inset-0 bg-[linear-gradient(90deg,oklch(0.07_0.005_80_/_0.78)_0%,oklch(0.07_0.005_80_/_0.42)_35%,oklch(0.07_0.005_80_/_0.18)_60%,transparent_100%)]" />
+            <div className="absolute inset-0 bg-[linear-gradient(180deg,oklch(0.07_0.005_80_/_0.22)_0%,transparent_22%,oklch(0.07_0.005_80_/_0.65)_100%)]" />
 
-            <div className="absolute inset-0 flex flex-col justify-end p-8 md:p-12 lg:p-16 animate-fade-up">
+            <div className="absolute inset-0 flex flex-col justify-end items-start p-6 md:p-10 lg:p-12 pb-5 md:pb-7 lg:pb-8 animate-fade-up">
               <div className="max-w-3xl text-foreground">
                 <div className="mb-5 flex flex-wrap items-center gap-x-4 gap-y-2 font-display uppercase">
                   <img
