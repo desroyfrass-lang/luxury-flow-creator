@@ -41,6 +41,7 @@ import { Route as CapsulesHandleRouteImport } from './routes/capsules.$handle'
 import { Route as BlogSlugRouteImport } from './routes/blog.$slug'
 import { Route as BareDripWomenRouteImport } from './routes/bare-drip.women'
 import { Route as BareDripMenRouteImport } from './routes/bare-drip.men'
+import { Route as ApiChatRouteImport } from './routes/api/chat'
 import { Route as AuthenticatedTryOnRouteImport } from './routes/_authenticated/try-on'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
 import { Route as Char91DotwellKnownChar93OauthProtectedResourceRouteImport } from './routes/[.well-known]/oauth-protected-resource'
@@ -225,6 +226,11 @@ const BareDripMenRoute = BareDripMenRouteImport.update({
   path: '/men',
   getParentRoute: () => BareDripRoute,
 } as any)
+const ApiChatRoute = ApiChatRouteImport.update({
+  id: '/api/chat',
+  path: '/api/chat',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AuthenticatedTryOnRoute = AuthenticatedTryOnRouteImport.update({
   id: '/try-on',
   path: '/try-on',
@@ -366,6 +372,7 @@ export interface FileRoutesByFullPath {
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/admin': typeof AuthenticatedAdminRouteWithChildren
   '/try-on': typeof AuthenticatedTryOnRoute
+  '/api/chat': typeof ApiChatRoute
   '/bare-drip/men': typeof BareDripMenRouteWithChildren
   '/bare-drip/women': typeof BareDripWomenRouteWithChildren
   '/blog/$slug': typeof BlogSlugRoute
@@ -414,6 +421,7 @@ export interface FileRoutesByTo {
   '/.mcp/list-tools': typeof Char91DotmcpChar93ListToolsRoute
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/try-on': typeof AuthenticatedTryOnRoute
+  '/api/chat': typeof ApiChatRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/capsules/$handle': typeof CapsulesHandleRoute
   '/collection/$handle': typeof CollectionHandleRoute
@@ -468,6 +476,7 @@ export interface FileRoutesById {
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRouteWithChildren
   '/_authenticated/try-on': typeof AuthenticatedTryOnRoute
+  '/api/chat': typeof ApiChatRoute
   '/bare-drip/men': typeof BareDripMenRouteWithChildren
   '/bare-drip/women': typeof BareDripWomenRouteWithChildren
   '/blog/$slug': typeof BlogSlugRoute
@@ -526,6 +535,7 @@ export interface FileRouteTypes {
     | '/.well-known/oauth-protected-resource'
     | '/admin'
     | '/try-on'
+    | '/api/chat'
     | '/bare-drip/men'
     | '/bare-drip/women'
     | '/blog/$slug'
@@ -574,6 +584,7 @@ export interface FileRouteTypes {
     | '/.mcp/list-tools'
     | '/.well-known/oauth-protected-resource'
     | '/try-on'
+    | '/api/chat'
     | '/blog/$slug'
     | '/capsules/$handle'
     | '/collection/$handle'
@@ -627,6 +638,7 @@ export interface FileRouteTypes {
     | '/.well-known/oauth-protected-resource'
     | '/_authenticated/admin'
     | '/_authenticated/try-on'
+    | '/api/chat'
     | '/bare-drip/men'
     | '/bare-drip/women'
     | '/blog/$slug'
@@ -683,6 +695,7 @@ export interface RootRouteChildren {
   SocialMediaViralsRoute: typeof SocialMediaViralsRouteWithChildren
   Char91DotmcpChar93ListToolsRoute: typeof Char91DotmcpChar93ListToolsRoute
   Char91DotwellKnownChar93OauthProtectedResourceRoute: typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
+  ApiChatRoute: typeof ApiChatRoute
   CollectionHandleRoute: typeof CollectionHandleRoute
   ProductHandleRoute: typeof ProductHandleRoute
   DotlovableOauthConsentRoute: typeof DotlovableOauthConsentRoute
@@ -914,6 +927,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/bare-drip/men'
       preLoaderRoute: typeof BareDripMenRouteImport
       parentRoute: typeof BareDripRoute
+    }
+    '/api/chat': {
+      id: '/api/chat'
+      path: '/api/chat'
+      fullPath: '/api/chat'
+      preLoaderRoute: typeof ApiChatRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/_authenticated/try-on': {
       id: '/_authenticated/try-on'
@@ -1319,6 +1339,7 @@ const rootRouteChildren: RootRouteChildren = {
   Char91DotmcpChar93ListToolsRoute: Char91DotmcpChar93ListToolsRoute,
   Char91DotwellKnownChar93OauthProtectedResourceRoute:
     Char91DotwellKnownChar93OauthProtectedResourceRoute,
+  ApiChatRoute: ApiChatRoute,
   CollectionHandleRoute: CollectionHandleRoute,
   ProductHandleRoute: ProductHandleRoute,
   DotlovableOauthConsentRoute: DotlovableOauthConsentRoute,
