@@ -168,6 +168,12 @@ function Home() {
                   >
                     {ctaBare}
                   </Link>
+                  <Link
+                    to="/capsules"
+                    className="lux-press inline-flex items-center gap-2 rounded-sm border border-[color:var(--gold)] bg-[color:var(--gold)] px-7 py-3.5 text-xs font-bold uppercase tracking-[0.32em] text-[color:var(--ink)] transition hover:bg-[color:var(--gold-soft)]"
+                  >
+                    Shop Capsules <ArrowUpRight className="h-4 w-4" />
+                  </Link>
                 </div>
               </div>
             </div>
