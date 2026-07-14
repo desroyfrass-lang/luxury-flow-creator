@@ -25,11 +25,19 @@ function CheckoutPage() {
   const subtotal = items.reduce((s, i) => s + parseFloat(i.price.amount) * i.quantity, 0);
   const currency = items[0]?.price.currencyCode ?? "USD";
 
+  const isSaleItem = (i: (typeof items)[number]) =>
+    (i.product.node.tags ?? []).some((t) => t.toLowerCase() === "sale");
+  const eligibleSubtotal = items
+    .filter((i) => !isSaleItem(i))
+    .reduce((s, i) => s + parseFloat(i.price.amount) * i.quantity, 0);
+  const excludedSubtotal = subtotal - eligibleSubtotal;
+  const hasExcluded = excludedSubtotal > 0;
+
   const [couponInput, setCouponInput] = useState("");
   const [applied, setApplied] = useState<{ code: string; percentOff: number } | null>(null);
   const [checking, setChecking] = useState(false);
   const validate = useServerFn(validateCoupon);
-  const discount = applied ? subtotal * (applied.percentOff / 100) : 0;
+  const discount = applied ? eligibleSubtotal * (applied.percentOff / 100) : 0;
   const total = Math.max(0, subtotal - discount);
 
   const applyCoupon = async () => {
