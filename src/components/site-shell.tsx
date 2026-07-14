@@ -13,7 +13,9 @@ const NAV_ITEMS = [
   { to: "/frass-drip", slot: "nav-frass-drip", fallback: "Frass Drip" },
   { to: "/bare-drip", slot: "nav-bare-drip", fallback: "Bare Drip" },
   { to: "/capsules", slot: "nav-capsules", fallback: "Capsules" },
+  { to: "/social-media-virals", slot: "nav-social-virals", fallback: "Social Media Virals" },
 ] as const;
+
 
 const MENU_ITEMS = [
   { to: "/lookbook", slot: "nav-lookbook", fallback: "Lookbook" },
