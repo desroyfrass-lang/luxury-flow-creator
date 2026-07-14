@@ -64,7 +64,7 @@ function CinematicTitleCard() {
 }
 
 function Home() {
-  const heroSrc = useSiteImageUrl("hero-home", heroImg);
+  const heroOverride = overrides?.get("hero-home");
   const { data: overrides } = useSiteImages();
 
   const heroEyebrow = useSiteText("home-hero-eyebrow");
