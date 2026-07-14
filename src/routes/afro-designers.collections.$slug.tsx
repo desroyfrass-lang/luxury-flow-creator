@@ -1,5 +1,5 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
-import { designersByRegion, getRegion } from "@/data/afro-designers";
+import { designersByRegion, getRegion, type Designer } from "@/data/afro-designers";
 import { DesignerCard } from "@/components/afro/DesignerCard";
 import { FrassyGold } from "@/components/afro/FrassyGold";
 
@@ -72,7 +72,7 @@ function RegionPage() {
           </p>
         </div>
         <ul className="flex flex-wrap gap-2">
-          {region.subcategories.map((s) => (
+          {region.subcategories.map((s: string) => (
             <li
               key={s}
               className="rounded-full border border-[color:var(--afro-chrome)] bg-white/70 px-3 py-1.5 text-[10px] uppercase tracking-[0.25em] text-[color:var(--afro-ink-soft)]"
@@ -95,7 +95,7 @@ function RegionPage() {
         </div>
       ) : (
         <div className="mt-12 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {designers.map((d) => (
+          {designers.map((d: Designer) => (
             <DesignerCard key={d.slug} designer={d} />
           ))}
         </div>
