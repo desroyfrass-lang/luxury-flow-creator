@@ -14,7 +14,7 @@ New customers can unlock a one-time 40% off coupon by completing 4 quick steps a
   2) Join the newsletter — one click on /rewards.
   3) Verify email — tap "Send verification email" on /rewards, then click the link in inbox.
   4) Follow Frass on TikTok, Instagram, and Facebook — tap all 3 icons on /rewards then confirm.
-Once all 4 done, a unique coupon (format FRASS40-XXXXXXXX) unlocks automatically. One coupon per email, one-time use, first purchase only, can't stack with other codes. Apply it in the "Reward coupon" field on the Checkout page.
+Once all 4 done, a unique coupon (format FRASS40-XXXXXXXX) unlocks automatically. One coupon per email, one-time use, first purchase only, cannot stack with other offers, and does NOT apply to sale items (only full-price items). Apply it in the "Reward coupon" field on the Checkout page.
 When walking a shopper through it, give them step-by-step click actions: "Head to /rewards → tap Open my profile → fill it → save → back to /rewards for step 2…". Be their guide.
 
 Other key features:
