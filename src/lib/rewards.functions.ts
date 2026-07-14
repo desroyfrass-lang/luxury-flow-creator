@@ -2,6 +2,9 @@ import { createServerFn } from "@tanstack/react-start";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import { z } from "zod";
 
+const SHOPIFY_ADMIN_DOMAIN = "3hekgw-kr.myshopify.com";
+const SHOPIFY_API_VERSION = "2025-07";
+
 export type RewardStatus = {
   signedIn: boolean;
   email: string | null;
@@ -21,6 +24,61 @@ function coupon(userId: string) {
   return `FRASS40-${userId.slice(0, 8).toUpperCase()}`;
 }
 
+async function shopifyAdminRequest<T = unknown>(
+  path: string,
+  options: { method?: string; body?: Record<string, unknown> } = {},
+): Promise<T> {
+  const token = process.env.SHOPIFY_ACCESS_TOKEN;
+  if (!token) throw new Error("Shopify admin token not configured");
+
+  const url = `https://${SHOPIFY_ADMIN_DOMAIN}/admin/api/${SHOPIFY_API_VERSION}${path}`;
+  const response = await fetch(url, {
+    method: options.method ?? "GET",
+    headers: {
+      "Content-Type": "application/json",
+      "X-Shopify-Access-Token": token,
+    },
+    body: options.body ? JSON.stringify(options.body) : undefined,
+  });
+
+  if (!response.ok) {
+    const text = await response.text();
+    throw new Error(`Shopify Admin API error ${response.status}: ${text}`);
+  }
+
+  return (await response.json()) as T;
+}
+
+async function createShopifyRewardDiscount(code: string) {
+  const startsAt = new Date().toISOString();
+  const priceRule = await shopifyAdminRequest<{ price_rule: { id: number } }>("/price_rules.json", {
+    method: "POST",
+    body: {
+      price_rule: {
+        title: "FRASS40 Reward",
+        target_type: "line_item",
+        target_selection: "all",
+        allocation_method: "across",
+        value_type: "percentage",
+        value: "-40.0",
+        customer_selection: "all",
+        starts_at: startsAt,
+        usage_limit: 1,
+      },
+    },
+  });
+
+  await shopifyAdminRequest<{ discount_code: { id: number; code: string } }>(
+    `/price_rules/${priceRule.price_rule.id}/discount_codes.json`,
+    {
+      method: "POST",
+      body: { discount_code: { code } },
+    },
+  );
+
+  return priceRule.price_rule.id;
+}
+
 export const getRewardStatus = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }): Promise<RewardStatus> => {
@@ -34,14 +92,12 @@ export const getRewardStatus = createServerFn({ method: "GET" })
     const [{ data: profile }, { data: couponRow }] = await Promise.all([
       supabase
         .from("profiles")
-        .select("full_name,gender,style_preferences,favorite_categories,newsletter_opt_in,social_followed")
+        .select(
+          "full_name,gender,style_preferences,favorite_categories,newsletter_opt_in,social_followed",
+        )
         .eq("id", userId)
         .maybeSingle(),
-      supabase
-        .from("reward_coupons")
-        .select("code,redeemed_at")
-        .eq("user_id", userId)
-        .maybeSingle(),
+      supabase.from("reward_coupons").select("code,redeemed_at").eq("user_id", userId).maybeSingle(),
     ]);
 
     const profileComplete = Boolean(
@@ -139,7 +195,9 @@ export const claimReward = createServerFn({ method: "POST" })
     );
     const { data: profile } = await supabase
       .from("profiles")
-      .select("full_name,gender,style_preferences,favorite_categories,newsletter_opt_in,social_followed")
+      .select(
+        "full_name,gender,style_preferences,favorite_categories,newsletter_opt_in,social_followed",
+      )
       .eq("id", userId)
       .maybeSingle();
 
@@ -161,6 +219,9 @@ export const claimReward = createServerFn({ method: "POST" })
       .eq("user_id", userId)
       .maybeSingle();
     if (existing) return { code: existing.code };
+
+    // Create the real Shopify discount code before saving locally
+    await createShopifyRewardDiscount(code);
 
     const { error } = await supabase
       .from("reward_coupons")
