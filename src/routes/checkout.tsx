@@ -142,14 +142,21 @@ function CheckoutPage() {
                   </span>
                 </div>
                 {applied && (
-                  <div className="flex justify-between text-[color:var(--gold,#c9a24a)]">
-                    <span className="inline-flex items-center gap-1">
-                      <Gift className="h-3.5 w-3.5" /> {applied.code} ({applied.percentOff}% OFF)
-                    </span>
-                    <span className="tabular-nums">
-                      -{currency} {discount.toFixed(2)}
-                    </span>
-                  </div>
+                  <>
+                    <div className="flex justify-between text-[color:var(--gold,#c9a24a)]">
+                      <span className="inline-flex items-center gap-1">
+                        <Gift className="h-3.5 w-3.5" /> {applied.code} ({applied.percentOff}% OFF)
+                      </span>
+                      <span className="tabular-nums">
+                        -{currency} {discount.toFixed(2)}
+                      </span>
+                    </div>
+                    {hasExcluded && (
+                      <p className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground">
+                        Sale items excluded from coupon ({currency} {excludedSubtotal.toFixed(2)})
+                      </p>
+                    )}
+                  </>
                 )}
                 <div className="flex justify-between">
                   <span className="text-muted-foreground">Shipping</span>
