@@ -216,6 +216,9 @@ const BARE_CATEGORY_LABEL: Record<string, string> = {
   swimwear: "Swimwear",
   underwear: "Underwear",
   lingerie: "Lingerie",
+  shapewear: "Shapewear",
+  panties: "Panties",
+  bras: "Bras",
 };
 
 function titleize(slug: string) {
@@ -282,7 +285,7 @@ export function getCollectionMeta(handle: string): CollectionMeta {
     };
   }
 
-  const bareCat = handle.match(/^(mens|womens)-bare-drip-(swimwear|underwear|lingerie)$/);
+  const bareCat = handle.match(/^(mens|womens)-bare-drip-(swimwear|underwear|lingerie|shapewear|panties|bras)$/);
   if (bareCat) {
     const [, gender, cat] = bareCat;
     const genderKey = gender === "mens" ? "men" : "women";
@@ -293,7 +296,7 @@ export function getCollectionMeta(handle: string): CollectionMeta {
     };
   }
 
-  const bareSub = handle.match(/^(mens|womens)-bare-drip-(swimwear|underwear|lingerie)-(.+)$/);
+  const bareSub = handle.match(/^(mens|womens)-bare-drip-(swimwear|underwear|lingerie|shapewear|panties|bras)-(.+)$/);
   if (bareSub) {
     const [, gender, cat, sub] = bareSub;
     const genderKey = gender === "mens" ? "men" : "women";
