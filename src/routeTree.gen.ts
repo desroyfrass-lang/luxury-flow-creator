@@ -9,7 +9,6 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as SocialMediaViralsRouteImport } from './routes/social-media-virals'
 import { Route as MusicMediaRouteImport } from './routes/music-media'
 import { Route as McpRouteImport } from './routes/mcp'
 import { Route as LookbookRouteImport } from './routes/lookbook'
@@ -60,11 +59,6 @@ import { Route as AuthenticatedAdminBlogRouteImport } from './routes/_authentica
 import { Route as Char91DotmcpChar93InvokeToolToolRouteImport } from './routes/[.mcp]/invoke-tool/$tool'
 import { Route as DotlovableOauthConsentRouteImport } from './routes/[.]lovable.oauth.consent'
 
-const SocialMediaViralsRoute = SocialMediaViralsRouteImport.update({
-  id: '/social-media-virals',
-  path: '/social-media-virals',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const MusicMediaRoute = MusicMediaRouteImport.update({
   id: '/music-media',
   path: '/music-media',
@@ -327,7 +321,6 @@ export interface FileRoutesByFullPath {
   '/lookbook': typeof LookbookRouteWithChildren
   '/mcp': typeof McpRoute
   '/music-media': typeof MusicMediaRoute
-  '/social-media-virals': typeof SocialMediaViralsRoute
   '/.mcp/list-tools': typeof Char91DotmcpChar93ListToolsRoute
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/admin': typeof AuthenticatedAdminRouteWithChildren
@@ -372,7 +365,6 @@ export interface FileRoutesByTo {
   '/checkout': typeof CheckoutRoute
   '/mcp': typeof McpRoute
   '/music-media': typeof MusicMediaRoute
-  '/social-media-virals': typeof SocialMediaViralsRoute
   '/.mcp/list-tools': typeof Char91DotmcpChar93ListToolsRoute
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/try-on': typeof AuthenticatedTryOnRoute
@@ -420,7 +412,6 @@ export interface FileRoutesById {
   '/lookbook': typeof LookbookRouteWithChildren
   '/mcp': typeof McpRoute
   '/music-media': typeof MusicMediaRoute
-  '/social-media-virals': typeof SocialMediaViralsRoute
   '/.mcp/list-tools': typeof Char91DotmcpChar93ListToolsRoute
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRouteWithChildren
@@ -473,7 +464,6 @@ export interface FileRouteTypes {
     | '/lookbook'
     | '/mcp'
     | '/music-media'
-    | '/social-media-virals'
     | '/.mcp/list-tools'
     | '/.well-known/oauth-protected-resource'
     | '/admin'
@@ -518,7 +508,6 @@ export interface FileRouteTypes {
     | '/checkout'
     | '/mcp'
     | '/music-media'
-    | '/social-media-virals'
     | '/.mcp/list-tools'
     | '/.well-known/oauth-protected-resource'
     | '/try-on'
@@ -565,7 +554,6 @@ export interface FileRouteTypes {
     | '/lookbook'
     | '/mcp'
     | '/music-media'
-    | '/social-media-virals'
     | '/.mcp/list-tools'
     | '/.well-known/oauth-protected-resource'
     | '/_authenticated/admin'
@@ -618,7 +606,6 @@ export interface RootRouteChildren {
   LookbookRoute: typeof LookbookRouteWithChildren
   McpRoute: typeof McpRoute
   MusicMediaRoute: typeof MusicMediaRoute
-  SocialMediaViralsRoute: typeof SocialMediaViralsRoute
   Char91DotmcpChar93ListToolsRoute: typeof Char91DotmcpChar93ListToolsRoute
   Char91DotwellKnownChar93OauthProtectedResourceRoute: typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   CollectionHandleRoute: typeof CollectionHandleRoute
@@ -629,13 +616,6 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/social-media-virals': {
-      id: '/social-media-virals'
-      path: '/social-media-virals'
-      fullPath: '/social-media-virals'
-      preLoaderRoute: typeof SocialMediaViralsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/music-media': {
       id: '/music-media'
       path: '/music-media'
@@ -1173,7 +1153,6 @@ const rootRouteChildren: RootRouteChildren = {
   LookbookRoute: LookbookRouteWithChildren,
   McpRoute: McpRoute,
   MusicMediaRoute: MusicMediaRoute,
-  SocialMediaViralsRoute: SocialMediaViralsRoute,
   Char91DotmcpChar93ListToolsRoute: Char91DotmcpChar93ListToolsRoute,
   Char91DotwellKnownChar93OauthProtectedResourceRoute:
     Char91DotwellKnownChar93OauthProtectedResourceRoute,
