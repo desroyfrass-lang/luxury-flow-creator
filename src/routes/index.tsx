@@ -116,11 +116,15 @@ function Home() {
       <section className="relative">
         <div className="mx-auto max-w-[1600px] px-6 lg:px-12 pt-10 lg:pt-16">
           <div className="relative overflow-hidden rounded-[2rem] border border-border/60 lux-card">
-            <img
-              src={heroSrc}
-              alt="Frass Kicks luxury showroom"
-              className="h-[62vh] min-h-[440px] w-full object-cover"
-            />
+            {heroOverride ? (
+              <img
+                src={heroOverride.url}
+                alt={heroOverride.alt ?? "Frass Kicks luxury showroom"}
+                className="h-[62vh] min-h-[440px] w-full object-cover"
+              />
+            ) : (
+              <div className="h-[62vh] min-h-[440px] w-full bg-gradient-to-br from-[color:var(--ink,#0a0a0a)] via-background to-secondary/40" />
+            )}
             <div className="absolute inset-0 bg-[linear-gradient(90deg,oklch(0.07_0.005_80_/_0.78)_0%,oklch(0.07_0.005_80_/_0.42)_35%,oklch(0.07_0.005_80_/_0.18)_60%,transparent_100%)]" />
             <div className="absolute inset-0 bg-[linear-gradient(180deg,oklch(0.07_0.005_80_/_0.22)_0%,transparent_22%,oklch(0.07_0.005_80_/_0.65)_100%)]" />
 
