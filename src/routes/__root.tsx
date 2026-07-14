@@ -13,6 +13,7 @@ import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { Toaster } from "@/components/ui/sonner";
 import { FrassyChat } from "@/components/frassy-chat";
+import { RewardsRibbon } from "@/components/rewards-ribbon";
 
 function NotFoundComponent() {
   return (
@@ -122,6 +123,7 @@ function RootComponent() {
   const { queryClient } = Route.useRouteContext();
   return (
     <QueryClientProvider client={queryClient}>
+      <RewardsRibbon />
       <Outlet />
       <Toaster position="top-center" />
       <FrassyChat />
