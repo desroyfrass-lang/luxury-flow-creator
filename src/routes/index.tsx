@@ -9,6 +9,8 @@ import cardKicks from "@/assets/card-kicks.jpg";
 import cardDrip from "@/assets/card-drip.jpg";
 import cardBare from "@/assets/card-bare.jpg";
 import fullLogo from "@/assets/frass-logo-full.asset.json";
+import chromeText from "@/assets/frass-kicks-chrome-text.asset.json";
+import symbolLogo from "@/assets/frass-logo-symbol.asset.json";
 import { ArrowUpRight, Sparkles, Shirt, Camera } from "lucide-react";
 import { useSiteImageUrl, useSiteImages } from "@/hooks/use-site-images";
 import { useSiteText } from "@/hooks/use-site-text";
