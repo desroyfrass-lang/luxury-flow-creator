@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as SocialMediaViralsRouteImport } from './routes/social-media-virals'
 import { Route as MusicMediaRouteImport } from './routes/music-media'
 import { Route as McpRouteImport } from './routes/mcp'
 import { Route as LookbookRouteImport } from './routes/lookbook'
@@ -21,12 +22,14 @@ import { Route as BareDripRouteImport } from './routes/bare-drip'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as SocialMediaViralsIndexRouteImport } from './routes/social-media-virals.index'
 import { Route as LookbookIndexRouteImport } from './routes/lookbook.index'
 import { Route as FrassKicksIndexRouteImport } from './routes/frass-kicks.index'
 import { Route as FrassDripIndexRouteImport } from './routes/frass-drip.index'
 import { Route as CapsulesIndexRouteImport } from './routes/capsules.index'
 import { Route as BlogIndexRouteImport } from './routes/blog.index'
 import { Route as BareDripIndexRouteImport } from './routes/bare-drip.index'
+import { Route as SocialMediaViralsCategoryRouteImport } from './routes/social-media-virals.$category'
 import { Route as ProductHandleRouteImport } from './routes/product.$handle'
 import { Route as LookbookStoryRouteImport } from './routes/lookbook.$story'
 import { Route as FrassKicksWomenRouteImport } from './routes/frass-kicks.women'
@@ -47,6 +50,7 @@ import { Route as FrassDripMenIndexRouteImport } from './routes/frass-drip.men.i
 import { Route as BareDripWomenIndexRouteImport } from './routes/bare-drip.women.index'
 import { Route as BareDripMenIndexRouteImport } from './routes/bare-drip.men.index'
 import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated/admin.index'
+import { Route as SocialMediaViralsCategorySubRouteImport } from './routes/social-media-virals.$category.$sub'
 import { Route as FrassDripWomenCategoryRouteImport } from './routes/frass-drip.women.$category'
 import { Route as FrassDripMenCategoryRouteImport } from './routes/frass-drip.men.$category'
 import { Route as BareDripWomenCategoryRouteImport } from './routes/bare-drip.women.$category'
@@ -58,7 +62,13 @@ import { Route as AuthenticatedAdminCapsulesRouteImport } from './routes/_authen
 import { Route as AuthenticatedAdminBlogRouteImport } from './routes/_authenticated/admin.blog'
 import { Route as Char91DotmcpChar93InvokeToolToolRouteImport } from './routes/[.mcp]/invoke-tool/$tool'
 import { Route as DotlovableOauthConsentRouteImport } from './routes/[.]lovable.oauth.consent'
+import { Route as SocialMediaViralsCategorySubProductRouteImport } from './routes/social-media-virals.$category.$sub.$product'
 
+const SocialMediaViralsRoute = SocialMediaViralsRouteImport.update({
+  id: '/social-media-virals',
+  path: '/social-media-virals',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const MusicMediaRoute = MusicMediaRouteImport.update({
   id: '/music-media',
   path: '/music-media',
@@ -118,6 +128,11 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SocialMediaViralsIndexRoute = SocialMediaViralsIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => SocialMediaViralsRoute,
+} as any)
 const LookbookIndexRoute = LookbookIndexRouteImport.update({
   id: '/',
   path: '/',
@@ -148,6 +163,12 @@ const BareDripIndexRoute = BareDripIndexRouteImport.update({
   path: '/',
   getParentRoute: () => BareDripRoute,
 } as any)
+const SocialMediaViralsCategoryRoute =
+  SocialMediaViralsCategoryRouteImport.update({
+    id: '/$category',
+    path: '/$category',
+    getParentRoute: () => SocialMediaViralsRoute,
+  } as any)
 const ProductHandleRoute = ProductHandleRouteImport.update({
   id: '/product/$handle',
   path: '/product/$handle',
@@ -250,6 +271,12 @@ const AuthenticatedAdminIndexRoute = AuthenticatedAdminIndexRouteImport.update({
   path: '/',
   getParentRoute: () => AuthenticatedAdminRoute,
 } as any)
+const SocialMediaViralsCategorySubRoute =
+  SocialMediaViralsCategorySubRouteImport.update({
+    id: '/$sub',
+    path: '/$sub',
+    getParentRoute: () => SocialMediaViralsCategoryRoute,
+  } as any)
 const FrassDripWomenCategoryRoute = FrassDripWomenCategoryRouteImport.update({
   id: '/$category',
   path: '/$category',
@@ -308,6 +335,12 @@ const DotlovableOauthConsentRoute = DotlovableOauthConsentRouteImport.update({
   path: '/.lovable/oauth/consent',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SocialMediaViralsCategorySubProductRoute =
+  SocialMediaViralsCategorySubProductRouteImport.update({
+    id: '/$product',
+    path: '/$product',
+    getParentRoute: () => SocialMediaViralsCategorySubRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -321,6 +354,7 @@ export interface FileRoutesByFullPath {
   '/lookbook': typeof LookbookRouteWithChildren
   '/mcp': typeof McpRoute
   '/music-media': typeof MusicMediaRoute
+  '/social-media-virals': typeof SocialMediaViralsRouteWithChildren
   '/.mcp/list-tools': typeof Char91DotmcpChar93ListToolsRoute
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/admin': typeof AuthenticatedAdminRouteWithChildren
@@ -336,12 +370,14 @@ export interface FileRoutesByFullPath {
   '/frass-kicks/women': typeof FrassKicksWomenRoute
   '/lookbook/$story': typeof LookbookStoryRoute
   '/product/$handle': typeof ProductHandleRoute
+  '/social-media-virals/$category': typeof SocialMediaViralsCategoryRouteWithChildren
   '/bare-drip/': typeof BareDripIndexRoute
   '/blog/': typeof BlogIndexRoute
   '/capsules/': typeof CapsulesIndexRoute
   '/frass-drip/': typeof FrassDripIndexRoute
   '/frass-kicks/': typeof FrassKicksIndexRoute
   '/lookbook/': typeof LookbookIndexRoute
+  '/social-media-virals/': typeof SocialMediaViralsIndexRoute
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
   '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
   '/admin/blog': typeof AuthenticatedAdminBlogRoute
@@ -353,11 +389,13 @@ export interface FileRoutesByFullPath {
   '/bare-drip/women/$category': typeof BareDripWomenCategoryRoute
   '/frass-drip/men/$category': typeof FrassDripMenCategoryRoute
   '/frass-drip/women/$category': typeof FrassDripWomenCategoryRoute
+  '/social-media-virals/$category/$sub': typeof SocialMediaViralsCategorySubRouteWithChildren
   '/admin/': typeof AuthenticatedAdminIndexRoute
   '/bare-drip/men/': typeof BareDripMenIndexRoute
   '/bare-drip/women/': typeof BareDripWomenIndexRoute
   '/frass-drip/men/': typeof FrassDripMenIndexRoute
   '/frass-drip/women/': typeof FrassDripWomenIndexRoute
+  '/social-media-virals/$category/$sub/$product': typeof SocialMediaViralsCategorySubProductRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -375,12 +413,14 @@ export interface FileRoutesByTo {
   '/frass-kicks/women': typeof FrassKicksWomenRoute
   '/lookbook/$story': typeof LookbookStoryRoute
   '/product/$handle': typeof ProductHandleRoute
+  '/social-media-virals/$category': typeof SocialMediaViralsCategoryRouteWithChildren
   '/bare-drip': typeof BareDripIndexRoute
   '/blog': typeof BlogIndexRoute
   '/capsules': typeof CapsulesIndexRoute
   '/frass-drip': typeof FrassDripIndexRoute
   '/frass-kicks': typeof FrassKicksIndexRoute
   '/lookbook': typeof LookbookIndexRoute
+  '/social-media-virals': typeof SocialMediaViralsIndexRoute
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
   '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
   '/admin/blog': typeof AuthenticatedAdminBlogRoute
@@ -392,11 +432,13 @@ export interface FileRoutesByTo {
   '/bare-drip/women/$category': typeof BareDripWomenCategoryRoute
   '/frass-drip/men/$category': typeof FrassDripMenCategoryRoute
   '/frass-drip/women/$category': typeof FrassDripWomenCategoryRoute
+  '/social-media-virals/$category/$sub': typeof SocialMediaViralsCategorySubRouteWithChildren
   '/admin': typeof AuthenticatedAdminIndexRoute
   '/bare-drip/men': typeof BareDripMenIndexRoute
   '/bare-drip/women': typeof BareDripWomenIndexRoute
   '/frass-drip/men': typeof FrassDripMenIndexRoute
   '/frass-drip/women': typeof FrassDripWomenIndexRoute
+  '/social-media-virals/$category/$sub/$product': typeof SocialMediaViralsCategorySubProductRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -412,6 +454,7 @@ export interface FileRoutesById {
   '/lookbook': typeof LookbookRouteWithChildren
   '/mcp': typeof McpRoute
   '/music-media': typeof MusicMediaRoute
+  '/social-media-virals': typeof SocialMediaViralsRouteWithChildren
   '/.mcp/list-tools': typeof Char91DotmcpChar93ListToolsRoute
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRouteWithChildren
@@ -427,12 +470,14 @@ export interface FileRoutesById {
   '/frass-kicks/women': typeof FrassKicksWomenRoute
   '/lookbook/$story': typeof LookbookStoryRoute
   '/product/$handle': typeof ProductHandleRoute
+  '/social-media-virals/$category': typeof SocialMediaViralsCategoryRouteWithChildren
   '/bare-drip/': typeof BareDripIndexRoute
   '/blog/': typeof BlogIndexRoute
   '/capsules/': typeof CapsulesIndexRoute
   '/frass-drip/': typeof FrassDripIndexRoute
   '/frass-kicks/': typeof FrassKicksIndexRoute
   '/lookbook/': typeof LookbookIndexRoute
+  '/social-media-virals/': typeof SocialMediaViralsIndexRoute
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
   '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
   '/_authenticated/admin/blog': typeof AuthenticatedAdminBlogRoute
@@ -444,11 +489,13 @@ export interface FileRoutesById {
   '/bare-drip/women/$category': typeof BareDripWomenCategoryRoute
   '/frass-drip/men/$category': typeof FrassDripMenCategoryRoute
   '/frass-drip/women/$category': typeof FrassDripWomenCategoryRoute
+  '/social-media-virals/$category/$sub': typeof SocialMediaViralsCategorySubRouteWithChildren
   '/_authenticated/admin/': typeof AuthenticatedAdminIndexRoute
   '/bare-drip/men/': typeof BareDripMenIndexRoute
   '/bare-drip/women/': typeof BareDripWomenIndexRoute
   '/frass-drip/men/': typeof FrassDripMenIndexRoute
   '/frass-drip/women/': typeof FrassDripWomenIndexRoute
+  '/social-media-virals/$category/$sub/$product': typeof SocialMediaViralsCategorySubProductRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -464,6 +511,7 @@ export interface FileRouteTypes {
     | '/lookbook'
     | '/mcp'
     | '/music-media'
+    | '/social-media-virals'
     | '/.mcp/list-tools'
     | '/.well-known/oauth-protected-resource'
     | '/admin'
@@ -479,12 +527,14 @@ export interface FileRouteTypes {
     | '/frass-kicks/women'
     | '/lookbook/$story'
     | '/product/$handle'
+    | '/social-media-virals/$category'
     | '/bare-drip/'
     | '/blog/'
     | '/capsules/'
     | '/frass-drip/'
     | '/frass-kicks/'
     | '/lookbook/'
+    | '/social-media-virals/'
     | '/.lovable/oauth/consent'
     | '/.mcp/invoke-tool/$tool'
     | '/admin/blog'
@@ -496,11 +546,13 @@ export interface FileRouteTypes {
     | '/bare-drip/women/$category'
     | '/frass-drip/men/$category'
     | '/frass-drip/women/$category'
+    | '/social-media-virals/$category/$sub'
     | '/admin/'
     | '/bare-drip/men/'
     | '/bare-drip/women/'
     | '/frass-drip/men/'
     | '/frass-drip/women/'
+    | '/social-media-virals/$category/$sub/$product'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -518,12 +570,14 @@ export interface FileRouteTypes {
     | '/frass-kicks/women'
     | '/lookbook/$story'
     | '/product/$handle'
+    | '/social-media-virals/$category'
     | '/bare-drip'
     | '/blog'
     | '/capsules'
     | '/frass-drip'
     | '/frass-kicks'
     | '/lookbook'
+    | '/social-media-virals'
     | '/.lovable/oauth/consent'
     | '/.mcp/invoke-tool/$tool'
     | '/admin/blog'
@@ -535,11 +589,13 @@ export interface FileRouteTypes {
     | '/bare-drip/women/$category'
     | '/frass-drip/men/$category'
     | '/frass-drip/women/$category'
+    | '/social-media-virals/$category/$sub'
     | '/admin'
     | '/bare-drip/men'
     | '/bare-drip/women'
     | '/frass-drip/men'
     | '/frass-drip/women'
+    | '/social-media-virals/$category/$sub/$product'
   id:
     | '__root__'
     | '/'
@@ -554,6 +610,7 @@ export interface FileRouteTypes {
     | '/lookbook'
     | '/mcp'
     | '/music-media'
+    | '/social-media-virals'
     | '/.mcp/list-tools'
     | '/.well-known/oauth-protected-resource'
     | '/_authenticated/admin'
@@ -569,12 +626,14 @@ export interface FileRouteTypes {
     | '/frass-kicks/women'
     | '/lookbook/$story'
     | '/product/$handle'
+    | '/social-media-virals/$category'
     | '/bare-drip/'
     | '/blog/'
     | '/capsules/'
     | '/frass-drip/'
     | '/frass-kicks/'
     | '/lookbook/'
+    | '/social-media-virals/'
     | '/.lovable/oauth/consent'
     | '/.mcp/invoke-tool/$tool'
     | '/_authenticated/admin/blog'
@@ -586,11 +645,13 @@ export interface FileRouteTypes {
     | '/bare-drip/women/$category'
     | '/frass-drip/men/$category'
     | '/frass-drip/women/$category'
+    | '/social-media-virals/$category/$sub'
     | '/_authenticated/admin/'
     | '/bare-drip/men/'
     | '/bare-drip/women/'
     | '/frass-drip/men/'
     | '/frass-drip/women/'
+    | '/social-media-virals/$category/$sub/$product'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -606,6 +667,7 @@ export interface RootRouteChildren {
   LookbookRoute: typeof LookbookRouteWithChildren
   McpRoute: typeof McpRoute
   MusicMediaRoute: typeof MusicMediaRoute
+  SocialMediaViralsRoute: typeof SocialMediaViralsRouteWithChildren
   Char91DotmcpChar93ListToolsRoute: typeof Char91DotmcpChar93ListToolsRoute
   Char91DotwellKnownChar93OauthProtectedResourceRoute: typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   CollectionHandleRoute: typeof CollectionHandleRoute
@@ -616,6 +678,13 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/social-media-virals': {
+      id: '/social-media-virals'
+      path: '/social-media-virals'
+      fullPath: '/social-media-virals'
+      preLoaderRoute: typeof SocialMediaViralsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/music-media': {
       id: '/music-media'
       path: '/music-media'
@@ -700,6 +769,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/social-media-virals/': {
+      id: '/social-media-virals/'
+      path: '/'
+      fullPath: '/social-media-virals/'
+      preLoaderRoute: typeof SocialMediaViralsIndexRouteImport
+      parentRoute: typeof SocialMediaViralsRoute
+    }
     '/lookbook/': {
       id: '/lookbook/'
       path: '/'
@@ -741,6 +817,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/bare-drip/'
       preLoaderRoute: typeof BareDripIndexRouteImport
       parentRoute: typeof BareDripRoute
+    }
+    '/social-media-virals/$category': {
+      id: '/social-media-virals/$category'
+      path: '/$category'
+      fullPath: '/social-media-virals/$category'
+      preLoaderRoute: typeof SocialMediaViralsCategoryRouteImport
+      parentRoute: typeof SocialMediaViralsRoute
     }
     '/product/$handle': {
       id: '/product/$handle'
@@ -882,6 +965,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminIndexRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
+    '/social-media-virals/$category/$sub': {
+      id: '/social-media-virals/$category/$sub'
+      path: '/$sub'
+      fullPath: '/social-media-virals/$category/$sub'
+      preLoaderRoute: typeof SocialMediaViralsCategorySubRouteImport
+      parentRoute: typeof SocialMediaViralsCategoryRoute
+    }
     '/frass-drip/women/$category': {
       id: '/frass-drip/women/$category'
       path: '/$category'
@@ -958,6 +1048,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/.lovable/oauth/consent'
       preLoaderRoute: typeof DotlovableOauthConsentRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/social-media-virals/$category/$sub/$product': {
+      id: '/social-media-virals/$category/$sub/$product'
+      path: '/$product'
+      fullPath: '/social-media-virals/$category/$sub/$product'
+      preLoaderRoute: typeof SocialMediaViralsCategorySubProductRouteImport
+      parentRoute: typeof SocialMediaViralsCategorySubRoute
     }
   }
 }
@@ -1140,6 +1237,49 @@ const LookbookRouteWithChildren = LookbookRoute._addFileChildren(
   LookbookRouteChildren,
 )
 
+interface SocialMediaViralsCategorySubRouteChildren {
+  SocialMediaViralsCategorySubProductRoute: typeof SocialMediaViralsCategorySubProductRoute
+}
+
+const SocialMediaViralsCategorySubRouteChildren: SocialMediaViralsCategorySubRouteChildren =
+  {
+    SocialMediaViralsCategorySubProductRoute:
+      SocialMediaViralsCategorySubProductRoute,
+  }
+
+const SocialMediaViralsCategorySubRouteWithChildren =
+  SocialMediaViralsCategorySubRoute._addFileChildren(
+    SocialMediaViralsCategorySubRouteChildren,
+  )
+
+interface SocialMediaViralsCategoryRouteChildren {
+  SocialMediaViralsCategorySubRoute: typeof SocialMediaViralsCategorySubRouteWithChildren
+}
+
+const SocialMediaViralsCategoryRouteChildren: SocialMediaViralsCategoryRouteChildren =
+  {
+    SocialMediaViralsCategorySubRoute:
+      SocialMediaViralsCategorySubRouteWithChildren,
+  }
+
+const SocialMediaViralsCategoryRouteWithChildren =
+  SocialMediaViralsCategoryRoute._addFileChildren(
+    SocialMediaViralsCategoryRouteChildren,
+  )
+
+interface SocialMediaViralsRouteChildren {
+  SocialMediaViralsCategoryRoute: typeof SocialMediaViralsCategoryRouteWithChildren
+  SocialMediaViralsIndexRoute: typeof SocialMediaViralsIndexRoute
+}
+
+const SocialMediaViralsRouteChildren: SocialMediaViralsRouteChildren = {
+  SocialMediaViralsCategoryRoute: SocialMediaViralsCategoryRouteWithChildren,
+  SocialMediaViralsIndexRoute: SocialMediaViralsIndexRoute,
+}
+
+const SocialMediaViralsRouteWithChildren =
+  SocialMediaViralsRoute._addFileChildren(SocialMediaViralsRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
@@ -1153,6 +1293,7 @@ const rootRouteChildren: RootRouteChildren = {
   LookbookRoute: LookbookRouteWithChildren,
   McpRoute: McpRoute,
   MusicMediaRoute: MusicMediaRoute,
+  SocialMediaViralsRoute: SocialMediaViralsRouteWithChildren,
   Char91DotmcpChar93ListToolsRoute: Char91DotmcpChar93ListToolsRoute,
   Char91DotwellKnownChar93OauthProtectedResourceRoute:
     Char91DotwellKnownChar93OauthProtectedResourceRoute,
