@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { SiteShell } from "@/components/site-shell";
 import { CollectionCard } from "@/components/collection-card";
-import { FeaturedDrop } from "@/components/featured-drop";
+
 import { ProductGrid } from "@/components/product-grid";
 import { StickyProductRail } from "@/components/sticky-product-rail";
 import heroImg from "@/assets/hero-frass.jpg";
