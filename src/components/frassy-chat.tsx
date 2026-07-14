@@ -96,7 +96,7 @@ export function FrassyChat() {
       const cartContext =
         cartCount > 0
           ? `Shopper has ${cartCount} item(s) in cart, subtotal ~${cartTotal.toFixed(2)} ${items[0]?.price.currencyCode ?? "USD"}. Items: ${items
-              .map((i) => `${i.product.title} (${i.variantTitle}) x${i.quantity}`)
+              .map((i) => `${i.product.node.title} (${i.variantTitle}) x${i.quantity}`)
               .join(", ")}.`
           : "Cart is empty.";
       const res = await fetch("/api/chat", {
