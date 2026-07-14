@@ -23,7 +23,7 @@ export const TEXT_SECTIONS: TextSection[] = [
     description: "The cinematic 'Frass Hill presents' card that sits above the navigation menu.",
     slots: [
       { key: "home-title-presents", label: "Presenter line", defaultValue: "Frass Hill Presents" },
-      { key: "home-title-tagline", label: "Tagline under the logo", defaultValue: "A cinematic streetwear experience." },
+      { key: "home-title-tagline", label: "Tagline under the logo", defaultValue: "A Luxury cinematic Caribbean Experience." },
     ],
   },
   {
