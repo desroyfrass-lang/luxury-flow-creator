@@ -241,3 +241,155 @@
   background-size: 200% 100%;
   animation: shimmer 4s linear infinite;
 }
+
+/* ============================================================
+ * AFRO DESIGNERS — Caribbean-luxury theme (scoped to .afro-theme)
+ * Bright white base, ocean aqua, sandy beige, glitter gold, chrome.
+ * Uses "Playfair Display" + "Manrope" loaded via <link> in __root.
+ * ============================================================ */
+.afro-theme {
+  --afro-white: oklch(0.99 0.005 200);
+  --afro-sand: oklch(0.95 0.02 85);
+  --afro-aqua-light: oklch(0.94 0.05 210);
+  --afro-aqua: oklch(0.85 0.09 210);
+  --afro-ocean: oklch(0.72 0.11 220);
+  --afro-ocean-deep: oklch(0.48 0.10 230);
+  --afro-ink: oklch(0.18 0.02 240);
+  --afro-ink-soft: oklch(0.42 0.02 240);
+  --afro-gold: oklch(0.78 0.15 82);
+  --afro-gold-hi: oklch(0.92 0.11 88);
+  --afro-gold-lo: oklch(0.62 0.14 70);
+  --afro-chrome: oklch(0.90 0.01 240);
+
+  background: linear-gradient(180deg, var(--afro-white) 0%, var(--afro-aqua-light) 60%, var(--afro-sand) 100%);
+  color: var(--afro-ink);
+  font-family: "Manrope", "Archivo", system-ui, sans-serif;
+}
+
+.afro-theme .afro-serif {
+  font-family: "Playfair Display", "Cormorant Garamond", "Iowan Old Style", Georgia, serif;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  text-transform: none;
+  line-height: 1.05;
+}
+.afro-theme .afro-serif.italic { font-style: italic; font-weight: 400; }
+
+/* Backdrop layers */
+.afro-sky-wash {
+  background:
+    radial-gradient(1100px 700px at 20% -10%, oklch(0.98 0.03 200 / 0.8), transparent 60%),
+    radial-gradient(900px 600px at 90% 10%, oklch(0.94 0.06 90 / 0.6), transparent 60%),
+    linear-gradient(180deg, var(--afro-white) 0%, var(--afro-aqua-light) 55%, var(--afro-white) 100%);
+}
+.afro-wave-band {
+  background:
+    radial-gradient(60% 40% at 50% 40%, oklch(0.90 0.07 210 / 0.6), transparent 70%),
+    linear-gradient(180deg, transparent 0%, oklch(0.88 0.08 210 / 0.35) 55%, transparent 100%);
+  filter: blur(30px);
+  animation: afro-wave 14s ease-in-out infinite alternate;
+}
+.afro-sun-bloom {
+  background: radial-gradient(circle, oklch(0.98 0.12 88 / 0.45), transparent 60%);
+  filter: blur(20px);
+  animation: afro-pulse 8s ease-in-out infinite;
+}
+.afro-glitter {
+  background-image:
+    radial-gradient(1.5px 1.5px at 12% 22%, oklch(0.95 0.12 88 / 0.9), transparent 60%),
+    radial-gradient(1px 1px at 34% 78%, oklch(0.95 0.12 88 / 0.8), transparent 60%),
+    radial-gradient(2px 2px at 68% 34%, oklch(0.98 0.13 88 / 0.85), transparent 60%),
+    radial-gradient(1px 1px at 82% 62%, oklch(0.95 0.12 88 / 0.85), transparent 60%),
+    radial-gradient(1.5px 1.5px at 48% 12%, oklch(0.98 0.13 88 / 0.8), transparent 60%),
+    radial-gradient(1px 1px at 22% 62%, oklch(0.95 0.12 88 / 0.7), transparent 60%),
+    radial-gradient(2px 2px at 92% 18%, oklch(0.98 0.14 88 / 0.9), transparent 60%),
+    radial-gradient(1px 1px at 6% 88%, oklch(0.95 0.12 88 / 0.7), transparent 60%);
+  animation: afro-shimmer 6s linear infinite;
+}
+
+/* Gold + chrome utilities */
+.afro-theme .afro-gold-text {
+  background: linear-gradient(120deg, var(--afro-gold-lo) 0%, var(--afro-gold-hi) 45%, var(--afro-gold-lo) 100%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  background-size: 200% 100%;
+  animation: afro-shimmer 8s linear infinite;
+}
+.afro-theme .afro-gold-btn {
+  background: linear-gradient(135deg, var(--afro-gold-lo) 0%, var(--afro-gold) 45%, var(--afro-gold-hi) 100%);
+  border: 1px solid oklch(0.75 0.14 80 / 0.7);
+  box-shadow: 0 12px 30px -12px oklch(0.72 0.14 78 / 0.5), inset 0 1px 0 oklch(1 0 0 / 0.5);
+  transition: transform 400ms ease, box-shadow 400ms ease, filter 400ms ease;
+}
+.afro-theme .afro-gold-btn:hover {
+  filter: brightness(1.05);
+  transform: translateY(-1px);
+  box-shadow: 0 18px 45px -12px oklch(0.72 0.14 78 / 0.65), inset 0 1px 0 oklch(1 0 0 / 0.6);
+}
+.afro-theme .afro-gold-hairline {
+  background: linear-gradient(90deg, transparent, var(--afro-gold), transparent);
+}
+
+/* Cards & pillars — chrome border with gold-glow hover */
+.afro-theme .afro-card {
+  background: linear-gradient(180deg, oklch(1 0 0 / 0.95), oklch(0.98 0.01 210 / 0.9));
+  border: 1px solid var(--afro-chrome);
+  box-shadow: 0 20px 60px -30px oklch(0.5 0.05 230 / 0.25);
+  transition: transform 500ms ease, box-shadow 500ms ease, border-color 500ms ease;
+}
+.afro-theme .afro-card:hover {
+  transform: translateY(-6px);
+  border-color: oklch(0.85 0.12 82 / 0.7);
+  box-shadow: 0 30px 80px -20px oklch(0.82 0.14 78 / 0.35), 0 0 0 1px oklch(0.85 0.12 82 / 0.4);
+}
+.afro-theme .afro-card-shine {
+  background: linear-gradient(120deg, transparent 20%, oklch(0.98 0.13 88 / 0.35) 50%, transparent 80%);
+  mix-blend-mode: screen;
+  transition: opacity 700ms ease;
+}
+.afro-theme .afro-pillar {
+  background: linear-gradient(180deg, oklch(1 0 0 / 0.92), oklch(0.95 0.03 210 / 0.85));
+  border: 1px solid var(--afro-chrome);
+  box-shadow: 0 18px 50px -30px oklch(0.5 0.05 230 / 0.28);
+  transition: transform 400ms ease, box-shadow 400ms ease, border-color 400ms ease;
+}
+.afro-theme .afro-pillar:hover {
+  transform: translateY(-4px);
+  border-color: oklch(0.85 0.12 82 / 0.7);
+  box-shadow: 0 24px 60px -20px oklch(0.82 0.14 78 / 0.35);
+}
+.afro-theme .afro-tile {
+  background: linear-gradient(180deg, oklch(1 0 0 / 0.92), oklch(0.96 0.03 210 / 0.85));
+  border: 1px solid var(--afro-chrome);
+  transition: transform 400ms ease, box-shadow 400ms ease;
+}
+.afro-theme .afro-tile:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 20px 50px -25px oklch(0.82 0.14 78 / 0.3);
+}
+.afro-theme .afro-spotlight {
+  background: linear-gradient(135deg, oklch(1 0 0 / 0.96), oklch(0.94 0.05 210 / 0.9));
+  border: 1px solid var(--afro-chrome);
+  box-shadow: 0 40px 100px -40px oklch(0.5 0.05 230 / 0.35);
+}
+
+/* Motion */
+@keyframes afro-shimmer {
+  0% { background-position: 0% 0; }
+  100% { background-position: 200% 0; }
+}
+@keyframes afro-wave {
+  0% { transform: translate3d(0, 0, 0) scale(1); }
+  100% { transform: translate3d(0, -20px, 0) scale(1.03); }
+}
+@keyframes afro-pulse {
+  0%, 100% { opacity: 0.7; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.05); }
+}
+@keyframes afro-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+.afro-theme .afro-float { animation: afro-float 5s ease-in-out infinite; }
+

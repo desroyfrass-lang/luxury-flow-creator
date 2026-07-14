@@ -21,6 +21,7 @@ import { Route as CapsulesRouteImport } from './routes/capsules'
 import { Route as BlogRouteImport } from './routes/blog'
 import { Route as BareDripRouteImport } from './routes/bare-drip'
 import { Route as AuthRouteImport } from './routes/auth'
+import { Route as AfroDesignersRouteImport } from './routes/afro-designers'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as SocialMediaViralsIndexRouteImport } from './routes/social-media-virals.index'
@@ -30,6 +31,7 @@ import { Route as FrassDripIndexRouteImport } from './routes/frass-drip.index'
 import { Route as CapsulesIndexRouteImport } from './routes/capsules.index'
 import { Route as BlogIndexRouteImport } from './routes/blog.index'
 import { Route as BareDripIndexRouteImport } from './routes/bare-drip.index'
+import { Route as AfroDesignersIndexRouteImport } from './routes/afro-designers.index'
 import { Route as SocialMediaViralsCategoryRouteImport } from './routes/social-media-virals.$category'
 import { Route as ProductHandleRouteImport } from './routes/product.$handle'
 import { Route as LookbookStoryRouteImport } from './routes/lookbook.$story'
@@ -43,6 +45,7 @@ import { Route as BlogSlugRouteImport } from './routes/blog.$slug'
 import { Route as BareDripWomenRouteImport } from './routes/bare-drip.women'
 import { Route as BareDripMenRouteImport } from './routes/bare-drip.men'
 import { Route as ApiChatRouteImport } from './routes/api/chat'
+import { Route as AfroDesignersDesignersRouteImport } from './routes/afro-designers.designers'
 import { Route as AuthenticatedTryOnRouteImport } from './routes/_authenticated/try-on'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
 import { Route as Char91DotwellKnownChar93OauthProtectedResourceRouteImport } from './routes/[.well-known]/oauth-protected-resource'
@@ -57,6 +60,8 @@ import { Route as FrassDripWomenCategoryRouteImport } from './routes/frass-drip.
 import { Route as FrassDripMenCategoryRouteImport } from './routes/frass-drip.men.$category'
 import { Route as BareDripWomenCategoryRouteImport } from './routes/bare-drip.women.$category'
 import { Route as BareDripMenCategoryRouteImport } from './routes/bare-drip.men.$category'
+import { Route as AfroDesignersDesignersSlugRouteImport } from './routes/afro-designers.designers.$slug'
+import { Route as AfroDesignersCollectionsSlugRouteImport } from './routes/afro-designers.collections.$slug'
 import { Route as AuthenticatedAdminViralsRouteImport } from './routes/_authenticated/admin.virals'
 import { Route as AuthenticatedAdminTextRouteImport } from './routes/_authenticated/admin.text'
 import { Route as AuthenticatedAdminMediaRouteImport } from './routes/_authenticated/admin.media'
@@ -127,6 +132,11 @@ const AuthRoute = AuthRouteImport.update({
   path: '/auth',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AfroDesignersRoute = AfroDesignersRouteImport.update({
+  id: '/afro-designers',
+  path: '/afro-designers',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
   id: '/_authenticated',
   getParentRoute: () => rootRouteImport,
@@ -170,6 +180,11 @@ const BareDripIndexRoute = BareDripIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => BareDripRoute,
+} as any)
+const AfroDesignersIndexRoute = AfroDesignersIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AfroDesignersRoute,
 } as any)
 const SocialMediaViralsCategoryRoute =
   SocialMediaViralsCategoryRouteImport.update({
@@ -236,6 +251,11 @@ const ApiChatRoute = ApiChatRouteImport.update({
   id: '/api/chat',
   path: '/api/chat',
   getParentRoute: () => rootRouteImport,
+} as any)
+const AfroDesignersDesignersRoute = AfroDesignersDesignersRouteImport.update({
+  id: '/designers',
+  path: '/designers',
+  getParentRoute: () => AfroDesignersRoute,
 } as any)
 const AuthenticatedTryOnRoute = AuthenticatedTryOnRouteImport.update({
   id: '/try-on',
@@ -310,6 +330,18 @@ const BareDripMenCategoryRoute = BareDripMenCategoryRouteImport.update({
   path: '/$category',
   getParentRoute: () => BareDripMenRoute,
 } as any)
+const AfroDesignersDesignersSlugRoute =
+  AfroDesignersDesignersSlugRouteImport.update({
+    id: '/$slug',
+    path: '/$slug',
+    getParentRoute: () => AfroDesignersDesignersRoute,
+  } as any)
+const AfroDesignersCollectionsSlugRoute =
+  AfroDesignersCollectionsSlugRouteImport.update({
+    id: '/collections/$slug',
+    path: '/collections/$slug',
+    getParentRoute: () => AfroDesignersRoute,
+  } as any)
 const AuthenticatedAdminViralsRoute =
   AuthenticatedAdminViralsRouteImport.update({
     id: '/virals',
@@ -363,6 +395,7 @@ const SocialMediaViralsCategorySubProductRoute =
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/afro-designers': typeof AfroDesignersRouteWithChildren
   '/auth': typeof AuthRoute
   '/bare-drip': typeof BareDripRouteWithChildren
   '/blog': typeof BlogRouteWithChildren
@@ -379,6 +412,7 @@ export interface FileRoutesByFullPath {
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/admin': typeof AuthenticatedAdminRouteWithChildren
   '/try-on': typeof AuthenticatedTryOnRoute
+  '/afro-designers/designers': typeof AfroDesignersDesignersRouteWithChildren
   '/api/chat': typeof ApiChatRoute
   '/bare-drip/men': typeof BareDripMenRouteWithChildren
   '/bare-drip/women': typeof BareDripWomenRouteWithChildren
@@ -392,6 +426,7 @@ export interface FileRoutesByFullPath {
   '/lookbook/$story': typeof LookbookStoryRoute
   '/product/$handle': typeof ProductHandleRoute
   '/social-media-virals/$category': typeof SocialMediaViralsCategoryRouteWithChildren
+  '/afro-designers/': typeof AfroDesignersIndexRoute
   '/bare-drip/': typeof BareDripIndexRoute
   '/blog/': typeof BlogIndexRoute
   '/capsules/': typeof CapsulesIndexRoute
@@ -407,6 +442,8 @@ export interface FileRoutesByFullPath {
   '/admin/media': typeof AuthenticatedAdminMediaRoute
   '/admin/text': typeof AuthenticatedAdminTextRoute
   '/admin/virals': typeof AuthenticatedAdminViralsRoute
+  '/afro-designers/collections/$slug': typeof AfroDesignersCollectionsSlugRoute
+  '/afro-designers/designers/$slug': typeof AfroDesignersDesignersSlugRoute
   '/bare-drip/men/$category': typeof BareDripMenCategoryRoute
   '/bare-drip/women/$category': typeof BareDripWomenCategoryRoute
   '/frass-drip/men/$category': typeof FrassDripMenCategoryRoute
@@ -429,6 +466,7 @@ export interface FileRoutesByTo {
   '/.mcp/list-tools': typeof Char91DotmcpChar93ListToolsRoute
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/try-on': typeof AuthenticatedTryOnRoute
+  '/afro-designers/designers': typeof AfroDesignersDesignersRouteWithChildren
   '/api/chat': typeof ApiChatRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/capsules/$handle': typeof CapsulesHandleRoute
@@ -438,6 +476,7 @@ export interface FileRoutesByTo {
   '/lookbook/$story': typeof LookbookStoryRoute
   '/product/$handle': typeof ProductHandleRoute
   '/social-media-virals/$category': typeof SocialMediaViralsCategoryRouteWithChildren
+  '/afro-designers': typeof AfroDesignersIndexRoute
   '/bare-drip': typeof BareDripIndexRoute
   '/blog': typeof BlogIndexRoute
   '/capsules': typeof CapsulesIndexRoute
@@ -453,6 +492,8 @@ export interface FileRoutesByTo {
   '/admin/media': typeof AuthenticatedAdminMediaRoute
   '/admin/text': typeof AuthenticatedAdminTextRoute
   '/admin/virals': typeof AuthenticatedAdminViralsRoute
+  '/afro-designers/collections/$slug': typeof AfroDesignersCollectionsSlugRoute
+  '/afro-designers/designers/$slug': typeof AfroDesignersDesignersSlugRoute
   '/bare-drip/men/$category': typeof BareDripMenCategoryRoute
   '/bare-drip/women/$category': typeof BareDripWomenCategoryRoute
   '/frass-drip/men/$category': typeof FrassDripMenCategoryRoute
@@ -469,6 +510,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
+  '/afro-designers': typeof AfroDesignersRouteWithChildren
   '/auth': typeof AuthRoute
   '/bare-drip': typeof BareDripRouteWithChildren
   '/blog': typeof BlogRouteWithChildren
@@ -485,6 +527,7 @@ export interface FileRoutesById {
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRouteWithChildren
   '/_authenticated/try-on': typeof AuthenticatedTryOnRoute
+  '/afro-designers/designers': typeof AfroDesignersDesignersRouteWithChildren
   '/api/chat': typeof ApiChatRoute
   '/bare-drip/men': typeof BareDripMenRouteWithChildren
   '/bare-drip/women': typeof BareDripWomenRouteWithChildren
@@ -498,6 +541,7 @@ export interface FileRoutesById {
   '/lookbook/$story': typeof LookbookStoryRoute
   '/product/$handle': typeof ProductHandleRoute
   '/social-media-virals/$category': typeof SocialMediaViralsCategoryRouteWithChildren
+  '/afro-designers/': typeof AfroDesignersIndexRoute
   '/bare-drip/': typeof BareDripIndexRoute
   '/blog/': typeof BlogIndexRoute
   '/capsules/': typeof CapsulesIndexRoute
@@ -513,6 +557,8 @@ export interface FileRoutesById {
   '/_authenticated/admin/media': typeof AuthenticatedAdminMediaRoute
   '/_authenticated/admin/text': typeof AuthenticatedAdminTextRoute
   '/_authenticated/admin/virals': typeof AuthenticatedAdminViralsRoute
+  '/afro-designers/collections/$slug': typeof AfroDesignersCollectionsSlugRoute
+  '/afro-designers/designers/$slug': typeof AfroDesignersDesignersSlugRoute
   '/bare-drip/men/$category': typeof BareDripMenCategoryRoute
   '/bare-drip/women/$category': typeof BareDripWomenCategoryRoute
   '/frass-drip/men/$category': typeof FrassDripMenCategoryRoute
@@ -529,6 +575,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/afro-designers'
     | '/auth'
     | '/bare-drip'
     | '/blog'
@@ -545,6 +592,7 @@ export interface FileRouteTypes {
     | '/.well-known/oauth-protected-resource'
     | '/admin'
     | '/try-on'
+    | '/afro-designers/designers'
     | '/api/chat'
     | '/bare-drip/men'
     | '/bare-drip/women'
@@ -558,6 +606,7 @@ export interface FileRouteTypes {
     | '/lookbook/$story'
     | '/product/$handle'
     | '/social-media-virals/$category'
+    | '/afro-designers/'
     | '/bare-drip/'
     | '/blog/'
     | '/capsules/'
@@ -573,6 +622,8 @@ export interface FileRouteTypes {
     | '/admin/media'
     | '/admin/text'
     | '/admin/virals'
+    | '/afro-designers/collections/$slug'
+    | '/afro-designers/designers/$slug'
     | '/bare-drip/men/$category'
     | '/bare-drip/women/$category'
     | '/frass-drip/men/$category'
@@ -595,6 +646,7 @@ export interface FileRouteTypes {
     | '/.mcp/list-tools'
     | '/.well-known/oauth-protected-resource'
     | '/try-on'
+    | '/afro-designers/designers'
     | '/api/chat'
     | '/blog/$slug'
     | '/capsules/$handle'
@@ -604,6 +656,7 @@ export interface FileRouteTypes {
     | '/lookbook/$story'
     | '/product/$handle'
     | '/social-media-virals/$category'
+    | '/afro-designers'
     | '/bare-drip'
     | '/blog'
     | '/capsules'
@@ -619,6 +672,8 @@ export interface FileRouteTypes {
     | '/admin/media'
     | '/admin/text'
     | '/admin/virals'
+    | '/afro-designers/collections/$slug'
+    | '/afro-designers/designers/$slug'
     | '/bare-drip/men/$category'
     | '/bare-drip/women/$category'
     | '/frass-drip/men/$category'
@@ -634,6 +689,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/_authenticated'
+    | '/afro-designers'
     | '/auth'
     | '/bare-drip'
     | '/blog'
@@ -650,6 +706,7 @@ export interface FileRouteTypes {
     | '/.well-known/oauth-protected-resource'
     | '/_authenticated/admin'
     | '/_authenticated/try-on'
+    | '/afro-designers/designers'
     | '/api/chat'
     | '/bare-drip/men'
     | '/bare-drip/women'
@@ -663,6 +720,7 @@ export interface FileRouteTypes {
     | '/lookbook/$story'
     | '/product/$handle'
     | '/social-media-virals/$category'
+    | '/afro-designers/'
     | '/bare-drip/'
     | '/blog/'
     | '/capsules/'
@@ -678,6 +736,8 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/media'
     | '/_authenticated/admin/text'
     | '/_authenticated/admin/virals'
+    | '/afro-designers/collections/$slug'
+    | '/afro-designers/designers/$slug'
     | '/bare-drip/men/$category'
     | '/bare-drip/women/$category'
     | '/frass-drip/men/$category'
@@ -694,6 +754,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
+  AfroDesignersRoute: typeof AfroDesignersRouteWithChildren
   AuthRoute: typeof AuthRoute
   BareDripRoute: typeof BareDripRouteWithChildren
   BlogRoute: typeof BlogRouteWithChildren
@@ -801,6 +862,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/afro-designers': {
+      id: '/afro-designers'
+      path: '/afro-designers'
+      fullPath: '/afro-designers'
+      preLoaderRoute: typeof AfroDesignersRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/_authenticated': {
       id: '/_authenticated'
       path: ''
@@ -863,6 +931,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/bare-drip/'
       preLoaderRoute: typeof BareDripIndexRouteImport
       parentRoute: typeof BareDripRoute
+    }
+    '/afro-designers/': {
+      id: '/afro-designers/'
+      path: '/'
+      fullPath: '/afro-designers/'
+      preLoaderRoute: typeof AfroDesignersIndexRouteImport
+      parentRoute: typeof AfroDesignersRoute
     }
     '/social-media-virals/$category': {
       id: '/social-media-virals/$category'
@@ -954,6 +1029,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/api/chat'
       preLoaderRoute: typeof ApiChatRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/afro-designers/designers': {
+      id: '/afro-designers/designers'
+      path: '/designers'
+      fullPath: '/afro-designers/designers'
+      preLoaderRoute: typeof AfroDesignersDesignersRouteImport
+      parentRoute: typeof AfroDesignersRoute
     }
     '/_authenticated/try-on': {
       id: '/_authenticated/try-on'
@@ -1052,6 +1134,20 @@ declare module '@tanstack/react-router' {
       fullPath: '/bare-drip/men/$category'
       preLoaderRoute: typeof BareDripMenCategoryRouteImport
       parentRoute: typeof BareDripMenRoute
+    }
+    '/afro-designers/designers/$slug': {
+      id: '/afro-designers/designers/$slug'
+      path: '/$slug'
+      fullPath: '/afro-designers/designers/$slug'
+      preLoaderRoute: typeof AfroDesignersDesignersSlugRouteImport
+      parentRoute: typeof AfroDesignersDesignersRoute
+    }
+    '/afro-designers/collections/$slug': {
+      id: '/afro-designers/collections/$slug'
+      path: '/collections/$slug'
+      fullPath: '/afro-designers/collections/$slug'
+      preLoaderRoute: typeof AfroDesignersCollectionsSlugRouteImport
+      parentRoute: typeof AfroDesignersRoute
     }
     '/_authenticated/admin/virals': {
       id: '/_authenticated/admin/virals'
@@ -1154,6 +1250,36 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
 
 const AuthenticatedRouteRouteWithChildren =
   AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
+
+interface AfroDesignersDesignersRouteChildren {
+  AfroDesignersDesignersSlugRoute: typeof AfroDesignersDesignersSlugRoute
+}
+
+const AfroDesignersDesignersRouteChildren: AfroDesignersDesignersRouteChildren =
+  {
+    AfroDesignersDesignersSlugRoute: AfroDesignersDesignersSlugRoute,
+  }
+
+const AfroDesignersDesignersRouteWithChildren =
+  AfroDesignersDesignersRoute._addFileChildren(
+    AfroDesignersDesignersRouteChildren,
+  )
+
+interface AfroDesignersRouteChildren {
+  AfroDesignersDesignersRoute: typeof AfroDesignersDesignersRouteWithChildren
+  AfroDesignersIndexRoute: typeof AfroDesignersIndexRoute
+  AfroDesignersCollectionsSlugRoute: typeof AfroDesignersCollectionsSlugRoute
+}
+
+const AfroDesignersRouteChildren: AfroDesignersRouteChildren = {
+  AfroDesignersDesignersRoute: AfroDesignersDesignersRouteWithChildren,
+  AfroDesignersIndexRoute: AfroDesignersIndexRoute,
+  AfroDesignersCollectionsSlugRoute: AfroDesignersCollectionsSlugRoute,
+}
+
+const AfroDesignersRouteWithChildren = AfroDesignersRoute._addFileChildren(
+  AfroDesignersRouteChildren,
+)
 
 interface BareDripMenRouteChildren {
   BareDripMenCategoryRoute: typeof BareDripMenCategoryRoute
@@ -1345,6 +1471,7 @@ const SocialMediaViralsRouteWithChildren =
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
+  AfroDesignersRoute: AfroDesignersRouteWithChildren,
   AuthRoute: AuthRoute,
   BareDripRoute: BareDripRouteWithChildren,
   BlogRoute: BlogRouteWithChildren,
