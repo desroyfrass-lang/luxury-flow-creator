@@ -215,19 +215,15 @@ function Home() {
               </div>
             </div>
             <div className="relative hidden md:block">
-              <div className="relative aspect-[3/4] overflow-hidden rounded-2xl border border-[color:var(--gold)]/30 bg-background/50">
-                <img
-                  src={heroSrc}
-                  alt="AI try-on preview"
-                  className="absolute inset-0 h-full w-full object-cover opacity-80"
-                />
-                <div className="absolute inset-0 bg-[linear-gradient(180deg,transparent_30%,oklch(0.07_0.005_80_/_0.85)_100%)]" />
+              <div className="relative aspect-[3/4] overflow-hidden rounded-2xl border border-[color:var(--gold)]/30 bg-gradient-to-br from-[color:var(--ink,#0a0a0a)] via-background to-secondary/40">
+                <div className="absolute inset-0 bg-[radial-gradient(70%_90%_at_50%_20%,oklch(0.78_0.14_78_/_0.25),transparent_70%)]" />
                 <div className="absolute inset-x-4 bottom-4 rounded-xl border border-[color:var(--gold)]/40 bg-background/70 backdrop-blur px-4 py-3">
                   <div className="text-[10px] uppercase tracking-[0.3em] text-[color:var(--gold)]">Live preview</div>
                   <div className="text-sm font-display text-foreground">Your fit, rendered by AI</div>
                 </div>
               </div>
             </div>
+
           </div>
         </Link>
       </section>
