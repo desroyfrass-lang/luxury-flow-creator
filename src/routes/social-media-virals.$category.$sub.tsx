@@ -30,6 +30,7 @@ export const Route = createFileRoute("/social-media-virals/$category/$sub")({
 function SubPage() {
   const { category, sub: subSlug } = Route.useParams();
   const { cat, sub } = getViralSub(category, subSlug);
+  const { products } = useMergedSubProducts(category, subSlug);
   if (!cat || !sub) return null;
 
   return (
@@ -48,11 +49,11 @@ function SubPage() {
 
       <section className="mx-auto max-w-[1600px] px-6 lg:px-12 pb-24">
         <div className="mb-6 flex items-center justify-between text-xs uppercase tracking-[0.2em] text-muted-foreground">
-          <span>{sub.products.length} products</span>
+          <span>{products.length} products</span>
           <span>Sort · Best selling</span>
         </div>
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5 lg:gap-7">
-          {sub.products.map((p) => (
+          {products.map((p) => (
             <ViralProductCard key={p.slug} product={p} category={cat.slug} sub={sub.slug} />
           ))}
         </div>
