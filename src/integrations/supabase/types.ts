@@ -741,6 +741,63 @@ export type Database = {
         }
         Relationships: []
       }
+      viral_products: {
+        Row: {
+          badge: string | null
+          blurb: string
+          category_slug: string
+          compare_at: number | null
+          created_at: string
+          id: string
+          image: string
+          price: number
+          rating: number
+          reviews: number
+          slug: string
+          sold: string
+          sort_order: number
+          sub_slug: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          badge?: string | null
+          blurb?: string
+          category_slug: string
+          compare_at?: number | null
+          created_at?: string
+          id?: string
+          image?: string
+          price?: number
+          rating?: number
+          reviews?: number
+          slug: string
+          sold?: string
+          sort_order?: number
+          sub_slug: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          badge?: string | null
+          blurb?: string
+          category_slug?: string
+          compare_at?: number | null
+          created_at?: string
+          id?: string
+          image?: string
+          price?: number
+          rating?: number
+          reviews?: number
+          slug?: string
+          sold?: string
+          sort_order?: number
+          sub_slug?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
