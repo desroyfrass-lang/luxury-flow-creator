@@ -296,7 +296,7 @@ export function getCollectionMeta(handle: string): CollectionMeta {
     };
   }
 
-  const bareSub = handle.match(/^(mens|womens)-bare-drip-(swimwear|underwear|lingerie)-(.+)$/);
+  const bareSub = handle.match(/^(mens|womens)-bare-drip-(swimwear|underwear|lingerie|shapewear|panties|bras)-(.+)$/);
   if (bareSub) {
     const [, gender, cat, sub] = bareSub;
     const genderKey = gender === "mens" ? "men" : "women";
