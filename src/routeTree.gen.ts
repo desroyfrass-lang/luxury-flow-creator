@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as SocialMediaViralsRouteImport } from './routes/social-media-virals'
+import { Route as RewardsRouteImport } from './routes/rewards'
 import { Route as MusicMediaRouteImport } from './routes/music-media'
 import { Route as McpRouteImport } from './routes/mcp'
 import { Route as LookbookRouteImport } from './routes/lookbook'
@@ -69,6 +70,11 @@ import { Route as SocialMediaViralsCategorySubProductRouteImport } from './route
 const SocialMediaViralsRoute = SocialMediaViralsRouteImport.update({
   id: '/social-media-virals',
   path: '/social-media-virals',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RewardsRoute = RewardsRouteImport.update({
+  id: '/rewards',
+  path: '/rewards',
   getParentRoute: () => rootRouteImport,
 } as any)
 const MusicMediaRoute = MusicMediaRouteImport.update({
@@ -367,6 +373,7 @@ export interface FileRoutesByFullPath {
   '/lookbook': typeof LookbookRouteWithChildren
   '/mcp': typeof McpRoute
   '/music-media': typeof MusicMediaRoute
+  '/rewards': typeof RewardsRoute
   '/social-media-virals': typeof SocialMediaViralsRouteWithChildren
   '/.mcp/list-tools': typeof Char91DotmcpChar93ListToolsRoute
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
@@ -418,6 +425,7 @@ export interface FileRoutesByTo {
   '/checkout': typeof CheckoutRoute
   '/mcp': typeof McpRoute
   '/music-media': typeof MusicMediaRoute
+  '/rewards': typeof RewardsRoute
   '/.mcp/list-tools': typeof Char91DotmcpChar93ListToolsRoute
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/try-on': typeof AuthenticatedTryOnRoute
@@ -471,6 +479,7 @@ export interface FileRoutesById {
   '/lookbook': typeof LookbookRouteWithChildren
   '/mcp': typeof McpRoute
   '/music-media': typeof MusicMediaRoute
+  '/rewards': typeof RewardsRoute
   '/social-media-virals': typeof SocialMediaViralsRouteWithChildren
   '/.mcp/list-tools': typeof Char91DotmcpChar93ListToolsRoute
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
@@ -530,6 +539,7 @@ export interface FileRouteTypes {
     | '/lookbook'
     | '/mcp'
     | '/music-media'
+    | '/rewards'
     | '/social-media-virals'
     | '/.mcp/list-tools'
     | '/.well-known/oauth-protected-resource'
@@ -581,6 +591,7 @@ export interface FileRouteTypes {
     | '/checkout'
     | '/mcp'
     | '/music-media'
+    | '/rewards'
     | '/.mcp/list-tools'
     | '/.well-known/oauth-protected-resource'
     | '/try-on'
@@ -633,6 +644,7 @@ export interface FileRouteTypes {
     | '/lookbook'
     | '/mcp'
     | '/music-media'
+    | '/rewards'
     | '/social-media-virals'
     | '/.mcp/list-tools'
     | '/.well-known/oauth-protected-resource'
@@ -692,6 +704,7 @@ export interface RootRouteChildren {
   LookbookRoute: typeof LookbookRouteWithChildren
   McpRoute: typeof McpRoute
   MusicMediaRoute: typeof MusicMediaRoute
+  RewardsRoute: typeof RewardsRoute
   SocialMediaViralsRoute: typeof SocialMediaViralsRouteWithChildren
   Char91DotmcpChar93ListToolsRoute: typeof Char91DotmcpChar93ListToolsRoute
   Char91DotwellKnownChar93OauthProtectedResourceRoute: typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
@@ -709,6 +722,13 @@ declare module '@tanstack/react-router' {
       path: '/social-media-virals'
       fullPath: '/social-media-virals'
       preLoaderRoute: typeof SocialMediaViralsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/rewards': {
+      id: '/rewards'
+      path: '/rewards'
+      fullPath: '/rewards'
+      preLoaderRoute: typeof RewardsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/music-media': {
@@ -1335,6 +1355,7 @@ const rootRouteChildren: RootRouteChildren = {
   LookbookRoute: LookbookRouteWithChildren,
   McpRoute: McpRoute,
   MusicMediaRoute: MusicMediaRoute,
+  RewardsRoute: RewardsRoute,
   SocialMediaViralsRoute: SocialMediaViralsRouteWithChildren,
   Char91DotmcpChar93ListToolsRoute: Char91DotmcpChar93ListToolsRoute,
   Char91DotwellKnownChar93OauthProtectedResourceRoute:

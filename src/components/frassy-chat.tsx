@@ -8,10 +8,11 @@ type Msg = { role: "user" | "assistant"; content: string };
 const GREETING: Msg = {
   role: "assistant",
   content:
-    "Wah gwaan! Welcome to Frass Kicks — I'm Frassy 👋. Here to help you find your next pair, answer questions, or get you to checkout smooth. What's on your mind?",
+    "Wah gwaan! Welcome to Frass Kicks — I'm Frassy 👋. Fun fact: new customers can unlock 40% OFF their first order in about 3 minutes. Want me to walk you through it, or help you shop?",
 };
 
 const QUICK_ACTIONS = [
+  { label: "🎁 Unlock 40% OFF", prompt: "How do I unlock the 40% off first purchase reward?" },
   { label: "How Try-On works", prompt: "How does the Try-On feature work?" },
   { label: "What's Capsule Checkout?", prompt: "What is Capsule Checkout?" },
   { label: "Shipping & returns", prompt: "Tell me about shipping and returns." },
