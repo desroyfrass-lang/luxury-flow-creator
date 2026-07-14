@@ -127,8 +127,21 @@ function Home() {
 
             <div className="absolute inset-0 flex flex-col justify-end p-8 md:p-12 lg:p-16 animate-fade-up">
               <div className="max-w-3xl text-foreground">
-                <div className="text-xs md:text-sm uppercase tracking-[0.35em] text-[color:var(--gold)] font-display mb-4">
-                  {heroEyebrow}
+                <div className="mb-5 flex flex-wrap items-center gap-x-4 gap-y-2 font-display uppercase">
+                  <img
+                    src={chromeText.url}
+                    alt="Frass Kicks"
+                    className="h-8 md:h-11 lg:h-14 w-auto object-contain drop-shadow-[0_0_18px_oklch(0.78_0.14_78_/_0.35)]"
+                  />
+                  <span className="text-sm md:text-lg lg:text-xl tracking-[0.3em] text-[color:var(--gold)]">
+                    Original Luxury Streetwear
+                  </span>
+                  <img
+                    src={symbolLogo.url}
+                    alt=""
+                    aria-hidden
+                    className="h-9 md:h-12 lg:h-16 w-auto object-contain drop-shadow-[0_0_18px_oklch(0.78_0.14_78_/_0.35)]"
+                  />
                 </div>
                 <h1 className="max-w-2xl font-display text-6xl md:text-8xl lg:text-[8.5rem] text-foreground leading-[0.88]">
                   {heroHeadline}
