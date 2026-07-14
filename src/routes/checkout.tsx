@@ -133,6 +133,16 @@ function CheckoutPage() {
                     {currency} {subtotal.toFixed(2)}
                   </span>
                 </div>
+                {applied && (
+                  <div className="flex justify-between text-[color:var(--gold,#c9a24a)]">
+                    <span className="inline-flex items-center gap-1">
+                      <Gift className="h-3.5 w-3.5" /> {applied.code} ({applied.percentOff}% OFF)
+                    </span>
+                    <span className="tabular-nums">
+                      -{currency} {discount.toFixed(2)}
+                    </span>
+                  </div>
+                )}
                 <div className="flex justify-between">
                   <span className="text-muted-foreground">Shipping</span>
                   <span className="text-muted-foreground">Calculated at next step</span>
@@ -140,10 +150,51 @@ function CheckoutPage() {
                 <div className="mt-4 border-t border-border pt-4 flex justify-between text-lg">
                   <span className="font-display">Total</span>
                   <span className="font-display tabular-nums">
-                    {currency} {subtotal.toFixed(2)}
+                    {currency} {total.toFixed(2)}
                   </span>
                 </div>
               </div>
+
+              {!applied ? (
+                <div className="mt-5">
+                  <label className="text-[10px] uppercase tracking-[0.25em] text-muted-foreground">
+                    Reward coupon
+                  </label>
+                  <div className="mt-2 flex gap-2">
+                    <input
+                      value={couponInput}
+                      onChange={(e) => setCouponInput(e.target.value)}
+                      placeholder="FRASS40-XXXXXXXX"
+                      className="flex-1 rounded-md border border-border bg-background px-3 py-2 text-sm uppercase tracking-wider"
+                    />
+                    <button
+                      type="button"
+                      onClick={applyCoupon}
+                      disabled={checking || !couponInput.trim()}
+                      className="rounded-md bg-foreground px-4 text-xs uppercase tracking-[0.2em] text-background disabled:opacity-40"
+                    >
+                      {checking ? "…" : "Apply"}
+                    </button>
+                  </div>
+                  <Link
+                    to="/rewards"
+                    className="mt-2 inline-flex items-center gap-1 text-[11px] text-[color:var(--gold,#c9a24a)] hover:underline"
+                  >
+                    <Gift className="h-3 w-3" /> Unlock 40% OFF your first order
+                  </Link>
+                </div>
+              ) : (
+                <button
+                  onClick={() => {
+                    setApplied(null);
+                    setCouponInput("");
+                  }}
+                  className="mt-3 text-[11px] text-muted-foreground hover:text-foreground underline"
+                >
+                  Remove coupon
+                </button>
+              )}
+
 
               <button
                 disabled
