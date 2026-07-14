@@ -55,6 +55,7 @@ import { Route as FrassDripWomenCategoryRouteImport } from './routes/frass-drip.
 import { Route as FrassDripMenCategoryRouteImport } from './routes/frass-drip.men.$category'
 import { Route as BareDripWomenCategoryRouteImport } from './routes/bare-drip.women.$category'
 import { Route as BareDripMenCategoryRouteImport } from './routes/bare-drip.men.$category'
+import { Route as AuthenticatedAdminViralsRouteImport } from './routes/_authenticated/admin.virals'
 import { Route as AuthenticatedAdminTextRouteImport } from './routes/_authenticated/admin.text'
 import { Route as AuthenticatedAdminMediaRouteImport } from './routes/_authenticated/admin.media'
 import { Route as AuthenticatedAdminImagesRouteImport } from './routes/_authenticated/admin.images'
@@ -297,6 +298,12 @@ const BareDripMenCategoryRoute = BareDripMenCategoryRouteImport.update({
   path: '/$category',
   getParentRoute: () => BareDripMenRoute,
 } as any)
+const AuthenticatedAdminViralsRoute =
+  AuthenticatedAdminViralsRouteImport.update({
+    id: '/virals',
+    path: '/virals',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
 const AuthenticatedAdminTextRoute = AuthenticatedAdminTextRouteImport.update({
   id: '/text',
   path: '/text',
@@ -385,6 +392,7 @@ export interface FileRoutesByFullPath {
   '/admin/images': typeof AuthenticatedAdminImagesRoute
   '/admin/media': typeof AuthenticatedAdminMediaRoute
   '/admin/text': typeof AuthenticatedAdminTextRoute
+  '/admin/virals': typeof AuthenticatedAdminViralsRoute
   '/bare-drip/men/$category': typeof BareDripMenCategoryRoute
   '/bare-drip/women/$category': typeof BareDripWomenCategoryRoute
   '/frass-drip/men/$category': typeof FrassDripMenCategoryRoute
@@ -428,6 +436,7 @@ export interface FileRoutesByTo {
   '/admin/images': typeof AuthenticatedAdminImagesRoute
   '/admin/media': typeof AuthenticatedAdminMediaRoute
   '/admin/text': typeof AuthenticatedAdminTextRoute
+  '/admin/virals': typeof AuthenticatedAdminViralsRoute
   '/bare-drip/men/$category': typeof BareDripMenCategoryRoute
   '/bare-drip/women/$category': typeof BareDripWomenCategoryRoute
   '/frass-drip/men/$category': typeof FrassDripMenCategoryRoute
@@ -485,6 +494,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/images': typeof AuthenticatedAdminImagesRoute
   '/_authenticated/admin/media': typeof AuthenticatedAdminMediaRoute
   '/_authenticated/admin/text': typeof AuthenticatedAdminTextRoute
+  '/_authenticated/admin/virals': typeof AuthenticatedAdminViralsRoute
   '/bare-drip/men/$category': typeof BareDripMenCategoryRoute
   '/bare-drip/women/$category': typeof BareDripWomenCategoryRoute
   '/frass-drip/men/$category': typeof FrassDripMenCategoryRoute
@@ -542,6 +552,7 @@ export interface FileRouteTypes {
     | '/admin/images'
     | '/admin/media'
     | '/admin/text'
+    | '/admin/virals'
     | '/bare-drip/men/$category'
     | '/bare-drip/women/$category'
     | '/frass-drip/men/$category'
@@ -585,6 +596,7 @@ export interface FileRouteTypes {
     | '/admin/images'
     | '/admin/media'
     | '/admin/text'
+    | '/admin/virals'
     | '/bare-drip/men/$category'
     | '/bare-drip/women/$category'
     | '/frass-drip/men/$category'
@@ -641,6 +653,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/images'
     | '/_authenticated/admin/media'
     | '/_authenticated/admin/text'
+    | '/_authenticated/admin/virals'
     | '/bare-drip/men/$category'
     | '/bare-drip/women/$category'
     | '/frass-drip/men/$category'
@@ -1000,6 +1013,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BareDripMenCategoryRouteImport
       parentRoute: typeof BareDripMenRoute
     }
+    '/_authenticated/admin/virals': {
+      id: '/_authenticated/admin/virals'
+      path: '/virals'
+      fullPath: '/admin/virals'
+      preLoaderRoute: typeof AuthenticatedAdminViralsRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
     '/_authenticated/admin/text': {
       id: '/_authenticated/admin/text'
       path: '/text'
@@ -1065,6 +1085,7 @@ interface AuthenticatedAdminRouteChildren {
   AuthenticatedAdminImagesRoute: typeof AuthenticatedAdminImagesRoute
   AuthenticatedAdminMediaRoute: typeof AuthenticatedAdminMediaRoute
   AuthenticatedAdminTextRoute: typeof AuthenticatedAdminTextRoute
+  AuthenticatedAdminViralsRoute: typeof AuthenticatedAdminViralsRoute
   AuthenticatedAdminIndexRoute: typeof AuthenticatedAdminIndexRoute
 }
 
@@ -1074,6 +1095,7 @@ const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
   AuthenticatedAdminImagesRoute: AuthenticatedAdminImagesRoute,
   AuthenticatedAdminMediaRoute: AuthenticatedAdminMediaRoute,
   AuthenticatedAdminTextRoute: AuthenticatedAdminTextRoute,
+  AuthenticatedAdminViralsRoute: AuthenticatedAdminViralsRoute,
   AuthenticatedAdminIndexRoute: AuthenticatedAdminIndexRoute,
 }
 
