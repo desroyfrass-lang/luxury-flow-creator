@@ -333,6 +333,27 @@ export type Database = {
         }
         Relationships: []
       }
+      newsletter_subscribers: {
+        Row: {
+          created_at: string
+          email: string
+          id: string
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          id?: string
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          id?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       order_items: {
         Row: {
           id: string
@@ -628,6 +649,84 @@ export type Database = {
           title?: string
           updated_at?: string
           vendor?: string | null
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          birthday: string | null
+          created_at: string
+          email: string | null
+          favorite_categories: string[] | null
+          full_name: string | null
+          gender: string | null
+          id: string
+          newsletter_opt_in: boolean
+          social_followed: boolean
+          style_preferences: string[] | null
+          updated_at: string
+        }
+        Insert: {
+          birthday?: string | null
+          created_at?: string
+          email?: string | null
+          favorite_categories?: string[] | null
+          full_name?: string | null
+          gender?: string | null
+          id: string
+          newsletter_opt_in?: boolean
+          social_followed?: boolean
+          style_preferences?: string[] | null
+          updated_at?: string
+        }
+        Update: {
+          birthday?: string | null
+          created_at?: string
+          email?: string | null
+          favorite_categories?: string[] | null
+          full_name?: string | null
+          gender?: string | null
+          id?: string
+          newsletter_opt_in?: boolean
+          social_followed?: boolean
+          style_preferences?: string[] | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      reward_coupons: {
+        Row: {
+          code: string
+          created_at: string
+          email: string
+          id: string
+          order_id: string | null
+          percent_off: number
+          redeemed_at: string | null
+          unlocked_at: string
+          user_id: string
+        }
+        Insert: {
+          code: string
+          created_at?: string
+          email: string
+          id?: string
+          order_id?: string | null
+          percent_off?: number
+          redeemed_at?: string | null
+          unlocked_at?: string
+          user_id: string
+        }
+        Update: {
+          code?: string
+          created_at?: string
+          email?: string
+          id?: string
+          order_id?: string | null
+          percent_off?: number
+          redeemed_at?: string | null
+          unlocked_at?: string
+          user_id?: string
         }
         Relationships: []
       }
