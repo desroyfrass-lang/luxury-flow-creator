@@ -94,6 +94,9 @@ function RewardsPage() {
           <p className="mt-4 text-sm text-muted-foreground max-w-lg mx-auto">
             Complete 4 simple steps. One-time coupon, one per email. Under 3 minutes.
           </p>
+          <p className="mt-2 text-[11px] uppercase tracking-[0.25em] text-muted-foreground">
+            Excludes sale items · Cannot be combined with other offers
+          </p>
         </div>
 
         {/* Progress */}
