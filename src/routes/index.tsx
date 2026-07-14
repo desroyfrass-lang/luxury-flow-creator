@@ -9,6 +9,8 @@ import cardKicks from "@/assets/card-kicks.jpg";
 import cardDrip from "@/assets/card-drip.jpg";
 import cardBare from "@/assets/card-bare.jpg";
 import fullLogo from "@/assets/frass-logo-full.asset.json";
+import chromeText from "@/assets/frass-kicks-chrome-text.asset.json";
+import symbolLogo from "@/assets/frass-logo-symbol.asset.json";
 import { ArrowUpRight, Sparkles, Shirt, Camera } from "lucide-react";
 import { useSiteImageUrl, useSiteImages } from "@/hooks/use-site-images";
 import { useSiteText } from "@/hooks/use-site-text";
@@ -125,8 +127,21 @@ function Home() {
 
             <div className="absolute inset-0 flex flex-col justify-end p-8 md:p-12 lg:p-16 animate-fade-up">
               <div className="max-w-3xl text-foreground">
-                <div className="text-xs md:text-sm uppercase tracking-[0.35em] text-[color:var(--gold)] font-display mb-4">
-                  {heroEyebrow}
+                <div className="mb-5 flex flex-wrap items-center gap-x-4 gap-y-2 font-display uppercase">
+                  <img
+                    src={chromeText.url}
+                    alt="Frass Kicks"
+                    className="h-8 md:h-11 lg:h-14 w-auto object-contain drop-shadow-[0_0_18px_oklch(0.78_0.14_78_/_0.35)]"
+                  />
+                  <span className="text-sm md:text-lg lg:text-xl tracking-[0.3em] text-[color:var(--gold)]">
+                    Original Luxury Streetwear
+                  </span>
+                  <img
+                    src={symbolLogo.url}
+                    alt=""
+                    aria-hidden
+                    className="h-9 md:h-12 lg:h-16 w-auto object-contain drop-shadow-[0_0_18px_oklch(0.78_0.14_78_/_0.35)]"
+                  />
                 </div>
                 <h1 className="max-w-2xl font-display text-6xl md:text-8xl lg:text-[8.5rem] text-foreground leading-[0.88]">
                   {heroHeadline}
@@ -152,6 +167,12 @@ function Home() {
                     className="lux-press inline-flex items-center gap-2 rounded-sm border border-border/80 bg-background/35 px-7 py-3.5 text-xs uppercase tracking-[0.28em] text-foreground backdrop-blur transition hover:border-[color:var(--gold)] hover:text-[color:var(--gold)]"
                   >
                     {ctaBare}
+                  </Link>
+                  <Link
+                    to="/capsules"
+                    className="lux-press inline-flex items-center gap-2 rounded-sm border border-[color:var(--gold)] bg-[color:var(--gold)] px-7 py-3.5 text-xs font-bold uppercase tracking-[0.32em] text-[color:var(--ink)] transition hover:bg-[color:var(--gold-soft)]"
+                  >
+                    Shop Capsules <ArrowUpRight className="h-4 w-4" />
                   </Link>
                 </div>
               </div>
