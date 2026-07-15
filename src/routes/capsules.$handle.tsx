@@ -1,9 +1,9 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { Loader2, ShoppingBag, Sparkles } from "lucide-react";
+import { Loader2, ShoppingBag, Sparkles, Wand2 } from "lucide-react";
 import { SiteShell } from "@/components/site-shell";
 import { fetchCapsuleByHandle, type CapsuleDetail, type CapsuleItem } from "@/lib/capsules";
-import { useCartStore } from "@/lib/cart-store";
+import { useCartStore, type CartItem } from "@/lib/cart-store";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/capsules/$handle")({
@@ -18,6 +18,7 @@ export const Route = createFileRoute("/capsules/$handle")({
 
 function CapsuleDetailPage() {
   const { handle } = Route.useParams();
+  const navigate = useNavigate();
   const [capsule, setCapsule] = useState<CapsuleDetail | null | undefined>(undefined);
   const addManyItems = useCartStore((s) => s.addManyItems);
   const isLoading = useCartStore((s) => s.isLoading);
@@ -25,6 +26,49 @@ function CapsuleDetailPage() {
   useEffect(() => {
     fetchCapsuleByHandle(handle).then(setCapsule).catch(() => setCapsule(null));
   }, [handle]);
+
+  function toCartInput(i: CapsuleItem): Omit<CartItem, "lineId"> | null {
+    if (!i.default_variant) return null;
+    return {
+      product: {
+        node: {
+          id: i.product.id,
+          title: i.product.title,
+          description: i.product.description,
+          handle: i.product.handle,
+          vendor: i.product.vendor ?? undefined,
+          productType: i.product.product_type ?? undefined,
+          tags: [],
+          priceRange: { minVariantPrice: { amount: String(i.product.min_price), currencyCode: i.product.currency } },
+          images: { edges: i.primary_image ? [{ node: { url: i.primary_image, altText: i.product.title } }] : [] },
+          variants: { edges: [] },
+          options: [],
+        },
+      },
+      variantId: i.default_variant.id,
+      variantTitle: i.default_variant.title,
+      price: { amount: String(i.default_variant.price), currencyCode: i.default_variant.currency },
+      quantity: 1,
+      selectedOptions: i.default_variant.selected_options ?? [],
+    };
+  }
+
+  const tryOnItem = async (i: CapsuleItem) => {
+    const input = toCartInput(i);
+    if (!input) return toast.error("This piece has no variant configured yet.");
+    await addManyItems([input]);
+    toast.success("Added — heading to the Fitting Room.");
+    navigate({ to: "/try-on" });
+  };
+
+  const tryOnAll = async () => {
+    if (!capsule) return;
+    const inputs = capsule.items.map(toCartInput).filter((x): x is Omit<CartItem, "lineId"> => !!x);
+    if (inputs.length === 0) return toast.error("No default variants configured for this capsule yet.");
+    await addManyItems(inputs);
+    toast.success(`${inputs.length} pieces added — try on your full look.`);
+    navigate({ to: "/try-on" });
+  };
 
   if (capsule === undefined) {
     return (
