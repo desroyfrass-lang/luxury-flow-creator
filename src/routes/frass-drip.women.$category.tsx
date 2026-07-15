@@ -98,6 +98,7 @@ const WOMEN_CATEGORIES: Record<string, { title: string; tagline: string; subs: r
       ["studio-yoga", "Studio & Yoga"],
       ["active-shapewear", "Active Shapewear"],
       ["gym-fits", "Gym Fits"],
+      ["jackets", "Jackets"],
     ],
   },
   crown: {
