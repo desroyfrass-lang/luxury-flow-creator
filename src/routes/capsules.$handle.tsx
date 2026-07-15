@@ -93,36 +93,10 @@ function CapsuleDetailPage() {
   }
 
   const buyAll = async () => {
-    const buildable = capsule.items.filter((i) => i.default_variant);
-    if (buildable.length === 0) {
-      toast.error("No default variants configured for this capsule yet.");
-      return;
-    }
-    await addManyItems(
-      buildable.map((i) => ({
-        product: {
-          node: {
-            id: i.product.id,
-            title: i.product.title,
-            description: i.product.description,
-            handle: i.product.handle,
-            vendor: i.product.vendor ?? undefined,
-            productType: i.product.product_type ?? undefined,
-            tags: [],
-            priceRange: { minVariantPrice: { amount: String(i.product.min_price), currencyCode: i.product.currency } },
-            images: { edges: i.primary_image ? [{ node: { url: i.primary_image, altText: i.product.title } }] : [] },
-            variants: { edges: [] },
-            options: [],
-          },
-        },
-        variantId: i.default_variant!.id,
-        variantTitle: i.default_variant!.title,
-        price: { amount: String(i.default_variant!.price), currencyCode: i.default_variant!.currency },
-        quantity: 1,
-        selectedOptions: i.default_variant!.selected_options ?? [],
-      })),
-    );
-    toast.success(`${buildable.length} pieces added to your bag.`);
+    const inputs = capsule.items.map(toCartInput).filter((x): x is Omit<CartItem, "lineId"> => !!x);
+    if (inputs.length === 0) return toast.error("No default variants configured for this capsule yet.");
+    await addManyItems(inputs);
+    toast.success(`${inputs.length} pieces added to your bag.`);
   };
 
   const hasDiscount = capsule.bundle_discount_pct > 0;
@@ -143,7 +117,7 @@ function CapsuleDetailPage() {
           <nav className="mb-4 flex items-center gap-2 text-[11px] uppercase tracking-[0.25em] text-muted-foreground">
             <Link to="/" className="hover:text-foreground">Home</Link>
             <span className="opacity-40">/</span>
-            <Link to="/capsules" className="hover:text-foreground">Capsules</Link>
+            <Link to="/capsules" className="hover:text-foreground">Lookbooks & Capsules</Link>
             <span className="opacity-40">/</span>
             <span className="text-foreground">{capsule.name}</span>
           </nav>
