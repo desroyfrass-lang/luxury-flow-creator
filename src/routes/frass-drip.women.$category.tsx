@@ -37,6 +37,7 @@ const WOMEN_CATEGORIES: Record<string, { title: string; tagline: string; subs: r
       ["clubwear", "Clubwear"],
       ["sequin-looks", "Sequin Looks"],
       ["nightlife-fits", "Nightlife Fits"],
+      ["jackets", "Jackets"],
     ],
   },
   casual: {
