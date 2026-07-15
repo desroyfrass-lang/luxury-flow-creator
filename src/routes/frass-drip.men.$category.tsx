@@ -36,6 +36,7 @@ const MEN_CATEGORIES: Record<string, { title: string; tagline: string; subs: rea
       ["dress-pants", "Dress Pants"],
       ["nightlife-fits", "Nightlife Fits"],
       ["party-fits", "Party Fits"],
+      ["jackets", "Jackets"],
     ],
   },
   casual: {
