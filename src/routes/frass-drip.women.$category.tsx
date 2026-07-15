@@ -6,7 +6,7 @@ import cardWomen from "@/assets/card-women.jpg";
 import cardBare from "@/assets/card-bare.jpg";
 import cardDrip from "@/assets/card-drip.jpg";
 
-type Sub = readonly [slug: string, title: string];
+type Sub = readonly [slug: string, title: string, handleOverride?: string];
 
 const WOMEN_CATEGORIES: Record<string, { title: string; tagline: string; subs: readonly Sub[] }> = {
   work: {
@@ -115,6 +115,15 @@ const WOMEN_CATEGORIES: Record<string, { title: string; tagline: string; subs: r
       ["on-sale", "On Sale"],
     ],
   },
+  "90s": {
+    title: "Women's 90's Drip",
+    tagline: "Throwback fits — casual, classic and street.",
+    subs: [
+      ["casual", "90's Casual", "frass-drip-90s-casual"],
+      ["classic", "90's Classic", "frass-drip-90s-classic"],
+      ["street", "90's Street", "frass-drip-90s-street"],
+    ],
+  },
 };
 
 const IMAGES = [cardWomen, cardBare, cardDrip];
@@ -158,11 +167,11 @@ function CategoryPage() {
       />
       <section className="mx-auto max-w-[1600px] px-6 lg:px-12">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
-          {cat.subs.map(([slug, title], i) => (
+          {cat.subs.map(([slug, title, handleOverride], i) => (
             <CollectionCard
               key={slug}
               to="/collection/$handle"
-              params={{ handle: `womens-${category}-drip-${slug}` }}
+              params={{ handle: handleOverride ?? `womens-${category}-drip-${slug}` }}
               image={IMAGES[i % IMAGES.length]}
               eyebrow={cat.title}
               title={title}
