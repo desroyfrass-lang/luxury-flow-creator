@@ -78,6 +78,7 @@ const MEN_CATEGORIES: Record<string, { title: string; tagline: string; subs: rea
       ["vacation-shorts", "Vacation Shorts"],
       ["resort-essentials", "Resort Essentials"],
       ["summer-styles", "Summer Styles"],
+      ["jackets", "Jackets"],
     ],
   },
   sport: {
