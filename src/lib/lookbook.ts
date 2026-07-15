@@ -20,6 +20,8 @@ export type LookbookStory = {
   cover: string;
   images: string[];
   shop: ShopLink[];
+  /** Optional matching capsule handle for the "Shop / Try On the Look" CTA. */
+  capsuleHandle?: string;
 };
 
 const IMG_POOL = [hero, cardDrip, cardMen, cardWomen, cardKicks, cardBare];
