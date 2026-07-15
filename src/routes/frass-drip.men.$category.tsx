@@ -108,6 +108,15 @@ const MEN_CATEGORIES: Record<string, { title: string; tagline: string; subs: rea
       ["on-sale", "On Sale"],
     ],
   },
+  "90s": {
+    title: "Men's 90's Drip",
+    tagline: "Throwback fits — casual, classic and street.",
+    subs: [
+      ["casual", "90's Casual", "frass-drip-90s-casual"],
+      ["classic", "90's Classic", "frass-drip-90s-classic"],
+      ["street", "90's Street", "frass-drip-90s-street"],
+    ],
+  },
 };
 
 const IMAGES = [cardDrip, cardMen, cardKicks];
