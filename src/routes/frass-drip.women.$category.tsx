@@ -21,6 +21,7 @@ const WOMEN_CATEGORIES: Record<string, { title: string; tagline: string; subs: r
       ["work-blouses", "Work Blouses"],
       ["professional-sets", "Professional Sets"],
       ["business-casual", "Business Casual"],
+      ["jackets", "Jackets"],
     ],
   },
   party: {
@@ -36,6 +37,7 @@ const WOMEN_CATEGORIES: Record<string, { title: string; tagline: string; subs: r
       ["clubwear", "Clubwear"],
       ["sequin-looks", "Sequin Looks"],
       ["nightlife-fits", "Nightlife Fits"],
+      ["jackets", "Jackets"],
     ],
   },
   casual: {
@@ -52,6 +54,7 @@ const WOMEN_CATEGORIES: Record<string, { title: string; tagline: string; subs: r
       ["denim", "Denim"],
       ["shorts", "Shorts"],
       ["sweats", "Sweats"],
+      ["jackets", "Jackets"],
     ],
   },
   street: {
@@ -82,6 +85,7 @@ const WOMEN_CATEGORIES: Record<string, { title: string; tagline: string; subs: r
       ["beachwear", "Beachwear"],
       ["resort-essentials", "Resort Essentials"],
       ["rompers-jumpsuits", "Rompers & Jumpsuits"],
+      ["jackets", "Jackets"],
     ],
   },
   sport: {
@@ -94,6 +98,7 @@ const WOMEN_CATEGORIES: Record<string, { title: string; tagline: string; subs: r
       ["studio-yoga", "Studio & Yoga"],
       ["active-shapewear", "Active Shapewear"],
       ["gym-fits", "Gym Fits"],
+      ["jackets", "Jackets"],
     ],
   },
   crown: {

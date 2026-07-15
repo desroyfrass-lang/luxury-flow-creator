@@ -21,6 +21,7 @@ const MEN_CATEGORIES: Record<string, { title: string; tagline: string; subs: rea
       ["quarter-zips", "Quarter Zips"],
       ["blazers-suit-jackets", "Blazers & Suit Jackets"],
       ["full-suits", "Full Suits"],
+      ["jackets", "Jackets"],
     ],
   },
   party: {
@@ -35,6 +36,7 @@ const MEN_CATEGORIES: Record<string, { title: string; tagline: string; subs: rea
       ["dress-pants", "Dress Pants"],
       ["nightlife-fits", "Nightlife Fits"],
       ["party-fits", "Party Fits"],
+      ["jackets", "Jackets"],
     ],
   },
   casual: {
@@ -49,6 +51,7 @@ const MEN_CATEGORIES: Record<string, { title: string; tagline: string; subs: rea
       ["hoodies", "Hoodies"],
       ["sweat-suits", "Sweat Suits"],
       ["matching-sets", "Matching Sets"],
+      ["jackets", "Jackets"],
     ],
   },
   street: {
@@ -75,6 +78,7 @@ const MEN_CATEGORIES: Record<string, { title: string; tagline: string; subs: rea
       ["vacation-shorts", "Vacation Shorts"],
       ["resort-essentials", "Resort Essentials"],
       ["summer-styles", "Summer Styles"],
+      ["jackets", "Jackets"],
     ],
   },
   sport: {
@@ -86,6 +90,7 @@ const MEN_CATEGORIES: Record<string, { title: string; tagline: string; subs: rea
       ["running-performance", "Running & Performance"],
       ["basketball-court", "Basketball & Court Style"],
       ["gym-fits", "Gym Fits"],
+      ["jackets", "Jackets"],
     ],
   },
   crown: {
