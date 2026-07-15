@@ -274,6 +274,7 @@ export function SiteShell({
       <Header />
       <main className="relative">{children}</main>
       <Footer />
+      <FreeTryOnFab />
     </div>
   );
 }
