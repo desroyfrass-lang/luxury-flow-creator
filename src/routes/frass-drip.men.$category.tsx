@@ -160,11 +160,11 @@ function CategoryPage() {
       />
       <section className="mx-auto max-w-[1600px] px-6 lg:px-12">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
-          {cat.subs.map(([slug, title], i) => (
+          {cat.subs.map(([slug, title, handleOverride], i) => (
             <CollectionCard
               key={slug}
               to="/collection/$handle"
-              params={{ handle: `mens-${category}-drip-${slug}` }}
+              params={{ handle: handleOverride ?? `mens-${category}-drip-${slug}` }}
               image={IMAGES[i % IMAGES.length]}
               eyebrow={cat.title}
               title={title}
