@@ -85,6 +85,7 @@ const WOMEN_CATEGORIES: Record<string, { title: string; tagline: string; subs: r
       ["beachwear", "Beachwear"],
       ["resort-essentials", "Resort Essentials"],
       ["rompers-jumpsuits", "Rompers & Jumpsuits"],
+      ["jackets", "Jackets"],
     ],
   },
   sport: {
