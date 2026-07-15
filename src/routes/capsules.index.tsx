@@ -8,16 +8,16 @@ import { fetchPublishedCapsules, type CapsuleRow } from "@/lib/capsules";
 export const Route = createFileRoute("/capsules/")({
   head: () => ({
     meta: [
-      { title: "Curated Capsules — Frass Kicks" },
+      { title: "Lookbooks & Capsules — Frass" },
       {
         name: "description",
         content:
-          "Shop complete, stylist-built outfits from head to toe. Every piece from the FRASS KICKS catalog, curated into one-click looks.",
+          "Discover editorial looks, shop the complete outfit as a capsule, and try every piece on virtually before you buy.",
       },
-      { property: "og:title", content: "Curated Capsules — Frass Kicks" },
+      { property: "og:title", content: "Lookbooks & Capsules — Frass" },
       {
         property: "og:description",
-        content: "One-click complete outfits, styled by FRASS KICKS.",
+        content: "Editorial lookbooks and one-click capsules with virtual try-on.",
       },
     ],
   }),
@@ -69,10 +69,10 @@ function CapsulesLanding() {
   return (
     <SiteShell>
       <PageHeader
-        eyebrow="Stylist Studio"
-        title="Curated Capsules"
-        description="Complete, one-click looks — every piece hand-picked from the Frass Kicks catalog and styled to feel like it walked out of a private closet."
-        crumbs={[{ label: "Home", to: "/" }, { label: "Capsules" }]}
+        eyebrow="Lookbook × Capsule Studio"
+        title="Lookbooks & Capsules"
+        description="Every editorial look is also a shoppable capsule. Buy the whole outfit in one click — or try it on virtually first, free."
+        crumbs={[{ label: "Home", to: "/" }, { label: "Lookbooks & Capsules" }]}
       />
 
       {/* Filter bar */}

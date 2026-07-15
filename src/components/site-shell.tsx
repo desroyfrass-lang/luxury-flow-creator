@@ -2,7 +2,7 @@ import { Link, useRouterState } from "@tanstack/react-router";
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { CartDrawer } from "./cart-drawer";
 import { LuxuryBackground } from "./luxury-background";
-import { Search, User, Instagram, Music2, Youtube, Facebook, Menu, X } from "lucide-react";
+import { Search, User, Instagram, Music2, Youtube, Facebook, Menu, X, Sparkles } from "lucide-react";
 import { useCartSync } from "@/hooks/use-cart-sync";
 import { useSiteText } from "@/hooks/use-site-text";
 import fullLogo from "@/assets/frass-logo-full.asset.json";
@@ -13,7 +13,7 @@ const NAV_ITEMS = [
   { to: "/frass-drip", slot: "nav-frass-drip", fallback: "Frass Drip" },
   { to: "/bare-drip", slot: "nav-bare-drip", fallback: "Bare Drip" },
   { to: "/afro-designers", slot: "nav-afro-designers", fallback: "Afro Designers" },
-  { to: "/capsules", slot: "nav-capsules", fallback: "Capsules" },
+  { to: "/capsules", slot: "nav-capsules", fallback: "Lookbooks & Capsules" },
   { to: "/social-media-virals", slot: "nav-social-virals", fallback: "Social Media Virals" },
 ] as const;
 
@@ -149,7 +149,7 @@ function MenuLink({ item }: { item: NavItem }) {
   return (
     <Link
       to={item.to}
-      className="block rounded-xl px-4 py-3 text-xs uppercase tracking-[0.25em] text-muted-foreground hover:text-foreground hover:bg-foreground/5 transition"
+      className="nav-glow block rounded-xl px-4 py-3 text-xs uppercase tracking-[0.25em] text-muted-foreground transition-colors hover:bg-foreground/5"
       activeProps={{ className: "text-foreground bg-foreground/5" }}
     >
       {label}
@@ -162,8 +162,8 @@ function HeaderNavLink({ item, active }: { item: NavItem; active: boolean }) {
   return (
     <Link
       to={item.to}
-      className={`relative px-4 py-2 text-xs uppercase tracking-[0.25em] transition-colors ${
-        active ? "text-foreground" : "text-muted-foreground hover:text-foreground"
+      className={`nav-glow relative px-4 py-2 text-xs uppercase tracking-[0.25em] transition-colors ${
+        active ? "text-foreground" : "text-muted-foreground"
       }`}
     >
       {label}
@@ -179,10 +179,25 @@ function MobileNavLink({ item }: { item: NavItem }) {
   return (
     <Link
       to={item.to}
-      className="shrink-0 whitespace-nowrap text-[10px] uppercase tracking-[0.2em] py-1 px-3 text-muted-foreground"
+      className="nav-glow shrink-0 whitespace-nowrap text-[10px] uppercase tracking-[0.2em] py-1 px-3 text-muted-foreground"
       activeProps={{ className: "text-foreground" }}
     >
       {label}
+    </Link>
+  );
+}
+
+function FreeTryOnFab() {
+  const path = useRouterState({ select: (r) => r.location.pathname });
+  if (path.startsWith("/try-on")) return null;
+  return (
+    <Link
+      to="/capsules"
+      className="fixed bottom-5 right-5 md:bottom-8 md:right-8 z-40 inline-flex items-center gap-2 rounded-full border border-[color:var(--gold)] bg-[color:var(--gold)] px-5 py-3 text-[11px] font-bold uppercase tracking-[0.28em] text-[color:var(--ink)] shadow-[0_10px_40px_-10px_oklch(0.92_0.12_85_/_0.7)] transition hover:scale-[1.03] hover:bg-[color:var(--gold-soft,#f0d78c)]"
+      aria-label="Free virtual try on"
+    >
+      <Sparkles className="h-4 w-4" />
+      Free Try On!
     </Link>
   );
 }
@@ -259,6 +274,7 @@ export function SiteShell({
       <Header />
       <main className="relative">{children}</main>
       <Footer />
+      <FreeTryOnFab />
     </div>
   );
 }

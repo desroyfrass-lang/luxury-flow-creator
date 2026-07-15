@@ -1,4 +1,5 @@
 import { createFileRoute, notFound, Link } from "@tanstack/react-router";
+import { Wand2, ShoppingBag } from "lucide-react";
 import { SiteShell } from "@/components/site-shell";
 import { PageHeader } from "@/components/page-header";
 import { CollectionCard } from "@/components/collection-card";
@@ -83,6 +84,30 @@ function StoryPage() {
             <p className="mt-6 max-w-2xl text-lg md:text-2xl italic font-script text-foreground/90">
               {s.tagline}
             </p>
+            <div className="mt-8 flex flex-wrap gap-3">
+              {s.capsuleHandle ? (
+                <Link
+                  to="/capsules/$handle"
+                  params={{ handle: s.capsuleHandle }}
+                  className="lux-press inline-flex items-center gap-2 rounded-sm border border-[color:var(--gold)] bg-[color:var(--gold)] px-7 py-3.5 text-xs font-bold uppercase tracking-[0.32em] text-[color:var(--ink)] transition hover:bg-[color:var(--gold-soft)]"
+                >
+                  <ShoppingBag className="h-4 w-4" /> Shop the capsule
+                </Link>
+              ) : (
+                <Link
+                  to="/capsules"
+                  className="lux-press inline-flex items-center gap-2 rounded-sm border border-[color:var(--gold)] bg-[color:var(--gold)] px-7 py-3.5 text-xs font-bold uppercase tracking-[0.32em] text-[color:var(--ink)] transition hover:bg-[color:var(--gold-soft)]"
+                >
+                  <ShoppingBag className="h-4 w-4" /> Browse capsules
+                </Link>
+              )}
+              <Link
+                to="/capsules"
+                className="lux-press inline-flex items-center gap-2 rounded-sm border border-border/80 bg-background/35 px-7 py-3.5 text-xs uppercase tracking-[0.28em] text-foreground backdrop-blur transition hover:border-[color:var(--gold)] hover:text-[color:var(--gold)]"
+              >
+                <Wand2 className="h-4 w-4" /> Try on the look — free
+              </Link>
+            </div>
           </div>
         </div>
       </section>
