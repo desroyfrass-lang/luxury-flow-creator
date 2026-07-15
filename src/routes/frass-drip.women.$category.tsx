@@ -31,6 +31,7 @@ const WOMEN_CATEGORIES: Record<string, { title: string; tagline: string; subs: r
       ["birthday-dresses", "Birthday Dresses"],
       ["mini-dresses", "Mini Dresses"],
       ["maxi-dresses", "Maxi Dresses"],
+      ["corset-tops", "Corset Tops"],
       ["two-piece-sets", "Two-Piece Sets"],
       ["clubwear", "Clubwear"],
       ["sequin-looks", "Sequin Looks"],
