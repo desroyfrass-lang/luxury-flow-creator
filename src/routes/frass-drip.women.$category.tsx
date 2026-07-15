@@ -115,6 +115,15 @@ const WOMEN_CATEGORIES: Record<string, { title: string; tagline: string; subs: r
       ["on-sale", "On Sale"],
     ],
   },
+  "90s": {
+    title: "Women's 90's Drip",
+    tagline: "Throwback fits — casual, classic and street.",
+    subs: [
+      ["casual", "90's Casual", "frass-drip-90s-casual"],
+      ["classic", "90's Classic", "frass-drip-90s-classic"],
+      ["street", "90's Street", "frass-drip-90s-street"],
+    ],
+  },
 };
 
 const IMAGES = [cardWomen, cardBare, cardDrip];
