@@ -1,4 +1,5 @@
 import { createFileRoute, notFound, Link } from "@tanstack/react-router";
+import { Wand2, ShoppingBag } from "lucide-react";
 import { SiteShell } from "@/components/site-shell";
 import { PageHeader } from "@/components/page-header";
 import { CollectionCard } from "@/components/collection-card";
