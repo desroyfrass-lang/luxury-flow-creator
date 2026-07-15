@@ -90,6 +90,7 @@ const MEN_CATEGORIES: Record<string, { title: string; tagline: string; subs: rea
       ["running-performance", "Running & Performance"],
       ["basketball-court", "Basketball & Court Style"],
       ["gym-fits", "Gym Fits"],
+      ["jackets", "Jackets"],
     ],
   },
   crown: {
