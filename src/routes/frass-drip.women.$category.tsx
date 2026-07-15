@@ -54,6 +54,7 @@ const WOMEN_CATEGORIES: Record<string, { title: string; tagline: string; subs: r
       ["denim", "Denim"],
       ["shorts", "Shorts"],
       ["sweats", "Sweats"],
+      ["jackets", "Jackets"],
     ],
   },
   street: {
