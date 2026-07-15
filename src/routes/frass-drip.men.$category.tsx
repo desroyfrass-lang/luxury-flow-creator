@@ -6,7 +6,7 @@ import cardDrip from "@/assets/card-drip.jpg";
 import cardMen from "@/assets/card-men.jpg";
 import cardKicks from "@/assets/card-kicks.jpg";
 
-type Sub = readonly [slug: string, title: string];
+type Sub = readonly [slug: string, title: string, handleOverride?: string];
 
 const MEN_CATEGORIES: Record<string, { title: string; tagline: string; subs: readonly Sub[] }> = {
   work: {
