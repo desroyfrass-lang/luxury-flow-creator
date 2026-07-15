@@ -51,6 +51,7 @@ const MEN_CATEGORIES: Record<string, { title: string; tagline: string; subs: rea
       ["hoodies", "Hoodies"],
       ["sweat-suits", "Sweat Suits"],
       ["matching-sets", "Matching Sets"],
+      ["jackets", "Jackets"],
     ],
   },
   street: {
