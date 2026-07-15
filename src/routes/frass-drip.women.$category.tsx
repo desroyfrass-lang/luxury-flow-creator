@@ -21,6 +21,7 @@ const WOMEN_CATEGORIES: Record<string, { title: string; tagline: string; subs: r
       ["work-blouses", "Work Blouses"],
       ["professional-sets", "Professional Sets"],
       ["business-casual", "Business Casual"],
+      ["jackets", "Jackets"],
     ],
   },
   party: {
