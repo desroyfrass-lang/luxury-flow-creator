@@ -21,6 +21,7 @@ const MEN_CATEGORIES: Record<string, { title: string; tagline: string; subs: rea
       ["quarter-zips", "Quarter Zips"],
       ["blazers-suit-jackets", "Blazers & Suit Jackets"],
       ["full-suits", "Full Suits"],
+      ["jackets", "Jackets"],
     ],
   },
   party: {
