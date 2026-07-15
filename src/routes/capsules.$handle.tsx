@@ -155,8 +155,15 @@ function CapsuleDetailPage() {
               >
                 {isLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : <><ShoppingBag className="h-4 w-4" /> Buy entire capsule</>}
               </button>
+              <button
+                onClick={tryOnAll}
+                disabled={isLoading || capsule.items.length === 0}
+                className="lux-press mt-3 w-full py-3.5 inline-flex items-center justify-center gap-2 rounded-full border border-[color:var(--gold)] bg-transparent text-[color:var(--gold)] uppercase tracking-[0.25em] text-xs font-medium hover:bg-[color:var(--gold)]/10 disabled:opacity-60"
+              >
+                <Wand2 className="h-4 w-4" /> Try on full outfit
+              </button>
               <p className="mt-3 text-center text-[10px] uppercase tracking-[0.25em] text-muted-foreground">
-                {capsule.items.length} piece{capsule.items.length === 1 ? "" : "s"}
+                {capsule.items.length} piece{capsule.items.length === 1 ? "" : "s"} · Free virtual try-on
               </p>
             </div>
           </div>
@@ -167,50 +174,62 @@ function CapsuleDetailPage() {
       <section className="mx-auto max-w-[1600px] px-6 lg:px-12 mt-20 pb-24">
         <div className="mb-10 flex items-end justify-between">
           <h2 className="font-display text-3xl md:text-4xl">The pieces</h2>
-          <span className="text-[11px] uppercase tracking-[0.25em] text-muted-foreground">Head to toe</span>
+          <span className="text-[11px] uppercase tracking-[0.25em] text-muted-foreground">Head to toe · Try any piece on</span>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
-          {capsule.items.map((it) => <ItemCard key={it.id} item={it} currency={capsule.currency} />)}
+          {capsule.items.map((it) => (
+            <ItemCard key={it.id} item={it} currency={capsule.currency} onTryOn={() => tryOnItem(it)} />
+          ))}
         </div>
       </section>
     </SiteShell>
   );
 }
 
-function ItemCard({ item, currency }: { item: CapsuleItem; currency: string }) {
+function ItemCard({ item, currency, onTryOn }: { item: CapsuleItem; currency: string; onTryOn: () => void }) {
   const price = item.default_variant?.price ?? item.product.min_price;
   return (
-    <Link
-      to="/product/$handle"
-      params={{ handle: item.product.handle }}
-      className="lux-card group block overflow-hidden rounded-2xl bg-card"
-    >
-      <div className="relative aspect-[4/5] overflow-hidden bg-muted">
-        {item.primary_image ? (
-          <img
-            src={item.primary_image}
-            alt={item.product.title}
-            loading="lazy"
-            className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.04]"
-          />
-        ) : (
-          <div className="absolute inset-0 chrome-surface" />
-        )}
-        <div className="absolute top-3 left-3 inline-flex items-center gap-1 rounded-full bg-background/80 backdrop-blur px-3 py-1 text-[10px] font-bold uppercase tracking-[0.2em]">
-          {item.slot}
+    <div className="lux-card group overflow-hidden rounded-2xl bg-card">
+      <Link
+        to="/product/$handle"
+        params={{ handle: item.product.handle }}
+        className="block"
+      >
+        <div className="relative aspect-[4/5] overflow-hidden bg-muted">
+          {item.primary_image ? (
+            <img
+              src={item.primary_image}
+              alt={item.product.title}
+              loading="lazy"
+              className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.04]"
+            />
+          ) : (
+            <div className="absolute inset-0 chrome-surface" />
+          )}
+          <div className="absolute top-3 left-3 inline-flex items-center gap-1 rounded-full bg-background/80 backdrop-blur px-3 py-1 text-[10px] font-bold uppercase tracking-[0.2em]">
+            {item.slot}
+          </div>
         </div>
-      </div>
-      <div className="p-5">
-        <h3 className="font-display text-xl leading-tight">{item.product.title}</h3>
-        <div className="mt-1 flex items-baseline justify-between text-sm">
-          <span className="text-xs uppercase tracking-[0.2em] text-muted-foreground">
-            {item.product.product_type ?? item.product.vendor ?? "Piece"}
-          </span>
-          <span className="tabular-nums font-medium">
-            {currency} {price.toFixed(2)}
-          </span>
+        <div className="p-5 pb-2">
+          <h3 className="font-display text-xl leading-tight">{item.product.title}</h3>
+          <div className="mt-1 flex items-baseline justify-between text-sm">
+            <span className="text-xs uppercase tracking-[0.2em] text-muted-foreground">
+              {item.product.product_type ?? item.product.vendor ?? "Piece"}
+            </span>
+            <span className="tabular-nums font-medium">
+              {currency} {price.toFixed(2)}
+            </span>
+          </div>
         </div>
+      </Link>
+      <div className="px-5 pb-5 pt-3">
+        <button
+          onClick={onTryOn}
+          className="lux-press w-full inline-flex items-center justify-center gap-2 rounded-full border border-[color:var(--gold)] px-4 py-2.5 text-[10px] font-bold uppercase tracking-[0.28em] text-[color:var(--gold)] hover:bg-[color:var(--gold)]/10 transition"
+        >
+          <Wand2 className="h-3.5 w-3.5" /> Try on
+        </button>
       </div>
-    </Link>
+    </div>
   );
 }
