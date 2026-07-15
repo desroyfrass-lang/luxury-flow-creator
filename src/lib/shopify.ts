@@ -243,6 +243,9 @@ const STATIC_MAP: Record<string, CollectionMeta> = {
   "bare-drip": { title: "Bare Drip", query: 'tag:"bare-drip"', description: "Swim, underwear & lingerie." },
   "mens-bare-drip": { title: "Men's Bare Drip", query: 'tag:"bare-drip" tag:"men"' },
   "womens-bare-drip": { title: "Women's Bare Drip", query: 'tag:"bare-drip" tag:"women"' },
+  "frass-drip-90s-casual": { title: "90's Casual Drip", query: 'tag:"frass-drip" tag:"90s-casual"', description: "Throwback casual fits." },
+  "frass-drip-90s-classic": { title: "90's Classic Drip", query: 'tag:"frass-drip" tag:"90s-classic"', description: "Throwback classic fits." },
+  "frass-drip-90s-street": { title: "90's Street Drip", query: 'tag:"frass-drip" tag:"90s-street"', description: "Throwback street fits." },
   "new-arrivals": { title: "New Arrivals", query: 'vendor:"FRASS KICKS"' },
   "best-sellers": { title: "Best Sellers", query: 'vendor:"FRASS KICKS"' },
 };
