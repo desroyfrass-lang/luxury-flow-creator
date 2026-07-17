@@ -139,7 +139,7 @@ function CjImportPage() {
         : `${category}-drip`.replace("-drip-drip", "-drip");
       const tags = [
         brand,
-        isVirals ? "" : gender,
+        gender,
         catTag,
         subcategory,
         ...extraTags.split(",").map((t) => t.trim()).filter(Boolean),
@@ -150,7 +150,7 @@ function CjImportPage() {
           title,
           suggested_price: price ? Number(price) : undefined,
           brand,
-          gender: isVirals ? "unisex" : gender,
+          gender,
           category,
           subcategory: subcategory || undefined,
           tags,
