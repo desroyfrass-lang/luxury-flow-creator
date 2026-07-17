@@ -25,7 +25,7 @@ const MENU_ITEMS = [
   { to: "/blog", slot: "nav-blog", fallback: "Frass Blog" },
 ] as const;
 
-const ADMIN_ITEM: NavItem = { to: "/admin", slot: "nav-admin", fallback: "Admin" };
+const ADMIN_ITEM = { to: "/admin", slot: "nav-admin", fallback: "Admin" } as const;
 
 const SOCIALS = [
   { href: "https://instagram.com", label: "Instagram", Icon: Instagram },
