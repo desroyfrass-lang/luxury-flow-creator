@@ -6,6 +6,9 @@ import updateSiteImage from "./tools/update-site-image";
 import listCapsules from "./tools/list-capsules";
 import getCapsule from "./tools/get-capsule";
 import updateCapsule from "./tools/update-capsule";
+import auditCatalog from "./tools/audit-catalog";
+import analyzeOrders from "./tools/analyze-orders";
+import auditContent from "./tools/audit-content";
 
 // The OAuth issuer MUST be the direct Supabase host (not the .lovable.cloud proxy).
 // VITE_SUPABASE_PROJECT_ID is inlined by Vite at build time.
@@ -16,7 +19,7 @@ export default defineMcp({
   title: "Frass",
   version: "0.1.0",
   instructions:
-    "Tools for managing the Frass storefront — site text, site images, and capsule collections. Admin role required.",
+    "Tools for the Frass storefront. Read-only analysis: audit_catalog (products/collections gaps), analyze_orders (sales & best-sellers), audit_content (text/images/capsules/blog review). Write tools: site text, site images, capsules. Admin role required.",
   auth: auth.oauth.issuer({
     issuer: `https://${projectRef}.supabase.co/auth/v1`,
     acceptedAudiences: "authenticated",
