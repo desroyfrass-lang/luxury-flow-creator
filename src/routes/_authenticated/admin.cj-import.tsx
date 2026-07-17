@@ -63,7 +63,7 @@ const TREE: Record<string, BrandDef> = {
   },
   virals: {
     label: "Social Media Virals",
-    hasGender: false,
+    hasGender: true,
     categories: {
       trending: { label: "🔥 Trending & Viral", subs: ["tiktok-made-me-buy-it", "best-sellers", "new-arrivals", "flash-deals", "creator-picks", "viral-beauty", "viral-tech", "viral-problem-solvers", "limited-time"] },
       tech: { label: "📱 Tech & Phone Accessories", subs: ["phone-cases", "chargers", "wireless", "mounts", "selfie", "audio", "smart-gadgets"] },
