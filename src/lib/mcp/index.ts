@@ -25,6 +25,9 @@ export default defineMcp({
     acceptedAudiences: "authenticated",
   }),
   tools: [
+    auditCatalog,
+    analyzeOrders,
+    auditContent,
     listSiteText,
     updateSiteText,
     listSiteImages,
