@@ -52,6 +52,7 @@ function BrandMark({ compact = false }: { compact?: boolean }) {
 
 function Header() {
   const path = useRouterState({ select: (r) => r.location.pathname });
+  const isAdmin = useIsAdmin();
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement | null>(null);
 
@@ -130,6 +131,12 @@ function Header() {
             {menuOpen && (
               <div className="absolute right-0 mt-3 w-64 rounded-2xl border border-border/70 bg-background/95 backdrop-blur-xl shadow-2xl p-2 z-50">
                 {MENU_ITEMS.map((n) => <MenuLink key={n.to} item={n} />)}
+                {isAdmin && (
+                  <>
+                    <div className="my-1 h-px bg-border/60" />
+                    <MenuLink item={ADMIN_ITEM} />
+                  </>
+                )}
               </div>
             )}
           </div>
