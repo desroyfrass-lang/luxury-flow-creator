@@ -17,6 +17,81 @@
     },
     "tools": [
       {
+        "name": "audit_catalog",
+        "title": "Audit catalog",
+        "description": "Read-only audit of products and collections: totals, price stats, and lists of products missing images, descriptions, or collection assignments. Use to spot catalog gaps.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "limit": {
+              "description": "Max rows per issue list. Default 25.",
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 200
+            }
+          }
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "analyze_orders",
+        "title": "Analyze orders & sales",
+        "description": "Read-only sales analysis: revenue totals, order counts, best-selling items, and recent orders over a lookback window.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "days": {
+              "description": "Lookback window in days. Default 30.",
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 365
+            },
+            "topN": {
+              "description": "Top N best-sellers to return. Default 10.",
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 50
+            }
+          }
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "audit_content",
+        "title": "Audit site content",
+        "description": "Read-only review of site text slots, site images, capsules, and blog posts. Flags empty slots, missing images, unpublished capsules, and stale content.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "staleDays": {
+              "description": "Content not updated in this many days is flagged as stale. Default 90.",
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 730
+            }
+          }
+        },
+        "outputSchema": null
+      },
+      {
         "name": "list_site_text",
         "title": "List site text",
         "description": "List editable text slots on the Frass site (key + current value).",
