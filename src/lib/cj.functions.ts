@@ -53,29 +53,8 @@ async function cjGet<T = unknown>(path: string, params: Record<string, string | 
   return json.data as T;
 }
 
-/** Pull one page of CJ products (raw list). */
-export const listCjProducts = createServerFn({ method: "POST" })
-  .middleware([requireSupabaseAuth])
-  .inputValidator((d: { pageNum?: number; pageSize?: number; keyword?: string }) => d)
-  .handler(async ({ data, context }) => {
-    const { data: isAdmin } = await context.supabase.rpc("has_role", {
-      _user_id: context.userId,
-      _role: "admin",
-    });
-    if (!isAdmin) throw new Error("Admin only");
+type CjListResponse = { list: unknown[]; total: number; pageNum: number; pageSize: number };
 
-    const params: Record<string, string | number> = {
-      pageNum: data.pageNum ?? 1,
-      pageSize: Math.min(data.pageSize ?? 20, 50),
-    };
-    if (data.keyword) params.productNameEn = data.keyword;
-
-    const res = await cjGet<{ list: Array<Record<string, unknown>>; total: number; pageNum: number; pageSize: number }>(
-      "/product/list",
-      params,
-    );
-    return res;
-  });
 
 /** Fetch the current CJ product being reviewed (the oldest pending item, or null). */
 export const nextPendingCj = createServerFn({ method: "GET" })
