@@ -133,10 +133,14 @@ function CjImportPage() {
   const saveMut = useMutation({
     mutationFn: async () => {
       if (!current) return;
+      const isVirals = brand === "virals";
+      const catTag = isVirals
+        ? `viral-${category}`
+        : `${category}-drip`.replace("-drip-drip", "-drip");
       const tags = [
         brand,
-        gender,
-        `${category}-drip`.replace("-drip-drip", "-drip"),
+        isVirals ? "" : gender,
+        catTag,
         subcategory,
         ...extraTags.split(",").map((t) => t.trim()).filter(Boolean),
       ].filter(Boolean);
@@ -146,7 +150,7 @@ function CjImportPage() {
           title,
           suggested_price: price ? Number(price) : undefined,
           brand,
-          gender,
+          gender: isVirals ? "unisex" : gender,
           category,
           subcategory: subcategory || undefined,
           tags,
@@ -172,7 +176,10 @@ function CjImportPage() {
     },
   });
 
-  const cats = CATEGORIES_BY_BRAND[brand] ?? [];
+  const brandDef = TREE[brand];
+  const catEntries = brandDef ? Object.entries(brandDef.categories) : [];
+  const subs = brandDef?.categories[category]?.subs ?? [];
+
 
   return (
     <div className="grid gap-8 lg:grid-cols-[420px_1fr]">
