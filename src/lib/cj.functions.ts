@@ -136,8 +136,7 @@ export const importCjPage = createServerFn({ method: "POST" })
     if (rows.length === 0) return { inserted: 0, total: res.total };
 
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-    const { error } = await supabaseAdmin
-      .from("cj_import_queue")
+    const { error } = await (supabaseAdmin.from("cj_import_queue") as any)
       .upsert(rows, { onConflict: "cj_pid", ignoreDuplicates: true });
     if (error) throw error;
     return { inserted: rows.length, total: res.total };
