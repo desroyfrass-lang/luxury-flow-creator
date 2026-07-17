@@ -66,6 +66,7 @@ import { Route as AuthenticatedAdminViralsRouteImport } from './routes/_authenti
 import { Route as AuthenticatedAdminTextRouteImport } from './routes/_authenticated/admin.text'
 import { Route as AuthenticatedAdminMediaRouteImport } from './routes/_authenticated/admin.media'
 import { Route as AuthenticatedAdminImagesRouteImport } from './routes/_authenticated/admin.images'
+import { Route as AuthenticatedAdminCjImportRouteImport } from './routes/_authenticated/admin.cj-import'
 import { Route as AuthenticatedAdminCapsulesRouteImport } from './routes/_authenticated/admin.capsules'
 import { Route as AuthenticatedAdminBlogRouteImport } from './routes/_authenticated/admin.blog'
 import { Route as Char91DotmcpChar93InvokeToolToolRouteImport } from './routes/[.mcp]/invoke-tool/$tool'
@@ -364,6 +365,12 @@ const AuthenticatedAdminImagesRoute =
     path: '/images',
     getParentRoute: () => AuthenticatedAdminRoute,
   } as any)
+const AuthenticatedAdminCjImportRoute =
+  AuthenticatedAdminCjImportRouteImport.update({
+    id: '/cj-import',
+    path: '/cj-import',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
 const AuthenticatedAdminCapsulesRoute =
   AuthenticatedAdminCapsulesRouteImport.update({
     id: '/capsules',
@@ -438,6 +445,7 @@ export interface FileRoutesByFullPath {
   '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
   '/admin/blog': typeof AuthenticatedAdminBlogRoute
   '/admin/capsules': typeof AuthenticatedAdminCapsulesRoute
+  '/admin/cj-import': typeof AuthenticatedAdminCjImportRoute
   '/admin/images': typeof AuthenticatedAdminImagesRoute
   '/admin/media': typeof AuthenticatedAdminMediaRoute
   '/admin/text': typeof AuthenticatedAdminTextRoute
@@ -488,6 +496,7 @@ export interface FileRoutesByTo {
   '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
   '/admin/blog': typeof AuthenticatedAdminBlogRoute
   '/admin/capsules': typeof AuthenticatedAdminCapsulesRoute
+  '/admin/cj-import': typeof AuthenticatedAdminCjImportRoute
   '/admin/images': typeof AuthenticatedAdminImagesRoute
   '/admin/media': typeof AuthenticatedAdminMediaRoute
   '/admin/text': typeof AuthenticatedAdminTextRoute
@@ -553,6 +562,7 @@ export interface FileRoutesById {
   '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
   '/_authenticated/admin/blog': typeof AuthenticatedAdminBlogRoute
   '/_authenticated/admin/capsules': typeof AuthenticatedAdminCapsulesRoute
+  '/_authenticated/admin/cj-import': typeof AuthenticatedAdminCjImportRoute
   '/_authenticated/admin/images': typeof AuthenticatedAdminImagesRoute
   '/_authenticated/admin/media': typeof AuthenticatedAdminMediaRoute
   '/_authenticated/admin/text': typeof AuthenticatedAdminTextRoute
@@ -618,6 +628,7 @@ export interface FileRouteTypes {
     | '/.mcp/invoke-tool/$tool'
     | '/admin/blog'
     | '/admin/capsules'
+    | '/admin/cj-import'
     | '/admin/images'
     | '/admin/media'
     | '/admin/text'
@@ -668,6 +679,7 @@ export interface FileRouteTypes {
     | '/.mcp/invoke-tool/$tool'
     | '/admin/blog'
     | '/admin/capsules'
+    | '/admin/cj-import'
     | '/admin/images'
     | '/admin/media'
     | '/admin/text'
@@ -732,6 +744,7 @@ export interface FileRouteTypes {
     | '/.mcp/invoke-tool/$tool'
     | '/_authenticated/admin/blog'
     | '/_authenticated/admin/capsules'
+    | '/_authenticated/admin/cj-import'
     | '/_authenticated/admin/images'
     | '/_authenticated/admin/media'
     | '/_authenticated/admin/text'
@@ -1177,6 +1190,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminImagesRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
+    '/_authenticated/admin/cj-import': {
+      id: '/_authenticated/admin/cj-import'
+      path: '/cj-import'
+      fullPath: '/admin/cj-import'
+      preLoaderRoute: typeof AuthenticatedAdminCjImportRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
     '/_authenticated/admin/capsules': {
       id: '/_authenticated/admin/capsules'
       path: '/capsules'
@@ -1218,6 +1238,7 @@ declare module '@tanstack/react-router' {
 interface AuthenticatedAdminRouteChildren {
   AuthenticatedAdminBlogRoute: typeof AuthenticatedAdminBlogRoute
   AuthenticatedAdminCapsulesRoute: typeof AuthenticatedAdminCapsulesRoute
+  AuthenticatedAdminCjImportRoute: typeof AuthenticatedAdminCjImportRoute
   AuthenticatedAdminImagesRoute: typeof AuthenticatedAdminImagesRoute
   AuthenticatedAdminMediaRoute: typeof AuthenticatedAdminMediaRoute
   AuthenticatedAdminTextRoute: typeof AuthenticatedAdminTextRoute
@@ -1228,6 +1249,7 @@ interface AuthenticatedAdminRouteChildren {
 const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
   AuthenticatedAdminBlogRoute: AuthenticatedAdminBlogRoute,
   AuthenticatedAdminCapsulesRoute: AuthenticatedAdminCapsulesRoute,
+  AuthenticatedAdminCjImportRoute: AuthenticatedAdminCjImportRoute,
   AuthenticatedAdminImagesRoute: AuthenticatedAdminImagesRoute,
   AuthenticatedAdminMediaRoute: AuthenticatedAdminMediaRoute,
   AuthenticatedAdminTextRoute: AuthenticatedAdminTextRoute,
