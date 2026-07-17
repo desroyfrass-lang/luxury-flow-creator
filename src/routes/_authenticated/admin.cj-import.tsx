@@ -15,11 +15,67 @@ export const Route = createFileRoute("/_authenticated/admin/cj-import")({
   component: CjImportPage,
 });
 
-const BRANDS = [
-  { value: "frass-kicks", label: "Frass Kicks (footwear)" },
-  { value: "frass-drip", label: "Frass Drip (apparel)" },
-  { value: "bare-drip", label: "Bare Drip (swim/underwear)" },
-];
+type CatDef = { label: string; subs: string[] };
+type BrandDef = { label: string; hasGender: boolean; categories: Record<string, CatDef> };
+
+const TREE: Record<string, BrandDef> = {
+  "frass-kicks": {
+    label: "Frass Kicks (footwear)",
+    hasGender: true,
+    categories: {
+      street: { label: "Street", subs: ["sneakers", "high-tops", "runners", "chunky"] },
+      classic: { label: "Classic", subs: ["low-tops", "loafers", "boots", "oxfords"] },
+      casual: { label: "Casual", subs: ["slides", "sandals", "canvas", "slip-ons"] },
+    },
+  },
+  "frass-drip": {
+    label: "Frass Drip (apparel)",
+    hasGender: true,
+    categories: {
+      work: { label: "Work Drip", subs: ["suits", "blazers", "dress-shirts", "trousers", "dress-shoes", "ties", "pencil-skirts"] },
+      party: { label: "Party Drip", subs: ["dresses", "corset-tops", "bodysuits", "going-out-tops", "mini-skirts", "sequins"] },
+      casual: { label: "Casual Drip", subs: ["tees", "hoodies", "sweaters", "joggers", "denim", "jackets", "shorts"] },
+      street: { label: "Street Drip", subs: ["cargo", "denim", "statement-tops", "outerwear", "graphic-tees", "hoodies"] },
+      vacay: { label: "Vacay Drip", subs: ["tropical-shirts", "linen", "shorts", "resort-dresses", "cover-ups", "sandals"] },
+      sport: { label: "Sport Drip", subs: ["training", "gym", "court", "athleisure", "performance", "tracksuits"] },
+      "main-event": { label: "Main Event Drip", subs: ["gowns", "tuxedos", "statement-pieces", "formal"] },
+      photoshoot: { label: "Photoshoot Drip", subs: ["editorial", "bold-prints", "accessories", "avant-garde"] },
+      crown: { label: "Crown Drip", subs: ["signature", "limited", "logo", "flagship"] },
+      extra: { label: "Extra Drip", subs: ["overflow", "seasonal", "misc"] },
+      "90s-casual": { label: "90s Casual", subs: ["baggy-jeans", "oversized-tees", "windbreakers", "flannels"] },
+      "90s-classic": { label: "90s Classic", subs: ["polos", "varsity", "corduroy", "turtlenecks"] },
+      "90s-street": { label: "90s Street", subs: ["cargo", "graphic-tees", "denim-jackets", "overalls"] },
+      jackets: { label: "Jackets", subs: ["bomber", "denim", "leather", "puffer", "trench", "windbreaker"] },
+      sweaters: { label: "Sweaters", subs: ["knit", "cardigan", "turtleneck", "crewneck", "hoodie", "vest"] },
+    },
+  },
+  "bare-drip": {
+    label: "Bare Drip (swim/underwear)",
+    hasGender: true,
+    categories: {
+      swimwear: { label: "Swimwear", subs: ["bikinis", "one-pieces", "trunks", "cover-ups", "boardshorts"] },
+      underwear: { label: "Underwear", subs: ["boxers", "briefs", "boxer-briefs", "trunks"] },
+      lingerie: { label: "Lingerie", subs: ["sets", "teddies", "robes", "babydolls", "corsets"] },
+      shapewear: { label: "Shapewear", subs: ["bodysuits", "waist-trainers", "thigh-shapers", "slips"] },
+      panties: { label: "Panties", subs: ["thongs", "hipsters", "briefs", "seamless", "boyshorts"] },
+      bras: { label: "Bras", subs: ["push-up", "bralette", "sports", "strapless", "wireless"] },
+    },
+  },
+  virals: {
+    label: "Social Media Virals",
+    hasGender: false,
+    categories: {
+      trending: { label: "🔥 Trending & Viral", subs: ["tiktok-made-me-buy-it", "best-sellers", "new-arrivals", "flash-deals", "creator-picks", "viral-beauty", "viral-tech", "viral-problem-solvers", "limited-time"] },
+      tech: { label: "📱 Tech & Phone Accessories", subs: ["phone-cases", "chargers", "wireless", "mounts", "selfie", "audio", "smart-gadgets"] },
+      home: { label: "🏡 Home & Kitchen", subs: ["home-essentials", "kitchen-essentials", "cookware", "decor", "organization", "cleaning", "smart-home", "seasonal"] },
+      beauty: { label: "💄 Beauty & Personal Care", subs: ["skincare", "makeup", "hair-tools", "fragrances", "bath-body", "beauty-devices"] },
+      wellness: { label: "💪 Health & Wellness", subs: ["fitness", "wellness-devices", "recovery", "sleep", "supplements", "personal-care"] },
+      pets: { label: "🐾 Pets", subs: ["dogs", "cats", "pet-health", "cat-accessories"] },
+    },
+  },
+};
+
+const BRANDS = Object.entries(TREE).map(([value, def]) => ({ value, label: def.label }));
 
 const GENDERS = [
   { value: "men", label: "Men" },
@@ -27,11 +83,6 @@ const GENDERS = [
   { value: "unisex", label: "Unisex" },
 ];
 
-const CATEGORIES_BY_BRAND: Record<string, string[]> = {
-  "frass-kicks": ["street", "classic", "casual"],
-  "frass-drip": ["work", "party", "casual", "street", "vacay", "sport", "crown", "extra", "90s-casual", "90s-classic", "90s-street"],
-  "bare-drip": ["swimwear", "underwear", "lingerie", "shapewear", "panties", "bras"],
-};
 
 function CjImportPage() {
   const qc = useQueryClient();
@@ -82,10 +133,14 @@ function CjImportPage() {
   const saveMut = useMutation({
     mutationFn: async () => {
       if (!current) return;
+      const isVirals = brand === "virals";
+      const catTag = isVirals
+        ? `viral-${category}`
+        : `${category}-drip`.replace("-drip-drip", "-drip");
       const tags = [
         brand,
-        gender,
-        `${category}-drip`.replace("-drip-drip", "-drip"),
+        isVirals ? "" : gender,
+        catTag,
         subcategory,
         ...extraTags.split(",").map((t) => t.trim()).filter(Boolean),
       ].filter(Boolean);
@@ -95,7 +150,7 @@ function CjImportPage() {
           title,
           suggested_price: price ? Number(price) : undefined,
           brand,
-          gender,
+          gender: isVirals ? "unisex" : gender,
           category,
           subcategory: subcategory || undefined,
           tags,
@@ -121,7 +176,10 @@ function CjImportPage() {
     },
   });
 
-  const cats = CATEGORIES_BY_BRAND[brand] ?? [];
+  const brandDef = TREE[brand];
+  const catEntries = brandDef ? Object.entries(brandDef.categories) : [];
+  const subs = brandDef?.categories[category]?.subs ?? [];
+
 
   return (
     <div className="grid gap-8 lg:grid-cols-[420px_1fr]">
@@ -215,12 +273,15 @@ function CjImportPage() {
                 />
               </Field>
 
-              <Field label="Brand">
+              <Field label="Brand / Store">
                 <select
                   value={brand}
                   onChange={(e) => {
-                    setBrand(e.target.value);
-                    setCategory(CATEGORIES_BY_BRAND[e.target.value]?.[0] ?? "");
+                    const b = e.target.value;
+                    setBrand(b);
+                    const firstCat = Object.keys(TREE[b]?.categories ?? {})[0] ?? "";
+                    setCategory(firstCat);
+                    setSubcategory("");
                   }}
                   className="w-full rounded-sm border border-border/50 bg-background px-3 py-2 text-sm"
                 >
@@ -230,44 +291,54 @@ function CjImportPage() {
                 </select>
               </Field>
 
-              <Field label="Gender">
-                <div className="flex gap-2">
-                  {GENDERS.map((g) => (
-                    <button
-                      key={g.value}
-                      onClick={() => setGender(g.value)}
-                      className={`flex-1 rounded-sm border px-3 py-2 text-[11px] uppercase tracking-[0.2em] ${
-                        gender === g.value
-                          ? "border-[color:var(--gold)] text-[color:var(--gold)]"
-                          : "border-border/50 text-muted-foreground"
-                      }`}
-                    >
-                      {g.label}
-                    </button>
-                  ))}
-                </div>
-              </Field>
+              {brandDef?.hasGender && (
+                <Field label="Gender">
+                  <div className="flex gap-2">
+                    {GENDERS.map((g) => (
+                      <button
+                        key={g.value}
+                        onClick={() => setGender(g.value)}
+                        className={`flex-1 rounded-sm border px-3 py-2 text-[11px] uppercase tracking-[0.2em] ${
+                          gender === g.value
+                            ? "border-[color:var(--gold)] text-[color:var(--gold)]"
+                            : "border-border/50 text-muted-foreground"
+                        }`}
+                      >
+                        {g.label}
+                      </button>
+                    ))}
+                  </div>
+                </Field>
+              )}
 
               <Field label="Category">
                 <select
                   value={category}
-                  onChange={(e) => setCategory(e.target.value)}
+                  onChange={(e) => {
+                    setCategory(e.target.value);
+                    setSubcategory("");
+                  }}
                   className="w-full rounded-sm border border-border/50 bg-background px-3 py-2 text-sm"
                 >
-                  {cats.map((c) => (
-                    <option key={c} value={c}>{c}</option>
+                  {catEntries.map(([slug, def]) => (
+                    <option key={slug} value={slug}>{def.label}</option>
                   ))}
                 </select>
               </Field>
 
-              <Field label="Subcategory tag (e.g. jackets, sweaters, corset-tops)">
-                <input
+              <Field label="Subcategory">
+                <select
                   value={subcategory}
                   onChange={(e) => setSubcategory(e.target.value)}
-                  placeholder="optional"
-                  className="w-full rounded-sm border border-border/50 bg-transparent px-3 py-2 text-sm"
-                />
+                  className="w-full rounded-sm border border-border/50 bg-background px-3 py-2 text-sm"
+                >
+                  <option value="">— none —</option>
+                  {subs.map((s) => (
+                    <option key={s} value={s}>{s}</option>
+                  ))}
+                </select>
               </Field>
+
 
               <Field label="Extra tags (comma separated)">
                 <input
