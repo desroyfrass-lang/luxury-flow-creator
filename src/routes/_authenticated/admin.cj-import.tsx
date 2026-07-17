@@ -273,12 +273,15 @@ function CjImportPage() {
                 />
               </Field>
 
-              <Field label="Brand">
+              <Field label="Brand / Store">
                 <select
                   value={brand}
                   onChange={(e) => {
-                    setBrand(e.target.value);
-                    setCategory(CATEGORIES_BY_BRAND[e.target.value]?.[0] ?? "");
+                    const b = e.target.value;
+                    setBrand(b);
+                    const firstCat = Object.keys(TREE[b]?.categories ?? {})[0] ?? "";
+                    setCategory(firstCat);
+                    setSubcategory("");
                   }}
                   className="w-full rounded-sm border border-border/50 bg-background px-3 py-2 text-sm"
                 >
@@ -288,44 +291,54 @@ function CjImportPage() {
                 </select>
               </Field>
 
-              <Field label="Gender">
-                <div className="flex gap-2">
-                  {GENDERS.map((g) => (
-                    <button
-                      key={g.value}
-                      onClick={() => setGender(g.value)}
-                      className={`flex-1 rounded-sm border px-3 py-2 text-[11px] uppercase tracking-[0.2em] ${
-                        gender === g.value
-                          ? "border-[color:var(--gold)] text-[color:var(--gold)]"
-                          : "border-border/50 text-muted-foreground"
-                      }`}
-                    >
-                      {g.label}
-                    </button>
-                  ))}
-                </div>
-              </Field>
+              {brandDef?.hasGender && (
+                <Field label="Gender">
+                  <div className="flex gap-2">
+                    {GENDERS.map((g) => (
+                      <button
+                        key={g.value}
+                        onClick={() => setGender(g.value)}
+                        className={`flex-1 rounded-sm border px-3 py-2 text-[11px] uppercase tracking-[0.2em] ${
+                          gender === g.value
+                            ? "border-[color:var(--gold)] text-[color:var(--gold)]"
+                            : "border-border/50 text-muted-foreground"
+                        }`}
+                      >
+                        {g.label}
+                      </button>
+                    ))}
+                  </div>
+                </Field>
+              )}
 
               <Field label="Category">
                 <select
                   value={category}
-                  onChange={(e) => setCategory(e.target.value)}
+                  onChange={(e) => {
+                    setCategory(e.target.value);
+                    setSubcategory("");
+                  }}
                   className="w-full rounded-sm border border-border/50 bg-background px-3 py-2 text-sm"
                 >
-                  {cats.map((c) => (
-                    <option key={c} value={c}>{c}</option>
+                  {catEntries.map(([slug, def]) => (
+                    <option key={slug} value={slug}>{def.label}</option>
                   ))}
                 </select>
               </Field>
 
-              <Field label="Subcategory tag (e.g. jackets, sweaters, corset-tops)">
-                <input
+              <Field label="Subcategory">
+                <select
                   value={subcategory}
                   onChange={(e) => setSubcategory(e.target.value)}
-                  placeholder="optional"
-                  className="w-full rounded-sm border border-border/50 bg-transparent px-3 py-2 text-sm"
-                />
+                  className="w-full rounded-sm border border-border/50 bg-background px-3 py-2 text-sm"
+                >
+                  <option value="">— none —</option>
+                  {subs.map((s) => (
+                    <option key={s} value={s}>{s}</option>
+                  ))}
+                </select>
               </Field>
+
 
               <Field label="Extra tags (comma separated)">
                 <input
