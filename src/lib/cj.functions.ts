@@ -174,7 +174,7 @@ export const categorizeCj = createServerFn({ method: "POST" })
       if (data[k] !== undefined) patch[k] = data[k];
     }
 
-    const { error } = await context.supabase.from("cj_import_queue").update(patch).eq("id", data.id);
+    const { error } = await (context.supabase.from("cj_import_queue") as any).update(patch).eq("id", data.id);
     if (error) throw error;
     return { ok: true };
   });
