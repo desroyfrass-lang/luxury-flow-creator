@@ -63,7 +63,7 @@ const TREE: Record<string, BrandDef> = {
   },
   virals: {
     label: "Social Media Virals",
-    hasGender: false,
+    hasGender: true,
     categories: {
       trending: { label: "🔥 Trending & Viral", subs: ["tiktok-made-me-buy-it", "best-sellers", "new-arrivals", "flash-deals", "creator-picks", "viral-beauty", "viral-tech", "viral-problem-solvers", "limited-time"] },
       tech: { label: "📱 Tech & Phone Accessories", subs: ["phone-cases", "chargers", "wireless", "mounts", "selfie", "audio", "smart-gadgets"] },
@@ -139,7 +139,7 @@ function CjImportPage() {
         : `${category}-drip`.replace("-drip-drip", "-drip");
       const tags = [
         brand,
-        isVirals ? "" : gender,
+        gender,
         catTag,
         subcategory,
         ...extraTags.split(",").map((t) => t.trim()).filter(Boolean),
@@ -150,7 +150,7 @@ function CjImportPage() {
           title,
           suggested_price: price ? Number(price) : undefined,
           brand,
-          gender: isVirals ? "unisex" : gender,
+          gender,
           category,
           subcategory: subcategory || undefined,
           tags,
