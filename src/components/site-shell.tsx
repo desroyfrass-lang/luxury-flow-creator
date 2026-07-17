@@ -5,6 +5,7 @@ import { LuxuryBackground } from "./luxury-background";
 import { Search, User, Instagram, Music2, Youtube, Facebook, Menu, X, Sparkles } from "lucide-react";
 import { useCartSync } from "@/hooks/use-cart-sync";
 import { useSiteText } from "@/hooks/use-site-text";
+import { useIsAdmin } from "@/hooks/use-is-admin";
 import fullLogo from "@/assets/frass-logo-full.asset.json";
 import symbolLogo from "@/assets/frass-logo-symbol.asset.json";
 
@@ -23,6 +24,8 @@ const MENU_ITEMS = [
   { to: "/music-media", slot: "nav-music-media", fallback: "Music & Media" },
   { to: "/blog", slot: "nav-blog", fallback: "Frass Blog" },
 ] as const;
+
+const ADMIN_ITEM: NavItem = { to: "/admin", slot: "nav-admin", fallback: "Admin" };
 
 const SOCIALS = [
   { href: "https://instagram.com", label: "Instagram", Icon: Instagram },
