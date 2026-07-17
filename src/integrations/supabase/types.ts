@@ -165,6 +165,69 @@ export type Database = {
         }
         Relationships: []
       }
+      cj_import_queue: {
+        Row: {
+          brand: string | null
+          category: string | null
+          cj_data: Json
+          cj_pid: string
+          created_at: string
+          decided_at: string | null
+          decided_by: string | null
+          gender: string | null
+          id: string
+          image_url: string | null
+          notes: string | null
+          source_price: number | null
+          status: string
+          subcategory: string | null
+          suggested_price: number | null
+          tags: string[] | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          brand?: string | null
+          category?: string | null
+          cj_data: Json
+          cj_pid: string
+          created_at?: string
+          decided_at?: string | null
+          decided_by?: string | null
+          gender?: string | null
+          id?: string
+          image_url?: string | null
+          notes?: string | null
+          source_price?: number | null
+          status?: string
+          subcategory?: string | null
+          suggested_price?: number | null
+          tags?: string[] | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          brand?: string | null
+          category?: string | null
+          cj_data?: Json
+          cj_pid?: string
+          created_at?: string
+          decided_at?: string | null
+          decided_by?: string | null
+          gender?: string | null
+          id?: string
+          image_url?: string | null
+          notes?: string | null
+          source_price?: number | null
+          status?: string
+          subcategory?: string | null
+          suggested_price?: number | null
+          tags?: string[] | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       collection_products: {
         Row: {
           collection_id: string
