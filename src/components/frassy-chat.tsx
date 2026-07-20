@@ -434,3 +434,84 @@ export function FrassyChat() {
     </>
   );
 }
+
+// ---------- Settings ----------
+
+function Row({ label, children }: { label: string; children: React.ReactNode }) {
+  return (
+    <label className="flex flex-col gap-1">
+      <span className="text-[10px] uppercase tracking-[0.22em] text-muted-foreground">{label}</span>
+      {children}
+    </label>
+  );
+}
+
+function FrassySettingsPanel({
+  prefs,
+  update,
+}: {
+  prefs: FrassyPrefs;
+  update: (patch: Partial<FrassyPrefs>) => void;
+}) {
+  const selectCls =
+    "w-full rounded-md border border-border bg-background px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-[color:var(--gold)]/40";
+  return (
+    <div className="border-b border-border bg-secondary/40 px-4 py-3 space-y-3">
+      <div className="text-[10px] uppercase tracking-[0.28em] text-[color:var(--gold)]">
+        Personalize Frassy
+      </div>
+      <div className="grid grid-cols-2 gap-3">
+        <Row label="Voice">
+          <select
+            className={selectCls}
+            value={prefs.voice}
+            onChange={(e) => update({ voice: e.target.value as FrassyPrefs["voice"] })}
+          >
+            <option value="feminine">Feminine</option>
+            <option value="masculine">Masculine</option>
+            <option value="neutral">Gender neutral</option>
+          </select>
+        </Row>
+        <Row label="Language">
+          <select
+            className={selectCls}
+            value={prefs.language}
+            onChange={(e) => update({ language: e.target.value as FrassyPrefs["language"] })}
+          >
+            <option value="english">Standard English</option>
+            <option value="caribbean-lite">Caribbean-lite</option>
+            <option value="caribbean">Caribbean English</option>
+            <option value="patois">Jamaican Patois</option>
+          </select>
+        </Row>
+        <Row label="Greeting style">
+          <select
+            className={selectCls}
+            value={prefs.greetingStyle}
+            onChange={(e) =>
+              update({ greetingStyle: e.target.value as FrassyPrefs["greetingStyle"] })
+            }
+          >
+            <option value="quiet">Quiet</option>
+            <option value="friendly">Friendly</option>
+            <option value="concierge">Luxury Concierge</option>
+          </select>
+        </Row>
+        <Row label="Animation">
+          <select
+            className={selectCls}
+            value={prefs.animation}
+            onChange={(e) => update({ animation: e.target.value as FrassyPrefs["animation"] })}
+          >
+            <option value="minimal">Minimal</option>
+            <option value="standard">Standard</option>
+            <option value="expressive">Expressive</option>
+          </select>
+        </Row>
+      </div>
+      <p className="text-[10px] leading-relaxed text-muted-foreground">
+        Frassy's intelligence stays the same — only tone, voice, and presence change.
+      </p>
+    </div>
+  );
+}

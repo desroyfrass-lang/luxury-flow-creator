@@ -419,3 +419,8 @@
 @media (prefers-reduced-motion: reduce) {
   .frassy-pulse { animation: none; box-shadow: 0 0 0 4px oklch(0.78 0.14 78 / 0.25); }
 }
+
+/* Frassy animation intensity variants */
+.frassy-pulse-minimal { animation-duration: 2.6s; animation-timing-function: ease-in-out; }
+.frassy-pulse-minimal { --tw-shadow: none; }
+.frassy-pulse-expressive { animation-duration: 1.1s; }
