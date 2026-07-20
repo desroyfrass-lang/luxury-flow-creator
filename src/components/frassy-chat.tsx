@@ -611,17 +611,31 @@ function FrassySettingsPanel({
   update,
   memory,
   updateMemory,
-  clearMemory,
+  onResetCommunication,
+  onClearRecentlyViewed,
+  onClearWishlist,
+  onResetLearned,
+  onFactoryReset,
 }: {
   prefs: FrassyPrefs;
   update: (patch: Partial<FrassyPrefs>) => void;
   memory: import("@/lib/frassy-memory").FrassyMemory;
   updateMemory: (patch: Partial<import("@/lib/frassy-memory").FrassyMemory>) => void;
-  clearMemory: () => void;
+  onResetCommunication: () => void;
+  onClearRecentlyViewed: () => void;
+  onClearWishlist: () => void;
+  onResetLearned: () => void;
+  onFactoryReset: () => void;
 }) {
+  const [confirmFactory, setConfirmFactory] = useState(false);
 
   const selectCls =
     "w-full rounded-md border border-border bg-background px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-[color:var(--gold)]/40";
+  const inputCls =
+    "w-full rounded-md border border-border bg-background px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-[color:var(--gold)]/40";
+  const resetBtn =
+    "inline-flex items-center gap-1 rounded-full border border-border bg-background px-2.5 py-1 text-[10px] uppercase tracking-[0.18em] text-muted-foreground hover:text-foreground";
+
   return (
     <div className="border-b border-border bg-secondary/40 px-4 py-3 space-y-3">
       <div className="text-[10px] uppercase tracking-[0.28em] text-[color:var(--gold)]">
@@ -641,7 +655,7 @@ function FrassySettingsPanel({
           }}
         >
           <option value="silent">Silent Concierge — text only</option>
-          <option value="voice_text">Voice &amp; Text</option>
+          <option value="voice_text">Voice &amp; Text (premium neural)</option>
           <option value="voice_only" disabled>
             Voice Only (coming soon)
           </option>
@@ -713,71 +727,194 @@ function FrassySettingsPanel({
           </select>
         </Row>
       </div>
+      <div className="flex items-center justify-between rounded-md border border-border/60 bg-background/60 px-2 py-1.5">
+        <span className="text-[10px] uppercase tracking-[0.22em] text-muted-foreground">
+          Communication preferences
+        </span>
+        <button type="button" onClick={onResetCommunication} className={resetBtn}>
+          <Trash2 className="h-3 w-3" /> Reset
+        </button>
+      </div>
       <p className="text-[10px] leading-relaxed text-muted-foreground">
-        Frassy's intelligence stays the same — only tone, voice, and presence change. Audio is
-        always optional; every message is available in text.
+        Frassy's intelligence stays the same — only tone, voice, and presence change. Audio uses a
+        premium neural voice; every message is also written.
       </p>
 
-      {/* What Frassy remembers — user-controlled memory */}
-      <div className="mt-2 rounded-lg border border-border/70 bg-background/60 p-3 space-y-2">
-        <div className="flex items-center justify-between">
-          <div className="text-[10px] uppercase tracking-[0.28em] text-[color:var(--gold)]">
-            What Frassy remembers
+      {/* What Frassy remembers — user-controlled memory with granular resets */}
+      <div className="mt-2 rounded-lg border border-border/70 bg-background/60 p-3 space-y-3">
+        <div className="text-[10px] uppercase tracking-[0.28em] text-[color:var(--gold)]">
+          What Frassy remembers
+        </div>
+
+        <Row label="Name to greet you by">
+          <input
+            type="text"
+            value={memory.firstName ?? ""}
+            onChange={(e) => updateMemory({ firstName: e.target.value || null })}
+            placeholder="Optional — e.g. Mike"
+            className={inputCls}
+          />
+        </Row>
+
+        <div className="grid grid-cols-2 gap-3">
+          <Row label="Preferred size">
+            <input
+              type="text"
+              value={memory.preferredSize ?? ""}
+              onChange={(e) => updateMemory({ preferredSize: e.target.value || null })}
+              placeholder="M / 9 / 32"
+              className={inputCls}
+            />
+          </Row>
+          <Row label="Budget">
+            <input
+              type="text"
+              value={memory.budgetRange ?? ""}
+              onChange={(e) => updateMemory({ budgetRange: e.target.value || null })}
+              placeholder="$50–150"
+              className={inputCls}
+            />
+          </Row>
+          <Row label="Favorite colors">
+            <input
+              type="text"
+              value={memory.preferredColors.join(", ")}
+              onChange={(e) =>
+                updateMemory({
+                  preferredColors: e.target.value.split(",").map((s) => s.trim()).filter(Boolean),
+                })
+              }
+              placeholder="black, cream, olive"
+              className={inputCls}
+            />
+          </Row>
+          <Row label="Favorite brands">
+            <input
+              type="text"
+              value={memory.preferredBrands.join(", ")}
+              onChange={(e) =>
+                updateMemory({
+                  preferredBrands: e.target.value.split(",").map((s) => s.trim()).filter(Boolean),
+                })
+              }
+              placeholder="Frass Kicks, Bare Drip"
+              className={inputCls}
+            />
+          </Row>
+        </div>
+
+        <Row label="Style likes (comma separated)">
+          <input
+            type="text"
+            value={memory.likes.join(", ")}
+            onChange={(e) =>
+              updateMemory({
+                likes: e.target.value.split(",").map((s) => s.trim()).filter(Boolean),
+              })
+            }
+            placeholder="neutral colors, oversized hoodies"
+            className={inputCls}
+          />
+        </Row>
+        <Row label="Dislikes">
+          <input
+            type="text"
+            value={memory.dislikes.join(", ")}
+            onChange={(e) =>
+              updateMemory({
+                dislikes: e.target.value.split(",").map((s) => s.trim()).filter(Boolean),
+              })
+            }
+            placeholder="floral prints, bright colors"
+            className={inputCls}
+          />
+        </Row>
+
+        {/* Granular reset actions */}
+        <div className="space-y-1.5 pt-1">
+          <div className="flex items-center justify-between rounded-md border border-border/60 bg-background/60 px-2 py-1.5">
+            <div className="min-w-0">
+              <div className="text-xs text-foreground">Recently viewed</div>
+              <div className="text-[10px] text-muted-foreground truncate">
+                {memory.recentProducts.length + memory.recentCategories.length > 0
+                  ? `${memory.recentProducts.length} products · ${memory.recentCategories.length} categories`
+                  : "Nothing yet."}
+              </div>
+            </div>
+            <button type="button" onClick={onClearRecentlyViewed} className={resetBtn}>
+              <Trash2 className="h-3 w-3" /> Clear
+            </button>
           </div>
+          <div className="flex items-center justify-between rounded-md border border-border/60 bg-background/60 px-2 py-1.5">
+            <div className="min-w-0">
+              <div className="text-xs text-foreground">Wishlist</div>
+              <div className="text-[10px] text-muted-foreground truncate">
+                {memory.wishlist.length
+                  ? `${memory.wishlist.length} saved · ${memory.wishlist.slice(0, 2).map((w) => w.title).join(", ")}${memory.wishlist.length > 2 ? "…" : ""}`
+                  : "Nothing saved yet."}
+              </div>
+            </div>
+            <button type="button" onClick={onClearWishlist} className={resetBtn}>
+              <Trash2 className="h-3 w-3" /> Clear
+            </button>
+          </div>
+          <div className="flex items-center justify-between rounded-md border border-border/60 bg-background/60 px-2 py-1.5">
+            <div className="min-w-0">
+              <div className="text-xs text-foreground">Learned shopping preferences</div>
+              <div className="text-[10px] text-muted-foreground">
+                Sizes, colors, brands, budget, likes &amp; dislikes.
+              </div>
+            </div>
+            <button type="button" onClick={onResetLearned} className={resetBtn}>
+              <Trash2 className="h-3 w-3" /> Reset
+            </button>
+          </div>
+        </div>
+
+        <p className="text-[10px] leading-relaxed text-muted-foreground">
+          Stored only on this device. Frassy never remembers payment info, addresses, or
+          passwords.
+        </p>
+      </div>
+
+      {/* Factory Reset — visually distinct, requires confirmation */}
+      <div className="mt-3 rounded-lg border border-destructive/40 bg-destructive/5 p-3 space-y-2">
+        <div className="text-[10px] uppercase tracking-[0.28em] text-destructive">
+          Factory reset
+        </div>
+        <p className="text-[11px] leading-relaxed text-muted-foreground">
+          Clears every preference, memory, wishlist item, and returns Frassy to a first-run state.
+          This can't be undone.
+        </p>
+        {confirmFactory ? (
+          <div className="flex flex-wrap gap-2">
+            <button
+              type="button"
+              onClick={() => {
+                onFactoryReset();
+                setConfirmFactory(false);
+              }}
+              className="rounded-full bg-destructive px-3 py-1.5 text-[11px] font-medium text-destructive-foreground"
+            >
+              Yes, clear everything
+            </button>
+            <button
+              type="button"
+              onClick={() => setConfirmFactory(false)}
+              className="rounded-full border border-border bg-background px-3 py-1.5 text-[11px]"
+            >
+              Cancel
+            </button>
+          </div>
+        ) : (
           <button
             type="button"
-            onClick={clearMemory}
-            className="inline-flex items-center gap-1 rounded-full border border-border px-2 py-0.5 text-[10px] text-muted-foreground hover:text-foreground"
+            onClick={() => setConfirmFactory(true)}
+            className="inline-flex items-center gap-1.5 rounded-full border border-destructive/60 bg-background px-3 py-1.5 text-[11px] text-destructive hover:bg-destructive/10"
           >
-            <Trash2 className="h-3 w-3" /> Forget
+            <Trash2 className="h-3 w-3" /> Clear everything
           </button>
-        </div>
-        <div className="grid grid-cols-1 gap-2 text-[11px]">
-          <Row label="Name to greet you by">
-            <input
-              type="text"
-              value={memory.firstName ?? ""}
-              onChange={(e) => updateMemory({ firstName: e.target.value || null })}
-              placeholder="Optional — e.g. Mike"
-              className="w-full rounded-md border border-border bg-background px-2 py-1.5 text-sm"
-            />
-          </Row>
-          <Row label="Style likes (comma separated)">
-            <input
-              type="text"
-              value={memory.likes.join(", ")}
-              onChange={(e) =>
-                updateMemory({
-                  likes: e.target.value.split(",").map((s) => s.trim()).filter(Boolean),
-                })
-              }
-              placeholder="neutral colors, oversized hoodies"
-              className="w-full rounded-md border border-border bg-background px-2 py-1.5 text-sm"
-            />
-          </Row>
-          <Row label="Dislikes">
-            <input
-              type="text"
-              value={memory.dislikes.join(", ")}
-              onChange={(e) =>
-                updateMemory({
-                  dislikes: e.target.value.split(",").map((s) => s.trim()).filter(Boolean),
-                })
-              }
-              placeholder="floral prints, bright colors"
-              className="w-full rounded-md border border-border bg-background px-2 py-1.5 text-sm"
-            />
-          </Row>
-          {memory.recentCategories.length > 0 && (
-            <div className="text-[10px] text-muted-foreground">
-              Recently browsed: {memory.recentCategories.slice(0, 5).join(" · ")}
-            </div>
-          )}
-          <p className="text-[10px] leading-relaxed text-muted-foreground">
-            Stored only on this device. Frassy never remembers payment info, addresses, or
-            passwords. Tap "Forget" to clear it any time.
-          </p>
-        </div>
+        )}
       </div>
     </div>
   );
