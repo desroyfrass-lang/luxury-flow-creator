@@ -80,21 +80,19 @@ export function FrassyChat() {
     setConsentOpen(false);
   };
 
-  // Frassy symbol activation: ~5s after landing, subtle pulse + spoken greeting.
+  // Frassy symbol activation: ~5s after landing, subtle pulse + (optional) spoken greeting.
+  // Held off while the consent modal is showing or the visitor hasn't consented yet.
   useEffect(() => {
     if (!hydrated || nudged) return;
     if (typeof window === "undefined") return;
+    if (consentOpen) return;
+    if (!prefs.consentedAt && prefs.consentDismissCount < 2) return;
     if (prefs.greetingStyle === "quiet") {
       setNudged(true);
       return;
     }
     const alreadyGreeted = window.sessionStorage.getItem(GREETED_STORAGE_KEY) === "1";
-    // Friendly = every few visits; Concierge = every session.
     if (alreadyGreeted && prefs.greetingStyle !== "concierge") {
-      setNudged(true);
-      return;
-    }
-    if (alreadyGreeted && prefs.greetingStyle === "concierge") {
       setNudged(true);
       return;
     }
@@ -103,40 +101,29 @@ export function FrassyChat() {
       setNudged(true);
       const line = pickGreeting(prefs.language);
       setGreetingText(line);
+      setLiveMessage(line);
       setPulse(true);
       window.sessionStorage.setItem(GREETED_STORAGE_KEY, "1");
-      if (!muted && "speechSynthesis" in window) {
-        try {
-          const speakNow = () => {
-            const u = new SpeechSynthesisUtterance(line);
-            const v = pickVoice(prefs.voice, prefs.language);
-            if (v) u.voice = v;
-            u.rate = prefs.language === "patois" ? 0.95 : 1;
-            u.pitch = prefs.voice === "masculine" ? 0.85 : prefs.voice === "feminine" ? 1.15 : 1;
-            u.volume = 0.9;
-            u.onend = () => setPulse(false);
-            u.onerror = () => setPulse(false);
-            window.speechSynthesis.speak(u);
-          };
-          // Voices may load async
-          if (window.speechSynthesis.getVoices().length === 0) {
-            window.speechSynthesis.onvoiceschanged = speakNow;
-            setTimeout(speakNow, 250);
-          } else {
-            speakNow();
-          }
-          setTimeout(() => setPulse(false), 9000);
-        } catch {
-          setTimeout(() => setPulse(false), 4000);
-        }
+      if (speechEnabled) {
+        speakLine(line, {
+          prefs,
+          tone: "welcome",
+          onDone: () => setPulse(false),
+        });
+        setTimeout(() => setPulse(false), 9000);
       } else {
         setTimeout(() => setPulse(false), 4000);
       }
-      // Auto-hide the greeting chip after a beat
       setTimeout(() => setGreetingText(null), 9000);
     }, 5000);
     return () => clearTimeout(t);
-  }, [hydrated, nudged, muted, prefs.greetingStyle, prefs.language, prefs.voice]);
+  }, [
+    hydrated,
+    nudged,
+    consentOpen,
+    speechEnabled,
+    prefs,
+  ]);
 
 
 
