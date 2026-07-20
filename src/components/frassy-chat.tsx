@@ -225,7 +225,11 @@ export function FrassyChat() {
         body: JSON.stringify({
           messages: next.map((m) => ({ role: m.role, content: m.content })),
           cartContext,
+          memoryContext: memoryContext(memory),
+          modeContext: `${ctx.mode} (route ${ctx.pathname})`,
+          seasonContext: seasonalAccent(season) ?? "",
         }),
+
       });
       const data = (await res.json()) as { reply?: string; error?: string };
       if (!res.ok) {
