@@ -3,6 +3,9 @@ import cardDrip from "@/assets/card-drip.jpg";
 import cardKicks from "@/assets/card-kicks.jpg";
 import cardMen from "@/assets/card-men.jpg";
 import cardWomen from "@/assets/card-women.jpg";
+import bouncyDress from "@/assets/bouncy-viral-dress.jpg";
+
+export const BOUNCY_VIRAL_DRESS_IMG = bouncyDress;
 
 export type ViralProduct = {
   slug: string;
@@ -51,6 +54,46 @@ function makeProducts(prefix: string, names: [string, string, number, number?][]
 }
 
 export const VIRAL_CATEGORIES: ViralCategory[] = [
+  {
+    slug: "main-event",
+    emoji: "✨",
+    title: "Main Event",
+    tagline: "Showstopper pieces made for the moment.",
+    image: bouncyDress,
+    subs: [
+      {
+        slug: "bouncy-dresses",
+        title: "Bouncy Dresses",
+        tagline: "The tiered, twirl-ready silhouettes going viral.",
+        products: [
+          {
+            slug: "bouncy-viral-dress",
+            title: "Bouncy Viral Dress",
+            blurb: "Champagne satin, three-tier ruffle, engineered to twirl.",
+            price: 78.0,
+            compareAt: 128.0,
+            rating: 4.9,
+            reviews: 1284,
+            sold: "6.2k sold",
+            badge: "Viral",
+            image: bouncyDress,
+          },
+          {
+            slug: "bouncy-viral-dress-noir",
+            title: "Bouncy Viral Dress — Noir",
+            blurb: "The moment, in liquid black satin.",
+            price: 78.0,
+            compareAt: 128.0,
+            rating: 4.8,
+            reviews: 612,
+            sold: "2.1k sold",
+            badge: "Hot",
+            image: bouncyDress,
+          },
+        ],
+      },
+    ],
+  },
   {
     slug: "trending",
     emoji: "🔥",
