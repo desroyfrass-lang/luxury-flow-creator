@@ -201,9 +201,19 @@ export function FrassyChat() {
     }
   }, [open, messages.length]);
 
+  // Bump visit counter once per browser session for memory-aware greetings.
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    if (window.sessionStorage.getItem("frassy:visit-bumped") === "1") return;
+    window.sessionStorage.setItem("frassy:visit-bumped", "1");
+    import("@/lib/frassy-memory").then((m) => m.bumpVisit(memory.firstName ?? null));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   useEffect(() => {
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" });
   }, [messages, loading]);
+
 
   const send = async (text: string) => {
     const trimmed = text.trim();
