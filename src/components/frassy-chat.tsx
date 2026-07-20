@@ -90,13 +90,14 @@ export function FrassyChat() {
     setConsentOpen(false);
   };
 
-  // Frassy symbol activation: ~5s after landing, subtle pulse + (optional) spoken greeting.
-  // Held off while the consent modal is showing or the visitor hasn't consented yet.
+  // Frassy activation: ~5s after landing, subtle pulse + (optional) spoken greeting.
+  // Suppressed at checkout, auth, and workspace routes (situational awareness).
   useEffect(() => {
     if (!hydrated || nudged) return;
     if (typeof window === "undefined") return;
     if (consentOpen) return;
     if (!prefs.consentedAt && prefs.consentDismissCount < 2) return;
+    if (!ctx.canProactivelySpeak) return;
     if (prefs.greetingStyle === "quiet") {
       setNudged(true);
       return;
@@ -109,7 +110,17 @@ export function FrassyChat() {
     const t = setTimeout(() => {
       if (dismissedRef.current) return;
       setNudged(true);
-      const line = pickGreeting(prefs.language);
+      // Memory-aware greeting: name-back if we know them, else language greeting.
+      let line = pickGreeting(prefs.language);
+      if (memory.firstName && memory.visits > 0) {
+        line = `Welcome back, ${memory.firstName}.`;
+        if (memory.recentCategories[0]) {
+          line += ` Last time you were looking at ${memory.recentCategories[0].replace(/-/g, " ")}. Want to continue?`;
+        }
+      } else {
+        const accent = seasonalAccent(season);
+        if (accent && Math.random() < 0.4) line = accent;
+      }
       setGreetingText(line);
       setLiveMessage(line);
       setPulse(true);
@@ -133,7 +144,25 @@ export function FrassyChat() {
     consentOpen,
     speechEnabled,
     prefs,
+    ctx.canProactivelySpeak,
+    memory.firstName,
+    memory.visits,
+    memory.recentCategories,
+    season,
   ]);
+
+  // Idle help — offer a hand after ~90s of no interaction while browsing.
+  useEffect(() => {
+    if (idleOffered || !ctx.shouldOfferHelp || open) return;
+    setIdleOffered(true);
+    const line = "Taking your time — want me to help you narrow it down?";
+    setGreetingText(line);
+    setLiveMessage(line);
+    setPulse(true);
+    setTimeout(() => setPulse(false), 4000);
+    setTimeout(() => setGreetingText(null), 9000);
+  }, [ctx.shouldOfferHelp, idleOffered, open]);
+
 
 
 
