@@ -250,9 +250,10 @@ export function FrassyChat() {
         <div className="fixed inset-x-3 bottom-24 z-[59] flex max-h-[70vh] flex-col overflow-hidden rounded-2xl border border-border bg-background shadow-2xl md:inset-x-auto md:right-5 md:bottom-24 md:w-[380px]">
           {/* Header */}
           <div className="flex items-center gap-3 border-b border-border bg-foreground px-4 py-3 text-background">
-            <div className="flex h-9 w-9 items-center justify-center rounded-full bg-background/10">
-              <Sparkles className="h-5 w-5" />
+            <div className="flex h-9 w-9 items-center justify-center rounded-full bg-background/10 overflow-hidden">
+              <img src={symbolAsset.url} alt="Frassy" className="h-7 w-7 object-contain" />
             </div>
+
             <div className="flex-1">
               <div className="font-display text-lg leading-none">Frassy</div>
               <div className="text-[10px] uppercase tracking-[0.2em] opacity-70">
