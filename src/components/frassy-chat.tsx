@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "@tanstack/react-router";
-import { MessageCircle, X, Send, ShoppingBag, Sparkles } from "lucide-react";
+import { X, Send, ShoppingBag, Sparkles, Volume2, VolumeX } from "lucide-react";
 import { useCartStore } from "@/lib/cart-store";
+import symbolAsset from "@/assets/frass-logo-symbol.asset.json";
 
 type Msg = { role: "user" | "assistant"; content: string };
 
@@ -11,12 +12,18 @@ const GREETING: Msg = {
     "Wah gwaan! Welcome to Frass Kicks — I'm Frassy 👋. Fun fact: new customers can unlock 40% OFF their first order in about 3 minutes. Want me to walk you through it, or help you shop?",
 };
 
+const SPOKEN_GREETING =
+  "Welcome to Frass Hill. I'm Frassy. Tap me anytime — I can help you find your fit, style a look, or unlock forty percent off your first order.";
+
 const QUICK_ACTIONS = [
   { label: "🎁 Unlock 40% OFF", prompt: "How do I unlock the 40% off first purchase reward?" },
   { label: "How Try-On works", prompt: "How does the Try-On feature work?" },
   { label: "What's Capsule Checkout?", prompt: "What is Capsule Checkout?" },
   { label: "Shipping & returns", prompt: "Tell me about shipping and returns." },
 ];
+
+const MUTE_STORAGE_KEY = "frassy:muted";
+const GREETED_STORAGE_KEY = "frassy:greeted";
 
 export function FrassyChat() {
   const navigate = useNavigate();
@@ -26,10 +33,12 @@ export function FrassyChat() {
   const [loading, setLoading] = useState(false);
   const [nudged, setNudged] = useState(false);
   const [pulse, setPulse] = useState(false);
+  const [muted, setMuted] = useState(false);
   const items = useCartStore((s) => s.items);
   const scrollRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const lastCartCountRef = useRef(0);
+  const dismissedRef = useRef(false);
 
   const cartCount = items.reduce((n, i) => n + i.quantity, 0);
   const cartTotal = items.reduce(
@@ -37,15 +46,48 @@ export function FrassyChat() {
     0,
   );
 
-  // First-visit gentle nudge after 25s
+  // Load mute preference
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    setMuted(window.localStorage.getItem(MUTE_STORAGE_KEY) === "1");
+  }, []);
+
+  // Frassy symbol activation: ~5s after landing, subtle pulse + spoken greeting.
   useEffect(() => {
     if (nudged) return;
+    if (typeof window === "undefined") return;
+    const alreadyGreeted = window.sessionStorage.getItem(GREETED_STORAGE_KEY) === "1";
+    if (alreadyGreeted) {
+      setNudged(true);
+      return;
+    }
     const t = setTimeout(() => {
+      if (dismissedRef.current) return;
       setNudged(true);
       setPulse(true);
-    }, 25000);
+      window.sessionStorage.setItem(GREETED_STORAGE_KEY, "1");
+      // Try to speak — many browsers block until first user gesture, in which case pulse still plays.
+      if (!muted && "speechSynthesis" in window) {
+        try {
+          const u = new SpeechSynthesisUtterance(SPOKEN_GREETING);
+          u.rate = 1;
+          u.pitch = 1;
+          u.volume = 0.9;
+          u.onend = () => setPulse(false);
+          u.onerror = () => setPulse(false);
+          window.speechSynthesis.speak(u);
+          // Safety: stop pulse after 8s regardless
+          setTimeout(() => setPulse(false), 8000);
+        } catch {
+          setTimeout(() => setPulse(false), 4000);
+        }
+      } else {
+        setTimeout(() => setPulse(false), 4000);
+      }
+    }, 5000);
     return () => clearTimeout(t);
-  }, [nudged]);
+  }, [nudged, muted]);
+
 
   // Cart-add trigger
   useEffect(() => {
