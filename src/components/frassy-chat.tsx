@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "@tanstack/react-router";
-import { MessageCircle, X, Send, ShoppingBag, Sparkles } from "lucide-react";
+import { X, Send, ShoppingBag, Volume2, VolumeX } from "lucide-react";
 import { useCartStore } from "@/lib/cart-store";
+import symbolAsset from "@/assets/frass-logo-symbol.asset.json";
 
 type Msg = { role: "user" | "assistant"; content: string };
 
@@ -11,12 +12,18 @@ const GREETING: Msg = {
     "Wah gwaan! Welcome to Frass Kicks — I'm Frassy 👋. Fun fact: new customers can unlock 40% OFF their first order in about 3 minutes. Want me to walk you through it, or help you shop?",
 };
 
+const SPOKEN_GREETING =
+  "Welcome to Frass Hill. I'm Frassy. Tap me anytime — I can help you find your fit, style a look, or unlock forty percent off your first order.";
+
 const QUICK_ACTIONS = [
   { label: "🎁 Unlock 40% OFF", prompt: "How do I unlock the 40% off first purchase reward?" },
   { label: "How Try-On works", prompt: "How does the Try-On feature work?" },
   { label: "What's Capsule Checkout?", prompt: "What is Capsule Checkout?" },
   { label: "Shipping & returns", prompt: "Tell me about shipping and returns." },
 ];
+
+const MUTE_STORAGE_KEY = "frassy:muted";
+const GREETED_STORAGE_KEY = "frassy:greeted";
 
 export function FrassyChat() {
   const navigate = useNavigate();
@@ -26,10 +33,12 @@ export function FrassyChat() {
   const [loading, setLoading] = useState(false);
   const [nudged, setNudged] = useState(false);
   const [pulse, setPulse] = useState(false);
+  const [muted, setMuted] = useState(false);
   const items = useCartStore((s) => s.items);
   const scrollRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const lastCartCountRef = useRef(0);
+  const dismissedRef = useRef(false);
 
   const cartCount = items.reduce((n, i) => n + i.quantity, 0);
   const cartTotal = items.reduce(
@@ -37,15 +46,48 @@ export function FrassyChat() {
     0,
   );
 
-  // First-visit gentle nudge after 25s
+  // Load mute preference
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    setMuted(window.localStorage.getItem(MUTE_STORAGE_KEY) === "1");
+  }, []);
+
+  // Frassy symbol activation: ~5s after landing, subtle pulse + spoken greeting.
   useEffect(() => {
     if (nudged) return;
+    if (typeof window === "undefined") return;
+    const alreadyGreeted = window.sessionStorage.getItem(GREETED_STORAGE_KEY) === "1";
+    if (alreadyGreeted) {
+      setNudged(true);
+      return;
+    }
     const t = setTimeout(() => {
+      if (dismissedRef.current) return;
       setNudged(true);
       setPulse(true);
-    }, 25000);
+      window.sessionStorage.setItem(GREETED_STORAGE_KEY, "1");
+      // Try to speak — many browsers block until first user gesture, in which case pulse still plays.
+      if (!muted && "speechSynthesis" in window) {
+        try {
+          const u = new SpeechSynthesisUtterance(SPOKEN_GREETING);
+          u.rate = 1;
+          u.pitch = 1;
+          u.volume = 0.9;
+          u.onend = () => setPulse(false);
+          u.onerror = () => setPulse(false);
+          window.speechSynthesis.speak(u);
+          // Safety: stop pulse after 8s regardless
+          setTimeout(() => setPulse(false), 8000);
+        } catch {
+          setTimeout(() => setPulse(false), 4000);
+        }
+      } else {
+        setTimeout(() => setPulse(false), 4000);
+      }
+    }, 5000);
     return () => clearTimeout(t);
-  }, [nudged]);
+  }, [nudged, muted]);
+
 
   // Cart-add trigger
   useEffect(() => {
@@ -133,31 +175,85 @@ export function FrassyChat() {
     }
   };
 
+  const toggleMute = () => {
+    const next = !muted;
+    setMuted(next);
+    if (typeof window !== "undefined") {
+      window.localStorage.setItem(MUTE_STORAGE_KEY, next ? "1" : "0");
+      if (next && "speechSynthesis" in window) window.speechSynthesis.cancel();
+    }
+    if (next) setPulse(false);
+  };
+
+  const dismissPulse = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    dismissedRef.current = true;
+    setPulse(false);
+    if (typeof window !== "undefined" && "speechSynthesis" in window) {
+      window.speechSynthesis.cancel();
+    }
+  };
+
   return (
     <>
-      {/* Floating button */}
-      <button
-        type="button"
-        onClick={() => setOpen((o) => !o)}
-        aria-label={open ? "Close Frassy" : "Open Frassy chat"}
-        className={`fixed bottom-5 right-5 z-[60] flex h-14 w-14 items-center justify-center rounded-full bg-foreground text-background shadow-2xl transition-transform hover:scale-105 md:h-16 md:w-16 ${pulse && !open ? "animate-pulse ring-4 ring-foreground/20" : ""}`}
-      >
-        {open ? <X className="h-6 w-6" /> : <MessageCircle className="h-6 w-6" />}
-        {!open && cartCount > 0 && (
-          <span className="absolute -top-1 -right-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-red-500 px-1.5 text-[10px] font-bold text-white">
-            {cartCount}
-          </span>
+      {/* Frassy — the Frass symbol itself */}
+      <div className="fixed bottom-5 right-5 z-[60] flex flex-col items-end gap-2">
+        {pulse && !open && (
+          <div className="flex items-center gap-2 rounded-full border border-[color:var(--gold)]/50 bg-background/95 px-3 py-1.5 text-[11px] uppercase tracking-[0.2em] text-foreground shadow-lg backdrop-blur animate-fade-in">
+            <span>Frassy is here</span>
+            <button
+              type="button"
+              onClick={toggleMute}
+              className="rounded-full p-1 hover:bg-secondary/60"
+              aria-label={muted ? "Unmute Frassy" : "Mute Frassy"}
+            >
+              {muted ? <VolumeX className="h-3.5 w-3.5" /> : <Volume2 className="h-3.5 w-3.5" />}
+            </button>
+            <button
+              type="button"
+              onClick={dismissPulse}
+              className="rounded-full p-1 hover:bg-secondary/60"
+              aria-label="Dismiss Frassy greeting"
+            >
+              <X className="h-3.5 w-3.5" />
+            </button>
+          </div>
         )}
-      </button>
+        <button
+          type="button"
+          onClick={() => setOpen((o) => !o)}
+          aria-label={open ? "Close Frassy" : "Open Frassy chat"}
+          className={`relative flex h-16 w-16 items-center justify-center rounded-full bg-[color:var(--ink,#0a0a0a)] shadow-2xl ring-1 ring-[color:var(--gold)]/40 transition-transform hover:scale-105 md:h-[72px] md:w-[72px] ${
+            pulse && !open ? "frassy-pulse" : ""
+          }`}
+        >
+          {open ? (
+            <X className="h-6 w-6 text-[color:var(--gold)]" />
+          ) : (
+            <img
+              src={symbolAsset.url}
+              alt="Frassy"
+              className="h-11 w-11 md:h-12 md:w-12 object-contain drop-shadow-[0_0_18px_oklch(0.78_0.14_78_/_0.55)]"
+            />
+          )}
+          {!open && cartCount > 0 && (
+            <span className="absolute -top-1 -right-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-[color:var(--gold)] px-1.5 text-[10px] font-bold text-[color:var(--ink)]">
+              {cartCount}
+            </span>
+          )}
+        </button>
+      </div>
+
 
       {/* Panel */}
       {open && (
         <div className="fixed inset-x-3 bottom-24 z-[59] flex max-h-[70vh] flex-col overflow-hidden rounded-2xl border border-border bg-background shadow-2xl md:inset-x-auto md:right-5 md:bottom-24 md:w-[380px]">
           {/* Header */}
           <div className="flex items-center gap-3 border-b border-border bg-foreground px-4 py-3 text-background">
-            <div className="flex h-9 w-9 items-center justify-center rounded-full bg-background/10">
-              <Sparkles className="h-5 w-5" />
+            <div className="flex h-9 w-9 items-center justify-center rounded-full bg-background/10 overflow-hidden">
+              <img src={symbolAsset.url} alt="Frassy" className="h-7 w-7 object-contain" />
             </div>
+
             <div className="flex-1">
               <div className="font-display text-lg leading-none">Frassy</div>
               <div className="text-[10px] uppercase tracking-[0.2em] opacity-70">

@@ -10,10 +10,11 @@ import cardDrip from "@/assets/card-drip.jpg";
 import cardBare from "@/assets/card-bare.jpg";
 import fullLogo from "@/assets/frass-logo-full.asset.json";
 
-import { ArrowUpRight, Sparkles, Shirt, Camera } from "lucide-react";
+import { ArrowUpRight, Sparkles, Shirt, Camera, Flame, Star } from "lucide-react";
 import { useSiteImageUrl, useSiteImages } from "@/hooks/use-site-images";
 import { useSiteText } from "@/hooks/use-site-text";
 import { LOOKBOOK_STORIES } from "@/lib/lookbook";
+import { BOUNCY_VIRAL_DRESS_IMG } from "@/lib/social-virals";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -175,6 +176,94 @@ function Home() {
           <div className="mt-4 overflow-hidden rounded-sm border border-[color:var(--gold)]/35 bg-background/70 backdrop-blur">
             <div className="px-6 py-3 text-center text-sm font-semibold uppercase tracking-[0.28em] text-[color:var(--gold)]">
               {discountBar}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="mx-auto max-w-[1600px] px-6 lg:px-12 mt-16">
+        <div className="flex items-end justify-between gap-6 mb-6">
+          <div>
+            <div className="mb-3 inline-flex items-center gap-3 text-[11px] uppercase tracking-[0.3em] text-muted-foreground">
+              <span className="h-px w-8 bg-[color:var(--gold)]" />
+              <Flame className="h-3.5 w-3.5 text-[color:var(--gold)]" /> Viral Right Now
+            </div>
+            <h2 className="font-display text-4xl md:text-6xl leading-[0.95] text-foreground">
+              The Main Event
+            </h2>
+          </div>
+          <Link
+            to="/social-media-virals/$category"
+            params={{ category: "main-event" }}
+            className="hidden md:inline-flex items-center gap-2 text-xs uppercase tracking-[0.25em] hover:text-[color:var(--gold)] transition"
+          >
+            Shop all virals <ArrowUpRight className="h-4 w-4" />
+          </Link>
+        </div>
+
+        <div className="grid md:grid-cols-[1.15fr_1fr] gap-6 lg:gap-8 items-stretch">
+          <Link
+            to="/social-media-virals/$category/$sub/$product"
+            params={{ category: "main-event", sub: "bouncy-dresses", product: "bouncy-viral-dress" }}
+            className="lux-card group relative block overflow-hidden rounded-[2rem] border border-[color:var(--gold)]/40 bg-[color:var(--ink,#0a0a0a)]"
+          >
+            <img
+              src={BOUNCY_VIRAL_DRESS_IMG}
+              alt="Bouncy Viral Dress"
+              loading="lazy"
+              width={1024}
+              height={1280}
+              className="h-full max-h-[560px] w-full object-cover transition-transform duration-[1200ms] ease-out group-hover:scale-[1.03]"
+            />
+            <div className="absolute inset-0 bg-[linear-gradient(180deg,transparent_45%,oklch(0.07_0.005_80_/_0.88)_100%)]" />
+            <div className="absolute top-4 left-4 inline-flex items-center gap-1.5 rounded-full border border-[color:var(--gold)]/60 bg-background/40 backdrop-blur px-3 py-1 text-[10px] uppercase tracking-[0.3em] text-[color:var(--gold)]">
+              <Flame className="h-3 w-3" /> Viral · 6.2k sold
+            </div>
+            <div className="absolute inset-x-0 bottom-0 p-6 md:p-8">
+              <div className="text-[10px] uppercase tracking-[0.3em] text-[color:var(--gold)]/90">
+                Bouncy Dresses · Main Event
+              </div>
+              <h3 className="mt-2 font-display uppercase text-3xl md:text-5xl leading-[0.95] text-foreground">
+                Bouncy Viral Dress
+              </h3>
+              <div className="mt-3 flex items-baseline gap-3">
+                <span className="font-display text-2xl text-foreground">$78</span>
+                <span className="text-sm text-foreground/60 line-through">$128</span>
+                <span className="inline-flex items-center gap-1 text-xs text-[color:var(--gold)]">
+                  <Star className="h-3 w-3 fill-current" /> 4.9 (1,284)
+                </span>
+              </div>
+            </div>
+          </Link>
+
+          <div className="relative overflow-hidden rounded-[2rem] border border-border/60 bg-secondary/40 p-8 md:p-10 flex flex-col justify-between">
+            <div>
+              <div className="text-[11px] uppercase tracking-[0.3em] text-[color:var(--gold)]">
+                Bouncy Dresses Collection
+              </div>
+              <h3 className="mt-3 font-display text-3xl md:text-5xl leading-[0.95]">
+                The tiered, twirl-ready silhouettes going viral.
+              </h3>
+              <p className="mt-5 text-sm md:text-base text-muted-foreground max-w-md">
+                Champagne satin. Three-tier ruffle. Engineered to move — and to end up on everyone's FYP.
+                The Main Event category is where the internet's biggest moments live.
+              </p>
+            </div>
+            <div className="mt-8 flex flex-wrap gap-3">
+              <Link
+                to="/social-media-virals/$category/$sub"
+                params={{ category: "main-event", sub: "bouncy-dresses" }}
+                className="lux-press inline-flex items-center gap-2 rounded-sm border border-[color:var(--gold)] bg-[color:var(--gold)] px-6 py-3 text-[11px] font-bold uppercase tracking-[0.28em] text-[color:var(--ink)] transition hover:bg-[color:var(--gold-soft)]"
+              >
+                Shop Bouncy Dresses <ArrowUpRight className="h-3.5 w-3.5" />
+              </Link>
+              <Link
+                to="/social-media-virals/$category"
+                params={{ category: "main-event" }}
+                className="lux-press inline-flex items-center gap-2 rounded-sm border border-border/80 bg-background/40 px-6 py-3 text-[11px] uppercase tracking-[0.26em] text-foreground backdrop-blur transition hover:border-[color:var(--gold)] hover:text-[color:var(--gold)]"
+              >
+                Explore Main Event
+              </Link>
             </div>
           </div>
         </div>
