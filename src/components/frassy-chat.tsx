@@ -1,6 +1,6 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate } from "@tanstack/react-router";
-import { X, Send, ShoppingBag, Volume2, VolumeX, Settings } from "lucide-react";
+import { X, Send, ShoppingBag, Volume2, VolumeX, Settings, LifeBuoy, Trash2 } from "lucide-react";
 import { useCartStore } from "@/lib/cart-store";
 import symbolAsset from "@/assets/frass-logo-symbol.asset.json";
 import {
@@ -11,6 +11,9 @@ import {
 } from "@/hooks/use-frassy-prefs";
 import { canSpeak, speakLine, stopSpeaking, VOICE_PROFILE_LABELS } from "@/lib/frassy-voice";
 import { FrassyConsentModal } from "@/components/frassy-consent";
+import { useFrassyMemory, memoryContext, rememberCartSnapshot } from "@/lib/frassy-memory";
+import { useFrassyContext, currentSeason, seasonalAccent } from "@/hooks/use-frassy-context";
+
 
 type Msg = { role: "user" | "assistant"; content: string };
 
@@ -32,8 +35,11 @@ const GREETED_STORAGE_KEY = "frassy:greeted";
 export function FrassyChat() {
   const navigate = useNavigate();
   const { prefs, update, hydrated } = useFrassyPrefs();
+  const { memory, update: updateMemory, clear: clearMemory } = useFrassyMemory();
+  const ctx = useFrassyContext();
   const [open, setOpen] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
+  const [escalateOpen, setEscalateOpen] = useState(false);
   const [messages, setMessages] = useState<Msg[]>([INITIAL_MSG]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
@@ -42,11 +48,15 @@ export function FrassyChat() {
   const [greetingText, setGreetingText] = useState<string | null>(null);
   const [liveMessage, setLiveMessage] = useState("");
   const [consentOpen, setConsentOpen] = useState(false);
+  const [idleOffered, setIdleOffered] = useState(false);
   const items = useCartStore((s) => s.items);
   const scrollRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const lastCartCountRef = useRef(0);
   const dismissedRef = useRef(false);
+
+  const season = useMemo(() => currentSeason(), []);
+
 
   const cartCount = items.reduce((n, i) => n + i.quantity, 0);
   const cartTotal = items.reduce(
@@ -80,13 +90,14 @@ export function FrassyChat() {
     setConsentOpen(false);
   };
 
-  // Frassy symbol activation: ~5s after landing, subtle pulse + (optional) spoken greeting.
-  // Held off while the consent modal is showing or the visitor hasn't consented yet.
+  // Frassy activation: ~5s after landing, subtle pulse + (optional) spoken greeting.
+  // Suppressed at checkout, auth, and workspace routes (situational awareness).
   useEffect(() => {
     if (!hydrated || nudged) return;
     if (typeof window === "undefined") return;
     if (consentOpen) return;
     if (!prefs.consentedAt && prefs.consentDismissCount < 2) return;
+    if (!ctx.canProactivelySpeak) return;
     if (prefs.greetingStyle === "quiet") {
       setNudged(true);
       return;
@@ -99,7 +110,17 @@ export function FrassyChat() {
     const t = setTimeout(() => {
       if (dismissedRef.current) return;
       setNudged(true);
-      const line = pickGreeting(prefs.language);
+      // Memory-aware greeting: name-back if we know them, else language greeting.
+      let line = pickGreeting(prefs.language);
+      if (memory.firstName && memory.visits > 0) {
+        line = `Welcome back, ${memory.firstName}.`;
+        if (memory.recentCategories[0]) {
+          line += ` Last time you were looking at ${memory.recentCategories[0].replace(/-/g, " ")}. Want to continue?`;
+        }
+      } else {
+        const accent = seasonalAccent(season);
+        if (accent && Math.random() < 0.4) line = accent;
+      }
       setGreetingText(line);
       setLiveMessage(line);
       setPulse(true);
@@ -123,38 +144,55 @@ export function FrassyChat() {
     consentOpen,
     speechEnabled,
     prefs,
+    ctx.canProactivelySpeak,
+    memory.firstName,
+    memory.visits,
+    memory.recentCategories,
+    season,
   ]);
 
+  // Idle help — offer a hand after ~90s of no interaction while browsing.
+  useEffect(() => {
+    if (idleOffered || !ctx.shouldOfferHelp || open) return;
+    setIdleOffered(true);
+    const line = "Taking your time — want me to help you narrow it down?";
+    setGreetingText(line);
+    setLiveMessage(line);
+    setPulse(true);
+    setTimeout(() => setPulse(false), 4000);
+    setTimeout(() => setGreetingText(null), 9000);
+  }, [ctx.shouldOfferHelp, idleOffered, open]);
 
 
 
-  // Cart-add trigger
+
+
+  // Cart-add trigger — respect situational awareness (never at checkout/auth/workspace).
   useEffect(() => {
     const prev = lastCartCountRef.current;
     lastCartCountRef.current = cartCount;
     if (cartCount > prev && cartCount > 0) {
+      rememberCartSnapshot(items.map((i) => i.product.node.title));
+      if (!ctx.canAutoOpenOnCart) return; // don't interrupt at checkout
       setPulse(true);
-      // Auto-open with contextual message
       setMessages((prevMsgs) => {
-        const already = prevMsgs.some((m) =>
-          m.content.includes("added to your cart"),
-        );
+        const already = prevMsgs.some((m) => m.content.includes("landed in your cart"));
         if (already) return prevMsgs;
         return [
           ...prevMsgs,
           {
             role: "assistant",
             content:
-              "🔥 Nice pick — that just landed in your cart. Want to head to checkout, try it on first, or ask me anything before you buy?",
+              "Nice pick — that just landed in your cart. Ready when you are, or want to try it on first?",
           },
         ];
       });
-      // Open on desktop, subtle pulse on mobile
       if (typeof window !== "undefined" && window.innerWidth >= 768) {
         setOpen(true);
       }
     }
-  }, [cartCount]);
+  }, [cartCount, ctx.canAutoOpenOnCart, items]);
+
 
   useEffect(() => {
     if (open) {
@@ -163,9 +201,19 @@ export function FrassyChat() {
     }
   }, [open, messages.length]);
 
+  // Bump visit counter once per browser session for memory-aware greetings.
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    if (window.sessionStorage.getItem("frassy:visit-bumped") === "1") return;
+    window.sessionStorage.setItem("frassy:visit-bumped", "1");
+    import("@/lib/frassy-memory").then((m) => m.bumpVisit(memory.firstName ?? null));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   useEffect(() => {
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" });
   }, [messages, loading]);
+
 
   const send = async (text: string) => {
     const trimmed = text.trim();
@@ -187,7 +235,11 @@ export function FrassyChat() {
         body: JSON.stringify({
           messages: next.map((m) => ({ role: m.role, content: m.content })),
           cartContext,
+          memoryContext: memoryContext(memory),
+          modeContext: `${ctx.mode} (route ${ctx.pathname})`,
+          seasonContext: seasonalAccent(season) ?? "",
         }),
+
       });
       const data = (await res.json()) as { reply?: string; error?: string };
       if (!res.ok) {
@@ -325,6 +377,15 @@ export function FrassyChat() {
             </button>
             <button
               type="button"
+              onClick={() => setEscalateOpen((s) => !s)}
+              className={`rounded-full p-1 hover:bg-background/10 ${escalateOpen ? "bg-background/10" : ""}`}
+              aria-label="Talk to a human"
+              title="Talk to a human"
+            >
+              <LifeBuoy className="h-4 w-4" />
+            </button>
+            <button
+              type="button"
               onClick={() => setSettingsOpen((s) => !s)}
               className={`rounded-full p-1 hover:bg-background/10 ${settingsOpen ? "bg-background/10" : ""}`}
               aria-label="Frassy settings"
@@ -341,7 +402,48 @@ export function FrassyChat() {
             </button>
           </div>
 
-          {settingsOpen && <FrassySettingsPanel prefs={prefs} update={update} />}
+          {escalateOpen && (
+            <div className="border-b border-border bg-secondary/40 px-4 py-3 space-y-2">
+              <div className="text-[10px] uppercase tracking-[0.28em] text-[color:var(--gold)]">
+                Talk to a human
+              </div>
+              <p className="text-xs text-muted-foreground">
+                I'll never leave you stuck — pick the fastest path for you.
+              </p>
+              <div className="flex flex-wrap gap-2">
+                <a
+                  href="mailto:concierge@frasskicks.com"
+                  className="rounded-full border border-border bg-background px-3 py-1.5 text-xs hover:bg-secondary/60"
+                >
+                  ✉ Email concierge
+                </a>
+                <a
+                  href="sms:+1"
+                  className="rounded-full border border-border bg-background px-3 py-1.5 text-xs hover:bg-secondary/60"
+                >
+                  💬 Text support
+                </a>
+                <button
+                  type="button"
+                  onClick={() => send("I'd like to open a support ticket, please.")}
+                  className="rounded-full border border-border bg-background px-3 py-1.5 text-xs hover:bg-secondary/60"
+                >
+                  🎟 Open ticket
+                </button>
+              </div>
+            </div>
+          )}
+
+          {settingsOpen && (
+            <FrassySettingsPanel
+              prefs={prefs}
+              update={update}
+              memory={memory}
+              updateMemory={updateMemory}
+              clearMemory={clearMemory}
+            />
+          )}
+
 
 
 
@@ -472,10 +574,17 @@ function Row({ label, children }: { label: string; children: React.ReactNode }) 
 function FrassySettingsPanel({
   prefs,
   update,
+  memory,
+  updateMemory,
+  clearMemory,
 }: {
   prefs: FrassyPrefs;
   update: (patch: Partial<FrassyPrefs>) => void;
+  memory: import("@/lib/frassy-memory").FrassyMemory;
+  updateMemory: (patch: Partial<import("@/lib/frassy-memory").FrassyMemory>) => void;
+  clearMemory: () => void;
 }) {
+
   const selectCls =
     "w-full rounded-md border border-border bg-background px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-[color:var(--gold)]/40";
   return (
@@ -573,7 +682,70 @@ function FrassySettingsPanel({
         Frassy's intelligence stays the same — only tone, voice, and presence change. Audio is
         always optional; every message is available in text.
       </p>
+
+      {/* What Frassy remembers — user-controlled memory */}
+      <div className="mt-2 rounded-lg border border-border/70 bg-background/60 p-3 space-y-2">
+        <div className="flex items-center justify-between">
+          <div className="text-[10px] uppercase tracking-[0.28em] text-[color:var(--gold)]">
+            What Frassy remembers
+          </div>
+          <button
+            type="button"
+            onClick={clearMemory}
+            className="inline-flex items-center gap-1 rounded-full border border-border px-2 py-0.5 text-[10px] text-muted-foreground hover:text-foreground"
+          >
+            <Trash2 className="h-3 w-3" /> Forget
+          </button>
+        </div>
+        <div className="grid grid-cols-1 gap-2 text-[11px]">
+          <Row label="Name to greet you by">
+            <input
+              type="text"
+              value={memory.firstName ?? ""}
+              onChange={(e) => updateMemory({ firstName: e.target.value || null })}
+              placeholder="Optional — e.g. Mike"
+              className="w-full rounded-md border border-border bg-background px-2 py-1.5 text-sm"
+            />
+          </Row>
+          <Row label="Style likes (comma separated)">
+            <input
+              type="text"
+              value={memory.likes.join(", ")}
+              onChange={(e) =>
+                updateMemory({
+                  likes: e.target.value.split(",").map((s) => s.trim()).filter(Boolean),
+                })
+              }
+              placeholder="neutral colors, oversized hoodies"
+              className="w-full rounded-md border border-border bg-background px-2 py-1.5 text-sm"
+            />
+          </Row>
+          <Row label="Dislikes">
+            <input
+              type="text"
+              value={memory.dislikes.join(", ")}
+              onChange={(e) =>
+                updateMemory({
+                  dislikes: e.target.value.split(",").map((s) => s.trim()).filter(Boolean),
+                })
+              }
+              placeholder="floral prints, bright colors"
+              className="w-full rounded-md border border-border bg-background px-2 py-1.5 text-sm"
+            />
+          </Row>
+          {memory.recentCategories.length > 0 && (
+            <div className="text-[10px] text-muted-foreground">
+              Recently browsed: {memory.recentCategories.slice(0, 5).join(" · ")}
+            </div>
+          )}
+          <p className="text-[10px] leading-relaxed text-muted-foreground">
+            Stored only on this device. Frassy never remembers payment info, addresses, or
+            passwords. Tap "Forget" to clear it any time.
+          </p>
+        </div>
+      </div>
     </div>
   );
 }
+
 
