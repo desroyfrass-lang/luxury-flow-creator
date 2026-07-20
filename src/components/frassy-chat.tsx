@@ -367,6 +367,15 @@ export function FrassyChat() {
             </button>
             <button
               type="button"
+              onClick={() => setEscalateOpen((s) => !s)}
+              className={`rounded-full p-1 hover:bg-background/10 ${escalateOpen ? "bg-background/10" : ""}`}
+              aria-label="Talk to a human"
+              title="Talk to a human"
+            >
+              <LifeBuoy className="h-4 w-4" />
+            </button>
+            <button
+              type="button"
               onClick={() => setSettingsOpen((s) => !s)}
               className={`rounded-full p-1 hover:bg-background/10 ${settingsOpen ? "bg-background/10" : ""}`}
               aria-label="Frassy settings"
@@ -383,7 +392,48 @@ export function FrassyChat() {
             </button>
           </div>
 
-          {settingsOpen && <FrassySettingsPanel prefs={prefs} update={update} />}
+          {escalateOpen && (
+            <div className="border-b border-border bg-secondary/40 px-4 py-3 space-y-2">
+              <div className="text-[10px] uppercase tracking-[0.28em] text-[color:var(--gold)]">
+                Talk to a human
+              </div>
+              <p className="text-xs text-muted-foreground">
+                I'll never leave you stuck — pick the fastest path for you.
+              </p>
+              <div className="flex flex-wrap gap-2">
+                <a
+                  href="mailto:concierge@frasskicks.com"
+                  className="rounded-full border border-border bg-background px-3 py-1.5 text-xs hover:bg-secondary/60"
+                >
+                  ✉ Email concierge
+                </a>
+                <a
+                  href="sms:+1"
+                  className="rounded-full border border-border bg-background px-3 py-1.5 text-xs hover:bg-secondary/60"
+                >
+                  💬 Text support
+                </a>
+                <button
+                  type="button"
+                  onClick={() => send("I'd like to open a support ticket, please.")}
+                  className="rounded-full border border-border bg-background px-3 py-1.5 text-xs hover:bg-secondary/60"
+                >
+                  🎟 Open ticket
+                </button>
+              </div>
+            </div>
+          )}
+
+          {settingsOpen && (
+            <FrassySettingsPanel
+              prefs={prefs}
+              update={update}
+              memory={memory}
+              updateMemory={updateMemory}
+              clearMemory={clearMemory}
+            />
+          )}
+
 
 
 
