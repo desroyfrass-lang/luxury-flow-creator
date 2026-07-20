@@ -237,9 +237,9 @@ export const runVisualSearch = createServerFn({ method: "POST" })
       category_slug: m.category_slug,
       sub_slug: m.sub_slug,
       price: m.price != null ? String(m.price) : null,
-      attributes: (m.attributes ?? {}) as Record<string, unknown>,
+      attributes: (m.attributes ?? {}) as VisualAttributes,
       similarity: m.similarity,
-      why: buildWhy(attrs, (m.attributes ?? {}) as VisualAttrs, m.similarity),
+      why: buildWhy(attrs, (m.attributes ?? {}) as VisualAttributes, m.similarity),
     }));
 
     return {
@@ -250,8 +250,7 @@ export const runVisualSearch = createServerFn({ method: "POST" })
     };
   });
 
-type VisualAttrs = { category?: string; primary_color?: string; silhouette?: string; mood?: string };
-function buildWhy(q: VisualAttrs, p: VisualAttrs, sim: number): string {
+function buildWhy(q: VisualAttributes, p: VisualAttributes, sim: number): string {
   const bits: string[] = [];
   if (q.primary_color && p.primary_color && q.primary_color.toLowerCase() === p.primary_color.toLowerCase())
     bits.push(`matches the ${p.primary_color} tone`);
