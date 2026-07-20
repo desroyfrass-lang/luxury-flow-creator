@@ -754,6 +754,10 @@ function FrassySettingsPanel({
           When off, Frassy stays quiet until you open the chat.
         </p>
       </div>
+      <div className="flex items-center justify-between rounded-md border border-border/60 bg-background/60 px-2 py-1.5">
+        <span className="text-[10px] uppercase tracking-[0.22em] text-muted-foreground">
+          Communication preferences
+        </span>
         <button type="button" onClick={onResetCommunication} className={resetBtn}>
           <Trash2 className="h-3 w-3" /> Reset
         </button>
