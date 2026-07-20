@@ -447,7 +447,35 @@ export function FrassyChat() {
               update={update}
               memory={memory}
               updateMemory={updateMemory}
-              clearMemory={clearMemory}
+              onResetCommunication={() =>
+                update({
+                  communicationMode: "silent",
+                  voice: "feminine",
+                  voiceProfile: "calm-luxury",
+                  language: "caribbean-lite",
+                  greetingStyle: "concierge",
+                  animation: "standard",
+                  muted: false,
+                })
+              }
+              onClearRecentlyViewed={clearRecentlyViewed}
+              onClearWishlist={clearWishlist}
+              onResetLearned={resetLearnedPreferences}
+              onFactoryReset={() => {
+                clearAllMemory();
+                update({
+                  communicationMode: "silent",
+                  voice: "feminine",
+                  voiceProfile: "calm-luxury",
+                  language: "caribbean-lite",
+                  greetingStyle: "concierge",
+                  animation: "standard",
+                  muted: false,
+                  consentedAt: null,
+                  consentDismissCount: 0,
+                });
+                stopSpeaking();
+              }}
             />
           )}
 
