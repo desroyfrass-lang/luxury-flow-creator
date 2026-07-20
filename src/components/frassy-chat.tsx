@@ -730,10 +730,30 @@ function FrassySettingsPanel({
           </select>
         </Row>
       </div>
-      <div className="flex items-center justify-between rounded-md border border-border/60 bg-background/60 px-2 py-1.5">
-        <span className="text-[10px] uppercase tracking-[0.22em] text-muted-foreground">
-          Communication preferences
-        </span>
+      {/* Spec 032 — Customer Control toggles */}
+      <div className="space-y-1.5 rounded-md border border-border/60 bg-background/60 px-2 py-2">
+        <label className="flex cursor-pointer items-center justify-between gap-2 text-[11px] text-foreground">
+          <span>Homepage greeting</span>
+          <input
+            type="checkbox"
+            checked={!prefs.disableHomepageGreeting}
+            onChange={(e) => update({ disableHomepageGreeting: !e.target.checked })}
+            className="h-3.5 w-3.5 accent-[color:var(--gold)]"
+          />
+        </label>
+        <label className="flex cursor-pointer items-center justify-between gap-2 text-[11px] text-foreground">
+          <span>Proactive recommendations</span>
+          <input
+            type="checkbox"
+            checked={!prefs.disableProactive}
+            onChange={(e) => update({ disableProactive: !e.target.checked })}
+            className="h-3.5 w-3.5 accent-[color:var(--gold)]"
+          />
+        </label>
+        <p className="text-[10px] leading-snug text-muted-foreground">
+          When off, Frassy stays quiet until you open the chat.
+        </p>
+      </div>
         <button type="button" onClick={onResetCommunication} className={resetBtn}>
           <Trash2 className="h-3 w-3" /> Reset
         </button>
