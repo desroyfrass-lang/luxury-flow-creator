@@ -6,9 +6,11 @@ import symbolAsset from "@/assets/frass-logo-symbol.asset.json";
 import {
   useFrassyPrefs,
   pickGreeting,
-  pickVoice,
   type FrassyPrefs,
+  type FrassyCommunicationMode,
 } from "@/hooks/use-frassy-prefs";
+import { canSpeak, speakLine, stopSpeaking, VOICE_PROFILE_LABELS } from "@/lib/frassy-voice";
+import { FrassyConsentModal } from "@/components/frassy-consent";
 
 type Msg = { role: "user" | "assistant"; content: string };
 
@@ -38,6 +40,8 @@ export function FrassyChat() {
   const [nudged, setNudged] = useState(false);
   const [pulse, setPulse] = useState(false);
   const [greetingText, setGreetingText] = useState<string | null>(null);
+  const [liveMessage, setLiveMessage] = useState("");
+  const [consentOpen, setConsentOpen] = useState(false);
   const items = useCartStore((s) => s.items);
   const scrollRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
@@ -51,22 +55,44 @@ export function FrassyChat() {
   );
 
   const muted = prefs.muted;
+  const speechEnabled = canSpeak(prefs);
 
-  // Frassy symbol activation: ~5s after landing, subtle pulse + spoken greeting.
+  // First-run consent gate — spec 031: never auto-speak for a first-time visitor.
+  useEffect(() => {
+    if (!hydrated) return;
+    if (prefs.consentedAt) return;
+    if (prefs.consentDismissCount >= 2) return;
+    const t = setTimeout(() => setConsentOpen(true), 5000);
+    return () => clearTimeout(t);
+  }, [hydrated, prefs.consentedAt, prefs.consentDismissCount]);
+
+  const handleConsentChoose = (mode: FrassyCommunicationMode) => {
+    // Voice Only is future-ready; treat as voice_text for now.
+    const applied: FrassyCommunicationMode = mode === "voice_only" ? "voice_text" : mode;
+    update({ communicationMode: applied, consentedAt: new Date().toISOString() });
+    setConsentOpen(false);
+  };
+  const handleConsentDefer = () => {
+    update({
+      communicationMode: "silent",
+      consentDismissCount: prefs.consentDismissCount + 1,
+    });
+    setConsentOpen(false);
+  };
+
+  // Frassy symbol activation: ~5s after landing, subtle pulse + (optional) spoken greeting.
+  // Held off while the consent modal is showing or the visitor hasn't consented yet.
   useEffect(() => {
     if (!hydrated || nudged) return;
     if (typeof window === "undefined") return;
+    if (consentOpen) return;
+    if (!prefs.consentedAt && prefs.consentDismissCount < 2) return;
     if (prefs.greetingStyle === "quiet") {
       setNudged(true);
       return;
     }
     const alreadyGreeted = window.sessionStorage.getItem(GREETED_STORAGE_KEY) === "1";
-    // Friendly = every few visits; Concierge = every session.
     if (alreadyGreeted && prefs.greetingStyle !== "concierge") {
-      setNudged(true);
-      return;
-    }
-    if (alreadyGreeted && prefs.greetingStyle === "concierge") {
       setNudged(true);
       return;
     }
@@ -75,40 +101,29 @@ export function FrassyChat() {
       setNudged(true);
       const line = pickGreeting(prefs.language);
       setGreetingText(line);
+      setLiveMessage(line);
       setPulse(true);
       window.sessionStorage.setItem(GREETED_STORAGE_KEY, "1");
-      if (!muted && "speechSynthesis" in window) {
-        try {
-          const speakNow = () => {
-            const u = new SpeechSynthesisUtterance(line);
-            const v = pickVoice(prefs.voice, prefs.language);
-            if (v) u.voice = v;
-            u.rate = prefs.language === "patois" ? 0.95 : 1;
-            u.pitch = prefs.voice === "masculine" ? 0.85 : prefs.voice === "feminine" ? 1.15 : 1;
-            u.volume = 0.9;
-            u.onend = () => setPulse(false);
-            u.onerror = () => setPulse(false);
-            window.speechSynthesis.speak(u);
-          };
-          // Voices may load async
-          if (window.speechSynthesis.getVoices().length === 0) {
-            window.speechSynthesis.onvoiceschanged = speakNow;
-            setTimeout(speakNow, 250);
-          } else {
-            speakNow();
-          }
-          setTimeout(() => setPulse(false), 9000);
-        } catch {
-          setTimeout(() => setPulse(false), 4000);
-        }
+      if (speechEnabled) {
+        speakLine(line, {
+          prefs,
+          tone: "welcome",
+          onDone: () => setPulse(false),
+        });
+        setTimeout(() => setPulse(false), 9000);
       } else {
         setTimeout(() => setPulse(false), 4000);
       }
-      // Auto-hide the greeting chip after a beat
       setTimeout(() => setGreetingText(null), 9000);
     }, 5000);
     return () => clearTimeout(t);
-  }, [hydrated, nudged, muted, prefs.greetingStyle, prefs.language, prefs.voice]);
+  }, [
+    hydrated,
+    nudged,
+    consentOpen,
+    speechEnabled,
+    prefs,
+  ]);
 
 
 
@@ -202,10 +217,10 @@ export function FrassyChat() {
   const toggleMute = () => {
     const next = !muted;
     update({ muted: next });
-    if (typeof window !== "undefined" && next && "speechSynthesis" in window) {
-      window.speechSynthesis.cancel();
+    if (next) {
+      stopSpeaking();
+      setPulse(false);
     }
-    if (next) setPulse(false);
   };
 
   const dismissPulse = (e: React.MouseEvent) => {
@@ -213,9 +228,7 @@ export function FrassyChat() {
     dismissedRef.current = true;
     setPulse(false);
     setGreetingText(null);
-    if (typeof window !== "undefined" && "speechSynthesis" in window) {
-      window.speechSynthesis.cancel();
-    }
+    stopSpeaking();
   };
 
   const pulseClass =
@@ -227,6 +240,16 @@ export function FrassyChat() {
 
   return (
     <>
+      <FrassyConsentModal
+        open={consentOpen}
+        onChoose={handleConsentChoose}
+        onDefer={handleConsentDefer}
+        prefs={prefs}
+      />
+      {/* ARIA live region — every spoken line is announced in text for parity. */}
+      <div role="status" aria-live="polite" className="sr-only">
+        {liveMessage}
+      </div>
       {/* Frassy — the Frass symbol itself */}
       <div className="fixed bottom-5 right-5 z-[60] flex flex-col items-end gap-2">
         {(pulse || greetingText) && !open && (
@@ -460,16 +483,53 @@ function FrassySettingsPanel({
       <div className="text-[10px] uppercase tracking-[0.28em] text-[color:var(--gold)]">
         Personalize Frassy
       </div>
+      <Row label="How Frassy communicates">
+        <select
+          className={selectCls}
+          value={prefs.communicationMode}
+          onChange={(e) => {
+            const mode = e.target.value as FrassyPrefs["communicationMode"];
+            update({
+              communicationMode: mode,
+              consentedAt: prefs.consentedAt ?? new Date().toISOString(),
+            });
+            if (mode === "silent") stopSpeaking();
+          }}
+        >
+          <option value="silent">Silent Concierge — text only</option>
+          <option value="voice_text">Voice &amp; Text</option>
+          <option value="voice_only" disabled>
+            Voice Only (coming soon)
+          </option>
+        </select>
+      </Row>
       <div className="grid grid-cols-2 gap-3">
         <Row label="Voice">
           <select
             className={selectCls}
             value={prefs.voice}
             onChange={(e) => update({ voice: e.target.value as FrassyPrefs["voice"] })}
+            disabled={prefs.communicationMode === "silent"}
           >
             <option value="feminine">Feminine</option>
             <option value="masculine">Masculine</option>
             <option value="neutral">Gender neutral</option>
+          </select>
+        </Row>
+        <Row label="Voice profile">
+          <select
+            className={selectCls}
+            value={prefs.voiceProfile}
+            onChange={(e) =>
+              update({ voiceProfile: e.target.value as FrassyPrefs["voiceProfile"] })
+            }
+            disabled={prefs.communicationMode === "silent"}
+          >
+            {Object.entries(VOICE_PROFILE_LABELS).map(([id, label]) => (
+              <option key={id} value={id}>
+                {label}
+              </option>
+            ))}
           </select>
         </Row>
         <Row label="Language">
@@ -510,8 +570,10 @@ function FrassySettingsPanel({
         </Row>
       </div>
       <p className="text-[10px] leading-relaxed text-muted-foreground">
-        Frassy's intelligence stays the same — only tone, voice, and presence change.
+        Frassy's intelligence stays the same — only tone, voice, and presence change. Audio is
+        always optional; every message is available in text.
       </p>
     </div>
   );
 }
+
