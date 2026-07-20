@@ -6,9 +6,11 @@ import symbolAsset from "@/assets/frass-logo-symbol.asset.json";
 import {
   useFrassyPrefs,
   pickGreeting,
-  pickVoice,
   type FrassyPrefs,
+  type FrassyCommunicationMode,
 } from "@/hooks/use-frassy-prefs";
+import { canSpeak, speakLine, stopSpeaking, VOICE_PROFILE_LABELS } from "@/lib/frassy-voice";
+import { FrassyConsentModal } from "@/components/frassy-consent";
 
 type Msg = { role: "user" | "assistant"; content: string };
 
@@ -38,6 +40,8 @@ export function FrassyChat() {
   const [nudged, setNudged] = useState(false);
   const [pulse, setPulse] = useState(false);
   const [greetingText, setGreetingText] = useState<string | null>(null);
+  const [liveMessage, setLiveMessage] = useState("");
+  const [consentOpen, setConsentOpen] = useState(false);
   const items = useCartStore((s) => s.items);
   const scrollRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
@@ -51,6 +55,30 @@ export function FrassyChat() {
   );
 
   const muted = prefs.muted;
+  const speechEnabled = canSpeak(prefs);
+
+  // First-run consent gate — spec 031: never auto-speak for a first-time visitor.
+  useEffect(() => {
+    if (!hydrated) return;
+    if (prefs.consentedAt) return;
+    if (prefs.consentDismissCount >= 2) return;
+    const t = setTimeout(() => setConsentOpen(true), 5000);
+    return () => clearTimeout(t);
+  }, [hydrated, prefs.consentedAt, prefs.consentDismissCount]);
+
+  const handleConsentChoose = (mode: FrassyCommunicationMode) => {
+    // Voice Only is future-ready; treat as voice_text for now.
+    const applied: FrassyCommunicationMode = mode === "voice_only" ? "voice_text" : mode;
+    update({ communicationMode: applied, consentedAt: new Date().toISOString() });
+    setConsentOpen(false);
+  };
+  const handleConsentDefer = () => {
+    update({
+      communicationMode: "silent",
+      consentDismissCount: prefs.consentDismissCount + 1,
+    });
+    setConsentOpen(false);
+  };
 
   // Frassy symbol activation: ~5s after landing, subtle pulse + spoken greeting.
   useEffect(() => {
