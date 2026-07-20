@@ -105,6 +105,7 @@ export function FrassyChat() {
     if (consentOpen) return;
     if (!prefs.consentedAt && prefs.consentDismissCount < 2) return;
     if (!ctx.canProactivelySpeak) return;
+    if (prefs.disableHomepageGreeting) { setNudged(true); return; }
     if (prefs.greetingStyle === "quiet") {
       setNudged(true);
       return;
@@ -161,6 +162,7 @@ export function FrassyChat() {
   // Idle help — offer a hand after ~90s of no interaction while browsing.
   useEffect(() => {
     if (idleOffered || !ctx.shouldOfferHelp || open) return;
+    if (prefs.disableProactive) return;
     setIdleOffered(true);
     const line = "Taking your time — want me to help you narrow it down?";
     setGreetingText(line);
@@ -168,7 +170,7 @@ export function FrassyChat() {
     setPulse(true);
     setTimeout(() => setPulse(false), 4000);
     setTimeout(() => setGreetingText(null), 9000);
-  }, [ctx.shouldOfferHelp, idleOffered, open]);
+  }, [ctx.shouldOfferHelp, idleOffered, open, prefs.disableProactive]);
 
 
 
@@ -181,6 +183,7 @@ export function FrassyChat() {
     if (cartCount > prev && cartCount > 0) {
       rememberCartSnapshot(items.map((i) => i.product.node.title));
       if (!ctx.canAutoOpenOnCart) return; // don't interrupt at checkout
+      if (prefs.disableProactive) return;
       setPulse(true);
       setMessages((prevMsgs) => {
         const already = prevMsgs.some((m) => m.content.includes("landed in your cart"));
