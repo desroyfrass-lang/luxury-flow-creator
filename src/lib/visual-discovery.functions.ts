@@ -114,23 +114,23 @@ export const backfillVisualEmbeddings = createServerFn({ method: "POST" })
           analyzeImageAttributes(item.image_url).catch(() => ({})),
         ]);
 
-        const { error } = await supabaseAdmin.from("product_visual_embeddings").upsert(
-          {
-            source_type: item.source_type,
-            source_id: item.source_id,
-            title: item.title,
-            image_url: item.image_url,
-            handle: item.handle ?? null,
-            category_slug: item.category_slug ?? null,
-            sub_slug: item.sub_slug ?? null,
-            price: item.price ?? null,
-            attributes: attrs as Record<string, unknown>,
-            embedding: toPgVector(vec) as unknown as number[],
-            model_version: "google/gemini-embedding-2",
-            indexed_at: new Date().toISOString(),
-          },
-          { onConflict: "source_type,source_id" },
-        );
+        const payload = {
+          source_type: item.source_type,
+          source_id: item.source_id,
+          title: item.title,
+          image_url: item.image_url,
+          handle: item.handle ?? null,
+          category_slug: item.category_slug ?? null,
+          sub_slug: item.sub_slug ?? null,
+          price: item.price ?? null,
+          attributes: attrs as unknown,
+          embedding: toPgVector(vec),
+          model_version: "google/gemini-embedding-2",
+          indexed_at: new Date().toISOString(),
+        };
+        const { error } = await supabaseAdmin
+          .from("product_visual_embeddings")
+          .upsert(payload as never, { onConflict: "source_type,source_id" });
         if (error) throw error;
         ok++;
       } catch (e) {
@@ -182,36 +182,40 @@ export const runVisualSearch = createServerFn({ method: "POST" })
         attributes: attrs,
         results: [] as VisualMatch[],
         upload_id: null as string | null,
-        refused: true as const,
+        refused: true,
       };
     }
 
     const vec = await embedImage(url, attrs.category ?? "fashion inspiration");
 
     // Persist the upload row (temp — expires_at defaults to now()+24h)
+    const uploadPayload = {
+      user_id: context.userId,
+      storage_path: data.storage_path,
+      attributes: attrs as unknown,
+      embedding: toPgVector(vec),
+    };
     const { data: uploadRow } = await context.supabase
       .from("visual_uploads")
-      .insert({
-        user_id: context.userId,
-        storage_path: data.storage_path,
-        attributes: attrs as Record<string, unknown>,
-        embedding: toPgVector(vec) as unknown as number[],
-      })
+      .insert(uploadPayload as never)
       .select("id")
       .single();
 
     // Similarity search
-    const filter = data.source_filter === "both" ? null : data.source_filter;
-    const { data: matches, error: matchErr } = await supabaseAdmin.rpc("match_product_visuals", {
-      query_embedding: toPgVector(vec) as unknown as number[],
+    const rpcArgs: Record<string, unknown> = {
+      query_embedding: toPgVector(vec),
       match_count: data.match_count,
-      source_filter: filter,
-    });
+    };
+    if (data.source_filter !== "both") rpcArgs.source_filter = data.source_filter;
+    const { data: matches, error: matchErr } = await supabaseAdmin.rpc(
+      "match_product_visuals",
+      rpcArgs as never,
+    );
     if (matchErr) throw new Error(matchErr.message);
 
-    const results: VisualMatch[] = (matches ?? []).map((m: {
+    type RawMatch = {
       id: string;
-      source_type: "shopify" | "viral";
+      source_type: string;
       source_id: string;
       title: string;
       image_url: string;
@@ -219,19 +223,29 @@ export const runVisualSearch = createServerFn({ method: "POST" })
       category_slug: string | null;
       sub_slug: string | null;
       price: number | null;
-      attributes: Record<string, unknown>;
+      attributes: unknown;
       similarity: number;
-    }) => ({
-      ...m,
+    };
+    const results: VisualMatch[] = ((matches ?? []) as RawMatch[]).map((m) => ({
+      id: m.id,
+      source_type: (m.source_type === "viral" ? "viral" : "shopify") as "shopify" | "viral",
+      source_id: m.source_id,
+      title: m.title,
+      image_url: m.image_url,
+      handle: m.handle,
+      category_slug: m.category_slug,
+      sub_slug: m.sub_slug,
       price: m.price != null ? String(m.price) : null,
-      why: buildWhy(attrs, m.attributes as VisualAttrs, m.similarity),
+      attributes: (m.attributes ?? {}) as Record<string, unknown>,
+      similarity: m.similarity,
+      why: buildWhy(attrs, (m.attributes ?? {}) as VisualAttrs, m.similarity),
     }));
 
     return {
       attributes: attrs,
       results,
       upload_id: uploadRow?.id ?? null,
-      refused: false as const,
+      refused: false,
     };
   });
 
