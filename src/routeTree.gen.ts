@@ -65,6 +65,7 @@ import { Route as AfroDesignersDesignersSlugRouteImport } from './routes/afro-de
 import { Route as AfroDesignersCollectionsSlugRouteImport } from './routes/afro-designers.collections.$slug'
 import { Route as AuthenticatedAdminViralsRouteImport } from './routes/_authenticated/admin.virals'
 import { Route as AuthenticatedAdminTextRouteImport } from './routes/_authenticated/admin.text'
+import { Route as AuthenticatedAdminRolesRouteImport } from './routes/_authenticated/admin.roles'
 import { Route as AuthenticatedAdminMediaRouteImport } from './routes/_authenticated/admin.media'
 import { Route as AuthenticatedAdminImagesRouteImport } from './routes/_authenticated/admin.images'
 import { Route as AuthenticatedAdminCjImportRouteImport } from './routes/_authenticated/admin.cj-import'
@@ -360,6 +361,11 @@ const AuthenticatedAdminTextRoute = AuthenticatedAdminTextRouteImport.update({
   path: '/text',
   getParentRoute: () => AuthenticatedAdminRoute,
 } as any)
+const AuthenticatedAdminRolesRoute = AuthenticatedAdminRolesRouteImport.update({
+  id: '/roles',
+  path: '/roles',
+  getParentRoute: () => AuthenticatedAdminRoute,
+} as any)
 const AuthenticatedAdminMediaRoute = AuthenticatedAdminMediaRouteImport.update({
   id: '/media',
   path: '/media',
@@ -455,6 +461,7 @@ export interface FileRoutesByFullPath {
   '/admin/cj-import': typeof AuthenticatedAdminCjImportRoute
   '/admin/images': typeof AuthenticatedAdminImagesRoute
   '/admin/media': typeof AuthenticatedAdminMediaRoute
+  '/admin/roles': typeof AuthenticatedAdminRolesRoute
   '/admin/text': typeof AuthenticatedAdminTextRoute
   '/admin/virals': typeof AuthenticatedAdminViralsRoute
   '/afro-designers/collections/$slug': typeof AfroDesignersCollectionsSlugRoute
@@ -507,6 +514,7 @@ export interface FileRoutesByTo {
   '/admin/cj-import': typeof AuthenticatedAdminCjImportRoute
   '/admin/images': typeof AuthenticatedAdminImagesRoute
   '/admin/media': typeof AuthenticatedAdminMediaRoute
+  '/admin/roles': typeof AuthenticatedAdminRolesRoute
   '/admin/text': typeof AuthenticatedAdminTextRoute
   '/admin/virals': typeof AuthenticatedAdminViralsRoute
   '/afro-designers/collections/$slug': typeof AfroDesignersCollectionsSlugRoute
@@ -574,6 +582,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/cj-import': typeof AuthenticatedAdminCjImportRoute
   '/_authenticated/admin/images': typeof AuthenticatedAdminImagesRoute
   '/_authenticated/admin/media': typeof AuthenticatedAdminMediaRoute
+  '/_authenticated/admin/roles': typeof AuthenticatedAdminRolesRoute
   '/_authenticated/admin/text': typeof AuthenticatedAdminTextRoute
   '/_authenticated/admin/virals': typeof AuthenticatedAdminViralsRoute
   '/afro-designers/collections/$slug': typeof AfroDesignersCollectionsSlugRoute
@@ -641,6 +650,7 @@ export interface FileRouteTypes {
     | '/admin/cj-import'
     | '/admin/images'
     | '/admin/media'
+    | '/admin/roles'
     | '/admin/text'
     | '/admin/virals'
     | '/afro-designers/collections/$slug'
@@ -693,6 +703,7 @@ export interface FileRouteTypes {
     | '/admin/cj-import'
     | '/admin/images'
     | '/admin/media'
+    | '/admin/roles'
     | '/admin/text'
     | '/admin/virals'
     | '/afro-designers/collections/$slug'
@@ -759,6 +770,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/cj-import'
     | '/_authenticated/admin/images'
     | '/_authenticated/admin/media'
+    | '/_authenticated/admin/roles'
     | '/_authenticated/admin/text'
     | '/_authenticated/admin/virals'
     | '/afro-designers/collections/$slug'
@@ -1195,6 +1207,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminTextRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
+    '/_authenticated/admin/roles': {
+      id: '/_authenticated/admin/roles'
+      path: '/roles'
+      fullPath: '/admin/roles'
+      preLoaderRoute: typeof AuthenticatedAdminRolesRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
     '/_authenticated/admin/media': {
       id: '/_authenticated/admin/media'
       path: '/media'
@@ -1260,6 +1279,7 @@ interface AuthenticatedAdminRouteChildren {
   AuthenticatedAdminCjImportRoute: typeof AuthenticatedAdminCjImportRoute
   AuthenticatedAdminImagesRoute: typeof AuthenticatedAdminImagesRoute
   AuthenticatedAdminMediaRoute: typeof AuthenticatedAdminMediaRoute
+  AuthenticatedAdminRolesRoute: typeof AuthenticatedAdminRolesRoute
   AuthenticatedAdminTextRoute: typeof AuthenticatedAdminTextRoute
   AuthenticatedAdminViralsRoute: typeof AuthenticatedAdminViralsRoute
   AuthenticatedAdminIndexRoute: typeof AuthenticatedAdminIndexRoute
@@ -1271,6 +1291,7 @@ const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
   AuthenticatedAdminCjImportRoute: AuthenticatedAdminCjImportRoute,
   AuthenticatedAdminImagesRoute: AuthenticatedAdminImagesRoute,
   AuthenticatedAdminMediaRoute: AuthenticatedAdminMediaRoute,
+  AuthenticatedAdminRolesRoute: AuthenticatedAdminRolesRoute,
   AuthenticatedAdminTextRoute: AuthenticatedAdminTextRoute,
   AuthenticatedAdminViralsRoute: AuthenticatedAdminViralsRoute,
   AuthenticatedAdminIndexRoute: AuthenticatedAdminIndexRoute,
