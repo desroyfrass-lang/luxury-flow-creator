@@ -4,31 +4,54 @@ export type FrassyVoice = "feminine" | "masculine" | "neutral";
 export type FrassyLanguage = "english" | "caribbean-lite" | "caribbean" | "patois";
 export type FrassyGreetingStyle = "quiet" | "friendly" | "concierge";
 export type FrassyAnimation = "minimal" | "standard" | "expressive";
+export type FrassyCommunicationMode = "silent" | "voice_text" | "voice_only";
+export type FrassyVoiceProfile =
+  | "calm-luxury"
+  | "warm-friendly"
+  | "happy-joyful"
+  | "professional-concierge"
+  | "confident-advisor";
 
 export type FrassyPrefs = {
+  communicationMode: FrassyCommunicationMode;
   voice: FrassyVoice;
+  voiceProfile: FrassyVoiceProfile;
   language: FrassyLanguage;
   greetingStyle: FrassyGreetingStyle;
   animation: FrassyAnimation;
   muted: boolean;
+  consentedAt: string | null;
+  consentDismissCount: number;
 };
 
 const DEFAULTS: FrassyPrefs = {
+  // Spec 031: default to Silent Concierge until the customer opts in.
+  communicationMode: "silent",
   voice: "feminine",
+  voiceProfile: "calm-luxury",
   language: "caribbean-lite",
   greetingStyle: "concierge",
   animation: "standard",
   muted: false,
+  consentedAt: null,
+  consentDismissCount: 0,
 };
 
-const KEY = "frassy:prefs:v1";
+const KEY = "frassy:prefs:v2";
+const LEGACY_KEY = "frassy:prefs:v1";
 
 function load(): FrassyPrefs {
   if (typeof window === "undefined") return DEFAULTS;
   try {
     const raw = window.localStorage.getItem(KEY);
-    if (!raw) return DEFAULTS;
-    return { ...DEFAULTS, ...(JSON.parse(raw) as Partial<FrassyPrefs>) };
+    if (raw) return { ...DEFAULTS, ...(JSON.parse(raw) as Partial<FrassyPrefs>) };
+    // Migrate v1 (no consent gate) into silent-until-consented v2.
+    const legacy = window.localStorage.getItem(LEGACY_KEY);
+    if (legacy) {
+      const parsed = JSON.parse(legacy) as Partial<FrassyPrefs>;
+      return { ...DEFAULTS, ...parsed, communicationMode: "silent", consentedAt: null };
+    }
+    return DEFAULTS;
   } catch {
     return DEFAULTS;
   }
@@ -118,6 +141,5 @@ export function pickVoice(
 
   if (voice === "feminine") return pool.find(isFem) ?? pool[0];
   if (voice === "masculine") return pool.find(isMasc) ?? pool[0];
-  // neutral: pick something not obviously gendered when possible
   return pool.find((v) => !isFem(v) && !isMasc(v)) ?? pool[0];
 }
