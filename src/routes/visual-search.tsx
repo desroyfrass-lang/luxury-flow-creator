@@ -188,6 +188,7 @@ function VisualSearchPage() {
         )}
       </div>
     </div>
+    </SiteShell>
   );
 }
 
