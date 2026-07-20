@@ -2,6 +2,7 @@ import { createServerFn } from "@tanstack/react-start";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import { z } from "zod";
 import { fetchProducts } from "@/lib/shopify";
+import type { VisualAttributes } from "@/lib/visual-embed.server";
 
 // ----- Types (client-safe) -----
 export type VisualMatch = {
@@ -14,7 +15,7 @@ export type VisualMatch = {
   category_slug: string | null;
   sub_slug: string | null;
   price: string | null;
-  attributes: Record<string, unknown>;
+  attributes: VisualAttributes;
   similarity: number;
   why: string;
 };
