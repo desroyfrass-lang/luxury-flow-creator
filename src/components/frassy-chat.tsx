@@ -217,10 +217,10 @@ export function FrassyChat() {
   const toggleMute = () => {
     const next = !muted;
     update({ muted: next });
-    if (typeof window !== "undefined" && next && "speechSynthesis" in window) {
-      window.speechSynthesis.cancel();
+    if (next) {
+      stopSpeaking();
+      setPulse(false);
     }
-    if (next) setPulse(false);
   };
 
   const dismissPulse = (e: React.MouseEvent) => {
@@ -228,9 +228,7 @@ export function FrassyChat() {
     dismissedRef.current = true;
     setPulse(false);
     setGreetingText(null);
-    if (typeof window !== "undefined" && "speechSynthesis" in window) {
-      window.speechSynthesis.cancel();
-    }
+    stopSpeaking();
   };
 
   const pulseClass =
