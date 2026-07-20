@@ -105,6 +105,7 @@ export function FrassyChat() {
     if (consentOpen) return;
     if (!prefs.consentedAt && prefs.consentDismissCount < 2) return;
     if (!ctx.canProactivelySpeak) return;
+    if (prefs.disableHomepageGreeting) { setNudged(true); return; }
     if (prefs.greetingStyle === "quiet") {
       setNudged(true);
       return;
@@ -161,6 +162,7 @@ export function FrassyChat() {
   // Idle help — offer a hand after ~90s of no interaction while browsing.
   useEffect(() => {
     if (idleOffered || !ctx.shouldOfferHelp || open) return;
+    if (prefs.disableProactive) return;
     setIdleOffered(true);
     const line = "Taking your time — want me to help you narrow it down?";
     setGreetingText(line);
@@ -168,7 +170,7 @@ export function FrassyChat() {
     setPulse(true);
     setTimeout(() => setPulse(false), 4000);
     setTimeout(() => setGreetingText(null), 9000);
-  }, [ctx.shouldOfferHelp, idleOffered, open]);
+  }, [ctx.shouldOfferHelp, idleOffered, open, prefs.disableProactive]);
 
 
 
@@ -181,6 +183,7 @@ export function FrassyChat() {
     if (cartCount > prev && cartCount > 0) {
       rememberCartSnapshot(items.map((i) => i.product.node.title));
       if (!ctx.canAutoOpenOnCart) return; // don't interrupt at checkout
+      if (prefs.disableProactive) return;
       setPulse(true);
       setMessages((prevMsgs) => {
         const already = prevMsgs.some((m) => m.content.includes("landed in your cart"));
@@ -726,6 +729,30 @@ function FrassySettingsPanel({
             <option value="expressive">Expressive</option>
           </select>
         </Row>
+      </div>
+      {/* Spec 032 — Customer Control toggles */}
+      <div className="space-y-1.5 rounded-md border border-border/60 bg-background/60 px-2 py-2">
+        <label className="flex cursor-pointer items-center justify-between gap-2 text-[11px] text-foreground">
+          <span>Homepage greeting</span>
+          <input
+            type="checkbox"
+            checked={!prefs.disableHomepageGreeting}
+            onChange={(e) => update({ disableHomepageGreeting: !e.target.checked })}
+            className="h-3.5 w-3.5 accent-[color:var(--gold)]"
+          />
+        </label>
+        <label className="flex cursor-pointer items-center justify-between gap-2 text-[11px] text-foreground">
+          <span>Proactive recommendations</span>
+          <input
+            type="checkbox"
+            checked={!prefs.disableProactive}
+            onChange={(e) => update({ disableProactive: !e.target.checked })}
+            className="h-3.5 w-3.5 accent-[color:var(--gold)]"
+          />
+        </label>
+        <p className="text-[10px] leading-snug text-muted-foreground">
+          When off, Frassy stays quiet until you open the chat.
+        </p>
       </div>
       <div className="flex items-center justify-between rounded-md border border-border/60 bg-background/60 px-2 py-1.5">
         <span className="text-[10px] uppercase tracking-[0.22em] text-muted-foreground">
