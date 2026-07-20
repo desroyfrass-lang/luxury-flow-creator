@@ -72,6 +72,7 @@ import { Route as AuthenticatedAdminImagesRouteImport } from './routes/_authenti
 import { Route as AuthenticatedAdminCjImportRouteImport } from './routes/_authenticated/admin.cj-import'
 import { Route as AuthenticatedAdminCapsulesRouteImport } from './routes/_authenticated/admin.capsules'
 import { Route as AuthenticatedAdminBlogRouteImport } from './routes/_authenticated/admin.blog'
+import { Route as AuthenticatedAdminApprovalsRouteImport } from './routes/_authenticated/admin.approvals'
 import { Route as Char91DotmcpChar93InvokeToolToolRouteImport } from './routes/[.mcp]/invoke-tool/$tool'
 import { Route as DotlovableOauthConsentRouteImport } from './routes/[.]lovable.oauth.consent'
 import { Route as SocialMediaViralsCategorySubProductRouteImport } from './routes/social-media-virals.$category.$sub.$product'
@@ -401,6 +402,12 @@ const AuthenticatedAdminBlogRoute = AuthenticatedAdminBlogRouteImport.update({
   path: '/blog',
   getParentRoute: () => AuthenticatedAdminRoute,
 } as any)
+const AuthenticatedAdminApprovalsRoute =
+  AuthenticatedAdminApprovalsRouteImport.update({
+    id: '/approvals',
+    path: '/approvals',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
 const Char91DotmcpChar93InvokeToolToolRoute =
   Char91DotmcpChar93InvokeToolToolRouteImport.update({
     id: '/.mcp/invoke-tool/$tool',
@@ -464,6 +471,7 @@ export interface FileRoutesByFullPath {
   '/social-media-virals/': typeof SocialMediaViralsIndexRoute
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
   '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
+  '/admin/approvals': typeof AuthenticatedAdminApprovalsRoute
   '/admin/blog': typeof AuthenticatedAdminBlogRoute
   '/admin/capsules': typeof AuthenticatedAdminCapsulesRoute
   '/admin/cj-import': typeof AuthenticatedAdminCjImportRoute
@@ -518,6 +526,7 @@ export interface FileRoutesByTo {
   '/social-media-virals': typeof SocialMediaViralsIndexRoute
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
   '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
+  '/admin/approvals': typeof AuthenticatedAdminApprovalsRoute
   '/admin/blog': typeof AuthenticatedAdminBlogRoute
   '/admin/capsules': typeof AuthenticatedAdminCapsulesRoute
   '/admin/cj-import': typeof AuthenticatedAdminCjImportRoute
@@ -587,6 +596,7 @@ export interface FileRoutesById {
   '/social-media-virals/': typeof SocialMediaViralsIndexRoute
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
   '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
+  '/_authenticated/admin/approvals': typeof AuthenticatedAdminApprovalsRoute
   '/_authenticated/admin/blog': typeof AuthenticatedAdminBlogRoute
   '/_authenticated/admin/capsules': typeof AuthenticatedAdminCapsulesRoute
   '/_authenticated/admin/cj-import': typeof AuthenticatedAdminCjImportRoute
@@ -656,6 +666,7 @@ export interface FileRouteTypes {
     | '/social-media-virals/'
     | '/.lovable/oauth/consent'
     | '/.mcp/invoke-tool/$tool'
+    | '/admin/approvals'
     | '/admin/blog'
     | '/admin/capsules'
     | '/admin/cj-import'
@@ -710,6 +721,7 @@ export interface FileRouteTypes {
     | '/social-media-virals'
     | '/.lovable/oauth/consent'
     | '/.mcp/invoke-tool/$tool'
+    | '/admin/approvals'
     | '/admin/blog'
     | '/admin/capsules'
     | '/admin/cj-import'
@@ -778,6 +790,7 @@ export interface FileRouteTypes {
     | '/social-media-virals/'
     | '/.lovable/oauth/consent'
     | '/.mcp/invoke-tool/$tool'
+    | '/_authenticated/admin/approvals'
     | '/_authenticated/admin/blog'
     | '/_authenticated/admin/capsules'
     | '/_authenticated/admin/cj-import'
@@ -1269,6 +1282,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminBlogRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
+    '/_authenticated/admin/approvals': {
+      id: '/_authenticated/admin/approvals'
+      path: '/approvals'
+      fullPath: '/admin/approvals'
+      preLoaderRoute: typeof AuthenticatedAdminApprovalsRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
     '/.mcp/invoke-tool/$tool': {
       id: '/.mcp/invoke-tool/$tool'
       path: '/.mcp/invoke-tool/$tool'
@@ -1294,6 +1314,7 @@ declare module '@tanstack/react-router' {
 }
 
 interface AuthenticatedAdminRouteChildren {
+  AuthenticatedAdminApprovalsRoute: typeof AuthenticatedAdminApprovalsRoute
   AuthenticatedAdminBlogRoute: typeof AuthenticatedAdminBlogRoute
   AuthenticatedAdminCapsulesRoute: typeof AuthenticatedAdminCapsulesRoute
   AuthenticatedAdminCjImportRoute: typeof AuthenticatedAdminCjImportRoute
@@ -1306,6 +1327,7 @@ interface AuthenticatedAdminRouteChildren {
 }
 
 const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
+  AuthenticatedAdminApprovalsRoute: AuthenticatedAdminApprovalsRoute,
   AuthenticatedAdminBlogRoute: AuthenticatedAdminBlogRoute,
   AuthenticatedAdminCapsulesRoute: AuthenticatedAdminCapsulesRoute,
   AuthenticatedAdminCjImportRoute: AuthenticatedAdminCjImportRoute,

@@ -100,6 +100,13 @@ function AdminLayout() {
               ✦ Frassy OS
             </Link>
             <Link
+              to="/admin/approvals"
+              activeProps={{ className: "text-[color:var(--gold)]" }}
+              className="text-muted-foreground hover:text-foreground"
+            >
+              Approvals
+            </Link>
+            <Link
               to="/admin/capsules"
               activeProps={{ className: "text-[color:var(--gold)]" }}
               className="text-muted-foreground hover:text-foreground"
