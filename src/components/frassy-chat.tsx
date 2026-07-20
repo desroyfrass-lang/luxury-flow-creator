@@ -1,6 +1,6 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate } from "@tanstack/react-router";
-import { X, Send, ShoppingBag, Volume2, VolumeX, Settings } from "lucide-react";
+import { X, Send, ShoppingBag, Volume2, VolumeX, Settings, LifeBuoy, Trash2 } from "lucide-react";
 import { useCartStore } from "@/lib/cart-store";
 import symbolAsset from "@/assets/frass-logo-symbol.asset.json";
 import {
@@ -11,6 +11,9 @@ import {
 } from "@/hooks/use-frassy-prefs";
 import { canSpeak, speakLine, stopSpeaking, VOICE_PROFILE_LABELS } from "@/lib/frassy-voice";
 import { FrassyConsentModal } from "@/components/frassy-consent";
+import { useFrassyMemory, memoryContext, rememberCartSnapshot } from "@/lib/frassy-memory";
+import { useFrassyContext, currentSeason, seasonalAccent } from "@/hooks/use-frassy-context";
+
 
 type Msg = { role: "user" | "assistant"; content: string };
 
