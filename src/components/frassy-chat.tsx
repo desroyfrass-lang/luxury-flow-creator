@@ -175,22 +175,75 @@ export function FrassyChat() {
     }
   };
 
+  const toggleMute = () => {
+    const next = !muted;
+    setMuted(next);
+    if (typeof window !== "undefined") {
+      window.localStorage.setItem(MUTE_STORAGE_KEY, next ? "1" : "0");
+      if (next && "speechSynthesis" in window) window.speechSynthesis.cancel();
+    }
+    if (next) setPulse(false);
+  };
+
+  const dismissPulse = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    dismissedRef.current = true;
+    setPulse(false);
+    if (typeof window !== "undefined" && "speechSynthesis" in window) {
+      window.speechSynthesis.cancel();
+    }
+  };
+
   return (
     <>
-      {/* Floating button */}
-      <button
-        type="button"
-        onClick={() => setOpen((o) => !o)}
-        aria-label={open ? "Close Frassy" : "Open Frassy chat"}
-        className={`fixed bottom-5 right-5 z-[60] flex h-14 w-14 items-center justify-center rounded-full bg-foreground text-background shadow-2xl transition-transform hover:scale-105 md:h-16 md:w-16 ${pulse && !open ? "animate-pulse ring-4 ring-foreground/20" : ""}`}
-      >
-        {open ? <X className="h-6 w-6" /> : <MessageCircle className="h-6 w-6" />}
-        {!open && cartCount > 0 && (
-          <span className="absolute -top-1 -right-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-red-500 px-1.5 text-[10px] font-bold text-white">
-            {cartCount}
-          </span>
+      {/* Frassy — the Frass symbol itself */}
+      <div className="fixed bottom-5 right-5 z-[60] flex flex-col items-end gap-2">
+        {pulse && !open && (
+          <div className="flex items-center gap-2 rounded-full border border-[color:var(--gold)]/50 bg-background/95 px-3 py-1.5 text-[11px] uppercase tracking-[0.2em] text-foreground shadow-lg backdrop-blur animate-fade-in">
+            <span>Frassy is here</span>
+            <button
+              type="button"
+              onClick={toggleMute}
+              className="rounded-full p-1 hover:bg-secondary/60"
+              aria-label={muted ? "Unmute Frassy" : "Mute Frassy"}
+            >
+              {muted ? <VolumeX className="h-3.5 w-3.5" /> : <Volume2 className="h-3.5 w-3.5" />}
+            </button>
+            <button
+              type="button"
+              onClick={dismissPulse}
+              className="rounded-full p-1 hover:bg-secondary/60"
+              aria-label="Dismiss Frassy greeting"
+            >
+              <X className="h-3.5 w-3.5" />
+            </button>
+          </div>
         )}
-      </button>
+        <button
+          type="button"
+          onClick={() => setOpen((o) => !o)}
+          aria-label={open ? "Close Frassy" : "Open Frassy chat"}
+          className={`relative flex h-16 w-16 items-center justify-center rounded-full bg-[color:var(--ink,#0a0a0a)] shadow-2xl ring-1 ring-[color:var(--gold)]/40 transition-transform hover:scale-105 md:h-[72px] md:w-[72px] ${
+            pulse && !open ? "frassy-pulse" : ""
+          }`}
+        >
+          {open ? (
+            <X className="h-6 w-6 text-[color:var(--gold)]" />
+          ) : (
+            <img
+              src={symbolAsset.url}
+              alt="Frassy"
+              className="h-11 w-11 md:h-12 md:w-12 object-contain drop-shadow-[0_0_18px_oklch(0.78_0.14_78_/_0.55)]"
+            />
+          )}
+          {!open && cartCount > 0 && (
+            <span className="absolute -top-1 -right-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-[color:var(--gold)] px-1.5 text-[10px] font-bold text-[color:var(--ink)]">
+              {cartCount}
+            </span>
+          )}
+        </button>
+      </div>
+
 
       {/* Panel */}
       {open && (
