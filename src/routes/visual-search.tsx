@@ -4,6 +4,7 @@ import { useMutation } from "@tanstack/react-query";
 import { useRef, useState } from "react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
+import { SiteShell } from "@/components/site-shell";
 import { runVisualSearch, type VisualMatch } from "@/lib/visual-discovery.functions";
 
 export const Route = createFileRoute("/visual-search")({
@@ -78,6 +79,7 @@ function VisualSearchPage() {
   const busy = uploading || run.isPending;
 
   return (
+    <SiteShell>
     <div className="min-h-screen bg-black text-white">
       <div className="mx-auto max-w-6xl px-6 py-16 space-y-12">
         <header className="text-center space-y-4">
