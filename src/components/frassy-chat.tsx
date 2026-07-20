@@ -289,9 +289,25 @@ export function FrassyChat() {
             <div className="flex-1">
               <div className="font-display text-lg leading-none">Frassy</div>
               <div className="text-[10px] uppercase tracking-[0.2em] opacity-70">
-                Frass Kicks Concierge
+                Frass Hill Concierge
               </div>
             </div>
+            <button
+              type="button"
+              onClick={toggleMute}
+              className="rounded-full p-1 hover:bg-background/10"
+              aria-label={muted ? "Unmute Frassy" : "Mute Frassy"}
+            >
+              {muted ? <VolumeX className="h-4 w-4" /> : <Volume2 className="h-4 w-4" />}
+            </button>
+            <button
+              type="button"
+              onClick={() => setSettingsOpen((s) => !s)}
+              className={`rounded-full p-1 hover:bg-background/10 ${settingsOpen ? "bg-background/10" : ""}`}
+              aria-label="Frassy settings"
+            >
+              <Settings className="h-4 w-4" />
+            </button>
             <button
               type="button"
               onClick={() => setOpen(false)}
@@ -301,6 +317,10 @@ export function FrassyChat() {
               <X className="h-4 w-4" />
             </button>
           </div>
+
+          {settingsOpen && <FrassySettingsPanel prefs={prefs} update={update} />}
+
+
 
           {/* Messages */}
           <div ref={scrollRef} className="flex-1 space-y-3 overflow-y-auto px-4 py-4">
