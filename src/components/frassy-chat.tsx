@@ -672,7 +672,70 @@ function FrassySettingsPanel({
         Frassy's intelligence stays the same — only tone, voice, and presence change. Audio is
         always optional; every message is available in text.
       </p>
+
+      {/* What Frassy remembers — user-controlled memory */}
+      <div className="mt-2 rounded-lg border border-border/70 bg-background/60 p-3 space-y-2">
+        <div className="flex items-center justify-between">
+          <div className="text-[10px] uppercase tracking-[0.28em] text-[color:var(--gold)]">
+            What Frassy remembers
+          </div>
+          <button
+            type="button"
+            onClick={clearMemory}
+            className="inline-flex items-center gap-1 rounded-full border border-border px-2 py-0.5 text-[10px] text-muted-foreground hover:text-foreground"
+          >
+            <Trash2 className="h-3 w-3" /> Forget
+          </button>
+        </div>
+        <div className="grid grid-cols-1 gap-2 text-[11px]">
+          <Row label="Name to greet you by">
+            <input
+              type="text"
+              value={memory.firstName ?? ""}
+              onChange={(e) => updateMemory({ firstName: e.target.value || null })}
+              placeholder="Optional — e.g. Mike"
+              className="w-full rounded-md border border-border bg-background px-2 py-1.5 text-sm"
+            />
+          </Row>
+          <Row label="Style likes (comma separated)">
+            <input
+              type="text"
+              value={memory.likes.join(", ")}
+              onChange={(e) =>
+                updateMemory({
+                  likes: e.target.value.split(",").map((s) => s.trim()).filter(Boolean),
+                })
+              }
+              placeholder="neutral colors, oversized hoodies"
+              className="w-full rounded-md border border-border bg-background px-2 py-1.5 text-sm"
+            />
+          </Row>
+          <Row label="Dislikes">
+            <input
+              type="text"
+              value={memory.dislikes.join(", ")}
+              onChange={(e) =>
+                updateMemory({
+                  dislikes: e.target.value.split(",").map((s) => s.trim()).filter(Boolean),
+                })
+              }
+              placeholder="floral prints, bright colors"
+              className="w-full rounded-md border border-border bg-background px-2 py-1.5 text-sm"
+            />
+          </Row>
+          {memory.recentCategories.length > 0 && (
+            <div className="text-[10px] text-muted-foreground">
+              Recently browsed: {memory.recentCategories.slice(0, 5).join(" · ")}
+            </div>
+          )}
+          <p className="text-[10px] leading-relaxed text-muted-foreground">
+            Stored only on this device. Frassy never remembers payment info, addresses, or
+            passwords. Tap "Forget" to clear it any time.
+          </p>
+        </div>
+      </div>
     </div>
   );
 }
+
 
