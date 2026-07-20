@@ -447,6 +447,42 @@ export type Database = {
         }
         Relationships: []
       }
+      notifications: {
+        Row: {
+          body: string | null
+          created_at: string
+          id: string
+          kind: string
+          meta: Json
+          read_at: string | null
+          title: string
+          url: string | null
+          user_id: string
+        }
+        Insert: {
+          body?: string | null
+          created_at?: string
+          id?: string
+          kind: string
+          meta?: Json
+          read_at?: string | null
+          title: string
+          url?: string | null
+          user_id: string
+        }
+        Update: {
+          body?: string | null
+          created_at?: string
+          id?: string
+          kind?: string
+          meta?: Json
+          read_at?: string | null
+          title?: string
+          url?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       order_items: {
         Row: {
           id: string
@@ -541,6 +577,36 @@ export type Database = {
           subtotal?: number
           updated_at?: string
           user_id?: string | null
+        }
+        Relationships: []
+      }
+      platform_events: {
+        Row: {
+          actor_id: string | null
+          created_at: string
+          entity_id: string | null
+          entity_type: string | null
+          event_type: string
+          id: number
+          payload: Json
+        }
+        Insert: {
+          actor_id?: string | null
+          created_at?: string
+          entity_id?: string | null
+          entity_type?: string | null
+          event_type: string
+          id?: number
+          payload?: Json
+        }
+        Update: {
+          actor_id?: string | null
+          created_at?: string
+          entity_id?: string | null
+          entity_type?: string | null
+          event_type?: string
+          id?: number
+          payload?: Json
         }
         Relationships: []
       }
