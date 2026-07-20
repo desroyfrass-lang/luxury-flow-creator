@@ -44,6 +44,7 @@ import { Route as CapsulesHandleRouteImport } from './routes/capsules.$handle'
 import { Route as BlogSlugRouteImport } from './routes/blog.$slug'
 import { Route as BareDripWomenRouteImport } from './routes/bare-drip.women'
 import { Route as BareDripMenRouteImport } from './routes/bare-drip.men'
+import { Route as ApiTtsRouteImport } from './routes/api/tts'
 import { Route as ApiChatRouteImport } from './routes/api/chat'
 import { Route as AfroDesignersDesignersRouteImport } from './routes/afro-designers.designers'
 import { Route as AuthenticatedWorkspaceRouteImport } from './routes/_authenticated/workspace'
@@ -253,6 +254,11 @@ const BareDripMenRoute = BareDripMenRouteImport.update({
   path: '/men',
   getParentRoute: () => BareDripRoute,
 } as any)
+const ApiTtsRoute = ApiTtsRouteImport.update({
+  id: '/api/tts',
+  path: '/api/tts',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiChatRoute = ApiChatRouteImport.update({
   id: '/api/chat',
   path: '/api/chat',
@@ -456,6 +462,7 @@ export interface FileRoutesByFullPath {
   '/workspace': typeof AuthenticatedWorkspaceRoute
   '/afro-designers/designers': typeof AfroDesignersDesignersRouteWithChildren
   '/api/chat': typeof ApiChatRoute
+  '/api/tts': typeof ApiTtsRoute
   '/bare-drip/men': typeof BareDripMenRouteWithChildren
   '/bare-drip/women': typeof BareDripWomenRouteWithChildren
   '/blog/$slug': typeof BlogSlugRoute
@@ -516,6 +523,7 @@ export interface FileRoutesByTo {
   '/workspace': typeof AuthenticatedWorkspaceRoute
   '/afro-designers/designers': typeof AfroDesignersDesignersRouteWithChildren
   '/api/chat': typeof ApiChatRoute
+  '/api/tts': typeof ApiTtsRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/capsules/$handle': typeof CapsulesHandleRoute
   '/collection/$handle': typeof CollectionHandleRoute
@@ -583,6 +591,7 @@ export interface FileRoutesById {
   '/_authenticated/workspace': typeof AuthenticatedWorkspaceRoute
   '/afro-designers/designers': typeof AfroDesignersDesignersRouteWithChildren
   '/api/chat': typeof ApiChatRoute
+  '/api/tts': typeof ApiTtsRoute
   '/bare-drip/men': typeof BareDripMenRouteWithChildren
   '/bare-drip/women': typeof BareDripWomenRouteWithChildren
   '/blog/$slug': typeof BlogSlugRoute
@@ -654,6 +663,7 @@ export interface FileRouteTypes {
     | '/workspace'
     | '/afro-designers/designers'
     | '/api/chat'
+    | '/api/tts'
     | '/bare-drip/men'
     | '/bare-drip/women'
     | '/blog/$slug'
@@ -714,6 +724,7 @@ export interface FileRouteTypes {
     | '/workspace'
     | '/afro-designers/designers'
     | '/api/chat'
+    | '/api/tts'
     | '/blog/$slug'
     | '/capsules/$handle'
     | '/collection/$handle'
@@ -780,6 +791,7 @@ export interface FileRouteTypes {
     | '/_authenticated/workspace'
     | '/afro-designers/designers'
     | '/api/chat'
+    | '/api/tts'
     | '/bare-drip/men'
     | '/bare-drip/women'
     | '/blog/$slug'
@@ -845,6 +857,7 @@ export interface RootRouteChildren {
   Char91DotmcpChar93ListToolsRoute: typeof Char91DotmcpChar93ListToolsRoute
   Char91DotwellKnownChar93OauthProtectedResourceRoute: typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   ApiChatRoute: typeof ApiChatRoute
+  ApiTtsRoute: typeof ApiTtsRoute
   CollectionHandleRoute: typeof CollectionHandleRoute
   ProductHandleRoute: typeof ProductHandleRoute
   DotlovableOauthConsentRoute: typeof DotlovableOauthConsentRoute
@@ -1097,6 +1110,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/bare-drip/men'
       preLoaderRoute: typeof BareDripMenRouteImport
       parentRoute: typeof BareDripRoute
+    }
+    '/api/tts': {
+      id: '/api/tts'
+      path: '/api/tts'
+      fullPath: '/api/tts'
+      preLoaderRoute: typeof ApiTtsRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/api/chat': {
       id: '/api/chat'
@@ -1617,6 +1637,7 @@ const rootRouteChildren: RootRouteChildren = {
   Char91DotwellKnownChar93OauthProtectedResourceRoute:
     Char91DotwellKnownChar93OauthProtectedResourceRoute,
   ApiChatRoute: ApiChatRoute,
+  ApiTtsRoute: ApiTtsRoute,
   CollectionHandleRoute: CollectionHandleRoute,
   ProductHandleRoute: ProductHandleRoute,
   DotlovableOauthConsentRoute: DotlovableOauthConsentRoute,
