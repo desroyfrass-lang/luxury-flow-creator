@@ -1,19 +1,22 @@
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "@tanstack/react-router";
-import { X, Send, ShoppingBag, Volume2, VolumeX } from "lucide-react";
+import { X, Send, ShoppingBag, Volume2, VolumeX, Settings } from "lucide-react";
 import { useCartStore } from "@/lib/cart-store";
 import symbolAsset from "@/assets/frass-logo-symbol.asset.json";
+import {
+  useFrassyPrefs,
+  pickGreeting,
+  pickVoice,
+  type FrassyPrefs,
+} from "@/hooks/use-frassy-prefs";
 
 type Msg = { role: "user" | "assistant"; content: string };
 
-const GREETING: Msg = {
+const INITIAL_MSG: Msg = {
   role: "assistant",
   content:
-    "Wah gwaan! Welcome to Frass Kicks — I'm Frassy 👋. Fun fact: new customers can unlock 40% OFF their first order in about 3 minutes. Want me to walk you through it, or help you shop?",
+    "Welcome to Frass Hill — I'm Frassy. Tap me anytime for styling, sizing, or to unlock 40% off your first order.",
 };
-
-const SPOKEN_GREETING =
-  "Welcome to Frass Hill. I'm Frassy. Tap me anytime — I can help you find your fit, style a look, or unlock forty percent off your first order.";
 
 const QUICK_ACTIONS = [
   { label: "🎁 Unlock 40% OFF", prompt: "How do I unlock the 40% off first purchase reward?" },
@@ -22,18 +25,19 @@ const QUICK_ACTIONS = [
   { label: "Shipping & returns", prompt: "Tell me about shipping and returns." },
 ];
 
-const MUTE_STORAGE_KEY = "frassy:muted";
 const GREETED_STORAGE_KEY = "frassy:greeted";
 
 export function FrassyChat() {
   const navigate = useNavigate();
+  const { prefs, update, hydrated } = useFrassyPrefs();
   const [open, setOpen] = useState(false);
-  const [messages, setMessages] = useState<Msg[]>([GREETING]);
+  const [settingsOpen, setSettingsOpen] = useState(false);
+  const [messages, setMessages] = useState<Msg[]>([INITIAL_MSG]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
   const [nudged, setNudged] = useState(false);
   const [pulse, setPulse] = useState(false);
-  const [muted, setMuted] = useState(false);
+  const [greetingText, setGreetingText] = useState<string | null>(null);
   const items = useCartStore((s) => s.items);
   const scrollRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
@@ -46,47 +50,67 @@ export function FrassyChat() {
     0,
   );
 
-  // Load mute preference
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-    setMuted(window.localStorage.getItem(MUTE_STORAGE_KEY) === "1");
-  }, []);
+  const muted = prefs.muted;
 
   // Frassy symbol activation: ~5s after landing, subtle pulse + spoken greeting.
   useEffect(() => {
-    if (nudged) return;
+    if (!hydrated || nudged) return;
     if (typeof window === "undefined") return;
+    if (prefs.greetingStyle === "quiet") {
+      setNudged(true);
+      return;
+    }
     const alreadyGreeted = window.sessionStorage.getItem(GREETED_STORAGE_KEY) === "1";
-    if (alreadyGreeted) {
+    // Friendly = every few visits; Concierge = every session.
+    if (alreadyGreeted && prefs.greetingStyle !== "concierge") {
+      setNudged(true);
+      return;
+    }
+    if (alreadyGreeted && prefs.greetingStyle === "concierge") {
       setNudged(true);
       return;
     }
     const t = setTimeout(() => {
       if (dismissedRef.current) return;
       setNudged(true);
+      const line = pickGreeting(prefs.language);
+      setGreetingText(line);
       setPulse(true);
       window.sessionStorage.setItem(GREETED_STORAGE_KEY, "1");
-      // Try to speak — many browsers block until first user gesture, in which case pulse still plays.
       if (!muted && "speechSynthesis" in window) {
         try {
-          const u = new SpeechSynthesisUtterance(SPOKEN_GREETING);
-          u.rate = 1;
-          u.pitch = 1;
-          u.volume = 0.9;
-          u.onend = () => setPulse(false);
-          u.onerror = () => setPulse(false);
-          window.speechSynthesis.speak(u);
-          // Safety: stop pulse after 8s regardless
-          setTimeout(() => setPulse(false), 8000);
+          const speakNow = () => {
+            const u = new SpeechSynthesisUtterance(line);
+            const v = pickVoice(prefs.voice, prefs.language);
+            if (v) u.voice = v;
+            u.rate = prefs.language === "patois" ? 0.95 : 1;
+            u.pitch = prefs.voice === "masculine" ? 0.85 : prefs.voice === "feminine" ? 1.15 : 1;
+            u.volume = 0.9;
+            u.onend = () => setPulse(false);
+            u.onerror = () => setPulse(false);
+            window.speechSynthesis.speak(u);
+          };
+          // Voices may load async
+          if (window.speechSynthesis.getVoices().length === 0) {
+            window.speechSynthesis.onvoiceschanged = speakNow;
+            setTimeout(speakNow, 250);
+          } else {
+            speakNow();
+          }
+          setTimeout(() => setPulse(false), 9000);
         } catch {
           setTimeout(() => setPulse(false), 4000);
         }
       } else {
         setTimeout(() => setPulse(false), 4000);
       }
+      // Auto-hide the greeting chip after a beat
+      setTimeout(() => setGreetingText(null), 9000);
     }, 5000);
     return () => clearTimeout(t);
-  }, [nudged, muted]);
+  }, [hydrated, nudged, muted, prefs.greetingStyle, prefs.language, prefs.voice]);
+
+
 
 
   // Cart-add trigger
@@ -177,10 +201,9 @@ export function FrassyChat() {
 
   const toggleMute = () => {
     const next = !muted;
-    setMuted(next);
-    if (typeof window !== "undefined") {
-      window.localStorage.setItem(MUTE_STORAGE_KEY, next ? "1" : "0");
-      if (next && "speechSynthesis" in window) window.speechSynthesis.cancel();
+    update({ muted: next });
+    if (typeof window !== "undefined" && next && "speechSynthesis" in window) {
+      window.speechSynthesis.cancel();
     }
     if (next) setPulse(false);
   };
@@ -189,18 +212,26 @@ export function FrassyChat() {
     e.stopPropagation();
     dismissedRef.current = true;
     setPulse(false);
+    setGreetingText(null);
     if (typeof window !== "undefined" && "speechSynthesis" in window) {
       window.speechSynthesis.cancel();
     }
   };
 
+  const pulseClass =
+    prefs.animation === "minimal"
+      ? "frassy-pulse frassy-pulse-minimal"
+      : prefs.animation === "expressive"
+        ? "frassy-pulse frassy-pulse-expressive"
+        : "frassy-pulse";
+
   return (
     <>
       {/* Frassy — the Frass symbol itself */}
       <div className="fixed bottom-5 right-5 z-[60] flex flex-col items-end gap-2">
-        {pulse && !open && (
-          <div className="flex items-center gap-2 rounded-full border border-[color:var(--gold)]/50 bg-background/95 px-3 py-1.5 text-[11px] uppercase tracking-[0.2em] text-foreground shadow-lg backdrop-blur animate-fade-in">
-            <span>Frassy is here</span>
+        {(pulse || greetingText) && !open && (
+          <div className="flex max-w-[280px] items-center gap-2 rounded-2xl border border-[color:var(--gold)]/50 bg-background/95 px-3 py-2 text-[12px] text-foreground shadow-lg backdrop-blur animate-fade-in">
+            <span className="flex-1 leading-snug">{greetingText ?? "Frassy is here"}</span>
             <button
               type="button"
               onClick={toggleMute}
@@ -224,9 +255,10 @@ export function FrassyChat() {
           onClick={() => setOpen((o) => !o)}
           aria-label={open ? "Close Frassy" : "Open Frassy chat"}
           className={`relative flex h-16 w-16 items-center justify-center rounded-full bg-[color:var(--ink,#0a0a0a)] shadow-2xl ring-1 ring-[color:var(--gold)]/40 transition-transform hover:scale-105 md:h-[72px] md:w-[72px] ${
-            pulse && !open ? "frassy-pulse" : ""
+            pulse && !open ? pulseClass : ""
           }`}
         >
+
           {open ? (
             <X className="h-6 w-6 text-[color:var(--gold)]" />
           ) : (
@@ -257,9 +289,25 @@ export function FrassyChat() {
             <div className="flex-1">
               <div className="font-display text-lg leading-none">Frassy</div>
               <div className="text-[10px] uppercase tracking-[0.2em] opacity-70">
-                Frass Kicks Concierge
+                Frass Hill Concierge
               </div>
             </div>
+            <button
+              type="button"
+              onClick={toggleMute}
+              className="rounded-full p-1 hover:bg-background/10"
+              aria-label={muted ? "Unmute Frassy" : "Mute Frassy"}
+            >
+              {muted ? <VolumeX className="h-4 w-4" /> : <Volume2 className="h-4 w-4" />}
+            </button>
+            <button
+              type="button"
+              onClick={() => setSettingsOpen((s) => !s)}
+              className={`rounded-full p-1 hover:bg-background/10 ${settingsOpen ? "bg-background/10" : ""}`}
+              aria-label="Frassy settings"
+            >
+              <Settings className="h-4 w-4" />
+            </button>
             <button
               type="button"
               onClick={() => setOpen(false)}
@@ -269,6 +317,10 @@ export function FrassyChat() {
               <X className="h-4 w-4" />
             </button>
           </div>
+
+          {settingsOpen && <FrassySettingsPanel prefs={prefs} update={update} />}
+
+
 
           {/* Messages */}
           <div ref={scrollRef} className="flex-1 space-y-3 overflow-y-auto px-4 py-4">
@@ -380,5 +432,86 @@ export function FrassyChat() {
         </div>
       )}
     </>
+  );
+}
+
+// ---------- Settings ----------
+
+function Row({ label, children }: { label: string; children: React.ReactNode }) {
+  return (
+    <label className="flex flex-col gap-1">
+      <span className="text-[10px] uppercase tracking-[0.22em] text-muted-foreground">{label}</span>
+      {children}
+    </label>
+  );
+}
+
+function FrassySettingsPanel({
+  prefs,
+  update,
+}: {
+  prefs: FrassyPrefs;
+  update: (patch: Partial<FrassyPrefs>) => void;
+}) {
+  const selectCls =
+    "w-full rounded-md border border-border bg-background px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-[color:var(--gold)]/40";
+  return (
+    <div className="border-b border-border bg-secondary/40 px-4 py-3 space-y-3">
+      <div className="text-[10px] uppercase tracking-[0.28em] text-[color:var(--gold)]">
+        Personalize Frassy
+      </div>
+      <div className="grid grid-cols-2 gap-3">
+        <Row label="Voice">
+          <select
+            className={selectCls}
+            value={prefs.voice}
+            onChange={(e) => update({ voice: e.target.value as FrassyPrefs["voice"] })}
+          >
+            <option value="feminine">Feminine</option>
+            <option value="masculine">Masculine</option>
+            <option value="neutral">Gender neutral</option>
+          </select>
+        </Row>
+        <Row label="Language">
+          <select
+            className={selectCls}
+            value={prefs.language}
+            onChange={(e) => update({ language: e.target.value as FrassyPrefs["language"] })}
+          >
+            <option value="english">Standard English</option>
+            <option value="caribbean-lite">Caribbean-lite</option>
+            <option value="caribbean">Caribbean English</option>
+            <option value="patois">Jamaican Patois</option>
+          </select>
+        </Row>
+        <Row label="Greeting style">
+          <select
+            className={selectCls}
+            value={prefs.greetingStyle}
+            onChange={(e) =>
+              update({ greetingStyle: e.target.value as FrassyPrefs["greetingStyle"] })
+            }
+          >
+            <option value="quiet">Quiet</option>
+            <option value="friendly">Friendly</option>
+            <option value="concierge">Luxury Concierge</option>
+          </select>
+        </Row>
+        <Row label="Animation">
+          <select
+            className={selectCls}
+            value={prefs.animation}
+            onChange={(e) => update({ animation: e.target.value as FrassyPrefs["animation"] })}
+          >
+            <option value="minimal">Minimal</option>
+            <option value="standard">Standard</option>
+            <option value="expressive">Expressive</option>
+          </select>
+        </Row>
+      </div>
+      <p className="text-[10px] leading-relaxed text-muted-foreground">
+        Frassy's intelligence stays the same — only tone, voice, and presence change.
+      </p>
+    </div>
   );
 }
