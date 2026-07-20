@@ -156,6 +156,13 @@ function AdminLayout() {
               CJ Import
             </Link>
             <Link
+              to="/admin/visual-index"
+              activeProps={{ className: "text-[color:var(--gold)]" }}
+              className="text-muted-foreground hover:text-foreground"
+            >
+              Visual Index
+            </Link>
+            <Link
               to="/admin/roles"
               activeProps={{ className: "text-[color:var(--gold)]" }}
               className="text-muted-foreground hover:text-foreground"
