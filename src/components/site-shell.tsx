@@ -2,6 +2,7 @@ import { Link, useRouterState } from "@tanstack/react-router";
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { CartDrawer } from "./cart-drawer";
 import { LuxuryBackground } from "./luxury-background";
+import { NotificationBell } from "./notification-bell";
 import { Search, User, Instagram, Music2, Youtube, Facebook, Menu, X, Sparkles } from "lucide-react";
 import { useCartSync } from "@/hooks/use-cart-sync";
 import { useSiteText } from "@/hooks/use-site-text";
@@ -112,6 +113,7 @@ function Header() {
           >
             <Search className="h-4 w-4" />
           </button>
+          <NotificationBell />
           <button
             className="hidden md:inline-flex h-10 w-10 items-center justify-center rounded-full border border-border bg-background/70 backdrop-blur hover:border-[color:var(--gold)] transition"
             aria-label="Account"

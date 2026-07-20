@@ -16,7 +16,7 @@ export async function emitPlatformEvent(input: PlatformEventInput): Promise<void
     actor_id: input.actorId ?? null,
     entity_type: input.entityType ?? null,
     entity_id: input.entityId ?? null,
-    payload: input.payload ?? {},
+    payload: (input.payload ?? {}) as never,
   });
   if (error) console.error("[platform_events] emit failed", error);
 }
