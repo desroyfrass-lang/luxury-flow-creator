@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as VisualSearchRouteImport } from './routes/visual-search'
 import { Route as SocialMediaViralsRouteImport } from './routes/social-media-virals'
 import { Route as RewardsRouteImport } from './routes/rewards'
 import { Route as MusicMediaRouteImport } from './routes/music-media'
@@ -66,6 +67,7 @@ import { Route as BareDripWomenCategoryRouteImport } from './routes/bare-drip.wo
 import { Route as BareDripMenCategoryRouteImport } from './routes/bare-drip.men.$category'
 import { Route as AfroDesignersDesignersSlugRouteImport } from './routes/afro-designers.designers.$slug'
 import { Route as AfroDesignersCollectionsSlugRouteImport } from './routes/afro-designers.collections.$slug'
+import { Route as AuthenticatedAdminVisualIndexRouteImport } from './routes/_authenticated/admin.visual-index'
 import { Route as AuthenticatedAdminViralsRouteImport } from './routes/_authenticated/admin.virals'
 import { Route as AuthenticatedAdminTextRouteImport } from './routes/_authenticated/admin.text'
 import { Route as AuthenticatedAdminRolesRouteImport } from './routes/_authenticated/admin.roles'
@@ -79,6 +81,11 @@ import { Route as Char91DotmcpChar93InvokeToolToolRouteImport } from './routes/[
 import { Route as DotlovableOauthConsentRouteImport } from './routes/[.]lovable.oauth.consent'
 import { Route as SocialMediaViralsCategorySubProductRouteImport } from './routes/social-media-virals.$category.$sub.$product'
 
+const VisualSearchRoute = VisualSearchRouteImport.update({
+  id: '/visual-search',
+  path: '/visual-search',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SocialMediaViralsRoute = SocialMediaViralsRouteImport.update({
   id: '/social-media-virals',
   path: '/social-media-virals',
@@ -370,6 +377,12 @@ const AfroDesignersCollectionsSlugRoute =
     path: '/collections/$slug',
     getParentRoute: () => AfroDesignersRoute,
   } as any)
+const AuthenticatedAdminVisualIndexRoute =
+  AuthenticatedAdminVisualIndexRouteImport.update({
+    id: '/visual-index',
+    path: '/visual-index',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
 const AuthenticatedAdminViralsRoute =
   AuthenticatedAdminViralsRouteImport.update({
     id: '/virals',
@@ -453,6 +466,7 @@ export interface FileRoutesByFullPath {
   '/music-media': typeof MusicMediaRoute
   '/rewards': typeof RewardsRoute
   '/social-media-virals': typeof SocialMediaViralsRouteWithChildren
+  '/visual-search': typeof VisualSearchRoute
   '/.mcp/list-tools': typeof Char91DotmcpChar93ListToolsRoute
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/admin': typeof AuthenticatedAdminRouteWithChildren
@@ -494,6 +508,7 @@ export interface FileRoutesByFullPath {
   '/admin/roles': typeof AuthenticatedAdminRolesRoute
   '/admin/text': typeof AuthenticatedAdminTextRoute
   '/admin/virals': typeof AuthenticatedAdminViralsRoute
+  '/admin/visual-index': typeof AuthenticatedAdminVisualIndexRoute
   '/afro-designers/collections/$slug': typeof AfroDesignersCollectionsSlugRoute
   '/afro-designers/designers/$slug': typeof AfroDesignersDesignersSlugRoute
   '/bare-drip/men/$category': typeof BareDripMenCategoryRoute
@@ -515,6 +530,7 @@ export interface FileRoutesByTo {
   '/mcp': typeof McpRoute
   '/music-media': typeof MusicMediaRoute
   '/rewards': typeof RewardsRoute
+  '/visual-search': typeof VisualSearchRoute
   '/.mcp/list-tools': typeof Char91DotmcpChar93ListToolsRoute
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/frassy': typeof AuthenticatedFrassyRoute
@@ -551,6 +567,7 @@ export interface FileRoutesByTo {
   '/admin/roles': typeof AuthenticatedAdminRolesRoute
   '/admin/text': typeof AuthenticatedAdminTextRoute
   '/admin/virals': typeof AuthenticatedAdminViralsRoute
+  '/admin/visual-index': typeof AuthenticatedAdminVisualIndexRoute
   '/afro-designers/collections/$slug': typeof AfroDesignersCollectionsSlugRoute
   '/afro-designers/designers/$slug': typeof AfroDesignersDesignersSlugRoute
   '/bare-drip/men/$category': typeof BareDripMenCategoryRoute
@@ -582,6 +599,7 @@ export interface FileRoutesById {
   '/music-media': typeof MusicMediaRoute
   '/rewards': typeof RewardsRoute
   '/social-media-virals': typeof SocialMediaViralsRouteWithChildren
+  '/visual-search': typeof VisualSearchRoute
   '/.mcp/list-tools': typeof Char91DotmcpChar93ListToolsRoute
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRouteWithChildren
@@ -623,6 +641,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/roles': typeof AuthenticatedAdminRolesRoute
   '/_authenticated/admin/text': typeof AuthenticatedAdminTextRoute
   '/_authenticated/admin/virals': typeof AuthenticatedAdminViralsRoute
+  '/_authenticated/admin/visual-index': typeof AuthenticatedAdminVisualIndexRoute
   '/afro-designers/collections/$slug': typeof AfroDesignersCollectionsSlugRoute
   '/afro-designers/designers/$slug': typeof AfroDesignersDesignersSlugRoute
   '/bare-drip/men/$category': typeof BareDripMenCategoryRoute
@@ -654,6 +673,7 @@ export interface FileRouteTypes {
     | '/music-media'
     | '/rewards'
     | '/social-media-virals'
+    | '/visual-search'
     | '/.mcp/list-tools'
     | '/.well-known/oauth-protected-resource'
     | '/admin'
@@ -695,6 +715,7 @@ export interface FileRouteTypes {
     | '/admin/roles'
     | '/admin/text'
     | '/admin/virals'
+    | '/admin/visual-index'
     | '/afro-designers/collections/$slug'
     | '/afro-designers/designers/$slug'
     | '/bare-drip/men/$category'
@@ -716,6 +737,7 @@ export interface FileRouteTypes {
     | '/mcp'
     | '/music-media'
     | '/rewards'
+    | '/visual-search'
     | '/.mcp/list-tools'
     | '/.well-known/oauth-protected-resource'
     | '/frassy'
@@ -752,6 +774,7 @@ export interface FileRouteTypes {
     | '/admin/roles'
     | '/admin/text'
     | '/admin/virals'
+    | '/admin/visual-index'
     | '/afro-designers/collections/$slug'
     | '/afro-designers/designers/$slug'
     | '/bare-drip/men/$category'
@@ -782,6 +805,7 @@ export interface FileRouteTypes {
     | '/music-media'
     | '/rewards'
     | '/social-media-virals'
+    | '/visual-search'
     | '/.mcp/list-tools'
     | '/.well-known/oauth-protected-resource'
     | '/_authenticated/admin'
@@ -823,6 +847,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/roles'
     | '/_authenticated/admin/text'
     | '/_authenticated/admin/virals'
+    | '/_authenticated/admin/visual-index'
     | '/afro-designers/collections/$slug'
     | '/afro-designers/designers/$slug'
     | '/bare-drip/men/$category'
@@ -854,6 +879,7 @@ export interface RootRouteChildren {
   MusicMediaRoute: typeof MusicMediaRoute
   RewardsRoute: typeof RewardsRoute
   SocialMediaViralsRoute: typeof SocialMediaViralsRouteWithChildren
+  VisualSearchRoute: typeof VisualSearchRoute
   Char91DotmcpChar93ListToolsRoute: typeof Char91DotmcpChar93ListToolsRoute
   Char91DotwellKnownChar93OauthProtectedResourceRoute: typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   ApiChatRoute: typeof ApiChatRoute
@@ -866,6 +892,13 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/visual-search': {
+      id: '/visual-search'
+      path: '/visual-search'
+      fullPath: '/visual-search'
+      preLoaderRoute: typeof VisualSearchRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/social-media-virals': {
       id: '/social-media-virals'
       path: '/social-media-virals'
@@ -1265,6 +1298,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AfroDesignersCollectionsSlugRouteImport
       parentRoute: typeof AfroDesignersRoute
     }
+    '/_authenticated/admin/visual-index': {
+      id: '/_authenticated/admin/visual-index'
+      path: '/visual-index'
+      fullPath: '/admin/visual-index'
+      preLoaderRoute: typeof AuthenticatedAdminVisualIndexRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
     '/_authenticated/admin/virals': {
       id: '/_authenticated/admin/virals'
       path: '/virals'
@@ -1362,6 +1402,7 @@ interface AuthenticatedAdminRouteChildren {
   AuthenticatedAdminRolesRoute: typeof AuthenticatedAdminRolesRoute
   AuthenticatedAdminTextRoute: typeof AuthenticatedAdminTextRoute
   AuthenticatedAdminViralsRoute: typeof AuthenticatedAdminViralsRoute
+  AuthenticatedAdminVisualIndexRoute: typeof AuthenticatedAdminVisualIndexRoute
   AuthenticatedAdminIndexRoute: typeof AuthenticatedAdminIndexRoute
 }
 
@@ -1375,6 +1416,7 @@ const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
   AuthenticatedAdminRolesRoute: AuthenticatedAdminRolesRoute,
   AuthenticatedAdminTextRoute: AuthenticatedAdminTextRoute,
   AuthenticatedAdminViralsRoute: AuthenticatedAdminViralsRoute,
+  AuthenticatedAdminVisualIndexRoute: AuthenticatedAdminVisualIndexRoute,
   AuthenticatedAdminIndexRoute: AuthenticatedAdminIndexRoute,
 }
 
@@ -1633,6 +1675,7 @@ const rootRouteChildren: RootRouteChildren = {
   MusicMediaRoute: MusicMediaRoute,
   RewardsRoute: RewardsRoute,
   SocialMediaViralsRoute: SocialMediaViralsRouteWithChildren,
+  VisualSearchRoute: VisualSearchRoute,
   Char91DotmcpChar93ListToolsRoute: Char91DotmcpChar93ListToolsRoute,
   Char91DotwellKnownChar93OauthProtectedResourceRoute:
     Char91DotwellKnownChar93OauthProtectedResourceRoute,
