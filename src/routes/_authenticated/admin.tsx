@@ -94,6 +94,12 @@ function AdminLayout() {
           </div>
           <nav className="flex items-center gap-4 text-[11px] uppercase tracking-[0.25em]">
             <Link
+              to="/frassy"
+              className="text-[color:var(--gold)] hover:text-foreground"
+            >
+              ✦ Frassy OS
+            </Link>
+            <Link
               to="/admin/capsules"
               activeProps={{ className: "text-[color:var(--gold)]" }}
               className="text-muted-foreground hover:text-foreground"
