@@ -46,6 +46,7 @@ import { Route as BareDripWomenRouteImport } from './routes/bare-drip.women'
 import { Route as BareDripMenRouteImport } from './routes/bare-drip.men'
 import { Route as ApiChatRouteImport } from './routes/api/chat'
 import { Route as AfroDesignersDesignersRouteImport } from './routes/afro-designers.designers'
+import { Route as AuthenticatedWorkspaceRouteImport } from './routes/_authenticated/workspace'
 import { Route as AuthenticatedTryOnRouteImport } from './routes/_authenticated/try-on'
 import { Route as AuthenticatedNotificationsRouteImport } from './routes/_authenticated/notifications'
 import { Route as AuthenticatedFrassyRouteImport } from './routes/_authenticated/frassy'
@@ -262,6 +263,11 @@ const AfroDesignersDesignersRoute = AfroDesignersDesignersRouteImport.update({
   path: '/designers',
   getParentRoute: () => AfroDesignersRoute,
 } as any)
+const AuthenticatedWorkspaceRoute = AuthenticatedWorkspaceRouteImport.update({
+  id: '/workspace',
+  path: '/workspace',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedTryOnRoute = AuthenticatedTryOnRouteImport.update({
   id: '/try-on',
   path: '/try-on',
@@ -447,6 +453,7 @@ export interface FileRoutesByFullPath {
   '/frassy': typeof AuthenticatedFrassyRoute
   '/notifications': typeof AuthenticatedNotificationsRoute
   '/try-on': typeof AuthenticatedTryOnRoute
+  '/workspace': typeof AuthenticatedWorkspaceRoute
   '/afro-designers/designers': typeof AfroDesignersDesignersRouteWithChildren
   '/api/chat': typeof ApiChatRoute
   '/bare-drip/men': typeof BareDripMenRouteWithChildren
@@ -506,6 +513,7 @@ export interface FileRoutesByTo {
   '/frassy': typeof AuthenticatedFrassyRoute
   '/notifications': typeof AuthenticatedNotificationsRoute
   '/try-on': typeof AuthenticatedTryOnRoute
+  '/workspace': typeof AuthenticatedWorkspaceRoute
   '/afro-designers/designers': typeof AfroDesignersDesignersRouteWithChildren
   '/api/chat': typeof ApiChatRoute
   '/blog/$slug': typeof BlogSlugRoute
@@ -572,6 +580,7 @@ export interface FileRoutesById {
   '/_authenticated/frassy': typeof AuthenticatedFrassyRoute
   '/_authenticated/notifications': typeof AuthenticatedNotificationsRoute
   '/_authenticated/try-on': typeof AuthenticatedTryOnRoute
+  '/_authenticated/workspace': typeof AuthenticatedWorkspaceRoute
   '/afro-designers/designers': typeof AfroDesignersDesignersRouteWithChildren
   '/api/chat': typeof ApiChatRoute
   '/bare-drip/men': typeof BareDripMenRouteWithChildren
@@ -642,6 +651,7 @@ export interface FileRouteTypes {
     | '/frassy'
     | '/notifications'
     | '/try-on'
+    | '/workspace'
     | '/afro-designers/designers'
     | '/api/chat'
     | '/bare-drip/men'
@@ -701,6 +711,7 @@ export interface FileRouteTypes {
     | '/frassy'
     | '/notifications'
     | '/try-on'
+    | '/workspace'
     | '/afro-designers/designers'
     | '/api/chat'
     | '/blog/$slug'
@@ -766,6 +777,7 @@ export interface FileRouteTypes {
     | '/_authenticated/frassy'
     | '/_authenticated/notifications'
     | '/_authenticated/try-on'
+    | '/_authenticated/workspace'
     | '/afro-designers/designers'
     | '/api/chat'
     | '/bare-drip/men'
@@ -1100,6 +1112,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AfroDesignersDesignersRouteImport
       parentRoute: typeof AfroDesignersRoute
     }
+    '/_authenticated/workspace': {
+      id: '/_authenticated/workspace'
+      path: '/workspace'
+      fullPath: '/workspace'
+      preLoaderRoute: typeof AuthenticatedWorkspaceRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/try-on': {
       id: '/_authenticated/try-on'
       path: '/try-on'
@@ -1347,6 +1366,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedFrassyRoute: typeof AuthenticatedFrassyRoute
   AuthenticatedNotificationsRoute: typeof AuthenticatedNotificationsRoute
   AuthenticatedTryOnRoute: typeof AuthenticatedTryOnRoute
+  AuthenticatedWorkspaceRoute: typeof AuthenticatedWorkspaceRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
@@ -1354,6 +1374,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedFrassyRoute: AuthenticatedFrassyRoute,
   AuthenticatedNotificationsRoute: AuthenticatedNotificationsRoute,
   AuthenticatedTryOnRoute: AuthenticatedTryOnRoute,
+  AuthenticatedWorkspaceRoute: AuthenticatedWorkspaceRoute,
 }
 
 const AuthenticatedRouteRouteWithChildren =

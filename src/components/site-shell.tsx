@@ -3,10 +3,11 @@ import { useEffect, useRef, useState, type ReactNode } from "react";
 import { CartDrawer } from "./cart-drawer";
 import { LuxuryBackground } from "./luxury-background";
 import { NotificationBell } from "./notification-bell";
-import { Search, User, Instagram, Music2, Youtube, Facebook, Menu, X, Sparkles } from "lucide-react";
+import { Search, User, Instagram, Music2, Youtube, Facebook, Menu, X, Sparkles, KeyRound } from "lucide-react";
 import { useCartSync } from "@/hooks/use-cart-sync";
 import { useSiteText } from "@/hooks/use-site-text";
 import { useIsAdmin } from "@/hooks/use-is-admin";
+import { useWorkspaceRoles } from "@/hooks/use-workspace-roles";
 import fullLogo from "@/assets/frass-logo-full.asset.json";
 import symbolLogo from "@/assets/frass-logo-symbol.asset.json";
 
@@ -54,6 +55,8 @@ function BrandMark({ compact = false }: { compact?: boolean }) {
 function Header() {
   const path = useRouterState({ select: (r) => r.location.pathname });
   const isAdmin = useIsAdmin();
+  const workspaceRoles = useWorkspaceRoles();
+  const hasWorkspace = workspaceRoles.length > 0;
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement | null>(null);
 
@@ -114,6 +117,16 @@ function Header() {
             <Search className="h-4 w-4" />
           </button>
           <NotificationBell />
+          {hasWorkspace && (
+            <Link
+              to="/workspace"
+              aria-label="Workspace"
+              title="Enter your private workspace"
+              className="hidden md:inline-flex h-10 w-10 items-center justify-center rounded-full border border-[color:var(--gold)]/60 bg-background/70 backdrop-blur text-[color:var(--gold)] hover:bg-[color:var(--gold)]/10 transition"
+            >
+              <KeyRound className="h-4 w-4" />
+            </Link>
+          )}
           <button
             className="hidden md:inline-flex h-10 w-10 items-center justify-center rounded-full border border-border bg-background/70 backdrop-blur hover:border-[color:var(--gold)] transition"
             aria-label="Account"
