@@ -757,6 +757,54 @@ export type Database = {
           },
         ]
       }
+      product_visual_embeddings: {
+        Row: {
+          attributes: Json
+          category_slug: string | null
+          embedding: string
+          handle: string | null
+          id: string
+          image_url: string
+          indexed_at: string
+          model_version: string
+          price: number | null
+          source_id: string
+          source_type: string
+          sub_slug: string | null
+          title: string
+        }
+        Insert: {
+          attributes?: Json
+          category_slug?: string | null
+          embedding: string
+          handle?: string | null
+          id?: string
+          image_url: string
+          indexed_at?: string
+          model_version?: string
+          price?: number | null
+          source_id: string
+          source_type: string
+          sub_slug?: string | null
+          title?: string
+        }
+        Update: {
+          attributes?: Json
+          category_slug?: string | null
+          embedding?: string
+          handle?: string | null
+          id?: string
+          image_url?: string
+          indexed_at?: string
+          model_version?: string
+          price?: number | null
+          source_id?: string
+          source_type?: string
+          sub_slug?: string | null
+          title?: string
+        }
+        Relationships: []
+      }
       products: {
         Row: {
           created_at: string
@@ -1056,6 +1104,54 @@ export type Database = {
         }
         Relationships: []
       }
+      visual_uploads: {
+        Row: {
+          attributes: Json
+          board_id: string | null
+          created_at: string
+          embedding: string | null
+          expires_at: string
+          height: number | null
+          id: string
+          is_saved: boolean
+          mime_type: string | null
+          session_id: string | null
+          storage_path: string
+          user_id: string | null
+          width: number | null
+        }
+        Insert: {
+          attributes?: Json
+          board_id?: string | null
+          created_at?: string
+          embedding?: string | null
+          expires_at?: string
+          height?: number | null
+          id?: string
+          is_saved?: boolean
+          mime_type?: string | null
+          session_id?: string | null
+          storage_path: string
+          user_id?: string | null
+          width?: number | null
+        }
+        Update: {
+          attributes?: Json
+          board_id?: string | null
+          created_at?: string
+          embedding?: string | null
+          expires_at?: string
+          height?: number | null
+          id?: string
+          is_saved?: boolean
+          mime_type?: string | null
+          session_id?: string | null
+          storage_path?: string
+          user_id?: string | null
+          width?: number | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
@@ -1068,6 +1164,27 @@ export type Database = {
         }
         Returns: boolean
       }
+      match_product_visuals: {
+        Args: {
+          match_count?: number
+          query_embedding: string
+          source_filter?: string
+        }
+        Returns: {
+          attributes: Json
+          category_slug: string
+          handle: string
+          id: string
+          image_url: string
+          price: number
+          similarity: number
+          source_id: string
+          source_type: string
+          sub_slug: string
+          title: string
+        }[]
+      }
+      purge_expired_visual_uploads: { Args: never; Returns: number }
     }
     Enums: {
       app_role:
