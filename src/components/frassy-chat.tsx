@@ -1,19 +1,22 @@
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "@tanstack/react-router";
-import { X, Send, ShoppingBag, Volume2, VolumeX } from "lucide-react";
+import { X, Send, ShoppingBag, Volume2, VolumeX, Settings } from "lucide-react";
 import { useCartStore } from "@/lib/cart-store";
 import symbolAsset from "@/assets/frass-logo-symbol.asset.json";
+import {
+  useFrassyPrefs,
+  pickGreeting,
+  pickVoice,
+  type FrassyPrefs,
+} from "@/hooks/use-frassy-prefs";
 
 type Msg = { role: "user" | "assistant"; content: string };
 
-const GREETING: Msg = {
+const INITIAL_MSG: Msg = {
   role: "assistant",
   content:
-    "Wah gwaan! Welcome to Frass Kicks — I'm Frassy 👋. Fun fact: new customers can unlock 40% OFF their first order in about 3 minutes. Want me to walk you through it, or help you shop?",
+    "Welcome to Frass Hill — I'm Frassy. Tap me anytime for styling, sizing, or to unlock 40% off your first order.",
 };
-
-const SPOKEN_GREETING =
-  "Welcome to Frass Hill. I'm Frassy. Tap me anytime — I can help you find your fit, style a look, or unlock forty percent off your first order.";
 
 const QUICK_ACTIONS = [
   { label: "🎁 Unlock 40% OFF", prompt: "How do I unlock the 40% off first purchase reward?" },
@@ -22,18 +25,19 @@ const QUICK_ACTIONS = [
   { label: "Shipping & returns", prompt: "Tell me about shipping and returns." },
 ];
 
-const MUTE_STORAGE_KEY = "frassy:muted";
 const GREETED_STORAGE_KEY = "frassy:greeted";
 
 export function FrassyChat() {
   const navigate = useNavigate();
+  const { prefs, update, hydrated } = useFrassyPrefs();
   const [open, setOpen] = useState(false);
-  const [messages, setMessages] = useState<Msg[]>([GREETING]);
+  const [settingsOpen, setSettingsOpen] = useState(false);
+  const [messages, setMessages] = useState<Msg[]>([INITIAL_MSG]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
   const [nudged, setNudged] = useState(false);
   const [pulse, setPulse] = useState(false);
-  const [muted, setMuted] = useState(false);
+  const [greetingText, setGreetingText] = useState<string | null>(null);
   const items = useCartStore((s) => s.items);
   const scrollRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
@@ -46,47 +50,67 @@ export function FrassyChat() {
     0,
   );
 
-  // Load mute preference
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-    setMuted(window.localStorage.getItem(MUTE_STORAGE_KEY) === "1");
-  }, []);
+  const muted = prefs.muted;
 
   // Frassy symbol activation: ~5s after landing, subtle pulse + spoken greeting.
   useEffect(() => {
-    if (nudged) return;
+    if (!hydrated || nudged) return;
     if (typeof window === "undefined") return;
+    if (prefs.greetingStyle === "quiet") {
+      setNudged(true);
+      return;
+    }
     const alreadyGreeted = window.sessionStorage.getItem(GREETED_STORAGE_KEY) === "1";
-    if (alreadyGreeted) {
+    // Friendly = every few visits; Concierge = every session.
+    if (alreadyGreeted && prefs.greetingStyle !== "concierge") {
+      setNudged(true);
+      return;
+    }
+    if (alreadyGreeted && prefs.greetingStyle === "concierge") {
       setNudged(true);
       return;
     }
     const t = setTimeout(() => {
       if (dismissedRef.current) return;
       setNudged(true);
+      const line = pickGreeting(prefs.language);
+      setGreetingText(line);
       setPulse(true);
       window.sessionStorage.setItem(GREETED_STORAGE_KEY, "1");
-      // Try to speak — many browsers block until first user gesture, in which case pulse still plays.
       if (!muted && "speechSynthesis" in window) {
         try {
-          const u = new SpeechSynthesisUtterance(SPOKEN_GREETING);
-          u.rate = 1;
-          u.pitch = 1;
-          u.volume = 0.9;
-          u.onend = () => setPulse(false);
-          u.onerror = () => setPulse(false);
-          window.speechSynthesis.speak(u);
-          // Safety: stop pulse after 8s regardless
-          setTimeout(() => setPulse(false), 8000);
+          const speakNow = () => {
+            const u = new SpeechSynthesisUtterance(line);
+            const v = pickVoice(prefs.voice, prefs.language);
+            if (v) u.voice = v;
+            u.rate = prefs.language === "patois" ? 0.95 : 1;
+            u.pitch = prefs.voice === "masculine" ? 0.85 : prefs.voice === "feminine" ? 1.15 : 1;
+            u.volume = 0.9;
+            u.onend = () => setPulse(false);
+            u.onerror = () => setPulse(false);
+            window.speechSynthesis.speak(u);
+          };
+          // Voices may load async
+          if (window.speechSynthesis.getVoices().length === 0) {
+            window.speechSynthesis.onvoiceschanged = speakNow;
+            setTimeout(speakNow, 250);
+          } else {
+            speakNow();
+          }
+          setTimeout(() => setPulse(false), 9000);
         } catch {
           setTimeout(() => setPulse(false), 4000);
         }
       } else {
         setTimeout(() => setPulse(false), 4000);
       }
+      // Auto-hide the greeting chip after a beat
+      setTimeout(() => setGreetingText(null), 9000);
     }, 5000);
     return () => clearTimeout(t);
-  }, [nudged, muted]);
+  }, [hydrated, nudged, muted, prefs.greetingStyle, prefs.language, prefs.voice]);
+
+
 
 
   // Cart-add trigger
