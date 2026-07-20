@@ -35,7 +35,14 @@ const GREETED_STORAGE_KEY = "frassy:greeted";
 export function FrassyChat() {
   const navigate = useNavigate();
   const { prefs, update, hydrated } = useFrassyPrefs();
-  const { memory, update: updateMemory, clear: clearMemory } = useFrassyMemory();
+  const {
+    memory,
+    update: updateMemory,
+    resetLearnedPreferences,
+    clearRecentlyViewed,
+    clearWishlist,
+    clearAll: clearAllMemory,
+  } = useFrassyMemory();
   const ctx = useFrassyContext();
   const [open, setOpen] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
