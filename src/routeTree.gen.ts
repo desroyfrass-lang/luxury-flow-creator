@@ -47,6 +47,7 @@ import { Route as BareDripMenRouteImport } from './routes/bare-drip.men'
 import { Route as ApiChatRouteImport } from './routes/api/chat'
 import { Route as AfroDesignersDesignersRouteImport } from './routes/afro-designers.designers'
 import { Route as AuthenticatedTryOnRouteImport } from './routes/_authenticated/try-on'
+import { Route as AuthenticatedFrassyRouteImport } from './routes/_authenticated/frassy'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
 import { Route as Char91DotwellKnownChar93OauthProtectedResourceRouteImport } from './routes/[.well-known]/oauth-protected-resource'
 import { Route as Char91DotmcpChar93ListToolsRouteImport } from './routes/[.mcp]/list-tools'
@@ -263,6 +264,11 @@ const AuthenticatedTryOnRoute = AuthenticatedTryOnRouteImport.update({
   path: '/try-on',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedFrassyRoute = AuthenticatedFrassyRouteImport.update({
+  id: '/frassy',
+  path: '/frassy',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedAdminRoute = AuthenticatedAdminRouteImport.update({
   id: '/admin',
   path: '/admin',
@@ -418,6 +424,7 @@ export interface FileRoutesByFullPath {
   '/.mcp/list-tools': typeof Char91DotmcpChar93ListToolsRoute
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/admin': typeof AuthenticatedAdminRouteWithChildren
+  '/frassy': typeof AuthenticatedFrassyRoute
   '/try-on': typeof AuthenticatedTryOnRoute
   '/afro-designers/designers': typeof AfroDesignersDesignersRouteWithChildren
   '/api/chat': typeof ApiChatRoute
@@ -473,6 +480,7 @@ export interface FileRoutesByTo {
   '/rewards': typeof RewardsRoute
   '/.mcp/list-tools': typeof Char91DotmcpChar93ListToolsRoute
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
+  '/frassy': typeof AuthenticatedFrassyRoute
   '/try-on': typeof AuthenticatedTryOnRoute
   '/afro-designers/designers': typeof AfroDesignersDesignersRouteWithChildren
   '/api/chat': typeof ApiChatRoute
@@ -535,6 +543,7 @@ export interface FileRoutesById {
   '/.mcp/list-tools': typeof Char91DotmcpChar93ListToolsRoute
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRouteWithChildren
+  '/_authenticated/frassy': typeof AuthenticatedFrassyRoute
   '/_authenticated/try-on': typeof AuthenticatedTryOnRoute
   '/afro-designers/designers': typeof AfroDesignersDesignersRouteWithChildren
   '/api/chat': typeof ApiChatRoute
@@ -601,6 +610,7 @@ export interface FileRouteTypes {
     | '/.mcp/list-tools'
     | '/.well-known/oauth-protected-resource'
     | '/admin'
+    | '/frassy'
     | '/try-on'
     | '/afro-designers/designers'
     | '/api/chat'
@@ -656,6 +666,7 @@ export interface FileRouteTypes {
     | '/rewards'
     | '/.mcp/list-tools'
     | '/.well-known/oauth-protected-resource'
+    | '/frassy'
     | '/try-on'
     | '/afro-designers/designers'
     | '/api/chat'
@@ -717,6 +728,7 @@ export interface FileRouteTypes {
     | '/.mcp/list-tools'
     | '/.well-known/oauth-protected-resource'
     | '/_authenticated/admin'
+    | '/_authenticated/frassy'
     | '/_authenticated/try-on'
     | '/afro-designers/designers'
     | '/api/chat'
@@ -1057,6 +1069,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedTryOnRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/frassy': {
+      id: '/_authenticated/frassy'
+      path: '/frassy'
+      fullPath: '/frassy'
+      preLoaderRoute: typeof AuthenticatedFrassyRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/admin': {
       id: '/_authenticated/admin'
       path: '/admin'
@@ -1262,11 +1281,13 @@ const AuthenticatedAdminRouteWithChildren =
 
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedAdminRoute: typeof AuthenticatedAdminRouteWithChildren
+  AuthenticatedFrassyRoute: typeof AuthenticatedFrassyRoute
   AuthenticatedTryOnRoute: typeof AuthenticatedTryOnRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedAdminRoute: AuthenticatedAdminRouteWithChildren,
+  AuthenticatedFrassyRoute: AuthenticatedFrassyRoute,
   AuthenticatedTryOnRoute: AuthenticatedTryOnRoute,
 }
 

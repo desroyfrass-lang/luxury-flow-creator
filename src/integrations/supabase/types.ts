@@ -327,6 +327,36 @@ export type Database = {
         }
         Relationships: []
       }
+      frassy_notes: {
+        Row: {
+          archived_at: string | null
+          body: string
+          created_at: string
+          id: string
+          pinned: boolean
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          archived_at?: string | null
+          body: string
+          created_at?: string
+          id?: string
+          pinned?: boolean
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          archived_at?: string | null
+          body?: string
+          created_at?: string
+          id?: string
+          pinned?: boolean
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       lookbook_story_images: {
         Row: {
           alt: string | null

@@ -1,75 +1,70 @@
-# Headless Shopify Integration Plan
+# Frassy OS — Phase 1 (Foundation)
 
-## Goal
-Keep the existing Lovable frontend exactly as designed. Replace the commerce backend with Shopify: products, variants, inventory, cart, checkout, discounts, and customer accounts all flow through Shopify Storefront API. The customer never feels like they leave Frass.
+A private admin operating system at `/frassy`. Separate from the customer Frassy chat widget. Read-only aggregator over what already exists in the database — no new approval flows yet.
 
-## Current State
-- Shopify store is connected: `3hekgw-kr.myshopify.com`
-- Storefront token is available.
-- **43 products already exist in Shopify**, including all Frass Kicks footwear and the 3 Frass merch items (hoodie, jacket, pants).
-- The site currently reads products from Lovable Cloud (Supabase `products` / `product_variants` tables).
-- Cart is local-only; checkout page is disabled.
+## What ships
 
-## Scope Decisions (from your answers)
-1. **All shoppable products** come from Shopify.
-2. **Rewards/coupons** will create real Shopify discount codes and pass them into Shopify checkout.
-3. **Checkout** stays on Frass until the final payment step, then redirects to Shopify Checkout (best non-Plus experience).
+**Route:** `/frassy` (under `_authenticated`, admin-only gate). Not linked from the public site. Owner accesses it directly or via a discreet link from `/admin`.
 
-## Implementation Steps
+**Layout:** Dark luxury "mission control" — full-bleed dark canvas, gold hairlines, generous whitespace, monospaced accents for numbers. Distinct from Shopify and from the storefront.
 
-### 1. Restore Shopify Storefront API layer
-- Replace the Supabase-backed `src/lib/shopify.ts` with Storefront API queries.
-- Fetch products, collections, product handles, variants, images, prices, and inventory via GraphQL.
-- Keep the existing `ShopifyProduct` / `ShopifyVariant` type shapes so every consumer (ProductCard, ProductGrid, product detail, cart) works unchanged.
+## Sections (top to bottom)
 
-### 2. Product grid & product cards
-- Update `ProductGrid` to call Shopify Storefront API instead of Supabase.
-- Keep existing cards, hover effects, typography, spacing, and quick-add button exactly as designed.
-- Preserve the Shopify-style query parsing so collection filters (`vendor:`, `product_type:`, `tag:`) still work.
+1. **Greeting bar**
+   Time-aware ("Good morning / afternoon / evening"), name from profile, warm one-liner. Rotates from a small pool so it never feels canned.
 
-### 3. Product detail page
-- Update `src/routes/product.$handle.tsx` to load from Shopify by handle.
-- Keep current layout, image gallery, variant selector, add-to-cart UX, and animations.
-- Pull meta title/description from Shopify product data for SEO.
+2. **Store status strip** (6 tiles)
+   Orders overnight · Revenue (today / 7d) · Pending orders · Low-stock alerts · New customers · Rewards claimed. Each tile: big number, delta vs. previous period, one-line "why it matters" caption.
 
-### 4. Re-implement Shopify cart
-- Rewrite `src/lib/cart-store.ts` to use Shopify Cart API:
-  - `cartCreate` on first add
-  - `cartLinesAdd` / `cartLinesUpdate` / `cartLinesRemove` for mutations
-  - Persist `cartId`, `checkoutUrl`, and line IDs in Zustand + localStorage
-  - Append `channel=online_store` to checkout URL
-- Keep `CartDrawer` visuals identical; only the data source and checkout button change.
+3. **Mandatory tasks** (approval queue)
+   Live counts pulled from existing tables:
+   - CJ products awaiting approval (`cj_import_queue` where status = pending)
+   - Capsules missing hero image / description (`capsules`)
+   - Blog drafts unpublished (`blog_posts`)
+   - Viral products missing category (`viral_products`)
+   - Site text slots empty (`site_text`)
+   - Site image slots empty (`site_images`)
+   Each row: task title, count, estimated minutes (rough heuristic: 30s per item), "Open" button that deep-links to the existing admin surface.
+   Header shows total estimated time: **"Today's mandatory work: ~X minutes"**.
 
-### 5. Checkout redirect
-- Update `src/routes/checkout.tsx` to display the cart summary as today, then redirect to Shopify Checkout when the customer proceeds to payment.
-- Remove the disabled "Payments coming soon" state.
-- Pass any applied Shopify discount code through to the checkout URL.
+4. **Optional work**
+   Static launcher grid (for now): Build capsule · Write blog · Explore trends · Review analytics · Manage virals · CJ discovery. Each links to the existing admin route.
 
-### 6. Rewards → Shopify discount codes
-- Update `src/lib/rewards.functions.ts` so claiming a reward creates a Shopify price rule + discount code via Admin API.
-- The generated code is what the customer enters at checkout; Shopify validates it.
+5. **Pinned notes**
+   Free-form notes the owner types in. Persist in a new `frassy_notes` table (id, user_id, body, pinned, created_at, archived_at). Add/pin/archive. Search box.
 
-### 7. Collection pages
-- Update all collection routes (`/frass-kicks`, `/frass-drip`, `/bare-drip`, etc.) to pull products from Shopify using the existing query mapping.
-- Keep every existing layout, animation, and card style.
+6. **Footer: today at a glance**
+   Simple daily rollup — orders count, revenue, tasks closed today (nothing fancy, no charts yet).
 
-### 8. SEO / structured data
-- Use Shopify product/collection titles and descriptions for `head()` meta.
-- Add JSON-LD product schema from Shopify data.
-- Preserve existing URL structure.
+## What is NOT in Phase 1
 
-### 9. Performance & UX guardrails
-- Lazy-load product images (already in place).
-- Cache Storefront API responses with TanStack Query where possible.
-- Show loading states inside the existing luxury UI, never a default Shopify widget.
+Chat mode · analytics narratives · memory that learns preferences · product/image approval UI · customer support console · designer/affiliate queues · daily-summary-at-logout · social publishing queues. All deferred to later phases (spec preserved in `NOTES.md`).
 
-### 10. Verification
-- Test product grid, product detail, add-to-cart, cart drawer, quantity updates, removal, and checkout redirect.
-- Confirm checkout URL opens correctly and discount codes apply.
+## Technical
 
-## What Will NOT Change
-- Colors, typography, spacing, layouts, navigation, animations, hover effects, hero sections, videos, Afro Designers, Capsules, Frass Hill Media, or any brand styling.
-- The homepage and all content pages remain untouched except where commerce data is displayed.
+- New route: `src/routes/_authenticated/frassy.tsx` (admin-role gated in the component, matching `/admin` pattern).
+- New server function file: `src/lib/frassy.functions.ts` — one `getDailyBriefing` server fn that runs the count queries in parallel and returns a typed briefing object. Uses `requireSupabaseAuth` + admin role check.
+- New table via migration: `frassy_notes` with RLS (owner reads/writes own rows only) and standard GRANTs.
+- New components under `src/components/frassy/`: `GreetingBar`, `StatusTile`, `TaskRow`, `NoteList`.
+- TanStack Query for the briefing with a 60s stale time and a manual refresh button.
+- No changes to the customer `frassy-chat.tsx` widget — kept as-is.
 
-## Note on Checkout Domain
-Without Shopify Plus, the final payment page is hosted on `3hekgw-kr.myshopify.com`. We will make the transition seamless (same-tab redirect, branded cart summary on Frass, discount pre-applied). A fully same-domain checkout requires Shopify Plus and is outside this scope.
+## Data sources (read-only aggregates)
+
+```text
+orders                 → today's revenue, order count, status buckets
+order_items            → (Phase 2 for best-sellers)
+cj_import_queue        → pending approvals count
+capsules               → missing description / image count
+blog_posts             → draft count
+viral_products         → uncategorized count
+site_text, site_images → empty slot counts
+profiles               → new signups (last 24h)
+reward_coupons         → claimed today
+```
+
+All queries scoped through `requireSupabaseAuth` + `has_role('admin')`.
+
+## Success looks like
+
+Owner opens `/frassy`, sees warm greeting, one screen tells them exactly what needs their approval today with time estimates and one-click jumps into the existing admin tools. Everything else (chat, product approval UI, analytics narratives) lands in later phases without rearchitecting Phase 1.
