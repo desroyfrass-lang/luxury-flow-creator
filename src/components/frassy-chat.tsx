@@ -240,6 +240,16 @@ export function FrassyChat() {
 
   return (
     <>
+      <FrassyConsentModal
+        open={consentOpen}
+        onChoose={handleConsentChoose}
+        onDefer={handleConsentDefer}
+        prefs={prefs}
+      />
+      {/* ARIA live region — every spoken line is announced in text for parity. */}
+      <div role="status" aria-live="polite" className="sr-only">
+        {liveMessage}
+      </div>
       {/* Frassy — the Frass symbol itself */}
       <div className="fixed bottom-5 right-5 z-[60] flex flex-col items-end gap-2">
         {(pulse || greetingText) && !open && (
