@@ -564,10 +564,17 @@ function Row({ label, children }: { label: string; children: React.ReactNode }) 
 function FrassySettingsPanel({
   prefs,
   update,
+  memory,
+  updateMemory,
+  clearMemory,
 }: {
   prefs: FrassyPrefs;
   update: (patch: Partial<FrassyPrefs>) => void;
+  memory: import("@/lib/frassy-memory").FrassyMemory;
+  updateMemory: (patch: Partial<import("@/lib/frassy-memory").FrassyMemory>) => void;
+  clearMemory: () => void;
 }) {
+
   const selectCls =
     "w-full rounded-md border border-border bg-background px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-[color:var(--gold)]/40";
   return (
