@@ -201,10 +201,9 @@ export function FrassyChat() {
 
   const toggleMute = () => {
     const next = !muted;
-    setMuted(next);
-    if (typeof window !== "undefined") {
-      window.localStorage.setItem(MUTE_STORAGE_KEY, next ? "1" : "0");
-      if (next && "speechSynthesis" in window) window.speechSynthesis.cancel();
+    update({ muted: next });
+    if (typeof window !== "undefined" && next && "speechSynthesis" in window) {
+      window.speechSynthesis.cancel();
     }
     if (next) setPulse(false);
   };
@@ -213,18 +212,26 @@ export function FrassyChat() {
     e.stopPropagation();
     dismissedRef.current = true;
     setPulse(false);
+    setGreetingText(null);
     if (typeof window !== "undefined" && "speechSynthesis" in window) {
       window.speechSynthesis.cancel();
     }
   };
 
+  const pulseClass =
+    prefs.animation === "minimal"
+      ? "frassy-pulse frassy-pulse-minimal"
+      : prefs.animation === "expressive"
+        ? "frassy-pulse frassy-pulse-expressive"
+        : "frassy-pulse";
+
   return (
     <>
       {/* Frassy — the Frass symbol itself */}
       <div className="fixed bottom-5 right-5 z-[60] flex flex-col items-end gap-2">
-        {pulse && !open && (
-          <div className="flex items-center gap-2 rounded-full border border-[color:var(--gold)]/50 bg-background/95 px-3 py-1.5 text-[11px] uppercase tracking-[0.2em] text-foreground shadow-lg backdrop-blur animate-fade-in">
-            <span>Frassy is here</span>
+        {(pulse || greetingText) && !open && (
+          <div className="flex max-w-[280px] items-center gap-2 rounded-2xl border border-[color:var(--gold)]/50 bg-background/95 px-3 py-2 text-[12px] text-foreground shadow-lg backdrop-blur animate-fade-in">
+            <span className="flex-1 leading-snug">{greetingText ?? "Frassy is here"}</span>
             <button
               type="button"
               onClick={toggleMute}
@@ -248,9 +255,10 @@ export function FrassyChat() {
           onClick={() => setOpen((o) => !o)}
           aria-label={open ? "Close Frassy" : "Open Frassy chat"}
           className={`relative flex h-16 w-16 items-center justify-center rounded-full bg-[color:var(--ink,#0a0a0a)] shadow-2xl ring-1 ring-[color:var(--gold)]/40 transition-transform hover:scale-105 md:h-[72px] md:w-[72px] ${
-            pulse && !open ? "frassy-pulse" : ""
+            pulse && !open ? pulseClass : ""
           }`}
         >
+
           {open ? (
             <X className="h-6 w-6 text-[color:var(--gold)]" />
           ) : (
