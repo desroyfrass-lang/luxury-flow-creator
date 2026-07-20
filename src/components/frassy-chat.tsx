@@ -483,16 +483,53 @@ function FrassySettingsPanel({
       <div className="text-[10px] uppercase tracking-[0.28em] text-[color:var(--gold)]">
         Personalize Frassy
       </div>
+      <Row label="How Frassy communicates">
+        <select
+          className={selectCls}
+          value={prefs.communicationMode}
+          onChange={(e) => {
+            const mode = e.target.value as FrassyPrefs["communicationMode"];
+            update({
+              communicationMode: mode,
+              consentedAt: prefs.consentedAt ?? new Date().toISOString(),
+            });
+            if (mode === "silent") stopSpeaking();
+          }}
+        >
+          <option value="silent">Silent Concierge — text only</option>
+          <option value="voice_text">Voice &amp; Text</option>
+          <option value="voice_only" disabled>
+            Voice Only (coming soon)
+          </option>
+        </select>
+      </Row>
       <div className="grid grid-cols-2 gap-3">
         <Row label="Voice">
           <select
             className={selectCls}
             value={prefs.voice}
             onChange={(e) => update({ voice: e.target.value as FrassyPrefs["voice"] })}
+            disabled={prefs.communicationMode === "silent"}
           >
             <option value="feminine">Feminine</option>
             <option value="masculine">Masculine</option>
             <option value="neutral">Gender neutral</option>
+          </select>
+        </Row>
+        <Row label="Voice profile">
+          <select
+            className={selectCls}
+            value={prefs.voiceProfile}
+            onChange={(e) =>
+              update({ voiceProfile: e.target.value as FrassyPrefs["voiceProfile"] })
+            }
+            disabled={prefs.communicationMode === "silent"}
+          >
+            {Object.entries(VOICE_PROFILE_LABELS).map(([id, label]) => (
+              <option key={id} value={id}>
+                {label}
+              </option>
+            ))}
           </select>
         </Row>
         <Row label="Language">
@@ -533,8 +570,10 @@ function FrassySettingsPanel({
         </Row>
       </div>
       <p className="text-[10px] leading-relaxed text-muted-foreground">
-        Frassy's intelligence stays the same — only tone, voice, and presence change.
+        Frassy's intelligence stays the same — only tone, voice, and presence change. Audio is
+        always optional; every message is available in text.
       </p>
     </div>
   );
 }
+
