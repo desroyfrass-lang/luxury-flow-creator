@@ -8,7 +8,20 @@ import { useRouterState } from "@tanstack/react-router";
 export type FrassyMode = "shopping" | "checkout" | "reading" | "workspace" | "auth";
 
 const CHECKOUT_ROUTES = ["/checkout", "/cart"];
-const READING_ROUTES = ["/blog", "/lookbooks", "/story", "/journal"];
+// Spec 032 — Attention Awareness: product pages, lookbooks, journals, blog,
+// capsule detail, and any long-form reading surface are "reading" (no proactive
+// interruption).
+const READING_ROUTES = [
+  "/blog",
+  "/lookbook",
+  "/lookbooks",
+  "/story",
+  "/journal",
+  "/product/",
+  "/capsules/",
+  "/social-media-virals/",
+  "/afro-designers/designers/",
+];
 const WORKSPACE_ROUTES = ["/admin", "/workspace", "/frassy"];
 const AUTH_ROUTES = ["/auth", "/login", "/signup", "/reset"];
 
@@ -16,7 +29,7 @@ function classify(pathname: string): FrassyMode {
   if (CHECKOUT_ROUTES.some((r) => pathname.startsWith(r))) return "checkout";
   if (AUTH_ROUTES.some((r) => pathname.startsWith(r))) return "auth";
   if (WORKSPACE_ROUTES.some((r) => pathname.startsWith(r))) return "workspace";
-  if (READING_ROUTES.some((r) => pathname.startsWith(r))) return "reading";
+  if (READING_ROUTES.some((r) => pathname.startsWith(r) || pathname.includes(r))) return "reading";
   return "shopping";
 }
 
@@ -45,11 +58,33 @@ export function useFrassyContext() {
     };
   }, [pathname]);
 
-  const canProactivelySpeak = mode === "shopping";
-  const canAutoOpenOnCart = mode === "shopping";
-  const shouldOfferHelp = mode === "shopping" && idleSeconds >= 90;
+  // Spec 032 — Attention Awareness: never surface while a form field is focused
+  // (typing address, payment, search, etc.). Tracked via focusin/focusout.
+  const [formActive, setFormActive] = useState(false);
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const check = () => {
+      const el = document.activeElement as HTMLElement | null;
+      if (!el) return setFormActive(false);
+      const tag = el.tagName;
+      const editable = (el as HTMLElement).isContentEditable;
+      setFormActive(tag === "INPUT" || tag === "TEXTAREA" || tag === "SELECT" || editable);
+    };
+    const on = () => check();
+    document.addEventListener("focusin", on);
+    document.addEventListener("focusout", on);
+    return () => {
+      document.removeEventListener("focusin", on);
+      document.removeEventListener("focusout", on);
+    };
+  }, []);
 
-  return { mode, pathname, idleSeconds, canProactivelySpeak, canAutoOpenOnCart, shouldOfferHelp };
+  const attentionOk = mode === "shopping" && !formActive;
+  const canProactivelySpeak = attentionOk;
+  const canAutoOpenOnCart = attentionOk;
+  const shouldOfferHelp = attentionOk && idleSeconds >= 90;
+
+  return { mode, pathname, idleSeconds, formActive, canProactivelySpeak, canAutoOpenOnCart, shouldOfferHelp };
 }
 
 // Simple seasonal accent — presentation only, not a personality shift.

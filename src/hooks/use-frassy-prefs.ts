@@ -22,6 +22,9 @@ export type FrassyPrefs = {
   muted: boolean;
   consentedAt: string | null;
   consentDismissCount: number;
+  // Spec 032 — Customer Control
+  disableProactive: boolean;
+  disableHomepageGreeting: boolean;
 };
 
 const DEFAULTS: FrassyPrefs = {
@@ -35,6 +38,8 @@ const DEFAULTS: FrassyPrefs = {
   muted: false,
   consentedAt: null,
   consentDismissCount: 0,
+  disableProactive: false,
+  disableHomepageGreeting: false,
 };
 
 const KEY = "frassy:prefs:v2";
