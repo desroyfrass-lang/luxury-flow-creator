@@ -35,8 +35,11 @@ const GREETED_STORAGE_KEY = "frassy:greeted";
 export function FrassyChat() {
   const navigate = useNavigate();
   const { prefs, update, hydrated } = useFrassyPrefs();
+  const { memory, update: updateMemory, clear: clearMemory } = useFrassyMemory();
+  const ctx = useFrassyContext();
   const [open, setOpen] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
+  const [escalateOpen, setEscalateOpen] = useState(false);
   const [messages, setMessages] = useState<Msg[]>([INITIAL_MSG]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
@@ -45,11 +48,15 @@ export function FrassyChat() {
   const [greetingText, setGreetingText] = useState<string | null>(null);
   const [liveMessage, setLiveMessage] = useState("");
   const [consentOpen, setConsentOpen] = useState(false);
+  const [idleOffered, setIdleOffered] = useState(false);
   const items = useCartStore((s) => s.items);
   const scrollRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const lastCartCountRef = useRef(0);
   const dismissedRef = useRef(false);
+
+  const season = useMemo(() => currentSeason(), []);
+
 
   const cartCount = items.reduce((n, i) => n + i.quantity, 0);
   const cartTotal = items.reduce(
