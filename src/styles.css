@@ -404,3 +404,18 @@
 }
 .afro-theme .afro-float { animation: afro-float 5s ease-in-out infinite; }
 
+
+/* Frassy — refined vibration pulse for the symbol */
+@keyframes frassy-vibrate {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1); box-shadow: 0 0 0 0 oklch(0.78 0.14 78 / 0.55); }
+  15% { transform: translate3d(-0.6px, 0.4px, 0) scale(1.02); }
+  30% { transform: translate3d(0.6px, -0.4px, 0) scale(1.03); box-shadow: 0 0 0 10px oklch(0.78 0.14 78 / 0); }
+  45% { transform: translate3d(-0.4px, 0.6px, 0) scale(1.02); }
+  60% { transform: translate3d(0.4px, -0.2px, 0) scale(1.01); }
+}
+.frassy-pulse {
+  animation: frassy-vibrate 1.6s ease-in-out infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .frassy-pulse { animation: none; box-shadow: 0 0 0 4px oklch(0.78 0.14 78 / 0.25); }
+}
