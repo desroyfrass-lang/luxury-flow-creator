@@ -186,10 +186,10 @@ function Home() {
           <div>
             <div className="mb-3 inline-flex items-center gap-3 text-[11px] uppercase tracking-[0.3em] text-muted-foreground">
               <span className="h-px w-8 bg-[color:var(--gold)]" />
-              <Flame className="h-3.5 w-3.5 text-[color:var(--gold)]" /> Viral Right Now
+              <Flame className="h-3.5 w-3.5 text-[color:var(--gold)]" /> Going Viral · Frass Hill Trending
             </div>
             <h2 className="font-display text-4xl md:text-6xl leading-[0.95] text-foreground">
-              The Main Event
+              Everyone Wants This
             </h2>
           </div>
           <Link
