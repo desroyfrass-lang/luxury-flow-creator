@@ -10,10 +10,11 @@ import cardDrip from "@/assets/card-drip.jpg";
 import cardBare from "@/assets/card-bare.jpg";
 import fullLogo from "@/assets/frass-logo-full.asset.json";
 
-import { ArrowUpRight, Sparkles, Shirt, Camera } from "lucide-react";
+import { ArrowUpRight, Sparkles, Shirt, Camera, Flame, Star } from "lucide-react";
 import { useSiteImageUrl, useSiteImages } from "@/hooks/use-site-images";
 import { useSiteText } from "@/hooks/use-site-text";
 import { LOOKBOOK_STORIES } from "@/lib/lookbook";
+import { BOUNCY_VIRAL_DRESS_IMG } from "@/lib/social-virals";
 
 export const Route = createFileRoute("/")({
   head: () => ({
