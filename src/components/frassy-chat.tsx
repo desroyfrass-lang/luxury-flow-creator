@@ -167,33 +167,32 @@ export function FrassyChat() {
 
 
 
-  // Cart-add trigger
+  // Cart-add trigger — respect situational awareness (never at checkout/auth/workspace).
   useEffect(() => {
     const prev = lastCartCountRef.current;
     lastCartCountRef.current = cartCount;
     if (cartCount > prev && cartCount > 0) {
+      rememberCartSnapshot(items.map((i) => i.product.node.title));
+      if (!ctx.canAutoOpenOnCart) return; // don't interrupt at checkout
       setPulse(true);
-      // Auto-open with contextual message
       setMessages((prevMsgs) => {
-        const already = prevMsgs.some((m) =>
-          m.content.includes("added to your cart"),
-        );
+        const already = prevMsgs.some((m) => m.content.includes("landed in your cart"));
         if (already) return prevMsgs;
         return [
           ...prevMsgs,
           {
             role: "assistant",
             content:
-              "🔥 Nice pick — that just landed in your cart. Want to head to checkout, try it on first, or ask me anything before you buy?",
+              "Nice pick — that just landed in your cart. Ready when you are, or want to try it on first?",
           },
         ];
       });
-      // Open on desktop, subtle pulse on mobile
       if (typeof window !== "undefined" && window.innerWidth >= 768) {
         setOpen(true);
       }
     }
-  }, [cartCount]);
+  }, [cartCount, ctx.canAutoOpenOnCart, items]);
+
 
   useEffect(() => {
     if (open) {
