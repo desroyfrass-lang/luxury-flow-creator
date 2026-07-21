@@ -8,15 +8,17 @@ import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 
-type RpcClient = { rpc: (fn: "has_role", args: { _user_id: string; _role: string }) => PromiseLike<{ data: unknown }> };
-
-async function assertAdmin(supabase: RpcClient, userId: string) {
+// Kept loose on purpose — supabase clients (user-scoped and admin) have
+// slightly different generic shapes; we only need `.rpc("has_role", ...)`.
+async function assertAdmin(supabase: unknown, userId: string) {
+  const sb = supabase as { rpc: (fn: string, args: Record<string, unknown>) => PromiseLike<{ data: unknown }> };
   const [{ data: isAdmin }, { data: isSuper }] = await Promise.all([
-    supabase.rpc("has_role", { _user_id: userId, _role: "admin" }),
-    supabase.rpc("has_role", { _user_id: userId, _role: "super_admin" }),
+    sb.rpc("has_role", { _user_id: userId, _role: "admin" }),
+    sb.rpc("has_role", { _user_id: userId, _role: "super_admin" }),
   ]);
   if (!isAdmin && !isSuper) throw new Error("Forbidden");
 }
+
 
 
 
