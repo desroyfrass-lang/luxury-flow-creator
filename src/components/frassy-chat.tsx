@@ -15,7 +15,30 @@ import { useFrassyMemory, memoryContext, rememberCartSnapshot } from "@/lib/fras
 import { useFrassyContext, currentSeason, seasonalAccent } from "@/hooks/use-frassy-context";
 
 
-type Msg = { role: "user" | "assistant"; content: string };
+type ProductCard = {
+  handle: string;
+  title: string;
+  price: string;
+  currency: string;
+  image: string | null;
+  url: string;
+  vendor?: string;
+};
+type OrderCard = {
+  name: string;
+  financial_status: string;
+  fulfillment_status: string;
+  total: string;
+  currency: string;
+  items: Array<{ title: string; quantity: number }>;
+  tracking: Array<{ number: string; url: string; company: string; eta: string | null }>;
+};
+type Msg = {
+  role: "user" | "assistant";
+  content: string;
+  products?: ProductCard[];
+  order?: OrderCard | null;
+};
 
 const INITIAL_MSG: Msg = {
   role: "assistant",
@@ -251,7 +274,11 @@ export function FrassyChat() {
         }),
 
       });
-      const data = (await res.json()) as { reply?: string; error?: string };
+      const data = (await res.json()) as {
+        reply?: string;
+        error?: string;
+        cards?: { products?: ProductCard[]; order?: OrderCard | null };
+      };
       if (!res.ok) {
         setMessages((m) => [
           ...m,
@@ -263,7 +290,12 @@ export function FrassyChat() {
       } else {
         setMessages((m) => [
           ...m,
-          { role: "assistant", content: data.reply ?? "…" },
+          {
+            role: "assistant",
+            content: data.reply ?? "…",
+            products: data.cards?.products,
+            order: data.cards?.order ?? null,
+          },
         ]);
       }
     } catch {
@@ -488,19 +520,79 @@ export function FrassyChat() {
           {/* Messages */}
           <div ref={scrollRef} className="flex-1 space-y-3 overflow-y-auto px-4 py-4">
             {messages.map((m, i) => (
-              <div
-                key={i}
-                className={`flex ${m.role === "user" ? "justify-end" : "justify-start"}`}
-              >
-                <div
-                  className={`max-w-[85%] whitespace-pre-wrap rounded-2xl px-3 py-2 text-sm leading-relaxed ${
-                    m.role === "user"
-                      ? "bg-foreground text-background"
-                      : "bg-secondary/60 text-foreground"
-                  }`}
-                >
-                  {m.content}
+              <div key={i} className="space-y-2">
+                <div className={`flex ${m.role === "user" ? "justify-end" : "justify-start"}`}>
+                  <div
+                    className={`max-w-[85%] whitespace-pre-wrap rounded-2xl px-3 py-2 text-sm leading-relaxed ${
+                      m.role === "user"
+                        ? "bg-foreground text-background"
+                        : "bg-secondary/60 text-foreground"
+                    }`}
+                  >
+                    {m.content}
+                  </div>
                 </div>
+                {m.role === "assistant" && m.products && m.products.length > 0 && (
+                  <div className="grid grid-cols-2 gap-2 pl-1">
+                    {m.products.map((p) => (
+                      <a
+                        key={p.handle}
+                        href={p.url}
+                        onClick={() => setOpen(false)}
+                        className="group overflow-hidden rounded-xl border border-border bg-background transition hover:border-[color:var(--gold)]/60"
+                      >
+                        {p.image ? (
+                          <div className="aspect-square w-full overflow-hidden bg-secondary/40">
+                            <img
+                              src={p.image}
+                              alt={p.title}
+                              className="h-full w-full object-cover transition group-hover:scale-105"
+                              loading="lazy"
+                            />
+                          </div>
+                        ) : (
+                          <div className="aspect-square w-full bg-secondary/40" />
+                        )}
+                        <div className="space-y-0.5 p-2">
+                          <div className="line-clamp-2 text-[11px] font-medium leading-tight text-foreground">
+                            {p.title}
+                          </div>
+                          <div className="text-[10px] text-muted-foreground">
+                            {p.currency} {Number(p.price).toFixed(2)}
+                          </div>
+                        </div>
+                      </a>
+                    ))}
+                  </div>
+                )}
+                {m.role === "assistant" && m.order && (
+                  <div className="rounded-xl border border-border bg-background p-3 text-xs">
+                    <div className="flex items-center justify-between">
+                      <span className="font-medium text-foreground">Order {m.order.name}</span>
+                      <span className="text-muted-foreground">
+                        {m.order.currency} {Number(m.order.total).toFixed(2)}
+                      </span>
+                    </div>
+                    <div className="mt-1 text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
+                      {m.order.financial_status} · {m.order.fulfillment_status}
+                    </div>
+                    {m.order.tracking.length > 0 && (
+                      <div className="mt-2 space-y-1">
+                        {m.order.tracking.map((t, ti) => (
+                          <a
+                            key={ti}
+                            href={t.url}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="block text-[color:var(--gold)] hover:underline"
+                          >
+                            Track {t.company} · {t.number}
+                          </a>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                )}
               </div>
             ))}
             {loading && (
