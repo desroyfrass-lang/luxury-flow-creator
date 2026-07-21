@@ -817,6 +817,42 @@ export type Database = {
         }
         Relationships: []
       }
+      partner_vendors: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          id: string
+          notes: string | null
+          revoked_at: string | null
+          revoked_by: string | null
+          status: string
+          user_id: string
+          vendor_id: string
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          notes?: string | null
+          revoked_at?: string | null
+          revoked_by?: string | null
+          status?: string
+          user_id: string
+          vendor_id: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          notes?: string | null
+          revoked_at?: string | null
+          revoked_by?: string | null
+          status?: string
+          user_id?: string
+          vendor_id?: string
+        }
+        Relationships: []
+      }
       platform_events: {
         Row: {
           actor_id: string | null
@@ -1403,6 +1439,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      get_active_partner_vendor_ids: {
+        Args: { _user_id: string }
+        Returns: string[]
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
