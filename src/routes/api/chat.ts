@@ -101,7 +101,7 @@ export const Route = createFileRoute("/api/chat")({
         const result = streamText({
           model,
           system,
-          messages: convertToModelMessages(messages),
+          messages: await convertToModelMessages(messages),
           tools: buildFrassyTools(),
           stopWhen: stepCountIs(50),
         });
