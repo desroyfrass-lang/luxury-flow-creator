@@ -15,7 +15,30 @@ import { useFrassyMemory, memoryContext, rememberCartSnapshot } from "@/lib/fras
 import { useFrassyContext, currentSeason, seasonalAccent } from "@/hooks/use-frassy-context";
 
 
-type Msg = { role: "user" | "assistant"; content: string };
+type ProductCard = {
+  handle: string;
+  title: string;
+  price: string;
+  currency: string;
+  image: string | null;
+  url: string;
+  vendor?: string;
+};
+type OrderCard = {
+  name: string;
+  financial_status: string;
+  fulfillment_status: string;
+  total: string;
+  currency: string;
+  items: Array<{ title: string; quantity: number }>;
+  tracking: Array<{ number: string; url: string; company: string; eta: string | null }>;
+};
+type Msg = {
+  role: "user" | "assistant";
+  content: string;
+  products?: ProductCard[];
+  order?: OrderCard | null;
+};
 
 const INITIAL_MSG: Msg = {
   role: "assistant",
@@ -251,7 +274,11 @@ export function FrassyChat() {
         }),
 
       });
-      const data = (await res.json()) as { reply?: string; error?: string };
+      const data = (await res.json()) as {
+        reply?: string;
+        error?: string;
+        cards?: { products?: ProductCard[]; order?: OrderCard | null };
+      };
       if (!res.ok) {
         setMessages((m) => [
           ...m,
@@ -263,7 +290,12 @@ export function FrassyChat() {
       } else {
         setMessages((m) => [
           ...m,
-          { role: "assistant", content: data.reply ?? "…" },
+          {
+            role: "assistant",
+            content: data.reply ?? "…",
+            products: data.cards?.products,
+            order: data.cards?.order ?? null,
+          },
         ]);
       }
     } catch {
