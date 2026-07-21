@@ -8,16 +8,16 @@ import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 
-async function assertAdmin(
-  supabase: { rpc: (fn: "has_role", args: { _user_id: string; _role: "admin" | "super_admin" }) => Promise<{ data: unknown }> },
-  userId: string,
-) {
+type RpcClient = { rpc: (fn: "has_role", args: { _user_id: string; _role: string }) => PromiseLike<{ data: unknown }> };
+
+async function assertAdmin(supabase: RpcClient, userId: string) {
   const [{ data: isAdmin }, { data: isSuper }] = await Promise.all([
     supabase.rpc("has_role", { _user_id: userId, _role: "admin" }),
     supabase.rpc("has_role", { _user_id: userId, _role: "super_admin" }),
   ]);
   if (!isAdmin && !isSuper) throw new Error("Forbidden");
 }
+
 
 
 /** Returns the caller's currently-allowed vendor IDs (deny-by-default: empty array). */
