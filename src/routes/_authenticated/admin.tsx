@@ -169,6 +169,14 @@ function AdminLayout() {
             >
               Roles
             </Link>
+            <Link
+              to="/admin/partner-vendors"
+              activeProps={{ className: "text-[color:var(--gold)]" }}
+              className="text-muted-foreground hover:text-foreground"
+            >
+              Partner Vendors
+            </Link>
+
             <Link to="/" className="text-muted-foreground hover:text-foreground">
               View site
             </Link>
