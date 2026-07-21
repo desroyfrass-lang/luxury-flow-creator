@@ -14,6 +14,134 @@ export type Database = {
   }
   public: {
     Tables: {
+      affiliate_clicks: {
+        Row: {
+          clicked_at: string
+          country: string | null
+          device: string | null
+          id: number
+          link_id: string
+        }
+        Insert: {
+          clicked_at?: string
+          country?: string | null
+          device?: string | null
+          id?: number
+          link_id: string
+        }
+        Update: {
+          clicked_at?: string
+          country?: string | null
+          device?: string | null
+          id?: number
+          link_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "affiliate_clicks_link_id_fkey"
+            columns: ["link_id"]
+            isOneToOne: false
+            referencedRelation: "affiliate_links"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      affiliate_links: {
+        Row: {
+          campaign_id: string | null
+          clicks: number
+          commission_rate: number | null
+          created_at: string
+          destination_handle: string
+          destination_type: string
+          destination_url: string
+          discount_code: string | null
+          expires_at: string | null
+          id: string
+          label: string | null
+          last_click_at: string | null
+          status: string
+          token: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          campaign_id?: string | null
+          clicks?: number
+          commission_rate?: number | null
+          created_at?: string
+          destination_handle: string
+          destination_type: string
+          destination_url: string
+          discount_code?: string | null
+          expires_at?: string | null
+          id?: string
+          label?: string | null
+          last_click_at?: string | null
+          status?: string
+          token: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          campaign_id?: string | null
+          clicks?: number
+          commission_rate?: number | null
+          created_at?: string
+          destination_handle?: string
+          destination_type?: string
+          destination_url?: string
+          discount_code?: string | null
+          expires_at?: string | null
+          id?: string
+          label?: string | null
+          last_click_at?: string | null
+          status?: string
+          token?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      affiliate_profiles: {
+        Row: {
+          created_at: string
+          default_commission_rate: number
+          display_name: string | null
+          notes: string | null
+          payout_destination_masked: string | null
+          payout_method: string | null
+          payout_status: string
+          status: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          default_commission_rate?: number
+          display_name?: string | null
+          notes?: string | null
+          payout_destination_masked?: string | null
+          payout_method?: string | null
+          payout_status?: string
+          status?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          default_commission_rate?: number
+          display_name?: string | null
+          notes?: string | null
+          payout_destination_masked?: string | null
+          payout_method?: string | null
+          payout_status?: string
+          status?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       blog_posts: {
         Row: {
           author: string | null
@@ -296,6 +424,115 @@ export type Database = {
           updated_at?: string
         }
         Relationships: []
+      }
+      commission_adjustments: {
+        Row: {
+          adjusted_by: string | null
+          commission_id: string
+          created_at: string
+          delta_amount: number
+          id: string
+          reason: string
+          reason_note: string | null
+          user_id: string
+        }
+        Insert: {
+          adjusted_by?: string | null
+          commission_id: string
+          created_at?: string
+          delta_amount: number
+          id?: string
+          reason: string
+          reason_note?: string | null
+          user_id: string
+        }
+        Update: {
+          adjusted_by?: string | null
+          commission_id?: string
+          created_at?: string
+          delta_amount?: number
+          id?: string
+          reason?: string
+          reason_note?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "commission_adjustments_commission_id_fkey"
+            columns: ["commission_id"]
+            isOneToOne: false
+            referencedRelation: "commissions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      commissions: {
+        Row: {
+          approved_at: string | null
+          attribution_source: string
+          commission_amount: number
+          commission_rate: number
+          commissionable_amount: number
+          created_at: string
+          currency: string
+          id: string
+          link_id: string | null
+          order_created_at: string
+          order_total: number
+          paid_at: string | null
+          shopify_line_item_id: string | null
+          shopify_order_id: string
+          shopify_order_name: string | null
+          status: string
+          user_id: string
+        }
+        Insert: {
+          approved_at?: string | null
+          attribution_source: string
+          commission_amount: number
+          commission_rate: number
+          commissionable_amount: number
+          created_at?: string
+          currency?: string
+          id?: string
+          link_id?: string | null
+          order_created_at: string
+          order_total: number
+          paid_at?: string | null
+          shopify_line_item_id?: string | null
+          shopify_order_id: string
+          shopify_order_name?: string | null
+          status?: string
+          user_id: string
+        }
+        Update: {
+          approved_at?: string | null
+          attribution_source?: string
+          commission_amount?: number
+          commission_rate?: number
+          commissionable_amount?: number
+          created_at?: string
+          currency?: string
+          id?: string
+          link_id?: string | null
+          order_created_at?: string
+          order_total?: number
+          paid_at?: string | null
+          shopify_line_item_id?: string | null
+          shopify_order_id?: string
+          shopify_order_name?: string | null
+          status?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "commissions_link_id_fkey"
+            columns: ["link_id"]
+            isOneToOne: false
+            referencedRelation: "affiliate_links"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       customer_photos: {
         Row: {
@@ -1049,9 +1286,11 @@ export type Database = {
       }
       viral_products: {
         Row: {
+          approved_for_promotion: boolean
           badge: string | null
           blurb: string
           category_slug: string
+          commission_rate: number | null
           compare_at: number | null
           created_at: string
           id: string
@@ -1065,11 +1304,14 @@ export type Database = {
           sub_slug: string
           title: string
           updated_at: string
+          visual_indexing_approved: boolean
         }
         Insert: {
+          approved_for_promotion?: boolean
           badge?: string | null
           blurb?: string
           category_slug: string
+          commission_rate?: number | null
           compare_at?: number | null
           created_at?: string
           id?: string
@@ -1083,11 +1325,14 @@ export type Database = {
           sub_slug: string
           title: string
           updated_at?: string
+          visual_indexing_approved?: boolean
         }
         Update: {
+          approved_for_promotion?: boolean
           badge?: string | null
           blurb?: string
           category_slug?: string
+          commission_rate?: number | null
           compare_at?: number | null
           created_at?: string
           id?: string
@@ -1101,6 +1346,7 @@ export type Database = {
           sub_slug?: string
           title?: string
           updated_at?: string
+          visual_indexing_approved?: boolean
         }
         Relationships: []
       }
