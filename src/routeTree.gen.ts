@@ -67,6 +67,7 @@ import { Route as BareDripWomenCategoryRouteImport } from './routes/bare-drip.wo
 import { Route as BareDripMenCategoryRouteImport } from './routes/bare-drip.men.$category'
 import { Route as AfroDesignersDesignersSlugRouteImport } from './routes/afro-designers.designers.$slug'
 import { Route as AfroDesignersCollectionsSlugRouteImport } from './routes/afro-designers.collections.$slug'
+import { Route as AuthenticatedWorkspaceMerchRouteImport } from './routes/_authenticated/workspace.merch'
 import { Route as AuthenticatedAdminVisualIndexRouteImport } from './routes/_authenticated/admin.visual-index'
 import { Route as AuthenticatedAdminViralsRouteImport } from './routes/_authenticated/admin.virals'
 import { Route as AuthenticatedAdminTextRouteImport } from './routes/_authenticated/admin.text'
@@ -378,6 +379,12 @@ const AfroDesignersCollectionsSlugRoute =
     path: '/collections/$slug',
     getParentRoute: () => AfroDesignersRoute,
   } as any)
+const AuthenticatedWorkspaceMerchRoute =
+  AuthenticatedWorkspaceMerchRouteImport.update({
+    id: '/merch',
+    path: '/merch',
+    getParentRoute: () => AuthenticatedWorkspaceRoute,
+  } as any)
 const AuthenticatedAdminVisualIndexRoute =
   AuthenticatedAdminVisualIndexRouteImport.update({
     id: '/visual-index',
@@ -480,7 +487,7 @@ export interface FileRoutesByFullPath {
   '/frassy': typeof AuthenticatedFrassyRoute
   '/notifications': typeof AuthenticatedNotificationsRoute
   '/try-on': typeof AuthenticatedTryOnRoute
-  '/workspace': typeof AuthenticatedWorkspaceRoute
+  '/workspace': typeof AuthenticatedWorkspaceRouteWithChildren
   '/afro-designers/designers': typeof AfroDesignersDesignersRouteWithChildren
   '/api/chat': typeof ApiChatRoute
   '/api/tts': typeof ApiTtsRoute
@@ -517,6 +524,7 @@ export interface FileRoutesByFullPath {
   '/admin/text': typeof AuthenticatedAdminTextRoute
   '/admin/virals': typeof AuthenticatedAdminViralsRoute
   '/admin/visual-index': typeof AuthenticatedAdminVisualIndexRoute
+  '/workspace/merch': typeof AuthenticatedWorkspaceMerchRoute
   '/afro-designers/collections/$slug': typeof AfroDesignersCollectionsSlugRoute
   '/afro-designers/designers/$slug': typeof AfroDesignersDesignersSlugRoute
   '/bare-drip/men/$category': typeof BareDripMenCategoryRoute
@@ -544,7 +552,7 @@ export interface FileRoutesByTo {
   '/frassy': typeof AuthenticatedFrassyRoute
   '/notifications': typeof AuthenticatedNotificationsRoute
   '/try-on': typeof AuthenticatedTryOnRoute
-  '/workspace': typeof AuthenticatedWorkspaceRoute
+  '/workspace': typeof AuthenticatedWorkspaceRouteWithChildren
   '/afro-designers/designers': typeof AfroDesignersDesignersRouteWithChildren
   '/api/chat': typeof ApiChatRoute
   '/api/tts': typeof ApiTtsRoute
@@ -577,6 +585,7 @@ export interface FileRoutesByTo {
   '/admin/text': typeof AuthenticatedAdminTextRoute
   '/admin/virals': typeof AuthenticatedAdminViralsRoute
   '/admin/visual-index': typeof AuthenticatedAdminVisualIndexRoute
+  '/workspace/merch': typeof AuthenticatedWorkspaceMerchRoute
   '/afro-designers/collections/$slug': typeof AfroDesignersCollectionsSlugRoute
   '/afro-designers/designers/$slug': typeof AfroDesignersDesignersSlugRoute
   '/bare-drip/men/$category': typeof BareDripMenCategoryRoute
@@ -615,7 +624,7 @@ export interface FileRoutesById {
   '/_authenticated/frassy': typeof AuthenticatedFrassyRoute
   '/_authenticated/notifications': typeof AuthenticatedNotificationsRoute
   '/_authenticated/try-on': typeof AuthenticatedTryOnRoute
-  '/_authenticated/workspace': typeof AuthenticatedWorkspaceRoute
+  '/_authenticated/workspace': typeof AuthenticatedWorkspaceRouteWithChildren
   '/afro-designers/designers': typeof AfroDesignersDesignersRouteWithChildren
   '/api/chat': typeof ApiChatRoute
   '/api/tts': typeof ApiTtsRoute
@@ -652,6 +661,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/text': typeof AuthenticatedAdminTextRoute
   '/_authenticated/admin/virals': typeof AuthenticatedAdminViralsRoute
   '/_authenticated/admin/visual-index': typeof AuthenticatedAdminVisualIndexRoute
+  '/_authenticated/workspace/merch': typeof AuthenticatedWorkspaceMerchRoute
   '/afro-designers/collections/$slug': typeof AfroDesignersCollectionsSlugRoute
   '/afro-designers/designers/$slug': typeof AfroDesignersDesignersSlugRoute
   '/bare-drip/men/$category': typeof BareDripMenCategoryRoute
@@ -727,6 +737,7 @@ export interface FileRouteTypes {
     | '/admin/text'
     | '/admin/virals'
     | '/admin/visual-index'
+    | '/workspace/merch'
     | '/afro-designers/collections/$slug'
     | '/afro-designers/designers/$slug'
     | '/bare-drip/men/$category'
@@ -787,6 +798,7 @@ export interface FileRouteTypes {
     | '/admin/text'
     | '/admin/virals'
     | '/admin/visual-index'
+    | '/workspace/merch'
     | '/afro-designers/collections/$slug'
     | '/afro-designers/designers/$slug'
     | '/bare-drip/men/$category'
@@ -861,6 +873,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/text'
     | '/_authenticated/admin/virals'
     | '/_authenticated/admin/visual-index'
+    | '/_authenticated/workspace/merch'
     | '/afro-designers/collections/$slug'
     | '/afro-designers/designers/$slug'
     | '/bare-drip/men/$category'
@@ -1311,6 +1324,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AfroDesignersCollectionsSlugRouteImport
       parentRoute: typeof AfroDesignersRoute
     }
+    '/_authenticated/workspace/merch': {
+      id: '/_authenticated/workspace/merch'
+      path: '/merch'
+      fullPath: '/workspace/merch'
+      preLoaderRoute: typeof AuthenticatedWorkspaceMerchRouteImport
+      parentRoute: typeof AuthenticatedWorkspaceRoute
+    }
     '/_authenticated/admin/visual-index': {
       id: '/_authenticated/admin/visual-index'
       path: '/visual-index'
@@ -1445,12 +1465,26 @@ const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
 const AuthenticatedAdminRouteWithChildren =
   AuthenticatedAdminRoute._addFileChildren(AuthenticatedAdminRouteChildren)
 
+interface AuthenticatedWorkspaceRouteChildren {
+  AuthenticatedWorkspaceMerchRoute: typeof AuthenticatedWorkspaceMerchRoute
+}
+
+const AuthenticatedWorkspaceRouteChildren: AuthenticatedWorkspaceRouteChildren =
+  {
+    AuthenticatedWorkspaceMerchRoute: AuthenticatedWorkspaceMerchRoute,
+  }
+
+const AuthenticatedWorkspaceRouteWithChildren =
+  AuthenticatedWorkspaceRoute._addFileChildren(
+    AuthenticatedWorkspaceRouteChildren,
+  )
+
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedAdminRoute: typeof AuthenticatedAdminRouteWithChildren
   AuthenticatedFrassyRoute: typeof AuthenticatedFrassyRoute
   AuthenticatedNotificationsRoute: typeof AuthenticatedNotificationsRoute
   AuthenticatedTryOnRoute: typeof AuthenticatedTryOnRoute
-  AuthenticatedWorkspaceRoute: typeof AuthenticatedWorkspaceRoute
+  AuthenticatedWorkspaceRoute: typeof AuthenticatedWorkspaceRouteWithChildren
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
@@ -1458,7 +1492,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedFrassyRoute: AuthenticatedFrassyRoute,
   AuthenticatedNotificationsRoute: AuthenticatedNotificationsRoute,
   AuthenticatedTryOnRoute: AuthenticatedTryOnRoute,
-  AuthenticatedWorkspaceRoute: AuthenticatedWorkspaceRoute,
+  AuthenticatedWorkspaceRoute: AuthenticatedWorkspaceRouteWithChildren,
 }
 
 const AuthenticatedRouteRouteWithChildren =
