@@ -26,10 +26,12 @@ export const QUALITY_TIERS = ["signature", "premium", "standard", "experimental"
 export type QualityTier = (typeof QUALITY_TIERS)[number];
 
 // ---------- Role helpers (server-side) ----------
+type AppRole = "admin" | "staff" | "designer" | "moderator" | "partner" | "affiliate" | "ambassador" | "super_admin";
 async function assertRole(
-  supabase: { rpc: (fn: string, args: Record<string, unknown>) => Promise<{ data: unknown; error: unknown }> },
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  supabase: any,
   userId: string,
-  roles: string[],
+  roles: AppRole[],
 ): Promise<void> {
   for (const role of roles) {
     const { data } = await supabase.rpc("has_role", { _user_id: userId, _role: role });
