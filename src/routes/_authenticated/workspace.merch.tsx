@@ -638,8 +638,8 @@ function AuditTab() {
   return (
     <ul className="space-y-1 font-mono text-xs">
       {(data ?? []).map((e: {
-        id: string; event_type: string; entity_type: string | null; entity_id: string | null;
-        payload: Record<string, unknown>; created_at: string;
+        id: number | string; event_type: string; entity_type: string | null; entity_id: string | null;
+        payload: unknown; created_at: string;
       }) => (
         <li key={e.id} className="grid grid-cols-[160px_1fr] gap-4 border-b border-border/40 py-2">
           <span className="text-muted-foreground">{new Date(e.created_at).toLocaleString()}</span>
