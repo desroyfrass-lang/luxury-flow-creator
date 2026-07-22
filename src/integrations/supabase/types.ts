@@ -594,6 +594,60 @@ export type Database = {
         }
         Relationships: []
       }
+      logo_treatments: {
+        Row: {
+          asset_url: string
+          asset_variant: string | null
+          color_treatment: string | null
+          created_at: string
+          id: string
+          name: string
+          notes: string | null
+          placement: Database["public"]["Enums"]["logo_placement"]
+          print_method: string | null
+          reviewed_at: string | null
+          reviewed_by: string | null
+          size_mm: number | null
+          status: Database["public"]["Enums"]["slogan_status"]
+          submitted_by: string | null
+          updated_at: string
+        }
+        Insert: {
+          asset_url: string
+          asset_variant?: string | null
+          color_treatment?: string | null
+          created_at?: string
+          id?: string
+          name: string
+          notes?: string | null
+          placement: Database["public"]["Enums"]["logo_placement"]
+          print_method?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          size_mm?: number | null
+          status?: Database["public"]["Enums"]["slogan_status"]
+          submitted_by?: string | null
+          updated_at?: string
+        }
+        Update: {
+          asset_url?: string
+          asset_variant?: string | null
+          color_treatment?: string | null
+          created_at?: string
+          id?: string
+          name?: string
+          notes?: string | null
+          placement?: Database["public"]["Enums"]["logo_placement"]
+          print_method?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          size_mm?: number | null
+          status?: Database["public"]["Enums"]["slogan_status"]
+          submitted_by?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       lookbook_story_images: {
         Row: {
           alt: string | null
@@ -662,6 +716,191 @@ export type Database = {
           updated_at?: string
         }
         Relationships: []
+      }
+      merch_blanks: {
+        Row: {
+          base_cost: number | null
+          category: string | null
+          colors: string[]
+          created_at: string
+          currency: string | null
+          description: string | null
+          fabric: string | null
+          id: string
+          metadata: Json
+          name: string
+          provider_blank_id: string
+          provider_id: string
+          quality_score: number | null
+          quality_tier: Database["public"]["Enums"]["merch_quality_tier"] | null
+          sample_ordered_at: string | null
+          sample_verdict: string | null
+          sizes: string[]
+          status: string
+          updated_at: string
+          weight_gsm: number | null
+        }
+        Insert: {
+          base_cost?: number | null
+          category?: string | null
+          colors?: string[]
+          created_at?: string
+          currency?: string | null
+          description?: string | null
+          fabric?: string | null
+          id?: string
+          metadata?: Json
+          name: string
+          provider_blank_id: string
+          provider_id: string
+          quality_score?: number | null
+          quality_tier?:
+            | Database["public"]["Enums"]["merch_quality_tier"]
+            | null
+          sample_ordered_at?: string | null
+          sample_verdict?: string | null
+          sizes?: string[]
+          status?: string
+          updated_at?: string
+          weight_gsm?: number | null
+        }
+        Update: {
+          base_cost?: number | null
+          category?: string | null
+          colors?: string[]
+          created_at?: string
+          currency?: string | null
+          description?: string | null
+          fabric?: string | null
+          id?: string
+          metadata?: Json
+          name?: string
+          provider_blank_id?: string
+          provider_id?: string
+          quality_score?: number | null
+          quality_tier?:
+            | Database["public"]["Enums"]["merch_quality_tier"]
+            | null
+          sample_ordered_at?: string | null
+          sample_verdict?: string | null
+          sizes?: string[]
+          status?: string
+          updated_at?: string
+          weight_gsm?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "merch_blanks_provider_id_fkey"
+            columns: ["provider_id"]
+            isOneToOne: false
+            referencedRelation: "pod_providers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      merch_proposals: {
+        Row: {
+          adjustments: Json
+          artwork_notes: string | null
+          blank_id: string | null
+          concept: string | null
+          created_at: string
+          id: string
+          logo_treatment_id: string | null
+          mockup_urls: string[]
+          proposed_by: string | null
+          proposed_price: number | null
+          provider_id: string | null
+          quality_score: number | null
+          quality_tier: Database["public"]["Enums"]["merch_quality_tier"]
+          reviewed_at: string | null
+          reviewed_by: string | null
+          reviewer_notes: string | null
+          season: string | null
+          slogan_id: string | null
+          status: Database["public"]["Enums"]["merch_proposal_status"]
+          target_collection: string | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          adjustments?: Json
+          artwork_notes?: string | null
+          blank_id?: string | null
+          concept?: string | null
+          created_at?: string
+          id?: string
+          logo_treatment_id?: string | null
+          mockup_urls?: string[]
+          proposed_by?: string | null
+          proposed_price?: number | null
+          provider_id?: string | null
+          quality_score?: number | null
+          quality_tier?: Database["public"]["Enums"]["merch_quality_tier"]
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          reviewer_notes?: string | null
+          season?: string | null
+          slogan_id?: string | null
+          status?: Database["public"]["Enums"]["merch_proposal_status"]
+          target_collection?: string | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          adjustments?: Json
+          artwork_notes?: string | null
+          blank_id?: string | null
+          concept?: string | null
+          created_at?: string
+          id?: string
+          logo_treatment_id?: string | null
+          mockup_urls?: string[]
+          proposed_by?: string | null
+          proposed_price?: number | null
+          provider_id?: string | null
+          quality_score?: number | null
+          quality_tier?: Database["public"]["Enums"]["merch_quality_tier"]
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          reviewer_notes?: string | null
+          season?: string | null
+          slogan_id?: string | null
+          status?: Database["public"]["Enums"]["merch_proposal_status"]
+          target_collection?: string | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "merch_proposals_blank_id_fkey"
+            columns: ["blank_id"]
+            isOneToOne: false
+            referencedRelation: "merch_blanks"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "merch_proposals_logo_treatment_id_fkey"
+            columns: ["logo_treatment_id"]
+            isOneToOne: false
+            referencedRelation: "logo_treatments"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "merch_proposals_provider_id_fkey"
+            columns: ["provider_id"]
+            isOneToOne: false
+            referencedRelation: "pod_providers"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "merch_proposals_slogan_id_fkey"
+            columns: ["slogan_id"]
+            isOneToOne: false
+            referencedRelation: "slogans"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       newsletter_subscribers: {
         Row: {
@@ -880,6 +1119,45 @@ export type Database = {
           event_type?: string
           id?: number
           payload?: Json
+        }
+        Relationships: []
+      }
+      pod_providers: {
+        Row: {
+          config: Json
+          connected_at: string | null
+          created_at: string
+          id: string
+          is_default: boolean
+          name: string
+          notes: string | null
+          slug: string
+          status: Database["public"]["Enums"]["pod_provider_status"]
+          updated_at: string
+        }
+        Insert: {
+          config?: Json
+          connected_at?: string | null
+          created_at?: string
+          id?: string
+          is_default?: boolean
+          name: string
+          notes?: string | null
+          slug: string
+          status?: Database["public"]["Enums"]["pod_provider_status"]
+          updated_at?: string
+        }
+        Update: {
+          config?: Json
+          connected_at?: string | null
+          created_at?: string
+          id?: string
+          is_default?: boolean
+          name?: string
+          notes?: string | null
+          slug?: string
+          status?: Database["public"]["Enums"]["pod_provider_status"]
+          updated_at?: string
         }
         Relationships: []
       }
@@ -1249,6 +1527,54 @@ export type Database = {
         }
         Relationships: []
       }
+      slogans: {
+        Row: {
+          brand_voice_notes: string | null
+          created_at: string
+          id: string
+          normalized_text: string | null
+          origin_note: string | null
+          reviewed_at: string | null
+          reviewed_by: string | null
+          source: Database["public"]["Enums"]["slogan_source"]
+          status: Database["public"]["Enums"]["slogan_status"]
+          submitted_by: string | null
+          tags: string[]
+          text: string
+          updated_at: string
+        }
+        Insert: {
+          brand_voice_notes?: string | null
+          created_at?: string
+          id?: string
+          normalized_text?: string | null
+          origin_note?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          source?: Database["public"]["Enums"]["slogan_source"]
+          status?: Database["public"]["Enums"]["slogan_status"]
+          submitted_by?: string | null
+          tags?: string[]
+          text: string
+          updated_at?: string
+        }
+        Update: {
+          brand_voice_notes?: string | null
+          created_at?: string
+          id?: string
+          normalized_text?: string | null
+          origin_note?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          source?: Database["public"]["Enums"]["slogan_source"]
+          status?: Database["public"]["Enums"]["slogan_status"]
+          submitted_by?: string | null
+          tags?: string[]
+          text?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       tryon_looks: {
         Row: {
           cart_items: Json
@@ -1483,6 +1809,39 @@ export type Database = {
         | "partner"
         | "ambassador"
         | "customer"
+      logo_placement:
+        | "chest_left"
+        | "chest_center"
+        | "back_center"
+        | "sleeve"
+        | "hem"
+        | "pocket"
+        | "all_over"
+        | "embroidery_chest"
+        | "embroidery_sleeve"
+        | "other"
+      merch_proposal_status:
+        | "proposed"
+        | "under_review"
+        | "approved"
+        | "adjusted"
+        | "skipped"
+        | "rejected"
+        | "published"
+        | "retired"
+      merch_quality_tier: "signature" | "premium" | "standard" | "experimental"
+      pod_provider_status: "available" | "connected" | "disabled"
+      slogan_source:
+        | "ai_generated"
+        | "founder"
+        | "site_import"
+        | "partner_submitted"
+      slogan_status:
+        | "draft"
+        | "under_review"
+        | "approved"
+        | "rejected"
+        | "retired"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -1620,6 +1979,43 @@ export const Constants = {
         "partner",
         "ambassador",
         "customer",
+      ],
+      logo_placement: [
+        "chest_left",
+        "chest_center",
+        "back_center",
+        "sleeve",
+        "hem",
+        "pocket",
+        "all_over",
+        "embroidery_chest",
+        "embroidery_sleeve",
+        "other",
+      ],
+      merch_proposal_status: [
+        "proposed",
+        "under_review",
+        "approved",
+        "adjusted",
+        "skipped",
+        "rejected",
+        "published",
+        "retired",
+      ],
+      merch_quality_tier: ["signature", "premium", "standard", "experimental"],
+      pod_provider_status: ["available", "connected", "disabled"],
+      slogan_source: [
+        "ai_generated",
+        "founder",
+        "site_import",
+        "partner_submitted",
+      ],
+      slogan_status: [
+        "draft",
+        "under_review",
+        "approved",
+        "rejected",
+        "retired",
       ],
     },
   },
