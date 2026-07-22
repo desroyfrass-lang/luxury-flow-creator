@@ -1,4 +1,4 @@
-import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
+import { createFileRoute, useNavigate, Link, Outlet, useRouterState } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { useQuery } from "@tanstack/react-query";
 import { useEffect, useMemo, useState } from "react";
@@ -33,7 +33,7 @@ const ROLE_META: Record<BusinessRole, { label: string; blurb: string; to?: strin
   staff: { label: "Operations Dashboard", blurb: "Approvals, content, and daily ops.", to: "/admin/approvals" },
   moderator: { label: "Moderation Desk", blurb: "Review and safeguard content.", to: "/admin/approvals" },
   partner: { label: "Partner Dashboard", blurb: "Partner analytics & collaborations.", to: undefined },
-  designer: { label: "Creator Studio", blurb: "Your collections & submissions.", to: undefined },
+  designer: { label: "Creator Studio", blurb: "Merch studio, capsules & submissions.", to: "/workspace/merch" },
   ambassador: { label: "Ambassador Lounge", blurb: "Campaigns & rewards.", to: undefined },
   affiliate: { label: "Affiliate Workspace", blurb: "Track links, earnings, payouts.", to: undefined },
 };
@@ -45,6 +45,12 @@ function WorkspacePage() {
   const [reauthed, setReauthed] = useState(false);
   const [password, setPassword] = useState("");
   const [submitting, setSubmitting] = useState(false);
+  const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const isChildRoute = pathname !== "/workspace";
+
+  // Child routes (e.g. /workspace/merch) render themselves inside their own SiteShell
+  // and handle their own role gating. This page only shows the lounge at /workspace.
+  if (isChildRoute) return <Outlet />;
 
   useEffect(() => {
     setReauthed(hasFreshReauth());
