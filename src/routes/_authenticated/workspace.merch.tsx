@@ -646,9 +646,9 @@ function AuditTab() {
           <span>
             <span className="text-[color:var(--gold)]">{e.event_type}</span>
             {e.entity_type && <span className="ml-2 text-muted-foreground">{e.entity_type}:{(e.entity_id ?? "").slice(0, 8)}</span>}
-            {e.payload && typeof e.payload === "object" && Object.keys(e.payload as object).length > 0 && (
+            {e.payload && typeof e.payload === "object" && Object.keys(e.payload as object).length > 0 ? (
               <span className="ml-2 text-muted-foreground">{JSON.stringify(e.payload)}</span>
-            )}
+            ) : null}
           </span>
         </li>
       ))}
