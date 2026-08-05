@@ -45,10 +45,13 @@ function AuthPage() {
         const { error } = await supabase.auth.signUp({
           email,
           password,
-          options: { emailRedirectTo: window.location.origin + dest },
+          options: { emailRedirectTo: window.location.origin + "/onboarding" },
         });
         if (error) throw error;
-        toast.success("Account created — signing you in");
+        toast.success("Welcome — Frassy is ready to begin your Builder Journey");
+        // Frassy is the very first experience after account creation.
+        window.location.assign("/onboarding");
+        return;
       }
       window.location.assign(dest);
     } catch (err) {
