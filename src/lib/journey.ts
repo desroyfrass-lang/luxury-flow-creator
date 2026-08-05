@@ -1,24 +1,14 @@
 // The Intelligent Builder Journey — the first experience inside Frass OS.
 // Client-safe stage definitions shared by the UI and the server functions.
 
-export type JourneyStageId =
-  | "mission"
-  | "goals"
-  | "identity"
-  | "passport"
-  | "memory"
-  | "vault"
-  | "districts"
-  | "preferences"
-  | "workflows"
-  | "organizations"
-  | "marketplace"
-  | "foundation"
-  | "frassy"
-  | "welcome_hall";
+export type JourneyStageId = string;
+
+export type JourneyTrack = "builder" | "owner";
 
 export type JourneyStage = {
   id: JourneyStageId;
+  track: JourneyTrack;
+
   title: string;
   chapter: string;
   purpose: string;
@@ -30,7 +20,7 @@ export type JourneyStage = {
   minutes: number;
 };
 
-export const JOURNEY_STAGES: JourneyStage[] = [
+const BUILDER_STAGES_RAW: Omit<JourneyStage, "track">[] = [
   {
     id: "mission",
     title: "Discover your mission",
@@ -242,23 +232,201 @@ export const JOURNEY_STAGES: JourneyStage[] = [
   },
 ];
 
+// ── The Owner Setup Journey ────────────────────────────────────────────────
+// For the person who owns and operates the site itself (Frass Kicks).
+// Frassy works as an operating partner: brand, catalog, money, policies,
+// storefront, marketing, launch and daily running of the store.
+const OWNER_STAGES_RAW: Omit<JourneyStage, "track">[] = [
+  {
+    id: "op_brand",
+    title: "Lock the brand and the promise",
+    chapter: "Store Foundation",
+    purpose:
+      "Agree on what the store is, who it serves, and the promise every page must keep.",
+    objectives: [
+      "What the store sells and what makes it unmistakably Frass",
+      "Who the customer is and what they come here for",
+      "The voice, tone, and look the site must hold",
+      "The one-line promise the homepage has to make",
+    ],
+    category: "store_brand",
+    minutes: 40,
+  },
+  {
+    id: "op_catalog",
+    title: "Set up your catalog",
+    chapter: "Store Foundation",
+    purpose:
+      "Decide the collections, products, and drops the storefront will carry.",
+    objectives: [
+      "Collections and how the tree is organised",
+      "Which products are live, which are coming",
+      "Photography, sizing, and product copy standards",
+      "The first drop and what it contains",
+    ],
+    category: "store_catalog",
+    minutes: 60,
+  },
+  {
+    id: "op_pricing",
+    title: "Pricing, margins, and offers",
+    chapter: "Money",
+    purpose:
+      "Make sure every sale actually makes money and every offer is deliberate.",
+    objectives: [
+      "Cost, price, and margin on each product family",
+      "Discount rules and what is excluded",
+      "Welcome offer and loyalty rewards",
+      "Bundles, sale windows, and floor prices",
+    ],
+    category: "store_pricing",
+    minutes: 45,
+  },
+  {
+    id: "op_payments",
+    title: "Payments, taxes, and payouts",
+    chapter: "Money",
+    purpose: "Confirm money can come in cleanly and reach your account.",
+    objectives: [
+      "How customers pay and which methods are on",
+      "Currency, taxes, and where you collect",
+      "Payout account and schedule",
+      "A real test order, start to finish",
+    ],
+    category: "store_payments",
+    minutes: 35,
+  },
+  {
+    id: "op_fulfillment",
+    title: "Shipping and fulfilment",
+    chapter: "Operations",
+    purpose: "Decide how an order becomes a package in a customer's hands.",
+    objectives: [
+      "Shipping zones, rates, and free-shipping thresholds",
+      "Who packs and ships, and how fast",
+      "Tracking and delivery communication",
+      "Returns, exchanges, and lost parcels",
+    ],
+    category: "store_fulfillment",
+    minutes: 45,
+  },
+  {
+    id: "op_policies",
+    title: "Policies and customer trust",
+    chapter: "Operations",
+    purpose: "Put the written promises in place before customers arrive.",
+    objectives: [
+      "Returns, refunds, and exchange policy in plain words",
+      "Shipping and delivery policy",
+      "Privacy and terms",
+      "Contact and support expectations",
+    ],
+    category: "store_policies",
+    minutes: 35,
+  },
+  {
+    id: "op_storefront",
+    title: "Storefront and pages",
+    chapter: "Storefront",
+    purpose: "Walk the site page by page and make each one earn its place.",
+    objectives: [
+      "Homepage, hero, and first impression",
+      "Collection and product pages",
+      "About, contact, and the Frass story",
+      "Anything broken, empty, or off-brand",
+    ],
+    category: "store_storefront",
+    minutes: 50,
+  },
+  {
+    id: "op_marketing",
+    title: "Marketing and launch plan",
+    chapter: "Growth",
+    purpose: "Decide how the first customers actually find the store.",
+    objectives: [
+      "Social channels and the content rhythm",
+      "Email list and the welcome sequence",
+      "Launch date and the run-up",
+      "The first ten customers and how you reach them",
+    ],
+    category: "store_marketing",
+    minutes: 50,
+  },
+  {
+    id: "op_frassy",
+    title: "Train Frassy for your customers",
+    chapter: "Growth",
+    purpose:
+      "Teach Frassy how to greet, help, and sell on your behalf, in your voice.",
+    objectives: [
+      "How Frassy should greet a first-time visitor",
+      "Answers to the questions customers ask most",
+      "What Frassy must never say or promise",
+      "When to hand a customer to you",
+    ],
+    category: "store_frassy",
+    minutes: 40,
+  },
+  {
+    id: "op_launch",
+    title: "Launch readiness",
+    chapter: "Launch",
+    purpose: "Final walk-through, then open the doors with confidence.",
+    objectives: [
+      "Every link, card, and button checked",
+      "A real test purchase completed",
+      "What you watch in the first week",
+      "Your daily and weekly running routine",
+    ],
+    category: "store_launch",
+    minutes: 40,
+  },
+];
+
+export const JOURNEY_STAGES: JourneyStage[] = BUILDER_STAGES_RAW.map((s) => ({
+  ...s,
+  track: "builder" as const,
+}));
+
+export const OWNER_STAGES: JourneyStage[] = OWNER_STAGES_RAW.map((s) => ({
+  ...s,
+  track: "owner" as const,
+}));
+
+export const ALL_STAGES: JourneyStage[] = [...JOURNEY_STAGES, ...OWNER_STAGES];
+
 export const FIRST_STAGE: JourneyStageId = "mission";
+export const FIRST_OWNER_STAGE: JourneyStageId = "op_brand";
+
+export function trackOf(id: string): JourneyTrack {
+  return id.startsWith("op_") ? "owner" : "builder";
+}
+
+export function stagesForTrack(track: JourneyTrack): JourneyStage[] {
+  return track === "owner" ? OWNER_STAGES : JOURNEY_STAGES;
+}
+
+export function stagesFor(id: string): JourneyStage[] {
+  return stagesForTrack(trackOf(id));
+}
 
 export function stageById(id: string): JourneyStage {
-  return JOURNEY_STAGES.find((s) => s.id === id) ?? JOURNEY_STAGES[0];
+  return ALL_STAGES.find((s) => s.id === id) ?? JOURNEY_STAGES[0];
 }
 
 export function stageIndex(id: string): number {
-  const i = JOURNEY_STAGES.findIndex((s) => s.id === id);
+  const i = stagesFor(id).findIndex((s) => s.id === id);
   return i < 0 ? 0 : i;
 }
 
 export function nextStage(id: string): JourneyStage | null {
-  const i = stageIndex(id);
-  return JOURNEY_STAGES[i + 1] ?? null;
+  const list = stagesFor(id);
+  return list[stageIndex(id) + 1] ?? null;
 }
 
-export const TOTAL_JOURNEY_MINUTES = JOURNEY_STAGES.reduce(
-  (sum, s) => sum + s.minutes,
-  0,
-);
+export function trackMinutes(track: JourneyTrack): number {
+  return stagesForTrack(track).reduce((sum, s) => sum + s.minutes, 0);
+}
+
+export const TOTAL_JOURNEY_MINUTES = trackMinutes("builder");
+

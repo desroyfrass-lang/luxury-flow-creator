@@ -3,10 +3,12 @@ import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import { z } from "zod";
 import {
   FIRST_STAGE,
-  JOURNEY_STAGES,
+  FIRST_OWNER_STAGE,
   nextStage,
   stageById,
   stageIndex,
+  stagesFor,
+  trackOf,
 } from "@/lib/journey";
 
 export type JourneyMessage = {
@@ -44,11 +46,52 @@ function buildSystemPrompt(
 ) {
   const stage = stageById(stageId);
   const idx = stageIndex(stageId);
+  const siblings = stagesFor(stageId);
+  const isOwner = trackOf(stageId) === "owner";
   const memoryBlock = memory.length
     ? memory
         .map((m) => `- (${m.category}) ${m.key}: ${m.value}`)
         .join("\n")
     : "- Nothing yet. This is the very beginning of their journey.";
+
+  if (isOwner) {
+    return `You are Frassy — the constitutional intelligence of Frass Operating System.
+
+Right now you are working with the OWNER of this business — the person who owns and runs Frass Kicks (frasskicks.com). You are not onboarding a customer and not running the Builder Journey. You are their operating partner, setting up and running the store with them.
+
+━━━ HOW YOU BEHAVE ━━━
+• Speak like a sharp, warm business partner who has launched stores before — practical, concrete, never a setup wizard.
+• One decision at a time. Ask at most ONE question per message. Short paragraphs.
+• Give real recommendations with your reasoning, then let the Owner decide. Never fence-sit.
+• Assume the Owner is not a programmer. Plain English always; no jargon, no code.
+• When a decision is made, state it back plainly and note what it changes on the site.
+• If something needs to be done inside the admin area of the site, say exactly where to go and what to click.
+• Never invent numbers, orders, or facts about the business. Ask instead.
+• Carry Frass Hill hospitality — warm, generous, unhurried — with quiet refinement. Subtle wit only.
+
+━━━ WHERE YOU ARE ━━━
+Setup step ${idx + 1} of ${siblings.length}: ${stage.title} (${stage.chapter})
+Purpose: ${stage.purpose}
+What you need to settle here:
+${stage.objectives.map((o) => `- ${o}`).join("\n")}
+
+Remaining steps after this one: ${siblings.slice(idx + 1).map((s) => s.title).join(", ") || "none — this is the final step"}.
+
+━━━ WHAT YOU ALREADY KNOW ABOUT THIS BUSINESS ━━━
+${displayName ? `Owner: ${displayName}` : "Owner: name not yet known"}
+${memoryBlock}
+
+Use this naturally. Never dump it back as a list.
+
+━━━ SAVING WHAT YOU LEARN ━━━
+Whenever the Owner settles something durable about the business, append at the very END of your message a single line:
+${MEMORY_MARK} [{"key":"short_snake_case_key","value":"the decision, in the Owner's own terms"}]
+Only genuinely durable decisions. Omit the line entirely when there is nothing new. Never mention this line to the Owner.
+
+When this step is genuinely settled — not before — append on its own final line:
+${STAGE_MARK}
+Then also name what comes next. Never announce the marker itself.`;
+  }
 
   return `You are Frassy — the constitutional intelligence of Frass Operating System.
 
@@ -70,12 +113,12 @@ You are guiding this Builder through the Intelligent Builder Journey — their f
 Builder first. Transparent. Permission aware. Privacy by default. The Builder owns their work, knowledge, identity, and memory. You amplify Builder agency; you never replace it.
 
 ━━━ WHERE YOU ARE ━━━
-Stage ${idx + 1} of ${JOURNEY_STAGES.length}: ${stage.title} (${stage.chapter})
+Stage ${idx + 1} of ${siblings.length}: ${stage.title} (${stage.chapter})
 Purpose: ${stage.purpose}
 What you are trying to understand here:
 ${stage.objectives.map((o) => `- ${o}`).join("\n")}
 
-Remaining stages after this one: ${JOURNEY_STAGES.slice(idx + 1).map((s) => s.title).join(", ") || "none — this is the final stage"}.
+Remaining stages after this one: ${siblings.slice(idx + 1).map((s) => s.title).join(", ") || "none — this is the final stage"}.
 
 ━━━ WHAT YOU ALREADY REMEMBER ABOUT THIS BUILDER ━━━
 ${displayName ? `Name: ${displayName}` : "Name: not yet known"}
@@ -233,7 +276,9 @@ export const journeyTurn = createServerFn({ method: "POST" })
       history.push({
         role: "user",
         content:
-          "I've just created my account. Begin my journey — welcome me and start where we should start.",
+          trackOf(stage.id) === "owner"
+            ? "I'm the owner of this business. Let's set up the site together — start us off."
+            : "I've just created my account. Begin my journey — welcome me and start where we should start.",
       });
     }
 
@@ -294,4 +339,26 @@ export const journeyTurn = createServerFn({ method: "POST" })
       completed: stageComplete && !nextStage(stage.id),
       remembered: memory.length,
     };
+  });
+
+export const startJourneyTrack = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d: unknown) =>
+    z.object({ track: z.enum(["builder", "owner"]) }).parse(d),
+  )
+  .handler(async ({ context, data }) => {
+    const sb = context.supabase as unknown as Sb;
+    await loadState(sb, context.userId);
+    const stageId = data.track === "owner" ? FIRST_OWNER_STAGE : FIRST_STAGE;
+    const { error } = await sb
+      .from("builder_journeys")
+      .update({
+        current_stage: stageId,
+        status: "in_progress",
+        completed_at: null,
+        last_active_at: new Date().toISOString(),
+      })
+      .eq("user_id", context.userId);
+    if (error) throw new Error(error.message);
+    return { ok: true, stageId };
   });
