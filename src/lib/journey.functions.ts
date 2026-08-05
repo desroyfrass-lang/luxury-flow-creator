@@ -176,11 +176,11 @@ export const journeyTurn = createServerFn({ method: "POST" })
     const raw = await result.text;
     const parsed = parseJourneyMarkers(raw);
     const rejectedFounderReply = activeTrack === "owner" && isFounderIdentityDiscovery(parsed.text);
-    const text = rejectedFounderReply ? founderSafetyReply(stage.id) : parsed.text;
+    const text = rejectedFounderReply ? founderSafetyReply(stage.id, displayName) : parsed.text;
     const stageComplete = rejectedFounderReply ? false : parsed.stageComplete;
     const memory = rejectedFounderReply ? [] : parsed.memory;
     const reply = text || (activeTrack === "owner"
-      ? founderSafetyReply(stage.id)
+      ? founderSafetyReply(stage.id, displayName)
       : "I'm here. Take your time — tell me a little more.");
 
     await sb

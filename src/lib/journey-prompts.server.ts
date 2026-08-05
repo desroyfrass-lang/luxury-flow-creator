@@ -8,11 +8,13 @@ export type PromptMemoryEntry = {
 
 export const PLATFORM_MEMORY_PREFIX = "platform:";
 
-const FOUNDER_FACTS = `Founder: Nicky
+function founderFacts(founder: string) {
+  return `Founder: ${founder}
 Founder role: Owner / Operator
 Platform: Frass Operating System (Frass OS)
 Commerce brand: FrassKicks
 Mission of this conversation: Commission the operating system before its first Builder arrives.`;
+}
 
 const FORBIDDEN_FOUNDER_DISCOVERY = [
   /tell me (?:a bit )?about (?:yourself|what you own|your business)/i,
@@ -21,6 +23,8 @@ const FORBIDDEN_FOUNDER_DISCOVERY = [
   /how would you like me to address you/i,
   /who are you/i,
   /what (?:business|project).*(?:heart of your work|operate|building)/i,
+  /tell me (?:a bit )?about what you (?:own|operate|do)/i,
+  /anchor.*(?:your specific work|your vision|what you own)/i,
 ];
 
 export function isFounderIdentityDiscovery(text: string): boolean {
@@ -29,10 +33,11 @@ export function isFounderIdentityDiscovery(text: string): boolean {
 
 const FOUNDER_DISCOVERY_PATTERNS = FORBIDDEN_FOUNDER_DISCOVERY;
 
-export function founderSafetyReply(stageId: string): string {
+export function founderSafetyReply(stageId: string, displayName?: string | null): string {
   const stage = stageById(stageId);
   const firstObjective = stage.objectives[0] ?? "the next platform decision";
-  return `Welcome back, Nicky. We are commissioning Frass OS—not onboarding you as a Builder. The platform identity is already settled: Frass OS is the operating system, FrassKicks is the commerce brand, and you are its Founder and Owner / Operator.\n\nFor “${stage.title},” my recommendation is that we settle ${firstObjective.toLowerCase()} first. Does the current Frass direction already express that correctly, or what should the platform change?`;
+  const founder = displayName ?? "Founder";
+  return `Welcome back, ${founder}. We are commissioning Frass OS—not onboarding you as a Builder. The platform identity is already settled: Frass OS is the operating system, FrassKicks is the commerce brand, and you are its Founder and Owner / Operator.\n\nFor “${stage.title},” my recommendation is that we settle ${firstObjective.toLowerCase()} first. Does the current Frass direction already express that correctly, or what should the platform change?`;
 }
 
 export function buildFounderSystemPrompt(
@@ -59,8 +64,7 @@ export function buildFounderSystemPrompt(
 This is a dedicated Platform Commissioning engine. It is not Builder onboarding, does not share Builder identity-discovery logic, and must never psychologically frame the Founder as a new Builder.
 
 ━━━ SETTLED SYSTEM FACTS — NEVER ASK FOR THESE ━━━
-${FOUNDER_FACTS}
-Authenticated Founder display name: ${founder}
+${founderFacts(founder)}
 
 Treat these as authoritative system facts. Do not ask the Founder to identify, explain, or reintroduce the business, project, platform, brand, role, or personal identity. If an earlier message contains Builder-onboarding language, explicitly correct course and continue commissioning; never continue that line of questioning.
 
