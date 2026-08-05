@@ -183,6 +183,13 @@ function AdminLayout() {
             >
               Feedback
             </Link>
+            <Link
+              to="/admin/link-check"
+              activeProps={{ className: "text-[color:var(--gold)]" }}
+              className="text-muted-foreground hover:text-foreground"
+            >
+              Link Check
+            </Link>
 
             <Link to="/" className="text-muted-foreground hover:text-foreground">
               View site
