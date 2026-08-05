@@ -652,7 +652,7 @@ export function FrassyChat() {
               </div>
             )}
 
-            {/* Builder Journey — always the first door for a signed-in Builder */}
+            {/* Route each signed-in identity to its authoritative experience. */}
             {needsJourney && !loading && (
               <div className="pt-1">
                 <button
@@ -660,7 +660,11 @@ export function FrassyChat() {
                   onClick={goToOnboarding}
                   className="w-full rounded-full bg-[color:var(--gold)] px-4 py-2 text-xs font-bold uppercase tracking-[0.2em] text-[color:var(--ink)]"
                 >
-                  {journey.started ? "Continue my Builder Journey" : "Begin my Builder Journey"}
+                  {needsCommissioning
+                    ? "Continue Platform Commissioning"
+                    : journey.started
+                      ? "Continue my Builder Journey"
+                      : "Begin my Builder Journey"}
                 </button>
               </div>
             )}
