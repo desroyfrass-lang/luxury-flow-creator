@@ -1,6 +1,6 @@
 ---
 name: Frassy Academy District (O-27)
-description: O-27 Parts 1–2 — Builder Development System, Builder Paths, Colleges & Learning Through Creation; project-based learning through adaptive journeys
+description: O-27 Parts 1–3 — Builder Development System, Builder Paths, Colleges, Builder Passport, Hall of Builders & Living Education System
 ---
 
 # O-27 — The Academy District
@@ -82,3 +82,43 @@ Architect Builder Paths as adaptive educational journeys that continuously integ
 
 ## Status
 O-27 Part 2 locked into memory — implementation remains on hold per Master Implementation Directive v2.0. Standing by for Part 3 and closing directive.
+
+---
+
+# O-27 (Part 3) — The Builder Passport, Hall of Builders & Living Education System
+
+## The Builder Passport Philosophy
+Every participant entering the Academy should automatically receive a Builder Passport. The Builder Passport is not a report card, transcript, or GPA. It is a living record of everything the participant has built throughout their journey inside the FRASS ecosystem. The Passport should become one of the participant's most valuable lifelong assets.
+
+## The Passport Represents Capability
+Traditional education often measures attendance, grades, and exams. The Builder Passport measures: projects completed, businesses launched, creative works published, problems solved, communities served, skills demonstrated, leadership shown, mentorship provided. Every Passport entry should represent evidence of real capability.
+
+## Passport Structure
+The Builder Passport should grow continuously throughout the participant's journey. Possible sections include: Builder Identity, Builder Paths completed, current Builder Paths, projects completed, businesses launched, creative portfolio, Academy milestones, community contributions, Foundation participation, leadership achievements, Marketplace activity, skills demonstrated, mentoring history, recognition earned, personal reflections, and future goals. The Passport becomes the participant's professional story.
+
+## Every Milestone Is Earned
+Nothing inside the Builder Passport should be awarded simply for participation. Recognition should be earned through meaningful accomplishment. Examples: first documentary completed, first business launched, first paying client, first published song, first nonprofit initiative, first Academy college completed, first community event organized, first mentor relationship. Every milestone should represent genuine progress.
+
+## Living Credentials
+Rather than issuing static certificates, the Academy should issue Living Credentials. A Living Credential demonstrates ongoing capability rather than one-time completion. Examples: Creative Storytelling, Business Leadership, Music Production, Community Leadership, Artificial Intelligence, Brand Development, Financial Planning, Leadership. As participants continue growing, these credentials become richer through continued experience. Learning never truly ends.
+
+## The Hall of Builders
+Every Academy should contain a Hall of Builders. This is not a Hall of Fame. It is intentionally different. The Hall celebrates ordinary people who built extraordinary things: a grandmother publishing her first cookbook, a teenager launching a nonprofit, a musician releasing a first album, a farmer modernizing a family business, a teacher creating a community initiative, a single parent building an online company, a documentary filmmaker changing public awareness. These stories exist for inspiration, not comparison. Participants should leave believing: "If they built it... maybe I can too."
+
+## Mentorship Evolution
+One of the Academy's long-term objectives is transformation from learner to mentor. As participants gain experience, Frassy should recognize opportunities for them to support newer builders. Mentorship becomes part of education. Teaching reinforces mastery. Builders strengthen builders. The Academy gradually becomes self-sustaining.
+
+## Living Curriculum
+The Academy curriculum should never become outdated. Frassy continuously evaluates: industry changes, technology changes, creative trends, business evolution, AI advancement, educational improvements, community feedback. Lessons should evolve while preserving foundational principles. Participants should always feel they are learning relevant, modern knowledge.
+
+## Builder Reflection Journal
+Throughout the Academy journey, participants should have access to a Builder Reflection Journal. Reflection should become part of the learning process. Possible prompts include: What challenged me? What surprised me? What have I improved? What am I proud of? What would I teach someone else? Reflection transforms accomplishments into lasting wisdom.
+
+## The Legacy Principle
+The Academy should encourage participants to think beyond personal success. Builders are invited to ask: How will my work help others? What knowledge should I leave behind? Who can benefit from what I've learned? How can I strengthen the next generation? Education becomes contribution. Contribution becomes legacy.
+
+## Engineering Directive
+Implement the Builder Passport as a living development record rather than a traditional academic transcript. Design it to evolve naturally throughout every participant's journey across the FRASS ecosystem. Integrate Academy achievements with Creation District projects, Opportunity Center milestones, Community participation, Foundation service, Marketplace activity, and future ecosystem expansions. The Builder Passport should become the single most comprehensive representation of a participant's growth within FrassKicks.
+
+## Status
+O-27 Part 3 locked into memory — implementation remains on hold per Master Implementation Directive v2.0. Standing by for Part 4 and closing directive.
