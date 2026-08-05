@@ -155,7 +155,45 @@ Frassy should understand relationships between every creative medium. For exampl
 ## Engineering Directive
 Build the Creation District around creative intention rather than editing tools. Projects should begin with ideas. Studios should prepare themselves automatically. Creative quality should remain consistently professional regardless of participant experience. Every workflow should reinforce collaboration rather than automation. The participant remains the creator; Frassy remains the creative partner.
 
+---
+
+# O-25 (Part 4) — Creative Excellence Engine, Cinematic Production & Professional Quality Standards
+
+## The Creative Excellence Standard
+Every creative asset produced within the Creation District shall strive toward professional, commercial-quality output. The objective is not simply "good enough" — the objective is work that can confidently exist alongside content produced by leading creative agencies, production studios, record labels, publishers, filmmakers, and digital creators. Quality is not an upgrade; quality is the default expectation.
+
+## Professional Quality Philosophy
+Participants should never have to ask, "Can you make this look more professional?" Professionalism should already be assumed. Regardless of experience level, Frassy should continuously improve creative work by evaluating story, visual composition, lighting, color, pacing, transitions, typography, brand consistency, audio quality, emotional impact, narrative clarity, and creative polish. Every revision should move the project toward a higher professional standard.
+
+## Cinematic Intelligence
+Whenever participants create video content, Frassy should internally evaluate cinematic quality across story pacing, shot selection, visual rhythm, scene transitions, camera movement, color continuity, emotional timing, opening hooks, ending impact, audience retention, and overall storytelling. The objective is not making every video feel like Hollywood; the objective is making every story feel intentional.
+
+## Intelligent Editing
+Editing should feel conversational rather than technical. Participants may communicate naturally: "Make this more emotional," "Cut the slow parts," "Give this more energy," "I want this to feel cinematic," "Make it look expensive," "Add more suspense," or "Let's make this shorter." Frassy translates creative intent into professional editing decisions. Participants should never be required to understand editing terminology.
+
+## Audio Intelligence Engine
+Audio quality should automatically become a priority throughout every creative workflow. Many participants will upload phone recordings, voice notes, interviews, field recordings, old recordings, poor-quality microphones, and background noise. Frassy should automatically evaluate opportunities to improve noise reduction, speech clarity, volume consistency, dynamic range, presence, warmth, balance, and professional mastering. The participant's objective is simple: "My audio should sound amazing." The implementation complexity remains hidden.
+
+## The A1 Audio Standard
+Every audio asset should move toward broadcast-quality output whenever source material reasonably allows. Frassy should intelligently preserve authenticity while maximizing clarity. The participant should feel that low-quality recordings have been respectfully elevated rather than artificially altered. Professional audio should become an expected experience throughout FrassKicks.
+
+## Image Intelligence
+Every image entering the Creation District should be evaluated for improvement opportunities: resolution improvement, color correction, exposure balancing, contrast refinement, noise reduction, cropping, composition, background cleanup, restoration, creative enhancement, and brand consistency. Enhancements should support the participant's creative vision rather than impose a predefined style.
+
+## Visual Consistency Engine
+Projects containing multiple visual assets should maintain consistent visual identity: color palette, typography, graphic language, photography style, motion language, brand consistency, and editing rhythm. Participants should experience cohesive productions rather than disconnected assets.
+
+## Creative Review Sessions
+Participants should be able to ask Frassy for a professional creative review at any stage: "Review this documentary," "Critique this logo," "Evaluate this mix," "How can this story improve?" or "Would this commercial convert?" Frassy should respond as an experienced Creative Director. Reviews should remain honest, constructive, encouraging, specific, and actionable. The objective is helping participants improve without discouraging them.
+
+## Revision Intelligence
+Every revision should preserve participant intent. Frassy should never overwrite creativity simply to demonstrate capability. Before major revisions, Frassy should internally ask: What is the participant trying to achieve? How can quality improve while preserving their unique voice? The participant's creative identity always comes first.
+
+## Engineering Directive
+Implement a Creative Excellence Engine that continuously elevates quality across every medium while preserving participant ownership and artistic identity. Professional quality should emerge naturally through intelligent collaboration rather than complicated technical workflows. The system should make exceptional creative work accessible to beginners while remaining worthy of professional creators.
+
 ## Status
-O-25 Parts 1–3 received — implementation on hold per Master Implementation Directive v2.0 until closing directive.
+O-25 Parts 1–4 received — implementation on hold per Master Implementation Directive v2.0 until closing directive.
+
 
 
