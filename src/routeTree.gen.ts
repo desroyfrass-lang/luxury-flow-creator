@@ -59,6 +59,7 @@ import { Route as AuthenticatedNotificationsRouteImport } from './routes/_authen
 import { Route as AuthenticatedFrassyRouteImport } from './routes/_authenticated/frassy'
 import { Route as AuthenticatedCreationRouteImport } from './routes/_authenticated/creation'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
+import { Route as AuthenticatedAcademyRouteImport } from './routes/_authenticated/academy'
 import { Route as Char91DotwellKnownChar93OauthProtectedResourceRouteImport } from './routes/[.well-known]/oauth-protected-resource'
 import { Route as Char91DotmcpChar93ListToolsRouteImport } from './routes/[.mcp]/list-tools'
 import { Route as FrassDripWomenIndexRouteImport } from './routes/frass-drip.women.index'
@@ -346,6 +347,11 @@ const AuthenticatedAdminRoute = AuthenticatedAdminRouteImport.update({
   path: '/admin',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedAcademyRoute = AuthenticatedAcademyRouteImport.update({
+  id: '/academy',
+  path: '/academy',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const Char91DotwellKnownChar93OauthProtectedResourceRoute =
   Char91DotwellKnownChar93OauthProtectedResourceRouteImport.update({
     id: '/.well-known/oauth-protected-resource',
@@ -549,6 +555,7 @@ export interface FileRoutesByFullPath {
   '/visual-search': typeof VisualSearchRoute
   '/.mcp/list-tools': typeof Char91DotmcpChar93ListToolsRoute
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
+  '/academy': typeof AuthenticatedAcademyRoute
   '/admin': typeof AuthenticatedAdminRouteWithChildren
   '/creation': typeof AuthenticatedCreationRoute
   '/frassy': typeof AuthenticatedFrassyRoute
@@ -625,6 +632,7 @@ export interface FileRoutesByTo {
   '/visual-search': typeof VisualSearchRoute
   '/.mcp/list-tools': typeof Char91DotmcpChar93ListToolsRoute
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
+  '/academy': typeof AuthenticatedAcademyRoute
   '/creation': typeof AuthenticatedCreationRoute
   '/frassy': typeof AuthenticatedFrassyRoute
   '/notifications': typeof AuthenticatedNotificationsRoute
@@ -706,6 +714,7 @@ export interface FileRoutesById {
   '/visual-search': typeof VisualSearchRoute
   '/.mcp/list-tools': typeof Char91DotmcpChar93ListToolsRoute
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
+  '/_authenticated/academy': typeof AuthenticatedAcademyRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRouteWithChildren
   '/_authenticated/creation': typeof AuthenticatedCreationRoute
   '/_authenticated/frassy': typeof AuthenticatedFrassyRoute
@@ -792,6 +801,7 @@ export interface FileRouteTypes {
     | '/visual-search'
     | '/.mcp/list-tools'
     | '/.well-known/oauth-protected-resource'
+    | '/academy'
     | '/admin'
     | '/creation'
     | '/frassy'
@@ -868,6 +878,7 @@ export interface FileRouteTypes {
     | '/visual-search'
     | '/.mcp/list-tools'
     | '/.well-known/oauth-protected-resource'
+    | '/academy'
     | '/creation'
     | '/frassy'
     | '/notifications'
@@ -948,6 +959,7 @@ export interface FileRouteTypes {
     | '/visual-search'
     | '/.mcp/list-tools'
     | '/.well-known/oauth-protected-resource'
+    | '/_authenticated/academy'
     | '/_authenticated/admin'
     | '/_authenticated/creation'
     | '/_authenticated/frassy'
@@ -1395,6 +1407,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/academy': {
+      id: '/_authenticated/academy'
+      path: '/academy'
+      fullPath: '/academy'
+      preLoaderRoute: typeof AuthenticatedAcademyRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/.well-known/oauth-protected-resource': {
       id: '/.well-known/oauth-protected-resource'
       path: '/.well-known/oauth-protected-resource'
@@ -1685,6 +1704,7 @@ const AuthenticatedWorkspaceRouteWithChildren =
   )
 
 interface AuthenticatedRouteRouteChildren {
+  AuthenticatedAcademyRoute: typeof AuthenticatedAcademyRoute
   AuthenticatedAdminRoute: typeof AuthenticatedAdminRouteWithChildren
   AuthenticatedCreationRoute: typeof AuthenticatedCreationRoute
   AuthenticatedFrassyRoute: typeof AuthenticatedFrassyRoute
@@ -1698,6 +1718,7 @@ interface AuthenticatedRouteRouteChildren {
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedAcademyRoute: AuthenticatedAcademyRoute,
   AuthenticatedAdminRoute: AuthenticatedAdminRouteWithChildren,
   AuthenticatedCreationRoute: AuthenticatedCreationRoute,
   AuthenticatedFrassyRoute: AuthenticatedFrassyRoute,
