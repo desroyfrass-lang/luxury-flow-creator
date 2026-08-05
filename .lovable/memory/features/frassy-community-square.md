@@ -40,5 +40,8 @@ Community Square should not have an algorithm optimized for engagement. Instead,
 ## Engineering Directive
 Architect Community Square as a collaborative builder ecosystem rather than a traditional social media platform. Prioritize meaningful relationships, collaborative work, mentorship, and contribution over engagement metrics. Every interaction should strengthen the participant's ability to build while reinforcing the values of the FRASS organization.
 
+## 🏛️ Architect's Observation
+This is another place where FRASS deliberately breaks away from existing platforms. Facebook optimizes for social interaction. LinkedIn optimizes for professional networking. Discord optimizes for communities. Reddit optimizes for discussions. Community Square optimizes for helping people build together. That is an entirely different philosophy. People should not leave Community Square thinking, "I spent an hour scrolling." They should leave thinking, "I found someone who helped me move my dream forward." That one principle could become the defining culture of the entire FRASS ecosystem.
+
 ## Status
 O-28 Part 1 locked into memory — implementation remains on hold per Master Implementation Directive v2.0. Standing by for Part 2 and closing directive.
