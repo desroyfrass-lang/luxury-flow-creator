@@ -146,6 +146,13 @@ export const journeyTurn = createServerFn({ method: "POST" })
 
     const history = state.messages
       .filter((message) => trackOf(message.stage) === activeTrack)
+      // Founder history created before the engines were separated can contain
+      // Builder-discovery questions. Never send that contamination back to the model.
+      .filter((message) =>
+        activeTrack !== "owner" ||
+        message.role !== "assistant" ||
+        !isFounderIdentityDiscovery(message.content),
+      )
       .slice(-40)
       .map((m) => ({ role: m.role, content: m.content }));
     if (userText) history.push({ role: "user", content: userText });
