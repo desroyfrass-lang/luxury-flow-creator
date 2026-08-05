@@ -53,6 +53,7 @@ import { Route as AuthenticatedWorkspaceRouteImport } from './routes/_authentica
 import { Route as AuthenticatedWelcomeHallRouteImport } from './routes/_authenticated/welcome-hall'
 import { Route as AuthenticatedVaultRouteImport } from './routes/_authenticated/vault'
 import { Route as AuthenticatedTryOnRouteImport } from './routes/_authenticated/try-on'
+import { Route as AuthenticatedOpportunityRouteImport } from './routes/_authenticated/opportunity'
 import { Route as AuthenticatedOnboardingRouteImport } from './routes/_authenticated/onboarding'
 import { Route as AuthenticatedNotificationsRouteImport } from './routes/_authenticated/notifications'
 import { Route as AuthenticatedFrassyRouteImport } from './routes/_authenticated/frassy'
@@ -313,6 +314,12 @@ const AuthenticatedTryOnRoute = AuthenticatedTryOnRouteImport.update({
   path: '/try-on',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedOpportunityRoute =
+  AuthenticatedOpportunityRouteImport.update({
+    id: '/opportunity',
+    path: '/opportunity',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedOnboardingRoute = AuthenticatedOnboardingRouteImport.update({
   id: '/onboarding',
   path: '/onboarding',
@@ -547,6 +554,7 @@ export interface FileRoutesByFullPath {
   '/frassy': typeof AuthenticatedFrassyRoute
   '/notifications': typeof AuthenticatedNotificationsRoute
   '/onboarding': typeof AuthenticatedOnboardingRoute
+  '/opportunity': typeof AuthenticatedOpportunityRoute
   '/try-on': typeof AuthenticatedTryOnRoute
   '/vault': typeof AuthenticatedVaultRoute
   '/welcome-hall': typeof AuthenticatedWelcomeHallRoute
@@ -621,6 +629,7 @@ export interface FileRoutesByTo {
   '/frassy': typeof AuthenticatedFrassyRoute
   '/notifications': typeof AuthenticatedNotificationsRoute
   '/onboarding': typeof AuthenticatedOnboardingRoute
+  '/opportunity': typeof AuthenticatedOpportunityRoute
   '/try-on': typeof AuthenticatedTryOnRoute
   '/vault': typeof AuthenticatedVaultRoute
   '/welcome-hall': typeof AuthenticatedWelcomeHallRoute
@@ -702,6 +711,7 @@ export interface FileRoutesById {
   '/_authenticated/frassy': typeof AuthenticatedFrassyRoute
   '/_authenticated/notifications': typeof AuthenticatedNotificationsRoute
   '/_authenticated/onboarding': typeof AuthenticatedOnboardingRoute
+  '/_authenticated/opportunity': typeof AuthenticatedOpportunityRoute
   '/_authenticated/try-on': typeof AuthenticatedTryOnRoute
   '/_authenticated/vault': typeof AuthenticatedVaultRoute
   '/_authenticated/welcome-hall': typeof AuthenticatedWelcomeHallRoute
@@ -787,6 +797,7 @@ export interface FileRouteTypes {
     | '/frassy'
     | '/notifications'
     | '/onboarding'
+    | '/opportunity'
     | '/try-on'
     | '/vault'
     | '/welcome-hall'
@@ -861,6 +872,7 @@ export interface FileRouteTypes {
     | '/frassy'
     | '/notifications'
     | '/onboarding'
+    | '/opportunity'
     | '/try-on'
     | '/vault'
     | '/welcome-hall'
@@ -941,6 +953,7 @@ export interface FileRouteTypes {
     | '/_authenticated/frassy'
     | '/_authenticated/notifications'
     | '/_authenticated/onboarding'
+    | '/_authenticated/opportunity'
     | '/_authenticated/try-on'
     | '/_authenticated/vault'
     | '/_authenticated/welcome-hall'
@@ -1340,6 +1353,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedTryOnRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/opportunity': {
+      id: '/_authenticated/opportunity'
+      path: '/opportunity'
+      fullPath: '/opportunity'
+      preLoaderRoute: typeof AuthenticatedOpportunityRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/onboarding': {
       id: '/_authenticated/onboarding'
       path: '/onboarding'
@@ -1670,6 +1690,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedFrassyRoute: typeof AuthenticatedFrassyRoute
   AuthenticatedNotificationsRoute: typeof AuthenticatedNotificationsRoute
   AuthenticatedOnboardingRoute: typeof AuthenticatedOnboardingRoute
+  AuthenticatedOpportunityRoute: typeof AuthenticatedOpportunityRoute
   AuthenticatedTryOnRoute: typeof AuthenticatedTryOnRoute
   AuthenticatedVaultRoute: typeof AuthenticatedVaultRoute
   AuthenticatedWelcomeHallRoute: typeof AuthenticatedWelcomeHallRoute
@@ -1682,6 +1703,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedFrassyRoute: AuthenticatedFrassyRoute,
   AuthenticatedNotificationsRoute: AuthenticatedNotificationsRoute,
   AuthenticatedOnboardingRoute: AuthenticatedOnboardingRoute,
+  AuthenticatedOpportunityRoute: AuthenticatedOpportunityRoute,
   AuthenticatedTryOnRoute: AuthenticatedTryOnRoute,
   AuthenticatedVaultRoute: AuthenticatedVaultRoute,
   AuthenticatedWelcomeHallRoute: AuthenticatedWelcomeHallRoute,

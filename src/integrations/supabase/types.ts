@@ -247,6 +247,45 @@ export type Database = {
         }
         Relationships: []
       }
+      builder_finance_entries: {
+        Row: {
+          amount: number
+          category: string | null
+          created_at: string
+          currency: string
+          entry_type: string
+          id: string
+          label: string
+          occurred_on: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          amount?: number
+          category?: string | null
+          created_at?: string
+          currency?: string
+          entry_type?: string
+          id?: string
+          label: string
+          occurred_on?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          amount?: number
+          category?: string | null
+          created_at?: string
+          currency?: string
+          entry_type?: string
+          id?: string
+          label?: string
+          occurred_on?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       builder_journey_messages: {
         Row: {
           content: string
@@ -340,6 +379,57 @@ export type Database = {
           updated_at?: string
           user_id?: string
           value?: string
+        }
+        Relationships: []
+      }
+      builder_opportunities: {
+        Row: {
+          created_at: string
+          currency: string
+          description: string | null
+          effort: string
+          id: string
+          kind: string
+          next_step: string | null
+          notes: string | null
+          potential_value: number | null
+          stage: string
+          target_date: string | null
+          title: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          currency?: string
+          description?: string | null
+          effort?: string
+          id?: string
+          kind?: string
+          next_step?: string | null
+          notes?: string | null
+          potential_value?: number | null
+          stage?: string
+          target_date?: string | null
+          title: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          currency?: string
+          description?: string | null
+          effort?: string
+          id?: string
+          kind?: string
+          next_step?: string | null
+          notes?: string | null
+          potential_value?: number | null
+          stage?: string
+          target_date?: string | null
+          title?: string
+          updated_at?: string
+          user_id?: string
         }
         Relationships: []
       }
