@@ -22,6 +22,18 @@ import {
 import { useIsAdmin } from "@/hooks/use-is-admin";
 import { LaunchReadiness } from "@/components/launch-readiness";
 import { COMMISSIONING_PHASES } from "@/lib/commissioning";
+import { useFrassyPrefs } from "@/hooks/use-frassy-prefs";
+import { speakLine, stopSpeaking } from "@/lib/frassy-voice";
+import { useVoiceDictation } from "@/hooks/use-voice-dictation";
+
+type ConversationMode = "text" | "voice_text" | "voice_only";
+const MODE_KEY = "frass:onboarding:mode";
+const MODE_LABELS: Record<ConversationMode, string> = {
+  text: "Text only",
+  voice_text: "Voice + text",
+  voice_only: "Voice only",
+};
+
 
 export const Route = createFileRoute("/_authenticated/onboarding")({
   head: () => ({
