@@ -35,8 +35,12 @@ function AuthPage() {
         window.location.assign(dest);
         return;
       }
-      const status = await fetchJourneyStatus();
-      window.location.assign(status.needsJourney ? "/onboarding" : dest);
+      try {
+        const status = await fetchJourneyStatus();
+        window.location.assign(status.needsJourney ? "/onboarding" : dest);
+      } catch {
+        window.location.assign(dest);
+      }
     });
   }, [dest, next]);
 
