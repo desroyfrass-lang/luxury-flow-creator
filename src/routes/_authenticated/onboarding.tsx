@@ -199,10 +199,13 @@ function OnboardingPage() {
   useEffect(() => {
     if (isLoading || roleLoading || !data || openedRef.current) return;
     if (isAdmin === true && track !== "owner") return;
-    const hasTrackMessages = (data.messages ?? []).some(
-      (m: JourneyMessage) => trackOf(m.stage) === track,
+    // Founder corrections and legacy Builder-style prompts must not suppress
+    // the deterministic Control Room opening. The server removes contaminated
+    // assistant replies; only a valid assistant turn proves this track opened.
+    const hasValidAssistantOpening = (data.messages ?? []).some(
+      (m: JourneyMessage) => trackOf(m.stage) === track && m.role === "assistant",
     );
-    if (!hasTrackMessages) {
+    if (!hasValidAssistantOpening) {
       openedRef.current = true;
       void send("", true);
     }
