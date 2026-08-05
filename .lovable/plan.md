@@ -1,70 +1,60 @@
-# Frassy OS — Phase 1 (Foundation)
+# Plan: Page Feedback Widgets
 
-A private admin operating system at `/frassy`. Separate from the customer Frassy chat widget. Read-only aggregator over what already exists in the database — no new approval flows yet.
+## Goal
+Add a customer-friendly feedback widget on key pages so visitors and the owner can:
+- Mark a page as helpful or not helpful
+- Report an issue with the page
 
-## What ships
+## What will be built
 
-**Route:** `/frassy` (under `_authenticated`, admin-only gate). Not linked from the public site. Owner accesses it directly or via a discreet link from `/admin`.
+### 1. Database table
+Create a `public.page_feedback` table:
+- `id` (uuid, primary key)
+- `page_path` (text, the page URL)
+- `page_title` (text, optional)
+- `helpful` (boolean, nullable: true = helpful, false = not helpful)
+- `issue_text` (text, nullable, the user's report)
+- `user_id` (uuid, nullable, references auth.users)
+- `created_at` (timestamptz, default now())
 
-**Layout:** Dark luxury "mission control" — full-bleed dark canvas, gold hairlines, generous whitespace, monospaced accents for numbers. Distinct from Shopify and from the storefront.
+RLS policy: users can insert their own feedback; only admins/service_role can read all rows.
 
-## Sections (top to bottom)
+### 2. Feedback component
+Create `src/components/page-feedback.tsx`:
+- Compact bar at the bottom of the page
+- "Was this helpful?" with thumbs-up and thumbs-down buttons
+- After voting, show a short "Thanks for your feedback" message
+- "Report an issue" link that expands a small textarea
+- Submit issue button stores the report
+- Anonymous-friendly: works whether the user is signed in or not
 
-1. **Greeting bar**
-   Time-aware ("Good morning / afternoon / evening"), name from profile, warm one-liner. Rotates from a small pool so it never feels canned.
+### 3. Server function
+Create `src/lib/feedback.functions.ts`:
+- `submitPageFeedback` createServerFn to insert feedback
+- Reads page path, helpful flag, and optional issue text
 
-2. **Store status strip** (6 tiles)
-   Orders overnight · Revenue (today / 7d) · Pending orders · Low-stock alerts · New customers · Rewards claimed. Each tile: big number, delta vs. previous period, one-line "why it matters" caption.
+### 4. Placement on key pages
+Add the `<PageFeedback />` component to:
+- Product detail page (`src/routes/product.$handle.tsx`)
+- Checkout page (`src/routes/checkout.tsx`)
+- Onboarding / Builder Journey page (`src/routes/onboarding.tsx`)
+- Workspace pages (`src/routes/_authenticated/workspace*.tsx`)
+- Frassy page (`src/routes/frassy.tsx`)
+- Main landing/store index pages (`/frass-kicks`, `/frass-drip`, `/bare-drip`, `/afro-designers`, `/capsules`, `/social-media-virals`)
+- Blog, lookbook, and music/media pages
 
-3. **Mandatory tasks** (approval queue)
-   Live counts pulled from existing tables:
-   - CJ products awaiting approval (`cj_import_queue` where status = pending)
-   - Capsules missing hero image / description (`capsules`)
-   - Blog drafts unpublished (`blog_posts`)
-   - Viral products missing category (`viral_products`)
-   - Site text slots empty (`site_text`)
-   - Site image slots empty (`site_images`)
-   Each row: task title, count, estimated minutes (rough heuristic: 30s per item), "Open" button that deep-links to the existing admin surface.
-   Header shows total estimated time: **"Today's mandatory work: ~X minutes"**.
+### 5. Admin view (optional follow-up)
+A simple admin report at `/admin/feedback` listing recent feedback with page path, vote, and issue text. This can be added in the same implementation if scope allows.
 
-4. **Optional work**
-   Static launcher grid (for now): Build capsule · Write blog · Explore trends · Review analytics · Manage virals · CJ discovery. Each links to the existing admin route.
+## Out of scope
+- Email notifications for new feedback
+- Sentiment analysis
+- Public display of feedback counts
 
-5. **Pinned notes**
-   Free-form notes the owner types in. Persist in a new `frassy_notes` table (id, user_id, body, pinned, created_at, archived_at). Add/pin/archive. Search box.
-
-6. **Footer: today at a glance**
-   Simple daily rollup — orders count, revenue, tasks closed today (nothing fancy, no charts yet).
-
-## What is NOT in Phase 1
-
-Chat mode · analytics narratives · memory that learns preferences · product/image approval UI · customer support console · designer/affiliate queues · daily-summary-at-logout · social publishing queues. All deferred to later phases (spec preserved in `NOTES.md`).
-
-## Technical
-
-- New route: `src/routes/_authenticated/frassy.tsx` (admin-role gated in the component, matching `/admin` pattern).
-- New server function file: `src/lib/frassy.functions.ts` — one `getDailyBriefing` server fn that runs the count queries in parallel and returns a typed briefing object. Uses `requireSupabaseAuth` + admin role check.
-- New table via migration: `frassy_notes` with RLS (owner reads/writes own rows only) and standard GRANTs.
-- New components under `src/components/frassy/`: `GreetingBar`, `StatusTile`, `TaskRow`, `NoteList`.
-- TanStack Query for the briefing with a 60s stale time and a manual refresh button.
-- No changes to the customer `frassy-chat.tsx` widget — kept as-is.
-
-## Data sources (read-only aggregates)
-
-```text
-orders                 → today's revenue, order count, status buckets
-order_items            → (Phase 2 for best-sellers)
-cj_import_queue        → pending approvals count
-capsules               → missing description / image count
-blog_posts             → draft count
-viral_products         → uncategorized count
-site_text, site_images → empty slot counts
-profiles               → new signups (last 24h)
-reward_coupons         → claimed today
-```
-
-All queries scoped through `requireSupabaseAuth` + `has_role('admin')`.
-
-## Success looks like
-
-Owner opens `/frassy`, sees warm greeting, one screen tells them exactly what needs their approval today with time estimates and one-click jumps into the existing admin tools. Everything else (chat, product approval UI, analytics narratives) lands in later phases without rearchitecting Phase 1.
+## Acceptance criteria
+- [ ] Thumbs-up/thumbs-down buttons appear on all listed key pages
+- [ ] Clicking a button records the vote and shows a thank-you message
+- [ ] "Report an issue" expands a textarea and submits text feedback
+- [ ] Anonymous visitors can submit feedback
+- [ ] Feedback data is visible in the database/admin
+- [ ] UI matches the dark streetwear Frass brand style
