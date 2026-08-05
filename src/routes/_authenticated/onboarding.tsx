@@ -19,7 +19,7 @@ import {
   trackMinutes,
   trackOf,
 } from "@/lib/journey";
-import { useIsAdmin } from "@/hooks/use-is-admin";
+import { useIsAdminStatus } from "@/hooks/use-is-admin";
 import { LaunchReadiness } from "@/components/launch-readiness";
 import { COMMISSIONING_PHASES } from "@/lib/commissioning";
 import { useFrassyPrefs } from "@/hooks/use-frassy-prefs";
@@ -56,7 +56,7 @@ function OnboardingPage() {
   const turn = useServerFn(journeyTurn);
   const jumpStage = useServerFn(setJourneyStage);
   const switchTrack = useServerFn(startJourneyTrack);
-  const isAdmin = useIsAdmin();
+  const { isAdmin, loading: roleLoading } = useIsAdminStatus();
 
   const { data, isLoading, refetch } = useQuery({
     queryKey: ["builder-journey"],
@@ -173,7 +173,7 @@ function OnboardingPage() {
 
   // Founders land in the Commissioning Journey, not the Builder Journey.
   useEffect(() => {
-    if (isLoading || !data || founderRef.current || isAdmin !== true) return;
+    if (isLoading || roleLoading || !data || founderRef.current || isAdmin !== true) return;
     if (trackOf(data.currentStage) === "owner") {
       founderRef.current = true;
       return;
@@ -183,12 +183,12 @@ function OnboardingPage() {
       await switchTrack({ data: { track: "owner" } });
       await refetch();
     })();
-  }, [isLoading, data, isAdmin]);
+  }, [isLoading, roleLoading, data, isAdmin, switchTrack, refetch]);
 
   // First session on this track: let Frassy open the conversation.
   useEffect(() => {
-    if (isLoading || !data || openedRef.current) return;
-    if (isAdmin === true && !founderRef.current) return;
+    if (isLoading || roleLoading || !data || openedRef.current) return;
+    if (isAdmin === true && track !== "owner") return;
     const hasTrackMessages = (data.messages ?? []).some(
       (m: JourneyMessage) => trackOf(m.stage) === track,
     );
@@ -196,7 +196,7 @@ function OnboardingPage() {
       openedRef.current = true;
       void send("", true);
     }
-  }, [isLoading, data, isAdmin, track]);
+  }, [isLoading, roleLoading, data, isAdmin, track]);
 
 
   const onSubmit = (e: React.FormEvent) => {
@@ -410,13 +410,13 @@ function OnboardingPage() {
               </div>
             ))}
             {busy && (
-              <div className="text-sm text-muted-foreground">Frassy is thinking…</div>
+              <div role="status" aria-live="polite" className="text-sm text-muted-foreground">Frassy is thinking…</div>
             )}
             {speaking && !busy && (
-              <div className="text-sm text-[color:var(--gold)]">Frassy is speaking…</div>
+              <div role="status" aria-live="polite" className="text-sm text-[color:var(--gold)]">Frassy is speaking…</div>
             )}
             {dictation.listening && (
-              <div className="text-sm text-muted-foreground">
+              <div role="status" aria-live="polite" className="text-sm text-muted-foreground">
                 Listening… {dictation.interim}
               </div>
             )}
