@@ -330,13 +330,20 @@ function OnboardingPage() {
         </aside>
 
         <div className="space-y-8">
-        {isOwnerTrack && (finished || stage.chapter.includes("Launch")) && (
+        {isOwnerTrack && (
           <LaunchReadiness
+            eyebrow="Commissioning Dashboard"
+            heading="Platform Readiness"
             completedStageIds={Object.keys(data?.stageProgress ?? {}).filter(
               (id) => trackOf(id) === "owner",
             )}
+            onSelectStage={async (stageId) => {
+              await jumpStage({ data: { stageId } });
+              await refetch();
+            }}
           />
         )}
+
 
         {/* Conversation */}
         <section className="min-h-[70vh] rounded-sm border border-border bg-background/40">
