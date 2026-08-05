@@ -79,5 +79,43 @@ Implement the Foundation District as a coordinated humanitarian collaboration pl
 ## 🏛️ Architect's Observation (Part 2)
 Many volunteer platforms ask, "Who needs help?" FRASS asks an equally important question: "Who is uniquely equipped to help?" That is a subtle but powerful distinction. Instead of treating volunteers as interchangeable, Frassy recognizes that every builder has unique gifts. A filmmaker doesn't just volunteer—they tell stories that inspire action. A programmer doesn't just volunteer—they build systems that multiply impact. A mentor doesn't just volunteer—they change trajectories. That philosophy—matching purpose with ability—is what can make the Foundation District extraordinarily effective over the long term.
 
+## O-29 (Part 3) — Legacy, Sustainability & Humanitarian Leadership
+
+### The Legacy Philosophy
+The Foundation encourages builders to think beyond individual projects. Every initiative asks: What lasting change will remain after this project ends? Success is not measured only by completed activities. Success is measured by strengthened people, stronger communities, sustainable systems, and future opportunities created. The Foundation exists to build legacy, not temporary relief alone.
+
+### Sustainable Impact
+Foundation projects prioritize long-term sustainability. Whenever possible, initiatives create local leadership, self-sustaining organizations, educational resources, economic opportunity, technology infrastructure, community ownership, and repeatable systems. The highest form of service is helping communities become increasingly independent.
+
+### Leadership Through Service
+Leadership inside the Foundation is earned through consistent service. Builders naturally grow into Project Leaders, Volunteer Coordinators, Regional Organizers, Mentors, Community Advocates, and Foundation Ambassadors. Leadership is never based upon status. It is demonstrated through responsibility, humility, and consistent contribution.
+
+### Builder-Led Initiatives
+Participants are empowered to propose and lead Foundation initiatives: neighborhood improvement projects, youth mentorship programs, creative education workshops, technology literacy programs, entrepreneurship boot camps, environmental restoration, food security initiatives, and community storytelling projects. Frassy provides organizational support while builders remain the leaders. The Foundation grows through its people.
+
+### Resource Stewardship
+The Foundation treats every resource with respect: volunteer time, financial contributions, creative assets, educational materials, technology, partnerships, and community trust. Every decision maximizes meaningful impact while minimizing waste. Responsible stewardship is a core organizational value.
+
+### Foundation Knowledge Base
+Every completed initiative contributes to a growing Foundation Knowledge Base: successful strategies, lessons learned, project templates, volunteer guides, training materials, community case studies, and leadership practices. Future builders benefit from the wisdom of previous builders. Knowledge compounds over time.
+
+### Stories of Hope
+The Foundation intentionally preserves stories that demonstrate hope, resilience, and transformation. These stories celebrate communities strengthened, individuals empowered, young leaders emerging, creative projects creating change, businesses serving communities, and builders helping builders. Stories remind participants why the Foundation exists. Hope becomes contagious.
+
+### Foundation Recognition
+Recognition honors service without encouraging ego: years of service, exceptional leadership, community innovation, volunteer excellence, mentorship impact, and collaborative achievement. Recognition always points back toward the mission rather than the individual. The work matters more than the recognition.
+
+### Human Dignity
+Every Foundation initiative protects the dignity of every person involved. Builders never view people as projects. Communities never become marketing opportunities. Service always preserves respect, privacy, and partnership. The Foundation works with communities, never merely for communities.
+
+### Global Vision
+The Foundation gradually expands from local initiatives to global impact. Builders increasingly recognize that their skills can strengthen people anywhere in the world. The Foundation becomes an international network of builders working together to solve meaningful problems through creativity, education, entrepreneurship, technology, and compassionate leadership.
+
+### Part 3 Engineering Directive
+Implement the Foundation District as a long-term humanitarian operating system capable of organizing people, projects, knowledge, partnerships, and leadership into a sustainable movement for positive change. Every engineering decision reinforces dignity, stewardship, collaboration, measurable impact, and long-term community strengthening. The Foundation grows stronger with every builder who contributes.
+
+## 🏛️ Architect's Observation (Part 3)
+Most organizations measure success by how much they accomplished. The Foundation measures success by how many people become capable of accomplishing things for themselves. That is a profound shift. The goal isn't creating dependency. The goal is creating builders. And when builders begin creating more builders, the impact becomes exponential. The Foundation District is what ensures FRASS remains a mission-driven organization for generations, no matter how large it becomes.
+
 ## Status
-O-29 Parts 1–2 locked into memory — implementation remains on hold per Master Implementation Directive v2.0. Standing by for Part 3 and closing directive.
+O-29 Parts 1–3 locked into memory — implementation remains on hold per Master Implementation Directive v2.0. Standing by for Part 4 and closing directive.
