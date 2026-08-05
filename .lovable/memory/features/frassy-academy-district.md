@@ -1,6 +1,6 @@
 ---
 name: Frassy Academy District (O-27)
-description: O-27 Parts 1–3 — Builder Development System, Builder Paths, Colleges, Builder Passport, Hall of Builders & Living Education System
+description: O-27 COMPLETE (Parts 1–4) — Builder Development System, Builder Paths, Colleges, Builder Passport, Hall of Builders, Mentor Intelligence, Adaptive Learning & Lifelong Builder Development
 ---
 
 # O-27 — The Academy District
@@ -39,7 +39,7 @@ Participants may enter the Academy with little formal education. Engineering sho
 Architect the Academy as a Builder Development System rather than a traditional educational platform. Every educational experience should strengthen participant capability through real-world application. The Academy should continuously transform knowledge into practical accomplishment while maintaining one unified relationship through Frassy.
 
 ## Status
-O-27 Parts 1–2 received — implementation on hold per Master Implementation Directive v2.0 until closing directive.
+O-27 Part 1 locked into memory — implementation remains on hold per Master Implementation Directive v2.0.
 
 ---
 
@@ -81,7 +81,7 @@ Every meaningful milestone should include reflection. Participants should period
 Architect Builder Paths as adaptive educational journeys that continuously integrate learning with real-world building. Every lesson should produce meaningful progress toward an active participant project. Education, creation, and opportunity should remain permanently connected throughout the Academy experience.
 
 ## Status
-O-27 Part 2 locked into memory — implementation remains on hold per Master Implementation Directive v2.0. Standing by for Part 3 and closing directive.
+O-27 Part 2 locked into memory — implementation remains on hold per Master Implementation Directive v2.0.
 
 ---
 
@@ -121,4 +121,4 @@ The Academy should encourage participants to think beyond personal success. Buil
 Implement the Builder Passport as a living development record rather than a traditional academic transcript. Design it to evolve naturally throughout every participant's journey across the FRASS ecosystem. Integrate Academy achievements with Creation District projects, Opportunity Center milestones, Community participation, Foundation service, Marketplace activity, and future ecosystem expansions. The Builder Passport should become the single most comprehensive representation of a participant's growth within FrassKicks.
 
 ## Status
-O-27 Part 3 locked into memory — implementation remains on hold per Master Implementation Directive v2.0. Standing by for Part 4 and closing directive.
+O-27 Part 3 locked into memory — implementation remains on hold per Master Implementation Directive v2.0.
