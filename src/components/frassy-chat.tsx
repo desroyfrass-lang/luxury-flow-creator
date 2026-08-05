@@ -47,6 +47,14 @@ const INITIAL_MSG: Msg = {
     "Welcome to Frass Hill — I'm Frassy. Tap me anytime for styling, sizing, or to unlock 40% off your first order.",
 };
 
+// Shown instead of the storefront welcome when a signed-in Builder still owes the journey.
+const JOURNEY_MSG: Msg = {
+  role: "assistant",
+  content:
+    "Welcome back — I'm Frassy. Before anything else, we have your Intelligent Builder Journey to walk through together: your mission, your identity, your vault, and the districts of Frass OS. It's taken at your pace across as many sessions as you like, and everything saves as we go. Tap “Begin my Builder Journey” below and I'll open the first chapter.",
+};
+
+
 const QUICK_ACTIONS = [
   { label: "🎁 Unlock 40% OFF", prompt: "How do I unlock the 40% off first purchase reward?" },
   { label: "How Try-On works", prompt: "How does the Try-On feature work?" },
