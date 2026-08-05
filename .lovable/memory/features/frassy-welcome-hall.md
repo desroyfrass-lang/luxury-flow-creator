@@ -170,3 +170,99 @@ Participants should rarely navigate through traditional software menus. Instead,
 
 Participants follow purpose rather than navigation. The platform becomes destination-driven instead of menu-driven.
 
+---
+
+# O-24 (Part 3) — Daily Operations, Dynamic Environment & Builder Continuity
+
+## The Welcome Hall Is Alive
+The Welcome Hall functions as a living environment rather than a static dashboard. It continuously responds to:
+- Participant progress.
+- Time of day.
+- Active projects.
+- Community achievements.
+- Seasonal events.
+- Foundation initiatives.
+- Academy milestones.
+- Marketplace activity.
+
+Nothing should feel random. Every environmental change reinforces that the FRASS ecosystem is active and continuously creating value.
+
+## Dynamic Environmental States
+The environment subtly evolves throughout the day:
+- **Morning:** bright, optimistic, fresh energy. The Hall feels ready for building.
+- **Afternoon:** focused, productive, confident. Everything encourages momentum.
+- **Evening:** warm, reflective, comfortable. The atmosphere encourages review, creativity, planning, and thoughtful work.
+
+Environmental transitions should be gradual and almost unnoticeable. The participant should simply feel that the space is alive.
+
+## Frassy's Presence Inside The Hall
+Frassy should never dominate the Welcome Hall. Instead, Frassy exists as a quiet presence:
+- Sometimes the FrassKicks symbol gently pulses.
+- Sometimes it ripples while processing.
+- Sometimes it subtly glows while preparing recommendations.
+- Sometimes it remains perfectly still.
+
+Silence communicates confidence. Motion communicates awareness. Every movement should have purpose. Animation should never exist simply because animation is possible.
+
+## The Daily Builder Briefing
+Each time a participant enters the Welcome Hall, Frassy prepares a personalized Builder Briefing. It is concise and may include:
+- Today's most important priority.
+- Progress since the last session.
+- One meaningful opportunity.
+- One suggested next action.
+- One encouraging observation based on real progress.
+
+The objective is to orient the participant quickly without creating information overload.
+
+## The Momentum Panel
+The Welcome Hall includes a Momentum Panel. This is not a productivity tracker — it is a reflection of forward movement:
+- Projects advancing.
+- Builder Path progress.
+- Creative consistency.
+- Business milestones.
+- Community participation.
+- Academy development.
+
+Momentum is communicated visually and simply. Participants should feel encouraged rather than measured.
+
+## The Continue Building Workspace
+The largest and most prominent action within the Welcome Hall should always be **Continue Building**. Selecting this action immediately resumes the participant's highest-priority work. No additional navigation. No searching. No reopening projects. Frassy already knows where meaningful progress should continue.
+
+## Cross-Campus Awareness
+The Welcome Hall serves as the central connection point for every building within the FRASS campus. Participants should always have awareness of activity occurring throughout the ecosystem:
+- "Your documentary review is waiting in the Creation District."
+- "The Academy has prepared your next lesson."
+- "A new collaboration opportunity is available in Community Square."
+- "The Opportunity Center has identified a licensing match."
+- "The Foundation has an initiative aligned with your interests."
+
+The participant should feel connected to the entire campus without becoming overwhelmed.
+
+## Intelligent Recovery
+If participants return after abandoning projects, Frassy should intelligently recover the work:
+- Organizing unfinished projects.
+- Removing outdated tasks.
+- Updating recommendations.
+- Rebuilding context.
+- Summarizing progress.
+- Identifying the easiest next step.
+
+The participant should never feel punished for taking time away. Recovery should feel welcoming.
+
+## Adaptive Simplicity
+As participants become more experienced, the Welcome Hall should gradually expose more capability. However, the interface should never become cluttered. Growth should increase usefulness rather than complexity. The engineering objective is progressive capability with consistent simplicity. Participants should feel increasingly empowered, never increasingly overwhelmed.
+
+## Hall Intelligence
+The Welcome Hall continuously evaluates:
+- Has the participant become stuck?
+- Are multiple priorities competing?
+- Has momentum slowed?
+- Has an important opportunity emerged?
+- Would another building better serve the participant today?
+
+The Welcome Hall quietly becomes the participant's daily strategic advisor.
+
+## Identity Reinforcement
+Every visit should reinforce one simple identity: the participant is a **builder**. Language throughout the Welcome Hall should consistently support this identity. Not user, customer, account, or subscriber. **Builder.** Because identity shapes behavior.
+
+
