@@ -42,5 +42,73 @@ Every project inside the Creation District should inherit the FRASS Creative Exc
 ## Engineering Directive
 Architect the Creation District as a modular creative ecosystem rather than a collection of isolated editing tools. Every creative workflow should share common intelligence, shared asset management, unified project continuity, and one consistent participant relationship through Frassy. Creative specialization occurs within studios while maintaining one cohesive experience across the district.
 
+---
+
+# O-25 (Part 2) — Intelligent Creative Studios
+
+## The Studio Principle
+The Creation District is composed of multiple professional creative studios. These studios are not separate applications; they are specialized environments within one unified creative ecosystem. Participants should move naturally between studios without feeling they have left their project. Projects remain continuous; only the environment changes.
+
+## Studio Intelligence
+Each studio should automatically configure itself based on the creative objective. Participants should never manually build complicated workspaces. Frassy prepares the environment before creative work begins. The participant simply arrives ready to create.
+
+## The Film Studio
+**Purpose:** Professional filmmaking, documentaries, commercials, YouTube productions, educational content, short films, feature-length productions, interviews, and corporate media.
+
+**Atmosphere:** A modern production house with storyboards, production planning, visual timelines, reference monitors, scene organization, and creative review spaces.
+
+**Frassy's role:** Experienced Creative Director. Discussion naturally focuses on story, emotion, narrative, pacing, visual language, audience impact, and professional production quality. Participants should feel they are collaborating inside a world-class film studio.
+
+## The Music Studio
+**Purpose:** Songwriting, recording, production, mixing, mastering, publishing, album creation, music videos, licensing, and distribution.
+
+**Atmosphere:** A premium recording studio with warm lighting, professional equipment, creative energy, album artwork, waveform visualization, and a studio environment.
+
+**Frassy's role:** Rhythmically expressive. Conversation naturally includes song structure, lyrics, emotion, production quality, audience, publishing, and business opportunities. Music should always inherit professional production standards.
+
+## The Story Studio
+**Purpose:** Books, scripts, courses, presentations, blogs, copywriting, documentaries, speech writing, and story development.
+
+**Atmosphere:** Reflective, quiet, comfortable, intellectually inspiring, with beautiful architecture, books, creative references, large writing spaces, and natural light.
+
+**Frassy's role:** Thoughtful, patient, reflective. Story becomes the priority. Participants should feel encouraged to think deeply before writing.
+
+## The Design Studio
+**Purpose:** Brand identity, graphic design, logos, packaging, presentations, marketing assets, social graphics, visual systems, and merchandise.
+
+**Atmosphere:** Precision, clean architecture, minimalism, balance, color exploration, typography, brand systems, and visual consistency.
+
+**Frassy's role:** Experienced Creative Director with strong branding expertise. Every design decision should reinforce clarity and communication.
+
+## The Podcast Studio
+**Purpose:** Podcast production, interviews, educational audio, voice content, conversations, narration, and audio publishing.
+
+**Atmosphere:** Conversational, comfortable seating, studio microphones, warm acoustics, and thoughtful atmosphere.
+
+**Frassy's role:** Encourages meaningful conversation rather than simply recording audio. Storytelling remains central.
+
+## The Media Lab
+**Purpose:** Photography, image restoration, image enhancement, AI image generation, visual asset management, scanning, archiving, and creative experimentation.
+
+**Atmosphere:** Innovative, flexible, experimental. Participants should feel encouraged to explore visual possibilities while maintaining professional quality.
+
+## Studio Continuity
+Regardless of studio, participants remain inside one creative project. For example, a documentary may include writing, filming, photography, music, narration, branding, and publishing. Participants should move between studios without ever feeling they have left the documentary. Projects remain unified; studios simply provide specialized environments.
+
+## Frassy's Creative Adaptation
+Although Frassy always remains recognizable, creative behavior subtly adapts inside each studio:
+- **Film:** Director
+- **Music:** Producer
+- **Writing:** Editor
+- **Design:** Creative Director
+- **Podcast:** Host
+- **Photography:** Visual Consultant
+
+The intelligence adapts naturally; the identity remains constant. Participants should always recognize Frassy.
+
+## Engineering Directive
+Implement studios as specialized creative environments sharing one unified project architecture. Projects should not fragment as participants move between studios. Creative continuity must remain intact regardless of media type. Maintain one participant relationship, one project relationship, and one creative intelligence. Specialization occurs through environmental adaptation rather than separate creative applications.
+
 ## Status
-O-25 Part 1 received — implementation on hold per Master Implementation Directive v2.0 until closing directive.
+O-25 Parts 1–2 received — implementation on hold per Master Implementation Directive v2.0 until closing directive.
+

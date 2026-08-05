@@ -19,7 +19,7 @@ Engineering Package v2.0: hold implementation until the closing directive; Frass
 - [Frassy Core Intelligence Engine](mem://features/frassy-core-intelligence-engine) — O-22 COMPLETE (Constitution of Frassy's Intelligence): orchestration layer, 3-layer awareness, 7-stage lifecycle, shared memory, initialization/arrival sequence, platform inheritance, acceptance criteria
 - [Frassy Onboarding System](mem://features/frassy-onboarding-system) — O-23 COMPLETE: Welcome Hall arrival, discovery journey, Builder Profile, no-intimidation rules, mandatory First Win, adaptive onboarding, returning participants, accessibility, acceptance criteria
 - [Frassy Welcome Hall Experience](mem://features/frassy-welcome-hall) — O-24 COMPLETE: digital front entrance, arrival sequence, Continue Building, Daily Focus, Opportunity Window, Progress Wall, Living Hall, dynamic environment, accessibility, responsive design, acceptance criteria, Headquarters Principle
-- [Frassy Creation District](mem://features/frassy-creation-district) — O-25 Part 1: creative operating system, dynamic studios, Frassy as creative director, Creative Excellence Standard
+- [Frassy Creation District](mem://features/frassy-creation-district) — O-25 Parts 1–2: creative operating system, Film/Music/Story/Design/Podcast/Media Lab studios, studio continuity, Frassy's adaptive creative roles
 
 
 
