@@ -7,7 +7,7 @@ type: feature
 # FRASS SYSTEM BLUEPRINT A-06: Workflow Engine Architecture
 
 ## Status
-**IN PROGRESS — Part 1 received, awaiting Part 2 and closing directive.**
+**IN PROGRESS — Parts 1-2 received, awaiting Part 3 and closing directive.**
 
 ## Executive Summary
 The Workflow Engine serves as the orchestration layer that transforms Builder intentions into coordinated action across the entire FRASS ecosystem. Rather than requiring Builders to manually coordinate projects, assets, people, learning, opportunities, and milestones, the Workflow Engine intelligently assembles and manages complete Builder journeys. Builders should focus on building; the operating system manages coordination.
