@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { SiteShell } from "@/components/site-shell";
+import { PageFeedback } from "@/components/page-feedback";
 import { CollectionCard } from "@/components/collection-card";
 import { PageHeader } from "@/components/page-header";
 import cardBare from "@/assets/card-bare.jpg";
@@ -28,6 +29,7 @@ export const Route = createFileRoute("/bare-drip/")({
           <CollectionCard to="/bare-drip/women" image={cardWomen} eyebrow="Bare Drip" title="Women's Bare Drip" description="Swim · Lingerie · Sleepwear" ratio="wide" />
         </div>
       </section>
+      <PageFeedback pageTitle="Bare Drip" />
     </SiteShell>
   ),
 });

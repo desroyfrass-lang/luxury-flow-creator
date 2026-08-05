@@ -4,6 +4,7 @@ import { useServerFn } from "@tanstack/react-start";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { Pin, PinOff, Archive, RefreshCw, ArrowUpRight, Plus } from "lucide-react";
+import { PageFeedback } from "@/components/page-feedback";
 import { supabase } from "@/integrations/supabase/client";
 import { checkIsAdmin } from "@/lib/admin.functions";
 import {
@@ -305,6 +306,7 @@ function FrassyOS() {
           ))}
         </ul>
       </section>
+      <PageFeedback pageTitle="Frassy OS" />
     </FrassyShell>
   );
 }

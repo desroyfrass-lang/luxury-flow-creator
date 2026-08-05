@@ -2,6 +2,7 @@ import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { Loader2, ShieldCheck, Truck, Sparkles, Undo2 } from "lucide-react";
 import { SiteShell } from "@/components/site-shell";
+import { PageFeedback } from "@/components/page-feedback";
 import { fetchProductByHandle, type ShopifyProductNode, type ShopifyVariant } from "@/lib/shopify";
 import { useCartStore } from "@/lib/cart-store";
 import { queryOptions } from "@tanstack/react-query";
@@ -251,6 +252,7 @@ function ProductPage() {
           </div>
         </div>
       </section>
+      <PageFeedback pageTitle={product?.title} />
     </SiteShell>
   );
 }

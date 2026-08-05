@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { SiteShell } from "@/components/site-shell";
+import { PageFeedback } from "@/components/page-feedback";
 import { PageHeader } from "@/components/page-header";
 import { LOOKBOOK_STORIES } from "@/lib/lookbook";
 import { useSiteImages } from "@/hooks/use-site-images";
@@ -81,6 +82,7 @@ function LookbookIndex() {
           })}
         </div>
       </section>
+      <PageFeedback pageTitle="Lookbook" />
     </SiteShell>
   );
 }

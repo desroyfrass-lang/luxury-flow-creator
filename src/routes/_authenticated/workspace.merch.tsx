@@ -7,6 +7,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useMemo, useState } from "react";
 import { toast } from "sonner";
 import { SiteShell } from "@/components/site-shell";
+import { PageFeedback } from "@/components/page-feedback";
 import { useWorkspaceRoles } from "@/hooks/use-workspace-roles";
 import {
   listSlogans, createSlogan, setSloganStatus,
@@ -107,6 +108,7 @@ function MerchWorkspace() {
           {tab === "audit" && <AuditTab />}
         </div>
       </div>
+      <PageFeedback pageTitle="Merch Studio" />
     </SiteShell>
   );
 }

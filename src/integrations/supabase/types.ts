@@ -1152,6 +1152,36 @@ export type Database = {
         }
         Relationships: []
       }
+      page_feedback: {
+        Row: {
+          created_at: string
+          helpful: boolean | null
+          id: string
+          issue_text: string | null
+          page_path: string
+          page_title: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          helpful?: boolean | null
+          id?: string
+          issue_text?: string | null
+          page_path: string
+          page_title?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          helpful?: boolean | null
+          id?: string
+          issue_text?: string | null
+          page_path?: string
+          page_title?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       partner_vendors: {
         Row: {
           created_at: string

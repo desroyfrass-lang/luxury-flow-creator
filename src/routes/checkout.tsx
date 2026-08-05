@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { SiteShell } from "@/components/site-shell";
+import { PageFeedback } from "@/components/page-feedback";
 import { useCartStore } from "@/lib/cart-store";
 import { Trash2, ArrowLeft, Lock, Gift, Loader2 } from "lucide-react";
 import { useState } from "react";
@@ -237,6 +238,7 @@ function CheckoutPage() {
           </div>
         )}
       </section>
+      <PageFeedback pageTitle="Checkout" />
     </SiteShell>
   );
 }

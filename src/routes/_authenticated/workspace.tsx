@@ -4,6 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
 import { SiteShell } from "@/components/site-shell";
+import { PageFeedback } from "@/components/page-feedback";
 import {
   BUSINESS_ROLES,
   getMyBusinessRoles,
@@ -220,6 +221,7 @@ function WorkspacePage() {
           </div>
         )}
       </div>
+      <PageFeedback pageTitle="Builder Workspace" />
     </SiteShell>
   );
 }

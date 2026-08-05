@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { SiteShell } from "@/components/site-shell";
+import { PageFeedback } from "@/components/page-feedback";
 import { CollectionCard } from "@/components/collection-card";
 import { PageHeader } from "@/components/page-header";
 import cardMen from "@/assets/card-men.jpg";
@@ -32,6 +33,7 @@ function FrassDrip() {
           <CollectionCard to="/frass-drip/women" image={cardWomen} eyebrow="Frass Drip" title="Women's Fashion" description="Resort · Vacation · Tops · Denim" ratio="wide" />
         </div>
       </section>
+      <PageFeedback pageTitle="Frass Drip" />
     </SiteShell>
   );
 }

@@ -35,3 +35,23 @@ export const claimInitialAdmin = createServerFn({ method: "POST" })
     if (insErr) throw insErr;
     return { claimed: true };
   });
+
+/** List recent page feedback for the admin console. */
+export const listPageFeedback = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }) => {
+    const { data: isAdmin } = await context.supabase.rpc("has_role", {
+      _user_id: context.userId,
+      _role: "admin",
+    });
+    if (!isAdmin) throw new Error("Forbidden");
+
+    const { data, error } = await context.supabase
+      .from("page_feedback")
+      .select("id, page_path, page_title, helpful, issue_text, user_id, created_at")
+      .order("created_at", { ascending: false })
+      .limit(200);
+
+    if (error) throw error;
+    return data ?? [];
+  });

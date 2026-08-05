@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { SiteShell } from "@/components/site-shell";
+import { PageFeedback } from "@/components/page-feedback";
 import { useBlogPosts } from "@/hooks/use-blog-posts";
 
 export const Route = createFileRoute("/blog/")({
@@ -75,6 +76,7 @@ function BlogIndex() {
           </div>
         </div>
       </div>
+      <PageFeedback pageTitle="Journal" />
     </SiteShell>
   );
 }

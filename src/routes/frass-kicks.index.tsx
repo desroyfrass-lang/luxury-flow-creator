@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { SiteShell } from "@/components/site-shell";
+import { PageFeedback } from "@/components/page-feedback";
 import { CollectionCard } from "@/components/collection-card";
 import { PageHeader } from "@/components/page-header";
 import { ProductGrid } from "@/components/product-grid";
@@ -56,6 +57,7 @@ function FrassKicks() {
         </div>
         <ProductGrid query='vendor:"FRASS KICKS"' first={24} />
       </section>
+      <PageFeedback pageTitle="Frass Kicks" />
     </SiteShell>
   );
 }

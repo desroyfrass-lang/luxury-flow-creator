@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useMemo, useRef, useState } from "react";
 import { SiteShell } from "@/components/site-shell";
+import { PageFeedback } from "@/components/page-feedback";
 import { Play, Pause, Headphones, Radio, Mic2 } from "lucide-react";
 import { useMediaItems, type MediaItem } from "@/hooks/use-media-items";
 
@@ -111,6 +112,7 @@ function MusicMedia() {
           </div>
         </div>
       </section>
+      <PageFeedback pageTitle="Music & Media" />
     </SiteShell>
   );
 }
