@@ -24,6 +24,7 @@ Engineering Package v2.0: hold implementation until the closing directive; Frass
 - [Frassy Academy District](mem://features/frassy-academy-district) — O-27 COMPLETE (Parts 1–4): Builder Development System, Builder Paths, Colleges, Builder Passport, Hall of Builders, Mentor Intelligence, Adaptive Learning & Lifelong Builder Development
 - [Frassy Community Square](mem://features/frassy-community-square) — O-28 COMPLETE: social & collaborative heart of FrassKicks, Builder Circles, collaboration, stewardship, and living builder society
 - [Frassy Foundation District](mem://features/frassy-foundation-district) — O-29 COMPLETE (Parts 1–4): humanitarian operating system; service-through-building, Impact Engine, Foundation Pillars, governance, transparency, and constitutional principles
+- [Frassy Executive Tower](mem://features/frassy-executive-tower) — O-30 Part 1: organizational intelligence and leadership operating system; stewardship-focused dashboards, friction intelligence, and strategic recommendations
 
 
 
