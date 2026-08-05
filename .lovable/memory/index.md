@@ -25,7 +25,7 @@ Engineering Package v2.0: hold implementation until the closing directive; Frass
 - [Frassy Community Square](mem://features/frassy-community-square) — O-28 COMPLETE: social & collaborative heart of FrassKicks, Builder Circles, collaboration, stewardship, and living builder society
 - [Frassy Foundation District](mem://features/frassy-foundation-district) — O-29 COMPLETE (Parts 1–4): humanitarian operating system; service-through-building, Impact Engine, Foundation Pillars, governance, transparency, and constitutional principles
 - [Frassy Executive Tower](mem://features/frassy-executive-tower) — O-30 Part 1: organizational intelligence and leadership operating system; stewardship-focused dashboards, friction intelligence, and strategic recommendations
-- [FRASS System Blueprint A-04](mem://features/frass-system-blueprint-a04) — AI Orchestration Architecture Parts 1–3: Intelligence Orchestrator, Expert Coordination, Decision Hierarchy, Builder-First Filter, Confidence-Based Reasoning, Ethical Guardrails, Self-Evaluation
+- [FRASS System Blueprint A-04](mem://features/frass-system-blueprint-a04) — COMPLETE: AI Orchestration Architecture — Intelligence Constitution, One Frassy Principle, Personality Preservation, Decision Transparency, Builder Autonomy, Ethical Intelligence, Engineering Acceptance Criteria, Future AI Evolution
 
 
 
