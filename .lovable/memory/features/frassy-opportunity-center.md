@@ -1,6 +1,6 @@
 ---
 name: Frassy Opportunity Center (O-26)
-description: O-26 Part 1 — financial intelligence and opportunity engine of FrassKicks; ethical value creation, opportunity discovery, and intelligent business partnering
+description: O-26 Parts 1–3 — financial intelligence, guided opportunity building, and opportunity ecosystem engine of FrassKicks; ethical value creation, intelligent sequencing, and long-term financial independence
 type: feature
 ---
 
