@@ -6,7 +6,7 @@ type: feature
 # A-01 — Platform Architecture
 
 ## Status
-LOCKED — Architecture Series A-01 Parts 1 and 2 received. Implementation on hold per Master Implementation Directive v2.0.
+LOCKED — Architecture Series A-01 Parts 1, 2, and 3 received. Implementation on hold per Master Implementation Directive v2.0.
 
 ## Executive Summary
 This document defines the architectural principles governing the entire FRASS platform. Previous documents defined user experiences; this document defines engineering philosophy. Every service, API, AI agent, workflow, database, and interface must inherit these principles so FrassKicks grows into a unified ecosystem rather than disconnected software.
