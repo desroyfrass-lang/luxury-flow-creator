@@ -97,7 +97,7 @@ export const getAcademyDashboard = createServerFn({ method: "GET" })
       JSON.stringify(profile.preferences ?? {}),
     ].join(" ");
 
-    const timeline = ((timelineRes.data ?? []) as LearningEvent[]) ?? [];
+    const timeline = (timelineRes.data ?? []) as LearningEvent[];
 
     return {
       progress: ((progressRes.data ?? []) as PathProgress[]).map((p) => ({
