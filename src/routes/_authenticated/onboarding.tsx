@@ -111,6 +111,13 @@ function OnboardingPage() {
     return [...saved, ...local];
   }, [data?.messages, local, track]);
 
+  // Founder decisions are Platform Memory, kept separate from Builder memory.
+  const platformMemory = useMemo(
+    () => (data?.memory ?? []).filter((m) => m.category.startsWith("platform:")),
+    [data?.memory],
+  );
+
+
   useEffect(() => {
     inputRef.current?.focus();
   }, [busy, stage.id]);
