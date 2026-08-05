@@ -15,15 +15,6 @@ export type VaultItem = {
   updated_at: string;
 };
 
-export const VAULT_KINDS = [
-  { id: "note", label: "Note" },
-  { id: "idea", label: "Idea" },
-  { id: "link", label: "Link" },
-  { id: "lesson", label: "Lesson" },
-  { id: "asset", label: "Asset" },
-  { id: "decision", label: "Decision" },
-] as const;
-
 export const listVaultItems = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }): Promise<VaultItem[]> => {
