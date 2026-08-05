@@ -433,6 +433,42 @@ export type Database = {
         }
         Relationships: []
       }
+      builder_path_progress: {
+        Row: {
+          completed_at: string | null
+          completed_lessons: string[]
+          created_at: string
+          id: string
+          path_id: string
+          reflection: string | null
+          started_at: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          completed_at?: string | null
+          completed_lessons?: string[]
+          created_at?: string
+          id?: string
+          path_id: string
+          reflection?: string | null
+          started_at?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          completed_at?: string | null
+          completed_lessons?: string[]
+          created_at?: string
+          id?: string
+          path_id?: string
+          reflection?: string | null
+          started_at?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       builder_products: {
         Row: {
           collection_id: string | null
