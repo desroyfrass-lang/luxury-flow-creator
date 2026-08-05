@@ -7,7 +7,7 @@ type: feature
 # FRASS SYSTEM BLUEPRINT A-09: Design System Architecture
 
 ## Status
-**IN PROGRESS — Parts 1-2 received, awaiting Part 3 and closing directive.**
+**IN PROGRESS — Parts 1-3 received, awaiting Part 4 and closing directive.**
 
 ## Executive Summary
 The Design System Architecture defines the visual, interactive, and emotional language of Frass Operating System. The objective is not merely consistency. The objective is creating an environment where Builders consistently feel calm, focused, creative, capable, inspired, and supported. Every screen, animation, interaction, and component should reinforce the feeling that the Builder has entered one intelligent operating system dedicated to helping them build meaningful work.
@@ -201,3 +201,105 @@ Implement Frass OS using one centralized Design System with reusable components,
 
 ## Chief Architect's Observation
 Many platforms design pages. Frass OS should design experiences built from systems. If Lovable follows this blueprint, future engineers won't ask "How should this page look?" Instead they'll ask "Which existing components best solve this Builder's problem?" That's exactly how Apple, Stripe, Notion, Linear, and other exceptional products maintain visual consistency while growing to thousands of screens.
+
+---
+
+# A-09 (Part 3): Interaction Patterns, Frassy Presence & Builder Experience
+
+## Interaction Philosophy
+Every interaction should reduce cognitive effort. The interface should anticipate Builder intent whenever possible. Builders should rarely wonder "What do I do next?" The system should naturally guide the Builder forward. Every interaction should reinforce confidence.
+
+## Direct Manipulation
+Builders should interact directly with their work:
+- Drag projects
+- Reorder workflows
+- Connect ideas
+- Organize knowledge
+- Move assets
+- Resize workspaces
+- Expand relationships
+
+Visual interactions should make complex systems feel intuitive.
+
+## Progressive Complexity
+The interface should reveal capability gradually. A new Builder sees simple project creation. An experienced Builder sees advanced automation, custom workflows, AI orchestration, and Knowledge Graph exploration. The platform grows alongside the Builder.
+
+## The Frassy Interaction Model
+Frassy should exist as an always-available companion. Frassy may appear through:
+- Conversation panel
+- Inline suggestions
+- Workflow guidance
+- Knowledge recommendations
+- Search assistance
+- Reflection prompts
+- Builder Briefs
+
+Frassy should never obstruct Builder work. He assists from beside the Builder. Never in front of them.
+
+## Conversational UI
+Conversation becomes a first-class interaction model. Builders may naturally say:
+- "Help me organize this."
+- "Build a workflow."
+- "Find my proposal."
+- "Create a learning path."
+- "Summarize this project."
+- "Prepare a presentation."
+
+Conversation should integrate seamlessly with visual interaction. Builders should move fluidly between speaking, typing, and direct manipulation.
+
+## Workspace Philosophy
+Each Builder workspace should adapt to the current activity:
+- **Creative work:** canvas and assets
+- **Learning:** lessons and progress
+- **Marketplace:** products and customers
+- **Foundation:** initiatives and volunteers
+- **Executive:** dashboards and strategy
+
+The workspace becomes context-sensitive without losing consistency.
+
+## Microinteractions
+Small interactions should reinforce confidence:
+- Successful saves
+- Workflow completion
+- Asset linking
+- Knowledge discovery
+- Search results
+- Builder Passport updates
+- Permission changes
+
+Microinteractions should be immediate, subtle, meaningful, and never distracting.
+
+## Error Experience
+Errors should remain calm and constructive. Instead of "Operation failed," Builders should see: "We couldn't complete that action. Here's what happened, and here's how we can fix it." Every error becomes an opportunity to help. Never blame. Never technical jargon.
+
+## Trust Indicators
+Builders should consistently understand system state:
+- Saving…
+- Saved.
+- Syncing…
+- Secure.
+- Shared.
+- Private.
+- Draft.
+- Published.
+- AI Generated.
+- Builder Approved.
+
+Trust grows when system status is obvious.
+
+## Adaptive Interface
+The interface should learn Builder preferences:
+- Frequently used tools
+- Preferred layouts
+- Workspace arrangements
+- Panel sizes
+- Communication style
+- Search behavior
+
+Learning should remain transparent and reversible. Builders remain in control.
+
+## Engineering Directive
+Implement the Frass Design System as an adaptive interaction framework that combines direct manipulation, conversational interfaces, intelligent guidance, contextual workspaces, and subtle feedback into one cohesive Builder experience. Every interaction should reduce cognitive load while strengthening Builder confidence, trust, and momentum.
+
+## Chief Architect's Observation
+The best software eventually disappears — not because it's invisible, but because it becomes effortless. The Builder stops thinking about menus, dialogs, buttons, and settings. They simply think about the documentary, the business, the Foundation, the Builder Path, the community, the next idea. Everything else quietly supports them. The greatest compliment FrassKicks could ever receive isn't "beautiful UI." It's: "I forgot I was using software."
