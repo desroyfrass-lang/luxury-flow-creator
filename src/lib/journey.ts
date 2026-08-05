@@ -313,15 +313,15 @@ const OWNER_STAGES_RAW: Omit<JourneyStage, "track">[] = [
   },
   {
     id: "op_founder_profile",
-    title: "Establish the Founder profile",
+    title: "Configure Founder representation",
     chapter: "Phase 1 · Platform Identity",
     purpose:
-      "Record who the Founder is and how they appear across the platform.",
+      "Decide where and how the already-known Founder identity represents Frass publicly.",
     objectives: [
-      "Founder name, handle, and how they are introduced",
-      "The Founder's story and why they built this",
-      "What the Founder personally stands behind",
-      "How and where the Founder appears publicly",
+      "Approve the public Founder name, handle, and introduction",
+      "Choose which already-recorded origin story the platform may publish",
+      "Set the statements that may carry the Founder's endorsement",
+      "Choose the districts and public surfaces where the Founder appears",
     ],
     category: "platform_identity",
     minutes: 25,

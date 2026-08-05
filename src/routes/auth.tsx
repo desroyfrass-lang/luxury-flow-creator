@@ -48,7 +48,7 @@ function AuthPage() {
         const { error } = await supabase.auth.signInWithPassword({ email, password });
         if (error) throw error;
         toast.success("Signed in");
-        // Frassy's Intelligent Builder Journey comes before anything else.
+        // Frassy routes each identity into its authoritative first experience.
         if (!next) {
           const status = await fetchJourneyStatus();
           if (status.needsJourney) {
@@ -63,8 +63,8 @@ function AuthPage() {
           options: { emailRedirectTo: window.location.origin + "/onboarding" },
         });
         if (error) throw error;
-        toast.success("Welcome — Frassy is ready to begin your Builder Journey");
-        // Frassy is the very first experience after account creation.
+        toast.success("Welcome — Frassy is ready to begin");
+        // Frassy resolves the account role before opening the correct experience.
         window.location.assign("/onboarding");
         return;
       }
@@ -89,7 +89,7 @@ function AuthPage() {
           </h1>
           <p className="mt-3 text-sm text-muted-foreground">
             {mode === "signin"
-              ? "Access the image admin panel."
+              ? "Enter the Founder Control Room."
               : "First sign-up becomes the site owner."}
           </p>
         </div>

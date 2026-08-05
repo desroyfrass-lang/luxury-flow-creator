@@ -14,6 +14,7 @@ import { FrassyConsentModal } from "@/components/frassy-consent";
 import { useFrassyMemory, memoryContext, rememberCartSnapshot } from "@/lib/frassy-memory";
 import { useFrassyContext, currentSeason, seasonalAccent } from "@/hooks/use-frassy-context";
 import { useJourneyStatus } from "@/hooks/use-journey-status";
+import { useIsAdminStatus } from "@/hooks/use-is-admin";
 
 
 type ProductCard = {
@@ -52,6 +53,12 @@ const JOURNEY_MSG: Msg = {
   role: "assistant",
   content:
     "Welcome back — I'm Frassy. Before anything else, we have your Intelligent Builder Journey to walk through together: your mission, your identity, your vault, and the districts of Frass OS. It's taken at your pace across as many sessions as you like, and everything saves as we go. Tap “Begin my Builder Journey” below and I'll open the first chapter.",
+};
+
+const FOUNDER_MSG: Msg = {
+  role: "assistant",
+  content:
+    "Welcome back. Your Founder Control Room is ready. We’re commissioning Frass OS itself—not onboarding you as a Builder. Continue with Platform Readiness, operating decisions, and launch preparation below.",
 };
 
 
@@ -96,7 +103,9 @@ export function FrassyChat() {
 
   const season = useMemo(() => currentSeason(), []);
   const journey = useJourneyStatus();
+  const { isAdmin } = useIsAdminStatus();
   const needsJourney = journey.signedIn && journey.needsJourney;
+  const needsCommissioning = needsJourney && isAdmin === true;
 
   const goToOnboarding = () => {
     setOpen(false);
@@ -109,9 +118,11 @@ export function FrassyChat() {
   useEffect(() => {
     if (!needsJourney) return;
     setMessages((prev) =>
-      prev.length === 1 && prev[0] === INITIAL_MSG ? [JOURNEY_MSG] : prev,
+      prev.length === 1 && prev[0] === INITIAL_MSG
+        ? [needsCommissioning ? FOUNDER_MSG : JOURNEY_MSG]
+        : prev,
     );
-  }, [needsJourney]);
+  }, [needsJourney, needsCommissioning]);
 
 
 
@@ -172,7 +183,9 @@ export function FrassyChat() {
       // Memory-aware greeting: name-back if we know them, else language greeting.
       let line = pickGreeting(prefs.language);
       if (needsJourney) {
-        line = "Ready when you are — your Builder Journey is waiting.";
+        line = needsCommissioning
+          ? "Welcome back — the Founder Control Room is ready."
+          : "Ready when you are — your Builder Journey is waiting.";
       } else if (memory.firstName && memory.visits > 0) {
         line = `Welcome back, ${memory.firstName}.`;
         if (memory.recentCategories[0]) {
@@ -210,6 +223,7 @@ export function FrassyChat() {
     memory.visits,
     memory.recentCategories,
     season,
+    needsCommissioning,
   ]);
 
   // Idle help — offer a hand after ~90s of no interaction while browsing.
@@ -301,6 +315,7 @@ export function FrassyChat() {
           memoryContext: memoryContext(memory),
           modeContext: `${ctx.mode} (route ${ctx.pathname})`,
           seasonContext: seasonalAccent(season) ?? "",
+          experienceContext: isAdmin === true ? "founder" : journey.signedIn ? "builder" : "storefront",
         }),
 
       });
@@ -637,7 +652,7 @@ export function FrassyChat() {
               </div>
             )}
 
-            {/* Builder Journey — always the first door for a signed-in Builder */}
+            {/* Route each signed-in identity to its authoritative experience. */}
             {needsJourney && !loading && (
               <div className="pt-1">
                 <button
@@ -645,7 +660,11 @@ export function FrassyChat() {
                   onClick={goToOnboarding}
                   className="w-full rounded-full bg-[color:var(--gold)] px-4 py-2 text-xs font-bold uppercase tracking-[0.2em] text-[color:var(--ink)]"
                 >
-                  {journey.started ? "Continue my Builder Journey" : "Begin my Builder Journey"}
+                  {needsCommissioning
+                    ? "Continue Platform Commissioning"
+                    : journey.started
+                      ? "Continue my Builder Journey"
+                      : "Begin my Builder Journey"}
                 </button>
               </div>
             )}
