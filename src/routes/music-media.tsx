@@ -112,6 +112,7 @@ function MusicMedia() {
           </div>
         </div>
       </section>
+      <PageFeedback pageTitle="Music & Media" />
     </SiteShell>
   );
 }
