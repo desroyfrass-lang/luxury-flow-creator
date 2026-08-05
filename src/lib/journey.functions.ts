@@ -313,7 +313,9 @@ export const journeyTurn = createServerFn({ method: "POST" })
     const displayName: string | null =
       profile?.display_name ?? profile?.full_name ?? null;
 
+    const activeTrack = trackOf(stage.id);
     const history = state.messages
+      .filter((message) => trackOf(message.stage) === activeTrack)
       .slice(-40)
       .map((m) => ({ role: m.role, content: m.content }));
     if (userText) history.push({ role: "user", content: userText });
