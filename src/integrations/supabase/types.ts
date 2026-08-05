@@ -187,6 +187,102 @@ export type Database = {
         }
         Relationships: []
       }
+      builder_journey_messages: {
+        Row: {
+          content: string
+          created_at: string
+          id: string
+          role: string
+          stage: string
+          user_id: string
+        }
+        Insert: {
+          content: string
+          created_at?: string
+          id?: string
+          role: string
+          stage: string
+          user_id: string
+        }
+        Update: {
+          content?: string
+          created_at?: string
+          id?: string
+          role?: string
+          stage?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      builder_journeys: {
+        Row: {
+          completed_at: string | null
+          created_at: string
+          current_stage: string
+          last_active_at: string
+          stage_progress: Json
+          started_at: string
+          status: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          completed_at?: string | null
+          created_at?: string
+          current_stage?: string
+          last_active_at?: string
+          stage_progress?: Json
+          started_at?: string
+          status?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          completed_at?: string | null
+          created_at?: string
+          current_stage?: string
+          last_active_at?: string
+          stage_progress?: Json
+          started_at?: string
+          status?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      builder_memory: {
+        Row: {
+          category: string
+          created_at: string
+          id: string
+          key: string
+          source: string
+          updated_at: string
+          user_id: string
+          value: string
+        }
+        Insert: {
+          category: string
+          created_at?: string
+          id?: string
+          key: string
+          source?: string
+          updated_at?: string
+          user_id: string
+          value: string
+        }
+        Update: {
+          category?: string
+          created_at?: string
+          id?: string
+          key?: string
+          source?: string
+          updated_at?: string
+          user_id?: string
+          value?: string
+        }
+        Relationships: []
+      }
       capsule_items: {
         Row: {
           capsule_id: string
