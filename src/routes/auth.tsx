@@ -28,10 +28,16 @@ function AuthPage() {
 
   // If already signed in, bounce to destination
   useEffect(() => {
-    supabase.auth.getSession().then(({ data }) => {
-      if (data.session) window.location.assign(dest);
+    supabase.auth.getSession().then(async ({ data }) => {
+      if (!data.session) return;
+      if (next) {
+        window.location.assign(dest);
+        return;
+      }
+      const status = await fetchJourneyStatus();
+      window.location.assign(status.needsJourney ? "/onboarding" : dest);
     });
-  }, [dest]);
+  }, [dest, next]);
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -41,6 +47,14 @@ function AuthPage() {
         const { error } = await supabase.auth.signInWithPassword({ email, password });
         if (error) throw error;
         toast.success("Signed in");
+        // Frassy's Intelligent Builder Journey comes before anything else.
+        if (!next) {
+          const status = await fetchJourneyStatus();
+          if (status.needsJourney) {
+            window.location.assign("/onboarding");
+            return;
+          }
+        }
       } else {
         const { error } = await supabase.auth.signUp({
           email,
