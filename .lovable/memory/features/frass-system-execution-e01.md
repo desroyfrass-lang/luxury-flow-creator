@@ -1,6 +1,6 @@
 # FRASS System Execution E-01 — Engineering Transition Framework
 
-## Status: IN PROGRESS — Part 1 locked
+## Status: IN PROGRESS — Parts 1-2 locked
 
 ---
 
@@ -167,8 +167,269 @@ Every production artifact should trace back to the architecture, and every archi
 
 ---
 
-## Part 1 Locked
+## Part 2: Production Specification Standards (Locked)
 
-E-01 Part 1 archived: Executive Summary, Execution Philosophy, Four Layers of Documentation, Execution Standards, Engineering Traceability, Definition of Done, and Engineering Directive are locked.
+### Production Engineering Philosophy
 
-Standing by for **Part 2**.
+Every specification should answer one question:
+
+**"Can an engineer build this without making architectural assumptions?"**
+
+Specifications should eliminate ambiguity.
+
+They should communicate:
+
+- Behavior.
+- Constraints.
+- Interfaces.
+- Responsibilities.
+- Failure modes.
+- Quality expectations.
+
+### Canonical Specification Structure
+
+Every engineering specification should follow one standardized format.
+
+#### 1. Purpose
+
+Why this component exists.
+
+Which constitutional principles it implements.
+
+Business objectives.
+
+Builder outcomes.
+
+#### 2. Scope
+
+Included capabilities.
+
+Explicit exclusions.
+
+Dependencies.
+
+Boundaries.
+
+#### 3. Domain Model
+
+Canonical entities.
+
+Relationships.
+
+Lifecycle.
+
+Ownership.
+
+Validation rules.
+
+Examples:
+
+- Builder
+- Project
+- Workflow
+- Memory
+- Organization
+- Asset
+
+#### 4. API Contracts
+
+Endpoints.
+
+Requests.
+
+Responses.
+
+Errors.
+
+Authentication.
+
+Authorization.
+
+Pagination.
+
+Filtering.
+
+Rate limits.
+
+Versioning.
+
+No undocumented behavior.
+
+#### 5. Events
+
+Published events.
+
+Consumed events.
+
+Event payloads.
+
+Ordering.
+
+Idempotency.
+
+Retry behavior.
+
+Examples:
+
+- WorkflowCreated
+- MemoryStored
+- BuilderJoinedOrganization
+
+#### 6. State Machines
+
+Valid states.
+
+Allowed transitions.
+
+Terminal states.
+
+Recovery paths.
+
+Example:
+
+```text
+Draft
+↓
+Planning
+↓
+Active
+↓
+Completed
+↓
+Archived
+```
+
+State behavior should never remain implicit.
+
+#### 7. Permission Matrix
+
+Every operation should define:
+
+- Who may view.
+- Who may create.
+- Who may update.
+- Who may delete.
+- Administrative authority.
+- Inherited permissions.
+- Organization rules.
+
+#### 8. Failure Modes
+
+Expected failures.
+
+Recovery behavior.
+
+Retry strategy.
+
+Timeout behavior.
+
+Graceful degradation.
+
+Builder messaging.
+
+Failure becomes part of the design.
+
+#### 9. Observability
+
+Metrics.
+
+Logs.
+
+Tracing.
+
+Alerts.
+
+Dashboards.
+
+Operational ownership.
+
+Every production capability should remain observable.
+
+#### 10. Performance Targets
+
+Examples:
+
+- P95 latency.
+- Availability target.
+- Throughput.
+- Search response.
+- Workflow orchestration time.
+- Scalability objectives.
+
+Performance becomes part of the contract.
+
+#### 11. Security Requirements
+
+Authentication.
+
+Authorization.
+
+Encryption.
+
+Privacy.
+
+Audit events.
+
+Compliance.
+
+Threat considerations.
+
+Security remains explicit.
+
+#### 12. Testing Strategy
+
+Unit tests.
+
+Integration tests.
+
+Contract tests.
+
+Performance tests.
+
+Accessibility tests.
+
+Security validation.
+
+Builder journey tests.
+
+Testing accompanies every specification.
+
+### Specification Ownership
+
+Every specification should identify:
+
+- Engineering owner.
+- Architectural owner.
+- Product owner.
+- Operational owner.
+- Quality owner.
+
+Ownership creates accountability.
+
+### Change Management
+
+Specifications evolve through controlled review.
+
+Every significant change should include:
+
+- Architectural rationale.
+- Builder impact.
+- Migration strategy.
+- Compatibility assessment.
+- Implementation plan.
+
+Future engineers should understand why changes occurred.
+
+### Engineering Directive
+
+Implement every Frass OS production specification using a standardized engineering template that defines behavior, interfaces, state, permissions, observability, quality, and operational expectations with sufficient precision for independent implementation.
+
+Specifications should eliminate ambiguity while remaining traceable to the constitutional architecture.
+
+---
+
+## Parts 1-2 Locked
+
+E-01 Parts 1-2 archived: Engineering Transition Framework and Production Specification Standards are locked.
+
+Standing by for **Part 3**.
