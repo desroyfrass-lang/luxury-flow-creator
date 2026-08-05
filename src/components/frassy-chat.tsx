@@ -637,8 +637,21 @@ export function FrassyChat() {
               </div>
             )}
 
+            {/* Builder Journey — always the first door for a signed-in Builder */}
+            {needsJourney && !loading && (
+              <div className="pt-1">
+                <button
+                  type="button"
+                  onClick={goToOnboarding}
+                  className="w-full rounded-full bg-[color:var(--gold)] px-4 py-2 text-xs font-bold uppercase tracking-[0.2em] text-[color:var(--ink)]"
+                >
+                  {journey.started ? "Continue my Builder Journey" : "Begin my Builder Journey"}
+                </button>
+              </div>
+            )}
+
             {/* Contextual quick actions */}
-            {messages.length <= 2 && !loading && (
+            {messages.length <= 2 && !loading && !needsJourney && (
               <div className="flex flex-wrap gap-2 pt-1">
                 {QUICK_ACTIONS.map((q) => (
                   <button
@@ -652,6 +665,7 @@ export function FrassyChat() {
                 ))}
               </div>
             )}
+
 
             {cartCount > 0 && (
               <div className="flex flex-wrap gap-2 pt-1">
