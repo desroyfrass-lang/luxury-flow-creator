@@ -172,6 +172,7 @@ function InsightsPage() {
           ← Back to workspace
         </Link>
       </div>
+      <PageFeedback pageTitle="Builder Insights" />
     </SiteShell>
   );
 }

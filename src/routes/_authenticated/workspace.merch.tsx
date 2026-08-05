@@ -108,6 +108,7 @@ function MerchWorkspace() {
           {tab === "audit" && <AuditTab />}
         </div>
       </div>
+      <PageFeedback pageTitle="Merch Studio" />
     </SiteShell>
   );
 }

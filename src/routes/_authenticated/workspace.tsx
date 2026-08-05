@@ -221,6 +221,7 @@ function WorkspacePage() {
           </div>
         )}
       </div>
+      <PageFeedback pageTitle="Builder Workspace" />
     </SiteShell>
   );
 }

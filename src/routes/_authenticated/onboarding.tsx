@@ -242,6 +242,7 @@ function OnboardingPage() {
           </form>
         </section>
       </div>
+      <PageFeedback pageTitle="Builder Onboarding" />
     </SiteShell>
   );
 }

@@ -221,6 +221,7 @@ function ProfilePage() {
           </form>
         )}
       </div>
+      <PageFeedback pageTitle="Builder Profile" />
     </div>
   );
 }

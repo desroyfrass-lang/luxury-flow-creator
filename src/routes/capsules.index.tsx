@@ -118,6 +118,7 @@ function CapsulesLanding() {
           </div>
         )}
       </section>
+      <PageFeedback pageTitle="Capsules" />
     </SiteShell>
   );
 }

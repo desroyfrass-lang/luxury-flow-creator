@@ -29,6 +29,7 @@ export const Route = createFileRoute("/bare-drip/")({
           <CollectionCard to="/bare-drip/women" image={cardWomen} eyebrow="Bare Drip" title="Women's Bare Drip" description="Swim · Lingerie · Sleepwear" ratio="wide" />
         </div>
       </section>
+      <PageFeedback pageTitle="Bare Drip" />
     </SiteShell>
   ),
 });

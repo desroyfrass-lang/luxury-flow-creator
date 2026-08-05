@@ -82,6 +82,7 @@ function LookbookIndex() {
           })}
         </div>
       </section>
+      <PageFeedback pageTitle="Lookbook" />
     </SiteShell>
   );
 }

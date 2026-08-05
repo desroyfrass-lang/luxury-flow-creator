@@ -306,6 +306,7 @@ function FrassyOS() {
           ))}
         </ul>
       </section>
+      <PageFeedback pageTitle="Frassy OS" />
     </FrassyShell>
   );
 }

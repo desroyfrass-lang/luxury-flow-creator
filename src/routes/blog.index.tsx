@@ -76,6 +76,7 @@ function BlogIndex() {
           </div>
         </div>
       </div>
+      <PageFeedback pageTitle="Journal" />
     </SiteShell>
   );
 }
