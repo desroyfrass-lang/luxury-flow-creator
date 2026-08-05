@@ -220,11 +220,18 @@ function BuilderAccountMenu({ hasWorkspace, isAdmin }: { hasWorkspace: boolean; 
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-56 rounded-2xl border-border/70 bg-background/95 backdrop-blur-xl">
         <DropdownMenuItem asChild className="rounded-xl cursor-pointer">
+          <Link to="/welcome-hall" className="flex items-center gap-2 text-xs uppercase tracking-[0.2em]">
+            <Sparkles className="h-4 w-4" />
+            Welcome Hall
+          </Link>
+        </DropdownMenuItem>
+        <DropdownMenuItem asChild className="rounded-xl cursor-pointer">
           <Link to="/workspace/profile" className="flex items-center gap-2 text-xs uppercase tracking-[0.2em]">
             <Settings className="h-4 w-4" />
             Builder Profile
           </Link>
         </DropdownMenuItem>
+
         {hasWorkspace && (
           <DropdownMenuItem asChild className="rounded-xl cursor-pointer">
             <Link to="/workspace" className="flex items-center gap-2 text-xs uppercase tracking-[0.2em]">
@@ -278,12 +285,20 @@ function MobileAccountLinks({ hasWorkspace, isAdmin }: { hasWorkspace: boolean; 
   return (
     <>
       <Link
+        to="/welcome-hall"
+        className="nav-glow block rounded-xl px-4 py-3 text-xs uppercase tracking-[0.25em] text-muted-foreground transition-colors hover:bg-foreground/5"
+        activeProps={{ className: "text-foreground bg-foreground/5" }}
+      >
+        Welcome Hall
+      </Link>
+      <Link
         to="/workspace/profile"
         className="nav-glow block rounded-xl px-4 py-3 text-xs uppercase tracking-[0.25em] text-muted-foreground transition-colors hover:bg-foreground/5"
         activeProps={{ className: "text-foreground bg-foreground/5" }}
       >
         Builder Profile
       </Link>
+
       {hasWorkspace && (
         <Link
           to="/workspace"
