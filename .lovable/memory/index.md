@@ -6,6 +6,7 @@ Stay true to the original Frass Kicks aesthetic.
 Prefer dark streetwear visuals over bright white luxury styling.
 Use bold block-letter typography and chrome/gold brand cues.
 Use uploaded Frass logo assets when brand moments need the real mark.
+Frassy is Builder Intelligence first — never a support chatbot; onboarding = Intelligent Builder Journey at /onboarding.
 Frassy carries Caribbean/Frass Hill hospitality DNA in every mode; subtle wit only, no stereotypes; also acts as first line of defense against fraud/social engineering.
 Frass OS Constitution v1.0 at `FRASS_OS_CONSTITUTION.md` is the permanent source of truth; every implementation must trace back to it.
 Implementation hold is lifted. The `FINAL_LOVABLE_DIRECTIVE.md` commissioning is the active build charter: Builder experience above everything; optimize for confidence, timelessness, and meaningful progress.
@@ -43,3 +44,4 @@ Implementation hold is lifted. The `FINAL_LOVABLE_DIRECTIVE.md` commissioning is
 - [FRASS System Blueprint A-14 — Testing & Quality Engineering](mem://features/frass-system-blueprint-a14) — COMPLETE: Quality Constitution, Builder-centered quality, continuous verification, automation-first validation, human judgment, engineering responsibility, quality governance, platform evolution, Engineering Acceptance Criteria, and lifelong quality stewardship locked
 - [FRASS System Blueprint A-15 — AI Governance & Continuous Evolution](mem://features/frass-system-blueprint-a15) — COMPLETE: Constitutional Intelligence Framework, Responsible Intelligence, Lifelong Stewardship, Governance, Engineering Acceptance Criteria, and the enduring AI constitution of Frass Operating System locked
 - [FRASS System Execution E-01 — Engineering Transition Framework](mem://features/frass-system-execution-e01) — COMPLETE: Parts 1-3 locked — Four Layers of Documentation, canonical 12-section Production Specification Standards, and Governance/Architectural Integrity/Engineering Constitution locked; Frass OS is ready to enter production implementation
+- [Frassy is Builder Intelligence](mem://constraints/frassy-builder-intelligence) — Constitutional role, Intelligent Builder Journey onboarding at /onboarding, journey tables
