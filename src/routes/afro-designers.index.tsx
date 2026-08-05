@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import heroImg from "@/assets/afro-hero-caribbean.jpg.asset.json";
+import { PageFeedback } from "@/components/page-feedback";
 import { FrassyGold } from "@/components/afro/FrassyGold";
 import { DesignerCard } from "@/components/afro/DesignerCard";
 import { RegionPillar } from "@/components/afro/RegionPillar";
