@@ -51,29 +51,50 @@ export function LaunchReadiness({
 
 
       <ul className="divide-y divide-border">
-        {rows.map((r) => (
-          <li key={r.id} className="flex items-start gap-4 px-6 py-3">
-            <span className={`mt-2 h-1.5 w-1.5 shrink-0 rounded-full ${DOT[r.state]}`} />
-            <div className="min-w-0 flex-1">
-              <div className="text-sm">{r.label}</div>
-              {!compact && (
-                <div className="text-xs text-muted-foreground">{r.note}</div>
+        {rows.map((r) => {
+          const target =
+            r.stageIds?.find((id) => !completedStageIds.includes(id)) ?? r.stageIds?.[0] ?? null;
+          const clickable = Boolean(onSelectStage && target);
+          const body = (
+            <>
+              <span className={`mt-2 h-1.5 w-1.5 shrink-0 rounded-full ${DOT[r.state]}`} />
+              <div className="min-w-0 flex-1">
+                <div className="text-sm">{r.label}</div>
+                {!compact && (
+                  <div className="text-xs text-muted-foreground">{r.note}</div>
+                )}
+              </div>
+              <span
+                className={`shrink-0 text-[10px] font-bold uppercase tracking-[0.2em] ${
+                  r.state === "complete"
+                    ? "text-[color:var(--gold)]"
+                    : r.state === "in_progress"
+                      ? "text-foreground/60"
+                      : "text-muted-foreground/50"
+                }`}
+              >
+                {READINESS_LABEL[r.state]}
+              </span>
+            </>
+          );
+          return (
+            <li key={r.id}>
+              {clickable ? (
+                <button
+                  type="button"
+                  onClick={() => onSelectStage?.(target as string)}
+                  className="flex w-full items-start gap-4 px-6 py-3 text-left transition hover:bg-[color:var(--gold)]/5"
+                >
+                  {body}
+                </button>
+              ) : (
+                <div className="flex items-start gap-4 px-6 py-3">{body}</div>
               )}
-            </div>
-            <span
-              className={`shrink-0 text-[10px] font-bold uppercase tracking-[0.2em] ${
-                r.state === "complete"
-                  ? "text-[color:var(--gold)]"
-                  : r.state === "in_progress"
-                    ? "text-foreground/60"
-                    : "text-muted-foreground/50"
-              }`}
-            >
-              {READINESS_LABEL[r.state]}
-            </span>
-          </li>
-        ))}
+            </li>
+          );
+        })}
       </ul>
+
 
       {ready && (
         <div className="border-t border-border px-6 py-5">
