@@ -1,6 +1,7 @@
 import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import { fetchJourneyStatus } from "@/hooks/use-journey-status";
 import { SiteShell } from "@/components/site-shell";
 import { toast } from "sonner";
 
