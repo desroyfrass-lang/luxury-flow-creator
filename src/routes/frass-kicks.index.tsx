@@ -57,6 +57,7 @@ function FrassKicks() {
         </div>
         <ProductGrid query='vendor:"FRASS KICKS"' first={24} />
       </section>
+      <PageFeedback pageTitle="Frass Kicks" />
     </SiteShell>
   );
 }

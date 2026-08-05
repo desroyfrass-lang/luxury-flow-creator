@@ -33,6 +33,7 @@ function FrassDrip() {
           <CollectionCard to="/frass-drip/women" image={cardWomen} eyebrow="Frass Drip" title="Women's Fashion" description="Resort · Vacation · Tops · Denim" ratio="wide" />
         </div>
       </section>
+      <PageFeedback pageTitle="Frass Drip" />
     </SiteShell>
   );
 }

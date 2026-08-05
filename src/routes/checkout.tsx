@@ -238,6 +238,7 @@ function CheckoutPage() {
           </div>
         )}
       </section>
+      <PageFeedback pageTitle="Checkout" />
     </SiteShell>
   );
 }

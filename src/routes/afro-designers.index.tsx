@@ -190,6 +190,7 @@ function AfroLanding() {
         </p>
         <div className="mx-auto mt-8 h-px w-32 afro-gold-hairline" />
       </section>
+      <PageFeedback pageTitle="Afro Designers" />
     </div>
   );
 }

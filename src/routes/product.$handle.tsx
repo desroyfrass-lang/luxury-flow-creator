@@ -252,6 +252,7 @@ function ProductPage() {
           </div>
         </div>
       </section>
+      <PageFeedback pageTitle={product?.title} />
     </SiteShell>
   );
 }
