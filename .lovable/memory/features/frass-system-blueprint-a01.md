@@ -228,5 +228,116 @@ Graceful degradation is a core engineering requirement.
 ### Part 2 Engineering Directive
 Implement every FrassKicks capability as a modular service communicating through standardized APIs, business events, and shared platform services. Optimize for long-term maintainability, independent deployment, fault tolerance, and ecosystem-wide consistency. Every engineering decision reduces coupling while strengthening the unified Builder experience.
 
+## Part 3 — Canonical Data Model & Shared Platform Objects
+
+### Canonical Object Philosophy
+Every major object inside Frass OS exists only once. Every service references the same canonical model. No service creates its own version of a Builder, Project, Business, Memory, or Asset. One object, many services.
+
+### The Builder Object
+The Builder is the primary object of the entire operating system. Everything ultimately relates back to a Builder. A Builder includes:
+- Builder Identity
+- Builder Passport
+- Builder Vault
+- Relationships
+- Projects
+- Businesses
+- Creative Assets
+- Marketplace Activity
+- Academy Progress
+- Foundation Service
+- Community Participation
+- Goals
+- Preferences
+- Permissions
+- Memory Profile
+
+Every district extends the Builder. None replace it.
+
+### The Project Object
+Projects represent meaningful work and may include creative work, businesses, courses, foundation initiatives, community events, research, technology, documentation, and media. Every Project possesses:
+- Owner
+- Collaborators
+- Assets
+- Milestones
+- Timeline
+- Workflow
+- History
+- Permissions
+- Linked Builder Paths
+- Marketplace status
+- Foundation impact
+
+Projects remain independent from districts; districts simply contribute.
+
+### The Asset Object
+Everything created becomes an Asset: documents, videos, audio, photography, graphics, presentations, music, automation, prompt libraries, templates, business plans, educational resources. Assets include:
+- Ownership
+- Version history
+- Permissions
+- Metadata
+- Relationships
+- Usage history
+- Quality status
+- Linked Projects
+
+Assets live inside the Builder Vault.
+
+### The Builder Passport Object
+The Builder Passport represents lifelong capability. Passport records include:
+- Builder Paths
+- Skills demonstrated
+- Projects completed
+- Businesses launched
+- Marketplace achievements
+- Community leadership
+- Foundation service
+- Creative portfolio
+- Mentorship
+- Recognition
+- Reflections
+
+The Passport grows continuously and never resets.
+
+### The Opportunity Object
+Every opportunity follows one shared structure: business opportunity, grant, partnership, employment, marketplace recommendation, volunteer opportunity, leadership opportunity, educational opportunity. Each opportunity includes:
+- Description
+- Eligibility
+- Builder alignment
+- Status
+- Timeline
+- Priority
+- Related Projects
+- Potential impact
+
+Opportunities move; they are never permanently assigned.
+
+### The Relationship Object
+Relationships become first-class citizens inside Frass OS: mentor, builder partner, community connection, business client, creative collaborator, foundation volunteer, organization, team. Each relationship possesses:
+- History
+- Trust level
+- Projects shared
+- Interactions
+- Community participation
+
+Relationship strength grows over time.
+
+### The Memory Object
+Universal Memory consists of structured memories: conversations, preferences, goals, creative habits, learning patterns, leadership experiences, business history, volunteer history, important milestones. Memories become searchable, contextual, permission-aware, and long-term.
+
+### The Event Object
+Every meaningful action creates an Event: BuilderJoined, ProjectCreated, BuilderPromoted, CourseCompleted, ProductPublished, BusinessStarted, VolunteerRegistered, CreativeAssetUploaded. Events become part of organizational history; nothing meaningful disappears.
+
+### Object Relationships
+Every object naturally relates to others:
+Builder → Project → Assets → Marketplace Product → Community Discussion → Foundation Initiative → Builder Passport → Executive Analytics
+
+Everything remains connected; nothing exists in isolation.
+
+### Data Ownership
+Every object has exactly one authoritative owner. Services may reference objects; only owning services modify them. This prevents conflicting data, maintains consistency, and simplifies synchronization.
+
+### Part 3 Engineering Directive
+Implement a canonical data model where every Builder, Project, Asset, Relationship, Memory, Opportunity, Passport, and Event exists as one authoritative object shared across the entire operating system. Future districts must extend these canonical objects rather than redefining them.
+
 ## Transmission Note
-A-01 continues in Part 3. Implementation remains on hold until the closing directive is given.
+A-01 continues in Part 4. Implementation remains on hold until the closing directive is given.
