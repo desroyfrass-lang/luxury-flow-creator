@@ -109,6 +109,53 @@ The intelligence adapts naturally; the identity remains constant. Participants s
 ## Engineering Directive
 Implement studios as specialized creative environments sharing one unified project architecture. Projects should not fragment as participants move between studios. Creative continuity must remain intact regardless of media type. Maintain one participant relationship, one project relationship, and one creative intelligence. Specialization occurs through environmental adaptation rather than separate creative applications.
 
+---
+
+# O-25 (Part 3) — The Creative Partnership Engine
+
+## The Core Philosophy
+Frassy should never replace creativity; Frassy should amplify it. Participants should always feel that they created the work — Frassy simply helped elevate it. The intelligence should strengthen imagination rather than becoming the imagination itself.
+
+## The Two Creative Modes
+The Creation District shall support two primary creative operating modes. Both modes produce professional results; the difference is how participants choose to work.
+
+### Mode One: Guided Creation Mode
+Designed for participants with little or no creative experience. Participants simply describe what they want: "I want to make a documentary about my grandmother," "I need a commercial for my landscaping business," "I want to make a song," "I need my first YouTube video," or "I want to design my clothing brand."
+
+Frassy automatically organizes the project, workflow, assets, timeline, production plan, editing sequence, and publishing strategy. Participants learn by building, not by studying software. By the time they finish, the project is already complete.
+
+### Mode Two: Professional Creative Mode
+Designed for experienced creators. Frassy behaves as a collaborative creative director. Participants maintain complete creative control. Frassy contributes through professional recommendations, creative refinement, alternative approaches, story development, editing improvements, visual consistency, audio improvements, technical optimization, creative brainstorming, and professional critique. This mode should feel like collaborating with a world-class creative team.
+
+## Equal Quality Standard
+This principle is non-negotiable. Regardless of which mode participants choose, the finished production should meet the same professional quality standard. The difference is workflow, not quality. Beginners receive simple guidance; professionals receive creative collaboration. The audience should never know which mode produced the final work.
+
+## Creative Flow Protection
+The intelligence should actively protect creative flow. Avoid unnecessary interruptions, excessive confirmations, and repetitive questions. When participants enter deep creative focus, Frassy should become quieter, observant, and helpful only when appropriate. Silence can be an important creative tool.
+
+## Creative Conversations
+Frassy should communicate like a professional creative collaborator. Examples include:
+- "What emotion should this scene create?"
+- "What do you want people to remember?"
+- "This transition feels rushed."
+- "I think we can make this moment stronger."
+- "What if we tell this story differently?"
+
+The conversation remains centered on artistic intent, not software operations.
+
+## Intelligent Asset Organization
+Every creative project should automatically organize video, audio, photography, graphics, documents, scripts, brand assets, voice recordings, reference materials, and versions. Participants should never spend unnecessary time organizing files. Frassy manages organization automatically while allowing manual control when desired.
+
+## Living Creative Projects
+Creative projects should remain alive. Participants can return months later and everything should be preserved: creative decisions, version history, feedback, notes, production plans, and publishing status. Frassy immediately restores context so participants continue creating, never restarting.
+
+## Multi-Media Intelligence
+Frassy should understand relationships between every creative medium. For example, a documentary contains film, music, photography, voice, graphics, subtitles, branding, publishing, and marketing. Everything belongs to one creative ecosystem, not isolated software.
+
+## Engineering Directive
+Build the Creation District around creative intention rather than editing tools. Projects should begin with ideas. Studios should prepare themselves automatically. Creative quality should remain consistently professional regardless of participant experience. Every workflow should reinforce collaboration rather than automation. The participant remains the creator; Frassy remains the creative partner.
+
 ## Status
-O-25 Parts 1–2 received — implementation on hold per Master Implementation Directive v2.0 until closing directive.
+O-25 Parts 1–3 received — implementation on hold per Master Implementation Directive v2.0 until closing directive.
+
 
