@@ -1,8 +1,9 @@
 ---
 name: Frassy First Experience & Intelligent Onboarding System (O-23)
-description: O-23 onboarding spec — Welcome Hall arrival, conversational intent discovery, Builder Profile, no-intimidation rules, mandatory First Win
+description: O-23 onboarding spec — Welcome Hall arrival, conversational intent discovery, Builder Profile, no-intimidation rules, mandatory First Win, adaptive onboarding, returning participants, accessibility, acceptance criteria
 type: feature
 ---
+
 
 # O-23 — The Frassy First Experience & Intelligent Onboarding System (Part 1)
 
