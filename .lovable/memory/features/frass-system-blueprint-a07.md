@@ -7,7 +7,7 @@ type: feature
 # FRASS SYSTEM BLUEPRINT A-07: Universal Search Architecture
 
 ## Status
-**IN PROGRESS — Parts 1-2 received, awaiting Part 3 and closing directive.**
+**IN PROGRESS — Parts 1-3 received, awaiting Part 4 and closing directive.**
 
 ## Executive Summary
 The Universal Search Architecture provides one intelligent search system spanning the entire FRASS ecosystem. Builders should never search individual districts. Instead, they ask Frassy naturally. The operating system understands intent, context, meaning, relationships, Builder history, and current projects. Universal Search should become the primary interface for discovering knowledge throughout the ecosystem.
@@ -218,7 +218,124 @@ Search becomes increasingly personalized while remaining transparent and Builder
 ### Engineering Directive
 Implement Universal Search as a Knowledge Graph traversal engine capable of semantic reasoning, relationship discovery, contextual ranking, and progressive knowledge exploration. Every search should strengthen Builder understanding rather than simply retrieving isolated records.
 
+## Part 3: Search Reasoning, Insight Generation & Builder Discovery
+
+### Search as Intelligence
+Universal Search should never stop after retrieving results. Every search becomes an opportunity to improve Builder understanding. Frassy should ask internally:
+- What is the Builder trying to accomplish?
+- What existing knowledge best supports that objective?
+- What connections might the Builder not have noticed?
+- What opportunities naturally emerge from these results?
+
+Search becomes reasoning. Not retrieval.
+
+### Search Context Engine
+Every search begins with an intelligent Context Package. Possible context includes:
+- Current workflow
+- Active projects
+- Builder goals
+- Organizations
+- Teams
+- Builder Passport
+- Universal Memory
+- Marketplace activity
+- Foundation initiatives
+- Recent conversations
+- Current Builder Path
+
+Search results should always reflect the Builder's current journey.
+
+### Search Reasoning Pipeline
+Every meaningful search follows a reasoning sequence:
+1. Understand Builder intent
+2. Assemble Builder context
+3. Traverse Knowledge Graph
+4. Rank relevance
+5. Identify relationships
+6. Detect opportunities
+7. Generate insights
+8. Present one unified discovery experience
+
+The Builder experiences one coherent response.
+
+### Insight Generation
+Search should generate insights alongside results. Examples:
+- "You've solved a similar problem twice before."
+- "This document became the foundation of your Marketplace product."
+- "This proposal eventually evolved into your Foundation initiative."
+- "Three different projects use the same successful workflow."
+
+Insights help Builders recognize patterns that may otherwise remain hidden.
+
+### Opportunity Discovery
+Search should recognize future opportunities. Examples: a completed documentary could become:
+- An Academy course
+- A Marketplace product
+- A Foundation fundraising campaign
+- A Community discussion
+- A Builder Path
+- A mentoring resource
+
+Knowledge naturally expands into new value.
+
+### Knowledge Gaps
+Search should identify missing information. Examples:
+- "You have the business plan but not a marketing strategy."
+- "This workflow lacks documentation."
+- "Your course has no accompanying templates."
+- "The Foundation proposal is missing a budget."
+
+Search helps Builders recognize what remains unfinished.
+
+### Search Across Time
+Search should understand Builder evolution. Example: searching "Leadership" may surface:
+- First leadership experience
+- Community leadership
+- Foundation leadership
+- Executive leadership
+- Current mentoring
+
+Search reveals growth across time.
+
+### Comparative Search
+Builders should compare related knowledge. Examples:
+- Compare two businesses
+- Compare documentary versions
+- Compare branding systems
+- Compare workflow performance
+- Compare Foundation initiatives
+- Compare Marketplace products
+
+Frassy should summarize meaningful similarities and differences.
+
+### Exploratory Search
+Builders should browse ideas conversationally. Examples:
+- "Show me everything I've created about education."
+- "What themes appear across my documentaries?"
+- "What businesses have I considered starting?"
+- "Which Foundation projects involved music?"
+
+Discovery should feel natural. Curiosity becomes productive.
+
+### Action-Oriented Search
+Search results should naturally lead into action. Examples:
+- Open workflow
+- Resume project
+- Create Marketplace listing
+- Share with collaborator
+- Generate presentation
+- Continue writing
+- Schedule review
+- Publish
+
+Every discovery should make the next step obvious.
+
+### Engineering Directive
+Implement Universal Search as a reasoning-driven knowledge discovery engine capable of contextual understanding, relationship traversal, opportunity detection, comparative analysis, and actionable recommendations. Search should consistently help Builders think more clearly, discover more deeply, and act more confidently.
+
 ## Chief Architect's Observation
 Universal Search changes one of the oldest assumptions in computing. For decades we've taught people: "Remember where you saved it." Frass OS says: "Remember why it mattered." The Builder shouldn't need to remember filenames, folders, dates, or even exact words. They should simply remember the project, the idea, the person, or the purpose. Frassy understands the rest. Universal Search will become the front door to the entire Frass Operating System, because once Builders trust that Frassy can always find what they need, the complexity of the platform effectively disappears.
 
-Part 2 deepens the opportunity: traditional search answers "Here's what you asked for," while Frass OS should answer "Here's what you asked for... and here's everything else that makes it more useful." Builders often don't need one document — they need the network of knowledge surrounding that document. Universal Search will become one of Frassy's greatest superpowers because instead of searching through information, Builders will begin exploring their own accumulated wisdom.
+Part 2 deepens the opportunity: traditional search answers "Here's what you asked for," while Frass OS should answer "Here's what you asked for... and here's everything else that makes it more useful." Builders often don't need one document — they need the network of knowledge surrounding that document.
+
+Part 3 moves beyond what most people would even call "search." Traditional search asks "What matches these words?" Frass OS asks "What knowledge will most help this Builder move forward?" Searching "Youth leadership" should return not twenty documents, but documentaries, Foundation initiatives, Academy lessons, Marketplace resources, collaborators, reflections, unfinished ideas, and the next logical opportunity. That is intelligent knowledge discovery — and it is the feature that will make Builders trust that nothing meaningful they create will ever become lost again, because Frassy will always know how to reconnect them with their own accumulated knowledge.
