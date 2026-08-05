@@ -221,18 +221,47 @@ async function loadState(sb: Sb, userId: string): Promise<JourneyState> {
 
 export const getBuilderJourney = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
-  .handler(async ({ context }): Promise<JourneyState> =>
-    loadState(context.supabase as unknown as Sb, context.userId),
-  );
+  .handler(async ({ context }): Promise<JourneyState> => {
+    const sb = context.supabase as unknown as Sb;
+    const state = await loadState(sb, context.userId);
+    const { data: isAdmin, error: roleError } = await context.supabase.rpc("has_role", {
+      _user_id: context.userId,
+      _role: "admin",
+    });
+    if (roleError) throw new Error(roleError.message);
+
+    // Founder identity is authoritative on the server. This also repairs accounts
+    // that entered the Builder journey before Founder Commissioning existed.
+    if (isAdmin && trackOf(state.currentStage) !== "owner") {
+      const now = new Date().toISOString();
+      const { error } = await context.supabase
+        .from("builder_journeys")
+        .update({ current_stage: FIRST_OWNER_STAGE, status: "in_progress", completed_at: null, last_active_at: now })
+        .eq("user_id", context.userId);
+      if (error) throw new Error(error.message);
+      return { ...state, status: "in_progress", currentStage: FIRST_OWNER_STAGE, completedAt: null, lastActiveAt: now };
+    }
+
+    return state;
+  });
 
 export const setJourneyStage = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((d: unknown) => z.object({ stageId: z.string() }).parse(d))
   .handler(async ({ context, data }) => {
     const sb = context.supabase as unknown as Sb;
+    const target = stageById(data.stageId);
+    if (trackOf(target.id) === "owner") {
+      const { data: isAdmin, error: roleError } = await context.supabase.rpc("has_role", {
+        _user_id: context.userId,
+        _role: "admin",
+      });
+      if (roleError) throw new Error(roleError.message);
+      if (!isAdmin) throw new Error("Founder Commissioning is restricted to the Founder.");
+    }
     const { error } = await sb
       .from("builder_journeys")
-      .update({ current_stage: stageById(data.stageId).id, last_active_at: new Date().toISOString() })
+      .update({ current_stage: target.id, last_active_at: new Date().toISOString() })
       .eq("user_id", context.userId);
     if (error) throw new Error(error.message);
     return { ok: true };
@@ -252,7 +281,21 @@ export const journeyTurn = createServerFn({ method: "POST" })
     const apiKey = process.env["LOVABLE_API_KEY"];
     if (!apiKey) throw new Error("Frassy is not configured yet.");
 
-    const state = await loadState(sb, userId);
+    let state = await loadState(sb, userId);
+    const { data: isAdmin, error: roleError } = await context.supabase.rpc("has_role", {
+      _user_id: userId,
+      _role: "admin",
+    });
+    if (roleError) throw new Error(roleError.message);
+    if (isAdmin && trackOf(state.currentStage) !== "owner") {
+      const now = new Date().toISOString();
+      const { error } = await context.supabase
+        .from("builder_journeys")
+        .update({ current_stage: FIRST_OWNER_STAGE, status: "in_progress", completed_at: null, last_active_at: now })
+        .eq("user_id", userId);
+      if (error) throw new Error(error.message);
+      state = { ...state, status: "in_progress", currentStage: FIRST_OWNER_STAGE, completedAt: null, lastActiveAt: now };
+    }
     const stage = stageById(state.currentStage);
 
     const userText = data.message.trim();
@@ -350,6 +393,14 @@ export const startJourneyTrack = createServerFn({ method: "POST" })
   )
   .handler(async ({ context, data }) => {
     const sb = context.supabase as unknown as Sb;
+    if (data.track === "owner") {
+      const { data: isAdmin, error: roleError } = await context.supabase.rpc("has_role", {
+        _user_id: context.userId,
+        _role: "admin",
+      });
+      if (roleError) throw new Error(roleError.message);
+      if (!isAdmin) throw new Error("Founder Commissioning is restricted to the Founder.");
+    }
     await loadState(sb, context.userId);
     const stageId = data.track === "owner" ? FIRST_OWNER_STAGE : FIRST_STAGE;
     const { error } = await sb
