@@ -6,8 +6,6 @@ import {
   FIRST_OWNER_STAGE,
   nextStage,
   stageById,
-  stageIndex,
-  stagesFor,
   trackOf,
 } from "@/lib/journey";
 import {
@@ -17,6 +15,11 @@ import {
   isFounderIdentityDiscovery,
   PLATFORM_MEMORY_PREFIX,
 } from "@/lib/journey-prompts.server";
+import {
+  loadJourneyState,
+  parseJourneyMarkers,
+  type JourneyDatabase,
+} from "@/lib/journey-state.server";
 
 export type JourneyMessage = {
   id: string;
@@ -43,95 +46,11 @@ export type JourneyState = {
   memory: BuilderMemoryEntry[];
 };
 
-const MEMORY_MARK = "[[MEMORY]]";
-const STAGE_MARK = "[[STAGE_COMPLETE]]";
-
-function parseMarkers(raw: string) {
-  let text = raw;
-  let stageComplete = false;
-  const memory: { key: string; value: string }[] = [];
-
-  if (text.includes(STAGE_MARK)) {
-    stageComplete = true;
-    text = text.split(STAGE_MARK).join("");
-  }
-
-  const mi = text.indexOf(MEMORY_MARK);
-  if (mi >= 0) {
-    const tail = text.slice(mi + MEMORY_MARK.length).trim();
-    text = text.slice(0, mi);
-    const start = tail.indexOf("[");
-    const end = tail.lastIndexOf("]");
-    if (start >= 0 && end > start) {
-      try {
-        const parsed = JSON.parse(tail.slice(start, end + 1)) as unknown;
-        if (Array.isArray(parsed)) {
-          for (const item of parsed) {
-            const rec = item as { key?: unknown; value?: unknown };
-            if (typeof rec?.key === "string" && typeof rec?.value === "string") {
-              memory.push({ key: rec.key.slice(0, 120), value: rec.value.slice(0, 2000) });
-            }
-          }
-        }
-      } catch {
-        /* ignore malformed memory line */
-      }
-    }
-  }
-
-  return { text: text.trim(), stageComplete, memory };
-}
-
-type Sb = { from: (t: string) => any; rpc?: unknown };
-
-async function loadState(sb: Sb, userId: string): Promise<JourneyState> {
-  const { data: existing } = await sb
-    .from("builder_journeys")
-    .select("*")
-    .eq("user_id", userId)
-    .maybeSingle();
-
-  let journey = existing;
-  if (!journey) {
-    const { data, error } = await sb
-      .from("builder_journeys")
-      .insert({ user_id: userId, current_stage: FIRST_STAGE })
-      .select("*")
-      .single();
-    if (error) throw new Error(error.message);
-    journey = data;
-  }
-
-  const [{ data: messages }, { data: memory }] = await Promise.all([
-    sb
-      .from("builder_journey_messages")
-      .select("id, role, content, stage, created_at")
-      .eq("user_id", userId)
-      .order("created_at", { ascending: true }),
-    sb
-      .from("builder_memory")
-      .select("category, key, value")
-      .eq("user_id", userId)
-      .order("created_at", { ascending: true }),
-  ]);
-
-  return {
-    status: journey.status,
-    currentStage: journey.current_stage,
-    stageProgress: (journey.stage_progress ?? {}) as JourneyState["stageProgress"],
-    startedAt: journey.started_at,
-    lastActiveAt: journey.last_active_at,
-    completedAt: journey.completed_at,
-    messages: (messages ?? []) as JourneyMessage[],
-    memory: (memory ?? []) as BuilderMemoryEntry[],
-  };
-}
-
 export const getBuilderJourney = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }): Promise<JourneyState> => {
-    const sb = context.supabase as unknown as Sb;
-    const state = await loadState(sb, context.userId);
+    const sb = context.supabase as unknown as JourneyDatabase;
+    const state = await loadJourneyState(sb, context.userId);
     const { data: isAdmin, error: roleError } = await context.supabase.rpc("has_role", {
       _user_id: context.userId,
       _role: "admin",
@@ -157,7 +76,7 @@ export const setJourneyStage = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((d: unknown) => z.object({ stageId: z.string() }).parse(d))
   .handler(async ({ context, data }) => {
-    const sb = context.supabase as unknown as Sb;
+    const sb = context.supabase as unknown as JourneyDatabase;
     const target = stageById(data.stageId);
     if (trackOf(target.id) === "owner") {
       const { data: isAdmin, error: roleError } = await context.supabase.rpc("has_role", {
@@ -183,13 +102,13 @@ export const journeyTurn = createServerFn({ method: "POST" })
       .parse(d),
   )
   .handler(async ({ context, data }) => {
-    const sb = context.supabase as unknown as Sb;
+    const sb = context.supabase as unknown as JourneyDatabase;
     const userId = context.userId;
 
     const apiKey = process.env["LOVABLE_API_KEY"];
     if (!apiKey) throw new Error("Frassy is not configured yet.");
 
-    let state = await loadState(sb, userId);
+    let state = await loadJourneyState(sb, userId);
     const { data: isAdmin, error: roleError } = await context.supabase.rpc("has_role", {
       _user_id: userId,
       _role: "admin",
@@ -255,7 +174,7 @@ export const journeyTurn = createServerFn({ method: "POST" })
     });
 
     const raw = await result.text;
-    const parsed = parseMarkers(raw);
+    const parsed = parseJourneyMarkers(raw);
     const rejectedFounderReply = activeTrack === "owner" && isFounderIdentityDiscovery(parsed.text);
     const text = rejectedFounderReply ? founderSafetyReply(stage.id) : parsed.text;
     const stageComplete = rejectedFounderReply ? false : parsed.stageComplete;
@@ -321,7 +240,7 @@ export const startJourneyTrack = createServerFn({ method: "POST" })
     z.object({ track: z.enum(["builder", "owner"]) }).parse(d),
   )
   .handler(async ({ context, data }) => {
-    const sb = context.supabase as unknown as Sb;
+    const sb = context.supabase as unknown as JourneyDatabase;
     if (data.track === "owner") {
       const { data: isAdmin, error: roleError } = await context.supabase.rpc("has_role", {
         _user_id: context.userId,
@@ -330,7 +249,7 @@ export const startJourneyTrack = createServerFn({ method: "POST" })
       if (roleError) throw new Error(roleError.message);
       if (!isAdmin) throw new Error("Founder Commissioning is restricted to the Founder.");
     }
-    await loadState(sb, context.userId);
+    await loadJourneyState(sb, context.userId);
     const stageId = data.track === "owner" ? FIRST_OWNER_STAGE : FIRST_STAGE;
     const { error } = await sb
       .from("builder_journeys")
