@@ -17,5 +17,7 @@ Engineering Package v2.0: hold implementation until the closing directive; Frass
 - [FRASS Genesis Specification](mem://features/frass-genesis-specification) — Canonical V1 doctrine: constitutional principles, 12 ecosystems, participant types, Links, definition of complete
 - [FRASS Engineering Implementation Package](mem://features/frass-engineering-implementation-package) — Master Directive v2.0: no build until closing directive, 5 canonical rules, modular architecture, premium quality bar
 - [Frassy Core Intelligence Engine](mem://features/frassy-core-intelligence-engine) — O-22 COMPLETE (Constitution of Frassy's Intelligence): orchestration layer, 3-layer awareness, 7-stage lifecycle, shared memory, initialization/arrival sequence, platform inheritance, acceptance criteria
-- [Frassy Onboarding System](mem://features/frassy-onboarding-system) — O-23: Welcome Hall arrival, first words, conversational intent discovery, Builder Profile, no-intimidation rules, mandatory First Win
+- [Frassy Onboarding System](mem://features/frassy-onboarding-system) — O-23 COMPLETE: Welcome Hall arrival, discovery journey, Builder Profile, no-intimidation rules, mandatory First Win, adaptive onboarding, returning participants, accessibility, acceptance criteria
+- [Frassy Welcome Hall Experience](mem://features/frassy-welcome-hall) — O-24 Part 1: digital front entrance, arrival sequence, Continue Building principle, Daily Focus, Opportunity Window, Progress Wall
+
 
