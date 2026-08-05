@@ -95,6 +95,25 @@ export function FrassyChat() {
   const dismissedRef = useRef(false);
 
   const season = useMemo(() => currentSeason(), []);
+  const journey = useJourneyStatus();
+  const needsJourney = journey.signedIn && journey.needsJourney;
+
+  const goToOnboarding = () => {
+    setOpen(false);
+    navigate({ to: "/onboarding" }).catch(() => {
+      window.location.href = "/onboarding";
+    });
+  };
+
+  // A signed-in Builder mid-journey is greeted by the journey, not the storefront.
+  useEffect(() => {
+    if (!needsJourney) return;
+    setMessages((prev) =>
+      prev.length === 1 && prev[0] === INITIAL_MSG ? [JOURNEY_MSG] : prev,
+    );
+  }, [needsJourney]);
+
+
 
 
   const cartCount = items.reduce((n, i) => n + i.quantity, 0);
