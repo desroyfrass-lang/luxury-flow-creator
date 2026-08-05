@@ -19,7 +19,7 @@ import {
   trackMinutes,
   trackOf,
 } from "@/lib/journey";
-import { useIsAdmin } from "@/hooks/use-is-admin";
+import { useIsAdminStatus } from "@/hooks/use-is-admin";
 import { LaunchReadiness } from "@/components/launch-readiness";
 import { COMMISSIONING_PHASES } from "@/lib/commissioning";
 import { useFrassyPrefs } from "@/hooks/use-frassy-prefs";
@@ -27,7 +27,6 @@ import { speakLine, stopSpeaking } from "@/lib/frassy-voice";
 import { useVoiceDictation } from "@/hooks/use-voice-dictation";
 
 type ConversationMode = "text" | "voice_text" | "voice_only";
-const MODE_KEY = "frass:onboarding:mode";
 const MODE_LABELS: Record<ConversationMode, string> = {
   text: "Text only",
   voice_text: "Voice + text",
@@ -38,7 +37,12 @@ const MODE_LABELS: Record<ConversationMode, string> = {
 export const Route = createFileRoute("/_authenticated/onboarding")({
   head: () => ({
     meta: [
-      { title: "Your Builder Journey — Frass OS" },
+      { title: "Founder Commissioning | Frass OS" },
+      { name: "description", content: "Commission Frass OS with Frassy across identity, commerce, Builder experience, operations, and launch readiness." },
+      { property: "og:title", content: "Founder Commissioning | Frass OS" },
+      { property: "og:description", content: "Commission Frass OS with Frassy across identity, commerce, Builder experience, operations, and launch readiness." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
       { name: "robots", content: "noindex,nofollow" },
     ],
   }),
@@ -52,7 +56,7 @@ function OnboardingPage() {
   const turn = useServerFn(journeyTurn);
   const jumpStage = useServerFn(setJourneyStage);
   const switchTrack = useServerFn(startJourneyTrack);
-  const isAdmin = useIsAdmin();
+  const { isAdmin, loading: roleLoading } = useIsAdminStatus();
 
   const { data, isLoading, refetch } = useQuery({
     queryKey: ["builder-journey"],
@@ -71,17 +75,17 @@ function OnboardingPage() {
   const modeRef = useRef<ConversationMode>("text");
   modeRef.current = mode;
 
-  const { prefs } = useFrassyPrefs();
+  const { prefs, update: updatePrefs, hydrated: prefsHydrated } = useFrassyPrefs();
 
   useEffect(() => {
-    if (typeof window === "undefined") return;
-    const saved = window.localStorage.getItem(MODE_KEY) as ConversationMode | null;
-    if (saved === "text" || saved === "voice_text" || saved === "voice_only") setMode(saved);
-  }, []);
+    if (!prefsHydrated) return;
+    setMode(prefs.communicationMode === "silent" ? "text" : prefs.communicationMode);
+  }, [prefsHydrated, prefs.communicationMode]);
 
   const chooseMode = (m: ConversationMode) => {
     setMode(m);
-    if (typeof window !== "undefined") window.localStorage.setItem(MODE_KEY, m);
+    modeRef.current = m;
+    updatePrefs({ communicationMode: m === "text" ? "silent" : m, muted: false });
     if (m === "text") {
       stopSpeaking();
       setSpeaking(false);
@@ -169,7 +173,7 @@ function OnboardingPage() {
 
   // Founders land in the Commissioning Journey, not the Builder Journey.
   useEffect(() => {
-    if (isLoading || !data || founderRef.current || isAdmin !== true) return;
+    if (isLoading || roleLoading || !data || founderRef.current || isAdmin !== true) return;
     if (trackOf(data.currentStage) === "owner") {
       founderRef.current = true;
       return;
@@ -179,12 +183,12 @@ function OnboardingPage() {
       await switchTrack({ data: { track: "owner" } });
       await refetch();
     })();
-  }, [isLoading, data, isAdmin]);
+  }, [isLoading, roleLoading, data, isAdmin, switchTrack, refetch]);
 
   // First session on this track: let Frassy open the conversation.
   useEffect(() => {
-    if (isLoading || !data || openedRef.current) return;
-    if (isAdmin === true && !founderRef.current) return;
+    if (isLoading || roleLoading || !data || openedRef.current) return;
+    if (isAdmin === true && track !== "owner") return;
     const hasTrackMessages = (data.messages ?? []).some(
       (m: JourneyMessage) => trackOf(m.stage) === track,
     );
@@ -192,7 +196,7 @@ function OnboardingPage() {
       openedRef.current = true;
       void send("", true);
     }
-  }, [isLoading, data, isAdmin, track]);
+  }, [isLoading, roleLoading, data, isAdmin, track]);
 
 
   const onSubmit = (e: React.FormEvent) => {
@@ -393,17 +397,26 @@ function OnboardingPage() {
                     </div>
                   )}
                   {m.content}
+                  {m.role === "assistant" && mode !== "text" && (
+                    <button
+                      type="button"
+                      onClick={() => speakReply(m.content)}
+                      className="mt-3 block text-[10px] font-bold uppercase tracking-[0.2em] text-[color:var(--gold)] hover:text-foreground"
+                    >
+                      Hear Frassy
+                    </button>
+                  )}
                 </div>
               </div>
             ))}
             {busy && (
-              <div className="text-sm text-muted-foreground">Frassy is thinking…</div>
+              <div role="status" aria-live="polite" className="text-sm text-muted-foreground">Frassy is thinking…</div>
             )}
             {speaking && !busy && (
-              <div className="text-sm text-[color:var(--gold)]">Frassy is speaking…</div>
+              <div role="status" aria-live="polite" className="text-sm text-[color:var(--gold)]">Frassy is speaking…</div>
             )}
             {dictation.listening && (
-              <div className="text-sm text-muted-foreground">
+              <div role="status" aria-live="polite" className="text-sm text-muted-foreground">
                 Listening… {dictation.interim}
               </div>
             )}
