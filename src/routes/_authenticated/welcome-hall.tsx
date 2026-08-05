@@ -102,6 +102,12 @@ function WelcomeHallPage() {
                   Enter your Vault
                 </Link>
                 <Link
+                  to="/creation"
+                  className="lux-press inline-block rounded-sm border border-[color:var(--gold)] px-6 py-3 text-[11px] font-bold uppercase tracking-[0.3em] text-[color:var(--gold)]"
+                >
+                  Start creating
+                </Link>
+                <Link
                   to="/frassy"
                   className="lux-press inline-block rounded-sm border border-[color:var(--gold)] px-6 py-3 text-[11px] font-bold uppercase tracking-[0.3em] text-[color:var(--gold)]"
                 >
