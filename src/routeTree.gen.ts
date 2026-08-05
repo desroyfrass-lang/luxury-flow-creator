@@ -51,6 +51,7 @@ import { Route as ApiChatRouteImport } from './routes/api/chat'
 import { Route as AfroDesignersDesignersRouteImport } from './routes/afro-designers.designers'
 import { Route as AuthenticatedWorkspaceRouteImport } from './routes/_authenticated/workspace'
 import { Route as AuthenticatedTryOnRouteImport } from './routes/_authenticated/try-on'
+import { Route as AuthenticatedOnboardingRouteImport } from './routes/_authenticated/onboarding'
 import { Route as AuthenticatedNotificationsRouteImport } from './routes/_authenticated/notifications'
 import { Route as AuthenticatedFrassyRouteImport } from './routes/_authenticated/frassy'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
@@ -296,6 +297,11 @@ const AuthenticatedTryOnRoute = AuthenticatedTryOnRouteImport.update({
   path: '/try-on',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedOnboardingRoute = AuthenticatedOnboardingRouteImport.update({
+  id: '/onboarding',
+  path: '/onboarding',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedNotificationsRoute =
   AuthenticatedNotificationsRouteImport.update({
     id: '/notifications',
@@ -506,6 +512,7 @@ export interface FileRoutesByFullPath {
   '/admin': typeof AuthenticatedAdminRouteWithChildren
   '/frassy': typeof AuthenticatedFrassyRoute
   '/notifications': typeof AuthenticatedNotificationsRoute
+  '/onboarding': typeof AuthenticatedOnboardingRoute
   '/try-on': typeof AuthenticatedTryOnRoute
   '/workspace': typeof AuthenticatedWorkspaceRouteWithChildren
   '/afro-designers/designers': typeof AfroDesignersDesignersRouteWithChildren
@@ -574,6 +581,7 @@ export interface FileRoutesByTo {
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/frassy': typeof AuthenticatedFrassyRoute
   '/notifications': typeof AuthenticatedNotificationsRoute
+  '/onboarding': typeof AuthenticatedOnboardingRoute
   '/try-on': typeof AuthenticatedTryOnRoute
   '/workspace': typeof AuthenticatedWorkspaceRouteWithChildren
   '/afro-designers/designers': typeof AfroDesignersDesignersRouteWithChildren
@@ -649,6 +657,7 @@ export interface FileRoutesById {
   '/_authenticated/admin': typeof AuthenticatedAdminRouteWithChildren
   '/_authenticated/frassy': typeof AuthenticatedFrassyRoute
   '/_authenticated/notifications': typeof AuthenticatedNotificationsRoute
+  '/_authenticated/onboarding': typeof AuthenticatedOnboardingRoute
   '/_authenticated/try-on': typeof AuthenticatedTryOnRoute
   '/_authenticated/workspace': typeof AuthenticatedWorkspaceRouteWithChildren
   '/afro-designers/designers': typeof AfroDesignersDesignersRouteWithChildren
@@ -728,6 +737,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/frassy'
     | '/notifications'
+    | '/onboarding'
     | '/try-on'
     | '/workspace'
     | '/afro-designers/designers'
@@ -796,6 +806,7 @@ export interface FileRouteTypes {
     | '/.well-known/oauth-protected-resource'
     | '/frassy'
     | '/notifications'
+    | '/onboarding'
     | '/try-on'
     | '/workspace'
     | '/afro-designers/designers'
@@ -870,6 +881,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin'
     | '/_authenticated/frassy'
     | '/_authenticated/notifications'
+    | '/_authenticated/onboarding'
     | '/_authenticated/try-on'
     | '/_authenticated/workspace'
     | '/afro-designers/designers'
@@ -1251,6 +1263,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedTryOnRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/onboarding': {
+      id: '/_authenticated/onboarding'
+      path: '/onboarding'
+      fullPath: '/onboarding'
+      preLoaderRoute: typeof AuthenticatedOnboardingRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/notifications': {
       id: '/_authenticated/notifications'
       path: '/notifications'
@@ -1547,6 +1566,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedAdminRoute: typeof AuthenticatedAdminRouteWithChildren
   AuthenticatedFrassyRoute: typeof AuthenticatedFrassyRoute
   AuthenticatedNotificationsRoute: typeof AuthenticatedNotificationsRoute
+  AuthenticatedOnboardingRoute: typeof AuthenticatedOnboardingRoute
   AuthenticatedTryOnRoute: typeof AuthenticatedTryOnRoute
   AuthenticatedWorkspaceRoute: typeof AuthenticatedWorkspaceRouteWithChildren
 }
@@ -1555,6 +1575,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedAdminRoute: AuthenticatedAdminRouteWithChildren,
   AuthenticatedFrassyRoute: AuthenticatedFrassyRoute,
   AuthenticatedNotificationsRoute: AuthenticatedNotificationsRoute,
+  AuthenticatedOnboardingRoute: AuthenticatedOnboardingRoute,
   AuthenticatedTryOnRoute: AuthenticatedTryOnRoute,
   AuthenticatedWorkspaceRoute: AuthenticatedWorkspaceRouteWithChildren,
 }
