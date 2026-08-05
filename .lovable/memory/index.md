@@ -22,6 +22,7 @@ Engineering Package v2.0: hold implementation until the closing directive; Frass
 - [Frassy Creation District](mem://features/frassy-creation-district) — O-25 COMPLETE: creative operating system, six studios, creative modes, Creative Excellence Engine, collaboration, publishing, creative memory, acceptance criteria
 - [Frassy Opportunity Center](mem://features/frassy-opportunity-center) — O-26 COMPLETE (Parts 1–4): financial intelligence engine, guided opportunity building, opportunity ecosystem, business scaling & partnership intelligence
 - [Frassy Academy District](mem://features/frassy-academy-district) — O-27 COMPLETE (Parts 1–4): Builder Development System, Builder Paths, Colleges, Builder Passport, Hall of Builders, Mentor Intelligence, Adaptive Learning & Lifelong Builder Development
+- [Frassy Community Square](mem://features/frassy-community-square) — O-28 Part 1: social & collaborative heart of FrassKicks, Builder Circles, collaboration requests, conversation culture, feed philosophy
 
 
 
