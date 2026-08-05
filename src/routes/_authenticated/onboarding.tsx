@@ -38,7 +38,7 @@ function OnboardingPage() {
   const turn = useServerFn(journeyTurn);
   const jumpStage = useServerFn(setJourneyStage);
   const switchTrack = useServerFn(startJourneyTrack);
-  const { isAdmin } = useIsAdmin();
+  const isAdmin = useIsAdmin();
 
   const { data, isLoading, refetch } = useQuery({
     queryKey: ["builder-journey"],
