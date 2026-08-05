@@ -13,6 +13,7 @@ import { canSpeak, speakLine, stopSpeaking, VOICE_PROFILE_LABELS } from "@/lib/f
 import { FrassyConsentModal } from "@/components/frassy-consent";
 import { useFrassyMemory, memoryContext, rememberCartSnapshot } from "@/lib/frassy-memory";
 import { useFrassyContext, currentSeason, seasonalAccent } from "@/hooks/use-frassy-context";
+import { useJourneyStatus } from "@/hooks/use-journey-status";
 
 
 type ProductCard = {
