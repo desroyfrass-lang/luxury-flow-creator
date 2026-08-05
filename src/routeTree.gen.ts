@@ -42,6 +42,7 @@ import { Route as FrassDripWomenRouteImport } from './routes/frass-drip.women'
 import { Route as FrassDripMenRouteImport } from './routes/frass-drip.men'
 import { Route as CollectionHandleRouteImport } from './routes/collection.$handle'
 import { Route as CapsulesHandleRouteImport } from './routes/capsules.$handle'
+import { Route as BuilderHandleRouteImport } from './routes/builder.$handle'
 import { Route as BlogSlugRouteImport } from './routes/blog.$slug'
 import { Route as BareDripWomenRouteImport } from './routes/bare-drip.women'
 import { Route as BareDripMenRouteImport } from './routes/bare-drip.men'
@@ -67,6 +68,7 @@ import { Route as BareDripWomenCategoryRouteImport } from './routes/bare-drip.wo
 import { Route as BareDripMenCategoryRouteImport } from './routes/bare-drip.men.$category'
 import { Route as AfroDesignersDesignersSlugRouteImport } from './routes/afro-designers.designers.$slug'
 import { Route as AfroDesignersCollectionsSlugRouteImport } from './routes/afro-designers.collections.$slug'
+import { Route as AuthenticatedWorkspaceProfileRouteImport } from './routes/_authenticated/workspace.profile'
 import { Route as AuthenticatedWorkspaceMerchRouteImport } from './routes/_authenticated/workspace.merch'
 import { Route as AuthenticatedWorkspaceInsightsRouteImport } from './routes/_authenticated/workspace.insights'
 import { Route as AuthenticatedAdminVisualIndexRouteImport } from './routes/_authenticated/admin.visual-index'
@@ -249,6 +251,11 @@ const CapsulesHandleRoute = CapsulesHandleRouteImport.update({
   path: '/$handle',
   getParentRoute: () => CapsulesRoute,
 } as any)
+const BuilderHandleRoute = BuilderHandleRouteImport.update({
+  id: '/builder/$handle',
+  path: '/builder/$handle',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const BlogSlugRoute = BlogSlugRouteImport.update({
   id: '/$slug',
   path: '/$slug',
@@ -380,6 +387,12 @@ const AfroDesignersCollectionsSlugRoute =
     path: '/collections/$slug',
     getParentRoute: () => AfroDesignersRoute,
   } as any)
+const AuthenticatedWorkspaceProfileRoute =
+  AuthenticatedWorkspaceProfileRouteImport.update({
+    id: '/profile',
+    path: '/profile',
+    getParentRoute: () => AuthenticatedWorkspaceRoute,
+  } as any)
 const AuthenticatedWorkspaceMerchRoute =
   AuthenticatedWorkspaceMerchRouteImport.update({
     id: '/merch',
@@ -501,6 +514,7 @@ export interface FileRoutesByFullPath {
   '/bare-drip/men': typeof BareDripMenRouteWithChildren
   '/bare-drip/women': typeof BareDripWomenRouteWithChildren
   '/blog/$slug': typeof BlogSlugRoute
+  '/builder/$handle': typeof BuilderHandleRoute
   '/capsules/$handle': typeof CapsulesHandleRoute
   '/collection/$handle': typeof CollectionHandleRoute
   '/frass-drip/men': typeof FrassDripMenRouteWithChildren
@@ -533,6 +547,7 @@ export interface FileRoutesByFullPath {
   '/admin/visual-index': typeof AuthenticatedAdminVisualIndexRoute
   '/workspace/insights': typeof AuthenticatedWorkspaceInsightsRoute
   '/workspace/merch': typeof AuthenticatedWorkspaceMerchRoute
+  '/workspace/profile': typeof AuthenticatedWorkspaceProfileRoute
   '/afro-designers/collections/$slug': typeof AfroDesignersCollectionsSlugRoute
   '/afro-designers/designers/$slug': typeof AfroDesignersDesignersSlugRoute
   '/bare-drip/men/$category': typeof BareDripMenCategoryRoute
@@ -565,6 +580,7 @@ export interface FileRoutesByTo {
   '/api/chat': typeof ApiChatRoute
   '/api/tts': typeof ApiTtsRoute
   '/blog/$slug': typeof BlogSlugRoute
+  '/builder/$handle': typeof BuilderHandleRoute
   '/capsules/$handle': typeof CapsulesHandleRoute
   '/collection/$handle': typeof CollectionHandleRoute
   '/frass-kicks/men': typeof FrassKicksMenRoute
@@ -595,6 +611,7 @@ export interface FileRoutesByTo {
   '/admin/visual-index': typeof AuthenticatedAdminVisualIndexRoute
   '/workspace/insights': typeof AuthenticatedWorkspaceInsightsRoute
   '/workspace/merch': typeof AuthenticatedWorkspaceMerchRoute
+  '/workspace/profile': typeof AuthenticatedWorkspaceProfileRoute
   '/afro-designers/collections/$slug': typeof AfroDesignersCollectionsSlugRoute
   '/afro-designers/designers/$slug': typeof AfroDesignersDesignersSlugRoute
   '/bare-drip/men/$category': typeof BareDripMenCategoryRoute
@@ -640,6 +657,7 @@ export interface FileRoutesById {
   '/bare-drip/men': typeof BareDripMenRouteWithChildren
   '/bare-drip/women': typeof BareDripWomenRouteWithChildren
   '/blog/$slug': typeof BlogSlugRoute
+  '/builder/$handle': typeof BuilderHandleRoute
   '/capsules/$handle': typeof CapsulesHandleRoute
   '/collection/$handle': typeof CollectionHandleRoute
   '/frass-drip/men': typeof FrassDripMenRouteWithChildren
@@ -672,6 +690,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/visual-index': typeof AuthenticatedAdminVisualIndexRoute
   '/_authenticated/workspace/insights': typeof AuthenticatedWorkspaceInsightsRoute
   '/_authenticated/workspace/merch': typeof AuthenticatedWorkspaceMerchRoute
+  '/_authenticated/workspace/profile': typeof AuthenticatedWorkspaceProfileRoute
   '/afro-designers/collections/$slug': typeof AfroDesignersCollectionsSlugRoute
   '/afro-designers/designers/$slug': typeof AfroDesignersDesignersSlugRoute
   '/bare-drip/men/$category': typeof BareDripMenCategoryRoute
@@ -717,6 +736,7 @@ export interface FileRouteTypes {
     | '/bare-drip/men'
     | '/bare-drip/women'
     | '/blog/$slug'
+    | '/builder/$handle'
     | '/capsules/$handle'
     | '/collection/$handle'
     | '/frass-drip/men'
@@ -749,6 +769,7 @@ export interface FileRouteTypes {
     | '/admin/visual-index'
     | '/workspace/insights'
     | '/workspace/merch'
+    | '/workspace/profile'
     | '/afro-designers/collections/$slug'
     | '/afro-designers/designers/$slug'
     | '/bare-drip/men/$category'
@@ -781,6 +802,7 @@ export interface FileRouteTypes {
     | '/api/chat'
     | '/api/tts'
     | '/blog/$slug'
+    | '/builder/$handle'
     | '/capsules/$handle'
     | '/collection/$handle'
     | '/frass-kicks/men'
@@ -811,6 +833,7 @@ export interface FileRouteTypes {
     | '/admin/visual-index'
     | '/workspace/insights'
     | '/workspace/merch'
+    | '/workspace/profile'
     | '/afro-designers/collections/$slug'
     | '/afro-designers/designers/$slug'
     | '/bare-drip/men/$category'
@@ -855,6 +878,7 @@ export interface FileRouteTypes {
     | '/bare-drip/men'
     | '/bare-drip/women'
     | '/blog/$slug'
+    | '/builder/$handle'
     | '/capsules/$handle'
     | '/collection/$handle'
     | '/frass-drip/men'
@@ -887,6 +911,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/visual-index'
     | '/_authenticated/workspace/insights'
     | '/_authenticated/workspace/merch'
+    | '/_authenticated/workspace/profile'
     | '/afro-designers/collections/$slug'
     | '/afro-designers/designers/$slug'
     | '/bare-drip/men/$category'
@@ -923,6 +948,7 @@ export interface RootRouteChildren {
   Char91DotwellKnownChar93OauthProtectedResourceRoute: typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   ApiChatRoute: typeof ApiChatRoute
   ApiTtsRoute: typeof ApiTtsRoute
+  BuilderHandleRoute: typeof BuilderHandleRoute
   CollectionHandleRoute: typeof CollectionHandleRoute
   ProductHandleRoute: typeof ProductHandleRoute
   DotlovableOauthConsentRoute: typeof DotlovableOauthConsentRoute
@@ -1162,6 +1188,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CapsulesHandleRouteImport
       parentRoute: typeof CapsulesRoute
     }
+    '/builder/$handle': {
+      id: '/builder/$handle'
+      path: '/builder/$handle'
+      fullPath: '/builder/$handle'
+      preLoaderRoute: typeof BuilderHandleRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/blog/$slug': {
       id: '/blog/$slug'
       path: '/$slug'
@@ -1337,6 +1370,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AfroDesignersCollectionsSlugRouteImport
       parentRoute: typeof AfroDesignersRoute
     }
+    '/_authenticated/workspace/profile': {
+      id: '/_authenticated/workspace/profile'
+      path: '/profile'
+      fullPath: '/workspace/profile'
+      preLoaderRoute: typeof AuthenticatedWorkspaceProfileRouteImport
+      parentRoute: typeof AuthenticatedWorkspaceRoute
+    }
     '/_authenticated/workspace/merch': {
       id: '/_authenticated/workspace/merch'
       path: '/merch'
@@ -1488,12 +1528,14 @@ const AuthenticatedAdminRouteWithChildren =
 interface AuthenticatedWorkspaceRouteChildren {
   AuthenticatedWorkspaceInsightsRoute: typeof AuthenticatedWorkspaceInsightsRoute
   AuthenticatedWorkspaceMerchRoute: typeof AuthenticatedWorkspaceMerchRoute
+  AuthenticatedWorkspaceProfileRoute: typeof AuthenticatedWorkspaceProfileRoute
 }
 
 const AuthenticatedWorkspaceRouteChildren: AuthenticatedWorkspaceRouteChildren =
   {
     AuthenticatedWorkspaceInsightsRoute: AuthenticatedWorkspaceInsightsRoute,
     AuthenticatedWorkspaceMerchRoute: AuthenticatedWorkspaceMerchRoute,
+    AuthenticatedWorkspaceProfileRoute: AuthenticatedWorkspaceProfileRoute,
   }
 
 const AuthenticatedWorkspaceRouteWithChildren =
@@ -1759,6 +1801,7 @@ const rootRouteChildren: RootRouteChildren = {
     Char91DotwellKnownChar93OauthProtectedResourceRoute,
   ApiChatRoute: ApiChatRoute,
   ApiTtsRoute: ApiTtsRoute,
+  BuilderHandleRoute: BuilderHandleRoute,
   CollectionHandleRoute: CollectionHandleRoute,
   ProductHandleRoute: ProductHandleRoute,
   DotlovableOauthConsentRoute: DotlovableOauthConsentRoute,

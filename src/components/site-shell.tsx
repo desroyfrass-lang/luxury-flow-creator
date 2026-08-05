@@ -1,13 +1,22 @@
-import { Link, useRouterState } from "@tanstack/react-router";
+import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
+import { useQueryClient } from "@tanstack/react-query";
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { CartDrawer } from "./cart-drawer";
 import { LuxuryBackground } from "./luxury-background";
 import { NotificationBell } from "./notification-bell";
-import { Search, User, Instagram, Music2, Youtube, Facebook, Menu, X, Sparkles, KeyRound } from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Search, User, Instagram, Music2, Youtube, Facebook, Menu, X, Sparkles, KeyRound, LogOut, Settings } from "lucide-react";
 import { useCartSync } from "@/hooks/use-cart-sync";
 import { useSiteText } from "@/hooks/use-site-text";
 import { useIsAdmin } from "@/hooks/use-is-admin";
 import { useWorkspaceRoles } from "@/hooks/use-workspace-roles";
+import { supabase } from "@/integrations/supabase/client";
 import fullLogo from "@/assets/frass-logo-full.asset.json";
 import symbolLogo from "@/assets/frass-logo-symbol.asset.json";
 
@@ -127,12 +136,7 @@ function Header() {
               <KeyRound className="h-4 w-4" />
             </Link>
           )}
-          <button
-            className="hidden md:inline-flex h-10 w-10 items-center justify-center rounded-full border border-border bg-background/70 backdrop-blur hover:border-[color:var(--gold)] transition"
-            aria-label="Account"
-          >
-            <User className="h-4 w-4" />
-          </button>
+          <BuilderAccountMenu hasWorkspace={hasWorkspace} isAdmin={isAdmin} />
           <div ref={menuRef} className="relative">
             <button
               type="button"
@@ -143,17 +147,13 @@ function Header() {
             >
               {menuOpen ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
             </button>
-            {menuOpen && (
-              <div className="absolute right-0 mt-3 w-64 rounded-2xl border border-border/70 bg-background/95 backdrop-blur-xl shadow-2xl p-2 z-50">
-                {MENU_ITEMS.map((n) => <MenuLink key={n.to} item={n} />)}
-                {isAdmin && (
-                  <>
-                    <div className="my-1 h-px bg-border/60" />
-                    <MenuLink item={ADMIN_ITEM} />
-                  </>
-                )}
-              </div>
-            )}
+              {menuOpen && (
+                <div className="absolute right-0 mt-3 w-64 rounded-2xl border border-border/70 bg-background/95 backdrop-blur-xl shadow-2xl p-2 z-50">
+                  {MENU_ITEMS.map((n) => <MenuLink key={n.to} item={n} />)}
+                  <div className="my-1 h-px bg-border/60" />
+                  <MobileAccountLinks hasWorkspace={hasWorkspace} isAdmin={isAdmin} />
+                </div>
+              )}
           </div>
           <CartDrawer />
         </div>
@@ -164,6 +164,151 @@ function Header() {
         </div>
       </div>
     </header>
+  );
+}
+
+function useSession() {
+  const [session, setSession] = useState(false);
+  useEffect(() => {
+    let mounted = true;
+    supabase.auth.getSession().then(({ data }) => {
+      if (mounted) setSession(!!data.session);
+    });
+    const { data: sub } = supabase.auth.onAuthStateChange((_e, s) => setSession(!!s));
+    return () => {
+      mounted = false;
+      sub.subscription.unsubscribe();
+    };
+  }, []);
+  return session;
+}
+
+function BuilderAccountMenu({ hasWorkspace, isAdmin }: { hasWorkspace: boolean; isAdmin: boolean }) {
+  const navigate = useNavigate();
+  const queryClient = useQueryClient();
+  const hasSession = useSession();
+
+  const handleSignOut = async () => {
+    await queryClient.cancelQueries();
+    queryClient.clear();
+    await supabase.auth.signOut();
+    navigate({ to: "/auth", search: { next: "" }, replace: true });
+  };
+
+  if (!hasSession) {
+    return (
+      <Link
+        to="/auth"
+        search={{ next: "" }}
+        className="hidden md:inline-flex h-10 w-10 items-center justify-center rounded-full border border-border bg-background/70 backdrop-blur hover:border-[color:var(--gold)] transition"
+        aria-label="Sign in"
+      >
+        <User className="h-4 w-4" />
+      </Link>
+    );
+  }
+
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <button
+          className="hidden md:inline-flex h-10 w-10 items-center justify-center rounded-full border border-border bg-background/70 backdrop-blur hover:border-[color:var(--gold)] transition"
+          aria-label="Account menu"
+        >
+          <User className="h-4 w-4" />
+        </button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="end" className="w-56 rounded-2xl border-border/70 bg-background/95 backdrop-blur-xl">
+        <DropdownMenuItem asChild className="rounded-xl cursor-pointer">
+          <Link to="/workspace/profile" className="flex items-center gap-2 text-xs uppercase tracking-[0.2em]">
+            <Settings className="h-4 w-4" />
+            Builder Profile
+          </Link>
+        </DropdownMenuItem>
+        {hasWorkspace && (
+          <DropdownMenuItem asChild className="rounded-xl cursor-pointer">
+            <Link to="/workspace" className="flex items-center gap-2 text-xs uppercase tracking-[0.2em]">
+              <KeyRound className="h-4 w-4" />
+              Workspace
+            </Link>
+          </DropdownMenuItem>
+        )}
+        {isAdmin && (
+          <DropdownMenuItem asChild className="rounded-xl cursor-pointer">
+            <Link to="/admin" className="flex items-center gap-2 text-xs uppercase tracking-[0.2em]">
+              <Sparkles className="h-4 w-4" />
+              Admin
+            </Link>
+          </DropdownMenuItem>
+        )}
+        <DropdownMenuSeparator />
+        <DropdownMenuItem onClick={handleSignOut} className="rounded-xl cursor-pointer text-xs uppercase tracking-[0.2em]">
+          <LogOut className="h-4 w-4 mr-2" />
+          Sign out
+        </DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
+}
+
+function MobileAccountLinks({ hasWorkspace, isAdmin }: { hasWorkspace: boolean; isAdmin: boolean }) {
+  const navigate = useNavigate();
+  const queryClient = useQueryClient();
+  const hasSession = useSession();
+
+  const handleSignOut = async () => {
+    await queryClient.cancelQueries();
+    queryClient.clear();
+    await supabase.auth.signOut();
+    navigate({ to: "/auth", search: { next: "" }, replace: true });
+  };
+
+  if (!hasSession) {
+    return (
+      <Link
+        to="/auth"
+        search={{ next: "" }}
+        className="nav-glow block rounded-xl px-4 py-3 text-xs uppercase tracking-[0.25em] text-muted-foreground transition-colors hover:bg-foreground/5"
+      >
+        Sign in
+      </Link>
+    );
+  }
+
+  return (
+    <>
+      <Link
+        to="/workspace/profile"
+        className="nav-glow block rounded-xl px-4 py-3 text-xs uppercase tracking-[0.25em] text-muted-foreground transition-colors hover:bg-foreground/5"
+        activeProps={{ className: "text-foreground bg-foreground/5" }}
+      >
+        Builder Profile
+      </Link>
+      {hasWorkspace && (
+        <Link
+          to="/workspace"
+          className="nav-glow block rounded-xl px-4 py-3 text-xs uppercase tracking-[0.25em] text-muted-foreground transition-colors hover:bg-foreground/5"
+          activeProps={{ className: "text-foreground bg-foreground/5" }}
+        >
+          Workspace
+        </Link>
+      )}
+      {isAdmin && (
+        <Link
+          to="/admin"
+          className="nav-glow block rounded-xl px-4 py-3 text-xs uppercase tracking-[0.25em] text-muted-foreground transition-colors hover:bg-foreground/5"
+          activeProps={{ className: "text-foreground bg-foreground/5" }}
+        >
+          Admin
+        </Link>
+      )}
+      <button
+        onClick={handleSignOut}
+        className="nav-glow block w-full rounded-xl px-4 py-3 text-left text-xs uppercase tracking-[0.25em] text-muted-foreground transition-colors hover:bg-foreground/5"
+      >
+        Sign out
+      </button>
+    </>
   );
 }
 
