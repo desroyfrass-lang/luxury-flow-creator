@@ -108,6 +108,12 @@ function WelcomeHallPage() {
                   Start creating
                 </Link>
                 <Link
+                  to="/opportunity"
+                  className="lux-press inline-block rounded-sm border border-[color:var(--gold)] px-6 py-3 text-[11px] font-bold uppercase tracking-[0.3em] text-[color:var(--gold)]"
+                >
+                  Track opportunities
+                </Link>
+                <Link
                   to="/frassy"
                   className="lux-press inline-block rounded-sm border border-[color:var(--gold)] px-6 py-3 text-[11px] font-bold uppercase tracking-[0.3em] text-[color:var(--gold)]"
                 >
