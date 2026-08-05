@@ -641,7 +641,7 @@ export const OWNER_STAGES: JourneyStage[] = OWNER_STAGES_RAW.map((s) => ({
 export const ALL_STAGES: JourneyStage[] = [...JOURNEY_STAGES, ...OWNER_STAGES];
 
 export const FIRST_STAGE: JourneyStageId = "mission";
-export const FIRST_OWNER_STAGE: JourneyStageId = "op_brand";
+export const FIRST_OWNER_STAGE: JourneyStageId = "op_brand_name";
 
 export function trackOf(id: string): JourneyTrack {
   return id.startsWith("op_") ? "owner" : "builder";
