@@ -7,7 +7,7 @@ type: feature
 # FRASS SYSTEM BLUEPRINT A-07: Universal Search Architecture
 
 ## Status
-**IN PROGRESS — Part 1 received, awaiting Part 2 and closing directive.**
+**IN PROGRESS — Parts 1-2 received, awaiting Part 3 and closing directive.**
 
 ## Executive Summary
 The Universal Search Architecture provides one intelligent search system spanning the entire FRASS ecosystem. Builders should never search individual districts. Instead, they ask Frassy naturally. The operating system understands intent, context, meaning, relationships, Builder history, and current projects. Universal Search should become the primary interface for discovering knowledge throughout the ecosystem.
@@ -100,8 +100,125 @@ Search should understand relationships. Examples:
 
 Search navigates relationships. Not just files.
 
-## Engineering Directive
-Implement Universal Search as a semantic, context-aware, Builder-centered knowledge discovery engine capable of traversing every canonical object within Frass Operating System. Builders should search naturally while Frassy interprets intent, relationships, context, and meaning to deliver relevant, connected knowledge.
+## Part 2: Knowledge Graph Navigation, Discovery & Intelligent Retrieval
+
+### Knowledge Discovery Philosophy
+The purpose of Universal Search is not merely finding information. Its purpose is helping Builders discover meaningful knowledge. Search should answer:
+- What exists?
+- What relates?
+- What have I forgotten?
+- What opportunity does this create?
+
+Knowledge discovery should become a natural extension of Builder thinking.
+
+### The Knowledge Graph
+Universal Search operates on the Frass Knowledge Graph. Every searchable object becomes a connected node. Examples:
+- Builders
+- Projects
+- Assets
+- Organizations
+- Businesses
+- Marketplace products
+- Academy lessons
+- Foundation initiatives
+- Community discussions
+- Workflows
+- Builder Passport achievements
+- Memories
+- Relationships
+
+Search should navigate connections rather than isolated records.
+
+### Connected Results
+Results should never appear alone. Example: searching "Youth Documentary" returns:
+- Primary documentary
+- Interview footage
+- Scripts
+- Music
+- Marketplace assets
+- Grant proposal
+- Community discussions
+- Academy lessons
+- Foundation initiative
+- Collaborators
+- Builder reflections
+
+Everything arrives together.
+
+### Search Intelligence
+Universal Search should understand multiple dimensions simultaneously:
+- Meaning
+- Relationships
+- Recency
+- Importance
+- Builder context
+- Current workflow
+- Organizations
+- People
+- Goals
+- Projects
+
+Search should intelligently rank information according to Builder relevance.
+
+### Builder Context Ranking
+Different Builders searching identical words may receive different results. Example: searching "Marketing"
+- Business Builder receives: business plans, Marketplace products, sales strategy, client proposals.
+- Creative Builder receives: brand identity, campaign design, media assets, photography.
+- Foundation leader receives: fundraising, community outreach, grant communications.
+
+Context personalizes discovery.
+
+### Progressive Discovery
+Search results should expand naturally. Builders first receive:
+- Most relevant information
+
+Then:
+- Related work
+- Supporting assets
+- Historical context
+- Potential opportunities
+- Suggested next actions
+
+Search becomes exploratory rather than overwhelming.
+
+### Intelligent Suggestions
+Even without explicit searches, Frassy may occasionally surface valuable discoveries. Examples:
+- "This project closely resembles something you created four years ago."
+- "You've built three workflows that could be combined."
+- "Your Marketplace products align with a new Builder Path."
+- "This Foundation proposal connects with your recent Academy research."
+
+Suggestions should remain purposeful. Never distracting.
+
+### Relationship Navigation
+Builders should naturally explore relationships. Example: viewing a collaborator may reveal:
+- Shared projects
+- Marketplace work
+- Community leadership
+- Foundation initiatives
+- Academy contributions
+- Organizations
+- Builder Passport milestones
+
+Relationships become navigable knowledge.
+
+### Search Learning
+Universal Search should improve continuously. It should learn:
+- Preferred search style
+- Frequently accessed knowledge
+- Common workflows
+- Important collaborators
+- Project priorities
+- Vocabulary
+- Industry terminology
+- Builder habits
+
+Search becomes increasingly personalized while remaining transparent and Builder-controlled.
+
+### Engineering Directive
+Implement Universal Search as a Knowledge Graph traversal engine capable of semantic reasoning, relationship discovery, contextual ranking, and progressive knowledge exploration. Every search should strengthen Builder understanding rather than simply retrieving isolated records.
 
 ## Chief Architect's Observation
 Universal Search changes one of the oldest assumptions in computing. For decades we've taught people: "Remember where you saved it." Frass OS says: "Remember why it mattered." The Builder shouldn't need to remember filenames, folders, dates, or even exact words. They should simply remember the project, the idea, the person, or the purpose. Frassy understands the rest. Universal Search will become the front door to the entire Frass Operating System, because once Builders trust that Frassy can always find what they need, the complexity of the platform effectively disappears.
+
+Part 2 deepens the opportunity: traditional search answers "Here's what you asked for," while Frass OS should answer "Here's what you asked for... and here's everything else that makes it more useful." Builders often don't need one document — they need the network of knowledge surrounding that document. Universal Search will become one of Frassy's greatest superpowers because instead of searching through information, Builders will begin exploring their own accumulated wisdom.
