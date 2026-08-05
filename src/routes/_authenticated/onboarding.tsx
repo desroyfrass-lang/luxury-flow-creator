@@ -310,6 +310,21 @@ function OnboardingPage() {
             })}
           </ol>
 
+          {isOwnerTrack && platformMemory.length > 0 && (
+            <div className="mt-8 rounded-sm border border-border px-4 py-4">
+              <div className="text-[10px] uppercase tracking-[0.28em] text-[color:var(--gold)]">
+                Platform Memory
+              </div>
+              <ul className="mt-3 space-y-2">
+                {platformMemory.slice(-8).map((m) => (
+                  <li key={`${m.category}:${m.key}`} className="text-xs text-muted-foreground">
+                    <span className="text-foreground">{m.key.replace(/_/g, " ")}</span> — {m.value}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+
           {isOwnerTrack && (
             <Link
               to="/founder"
@@ -318,6 +333,7 @@ function OnboardingPage() {
               Founder Mode
             </Link>
           )}
+
 
           {finished && (
             <Link
