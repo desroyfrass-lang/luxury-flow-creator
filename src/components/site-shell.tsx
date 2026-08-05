@@ -232,6 +232,12 @@ function BuilderAccountMenu({ hasWorkspace, isAdmin }: { hasWorkspace: boolean; 
           </Link>
         </DropdownMenuItem>
         <DropdownMenuItem asChild className="rounded-xl cursor-pointer">
+          <Link to="/creation" className="flex items-center gap-2 text-xs uppercase tracking-[0.2em]">
+            <Sparkles className="h-4 w-4" />
+            Creation District
+          </Link>
+        </DropdownMenuItem>
+        <DropdownMenuItem asChild className="rounded-xl cursor-pointer">
           <Link to="/workspace/profile" className="flex items-center gap-2 text-xs uppercase tracking-[0.2em]">
             <Settings className="h-4 w-4" />
             Builder Profile
