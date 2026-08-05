@@ -1,24 +1,14 @@
 // The Intelligent Builder Journey — the first experience inside Frass OS.
 // Client-safe stage definitions shared by the UI and the server functions.
 
-export type JourneyStageId =
-  | "mission"
-  | "goals"
-  | "identity"
-  | "passport"
-  | "memory"
-  | "vault"
-  | "districts"
-  | "preferences"
-  | "workflows"
-  | "organizations"
-  | "marketplace"
-  | "foundation"
-  | "frassy"
-  | "welcome_hall";
+export type JourneyStageId = string;
+
+export type JourneyTrack = "builder" | "owner";
 
 export type JourneyStage = {
   id: JourneyStageId;
+  track: JourneyTrack;
+
   title: string;
   chapter: string;
   purpose: string;
