@@ -7,7 +7,7 @@ type: feature
 # FRASS SYSTEM BLUEPRINT A-08: Notification & Attention Architecture
 
 ## Status
-**IN PROGRESS — Part 1 received, awaiting Part 2 and closing directive.**
+**IN PROGRESS — Parts 1-2 received, awaiting Part 3 and closing directive.**
 
 ## Executive Summary
 The Notification & Attention Architecture governs how Frass Operating System communicates with Builders. Its purpose is not to maximize engagement. Its purpose is to maximize meaningful progress. Every notification should justify interrupting the Builder. Silence should be the default. Attention should be treated as a precious resource.
@@ -85,5 +85,112 @@ Frassy should notify Builders only when opportunities meaningfully align with th
 ## Engineering Directive
 Implement Notifications as an attention management system rather than an engagement system. Every interruption should be intentional, context-aware, Builder-centered, and mission-aligned. Frass OS should consistently protect Builder focus while ensuring meaningful opportunities are never missed.
 
+## Part 2: Attention Intelligence, Context Awareness & Builder Focus
+
+### Attention Intelligence Philosophy
+The Attention System should continuously ask: "Does this Builder truly need to know this right now?" Rather than notifying whenever something happens, Frassy evaluates:
+- Importance
+- Timing
+- Builder context
+- Current workload
+- Current focus
+- Long-term goals
+
+The objective is protecting attention while maximizing progress.
+
+### Builder Context Awareness
+Before generating any notification, Frassy assembles an Attention Context. Possible context includes:
+- Current workflow
+- Focus Mode
+- Active meeting
+- Creative session
+- Upcoming deadlines
+- Recent notifications
+- Current Builder priorities
+- Organizations
+- Community commitments
+- Foundation responsibilities
+- Marketplace activity
+
+The same notification may be delivered differently depending upon context.
+
+### Attention Scoring
+Every potential notification receives an Attention Score. Possible factors include:
+- Urgency
+- Strategic importance
+- Workflow impact
+- Relationship importance
+- Deadline proximity
+- Builder goals
+- Community impact
+- Foundation significance
+- Security implications
+
+Attention Score determines delivery behavior.
+
+### Notification Bundling
+Whenever appropriate, Frassy should intelligently combine related notifications. Example: instead of seven Marketplace notifications, three Community notifications, and two Foundation notifications, deliver one thoughtful Builder Summary. Builders receive understanding, not interruption.
+
+### Intelligent Escalation
+Certain situations deserve progressively stronger attention. Examples:
+- Missed critical deadline
+- Security concern
+- Project blocker
+- Foundation emergency
+- Marketplace issue affecting customers
+
+Escalation should remain calm, professional, and respectful. Never alarming without reason.
+
+### Builder Digest System
+Frassy should prepare periodic digests. Possible digests include:
+- Morning Builder Brief
+- Weekly Progress Review
+- Monthly Growth Summary
+- Quarterly Reflection
+- Annual Builder Journey Report
+
+Digests should highlight:
+- Achievements
+- Opportunities
+- Upcoming priorities
+- Knowledge gained
+- Relationships strengthened
+
+Reflection becomes part of the Builder experience.
+
+### Contextual Delivery
+The same information may appear differently depending upon where the Builder is working. Examples:
+- Inside the Academy: show learning reminders
+- Inside the Marketplace: show customer activity
+- Inside Foundation: show volunteer coordination
+- Inside Creation District: minimize interruptions
+
+The operating system adapts communication to Builder context.
+
+### Silent Intelligence
+Many events require no notification. Instead, Frassy quietly:
+- Updates Builder Passport
+- Organizes Builder Vault
+- Links assets
+- Updates workflows
+- Strengthens Universal Memory
+- Refreshes recommendations
+
+Invisible intelligence reduces unnecessary cognitive load.
+
+### Notification Learning
+The Attention System should continuously learn. Examples:
+- Preferred delivery times
+- Ignored notification types
+- Important collaborators
+- High-value opportunities
+- Builder work rhythms
+- Preferred communication style
+
+Builders should be able to override learning at any time.
+
+### Engineering Directive
+Implement the Notification System as an adaptive Attention Intelligence layer that continuously evaluates Builder context, workload, priorities, and workflow state before deciding whether, when, and how to communicate. Optimize for Builder focus, sustainable productivity, and meaningful progress rather than engagement frequency.
+
 ## Chief Architect's Observation
-This may become one of the most important philosophical differences between FrassKicks and nearly every modern software platform. Most products ask, "How do we get people back into the app?" Frass OS asks, "Is this interruption actually worthy of the Builder's attention?" Sometimes the best notification is no notification. If Builders come to trust that Frassy only interrupts when something genuinely helps them build, that trust will become one of the strongest user experience advantages FrassKicks has.
+This blueprint captures a philosophy that feels increasingly rare. Most software celebrates sending more notifications; Frass OS should celebrate sending fewer—but better—notifications. Imagine a Builder finishing four hours of focused creative work. Instead of returning to 43 notifications, Frassy simply says: "Welcome back. Three things need your attention. One project reached a milestone, one collaborator left feedback, and I found a grant opportunity that aligns with your Foundation work. Everything else has already been organized." That is an entirely different relationship with technology. Attention Intelligence may become one of the quietest but most beloved features of Frass OS, because it demonstrates respect for a Builder's ability to focus.
