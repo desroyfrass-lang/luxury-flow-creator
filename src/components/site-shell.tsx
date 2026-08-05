@@ -298,6 +298,13 @@ function MobileAccountLinks({ hasWorkspace, isAdmin }: { hasWorkspace: boolean; 
         Welcome Hall
       </Link>
       <Link
+        to="/vault"
+        className="nav-glow block rounded-xl px-4 py-3 text-xs uppercase tracking-[0.25em] text-muted-foreground transition-colors hover:bg-foreground/5"
+        activeProps={{ className: "text-foreground bg-foreground/5" }}
+      >
+        Builder Vault
+      </Link>
+      <Link
         to="/workspace/profile"
         className="nav-glow block rounded-xl px-4 py-3 text-xs uppercase tracking-[0.25em] text-muted-foreground transition-colors hover:bg-foreground/5"
         activeProps={{ className: "text-foreground bg-foreground/5" }}
