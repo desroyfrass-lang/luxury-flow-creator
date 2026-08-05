@@ -1802,6 +1802,51 @@ export type Database = {
         }
         Relationships: []
       }
+      vault_items: {
+        Row: {
+          archived_at: string | null
+          body: string | null
+          collection: string | null
+          created_at: string
+          id: string
+          kind: string
+          pinned: boolean
+          tags: string[]
+          title: string
+          updated_at: string
+          url: string | null
+          user_id: string
+        }
+        Insert: {
+          archived_at?: string | null
+          body?: string | null
+          collection?: string | null
+          created_at?: string
+          id?: string
+          kind?: string
+          pinned?: boolean
+          tags?: string[]
+          title: string
+          updated_at?: string
+          url?: string | null
+          user_id: string
+        }
+        Update: {
+          archived_at?: string | null
+          body?: string | null
+          collection?: string | null
+          created_at?: string
+          id?: string
+          kind?: string
+          pinned?: boolean
+          tags?: string[]
+          title?: string
+          updated_at?: string
+          url?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       viral_products: {
         Row: {
           approved_for_promotion: boolean
