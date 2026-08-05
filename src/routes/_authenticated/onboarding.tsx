@@ -203,70 +203,8 @@ function OnboardingPage() {
     void send(text);
   };
 
-  if (needsFounderChoice) {
-    const choose = async (t: "owner" | "builder") => {
-      setBusy(true);
-      try {
-        await switchTrack({ data: { track: t } });
-        openedRef.current = true;
-        await refetch();
-        await send("", true);
-      } finally {
-        setBusy(false);
-      }
-    };
 
-    return (
-      <SiteShell>
-        <div className="mx-auto max-w-3xl px-6 py-24">
-          <div className="text-[11px] uppercase tracking-[0.3em] text-[color:var(--gold)]">
-            Frass Operating System
-          </div>
-          <h1 className="mt-4 font-display text-4xl leading-tight">
-            Welcome back. Are we commissioning Frass OS today, or would you like to enter as a
-            Builder?
-          </h1>
-          <p className="mt-4 text-sm text-muted-foreground">
-            You can switch between the two at any time — nothing is lost either way.
-          </p>
 
-          <div className="mt-10 grid gap-4 md:grid-cols-2">
-            <button
-              type="button"
-              disabled={busy}
-              onClick={() => void choose("owner")}
-              className="rounded-sm border border-[color:var(--gold)] bg-[color:var(--gold)]/5 p-6 text-left transition hover:bg-[color:var(--gold)]/10 disabled:opacity-50"
-            >
-              <div className="font-display text-2xl">Commission Frass OS</div>
-              <p className="mt-2 text-sm text-muted-foreground">
-                Five phases — platform identity, commerce, the Builder experience, operations, and
-                launch readiness. We prepare the place others will enter.
-              </p>
-            </button>
-            <button
-              type="button"
-              disabled={busy}
-              onClick={() => void choose("builder")}
-              className="rounded-sm border border-border p-6 text-left transition hover:border-foreground/40 disabled:opacity-50"
-            >
-              <div className="font-display text-2xl">Enter as a Builder</div>
-              <p className="mt-2 text-sm text-muted-foreground">
-                Walk the same journey every Builder walks — mission, identity, memory, and the
-                districts.
-              </p>
-            </button>
-          </div>
-
-          <Link
-            to="/founder"
-            className="mt-10 inline-block text-[11px] font-bold uppercase tracking-[0.28em] text-muted-foreground hover:text-foreground"
-          >
-            Open Founder Mode instead
-          </Link>
-        </div>
-      </SiteShell>
-    );
-  }
 
   return (
     <SiteShell>
