@@ -7,7 +7,7 @@ type: feature
 # FRASS SYSTEM BLUEPRINT A-06: Workflow Engine Architecture
 
 ## Status
-**IN PROGRESS — Parts 1-2 received, awaiting Part 3 and closing directive.**
+**COMPLETE — Parts 1-4 received and locked. Implementation on hold pending final closing directive.**
 
 ## Executive Summary
 The Workflow Engine serves as the orchestration layer that transforms Builder intentions into coordinated action across the entire FRASS ecosystem. Rather than requiring Builders to manually coordinate projects, assets, people, learning, opportunities, and milestones, the Workflow Engine intelligently assembles and manages complete Builder journeys. Builders should focus on building; the operating system manages coordination.
@@ -198,7 +198,62 @@ Reflection transforms completed work into future wisdom.
 ### Engineering Directive
 Implement the Workflow Engine as an adaptive orchestration system capable of coordinating complex, evolving Builder journeys across multiple districts, organizations, and collaborators. Every workflow should continuously integrate Builder context, ecosystem intelligence, and thoughtful recommendations while preserving Builder autonomy and creative leadership.
 
+## Part 3: Workflow Governance, Engineering Acceptance Criteria & Constitutional Workflow Principles
+
+### Workflow Constitution
+The Workflow Engine exists to transform Builder intentions into meaningful progress. It should never exist simply to organize tasks. Its purpose is to help Builders consistently create, learn, lead, collaborate, and complete work that matters. Every workflow should strengthen the Builder's journey. Never complicate it.
+
+### Builder Ownership
+Builders own their workflows. Frass Operating System coordinates them. Builders remain responsible for vision, creative direction, leadership, final decisions, and ethical judgment. The Workflow Engine provides structure, organization, recommendations, automation, coordination, and momentum. The Builder always leads.
+
+### Human-Centered Automation
+Automation should eliminate administrative friction. It should never eliminate creative thinking, human relationships, leadership, purpose, or critical decisions. Builders should consistently feel empowered rather than replaced.
+
+### Cross-District Integrity
+Every workflow should remain capable of spanning multiple districts. Examples include Academy learning, Creation projects, Marketplace launches, Foundation initiatives, Community collaboration, Executive reporting, Builder Passport updates, Builder Vault preservation, and Universal Memory enrichment. The Builder experiences one seamless journey regardless of how many districts participate.
+
+### Workflow Transparency
+Builders should always understand current workflow stage, upcoming milestones, dependencies, recommendations, automation actions, collaboration status, and decision history. Nothing important should happen invisibly. Transparency builds confidence.
+
+### Sustainable Progress
+The Workflow Engine should optimize for sustainable Builder progress. It should discourage unnecessary complexity, administrative overload, duplicate effort, burnout, and constant urgency. Instead, it should encourage healthy pacing, reflection, thoughtful planning, and long-term consistency. Builders succeed through sustained momentum rather than short bursts of activity.
+
+### Workflow Knowledge
+Every completed workflow should enrich the operating system. Lessons learned should improve workflow templates, recommendations, planning strategies, risk detection, resource allocation, and future Builder guidance. Completed work becomes organizational intelligence.
+
+### Future Workflow Evolution
+The architecture should support future capabilities including autonomous workflow orchestration, enterprise workflows, multi-organization initiatives, international collaboration, grant management, large-scale event coordination, construction projects, research programs, government partnerships, and future workflow types not yet imagined. Every new capability should inherit the constitutional principles established here.
+
+### Engineering Acceptance Criteria
+The Workflow Engine shall be considered successfully implemented when:
+- Every Builder objective can become an adaptive workflow.
+- Cross-district orchestration occurs without manual coordination.
+- Workflow Health accurately reflects project momentum.
+- Dependencies automatically organize execution.
+- Recommendations consistently improve Builder progress.
+- Human approval remains central to meaningful decisions.
+- Completed workflows enrich Universal Memory, the Builder Vault, and the Builder Passport.
+- Builders experience sustainable momentum rather than administrative burden.
+- Future workflow types integrate without redesigning the orchestration architecture.
+- Builders consistently experience the Workflow Engine as an intelligent operating system rather than project management software.
+
+### Future Blueprint Series
+Following Workflow Engine Architecture, the engineering blueprint continues with:
+- A-07 — Universal Search Architecture
+- A-08 — Notification Architecture
+- A-09 — Design System
+- A-10 — Security & Trust Architecture
+- A-11 — Infrastructure & Deployment
+- A-12 — Observability & Operations
+
+These blueprints complete the production architecture of Frass Operating System.
+
+### Closing Principle
+The Workflow Engine exists because Builders should spend their energy creating meaningful work—not coordinating software. A Builder should never have to wonder, "What do I need to do next?" Frassy should already understand. He should quietly organize the journey, protect momentum, coordinate the ecosystem, preserve the Builder's work, celebrate meaningful milestones, and prepare the path forward. When future engineers extend the Workflow Engine, they should remember one guiding principle: do not build a better task manager; build a better way for Builders to accomplish meaningful work. That is the constitutional purpose of the Workflow Engine Architecture.
+
 ## Chief Architect's Observation
 This is where Frass OS begins behaving like a true operating system instead of a collection of intelligent tools. Most software says: "Tell me what task you want to do." Frass OS says: "Tell me what you're trying to build." The Builder doesn't think about creating folders, assigning tasks, finding collaborators, updating records, or connecting systems. They simply say: "Frassy, let's build this." And the Workflow Engine quietly coordinates the entire ecosystem around that objective.
 
 Part 2 adds a critical distinction: most workflow software manages tasks; Frass OS manages momentum. A Builder shouldn't lose momentum because a collaborator becomes unavailable, a funding source changes, a deadline shifts, or a project grows larger than expected. The Workflow Engine should quietly absorb that complexity, reorganize the path forward, and help the Builder keep moving. This is what transforms workflow management into Builder orchestration — a system that protects creative momentum instead of simply tracking checklists.
+
+Part 4 finalizes the constitutional contract: the Workflow Engine is not project management software. It is an intelligent operating system for meaningful work. Every completed workflow becomes memory, every milestone teaches the system, and every future workflow inherits the wisdom of those that came before. The remaining blueprints should now shift from conceptual architecture to production specifications — canonical data models, API contracts, event definitions, state machines, permission matrices, service interfaces, acceptance tests, performance targets, failure modes, and observability requirements — so that Lovable and future engineering teams can implement them directly.
