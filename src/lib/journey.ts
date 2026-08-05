@@ -20,7 +20,7 @@ export type JourneyStage = {
   minutes: number;
 };
 
-export const JOURNEY_STAGES: JourneyStage[] = [
+const BUILDER_STAGES_RAW: Omit<JourneyStage, "track">[] = [
   {
     id: "mission",
     title: "Discover your mission",
