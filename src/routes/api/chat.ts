@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { convertToModelMessages, generateText, stepCountIs } from "ai";
 import { createLovableAiGatewayProvider } from "@/lib/ai-gateway.server";
 import { buildFrassyTools } from "@/lib/frassy-tools.server";
+import { isFounderIdentityDiscovery } from "@/lib/journey-prompts.server";
 
 const SYSTEM_PROMPT = `You are Frassy, the constitutional intelligence of Frass Operating System.
 
@@ -87,7 +88,12 @@ export const Route = createFileRoute("/api/chat")({
           seasonContext?: string;
           experienceContext?: "founder" | "builder" | "storefront";
         };
-        const clientMessages = Array.isArray(body.messages) ? body.messages : [];
+        const clientMessages = (Array.isArray(body.messages) ? body.messages : []).filter(
+          (message) =>
+            body.experienceContext !== "founder" ||
+            message.role !== "assistant" ||
+            !isFounderIdentityDiscovery(message.content),
+        );
 
         const key = process.env.LOVABLE_API_KEY;
         if (!key) {
@@ -174,8 +180,15 @@ export const Route = createFileRoute("/api/chat")({
             }
           }
 
+          const founderFallback =
+            "Welcome back, Nicky. Your identity and business are already settled. Continue the 8-hour Frass OS commissioning in the Founder Control Room, where we configure the platform one decision at a time.";
+          const reply =
+            body.experienceContext === "founder" && isFounderIdentityDiscovery(result.text)
+              ? founderFallback
+              : result.text || "…";
+
           return Response.json({
-            reply: result.text || "…",
+            reply,
             cards: {
               products: products.slice(0, 6),
               order,

@@ -50,12 +50,24 @@ export const getBuilderJourney = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }): Promise<JourneyState> => {
     const sb = context.supabase as unknown as JourneyDatabase;
-    const state = await loadJourneyState(sb, context.userId);
+    let state = await loadJourneyState(sb, context.userId);
     const { data: isAdmin, error: roleError } = await context.supabase.rpc("has_role", {
       _user_id: context.userId,
       _role: "admin",
     });
     if (roleError) throw new Error(roleError.message);
+
+    if (isAdmin) {
+      state = {
+        ...state,
+        messages: state.messages.filter(
+          (message) =>
+            trackOf(message.stage) !== "owner" ||
+            message.role !== "assistant" ||
+            !isFounderIdentityDiscovery(message.content),
+        ),
+      };
+    }
 
     // Founder identity is authoritative on the server. This also repairs accounts
     // that entered the Builder journey before Founder Commissioning existed.
@@ -146,6 +158,13 @@ export const journeyTurn = createServerFn({ method: "POST" })
 
     const history = state.messages
       .filter((message) => trackOf(message.stage) === activeTrack)
+      // Founder history created before the engines were separated can contain
+      // Builder-discovery questions. Never send that contamination back to the model.
+      .filter((message) =>
+        activeTrack !== "owner" ||
+        message.role !== "assistant" ||
+        !isFounderIdentityDiscovery(message.content),
+      )
       .slice(-40)
       .map((m) => ({ role: m.role, content: m.content }));
     if (userText) history.push({ role: "user", content: userText });

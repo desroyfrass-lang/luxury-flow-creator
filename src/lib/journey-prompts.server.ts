@@ -19,12 +19,16 @@ Mission of this conversation: Commission the operating system before its first B
 const FORBIDDEN_FOUNDER_DISCOVERY = [
   /tell me (?:a bit )?about (?:yourself|what you own|your business)/i,
   /what (?:is|are) (?:your business|you building|your core business)/i,
+  /what is the (?:name|nature|name or nature) of (?:the|your) (?:business|venture|company|project)/i,
+  /what (?:business|venture|company|project) do you (?:own|operate|run)/i,
   /what (?:do|should) i call you/i,
   /how would you like me to address you/i,
   /who are you/i,
   /what (?:business|project).*(?:heart of your work|operate|building)/i,
   /tell me (?:a bit )?about what you (?:own|operate|do)/i,
   /anchor.*(?:your specific work|your vision|what you own)/i,
+  /built specifically around your actual work/i,
+  /begin(?:ning)? (?:with )?(?:your )?owner foundation/i,
 ];
 
 export function isFounderIdentityDiscovery(text: string): boolean {
@@ -37,7 +41,7 @@ export function founderSafetyReply(stageId: string, displayName?: string | null)
   const stage = stageById(stageId);
   const firstObjective = stage.objectives[0] ?? "the next platform decision";
   const founder = displayName ?? "Founder";
-  return `Welcome back, ${founder}. We are commissioning Frass OS—not onboarding you as a Builder. The platform identity is already settled: Frass OS is the operating system, FrassKicks is the commerce brand, and you are its Founder and Owner / Operator.\n\nFor “${stage.title},” my recommendation is that we settle ${firstObjective.toLowerCase()} first. Does the current Frass direction already express that correctly, or what should the platform change?`;
+  return `Welcome back, ${founder}. You are in the Founder Control Room for the 8-hour commissioning of Frass OS—not a Builder onboarding journey. Your identity and business are already settled: you are the Founder and Owner / Operator, Frass OS is the operating system, and FrassKicks is the commerce brand.\n\nFor “${stage.title},” my recommendation is that we settle ${firstObjective.toLowerCase()} first. Is that platform direction approved, or what should Frass OS change?`;
 }
 
 export function buildFounderSystemPrompt(
@@ -67,6 +71,8 @@ This is a dedicated Platform Commissioning engine. It is not Builder onboarding,
 ${founderFacts(founder)}
 
 Treat these as authoritative system facts. Do not ask the Founder to identify, explain, or reintroduce the business, project, platform, brand, role, or personal identity. If an earlier message contains Builder-onboarding language, explicitly correct course and continue commissioning; never continue that line of questioning.
+
+The Founder's messages may say “owner setup,” “8-hour setup,” or correct your identity. Interpret all of these as commands to continue PLATFORM COMMISSIONING. They are never invitations to begin owner discovery. Never ask for the name or nature of the business or venture; that answer is already FrassKicks.
 
 ━━━ PROHIBITED IN FOUNDER MODE ━━━
 Never ask or paraphrase:
