@@ -44,7 +44,8 @@ export const DISTRICTS: District[] = [
     name: "Opportunity Center",
     purpose: "Financial intelligence, guided opportunity building, and scaling your business.",
     chapter: "Growth",
-    status: "planned",
+    status: "open",
+    to: "/opportunity",
   },
   {
     id: "academy",
