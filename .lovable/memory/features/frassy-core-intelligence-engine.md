@@ -38,3 +38,45 @@ Architect the platform so Frassy functions as the central orchestration service.
 
 ## Multi-Assistant Inheritance
 Future assistants (Sheldon, creative specialists, business specialists, academy mentors, foundation assistants) become specialized expressions of the same underlying intelligence, sharing context, standards, and participant understanding — not separate AIs with separate memory.
+
+---
+
+# Intelligence Architecture, Memory Coordination & Assistant Ecosystem
+
+## Foundational Intelligence Architecture
+Frassy is a centralized intelligence layer coordinating multiple specialized intelligence modules without fragmenting the participant experience. Specialized capabilities operate beneath a unified Frassy experience — one identity, one relationship, one continuous intelligence.
+
+## Specialized Intelligence Modules
+Internal modules responsible for different domains (creative, business, educational, marketplace, foundation, community, operations, executive, future domains). Frassy determines the appropriate expertise automatically; participants never manually choose.
+
+## Intelligent Routing
+For each request Frassy internally determines: intent, involved knowledge domains, which modules should contribute, whether multiple domains collaborate, and which module leads while others support. Routing remains invisible; participants experience one seamless conversation.
+
+## Shared Memory Architecture
+All modules reference one shared participant knowledge layer to prevent duplicate memories, duplicate conversations, duplicate preferences, and conflicting recommendations. Memory is centralized; expertise is specialized. Objective = organizational intelligence, not isolated assistants.
+
+## Memory Categories
+- **Identity** — preferred name, communication style, experience level, builder profile, accessibility/language preferences.
+- **Vision** — long-term dreams, personal mission, major life goals, business/creative/community ambitions.
+- **Active Work** — current projects, businesses, creative productions, courses, foundation initiatives, marketplace activity, upcoming launches.
+- **Growth** — skills learned, academy progress, creative/business milestones, leadership development, Builder Passport achievements.
+- **Relationships** — trusted collaborators, mentors, teams, organizations, creative partners, community involvement.
+- **Preferences** — creative/business/workflow/review preferences, learning style, scheduling habits, preferred detail level.
+
+## Memory Stewardship
+Remember only what genuinely improves future experiences. Memory strengthens guidance, not unnecessary personal accumulation. Participants remain in control of meaningful long-term memory and may review/edit/remove it. Trust outweighs convenience.
+
+## Multi-Project Intelligence
+Frassy simultaneously understands relationships between multiple active initiatives and recognizes how one project strengthens another (documentary → nonprofit → speaking → business → academy → marketplace). Everything becomes connected.
+
+## Specialized Assistant Philosophy
+Future assistants extend Frassy, not compete. Each represents a specialized operational role inside FRASS while inheriting the same ethical framework, communication standards, and participant-first philosophy. They feel like members of one organization; expertise differs, values remain consistent.
+
+## Context Preservation
+When work transitions between specialized capabilities, no participant context is lost: project, conversation, strategic, and emotional continuity. One uninterrupted journey.
+
+## Organizational Intelligence
+Completed projects contribute generalized organizational learning back into the ecosystem — successful workflows, improved templates, better sequencing, enhanced teaching, refined creative standards, operational improvements. The platform becomes progressively smarter.
+
+## Engineering Directive
+Architect Frassy as a centralized orchestration layer supported by modular domain intelligence. Maintain one participant relationship, one shared context, one ethical framework. Future assistants inherit the Frassy Core Intelligence Engine rather than implementing independent conversational systems. Design for expansion without architectural redesign.
