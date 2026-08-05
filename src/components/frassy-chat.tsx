@@ -13,6 +13,7 @@ import { canSpeak, speakLine, stopSpeaking, VOICE_PROFILE_LABELS } from "@/lib/f
 import { FrassyConsentModal } from "@/components/frassy-consent";
 import { useFrassyMemory, memoryContext, rememberCartSnapshot } from "@/lib/frassy-memory";
 import { useFrassyContext, currentSeason, seasonalAccent } from "@/hooks/use-frassy-context";
+import { useJourneyStatus } from "@/hooks/use-journey-status";
 
 
 type ProductCard = {
@@ -45,6 +46,14 @@ const INITIAL_MSG: Msg = {
   content:
     "Welcome to Frass Hill — I'm Frassy. Tap me anytime for styling, sizing, or to unlock 40% off your first order.",
 };
+
+// Shown instead of the storefront welcome when a signed-in Builder still owes the journey.
+const JOURNEY_MSG: Msg = {
+  role: "assistant",
+  content:
+    "Welcome back — I'm Frassy. Before anything else, we have your Intelligent Builder Journey to walk through together: your mission, your identity, your vault, and the districts of Frass OS. It's taken at your pace across as many sessions as you like, and everything saves as we go. Tap “Begin my Builder Journey” below and I'll open the first chapter.",
+};
+
 
 const QUICK_ACTIONS = [
   { label: "🎁 Unlock 40% OFF", prompt: "How do I unlock the 40% off first purchase reward?" },
@@ -86,6 +95,25 @@ export function FrassyChat() {
   const dismissedRef = useRef(false);
 
   const season = useMemo(() => currentSeason(), []);
+  const journey = useJourneyStatus();
+  const needsJourney = journey.signedIn && journey.needsJourney;
+
+  const goToOnboarding = () => {
+    setOpen(false);
+    navigate({ to: "/onboarding" }).catch(() => {
+      window.location.href = "/onboarding";
+    });
+  };
+
+  // A signed-in Builder mid-journey is greeted by the journey, not the storefront.
+  useEffect(() => {
+    if (!needsJourney) return;
+    setMessages((prev) =>
+      prev.length === 1 && prev[0] === INITIAL_MSG ? [JOURNEY_MSG] : prev,
+    );
+  }, [needsJourney]);
+
+
 
 
   const cartCount = items.reduce((n, i) => n + i.quantity, 0);
@@ -143,7 +171,9 @@ export function FrassyChat() {
       setNudged(true);
       // Memory-aware greeting: name-back if we know them, else language greeting.
       let line = pickGreeting(prefs.language);
-      if (memory.firstName && memory.visits > 0) {
+      if (needsJourney) {
+        line = "Ready when you are — your Builder Journey is waiting.";
+      } else if (memory.firstName && memory.visits > 0) {
         line = `Welcome back, ${memory.firstName}.`;
         if (memory.recentCategories[0]) {
           line += ` Last time you were looking at ${memory.recentCategories[0].replace(/-/g, " ")}. Want to continue?`;
@@ -607,8 +637,21 @@ export function FrassyChat() {
               </div>
             )}
 
+            {/* Builder Journey — always the first door for a signed-in Builder */}
+            {needsJourney && !loading && (
+              <div className="pt-1">
+                <button
+                  type="button"
+                  onClick={goToOnboarding}
+                  className="w-full rounded-full bg-[color:var(--gold)] px-4 py-2 text-xs font-bold uppercase tracking-[0.2em] text-[color:var(--ink)]"
+                >
+                  {journey.started ? "Continue my Builder Journey" : "Begin my Builder Journey"}
+                </button>
+              </div>
+            )}
+
             {/* Contextual quick actions */}
-            {messages.length <= 2 && !loading && (
+            {messages.length <= 2 && !loading && !needsJourney && (
               <div className="flex flex-wrap gap-2 pt-1">
                 {QUICK_ACTIONS.map((q) => (
                   <button
@@ -622,6 +665,7 @@ export function FrassyChat() {
                 ))}
               </div>
             )}
+
 
             {cartCount > 0 && (
               <div className="flex flex-wrap gap-2 pt-1">
