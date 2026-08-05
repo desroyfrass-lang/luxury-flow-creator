@@ -50,7 +50,7 @@ export const getBuilderJourney = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }): Promise<JourneyState> => {
     const sb = context.supabase as unknown as JourneyDatabase;
-    const state = await loadJourneyState(sb, context.userId);
+    let state = await loadJourneyState(sb, context.userId);
     const { data: isAdmin, error: roleError } = await context.supabase.rpc("has_role", {
       _user_id: context.userId,
       _role: "admin",
