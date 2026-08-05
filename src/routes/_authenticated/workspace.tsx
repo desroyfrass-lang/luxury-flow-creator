@@ -154,7 +154,21 @@ function WorkspacePage() {
             <div className="text-center text-[10px] uppercase tracking-[0.3em] text-[color:var(--gold)]">
               Choose your workspace
             </div>
+            <Link to="/workspace/insights">
+              <div className="flex items-center justify-between rounded-xl border border-border/70 bg-background/70 px-5 py-4 backdrop-blur transition hover:border-[color:var(--gold)]">
+                <div>
+                  <div className="font-display text-lg">Builder Insights</div>
+                  <div className="text-xs text-muted-foreground">
+                    Patterns across your work, with the artifacts behind them.
+                  </div>
+                </div>
+                <div className="text-[10px] uppercase tracking-[0.3em] text-[color:var(--gold)]">
+                  Enter →
+                </div>
+              </div>
+            </Link>
             {orderedRoles.map((r) => {
+
               const meta = ROLE_META[r];
               const inner = (
                 <div className="flex items-center justify-between rounded-xl border border-border/70 bg-background/70 px-5 py-4 backdrop-blur transition hover:border-[color:var(--gold)]">
