@@ -50,7 +50,8 @@ export const DISTRICTS: District[] = [
   {
     id: "academy",
     name: "Academy District",
-    purpose: "Builder Paths and project-based learning that teaches you as you build.",
+    purpose:
+      "Your lifelong campus — Builder Paths, Frassy as mentor, and a timeline of everything you become.",
     chapter: "Growth",
     status: "open",
     to: "/academy",
