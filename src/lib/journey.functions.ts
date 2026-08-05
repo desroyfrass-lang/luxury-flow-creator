@@ -382,17 +382,23 @@ export const journeyTurn = createServerFn({ method: "POST" })
       .insert({ user_id: userId, stage: stage.id, role: "assistant", content: reply });
 
     if (memory.length) {
+      // Founder sessions write Platform Memory; Builder sessions write Builder Memory.
+      const category =
+        activeTrack === "owner"
+          ? `${PLATFORM_MEMORY_PREFIX}${stage.category}`
+          : stage.category;
       await sb.from("builder_memory").upsert(
         memory.map((m) => ({
           user_id: userId,
-          category: stage.category,
+          category,
           key: m.key,
           value: m.value,
-          source: "onboarding",
+          source: activeTrack === "owner" ? "commissioning" : "onboarding",
         })),
         { onConflict: "user_id,category,key" },
       );
     }
+
 
     const now = new Date().toISOString();
     const update: Record<string, unknown> = { last_active_at: now };
