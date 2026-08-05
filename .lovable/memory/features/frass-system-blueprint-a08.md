@@ -7,7 +7,7 @@ type: feature
 # FRASS SYSTEM BLUEPRINT A-08: Notification & Attention Architecture
 
 ## Status
-**IN PROGRESS — Parts 1-3 received, awaiting Part 4 and closing directive.**
+**COMPLETE — Parts 1-4 received and locked.**
 
 ## Executive Summary
 The Notification & Attention Architecture governs how Frass Operating System communicates with Builders. Its purpose is not to maximize engagement. Its purpose is to maximize meaningful progress. Every notification should justify interrupting the Builder. Silence should be the default. Attention should be treated as a precious resource.
@@ -299,5 +299,136 @@ Not every accomplishment requires interruption. Some simply become part of the B
 ### Engineering Directive
 Implement the Notification System as a progress intelligence layer that helps Builders recognize growth, reflect thoughtfully, celebrate meaningful achievements, reconnect with important goals, and understand the broader trajectory of their Builder Journey. Every communication should strengthen motivation through clarity, purpose, and encouragement rather than urgency or engagement metrics.
 
+## Part 4: Governance, Engineering Acceptance Criteria & Constitutional Attention Principles
+
+### Attention Constitution
+The Attention System exists to protect Builder focus while ensuring that meaningful opportunities, relationships, and responsibilities are never overlooked. Every interruption should justify its existence. Silence should remain the default. Attention should always be treated as a finite and valuable Builder resource.
+
+### Builder Ownership
+Builders remain in complete control of how Frass OS communicates with them. Builders should be able to customize:
+- Notification categories
+- Delivery methods
+- Digest frequency
+- Focus schedules
+- Quiet hours
+- Organization preferences
+- Marketplace alerts
+- Foundation updates
+- Community notifications
+
+Builders control attention. Frass OS intelligently assists.
+
+### Respect for Focus
+Focus is considered productive work. The operating system should actively protect it. Examples include:
+- Suppressing non-essential notifications
+- Bundling updates
+- Delaying low-priority communication
+- Deferring recommendations
+- Summarizing activity afterward
+
+Builders should consistently feel that Frassy respects their concentration.
+
+### Communication Principles
+Every notification should answer four questions:
+1. Why is this important?
+2. Why now?
+3. How does this relate to my Builder Journey?
+4. What can I do next?
+
+If a notification cannot answer these questions, it probably should not be sent.
+
+### Emotional Responsibility
+Notifications should never intentionally create:
+- Fear
+- Artificial urgency
+- Addiction
+- Compulsive checking
+- Pressure
+- Shame
+
+Every communication should reinforce:
+- Confidence
+- Clarity
+- Purpose
+- Momentum
+- Trust
+- Professionalism
+
+### Notification Across the Ecosystem
+Every district contributes meaningful events, including:
+- Academy
+- Marketplace
+- Community
+- Foundation
+- Workflow Engine
+- Builder Passport
+- Builder Vault
+- Universal Memory
+- Executive Tower
+
+The Attention System coordinates these events into one coherent Builder experience.
+
+### Learning Without Manipulation
+The Attention System may learn:
+- Preferred timing
+- Communication preferences
+- High-value collaborators
+- Workflow rhythms
+- Review habits
+- Digest preferences
+
+Builders must always be able to:
+- Review
+- Reset
+- Override
+- Disable
+
+Learning serves the Builder. Not engagement metrics.
+
+### Future Communication
+The architecture should support future communication methods including:
+- Voice conversations
+- Wearable devices
+- Spatial computing
+- Mixed reality
+- Ambient environments
+- Automotive systems
+- Future interaction paradigms
+
+Regardless of delivery method, the constitutional principles remain unchanged.
+
+### Engineering Acceptance Criteria
+The Notification & Attention Architecture shall be considered successfully implemented when:
+- Notifications consistently respect Builder focus.
+- Attention Scoring accurately prioritizes meaningful communication.
+- Focus Mode suppresses non-essential interruptions.
+- Daily and weekly Builder Briefings summarize activity intelligently.
+- Recommendations appear at contextually appropriate moments.
+- Builders retain complete control over communication preferences.
+- Attention learning improves timing without becoming manipulative.
+- Every district communicates through one unified Attention System.
+- Builders consistently describe Frass OS as respectful of their time and attention.
+- Notifications strengthen Builder momentum rather than distracting from it.
+
+### Future Blueprint Series
+Following Notification & Attention Architecture, the engineering blueprint continues with:
+- A-09 — Design System Architecture
+- A-10 — Security & Trust Architecture
+- A-11 — Infrastructure & Deployment
+- A-12 — Observability & Operations
+- A-13 — Developer Platform & APIs
+- A-14 — Testing & Quality Engineering
+
+These documents complete the production-ready architecture of Frass Operating System.
+
+### Closing Principle
+The Attention System exists because the Builder's focus is more valuable than the platform's engagement metrics. Frass OS should never compete for attention. It should earn attention. When Frassy speaks, Builders should naturally think: "If Frassy interrupted me, it's probably worth my time." That level of trust should be protected above all else.
+
+Technology should become quieter as it becomes smarter. When future engineers extend the Attention System, they should remember one guiding principle:
+
+**Do not build a better notification system. Build a better guardian of the Builder's attention.**
+
+That is the constitutional purpose of the Notification & Attention Architecture.
+
 ## Chief Architect's Observation
-This blueprint introduces something missing from almost every productivity platform. Most software tells you, "Here's what happened today." Frass OS should occasionally tell you, "Here's how you've grown." Builders often underestimate how far they've come because they're focused on the next challenge. Frassy should occasionally pause — not to interrupt — but to help them see the progress, the people they've helped, the skills they've developed, and the legacy they're quietly building. Progress Intelligence may become one of Frassy's most human qualities, because sometimes the most valuable thing a trusted companion can do is remind you that you're making meaningful progress, even when you don't see it yourself.
+With A-01 through A-08, the Core Experience Layer of Frass OS is now complete: Platform, Identity, Memory, Intelligence, Knowledge, Workflow, Discovery, and Attention. Frass OS now has the architecture of a true operating system rather than a conventional application. The next blueprint, A-09 — Design System Architecture, should begin specifying a production-grade design language: design tokens, component standards, typography scales, color system, layout grids, motion specifications, accessibility requirements (WCAG), responsive behavior, Frassy interaction patterns, UI state definitions, and component APIs. A-09 is where FrassKicks begins to look as sophisticated as the architecture we've now engineered.
