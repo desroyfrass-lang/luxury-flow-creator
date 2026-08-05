@@ -241,27 +241,14 @@ function OnboardingPage() {
           </p>
 
 
-          {isAdmin && (
-            <div className="mt-5 flex gap-2">
-              {(["owner", "builder"] as const).map((t) => (
-                <button
-                  key={t}
-                  type="button"
-                  disabled={busy || t === track}
-                  onClick={async () => {
-                    await switchTrack({ data: { track: t } });
-                    openedRef.current = true;
-                    await refetch();
-                  }}
-                  className={`flex-1 rounded-sm border px-3 py-2 text-[10px] font-bold uppercase tracking-[0.2em] transition ${
-                    t === track
-                      ? "border-[color:var(--gold)] bg-[color:var(--gold)]/10 text-[color:var(--gold)]"
-                      : "border-border text-muted-foreground hover:text-foreground"
-                  }`}
-                >
-                  {t === "owner" ? "Commission Frass OS" : "Builder journey"}
-                </button>
-              ))}
+          {isAdmin && isOwnerTrack && (
+            <div className="mt-5 rounded-sm border border-[color:var(--gold)]/40 bg-[color:var(--gold)]/5 px-4 py-3">
+              <div className="text-[10px] font-bold uppercase tracking-[0.24em] text-[color:var(--gold)]">
+                Founder identity verified
+              </div>
+              <p className="mt-1 text-xs text-muted-foreground">
+                Dedicated Platform Commissioning engine · Platform Memory only
+              </p>
             </div>
           )}
 
