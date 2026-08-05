@@ -7,7 +7,7 @@ type: feature
 # O-32 — Frass Operating System (FOS)
 
 ## Status
-IN PROGRESS — Part 1 received and locked. Awaiting Parts 2+ and closing directive before implementation.
+IN PROGRESS — Parts 1–2 received and locked. Awaiting Parts 3+ and closing directive before implementation.
 
 ## Executive Summary
 Frass Operating System (FOS) is the universal intelligence layer that connects every district within the FRASS ecosystem. It is not a visible destination; it exists beneath every experience, conversation, project, Builder Path, transaction, initiative, relationship, and memory.
