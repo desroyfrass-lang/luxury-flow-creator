@@ -171,7 +171,9 @@ export function FrassyChat() {
       setNudged(true);
       // Memory-aware greeting: name-back if we know them, else language greeting.
       let line = pickGreeting(prefs.language);
-      if (memory.firstName && memory.visits > 0) {
+      if (needsJourney) {
+        line = "Ready when you are — your Builder Journey is waiting.";
+      } else if (memory.firstName && memory.visits > 0) {
         line = `Welcome back, ${memory.firstName}.`;
         if (memory.recentCategories[0]) {
           line += ` Last time you were looking at ${memory.recentCategories[0].replace(/-/g, " ")}. Want to continue?`;
