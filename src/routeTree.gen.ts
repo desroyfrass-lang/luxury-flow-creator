@@ -50,6 +50,7 @@ import { Route as ApiTtsRouteImport } from './routes/api/tts'
 import { Route as ApiChatRouteImport } from './routes/api/chat'
 import { Route as AfroDesignersDesignersRouteImport } from './routes/afro-designers.designers'
 import { Route as AuthenticatedWorkspaceRouteImport } from './routes/_authenticated/workspace'
+import { Route as AuthenticatedWelcomeHallRouteImport } from './routes/_authenticated/welcome-hall'
 import { Route as AuthenticatedTryOnRouteImport } from './routes/_authenticated/try-on'
 import { Route as AuthenticatedOnboardingRouteImport } from './routes/_authenticated/onboarding'
 import { Route as AuthenticatedNotificationsRouteImport } from './routes/_authenticated/notifications'
@@ -294,6 +295,12 @@ const AuthenticatedWorkspaceRoute = AuthenticatedWorkspaceRouteImport.update({
   path: '/workspace',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedWelcomeHallRoute =
+  AuthenticatedWelcomeHallRouteImport.update({
+    id: '/welcome-hall',
+    path: '/welcome-hall',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedTryOnRoute = AuthenticatedTryOnRouteImport.update({
   id: '/try-on',
   path: '/try-on',
@@ -528,6 +535,7 @@ export interface FileRoutesByFullPath {
   '/notifications': typeof AuthenticatedNotificationsRoute
   '/onboarding': typeof AuthenticatedOnboardingRoute
   '/try-on': typeof AuthenticatedTryOnRoute
+  '/welcome-hall': typeof AuthenticatedWelcomeHallRoute
   '/workspace': typeof AuthenticatedWorkspaceRouteWithChildren
   '/afro-designers/designers': typeof AfroDesignersDesignersRouteWithChildren
   '/api/chat': typeof ApiChatRoute
@@ -599,6 +607,7 @@ export interface FileRoutesByTo {
   '/notifications': typeof AuthenticatedNotificationsRoute
   '/onboarding': typeof AuthenticatedOnboardingRoute
   '/try-on': typeof AuthenticatedTryOnRoute
+  '/welcome-hall': typeof AuthenticatedWelcomeHallRoute
   '/workspace': typeof AuthenticatedWorkspaceRouteWithChildren
   '/afro-designers/designers': typeof AfroDesignersDesignersRouteWithChildren
   '/api/chat': typeof ApiChatRoute
@@ -677,6 +686,7 @@ export interface FileRoutesById {
   '/_authenticated/notifications': typeof AuthenticatedNotificationsRoute
   '/_authenticated/onboarding': typeof AuthenticatedOnboardingRoute
   '/_authenticated/try-on': typeof AuthenticatedTryOnRoute
+  '/_authenticated/welcome-hall': typeof AuthenticatedWelcomeHallRoute
   '/_authenticated/workspace': typeof AuthenticatedWorkspaceRouteWithChildren
   '/afro-designers/designers': typeof AfroDesignersDesignersRouteWithChildren
   '/api/chat': typeof ApiChatRoute
@@ -759,6 +769,7 @@ export interface FileRouteTypes {
     | '/notifications'
     | '/onboarding'
     | '/try-on'
+    | '/welcome-hall'
     | '/workspace'
     | '/afro-designers/designers'
     | '/api/chat'
@@ -830,6 +841,7 @@ export interface FileRouteTypes {
     | '/notifications'
     | '/onboarding'
     | '/try-on'
+    | '/welcome-hall'
     | '/workspace'
     | '/afro-designers/designers'
     | '/api/chat'
@@ -907,6 +919,7 @@ export interface FileRouteTypes {
     | '/_authenticated/notifications'
     | '/_authenticated/onboarding'
     | '/_authenticated/try-on'
+    | '/_authenticated/welcome-hall'
     | '/_authenticated/workspace'
     | '/afro-designers/designers'
     | '/api/chat'
@@ -1282,6 +1295,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedWorkspaceRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/welcome-hall': {
+      id: '/_authenticated/welcome-hall'
+      path: '/welcome-hall'
+      fullPath: '/welcome-hall'
+      preLoaderRoute: typeof AuthenticatedWelcomeHallRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/try-on': {
       id: '/_authenticated/try-on'
       path: '/try-on'
@@ -1612,6 +1632,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedNotificationsRoute: typeof AuthenticatedNotificationsRoute
   AuthenticatedOnboardingRoute: typeof AuthenticatedOnboardingRoute
   AuthenticatedTryOnRoute: typeof AuthenticatedTryOnRoute
+  AuthenticatedWelcomeHallRoute: typeof AuthenticatedWelcomeHallRoute
   AuthenticatedWorkspaceRoute: typeof AuthenticatedWorkspaceRouteWithChildren
 }
 
@@ -1621,6 +1642,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedNotificationsRoute: AuthenticatedNotificationsRoute,
   AuthenticatedOnboardingRoute: AuthenticatedOnboardingRoute,
   AuthenticatedTryOnRoute: AuthenticatedTryOnRoute,
+  AuthenticatedWelcomeHallRoute: AuthenticatedWelcomeHallRoute,
   AuthenticatedWorkspaceRoute: AuthenticatedWorkspaceRouteWithChildren,
 }
 
