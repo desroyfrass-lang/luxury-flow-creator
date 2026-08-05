@@ -15,9 +15,16 @@ const DOT: Record<ReadinessState, string> = {
 export function LaunchReadiness({
   completedStageIds,
   compact = false,
+  heading,
+  eyebrow = "Launch Readiness",
+  onSelectStage,
 }: {
   completedStageIds: string[];
   compact?: boolean;
+  heading?: string;
+  eyebrow?: string;
+  /** When provided, each row jumps the Founder to the step that settles it. */
+  onSelectStage?: (stageId: string) => void;
 }) {
   const rows = readinessBoard(completedStageIds);
   const done = rows.filter((r) => r.state === "complete").length;
@@ -27,19 +34,21 @@ export function LaunchReadiness({
     <div className="rounded-sm border border-border bg-background/40">
       <header className="border-b border-border px-6 py-5">
         <div className="text-[11px] uppercase tracking-[0.3em] text-[color:var(--gold)]">
-          Launch Readiness
+          {eyebrow}
         </div>
         <h3 className="mt-2 font-display text-2xl">
           {ready
             ? "Frass OS is commissioned and ready to welcome its first Builder."
-            : `${done} of ${rows.length} systems ready`}
+            : (heading ?? `${done} of ${rows.length} systems ready`)}
         </h3>
         {!ready && (
           <p className="mt-1 text-sm text-muted-foreground">
-            Readiness across the whole operating system, not just the storefront.
+            {done} of {rows.length} systems ready — readiness across the whole operating system,
+            not just the storefront.
           </p>
         )}
       </header>
+
 
       <ul className="divide-y divide-border">
         {rows.map((r) => (
