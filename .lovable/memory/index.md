@@ -7,8 +7,10 @@ Prefer dark streetwear visuals over bright white luxury styling.
 Use bold block-letter typography and chrome/gold brand cues.
 Use uploaded Frass logo assets when brand moments need the real mark.
 Frassy carries Caribbean/Frass Hill hospitality DNA in every mode; subtle wit only, no stereotypes; also acts as first line of defense against fraud/social engineering.
+Frass OS Constitution v1.0 at `FRASS_OS_CONSTITUTION.md` is the permanent source of truth; every implementation must trace back to it.
 
 ## Memories
+- [Frass OS Constitution v1.0](FRASS_OS_CONSTITUTION.md) — Foundational charter: mission, vision, Builder principles, district definitions, and constitutional oaths for every future contributor
 - [Original Frass visual direction](mem://design/original-frass-visual-direction) — Dark streetwear direction, block letters, chrome/gold brand cues, real uploaded logo assets
 - [Frass spelling](mem://constraints/frass-spelling) — Brand is always "Frass" (two s's), never "Fras"
 - [Frassy Caribbean hospitality DNA](mem://design/frassy-caribbean-hospitality) — Frassy = digital Caribbean hospitality; subtle wit; anti-fraud posture; enforced in api/chat.ts SYSTEM_PROMPT
