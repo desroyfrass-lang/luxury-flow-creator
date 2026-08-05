@@ -6,7 +6,7 @@ type: feature
 # A-01 — Platform Architecture
 
 ## Status
-LOCKED — Architecture Series A-01 Part 1 received. Implementation on hold per Master Implementation Directive v2.0.
+LOCKED — Architecture Series A-01 Parts 1 and 2 received. Implementation on hold per Master Implementation Directive v2.0.
 
 ## Executive Summary
 This document defines the architectural principles governing the entire FRASS platform. Previous documents defined user experiences; this document defines engineering philosophy. Every service, API, AI agent, workflow, database, and interface must inherit these principles so FrassKicks grows into a unified ecosystem rather than disconnected software.
@@ -102,8 +102,131 @@ Optimize for:
 
 Rule: if two implementations exist, choose the simpler one.
 
-## Engineering Directive
+## Part 1 Engineering Directive
 Architect FrassKicks as a modular, event-driven, domain-oriented operating system where every district behaves as an independent service while participating in one shared Builder ecosystem governed by Frass Operating System.
 
+## Part 2 — Services, Communication & Engineering Standards
+
+### Service-Oriented Philosophy
+Every major capability exists as an independent service with one clear responsibility. No service performs another service's responsibilities. Services evolve independently while remaining compatible with the larger ecosystem. Objective: grow for decades without fragility.
+
+### Core Platform Services
+Frass OS provides shared platform services consumed by every district:
+- Builder Identity Service
+- Authentication Service
+- Authorization Service
+- Universal Memory Service
+- Builder Passport Service
+- Builder Vault Service
+- Notification Service
+- Messaging Service
+- Workflow Engine
+- Search Engine
+- Recommendation Engine
+- Analytics Engine
+- Media Processing Service
+- Audit Service
+- Settings Service
+- Localization Service
+- Accessibility Service
+
+Every district consumes these services rather than implementing its own version.
+
+### Single Source of Truth Principle
+Every piece of information has exactly one authoritative owner:
+- Builder Identity → Builder Identity Service
+- Builder Passport → Passport Service
+- Projects → Project Service
+- Marketplace Listings → Marketplace Service
+- Community Posts → Community Service
+- Foundation Projects → Foundation Service
+
+No duplicate business logic. No competing data ownership. This prevents inconsistency across the ecosystem.
+
+### Communication Standards
+Services communicate through well-defined contracts:
+- Request when immediate information is required.
+- Events when information should be shared.
+- Background jobs for long-running processes.
+- Streaming for live collaboration.
+
+Each method has a clear purpose.
+
+### Event Architecture
+The ecosystem publishes meaningful business events:
+- BuilderCreated
+- BuilderUpdated
+- ProjectStarted
+- ProjectCompleted
+- CourseCompleted
+- PassportUpdated
+- MarketplaceListingPublished
+- PurchaseCompleted
+- FoundationProjectCreated
+- VolunteerJoined
+- MentorAssigned
+- BusinessLaunched
+- CreativeAssetPublished
+
+Every event is understandable without additional context. Events describe facts, never intentions.
+
+### Event Subscribers
+Each service subscribes only to events relevant to its responsibilities. Example: when CourseCompleted occurs:
+- Builder Passport updates.
+- Opportunity Center evaluates opportunities.
+- Community celebrates milestone.
+- Executive analytics update.
+- Foundation evaluates volunteer readiness.
+
+Everything happens automatically without direct coupling.
+
+### Workflow Engine
+Complex processes are orchestrated through the Workflow Engine:
+- Publishing a documentary
+- Launching a business
+- Completing a Builder Path
+- Creating a Marketplace product
+- Starting a Foundation initiative
+
+The workflow coordinates services while preserving flexibility. Participants experience one smooth journey.
+
+### AI Service Layer
+Frassy orchestrates specialized AI capabilities:
+- Creative Intelligence
+- Business Intelligence
+- Educational Intelligence
+- Community Intelligence
+- Marketplace Intelligence
+- Foundation Intelligence
+- Executive Intelligence
+
+Participants never choose which intelligence to use. Frassy routes requests automatically: one personality, many expert systems.
+
+### Engineering Standards
+Every service follows consistent engineering standards:
+- Versioned APIs
+- Structured logging
+- Health monitoring
+- Automated testing
+- Observability
+- Rate limiting
+- Graceful failure
+- Documentation
+- Security reviews
+- Performance benchmarks
+
+Consistency is considered a feature.
+
+### Failure Philosophy
+Failure never feels catastrophic. If one service becomes temporarily unavailable, the remainder continues functioning:
+- Marketplace unavailable → Academy still works.
+- Foundation unavailable → Creation District continues.
+- Executive analytics delayed → Builder workflows continue.
+
+Graceful degradation is a core engineering requirement.
+
+### Part 2 Engineering Directive
+Implement every FrassKicks capability as a modular service communicating through standardized APIs, business events, and shared platform services. Optimize for long-term maintainability, independent deployment, fault tolerance, and ecosystem-wide consistency. Every engineering decision reduces coupling while strengthening the unified Builder experience.
+
 ## Transmission Note
-A-01 continues in Part 2. Implementation remains on hold until the closing directive is given.
+A-01 continues in Part 3. Implementation remains on hold until the closing directive is given.
