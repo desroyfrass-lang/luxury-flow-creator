@@ -88,5 +88,117 @@ Templates provide guidance without limiting creativity. Builders remain free to 
 ## Engineering Directive
 Implement the Workflow Engine as a living orchestration system capable of coordinating people, projects, assets, organizations, milestones, and cross-district intelligence into adaptive Builder journeys. Every workflow should remain context-aware, memory-aware, Builder-centered, and capable of evolving throughout the Builder's lifetime.
 
+## Part 2: Workflow Intelligence, Orchestration & Adaptive Coordination
+
+### Workflow Intelligence Philosophy
+The Workflow Engine should never simply execute predefined steps. It should continuously evaluate progress, context, dependencies, Builder priorities, emerging opportunities, and changing circumstances. Every workflow should remain alive.
+
+### Workflow Context
+Every workflow continuously receives contextual updates from Frass OS. Context sources include:
+- Builder Identity
+- Universal Memory
+- Builder Vault
+- Builder Passport
+- Marketplace activity
+- Academy progress
+- Community participation
+- Foundation initiatives
+- Organizations and Teams
+- Current workload
+
+Frassy should always understand the workflow within the Builder's broader journey.
+
+### Dynamic Milestones
+Milestones should adapt as projects evolve. Examples:
+- A documentary gains additional interviews.
+- A business expands internationally.
+- A nonprofit receives grant funding.
+- An Academy course becomes a certification program.
+
+The Workflow Engine should intelligently revise timelines and suggest new milestones without disrupting completed work.
+
+### Dependency Intelligence
+Every workflow should understand dependencies. Examples:
+- A logo must be approved before branding begins.
+- A script must be completed before filming.
+- Legal approval precedes Marketplace publication.
+- Academy certification precedes mentorship eligibility.
+- Foundation approval precedes fundraising.
+
+Dependencies should automatically adjust workflow sequencing. Builders should spend less time coordinating logistics.
+
+### Intelligent Task Generation
+Frassy may suggest tasks when appropriate. Examples:
+- Prepare interview questions.
+- Draft partnership agreement.
+- Create promotional assets.
+- Review Marketplace listing.
+- Publish Academy lesson.
+- Invite collaborators.
+
+Tasks should support Builder objectives rather than overwhelm them with unnecessary administration.
+
+### Workflow Collaboration
+Multiple Builders should collaborate within shared workflows. Examples:
+- Creative teams
+- Business partners
+- Foundation volunteers
+- Community organizers
+- Educational faculty
+- Marketplace agencies
+
+Every participant clearly understands responsibilities, permissions, deadlines, current status, and contribution history. The workflow becomes the shared operational space.
+
+### Workflow Adaptation
+Workflows should gracefully adapt to change. Examples:
+- Team members join or leave.
+- Priorities shift.
+- Funding changes.
+- Deadlines move.
+- Scope expands.
+- Unexpected opportunities appear.
+
+The operating system should preserve momentum rather than forcing Builders to restart planning.
+
+### Intelligent Recommendations
+Throughout execution, Frassy should recommend helpful actions. Examples:
+- A relevant Academy lesson.
+- A Marketplace template.
+- A previous project.
+- An experienced mentor.
+- A Foundation partnership.
+- A funding opportunity.
+
+Recommendations should appear only when they meaningfully advance the workflow.
+
+### Cross-Workflow Awareness
+Builders often manage multiple workflows simultaneously. The Workflow Engine should recognize:
+- Shared resources
+- Scheduling conflicts
+- Duplicate work
+- Competing priorities
+- Potential collaboration
+- Reusable assets
+
+Frassy should help Builders balance their overall workload rather than optimizing one workflow in isolation.
+
+### Workflow Reflection
+Upon completion, every workflow should conclude with reflection. Reflections include:
+- Objectives achieved.
+- Lessons learned.
+- Unexpected discoveries.
+- Assets created.
+- Relationships formed.
+- Marketplace opportunities.
+- Foundation impact.
+- Builder Passport achievements.
+
+Reflection transforms completed work into future wisdom.
+
+### Engineering Directive
+Implement the Workflow Engine as an adaptive orchestration system capable of coordinating complex, evolving Builder journeys across multiple districts, organizations, and collaborators. Every workflow should continuously integrate Builder context, ecosystem intelligence, and thoughtful recommendations while preserving Builder autonomy and creative leadership.
+
 ## Chief Architect's Observation
-This is where Frass OS begins behaving like a true operating system instead of a collection of intelligent tools. Most software says: "Tell me what task you want to do." Frass OS says: "Tell me what you're trying to build." The Builder doesn't think about creating folders, assigning tasks, finding collaborators, updating records, or connecting systems. They simply say: "Frassy, let's build this." And the Workflow Engine quietly coordinates the entire ecosystem around that objective. This architecture is what will make FrassKicks feel less like using software and more like working alongside an intelligent operations team dedicated to helping Builders succeed.
+This is where Frass OS begins behaving like a true operating system instead of a collection of intelligent tools. Most software says: "Tell me what task you want to do." Frass OS says: "Tell me what you're trying to build." The Builder doesn't think about creating folders, assigning tasks, finding collaborators, updating records, or connecting systems. They simply say: "Frassy, let's build this." And the Workflow Engine quietly coordinates the entire ecosystem around that objective.
+
+Part 2 adds a critical distinction: most workflow software manages tasks; Frass OS manages momentum. A Builder shouldn't lose momentum because a collaborator becomes unavailable, a funding source changes, a deadline shifts, or a project grows larger than expected. The Workflow Engine should quietly absorb that complexity, reorganize the path forward, and help the Builder keep moving. This is what transforms workflow management into Builder orchestration — a system that protects creative momentum instead of simply tracking checklists.
