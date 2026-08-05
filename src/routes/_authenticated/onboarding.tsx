@@ -122,9 +122,11 @@ function OnboardingPage() {
   useEffect(() => () => stopSpeaking(), []);
 
   const dictation = useVoiceDictation((text) => {
-    if (modeRef.current === "voice_only") void send(text);
+    // Voice modes are continuous: what you say is sent, no button press.
+    if (modeRef.current !== "text") void send(text);
     else setDraft((p) => (p ? `${p} ${text}` : text));
   });
+
   const dictationRef = useRef(dictation);
   dictationRef.current = dictation;
 
