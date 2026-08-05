@@ -187,6 +187,66 @@ export type Database = {
         }
         Relationships: []
       }
+      builder_collections: {
+        Row: {
+          created_at: string
+          description: string | null
+          id: string
+          name: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          name: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          name?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      builder_drops: {
+        Row: {
+          created_at: string
+          description: string | null
+          drop_date: string | null
+          id: string
+          name: string
+          status: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          drop_date?: string | null
+          id?: string
+          name: string
+          status?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          drop_date?: string | null
+          id?: string
+          name?: string
+          status?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       builder_journey_messages: {
         Row: {
           content: string
@@ -282,6 +342,69 @@ export type Database = {
           value?: string
         }
         Relationships: []
+      }
+      builder_products: {
+        Row: {
+          collection_id: string | null
+          created_at: string
+          currency: string
+          description: string | null
+          drop_id: string | null
+          id: string
+          image_url: string | null
+          price: number | null
+          status: string
+          tags: string[]
+          title: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          collection_id?: string | null
+          created_at?: string
+          currency?: string
+          description?: string | null
+          drop_id?: string | null
+          id?: string
+          image_url?: string | null
+          price?: number | null
+          status?: string
+          tags?: string[]
+          title: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          collection_id?: string | null
+          created_at?: string
+          currency?: string
+          description?: string | null
+          drop_id?: string | null
+          id?: string
+          image_url?: string | null
+          price?: number | null
+          status?: string
+          tags?: string[]
+          title?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "builder_products_collection_id_fkey"
+            columns: ["collection_id"]
+            isOneToOne: false
+            referencedRelation: "builder_collections"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "builder_products_drop_id_fkey"
+            columns: ["drop_id"]
+            isOneToOne: false
+            referencedRelation: "builder_drops"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       capsule_items: {
         Row: {

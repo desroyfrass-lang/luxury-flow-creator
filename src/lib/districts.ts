@@ -34,9 +34,10 @@ export const DISTRICTS: District[] = [
   {
     id: "creation",
     name: "Creation District",
-    purpose: "Where you make things — products, drops, designs, and content.",
+    purpose: "Where you make things — products, collections, and drops.",
     chapter: "Craft",
-    status: "building",
+    status: "open",
+    to: "/creation",
   },
   {
     id: "opportunity",
