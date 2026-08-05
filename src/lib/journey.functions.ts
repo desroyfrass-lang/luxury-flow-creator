@@ -276,7 +276,9 @@ export const journeyTurn = createServerFn({ method: "POST" })
       history.push({
         role: "user",
         content:
-          "I've just created my account. Begin my journey — welcome me and start where we should start.",
+          trackOf(stage.id) === "owner"
+            ? "I'm the owner of this business. Let's set up the site together — start us off."
+            : "I've just created my account. Begin my journey — welcome me and start where we should start.",
       });
     }
 
