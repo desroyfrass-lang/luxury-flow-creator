@@ -325,6 +325,13 @@ function MobileAccountLinks({ hasWorkspace, isAdmin }: { hasWorkspace: boolean; 
         Creation District
       </Link>
       <Link
+        to="/opportunity"
+        className="nav-glow block rounded-xl px-4 py-3 text-xs uppercase tracking-[0.25em] text-muted-foreground transition-colors hover:bg-foreground/5"
+        activeProps={{ className: "text-foreground bg-foreground/5" }}
+      >
+        Opportunity Center
+      </Link>
+      <Link
         to="/workspace/profile"
         className="nav-glow block rounded-xl px-4 py-3 text-xs uppercase tracking-[0.25em] text-muted-foreground transition-colors hover:bg-foreground/5"
         activeProps={{ className: "text-foreground bg-foreground/5" }}
