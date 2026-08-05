@@ -57,6 +57,18 @@ export const getBuilderJourney = createServerFn({ method: "GET" })
     });
     if (roleError) throw new Error(roleError.message);
 
+    if (isAdmin) {
+      state = {
+        ...state,
+        messages: state.messages.filter(
+          (message) =>
+            trackOf(message.stage) !== "owner" ||
+            message.role !== "assistant" ||
+            !isFounderIdentityDiscovery(message.content),
+        ),
+      };
+    }
+
     // Founder identity is authoritative on the server. This also repairs accounts
     // that entered the Builder journey before Founder Commissioning existed.
     if (isAdmin && trackOf(state.currentStage) !== "owner") {
