@@ -214,3 +214,126 @@ Implement Security & Trust as an adaptive risk intelligence system capable of co
 
 ## Chief Architect's Observation
 Most security systems are designed around suspicion. Frass OS should be designed around stewardship. That does not mean lowering security. It means treating Builders with respect. When something unusual happens, Frassy should not react like a security alarm. He should respond like a trusted partner: "Something doesn't look quite right. I've already protected your work. Let's verify this together." That tone changes everything. The emotional experience of security matters almost as much as the technical implementation, because Builders should leave every security interaction feeling more confident — not more anxious.
+
+---
+
+# A-10 Part 3: Ethical Governance, AI Stewardship & Builder Trust
+
+## Trust Beyond Security
+Security protects assets. Trust protects relationships. Frass OS should be engineered to preserve both. Builders should consistently believe:
+- "My work is safe."
+- "My privacy is respected."
+- "My data is mine."
+- "Frassy works for me."
+
+Trust should deepen through every interaction.
+
+## Builder Data Stewardship
+FrassKicks serves as steward of Builder information — never owner. Builders retain ownership of:
+- Builder Identity
+- Builder Vault
+- Universal Memory
+- Builder Passport
+- Creative works
+- Business information
+- Organizations
+- Marketplace assets
+- Foundation initiatives
+- AI workflows
+- Builder history
+
+Technology safeguards the Builder's work. It never claims it.
+
+## AI Stewardship
+Frassy should always act in the Builder's interest. Frassy may:
+- Organize
+- Recommend
+- Summarize
+- Analyze
+- Connect
+- Plan
+- Guide
+- Assist
+
+Frassy should never:
+- Claim ownership
+- Publish Builder work without approval
+- Share private information
+- Alter historical records without transparency
+- Manipulate Builder decisions
+
+Trust extends to AI behavior.
+
+## Administrative Ethics
+Platform administrators possess responsibility — not privilege. Administrative access should always be:
+- Authorized
+- Auditable
+- Scoped
+- Documented
+- Reversible whenever possible
+
+Administrative authority exists to protect Builders. Never to bypass them.
+
+## Organizational Trust
+Organizations should clearly understand:
+- Ownership
+- Permissions
+- Shared assets
+- Delegated authority
+- Administrative boundaries
+- Audit history
+
+Collaboration succeeds when governance remains transparent.
+
+## Builder Consent
+Meaningful actions should require meaningful consent, including:
+- Sharing assets
+- Publishing content
+- Marketplace listings
+- Foundation participation
+- Data exports
+- Third-party integrations
+- AI-generated publishing
+
+Consent should remain informed, specific, and revocable whenever appropriate.
+
+## Transparency Principles
+Builders should always understand:
+- What Frassy knows
+- Why Frassy knows it
+- How information is being used
+- What recommendations are based upon
+- Who has access
+- When information changes
+
+Transparency removes uncertainty.
+
+## Long-Term Stewardship
+Builders may remain within Frass OS for decades. The architecture should preserve:
+- History
+- Relationships
+- Projects
+- Organizations
+- Creative works
+- Businesses
+- Foundation impact
+- Builder legacy
+
+Every future engineering decision should strengthen long-term stewardship.
+
+## Ethical Evolution
+Future AI capabilities should always inherit these principles, including:
+- Autonomous planning
+- Advanced orchestration
+- Predictive assistance
+- Voice-first collaboration
+- Future reasoning systems
+- Emerging technologies
+
+Technology may evolve. The Builder-first constitution must remain unchanged.
+
+## Engineering Directive
+Implement Security & Trust as a comprehensive stewardship framework governing Builder ownership, AI ethics, administrative responsibility, organizational governance, informed consent, transparency, and lifelong preservation of Builder trust. Every system should reinforce the principle that Frass Operating System exists to serve Builders rather than extract value from them.
+
+## Chief Architect's Observation
+Security protects technology. Stewardship protects relationships. Those are not the same thing. A Builder should never wonder, "Who really owns my work?" The answer should always be obvious: the Builder does. FrassKicks exists to preserve, protect, organize, and amplify that work — not to claim it. This stewardship philosophy will become one of the defining characteristics of FrassKicks, because it establishes a relationship built on respect, transparency, and long-term trust rather than platform dependency.
