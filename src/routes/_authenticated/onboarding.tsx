@@ -22,6 +22,18 @@ import {
 import { useIsAdmin } from "@/hooks/use-is-admin";
 import { LaunchReadiness } from "@/components/launch-readiness";
 import { COMMISSIONING_PHASES } from "@/lib/commissioning";
+import { useFrassyPrefs } from "@/hooks/use-frassy-prefs";
+import { speakLine, stopSpeaking } from "@/lib/frassy-voice";
+import { useVoiceDictation } from "@/hooks/use-voice-dictation";
+
+type ConversationMode = "text" | "voice_text" | "voice_only";
+const MODE_KEY = "frass:onboarding:mode";
+const MODE_LABELS: Record<ConversationMode, string> = {
+  text: "Text only",
+  voice_text: "Voice + text",
+  voice_only: "Voice only",
+};
+
 
 export const Route = createFileRoute("/_authenticated/onboarding")({
   head: () => ({
@@ -50,17 +62,31 @@ function OnboardingPage() {
   const [draft, setDraft] = useState("");
   const [busy, setBusy] = useState(false);
   const [local, setLocal] = useState<LocalMessage[]>([]);
+  const [mode, setMode] = useState<ConversationMode>("text");
+  const [speaking, setSpeaking] = useState(false);
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const endRef = useRef<HTMLDivElement>(null);
   const openedRef = useRef(false);
+  const founderRef = useRef(false);
+  const modeRef = useRef<ConversationMode>("text");
+  modeRef.current = mode;
 
-  const messages: LocalMessage[] = useMemo(() => {
-    const saved = (data?.messages ?? []).map((m: JourneyMessage) => ({
-      role: m.role,
-      content: m.content,
-    }));
-    return [...saved, ...local];
-  }, [data?.messages, local]);
+  const { prefs } = useFrassyPrefs();
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const saved = window.localStorage.getItem(MODE_KEY) as ConversationMode | null;
+    if (saved === "text" || saved === "voice_text" || saved === "voice_only") setMode(saved);
+  }, []);
+
+  const chooseMode = (m: ConversationMode) => {
+    setMode(m);
+    if (typeof window !== "undefined") window.localStorage.setItem(MODE_KEY, m);
+    if (m === "text") {
+      stopSpeaking();
+      setSpeaking(false);
+    }
+  };
 
   const stage = stageById(data?.currentStage ?? "mission");
   const idx = stageIndex(stage.id);
@@ -73,6 +99,14 @@ function OnboardingPage() {
   const pct = Math.round((completedCount / stages.length) * 100);
   const finished = data?.status === "complete";
 
+  // Only this track's conversation belongs on screen.
+  const messages: LocalMessage[] = useMemo(() => {
+    const saved = (data?.messages ?? [])
+      .filter((m: JourneyMessage) => trackOf(m.stage) === track)
+      .map((m: JourneyMessage) => ({ role: m.role, content: m.content }));
+    return [...saved, ...local];
+  }, [data?.messages, local, track]);
+
   useEffect(() => {
     inputRef.current?.focus();
   }, [busy, stage.id]);
@@ -81,14 +115,39 @@ function OnboardingPage() {
     endRef.current?.scrollIntoView({ behavior: "smooth", block: "end" });
   }, [messages.length, busy]);
 
+  useEffect(() => () => stopSpeaking(), []);
+
+  const dictation = useVoiceDictation((text) => {
+    if (modeRef.current === "voice_only") void send(text);
+    else setDraft((p) => (p ? `${p} ${text}` : text));
+  });
+  const dictationRef = useRef(dictation);
+  dictationRef.current = dictation;
+
+  const speakReply = (text: string) => {
+    if (modeRef.current === "text" || !text) return;
+    setSpeaking(true);
+    speakLine(text, {
+      prefs: { ...prefs, muted: false, communicationMode: "voice_text" },
+      tone: "welcome",
+      onDone: () => {
+        setSpeaking(false);
+        // Voice only: hand the floor straight back to the speaker.
+        if (modeRef.current === "voice_only") dictationRef.current.start();
+      },
+    });
+  };
+
   const send = async (text: string, opening = false) => {
     if (busy) return;
+    stopSpeaking();
     setBusy(true);
     if (text) setLocal((p) => [...p, { role: "user", content: text }]);
     try {
       const res = await turn({ data: { message: text, opening } });
       setLocal([]);
       await refetch();
+      speakReply(res.reply);
       if (res.movedTo) {
         toast.success(
           `${isOwnerTrack ? "Commissioned" : "Chapter"} complete — next: ${stageById(res.movedTo).title}`,
@@ -108,18 +167,33 @@ function OnboardingPage() {
     }
   };
 
-  const needsFounderChoice =
-    isAdmin && !isLoading && !!data && data.messages.length === 0;
+  // Founders land in the Commissioning Journey, not the Builder Journey.
+  useEffect(() => {
+    if (isLoading || !data || founderRef.current || isAdmin !== true) return;
+    if (trackOf(data.currentStage) === "owner") {
+      founderRef.current = true;
+      return;
+    }
+    founderRef.current = true;
+    void (async () => {
+      await switchTrack({ data: { track: "owner" } });
+      await refetch();
+    })();
+  }, [isLoading, data, isAdmin]);
 
-  // First-ever session: let Frassy open the journey.
+  // First session on this track: let Frassy open the conversation.
   useEffect(() => {
     if (isLoading || !data || openedRef.current) return;
-    if (isAdmin) return; // Founders choose their journey first.
-    if (data.messages.length === 0) {
+    if (isAdmin === true && !founderRef.current) return;
+    const hasTrackMessages = (data.messages ?? []).some(
+      (m: JourneyMessage) => trackOf(m.stage) === track,
+    );
+    if (!hasTrackMessages) {
       openedRef.current = true;
       void send("", true);
     }
-  }, [isLoading, data, isAdmin]);
+  }, [isLoading, data, isAdmin, track]);
+
 
   const onSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -129,70 +203,8 @@ function OnboardingPage() {
     void send(text);
   };
 
-  if (needsFounderChoice) {
-    const choose = async (t: "owner" | "builder") => {
-      setBusy(true);
-      try {
-        await switchTrack({ data: { track: t } });
-        openedRef.current = true;
-        await refetch();
-        await send("", true);
-      } finally {
-        setBusy(false);
-      }
-    };
 
-    return (
-      <SiteShell>
-        <div className="mx-auto max-w-3xl px-6 py-24">
-          <div className="text-[11px] uppercase tracking-[0.3em] text-[color:var(--gold)]">
-            Frass Operating System
-          </div>
-          <h1 className="mt-4 font-display text-4xl leading-tight">
-            Welcome back. Are we commissioning Frass OS today, or would you like to enter as a
-            Builder?
-          </h1>
-          <p className="mt-4 text-sm text-muted-foreground">
-            You can switch between the two at any time — nothing is lost either way.
-          </p>
 
-          <div className="mt-10 grid gap-4 md:grid-cols-2">
-            <button
-              type="button"
-              disabled={busy}
-              onClick={() => void choose("owner")}
-              className="rounded-sm border border-[color:var(--gold)] bg-[color:var(--gold)]/5 p-6 text-left transition hover:bg-[color:var(--gold)]/10 disabled:opacity-50"
-            >
-              <div className="font-display text-2xl">Commission Frass OS</div>
-              <p className="mt-2 text-sm text-muted-foreground">
-                Five phases — platform identity, commerce, the Builder experience, operations, and
-                launch readiness. We prepare the place others will enter.
-              </p>
-            </button>
-            <button
-              type="button"
-              disabled={busy}
-              onClick={() => void choose("builder")}
-              className="rounded-sm border border-border p-6 text-left transition hover:border-foreground/40 disabled:opacity-50"
-            >
-              <div className="font-display text-2xl">Enter as a Builder</div>
-              <p className="mt-2 text-sm text-muted-foreground">
-                Walk the same journey every Builder walks — mission, identity, memory, and the
-                districts.
-              </p>
-            </button>
-          </div>
-
-          <Link
-            to="/founder"
-            className="mt-10 inline-block text-[11px] font-bold uppercase tracking-[0.28em] text-muted-foreground hover:text-foreground"
-          >
-            Open Founder Mode instead
-          </Link>
-        </div>
-      </SiteShell>
-    );
-  }
 
   return (
     <SiteShell>
@@ -327,7 +339,40 @@ function OnboardingPage() {
             </div>
             <h2 className="mt-2 font-display text-2xl">{stage.title}</h2>
             <p className="mt-1 text-sm text-muted-foreground">{stage.purpose}</p>
+
+            <div className="mt-4 flex flex-wrap items-center gap-2">
+              <span className="text-[10px] uppercase tracking-[0.28em] text-muted-foreground">
+                How we talk
+              </span>
+              {(["text", "voice_text", "voice_only"] as const).map((m) => (
+                <button
+                  key={m}
+                  type="button"
+                  onClick={() => chooseMode(m)}
+                  className={`rounded-sm border px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.2em] transition ${
+                    mode === m
+                      ? "border-[color:var(--gold)] bg-[color:var(--gold)]/10 text-[color:var(--gold)]"
+                      : "border-border text-muted-foreground hover:text-foreground"
+                  }`}
+                >
+                  {MODE_LABELS[m]}
+                </button>
+              ))}
+              {speaking && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    stopSpeaking();
+                    setSpeaking(false);
+                  }}
+                  className="rounded-sm border border-border px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground hover:text-foreground"
+                >
+                  Stop voice
+                </button>
+              )}
+            </div>
           </header>
+
 
           <div className="space-y-6 px-6 py-8">
             {isLoading && (
@@ -354,37 +399,79 @@ function OnboardingPage() {
             {busy && (
               <div className="text-sm text-muted-foreground">Frassy is thinking…</div>
             )}
+            {speaking && !busy && (
+              <div className="text-sm text-[color:var(--gold)]">Frassy is speaking…</div>
+            )}
+            {dictation.listening && (
+              <div className="text-sm text-muted-foreground">
+                Listening… {dictation.interim}
+              </div>
+            )}
             <div ref={endRef} />
           </div>
 
           <form onSubmit={onSubmit} className="border-t border-border px-6 py-5">
-            <textarea
-              ref={inputRef}
-              rows={3}
-              value={draft}
-              onChange={(e) => setDraft(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === "Enter" && !e.shiftKey) {
-                  e.preventDefault();
-                  onSubmit(e);
+            {mode !== "voice_only" && (
+              <textarea
+                ref={inputRef}
+                rows={3}
+                value={draft}
+                onChange={(e) => setDraft(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" && !e.shiftKey) {
+                    e.preventDefault();
+                    onSubmit(e);
+                  }
+                }}
+                placeholder={
+                  mode === "voice_text"
+                    ? "Speak or type — Frassy answers out loud."
+                    : "Take your time — answer in your own words."
                 }
-              }}
-              placeholder="Take your time — answer in your own words."
-              className="w-full resize-none rounded-sm border border-border bg-background/60 px-4 py-3 text-sm outline-none focus:border-[color:var(--gold)]"
-            />
-            <div className="mt-3 flex items-center justify-between">
+                className="w-full resize-none rounded-sm border border-border bg-background/60 px-4 py-3 text-sm outline-none focus:border-[color:var(--gold)]"
+              />
+            )}
+            <div className="mt-3 flex flex-wrap items-center justify-between gap-3">
               <span className="text-[11px] uppercase tracking-[0.25em] text-muted-foreground">
-                Saved automatically
+                {mode === "voice_only" ? "Speak freely — saved automatically" : "Saved automatically"}
               </span>
-              <button
-                type="submit"
-                disabled={busy || !draft.trim()}
-                className="lux-press rounded-sm border border-[color:var(--gold)] bg-[color:var(--gold)] px-6 py-2.5 text-[11px] font-bold uppercase tracking-[0.3em] text-[color:var(--ink)] disabled:opacity-40"
-              >
-                Send
-              </button>
+              <div className="flex items-center gap-3">
+                {mode !== "text" &&
+                  (dictation.supported ? (
+                    <button
+                      type="button"
+                      disabled={busy}
+                      onClick={() => {
+                        stopSpeaking();
+                        setSpeaking(false);
+                        dictation.listening ? dictation.stop() : dictation.start();
+                      }}
+                      className={`rounded-sm border px-5 py-2.5 text-[11px] font-bold uppercase tracking-[0.25em] transition disabled:opacity-40 ${
+                        dictation.listening
+                          ? "border-[color:var(--gold)] bg-[color:var(--gold)]/10 text-[color:var(--gold)]"
+                          : "border-border text-muted-foreground hover:text-foreground"
+                      }`}
+                    >
+                      {dictation.listening ? "Stop listening" : "Speak"}
+                    </button>
+                  ) : (
+                    <span className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground">
+                      Voice input needs Chrome or Safari
+                    </span>
+                  ))}
+                {mode !== "voice_only" && (
+                  <button
+                    type="submit"
+                    disabled={busy || !draft.trim()}
+                    className="lux-press rounded-sm border border-[color:var(--gold)] bg-[color:var(--gold)] px-6 py-2.5 text-[11px] font-bold uppercase tracking-[0.3em] text-[color:var(--ink)] disabled:opacity-40"
+                  >
+                    Send
+                  </button>
+                )}
+              </div>
             </div>
           </form>
+
         </section>
         </div>
       </div>
