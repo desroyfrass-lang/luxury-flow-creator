@@ -115,5 +115,47 @@ Implement the Marketplace as a sustainable Builder Economy where professional ex
 ## 🏛️ Architect's Observation (Part 3)
 Most marketplaces ask "How can we increase sales?" The FRASS Marketplace asks "How can we increase the success of the builders behind those sales?" That changes every engineering decision. If builders become more capable, their businesses improve, their customers benefit, the Marketplace becomes stronger, the Academy gains new case studies, the Community gains experienced mentors, the Foundation gains stronger leaders, and the entire ecosystem becomes self-reinforcing. The Marketplace isn't just an economy — it's the economic engine that continually feeds growth back into every other part of FRASS.
 
+## O-31 (Part 4 – Final) — Governance, Trust, Engineering Acceptance Criteria & Constitutional Principles
+
+### Marketplace Governance
+The Marketplace should operate according to clear principles of fairness, transparency, professionalism, and ethical commerce. Every participant should understand marketplace expectations, professional responsibilities, community standards, dispute resolution, quality expectations, builder rights, and customer rights. Trust should be protected through consistency rather than excessive regulation.
+
+### Ethical Commerce
+Every transaction should strengthen the FRASS ecosystem. The Marketplace should actively discourage fraud, plagiarism, misrepresentation, artificial scarcity, spam, deceptive marketing, low-quality products presented as premium, unethical AI usage, and exploitative pricing. Commerce should always reinforce integrity.
+
+### Customer Confidence
+Participants purchasing products or services should consistently feel safe, informed, respected, supported, and confident. Professional communication should be encouraged throughout every Marketplace interaction. Trust becomes one of the Marketplace's greatest competitive advantages.
+
+### Builder Responsibility
+Marketplace builders should understand that every transaction reflects both their reputation and the reputation of the FRASS ecosystem. Builders should strive to consistently deliver excellent quality, clear communication, reliable timelines, professional conduct, honest expectations, and long-term relationships. The Marketplace succeeds when builders become trusted professionals.
+
+### Marketplace Conflict Resolution
+Occasionally, disagreements will occur. Frassy should encourage resolution through clarification, respectful communication, mutual understanding, and reasonable compromise. When necessary, structured mediation processes may be available. The objective is restoring trust whenever possible.
+
+### Continuous Improvement
+The Marketplace should continuously improve through builder feedback, customer feedback, community observations, marketplace analytics, emerging industries, technology evolution, educational insights, and operational lessons. The Marketplace should become more valuable every year.
+
+### Marketplace Integration
+The Marketplace should remain deeply connected to every FRASS district. The Creation District generates products; the Academy develops expertise; the Opportunity Center identifies business opportunities; Community Square builds trust; the Foundation supports social impact commerce; the Executive Tower monitors ecosystem health. No Marketplace transaction exists independently from the broader FRASS mission.
+
+### Part 4 Engineering Acceptance Criteria
+The Marketplace District is successfully implemented when:
+- Builders can confidently establish professional storefronts.
+- Products and services remain organized around Builder identity.
+- Frassy intelligently recommends valuable Marketplace opportunities.
+- Professional relationships naturally develop through commerce.
+- Marketplace reputation reflects meaningful contribution rather than popularity.
+- Commerce remains ethical, transparent, and trustworthy.
+- Marketplace activity strengthens the Opportunity Center, Academy, Community Square, and Foundation.
+- Builders consistently grow sustainable businesses rather than isolated sales.
+- Participants describe the Marketplace as a trusted Builder Economy rather than simply an online store.
+- The Marketplace reinforces the long-term mission of the FRASS ecosystem.
+
+### Future Expansion Hooks
+The Marketplace architecture should support future implementation of international commerce, builder cooperatives, subscription ecosystems, licensing exchanges, creative rights management, enterprise partnerships, global service exchanges, digital asset authentication, physical product fulfillment, marketplace financing, social enterprise storefronts, and physical Frass Hill marketplaces. Future commerce capabilities should integrate naturally while preserving the ethical Builder Economy established by these constitutional principles.
+
+### Closing Principle
+The Marketplace exists to help builders exchange value with integrity. Commerce should never become disconnected from purpose. Every successful business should strengthen its customers, its builder, its community, and the broader FRASS ecosystem. When builders leave the Marketplace, they should not simply say "I made a sale." They should say: "I earned trust, created value, and strengthened my future." That is the true purpose of the Marketplace District.
+
 ## Status
-O-31 Parts 1–3 locked into memory — implementation remains on hold per Master Implementation Directive v2.0. Standing by for Part 4.
+O-31 — The Marketplace District — COMPLETE. Implementation remains on hold per Master Implementation Directive v2.0. Standing by for O-32 — The Frass Operating System (FOS) or your closing directive.
