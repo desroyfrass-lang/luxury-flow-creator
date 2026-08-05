@@ -81,5 +81,43 @@ Implement Community Square as a relationship-building environment where long-ter
 ## 🏛️ Architect's Observation (Part 2)
 This defines one of the biggest cultural differences between FRASS and traditional social platforms. Most social platforms reward attention. Community Square rewards contribution. Imagine someone becoming well known inside FRASS because they consistently helped fifty other builders launch their first businesses, reviewed documentaries, mentored teenagers, or organized volunteer projects. That is a reputation built on service. That culture—where influence is earned through contribution rather than visibility—could become one of the defining characteristics of the entire FRASS movement.
 
+## O-28 (Part 3) — Community Culture, Leadership & Living Builder Society
+
+### The Community Culture
+Community Square intentionally cultivates a recognizable culture emerging from FRASS values: builders encourage builders, celebrate builders, teach builders, solve problems together, serve communities, and leave things better than they found them. Every interaction reinforces these values. Culture is not created through rules alone; it is modeled through consistent behavior.
+
+### Leadership Development
+Community Square continuously creates opportunities for builders to grow into leaders. Leadership is demonstrated through action: hosting Builder Circles, leading workshops, organizing volunteer initiatives, mentoring newer builders, creating educational content, sharing successful workflows, and helping resolve community questions. Leadership emerges naturally through contribution rather than appointment.
+
+### Community Service
+The FRASS ecosystem encourages builders to contribute beyond themselves. Participants regularly discover opportunities to volunteer, mentor, support nonprofits, teach workshops, strengthen neighborhoods, collaborate on Foundation initiatives, and respond to community needs. Service becomes a normal part of being a builder.
+
+### Builder Reputation
+Community reputation is earned through meaningful contribution. Reputation reflects reliability, generosity, professionalism, leadership, creativity, mentorship, integrity, and problem solving. Participants are recognized for the value they consistently create. Popularity never becomes the primary measure of influence.
+
+### Community Events
+Community Square hosts regular events: Builder Meetups, Creative Showcases, Business Demo Days, Music Listening Sessions, Film Premieres, Academy Workshops, AI Labs, Foundation Volunteer Days, Community Celebrations, and Ask the Mentor sessions. Events encourage participation rather than passive attendance. Builders leave having created something, learned something, or strengthened a relationship.
+
+### Builder Showcases
+Participants have opportunities to showcase meaningful work: businesses launched, songs released, films completed, books published, community projects, Foundation impact, creative portfolios, and educational achievements. Showcases inspire rather than intimidate. Recognition focuses on effort, growth, and contribution.
+
+### Community Problem Solving
+Builders are encouraged to ask for help openly: "I'm stuck," "I need feedback," "I need collaborators," "I need advice," "I've hit a roadblock." Community members naturally respond with guidance, resources, encouragement, and practical solutions. Frassy intelligently surfaces the most relevant builders to assist.
+
+### Shared Wins
+Community celebrations prioritize collective success: the community helped launch 100 businesses, builders completed 1,000 Academy projects, the Foundation reached a major milestone, a collaborative documentary won an award, a Builder Circle organized disaster relief. The focus shifts from individual achievement to shared accomplishment. The community wins together.
+
+### Community Memory
+Community Square preserves meaningful moments: historic launches, major collaborations, volunteer campaigns, creative festivals, leadership milestones, builder anniversaries, important discussions, and community traditions. Over time, Community Square develops its own history. New builders become part of an ongoing story rather than joining an empty platform.
+
+### Global Yet Local
+The FRASS community supports both global and local relationships. Builders connect across countries, industries, cultures, and generations, and also within their own cities and neighborhoods. The platform strengthens both worldwide collaboration and real-world community impact.
+
+### Part 3 Engineering Directive
+Implement Community Square as a living builder society rather than a conventional online community. Design systems that naturally reward service, leadership, collaboration, generosity, and meaningful contribution. Every engineering decision should strengthen the culture of builders helping builders while preserving a welcoming environment for participants of every background and experience level.
+
+## 🏛️ Architect's Observation (Part 3)
+This section captures one of the deepest ideas behind FRASS. The goal is not to build a user base but a society. Societies have culture, history, traditions, mentors, leaders, stories, shared victories, and shared responsibility. If engineered correctly, people won't just say, "I'm a member of FrassKicks." They'll say, "I'm part of the FRASS community." That is the difference between building a successful platform and building a lasting movement.
+
 ## Status
-O-28 Parts 1–2 locked into memory — implementation remains on hold per Master Implementation Directive v2.0. Standing by for Part 3 and closing directive.
+O-28 Parts 1–3 locked into memory — implementation remains on hold per Master Implementation Directive v2.0. Standing by for Part 4 and closing directive.
