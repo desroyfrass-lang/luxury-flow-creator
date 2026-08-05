@@ -20,6 +20,8 @@ import {
   trackOf,
 } from "@/lib/journey";
 import { useIsAdmin } from "@/hooks/use-is-admin";
+import { LaunchReadiness } from "@/components/launch-readiness";
+import { COMMISSIONING_PHASES } from "@/lib/commissioning";
 
 export const Route = createFileRoute("/_authenticated/onboarding")({
   head: () => ({
@@ -89,13 +91,13 @@ function OnboardingPage() {
       await refetch();
       if (res.movedTo) {
         toast.success(
-          `${isOwnerTrack ? "Step" : "Chapter"} complete — next: ${stageById(res.movedTo).title}`,
+          `${isOwnerTrack ? "Commissioned" : "Chapter"} complete — next: ${stageById(res.movedTo).title}`,
         );
       }
       if (res.completed)
         toast.success(
           isOwnerTrack
-            ? "Your site setup is complete."
+            ? "Frass OS is commissioned and ready to welcome its first Builder."
             : "Your Builder Journey is complete.",
         );
     } catch (err) {
@@ -106,14 +108,18 @@ function OnboardingPage() {
     }
   };
 
+  const needsFounderChoice =
+    isAdmin && !isLoading && !!data && data.messages.length === 0;
+
   // First-ever session: let Frassy open the journey.
   useEffect(() => {
     if (isLoading || !data || openedRef.current) return;
+    if (isAdmin) return; // Founders choose their journey first.
     if (data.messages.length === 0) {
       openedRef.current = true;
       void send("", true);
     }
-  }, [isLoading, data]);
+  }, [isLoading, data, isAdmin]);
 
   const onSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -132,11 +138,11 @@ function OnboardingPage() {
             Frass Operating System
           </div>
           <h1 className="mt-3 font-display text-3xl leading-tight">
-            {isOwnerTrack ? "Your Site Setup" : "Your Builder Journey"}
+            {isOwnerTrack ? "Founder Commissioning" : "Your Builder Journey"}
           </h1>
           <p className="mt-3 text-sm text-muted-foreground">
             {isOwnerTrack
-              ? "Frassy walks you through setting up and launching your store, one decision at a time."
+              ? "Frassy walks you through commissioning Frass OS across five phases — identity, commerce, the Builder experience, operations, and launch."
               : "Frassy walks you through who you are and what you're building, one chapter at a time."}{" "}
             About {Math.round(trackMinutes(track) / 60)} hours at your pace, across as many sessions
             as you like. Everything is saved — leave whenever you want and Frassy picks up exactly
@@ -161,7 +167,7 @@ function OnboardingPage() {
                       : "border-border text-muted-foreground hover:text-foreground"
                   }`}
                 >
-                  {t === "owner" ? "Set up my site" : "Builder journey"}
+                  {t === "owner" ? "Commission Frass OS" : "Builder journey"}
                 </button>
               ))}
             </div>
@@ -175,7 +181,7 @@ function OnboardingPage() {
               />
             </div>
             <div className="mt-2 text-[11px] uppercase tracking-[0.25em] text-muted-foreground">
-              {completedCount} of {stages.length} {isOwnerTrack ? "steps" : "chapters"}
+              {completedCount} of {stages.length} {isOwnerTrack ? "commissioning steps" : "chapters"}
             </div>
           </div>
 
@@ -183,8 +189,17 @@ function OnboardingPage() {
             {stages.map((s, i) => {
               const done = Boolean(data?.stageProgress?.[s.id]);
               const active = s.id === stage.id;
+              const phase = isOwnerTrack
+                ? COMMISSIONING_PHASES.find((ph) => ph.chapter === s.chapter)
+                : null;
+              const firstOfPhase = phase && phase.stages[0]?.id === s.id;
               return (
                 <li key={s.id}>
+                  {firstOfPhase && phase && (
+                    <div className="mt-5 mb-1 px-3 text-[10px] uppercase tracking-[0.28em] text-[color:var(--gold)]">
+                      Phase {phase.number} · {phase.name}
+                    </div>
+                  )}
                   <button
                     type="button"
                     disabled={busy || (!done && i > idx)}
@@ -225,7 +240,7 @@ function OnboardingPage() {
         <section className="min-h-[70vh] rounded-sm border border-border bg-background/40">
           <header className="border-b border-border px-6 py-5">
             <div className="text-[11px] uppercase tracking-[0.3em] text-muted-foreground">
-              {isOwnerTrack ? "Step" : "Chapter"} {idx + 1} · {stage.chapter}
+              {isOwnerTrack ? stage.chapter : `Chapter ${idx + 1} · ${stage.chapter}`}
             </div>
             <h2 className="mt-2 font-display text-2xl">{stage.title}</h2>
             <p className="mt-1 text-sm text-muted-foreground">{stage.purpose}</p>
