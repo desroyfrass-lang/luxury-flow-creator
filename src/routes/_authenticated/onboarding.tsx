@@ -62,17 +62,31 @@ function OnboardingPage() {
   const [draft, setDraft] = useState("");
   const [busy, setBusy] = useState(false);
   const [local, setLocal] = useState<LocalMessage[]>([]);
+  const [mode, setMode] = useState<ConversationMode>("text");
+  const [speaking, setSpeaking] = useState(false);
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const endRef = useRef<HTMLDivElement>(null);
   const openedRef = useRef(false);
+  const founderRef = useRef(false);
+  const modeRef = useRef<ConversationMode>("text");
+  modeRef.current = mode;
 
-  const messages: LocalMessage[] = useMemo(() => {
-    const saved = (data?.messages ?? []).map((m: JourneyMessage) => ({
-      role: m.role,
-      content: m.content,
-    }));
-    return [...saved, ...local];
-  }, [data?.messages, local]);
+  const { prefs } = useFrassyPrefs();
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const saved = window.localStorage.getItem(MODE_KEY) as ConversationMode | null;
+    if (saved === "text" || saved === "voice_text" || saved === "voice_only") setMode(saved);
+  }, []);
+
+  const chooseMode = (m: ConversationMode) => {
+    setMode(m);
+    if (typeof window !== "undefined") window.localStorage.setItem(MODE_KEY, m);
+    if (m === "text") {
+      stopSpeaking();
+      setSpeaking(false);
+    }
+  };
 
   const stage = stageById(data?.currentStage ?? "mission");
   const idx = stageIndex(stage.id);
@@ -85,6 +99,14 @@ function OnboardingPage() {
   const pct = Math.round((completedCount / stages.length) * 100);
   const finished = data?.status === "complete";
 
+  // Only this track's conversation belongs on screen.
+  const messages: LocalMessage[] = useMemo(() => {
+    const saved = (data?.messages ?? [])
+      .filter((m: JourneyMessage) => trackOf(m.stage) === track)
+      .map((m: JourneyMessage) => ({ role: m.role, content: m.content }));
+    return [...saved, ...local];
+  }, [data?.messages, local, track]);
+
   useEffect(() => {
     inputRef.current?.focus();
   }, [busy, stage.id]);
@@ -93,14 +115,39 @@ function OnboardingPage() {
     endRef.current?.scrollIntoView({ behavior: "smooth", block: "end" });
   }, [messages.length, busy]);
 
+  useEffect(() => () => stopSpeaking(), []);
+
+  const dictation = useVoiceDictation((text) => {
+    if (modeRef.current === "voice_only") void send(text);
+    else setDraft((p) => (p ? `${p} ${text}` : text));
+  });
+  const dictationRef = useRef(dictation);
+  dictationRef.current = dictation;
+
+  const speakReply = (text: string) => {
+    if (modeRef.current === "text" || !text) return;
+    setSpeaking(true);
+    speakLine(text, {
+      prefs: { ...prefs, muted: false, communicationMode: "voice_text" },
+      tone: "welcome",
+      onDone: () => {
+        setSpeaking(false);
+        // Voice only: hand the floor straight back to the speaker.
+        if (modeRef.current === "voice_only") dictationRef.current.start();
+      },
+    });
+  };
+
   const send = async (text: string, opening = false) => {
     if (busy) return;
+    stopSpeaking();
     setBusy(true);
     if (text) setLocal((p) => [...p, { role: "user", content: text }]);
     try {
       const res = await turn({ data: { message: text, opening } });
       setLocal([]);
       await refetch();
+      speakReply(res.reply);
       if (res.movedTo) {
         toast.success(
           `${isOwnerTrack ? "Commissioned" : "Chapter"} complete — next: ${stageById(res.movedTo).title}`,
@@ -120,18 +167,33 @@ function OnboardingPage() {
     }
   };
 
-  const needsFounderChoice =
-    isAdmin && !isLoading && !!data && data.messages.length === 0;
+  // Founders land in the Commissioning Journey, not the Builder Journey.
+  useEffect(() => {
+    if (isLoading || !data || founderRef.current || isAdmin !== true) return;
+    if (trackOf(data.currentStage) === "owner") {
+      founderRef.current = true;
+      return;
+    }
+    founderRef.current = true;
+    void (async () => {
+      await switchTrack({ data: { track: "owner" } });
+      await refetch();
+    })();
+  }, [isLoading, data, isAdmin]);
 
-  // First-ever session: let Frassy open the journey.
+  // First session on this track: let Frassy open the conversation.
   useEffect(() => {
     if (isLoading || !data || openedRef.current) return;
-    if (isAdmin) return; // Founders choose their journey first.
-    if (data.messages.length === 0) {
+    if (isAdmin === true && !founderRef.current) return;
+    const hasTrackMessages = (data.messages ?? []).some(
+      (m: JourneyMessage) => trackOf(m.stage) === track,
+    );
+    if (!hasTrackMessages) {
       openedRef.current = true;
       void send("", true);
     }
-  }, [isLoading, data, isAdmin]);
+  }, [isLoading, data, isAdmin, track]);
+
 
   const onSubmit = (e: React.FormEvent) => {
     e.preventDefault();
