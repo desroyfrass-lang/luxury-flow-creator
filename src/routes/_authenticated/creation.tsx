@@ -33,7 +33,7 @@ export const Route = createFileRoute("/_authenticated/creation")({
       { name: "robots", content: "noindex,nofollow" },
     ],
   }),
-  component: CreationPage;
+  component: CreationPage,
 });
 
 const inputClass =
