@@ -252,6 +252,15 @@ function OnboardingPage() {
             </div>
           )}
 
+          {isAdmin && (
+            <a
+              href="/admin/images"
+              className="mt-4 inline-block rounded-sm border border-border px-4 py-2 text-[11px] uppercase tracking-[0.25em] text-muted-foreground transition hover:border-[color:var(--gold)] hover:text-[color:var(--gold)]"
+            >
+              Admin console →
+            </a>
+          )}
+
           <div className="mt-6">
             <div className="h-px w-full bg-border">
               <div
