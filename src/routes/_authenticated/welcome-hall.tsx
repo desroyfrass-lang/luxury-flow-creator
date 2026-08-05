@@ -87,17 +87,27 @@ function WelcomeHallPage() {
           </div>
           {finished ? (
             <>
-              <h2 className="mt-3 font-display text-2xl">Your foundation is complete.</h2>
+              <h2 className="mt-3 font-display text-2xl">
+                Your foundation is complete. Now start your Vault.
+              </h2>
               <p className="mt-2 text-sm text-muted-foreground">
-                Frassy knows your mission, your identity, and how you work. Districts open here as
-                they're built — the Vault and Creation District are next.
+                Frassy knows your mission, your identity, and how you work. The Builder Vault is
+                open — keep the work, ideas, and decisions worth carrying forward.
               </p>
-              <Link
-                to="/frassy"
-                className="lux-press mt-6 inline-block rounded-sm border border-[color:var(--gold)] bg-[color:var(--gold)] px-6 py-3 text-[11px] font-bold uppercase tracking-[0.3em] text-[color:var(--ink)]"
-              >
-                Work with Frassy
-              </Link>
+              <div className="mt-6 flex flex-wrap gap-3">
+                <Link
+                  to="/vault"
+                  className="lux-press inline-block rounded-sm border border-[color:var(--gold)] bg-[color:var(--gold)] px-6 py-3 text-[11px] font-bold uppercase tracking-[0.3em] text-[color:var(--ink)]"
+                >
+                  Enter your Vault
+                </Link>
+                <Link
+                  to="/frassy"
+                  className="lux-press inline-block rounded-sm border border-[color:var(--gold)] px-6 py-3 text-[11px] font-bold uppercase tracking-[0.3em] text-[color:var(--gold)]"
+                >
+                  Work with Frassy
+                </Link>
+              </div>
             </>
           ) : (
             <>

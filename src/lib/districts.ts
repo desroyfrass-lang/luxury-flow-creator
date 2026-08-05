@@ -28,7 +28,8 @@ export const DISTRICTS: District[] = [
     name: "Builder Vault",
     purpose: "Your living archive — work, knowledge, and everything worth keeping.",
     chapter: "Continuity",
-    status: "building",
+    status: "open",
+    to: "/vault",
   },
   {
     id: "creation",
