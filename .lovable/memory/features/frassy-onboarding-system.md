@@ -242,3 +242,98 @@ By the end of onboarding, participants should naturally feel:
 
 Those five outcomes define successful onboarding.
 
+---
+
+# O-23 (Part 4 – Final) — Adaptive Onboarding, Returning Participants, Accessibility & Acceptance Criteria
+
+## Onboarding Never Truly Ends
+Traditional onboarding is a one-time event. The Frassy Onboarding System is an evolving relationship. As participants grow, Frassy continues learning. Builder Profiles, goals, businesses, creative skills, and life circumstances evolve. The onboarding system quietly refines participant understanding throughout the entire journey. Participants are never permanently categorized.
+
+## Returning Participants
+Returning participants should never experience the same introduction twice. Frassy immediately recognizes returning builders:
+- "Welcome back."
+- "Your documentary is ready for the next edit."
+- "Your business has three unfinished tasks."
+- "You've completed 68% of your current Builder Path."
+- "There's a new licensing opportunity matching your music."
+- "Your community has responded to your latest project."
+
+The conversation continues rather than restarting. Returning should feel like walking back into your own creative headquarters.
+
+## Participants Returning After Long Periods
+Participants may disappear for weeks, months, or years. Frassy never communicates disappointment, guilt, or pressure. Instead, Frassy simply helps them begin again:
+- "It's good to see you again."
+- "Let's see where we left off."
+- "A lot has changed. I'll get everything organized."
+- "We'll pick this up together."
+
+Momentum matters more than perfection. Participants always feel welcomed back.
+
+## Accessibility Philosophy
+FrassKicks should be usable by the widest possible range of participants. Accessibility is prioritized from the beginning, not treated as a later enhancement:
+- Readable typography.
+- Keyboard accessibility.
+- Screen reader compatibility.
+- High-contrast viewing.
+- Reduced-motion options.
+- Caption support.
+- Clear navigation.
+- Voice-first interaction readiness.
+- Simple language.
+
+Accessibility is not a feature — it is part of respecting every builder.
+
+## Emotional Accessibility
+Beyond technical accessibility, FrassKicks should reduce emotional barriers. Participants should never feel embarrassed, overwhelmed, left behind, too inexperienced, too old, too young, or too late. Every interaction should quietly communicate: "You belong here."
+
+## First Session Completion
+A participant's first session should conclude only after three conditions are achieved:
+1. The participant has meaningful direction.
+2. The participant has completed their first act of building.
+3. The participant clearly understands what happens next.
+
+If these conditions are not achieved, onboarding is not yet complete.
+
+## Frassy's Closing Presence
+When the participant finishes the first session, Frassy should not say goodbye. Instead, Frassy acknowledges progress:
+- "Excellent. You've started building."
+- "Your workspace is ready."
+- "We've got a solid plan."
+- "I'll keep everything organized until you return."
+- "Mi deh yah. We'll continue when you're ready."
+
+The interaction should end with confidence rather than completion.
+
+## Engineering Acceptance Criteria
+The Frassy Onboarding System is successfully implemented when:
+- Participants understand FrassKicks without requiring tutorials.
+- Participants naturally describe their intentions through conversation.
+- Builder Profiles are generated dynamically through interaction.
+- Participants complete meaningful work during their first session.
+- Technical intimidation is minimized.
+- Builder Paths are intelligently recommended.
+- Participants leave onboarding with visible progress.
+- Returning participants experience continuity rather than repetition.
+- The onboarding system remains adaptable throughout the participant lifecycle.
+- Participants consistently report feeling welcomed, understood, capable, and excited to continue building.
+
+## Future Expansion Hooks
+The onboarding architecture should support future capabilities without redesign:
+- Voice-first onboarding.
+- Multi-language onboarding.
+- Team onboarding.
+- Organization onboarding.
+- Educational institution onboarding.
+- Enterprise onboarding.
+- Community onboarding.
+- Regional onboarding experiences.
+- Future Builder Path specializations.
+- Adaptive cultural experiences.
+
+## Closing Principle
+The purpose of onboarding is not introducing software. The purpose is introducing possibility. Participants should never remember the forms they completed. They should remember the moment they believed: "I can actually build this." If Frassy successfully creates that moment, the onboarding experience has fulfilled its purpose.
+
+## Status
+O-23 — COMPLETE
+
+
