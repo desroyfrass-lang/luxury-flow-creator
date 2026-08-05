@@ -349,6 +349,45 @@ export type Database = {
         }
         Relationships: []
       }
+      builder_learning_events: {
+        Row: {
+          artifact_url: string | null
+          created_at: string
+          detail: string | null
+          id: string
+          kind: string
+          lesson_id: string | null
+          path_id: string | null
+          skills: string[]
+          title: string
+          user_id: string
+        }
+        Insert: {
+          artifact_url?: string | null
+          created_at?: string
+          detail?: string | null
+          id?: string
+          kind?: string
+          lesson_id?: string | null
+          path_id?: string | null
+          skills?: string[]
+          title: string
+          user_id: string
+        }
+        Update: {
+          artifact_url?: string | null
+          created_at?: string
+          detail?: string | null
+          id?: string
+          kind?: string
+          lesson_id?: string | null
+          path_id?: string | null
+          skills?: string[]
+          title?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       builder_memory: {
         Row: {
           category: string
@@ -439,6 +478,8 @@ export type Database = {
           completed_lessons: string[]
           created_at: string
           id: string
+          is_primary: boolean
+          lesson_notes: Json
           path_id: string
           reflection: string | null
           started_at: string
@@ -450,6 +491,8 @@ export type Database = {
           completed_lessons?: string[]
           created_at?: string
           id?: string
+          is_primary?: boolean
+          lesson_notes?: Json
           path_id: string
           reflection?: string | null
           started_at?: string
@@ -461,6 +504,8 @@ export type Database = {
           completed_lessons?: string[]
           created_at?: string
           id?: string
+          is_primary?: boolean
+          lesson_notes?: Json
           path_id?: string
           reflection?: string | null
           started_at?: string
