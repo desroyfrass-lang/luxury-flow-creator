@@ -12,3 +12,5 @@ The Intelligent Builder Journey is the very first experience after account creat
 - Must remain resumable, conversational, adaptive, Builder-centered — a mentor, not a setup wizard. Everything learned is written to `builder_memory` and reused across the OS.
 
 **Why:** Architectural correction directive — protect the Frass OS architecture from defaulting to "website + chatbot" SaaS patterns.
+
+Founder Commissioning is a completely separate Platform Administrator experience. It begins with platform state and configuration—not identity discovery. Immutable Founder facts: Nicky; Founder / Owner / Operator; Frass OS; FrassKicks. Founder Mode must never ask who the Founder is, what the company/business/venture is, or what they are building.

@@ -238,15 +238,15 @@ const BUILDER_STAGES_RAW: Omit<JourneyStage, "track">[] = [
 const OWNER_STAGES_RAW: Omit<JourneyStage, "track">[] = [
   {
     id: "op_brand_name",
-    title: "Name the platform",
+    title: "Configure Platform Identity",
     chapter: "Phase 1 · Platform Identity",
     purpose:
-      "Settle the name, the mark, and how Frass introduces itself to the world.",
+      "Define how the already-named Frass OS and FrassKicks present themselves to every future Builder.",
     objectives: [
-      "The platform name and how it is written",
-      "What Frass means and where it comes from",
-      "The mark, wordmark, and where each is used",
-      "How Frass is introduced in one sentence",
+      "Approve how the immutable Frass OS and FrassKicks names are presented",
+      "Configure the meaning and origin language Frass may publish",
+      "Configure where the existing mark and wordmark are used",
+      "Approve the platform introduction shown to future Builders",
     ],
     category: "platform_identity",
     minutes: 25,

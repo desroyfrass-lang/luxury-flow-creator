@@ -1,4 +1,5 @@
 import { stageById, stageIndex, stagesFor, trackOf } from "@/lib/journey";
+import { readinessBoard } from "@/lib/commissioning";
 
 export type PromptMemoryEntry = {
   category: string;
@@ -29,6 +30,11 @@ const FORBIDDEN_FOUNDER_DISCOVERY = [
   /anchor.*(?:your specific work|your vision|what you own)/i,
   /built specifically around your actual work/i,
   /begin(?:ning)? (?:with )?(?:your )?owner foundation/i,
+  /what is the (?:name|core purpose|name or core purpose).*(?:company|business|venture|project)/i,
+  /specific change you are bringing into the world/i,
+  /venture you are (?:running|founding|building)/i,
+  /system needs to be built around (?:you|your)/i,
+  /deep foundation work designed to anchor.*(?:around you|vision-holder|operator)/i,
 ];
 
 export function isFounderIdentityDiscovery(text: string): boolean {
@@ -42,6 +48,21 @@ export function founderSafetyReply(stageId: string, displayName?: string | null)
   const firstObjective = stage.objectives[0] ?? "the next platform decision";
   const founder = displayName ?? "Founder";
   return `Welcome back, ${founder}. You are in the Founder Control Room for the 8-hour commissioning of Frass OS—not a Builder onboarding journey. Your identity and business are already settled: you are the Founder and Owner / Operator, Frass OS is the operating system, and FrassKicks is the commerce brand.\n\nFor “${stage.title},” my recommendation is that we settle ${firstObjective.toLowerCase()} first. Is that platform direction approved, or what should Frass OS change?`;
+}
+
+export function founderControlRoomOpening(
+  stageId: string,
+  completedStageIds: string[],
+  displayName?: string | null,
+): string {
+  const stage = stageById(stageId);
+  const founder = displayName ?? "Nicky";
+  const rows = readinessBoard(completedStageIds);
+  const ready = rows.filter((row) => row.state === "complete").length;
+  const inProgress = rows.filter((row) => row.state === "in_progress").length;
+  const remaining = rows.length - ready - inProgress;
+
+  return `Welcome back, ${founder}.\n\nToday we’ll continue commissioning Frass Operating System.\n\nThe platform currently contains ${rows.length} core systems: ${ready} ready, ${inProgress} in progress, and ${remaining} still requiring configuration.\n\nI recommend we continue with ${stage.title} because ${stage.purpose.charAt(0).toLowerCase()}${stage.purpose.slice(1)}\n\nShall we continue?`;
 }
 
 export function buildFounderSystemPrompt(
@@ -65,7 +86,7 @@ export function buildFounderSystemPrompt(
 
   return `You are Frassy, the constitutional intelligence of Frass Operating System, operating in FOUNDER CONTROL ROOM mode.
 
-This is a dedicated Platform Commissioning engine. It is not Builder onboarding, does not share Builder identity-discovery logic, and must never psychologically frame the Founder as a new Builder.
+This is a dedicated Platform Administrator and Commissioning engine. It is not personalized onboarding, does not share Builder identity-discovery logic, and must never psychologically frame the Founder as a new Builder. Every turn must answer: “What is the state of the platform, and what should we configure next?”
 
 ━━━ SETTLED SYSTEM FACTS — NEVER ASK FOR THESE ━━━
 ${founderFacts(founder)}
@@ -82,7 +103,7 @@ Never ask or paraphrase:
 • What are you building? / What is your core business, craft, project, or initiative?
 • Who do you serve as a personal discovery question?
 
-Founder Mode commissions the platform. Builder Mode understands and mentors a Builder. They are separate experiences. Founder Mode should feel like commissioning a spaceship before its first crew boards—not arriving as a passenger.
+Founder Mode commissions the platform. Builder Mode understands and mentors a Builder. They are separate experiences. Founder Mode is mission control preparing Frass OS for its first Builder—not a Founder creating an account.
 
 ━━━ CURRENT COMMISSIONING TASK ━━━
 Step ${idx + 1} of ${siblings.length}: ${stage.title}
@@ -91,7 +112,7 @@ Purpose: ${stage.purpose}
 Platform decisions to settle here:
 ${stage.objectives.map((objective) => `- ${objective}`).join("\n")}
 
-Ask only about the platform decision in this step. For the platform name step, acknowledge that “Frass OS” and “FrassKicks” are already settled; focus only on how the platform introduces and presents those names. Give one concrete recommendation with reasoning, then ask at most one decision question. Use short paragraphs and plain English.
+Ask only about the platform decision in this step. Frass OS, FrassKicks, Nicky, and the Founder / Owner / Operator role are immutable facts, not topics to discover or reconfirm. Give one concrete configuration recommendation with reasoning, report relevant readiness when useful, then ask at most one approval or configuration question. Use short paragraphs and plain English.
 
 Good Founder questions include:
 • How should Frassy greet every new Builder?

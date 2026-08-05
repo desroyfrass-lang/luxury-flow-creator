@@ -10,6 +10,7 @@ import {
 } from "@/lib/journey";
 import {
   buildBuilderSystemPrompt,
+  founderControlRoomOpening,
   buildFounderSystemPrompt,
   founderSafetyReply,
   isFounderIdentityDiscovery,
@@ -154,7 +155,29 @@ export const journeyTurn = createServerFn({ method: "POST" })
       .eq("id", userId)
       .maybeSingle();
     const displayName: string | null =
-      profile?.display_name ?? profile?.full_name ?? null;
+      activeTrack === "owner"
+        ? "Nicky"
+        : profile?.display_name ?? profile?.full_name ?? null;
+
+    // Founder entry is deterministic: do not let a model reinterpret commissioning
+    // as identity discovery before the Control Room is established.
+    if (activeTrack === "owner" && data.opening) {
+      const completedStageIds = Object.keys(state.stageProgress).filter(
+        (id) => trackOf(id) === "owner",
+      );
+      const reply = founderControlRoomOpening(stage.id, completedStageIds, displayName);
+      const { error: openingError } = await sb
+        .from("builder_journey_messages")
+        .insert({ user_id: userId, stage: stage.id, role: "assistant", content: reply });
+      if (openingError) throw new Error(openingError.message);
+      return {
+        reply,
+        stageId: stage.id,
+        movedTo: null,
+        completed: false,
+        remembered: 0,
+      };
+    }
 
     const history = state.messages
       .filter((message) => trackOf(message.stage) === activeTrack)
