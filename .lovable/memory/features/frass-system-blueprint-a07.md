@@ -7,7 +7,7 @@ type: feature
 # FRASS SYSTEM BLUEPRINT A-07: Universal Search Architecture
 
 ## Status
-**IN PROGRESS — Parts 1-3 received, awaiting Part 4 and closing directive.**
+**COMPLETE — Parts 1-4 received and locked.**
 
 ## Executive Summary
 The Universal Search Architecture provides one intelligent search system spanning the entire FRASS ecosystem. Builders should never search individual districts. Instead, they ask Frassy naturally. The operating system understands intent, context, meaning, relationships, Builder history, and current projects. Universal Search should become the primary interface for discovering knowledge throughout the ecosystem.
@@ -339,3 +339,145 @@ Universal Search changes one of the oldest assumptions in computing. For decades
 Part 2 deepens the opportunity: traditional search answers "Here's what you asked for," while Frass OS should answer "Here's what you asked for... and here's everything else that makes it more useful." Builders often don't need one document — they need the network of knowledge surrounding that document.
 
 Part 3 moves beyond what most people would even call "search." Traditional search asks "What matches these words?" Frass OS asks "What knowledge will most help this Builder move forward?" Searching "Youth leadership" should return not twenty documents, but documentaries, Foundation initiatives, Academy lessons, Marketplace resources, collaborators, reflections, unfinished ideas, and the next logical opportunity. That is intelligent knowledge discovery — and it is the feature that will make Builders trust that nothing meaningful they create will ever become lost again, because Frassy will always know how to reconnect them with their own accumulated knowledge.
+
+## Part 4: Governance, Engineering Acceptance Criteria & Constitutional Search Principles
+
+### Search Constitution
+Universal Search exists to help Builders discover knowledge, not merely retrieve information. Its purpose is to transform accumulated work into accessible wisdom.
+
+Every search should strengthen:
+- Understanding
+- Creativity
+- Decision-making
+- Relationships
+- Momentum
+- Long-term Builder growth
+
+Search should reduce cognitive burden. Not increase it.
+
+### Builder-Centered Discovery
+Search belongs to the Builder. The operating system adapts to the Builder's thinking.
+
+Builders should never be required to remember:
+- File names
+- Folder locations
+- Exact wording
+- Application boundaries
+- Dates
+- Storage structures
+
+They simply express intent. Frassy understands the rest.
+
+### One Search System
+There shall be only one search experience across Frass OS. Builders should never search separately inside:
+- The Vault
+- Marketplace
+- Academy
+- Community
+- Foundation
+- Projects
+- Memory
+- Workflows
+- Passport
+- Organizations
+
+Everything belongs to one searchable knowledge ecosystem.
+
+### Transparency
+Whenever Search produces recommendations or insights, Builders should understand:
+- Why these results appeared
+- How they relate
+- Which memories influenced ranking
+- What context affected prioritization
+
+Search should remain understandable. Never mysterious.
+
+### Privacy & Permissions
+Search must always respect Builder permissions. Results should never reveal information the Builder is not authorized to access.
+
+Permission evaluation should occur before:
+- Ranking
+- Relationship traversal
+- Knowledge graph expansion
+- Insight generation
+- Recommendations
+
+Privacy is never bypassed for convenience.
+
+### Ethical Discovery
+Search should never manipulate Builders through ranking or recommendations. Discovery should remain:
+- Honest
+- Transparent
+- Builder-centered
+- Mission-aligned
+
+Recommendations exist to support Builder progress. Never to maximize engagement or commercial outcomes.
+
+### Search Evolution
+Universal Search should improve continuously. Examples include:
+- Better semantic understanding
+- Improved relationship discovery
+- More accurate context ranking
+- Expanded Knowledge Graph reasoning
+- Multilingual understanding
+- Voice-first search
+- Visual search
+- Future interaction paradigms
+
+Improvements should strengthen discovery without changing the Builder experience.
+
+### Search Across the Ecosystem
+Every district contributes searchable knowledge, including:
+- Builder Vault
+- Projects
+- Universal Memory
+- Workflow Engine
+- Marketplace
+- Academy
+- Foundation
+- Community
+- Executive Tower
+- Future districts
+
+Search becomes the connective tissue of Frass OS.
+
+### Engineering Acceptance Criteria
+The Universal Search Architecture shall be considered successfully implemented when:
+- Builders search naturally using conversational language.
+- Intent recognition consistently identifies Builder objectives.
+- Semantic reasoning outperforms keyword matching.
+- Knowledge Graph traversal reveals meaningful relationships.
+- Context-aware ranking reflects Builder priorities.
+- Permission-aware retrieval protects privacy.
+- Search generates useful insights alongside results.
+- Recommendations create meaningful opportunities without distraction.
+- Future districts integrate seamlessly into Universal Search.
+- Builders consistently experience Search as an intelligent knowledge discovery system rather than a traditional search engine.
+
+### Future Blueprint Series
+Following Universal Search Architecture, the engineering blueprint continues with:
+- A-08 — Notification & Attention Architecture
+- A-09 — Design System
+- A-10 — Security & Trust Architecture
+- A-11 — Infrastructure & Deployment
+- A-12 — Observability & Operations
+- A-13 — Developer Platform & APIs
+- A-14 — Testing & Quality Engineering
+
+These blueprints complete the production architecture for Frass Operating System.
+
+### Closing Principle
+Universal Search exists because Builders should spend their lives creating knowledge — not searching for it.
+
+Every conversation, project, lesson, business, relationship, creative work, and act of service becomes permanently discoverable through one intelligent interface.
+
+When Builders ask Frassy a question, they should never feel they are searching a database. They should feel they are asking a trusted companion who understands everything they have ever built and knows exactly how it all connects.
+
+When future engineers extend Universal Search, they should remember one guiding principle:
+
+**Do not build a better search engine. Build a better way for Builders to rediscover their own wisdom.**
+
+That is the constitutional purpose of the Universal Search Architecture.
+
+## Chief Architect's Observation
+With A-01 through A-07, the complete Core Cognitive Layer of Frass OS is now engineered: Platform, Identity, Memory, Intelligence, Knowledge, Workflow, and Discovery. The operating system can now think, remember, coordinate, preserve, and discover. The next blueprint, A-08 — Notification & Attention Architecture, will become one of the most important user experience systems in the platform. Most software competes for attention; Frass OS should protect attention. The question is not "How do we get Builders to come back?" but "How do we ensure every interruption is worthy of a Builder's attention?" That philosophical shift will make notifications feel less like distractions and more like trusted guidance from Frassy — only speaking when it truly helps the Builder move forward.
