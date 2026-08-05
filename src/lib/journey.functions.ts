@@ -356,11 +356,12 @@ export const journeyTurn = createServerFn({ method: "POST" })
       history.push({
         role: "user",
         content:
-          trackOf(stage.id) === "owner"
-            ? "I'm the Founder. Let's commission Frass OS — start us off."
+          activeTrack === "owner"
+            ? "Open the control room. Continue commissioning Frass Operating System with me — greet me as the Founder and take us straight to the platform decision waiting in this step. Do not ask me about myself."
             : "I've just created my account. Begin my journey — welcome me and start where we should start.",
       });
     }
+
 
     const { createLovableAiGatewayProvider } = await import("@/lib/ai-gateway.server");
     const { streamText } = await import("ai");
