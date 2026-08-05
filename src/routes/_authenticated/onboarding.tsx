@@ -222,16 +222,17 @@ function OnboardingPage() {
             Frass Operating System
           </div>
           <h1 className="mt-3 font-display text-3xl leading-tight">
-            {isOwnerTrack ? "Founder Commissioning" : "Your Builder Journey"}
+            {isOwnerTrack ? "The Control Room" : "Your Builder Journey"}
           </h1>
           <p className="mt-3 text-sm text-muted-foreground">
             {isOwnerTrack
-              ? "Frassy walks you through commissioning Frass OS across five phases — identity, commerce, the Builder experience, operations, and launch."
+              ? "This is the commissioning of Frass Operating System. Frassy prepares the platform with you — identity, commerce, the Builder experience, operations, and launch — before your first Builder arrives."
               : "Frassy walks you through who you are and what you're building, one chapter at a time."}{" "}
             About {Math.round(trackMinutes(track) / 60)} hours at your pace, across as many sessions
             as you like. Everything is saved — leave whenever you want and Frassy picks up exactly
             where you left off.
           </p>
+
 
           {isAdmin && (
             <div className="mt-5 flex gap-2">
