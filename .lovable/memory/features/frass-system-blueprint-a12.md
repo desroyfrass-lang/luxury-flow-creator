@@ -1,13 +1,13 @@
 ---
 name: FRASS System Blueprint A-12 — Observability & Operations Architecture
-description: Builder-centered operational intelligence platform using metrics, logs, traces, dashboards, and outcome-oriented monitoring
+description: Builder-centered operational intelligence platform using metrics, logs, traces, dashboards, SLOs, SLIs, error budgets, incident management, and reliability engineering
 type: feature
 ---
 
 # FRASS SYSTEM BLUEPRINT A-12: Observability & Operations Architecture
 
 ## Status
-**IN PROGRESS — Part 1 received, awaiting Part 2 and closing directive.**
+**IN PROGRESS — Part 1 and Part 2 received, awaiting Part 3 and closing directive.**
 
 ## Executive Summary
 The Observability & Operations Architecture defines how Frass Operating System continuously measures, understands, and improves its own behavior. Observability exists for one reason: to ensure Builders always experience a healthy, reliable, continuously improving operating system. The objective is not simply collecting metrics — it is understanding Builder experience.
@@ -107,8 +107,109 @@ Operations teams should receive unified dashboards. Examples:
 
 Dashboards should explain platform behavior rather than simply display numbers.
 
+## Part 2: Operational Intelligence, Incident Management & Reliability Engineering
+
+### Operational Intelligence Philosophy
+Operations should continuously ask: "What can we improve before Builders ever notice a problem?" The objective is anticipation, not reaction. Engineering teams should solve tomorrow's problems today.
+
+### Service-Level Objectives (SLOs)
+Every critical service should define measurable Service-Level Objectives. Examples include:
+- Authentication availability
+- Universal Search latency
+- Workflow completion success
+- Builder Vault upload reliability
+- AI response performance
+- Marketplace publishing success
+- Notification delivery
+- Foundation coordination
+
+Objectives should represent Builder experience rather than purely technical metrics.
+
+### Service-Level Indicators (SLIs)
+Each SLO should be supported by meaningful indicators. Examples:
+- Response time
+- Availability
+- Error rate
+- Completion success
+- Queue latency
+- Search relevance
+- Synchronization accuracy
+- Conversation continuity
+
+Indicators provide early warning before Builder impact becomes significant.
+
+### Error Budgets
+Engineering teams should operate using Error Budgets. Small, acceptable levels of operational imperfection allow continuous innovation while protecting Builder trust. When Error Budgets are exhausted, stability becomes the priority and feature delivery slows until reliability is restored. Builder trust always outweighs release velocity.
+
+### Intelligent Incident Detection
+Operational intelligence should automatically identify:
+- Performance degradation
+- Authentication anomalies
+- Workflow failures
+- Search quality decline
+- Memory retrieval issues
+- Marketplace disruptions
+- AI orchestration failures
+- Foundation coordination problems
+
+Incidents should be classified by Builder impact, not internal technical complexity.
+
+### Incident Response
+Every incident should follow a consistent lifecycle:
+
+```text
+Detection
+   ↓
+Classification
+   ↓
+Builder impact assessment
+   ↓
+Containment
+   ↓
+Recovery
+   ↓
+Communication
+   ↓
+Root cause analysis
+   ↓
+System improvement
+```
+
+The objective is continuous learning, not assigning blame.
+
+### Builder Communication
+When Builder impact exists, communication should remain honest, timely, understandable, and calm. Examples:
+- "We're experiencing slower search responses than usual."
+- "We've already identified the issue and are restoring normal performance."
+
+Builders deserve transparency, not technical jargon.
+
+### Root Cause Analysis
+Every significant incident should produce structured learning. Questions include:
+- What happened?
+- Why did it happen?
+- How was it detected?
+- How quickly did we respond?
+- How many Builders were affected?
+- What architectural improvements prevent recurrence?
+
+Every incident strengthens the platform.
+
+### Reliability Engineering
+Engineering teams should continuously improve:
+- System resilience
+- Operational automation
+- Monitoring quality
+- Deployment safety
+- Performance
+- Builder experience
+
+Reliability is an ongoing engineering discipline, not a one-time project.
+
 ## Engineering Directive
-Implement Observability as a Builder-centered operational intelligence platform using standardized metrics, structured logs, distributed tracing, operational dashboards, and outcome-oriented monitoring. Every observable signal should ultimately help engineering teams improve Builder experience.
+Implement Observability as a Builder-centered operational intelligence platform using standardized metrics, structured logs, distributed tracing, operational dashboards, and outcome-oriented monitoring. Implement Operations as an intelligent reliability engineering system incorporating SLOs, SLIs, Error Budgets, proactive incident detection, Builder-centered communication, structured post-incident learning, and continuous operational improvement. Every observable signal and every operational process should ultimately help engineering teams improve Builder experience while reinforcing Builder confidence.
 
 ## Chief Architect's Observation
 Most observability systems ask: "Is the platform healthy?" Frass OS should ask: "Are Builders succeeding?" A perfectly healthy infrastructure doesn't matter if Builders can't complete their work. Likewise, a temporary infrastructure issue that no Builder notices shouldn't create unnecessary operational panic. Builder-centric observability will become one of the defining operational philosophies of Frass OS, because every graph, dashboard, alert, and engineering conversation will ultimately point back to the only metric that truly matters: "Can Builders continue building meaningful work?"
+
+Many organizations treat incidents as failures. Frass OS should treat incidents as opportunities to become more resilient. Every outage, unexpected behavior, and operational challenge should leave the platform stronger than it was before. The real measure of an engineering team isn't whether problems occur — it's whether the platform becomes wiser after each one. This continuous-learning operations model will allow Frass OS to mature gracefully over decades, because every challenge becomes another investment in Builder trust rather than merely another engineering problem to solve.
