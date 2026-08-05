@@ -1,13 +1,13 @@
 ---
 name: FRASS System Blueprint A-11 — Infrastructure & Deployment Architecture
-description: Cloud-native, service-oriented, event-driven production foundation for Frass OS
+description: Cloud-native, service-oriented, event-driven, resilient, globally distributed production foundation for Frass OS
 type: feature
 ---
 
 # FRASS SYSTEM BLUEPRINT A-11: Infrastructure & Deployment Architecture
 
 ## Status
-**IN PROGRESS — Part 1 and Part 2 received, awaiting Part 3 and closing directive.**
+**COMPLETE — Part 1, Part 2, and Part 4 (Final) received. Awaiting closing implementation directive.**
 
 ## Executive Summary
 The Infrastructure & Deployment Architecture defines the technical foundation upon which Frass Operating System operates. Its purpose is not simply hosting software. Its purpose is providing a resilient, scalable, secure, globally available operating system capable of serving Builders for decades. Infrastructure should become invisible. Builders should never think about servers. Only building.
@@ -207,6 +207,119 @@ Infrastructure should anticipate growth. Planning should consider:
 - Workflow complexity
 
 Infrastructure should evolve ahead of demand.
+
+## Part 4 (Final): Governance, Engineering Acceptance Criteria & Constitutional Infrastructure Principles
+
+### Infrastructure Constitution
+The Infrastructure exists for one purpose: to ensure that Builders can reliably create meaningful work without interruption. Infrastructure should remain almost entirely invisible. Builders should remember their accomplishments — not outages, deployments, or servers.
+
+### Builder Continuity
+Every infrastructure decision should prioritize Builder continuity. Examples include:
+- Graceful degradation
+- Automatic recovery
+- Rolling deployments
+- Regional redundancy
+- Disaster recovery
+- Predictable performance
+
+Infrastructure serves Builder momentum, not engineering convenience.
+
+### Reliability by Design
+Reliability should be engineered from the beginning, not added later. Every production service should support:
+- Health validation
+- Automatic recovery
+- Scalable deployment
+- Secure configuration
+- Version control
+- Operational monitoring
+
+Failure should be anticipated, not feared.
+
+### Operational Simplicity
+Infrastructure should remain understandable. Complexity should exist only where it creates meaningful Builder value. Engineering teams should optimize for:
+- Clear architecture
+- Repeatable deployments
+- Consistent service boundaries
+- Predictable operations
+- Simple recovery
+
+Simple systems survive longer.
+
+### Continuous Delivery
+Platform improvements should happen continuously. Builders should rarely notice deployments. Recommended practices include:
+- Infrastructure as Code
+- Automated testing
+- Continuous Integration
+- Continuous Deployment
+- Feature flags
+- Progressive rollouts
+- Automatic rollback
+
+Every release should reduce operational risk.
+
+### Global Builder Support
+Infrastructure should evolve to support Builders everywhere. Future capabilities include:
+- Multi-region deployment
+- Localized services
+- Regional compliance
+- Global edge delivery
+- International Marketplace expansion
+- Localized AI infrastructure
+- Worldwide collaboration
+
+Every Builder deserves a consistently excellent experience regardless of location.
+
+### Sustainability
+Infrastructure should remain sustainable for decades. Engineering decisions should consider:
+- Operational cost
+- Maintainability
+- Energy efficiency where practical
+- Scalability
+- Technical debt
+- Developer productivity
+- Long-term stewardship
+- Technology changes
+
+The Builder Journey endures.
+
+### Platform Evolution
+Infrastructure should support continuous platform evolution. Future additions should integrate without disrupting:
+- Builder Identity
+- Universal Memory
+- Builder Vault
+- Workflow Engine
+- Search
+- Marketplace
+- Foundation
+- Community
+- Frassy
+
+Future capabilities should strengthen the platform rather than fragment it.
+
+## Engineering Acceptance Criteria
+The Infrastructure & Deployment Architecture shall be considered successfully implemented when:
+- Services remain independently deployable.
+- Cloud infrastructure is reproducible through Infrastructure as Code.
+- Critical services maintain high availability.
+- Horizontal scaling occurs without architectural redesign.
+- Event-driven communication enables loose service coupling.
+- Automated deployments minimize Builder disruption.
+- Disaster recovery procedures preserve Builder continuity.
+- Observability enables rapid diagnosis and recovery.
+- Global infrastructure provides consistent Builder performance.
+- Builders consistently experience Frass OS as reliable enough to trust with their lifelong work.
+
+## Future Blueprint Series
+Following Infrastructure & Deployment Architecture, the engineering blueprint continues with:
+- A-12 — Observability & Operations Architecture
+- A-13 — Developer Platform & APIs
+- A-14 — Testing & Quality Engineering
+- A-15 — AI Governance & Continuous Evolution
+
+## Closing Principle
+Infrastructure should never become the Builder's concern. When Builders open Frass OS, they should simply begin creating. The platform quietly scales, recovers, protects, synchronizes, deploys, optimizes, heals, and expands — without asking Builders to think about any of it.
+
+The constitutional purpose of Infrastructure & Deployment Architecture is not to keep servers online. It is to keep Builder journeys alive.
 
 ## Engineering Directive
 Implement Frass Operating System as a cloud-native, service-oriented, event-driven, globally distributed, resilient, horizontally scalable production platform capable of continuous delivery, disaster recovery, automated failover, validated backups, and predictable performance under sustained growth. Every infrastructure decision should preserve Builder continuity regardless of operational conditions.
