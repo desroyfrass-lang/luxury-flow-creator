@@ -50,4 +50,122 @@ A dedicated area quietly surfaces relevant opportunities: grants, licensing, cre
 One section celebrates participant growth: first business launched, new Academy milestone, creative streak, community contribution, foundation impact, Builder Passport progress. Progress is presented as evidence of growth rather than gamification. The participant's journey becomes visible over time.
 
 ## Status
-O-24 Part 1 received — implementation on hold per Master Implementation Directive v2.0 until closing directive.
+O-24 Parts 1–2 received — implementation on hold per Master Implementation Directive v2.0 until closing directive.
+
+---
+
+# O-24 (Part 2) — The Living Hall Philosophy
+
+## The Living Hall
+The Welcome Hall should never feel static. It should feel like the headquarters of a living organization. Without becoming distracting, the environment subtly communicates that meaningful work is happening throughout the FRASS ecosystem:
+- New businesses launched today.
+- Songs released.
+- Documentaries completed.
+- Foundation initiatives in progress.
+- Community events beginning.
+- Academy milestones reached.
+- Marketplace activity.
+
+Everything reinforces one quiet truth: **Builders are building.** Participants immediately feel they are part of something much larger than themselves.
+
+## The Hall Never Feels Empty
+The Welcome Hall always communicates life — not through noise or clutter, but through thoughtful environmental design:
+- Large architectural displays.
+- Soft environmental movement.
+- Dynamic lighting.
+- Living digital displays.
+- Gentle environmental animation.
+
+The space feels occupied by purpose. Participants feel they have entered an active headquarters rather than opening software.
+
+## The Community Wall
+One major architectural element celebrates the FRASS community. It continuously highlights meaningful accomplishments from builders across the platform:
+- A participant launched their first business.
+- A musician released their debut album.
+- A nonprofit secured funding.
+- A creator published their first documentary.
+- A teenager completed their first Academy Path.
+- A volunteer organized a community initiative.
+
+These stories inspire without creating unhealthy comparison. The emphasis is always on possibility, not popularity.
+
+## The Builder Dashboard
+Rather than overwhelming participants with analytics, the Welcome Hall presents only the information necessary to continue building:
+- Today's focus.
+- Active milestone.
+- Current Builder Path.
+- Pending opportunity.
+- Upcoming Academy session.
+- Current project status.
+
+Everything displayed answers one question: "What should I build next?"
+
+## Frassy's Awareness
+Frassy should never greet participants with generic information. Instead, Frassy immediately demonstrates awareness:
+- "I've organized your workspace."
+- "Your documentary is ready for review."
+- "You've got a great opportunity waiting."
+- "Yesterday's edits are ready to continue."
+
+Participants should immediately recognize continuity. No unnecessary repetition. No restarting.
+
+## Adaptive Layout
+The Welcome Hall evolves as participants grow.
+- **First-time builder:** simplicity, guidance, encouragement, one clear direction.
+- **Experienced entrepreneur:** business performance, active teams, marketplace opportunities, executive summaries, Academy mentoring requests, leadership dashboards.
+
+The Hall grows alongside the participant. The participant never outgrows the platform.
+
+## Workspace Continuity
+The Welcome Hall intelligently remembers unfinished work:
+- An editing session.
+- A business proposal.
+- A Foundation initiative.
+- A content calendar.
+- A music project.
+- A Builder Path.
+
+Returning participants immediately see: **Continue where you left off.** No searching. No remembering. Frassy already organized everything.
+
+## Intelligent Prioritization
+When multiple projects exist simultaneously, Frassy intelligently recommends priorities considering:
+- Deadlines.
+- Momentum.
+- Business value.
+- Learning progression.
+- Creative flow.
+- Community commitments.
+- Participant energy.
+
+The participant should always understand why a recommendation is made. Transparency builds trust.
+
+## The Opportunity Stream
+Opportunities appear as curated recommendations, not notifications. Every opportunity satisfies at least one of:
+- Creates meaningful progress.
+- Removes friction.
+- Increases income potential.
+- Expands learning.
+- Strengthens community.
+- Supports long-term goals.
+
+If an opportunity does not improve the participant's journey, it should not appear. Quality always outweighs quantity.
+
+## Emotional Architecture
+Every design decision reinforces these emotions:
+- Belonging.
+- Possibility.
+- Confidence.
+- Progress.
+- Purpose.
+- Hope.
+
+The interface should never create stress, confusion, decision fatigue, comparison, or information overload. These emotional outcomes are engineering requirements, not design preferences.
+
+## Navigation Philosophy
+Participants should rarely navigate through traditional software menus. Instead, Frassy naturally guides movement throughout the campus:
+- "We're ready to continue your documentary."
+- "Let's head over to the Music Studio."
+- "There's a business opportunity waiting in the Opportunity Center."
+
+Participants follow purpose rather than navigation. The platform becomes destination-driven instead of menu-driven.
+
