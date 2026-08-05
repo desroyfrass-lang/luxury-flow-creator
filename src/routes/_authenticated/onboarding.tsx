@@ -111,6 +111,13 @@ function OnboardingPage() {
     return [...saved, ...local];
   }, [data?.messages, local, track]);
 
+  // Founder decisions are Platform Memory, kept separate from Builder memory.
+  const platformMemory = useMemo(
+    () => (data?.memory ?? []).filter((m) => m.category.startsWith("platform:")),
+    [data?.memory],
+  );
+
+
   useEffect(() => {
     inputRef.current?.focus();
   }, [busy, stage.id]);
@@ -122,9 +129,11 @@ function OnboardingPage() {
   useEffect(() => () => stopSpeaking(), []);
 
   const dictation = useVoiceDictation((text) => {
-    if (modeRef.current === "voice_only") void send(text);
+    // Voice modes are continuous: what you say is sent, no button press.
+    if (modeRef.current !== "text") void send(text);
     else setDraft((p) => (p ? `${p} ${text}` : text));
   });
+
   const dictationRef = useRef(dictation);
   dictationRef.current = dictation;
 
@@ -136,11 +145,12 @@ function OnboardingPage() {
       tone: "welcome",
       onDone: () => {
         setSpeaking(false);
-        // Voice only: hand the floor straight back to the speaker.
-        if (modeRef.current === "voice_only") dictationRef.current.start();
+        // Continuous conversation: hand the floor straight back to the speaker.
+        if (modeRef.current !== "text") dictationRef.current.start();
       },
     });
   };
+
 
   const send = async (text: string, opening = false) => {
     if (busy) return;
@@ -219,16 +229,17 @@ function OnboardingPage() {
             Frass Operating System
           </div>
           <h1 className="mt-3 font-display text-3xl leading-tight">
-            {isOwnerTrack ? "Founder Commissioning" : "Your Builder Journey"}
+            {isOwnerTrack ? "The Control Room" : "Your Builder Journey"}
           </h1>
           <p className="mt-3 text-sm text-muted-foreground">
             {isOwnerTrack
-              ? "Frassy walks you through commissioning Frass OS across five phases — identity, commerce, the Builder experience, operations, and launch."
+              ? "This is the commissioning of Frass Operating System. Frassy prepares the platform with you — identity, commerce, the Builder experience, operations, and launch — before your first Builder arrives."
               : "Frassy walks you through who you are and what you're building, one chapter at a time."}{" "}
             About {Math.round(trackMinutes(track) / 60)} hours at your pace, across as many sessions
             as you like. Everything is saved — leave whenever you want and Frassy picks up exactly
             where you left off.
           </p>
+
 
           {isAdmin && (
             <div className="mt-5 flex gap-2">
@@ -306,6 +317,21 @@ function OnboardingPage() {
             })}
           </ol>
 
+          {isOwnerTrack && platformMemory.length > 0 && (
+            <div className="mt-8 rounded-sm border border-border px-4 py-4">
+              <div className="text-[10px] uppercase tracking-[0.28em] text-[color:var(--gold)]">
+                Platform Memory
+              </div>
+              <ul className="mt-3 space-y-2">
+                {platformMemory.slice(-8).map((m) => (
+                  <li key={`${m.category}:${m.key}`} className="text-xs text-muted-foreground">
+                    <span className="text-foreground">{m.key.replace(/_/g, " ")}</span> — {m.value}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+
           {isOwnerTrack && (
             <Link
               to="/founder"
@@ -314,6 +340,7 @@ function OnboardingPage() {
               Founder Mode
             </Link>
           )}
+
 
           {finished && (
             <Link
@@ -327,13 +354,20 @@ function OnboardingPage() {
         </aside>
 
         <div className="space-y-8">
-        {isOwnerTrack && (finished || stage.chapter.includes("Launch")) && (
+        {isOwnerTrack && (
           <LaunchReadiness
+            eyebrow="Commissioning Dashboard"
+            heading="Platform Readiness"
             completedStageIds={Object.keys(data?.stageProgress ?? {}).filter(
               (id) => trackOf(id) === "owner",
             )}
+            onSelectStage={async (stageId) => {
+              await jumpStage({ data: { stageId } });
+              await refetch();
+            }}
           />
         )}
+
 
         {/* Conversation */}
         <section className="min-h-[70vh] rounded-sm border border-border bg-background/40">

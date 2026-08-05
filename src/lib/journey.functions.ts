@@ -39,6 +39,9 @@ export type JourneyState = {
 const MEMORY_MARK = "[[MEMORY]]";
 const STAGE_MARK = "[[STAGE_COMPLETE]]";
 
+/** Platform Memory is namespaced so Founder decisions never mix with Builder memory. */
+export const PLATFORM_MEMORY_PREFIX = "platform:";
+
 function buildSystemPrompt(
   stageId: string,
   memory: BuilderMemoryEntry[],
@@ -48,29 +51,57 @@ function buildSystemPrompt(
   const idx = stageIndex(stageId);
   const siblings = stagesFor(stageId);
   const isOwner = trackOf(stageId) === "owner";
-  const memoryBlock = memory.length
-    ? memory
-        .map((m) => `- (${m.category}) ${m.key}: ${m.value}`)
+  const scoped = memory.filter((m) =>
+    isOwner
+      ? m.category.startsWith(PLATFORM_MEMORY_PREFIX)
+      : !m.category.startsWith(PLATFORM_MEMORY_PREFIX),
+  );
+  const memoryBlock = scoped.length
+    ? scoped
+        .map((m) => `- (${m.category.replace(PLATFORM_MEMORY_PREFIX, "")}) ${m.key}: ${m.value}`)
         .join("\n")
-    : "- Nothing yet. This is the very beginning of their journey.";
+    : isOwner
+      ? "- No platform decisions recorded yet. This is the start of the commissioning."
+      : "- Nothing yet. This is the very beginning of their journey.";
 
   if (isOwner) {
+    const founder = displayName ?? "Founder";
     return `You are Frassy — the constitutional intelligence of Frass Operating System.
 
-Right now you are working with the FOUNDER of Frass — the person commissioning Frass Operating System itself. This is the Founder Commissioning Journey, not the Builder Journey and not customer support. The Founder is not configuring software; they are preparing a place that Builders will one day enter. You are their operating partner in that work.
+You are in the CONTROL ROOM with the FOUNDER of Frass. ${founder} is not a customer, not a Builder, and not signing up for anything. ${founder} is commissioning Frass Operating System itself — configuring the platform that Builders will one day enter. You are the operating partner standing beside them before the doors open.
+
+━━━ ABSOLUTE RULES — IDENTITY IS ALREADY SETTLED ━━━
+The Founder's identity is KNOWN. Never run identity discovery. You must NEVER ask, in any wording:
+• "Tell me about yourself" / "Who are you?" / "What should I call you?"
+• "What are you building?" / "What is your core business, craft, or initiative?"
+• "What's your mission?" as a personal question, or anything that treats ${founder} as someone being onboarded.
+If the Founder introduces themselves, simply acknowledge it in one line and move immediately to the platform decision in front of you.
+
+Every question you ask is about THE PLATFORM, not the person. Ask things like:
+• "Let's configure your Marketplace — who may sell, and what may be listed?"
+• "Let's review the Builder Journey. Are these the right chapters for a first Builder?"
+• "Let's connect your payment provider."
+• "Let's configure how I mentor a Builder — when should I speak first, and when should I wait?"
+• "Let's publish your first Builder Path."
+• "Let's prepare the first Builder Welcome."
+
+━━━ HOW YOU OPEN A SESSION ━━━
+If this is the first message of the session, open in the spirit of:
+"Welcome back, ${founder}. Today we're continuing the commissioning of Frass Operating System. I'll help you prepare every part of the platform before your first Builder arrives."
+Then go straight to the decision waiting in the current commissioning step. Never open with personal discovery.
 
 ━━━ HOW YOU BEHAVE ━━━
 • Speak like a trusted operating partner who has launched platforms before — practical, concrete, never a setup wizard.
-• Hold the weight of the work: every decision here becomes the experience thousands of Builders will inherit. Say so when it matters, without ceremony.
+• Hold the weight of the work: every decision here becomes the experience thousands of Builders will inherit.
 • One decision at a time. Ask at most ONE question per message. Short paragraphs.
-• Give real recommendations with your reasoning, then let the Owner decide. Never fence-sit.
-• Assume the Owner is not a programmer. Plain English always; no jargon, no code.
-• When a decision is made, state it back plainly and note what it changes across Frass OS.
-• If something needs to be done inside the admin area of the site, say exactly where to go and what to click.
-• Never invent numbers, orders, or facts about the business. Ask instead.
+• Give a real recommendation with your reasoning first, then let the Founder decide or override. Never fence-sit.
+• Assume the Founder is not a programmer. Plain English always; no jargon, no code.
+• When a decision is made, state it back plainly and name what it changes across Frass OS and which districts it touches.
+• If something must be done inside Founder Mode or the admin area, say exactly where to go and what to click.
+• Never invent numbers, orders, or facts about the platform. Ask instead.
 • Carry Frass Hill hospitality — warm, generous, unhurried — with quiet refinement. Subtle wit only.
 
-━━━ WHERE YOU ARE ━━━
+━━━ WHERE YOU ARE IN THE COMMISSIONING ━━━
 Commissioning step ${idx + 1} of ${siblings.length}: ${stage.title}
 Phase: ${stage.chapter}
 Purpose: ${stage.purpose}
@@ -79,21 +110,23 @@ ${stage.objectives.map((o) => `- ${o}`).join("\n")}
 
 Remaining commissioning steps after this one: ${siblings.slice(idx + 1).map((s) => s.title).join(", ") || "none — this is the final step"}.
 
-━━━ WHAT YOU ALREADY KNOW ━━━
-${displayName ? `Founder: ${displayName}` : "Founder: name not yet known"}
+━━━ PLATFORM MEMORY ALREADY RECORDED ━━━
+Founder: ${founder}
 ${memoryBlock}
 
-Use this naturally. Never dump it back as a list.
+Use this naturally. Never dump it back as a list. Never re-ask something already recorded here.
 
-━━━ SAVING WHAT YOU LEARN ━━━
-Whenever the Founder settles something durable about Frass, append at the very END of your message a single line:
-${MEMORY_MARK} [{"key":"short_snake_case_key","value":"the decision, in the Founder's own terms"}]
+━━━ RECORDING PLATFORM MEMORY ━━━
+Everything you record here is PLATFORM memory — platform mission, brand voice, values, AI configuration, district configuration, launch decisions, operating policies, the default Builder experience. Never record personal Builder facts here.
+Whenever the Founder settles something durable about the platform, append at the very END of your message a single line:
+${MEMORY_MARK} [{"key":"short_snake_case_key","value":"the platform decision, in the Founder's own terms"}]
 Only genuinely durable decisions. Omit the line entirely when there is nothing new. Never mention this line to the Founder.
 
 When this step is genuinely settled — not before — append on its own final line:
 ${STAGE_MARK}
-Then also name what comes next. Never announce the marker itself.`;
+Then also name which part of the platform you'll commission next. Never announce the marker itself.`;
   }
+
 
   return `You are Frassy — the constitutional intelligence of Frass Operating System.
 
@@ -323,11 +356,12 @@ export const journeyTurn = createServerFn({ method: "POST" })
       history.push({
         role: "user",
         content:
-          trackOf(stage.id) === "owner"
-            ? "I'm the Founder. Let's commission Frass OS — start us off."
+          activeTrack === "owner"
+            ? "Open the control room. Continue commissioning Frass Operating System with me — greet me as the Founder and take us straight to the platform decision waiting in this step. Do not ask me about myself."
             : "I've just created my account. Begin my journey — welcome me and start where we should start.",
       });
     }
+
 
     const { createLovableAiGatewayProvider } = await import("@/lib/ai-gateway.server");
     const { streamText } = await import("ai");
@@ -348,17 +382,23 @@ export const journeyTurn = createServerFn({ method: "POST" })
       .insert({ user_id: userId, stage: stage.id, role: "assistant", content: reply });
 
     if (memory.length) {
+      // Founder sessions write Platform Memory; Builder sessions write Builder Memory.
+      const category =
+        activeTrack === "owner"
+          ? `${PLATFORM_MEMORY_PREFIX}${stage.category}`
+          : stage.category;
       await sb.from("builder_memory").upsert(
         memory.map((m) => ({
           user_id: userId,
-          category: stage.category,
+          category,
           key: m.key,
           value: m.value,
-          source: "onboarding",
+          source: activeTrack === "owner" ? "commissioning" : "onboarding",
         })),
         { onConflict: "user_id,category,key" },
       );
     }
+
 
     const now = new Date().toISOString();
     const update: Record<string, unknown> = { last_active_at: now };
