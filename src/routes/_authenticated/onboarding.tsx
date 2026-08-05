@@ -136,11 +136,12 @@ function OnboardingPage() {
       tone: "welcome",
       onDone: () => {
         setSpeaking(false);
-        // Voice only: hand the floor straight back to the speaker.
-        if (modeRef.current === "voice_only") dictationRef.current.start();
+        // Continuous conversation: hand the floor straight back to the speaker.
+        if (modeRef.current !== "text") dictationRef.current.start();
       },
     });
   };
+
 
   const send = async (text: string, opening = false) => {
     if (busy) return;
