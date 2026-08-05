@@ -1412,40 +1412,70 @@ export type Database = {
       }
       profiles: {
         Row: {
+          avatar_url: string | null
+          bio: string | null
           birthday: string | null
+          builder_stage: string
           created_at: string
+          display_name: string | null
           email: string | null
           favorite_categories: string[] | null
           full_name: string | null
           gender: string | null
+          handle: string | null
           id: string
+          is_public: boolean
+          last_seen_at: string | null
           newsletter_opt_in: boolean
+          onboarding_completed_at: string | null
+          preferences: Json
+          primary_district: string | null
           social_followed: boolean
           style_preferences: string[] | null
           updated_at: string
         }
         Insert: {
+          avatar_url?: string | null
+          bio?: string | null
           birthday?: string | null
+          builder_stage?: string
           created_at?: string
+          display_name?: string | null
           email?: string | null
           favorite_categories?: string[] | null
           full_name?: string | null
           gender?: string | null
+          handle?: string | null
           id: string
+          is_public?: boolean
+          last_seen_at?: string | null
           newsletter_opt_in?: boolean
+          onboarding_completed_at?: string | null
+          preferences?: Json
+          primary_district?: string | null
           social_followed?: boolean
           style_preferences?: string[] | null
           updated_at?: string
         }
         Update: {
+          avatar_url?: string | null
+          bio?: string | null
           birthday?: string | null
+          builder_stage?: string
           created_at?: string
+          display_name?: string | null
           email?: string | null
           favorite_categories?: string[] | null
           full_name?: string | null
           gender?: string | null
+          handle?: string | null
           id?: string
+          is_public?: boolean
+          last_seen_at?: string | null
           newsletter_opt_in?: boolean
+          onboarding_completed_at?: string | null
+          preferences?: Json
+          primary_district?: string | null
           social_followed?: boolean
           style_preferences?: string[] | null
           updated_at?: string

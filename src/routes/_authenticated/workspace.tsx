@@ -154,6 +154,19 @@ function WorkspacePage() {
             <div className="text-center text-[10px] uppercase tracking-[0.3em] text-[color:var(--gold)]">
               Choose your workspace
             </div>
+            <Link to="/workspace/profile">
+              <div className="flex items-center justify-between rounded-xl border border-border/70 bg-background/70 px-5 py-4 backdrop-blur transition hover:border-[color:var(--gold)]">
+                <div>
+                  <div className="font-display text-lg">Builder Identity</div>
+                  <div className="text-xs text-muted-foreground">
+                    Your public profile, handle, and builder stage.
+                  </div>
+                </div>
+                <div className="text-[10px] uppercase tracking-[0.3em] text-[color:var(--gold)]">
+                  Edit →
+                </div>
+              </div>
+            </Link>
             <Link to="/workspace/insights">
               <div className="flex items-center justify-between rounded-xl border border-border/70 bg-background/70 px-5 py-4 backdrop-blur transition hover:border-[color:var(--gold)]">
                 <div>
