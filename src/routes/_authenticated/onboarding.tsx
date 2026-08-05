@@ -339,7 +339,40 @@ function OnboardingPage() {
             </div>
             <h2 className="mt-2 font-display text-2xl">{stage.title}</h2>
             <p className="mt-1 text-sm text-muted-foreground">{stage.purpose}</p>
+
+            <div className="mt-4 flex flex-wrap items-center gap-2">
+              <span className="text-[10px] uppercase tracking-[0.28em] text-muted-foreground">
+                How we talk
+              </span>
+              {(["text", "voice_text", "voice_only"] as const).map((m) => (
+                <button
+                  key={m}
+                  type="button"
+                  onClick={() => chooseMode(m)}
+                  className={`rounded-sm border px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.2em] transition ${
+                    mode === m
+                      ? "border-[color:var(--gold)] bg-[color:var(--gold)]/10 text-[color:var(--gold)]"
+                      : "border-border text-muted-foreground hover:text-foreground"
+                  }`}
+                >
+                  {MODE_LABELS[m]}
+                </button>
+              ))}
+              {speaking && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    stopSpeaking();
+                    setSpeaking(false);
+                  }}
+                  className="rounded-sm border border-border px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground hover:text-foreground"
+                >
+                  Stop voice
+                </button>
+              )}
+            </div>
           </header>
+
 
           <div className="space-y-6 px-6 py-8">
             {isLoading && (
