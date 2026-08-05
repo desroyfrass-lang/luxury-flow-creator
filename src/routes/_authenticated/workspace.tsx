@@ -154,6 +154,19 @@ function WorkspacePage() {
             <div className="text-center text-[10px] uppercase tracking-[0.3em] text-[color:var(--gold)]">
               Choose your workspace
             </div>
+            <Link to="/onboarding">
+              <div className="flex items-center justify-between rounded-xl border border-border/70 bg-background/70 px-5 py-4 backdrop-blur transition hover:border-[color:var(--gold)]">
+                <div>
+                  <div className="font-display text-lg">Your Builder Journey</div>
+                  <div className="text-xs text-muted-foreground">
+                    Continue setting up your Frass OS with Frassy. Progress saves automatically.
+                  </div>
+                </div>
+                <div className="text-[10px] uppercase tracking-[0.3em] text-[color:var(--gold)]">
+                  Resume →
+                </div>
+              </div>
+            </Link>
             <Link to="/workspace/profile">
               <div className="flex items-center justify-between rounded-xl border border-border/70 bg-background/70 px-5 py-4 backdrop-blur transition hover:border-[color:var(--gold)]">
                 <div>
