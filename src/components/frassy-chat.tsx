@@ -86,7 +86,7 @@ export function FrassyChat() {
 
   const cartContext = items.length
     ? items
-        .map((i) => `${i.quantity}× ${i.product.title} (${i.variantTitle})`)
+        .map((i) => `${i.quantity}× ${i.product.node.title} (${i.variantTitle})`)
         .join(", ")
         .slice(0, 500)
     : "";
@@ -175,7 +175,7 @@ export function FrassyChat() {
         onClick={() => setOpen(true)}
         className="fixed bottom-5 right-5 z-50 flex h-14 w-14 items-center justify-center rounded-full border border-[color:var(--gold)]/50 bg-[#0b0c0e] shadow-lg transition-transform hover:scale-105"
       >
-        <img src={symbolAsset.src} alt="" className="h-7 w-7 object-contain" />
+        <img src={symbolAsset.url} alt="" className="h-7 w-7 object-contain" />
       </button>
     );
   }
@@ -184,7 +184,7 @@ export function FrassyChat() {
     <div className="fixed bottom-5 right-5 z-50 flex h-[min(620px,80vh)] w-[min(400px,calc(100vw-2.5rem))] flex-col overflow-hidden rounded-lg border border-white/10 bg-[#0b0c0e] shadow-2xl">
       <header className="flex items-center justify-between border-b border-white/10 px-4 py-3">
         <div className="flex items-center gap-3">
-          <img src={symbolAsset.src} alt="" className="h-6 w-6 object-contain" />
+          <img src={symbolAsset.url} alt="" className="h-6 w-6 object-contain" />
           <div>
             <div className="text-sm text-white">Frassy</div>
             <div className="text-[10px] uppercase tracking-[0.3em] text-white/40">
