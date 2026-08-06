@@ -9,6 +9,7 @@ import { SentencePump } from "./sentence-pump";
 export type FrassyStreamResult = {
   reply: string;
   cards?: { products?: unknown[]; order?: unknown } | undefined;
+  diagnostics?: Record<string, unknown>;
   error?: string;
 };
 
@@ -66,6 +67,7 @@ export async function streamFrassyChat(
         replaced?: boolean;
         error?: string;
         cards?: FrassyStreamResult["cards"];
+        diagnostics?: Record<string, unknown>;
       };
       try {
         payload = JSON.parse(raw);
@@ -84,7 +86,11 @@ export async function streamFrassyChat(
         } else {
           pump.flush();
         }
-        final = { reply: payload.reply ?? streamed, cards: payload.cards };
+        final = {
+          reply: payload.reply ?? streamed,
+          cards: payload.cards,
+          diagnostics: payload.diagnostics,
+        };
       } else if (payload.type === "error") {
         pump.reset();
         final = { reply: "", error: payload.error };
