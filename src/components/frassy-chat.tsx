@@ -11,7 +11,13 @@ import {
   type FrassyPrefs,
   type FrassyCommunicationMode,
 } from "@/hooks/use-frassy-prefs";
-import { canSpeak, speakLine, stopSpeaking, VOICE_PROFILE_LABELS } from "@/lib/frassy-voice";
+import {
+  canSpeak,
+  createSpeechSession,
+  stopSpeaking,
+  VOICE_PROFILE_LABELS,
+} from "@/lib/frassy-voice";
+import { streamFrassyChat } from "@/lib/voice/chat-stream";
 import { installAudioUnlockListener, isAudioUnlocked, unlockAudio } from "@/lib/audio-unlock";
 import { useVoiceDictation } from "@/hooks/use-voice-dictation";
 import { FrassyConsentModal } from "@/components/frassy-consent";
