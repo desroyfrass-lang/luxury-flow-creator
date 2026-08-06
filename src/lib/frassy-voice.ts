@@ -165,9 +165,15 @@ export function createSpeechSession(opts: SpeakOptions): SpeechSession {
         failed = true;
         // eslint-disable-next-line no-console
         console.warn("[frassy] streaming TTS fallback:", err);
-        onBlocked?.(err instanceof Error && err.name === "NotAllowedError"
-          ? "autoplay-blocked"
-          : "tts-unavailable");
+        const msg = err instanceof Error ? `${err.name} ${err.message}` : String(err);
+        onBlocked?.(
+          /NotAllowedError|audio-context-unavailable/.test(msg)
+            ? "browser-blocked-audio"
+            : /Permission|denied/i.test(msg)
+              ? "permission-denied"
+              : "tts-error",
+        );
+
       }
       await new Promise<void>((resolve) => fallbackSpeak(sentence, prefs, resolve, () => {}));
     }
