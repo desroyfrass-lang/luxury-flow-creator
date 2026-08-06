@@ -257,8 +257,11 @@ export const Route = createFileRoute("/api/chat")({
             }
           }
 
+          // Continuation, never a re-introduction: a mid-session welcome reads
+          // as the conversation restarting.
           const founderFallback =
-            "Welcome back, Nicky. Your identity and business are already settled. Continue the 8-hour Frass OS commissioning in the Founder Control Room, where we configure the platform one decision at a time.";
+            "Let's stay with the platform decision in front of us. What would you like Frass OS to configure next?";
+
           const reply =
             body.experienceContext === "founder" && isFounderIdentityDiscovery(result.text)
               ? founderFallback
