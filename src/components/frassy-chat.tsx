@@ -141,6 +141,9 @@ export function FrassyChat() {
           cartContext,
           modeContext: ctx.mode,
           experienceContext: isAdmin ? "founder" : "storefront",
+          // Actual runtime interaction mode, so Frassy never misstates her capabilities.
+          interactionMode: spoken ? "voice_and_text" : "text",
+          voiceAvailable: true,
           stream: false,
         }),
       });
