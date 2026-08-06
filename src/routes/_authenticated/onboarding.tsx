@@ -25,7 +25,9 @@ import { LaunchReadiness } from "@/components/launch-readiness";
 import { COMMISSIONING_PHASES } from "@/lib/commissioning";
 import { useFrassyPrefs } from "@/hooks/use-frassy-prefs";
 import { speakLine, stopSpeaking } from "@/lib/frassy-voice";
+import { installAudioUnlockListener, isAudioUnlocked, unlockAudio } from "@/lib/audio-unlock";
 import { useVoiceDictation } from "@/hooks/use-voice-dictation";
+
 
 type ConversationMode = "text" | "voice_text" | "voice_only";
 const MODE_LABELS: Record<ConversationMode, string> = {
