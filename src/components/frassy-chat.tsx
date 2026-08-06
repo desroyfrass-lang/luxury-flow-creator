@@ -840,42 +840,18 @@ export function FrassyChat() {
             )}
           </div>
 
-          {/* Composer */}
-          <form
-            onSubmit={(e) => {
-              e.preventDefault();
-              send(input);
-            }}
-            className="flex items-end gap-2 border-t border-border bg-background px-3 py-2"
-          >
-            {prefs.communicationMode !== "voice_only" && <textarea
-              ref={inputRef}
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === "Enter" && !e.shiftKey) {
-                  e.preventDefault();
-                  send(input);
-                }
-              }}
-              rows={1}
-              placeholder="Ask Frassy anything…"
-              className="max-h-32 flex-1 resize-none rounded-xl border border-border bg-background px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-foreground/20"
-            />}
-            {prefs.communicationMode !== "voice_only" && <button
-              type="submit"
-              disabled={loading || !input.trim()}
-              className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-foreground text-background disabled:opacity-40"
-              aria-label="Send"
-            >
-              <Send className="h-4 w-4" />
-            </button>}
-            {prefs.communicationMode === "voice_only" && (
-              <div className="flex min-h-9 flex-1 items-center justify-center text-xs text-muted-foreground">
-                {speaking ? "Frassy is speaking…" : dictation.interim || "Listening…"}
-              </div>
-            )}
-          </form>
+          {/* Builder Composer */}
+          <BuilderComposer
+            value={input}
+            onChange={setInput}
+            onSend={(text, files) => send(text, files)}
+            disabled={loading}
+            mode={prefs.communicationMode}
+            dictation={dictation}
+            canSaveToVault={journey.signedIn}
+            hint={speaking ? "Frassy is speaking…" : undefined}
+          />
+
         </div>
       )}
     </>
