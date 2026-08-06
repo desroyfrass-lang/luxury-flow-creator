@@ -219,18 +219,6 @@ function OnboardingPage() {
   };
 
 
-  /** User tapped "Let Frassy speak" — a real gesture, so unlock and replay. */
-  const enableVoicePlayback = () => {
-    unlockAudio();
-    setVoiceBlocked(false);
-    setBlockReason(null);
-    const text =
-      lastSpokenRef.current ||
-      [...messagesRef.current].reverse().find((m) => m.role === "assistant")?.content ||
-      "";
-    if (text) speakReply(text);
-    else dictationRef.current.start();
-  };
 
   const send = async (text: string, opening = false) => {
     if (busy) return;
