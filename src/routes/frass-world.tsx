@@ -1,0 +1,203 @@
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { GatewayNav } from "@/components/gateway-nav";
+import kicksImg from "@/assets/district-kicks.jpg";
+import hillImg from "@/assets/district-hill.jpg";
+import luxuryImg from "@/assets/district-luxury.jpg";
+import kidsImg from "@/assets/district-kids.jpg";
+
+export const Route = createFileRoute("/frass-world")({
+  head: () => ({
+    meta: [
+      { title: "Explore Frass World — The Living Ecosystem Map" },
+      {
+        name: "description",
+        content:
+          "Enter FrassKicks District, Frass Hill, Frass Luxury House and Kids Valley — the four entrances of the Frass ecosystem.",
+      },
+      { property: "og:title", content: "Explore Frass World" },
+      {
+        property: "og:description",
+        content: "Four district entrances: FrassKicks, Frass Hill, Luxury House and Kids Valley.",
+      },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
+    ],
+  }),
+  component: FrassWorldPage,
+});
+
+function FrassWorldPage() {
+  return (
+    <div className="min-h-screen bg-background">
+      <GatewayNav mode="world" />
+
+      <section className="mx-auto max-w-[1600px] px-6 pt-12 lg:px-10">
+        <span className="text-[10px] uppercase tracking-[0.35em] text-[color:var(--hill-gold)]">
+          The living ecosystem map
+        </span>
+        <h1 className="mt-3 font-display text-4xl uppercase leading-[0.95] md:text-7xl">
+          Choose your entrance.
+        </h1>
+        <p className="mt-4 max-w-xl text-sm text-muted-foreground">
+          Four districts. One world. Every door opens onto people first.
+        </p>
+      </section>
+
+      <div className="mx-auto grid max-w-[1600px] gap-6 px-6 py-12 lg:grid-cols-2 lg:px-10">
+        <District
+          id="kicks"
+          image={kicksImg}
+          alt="Lush Jamaican street opening into a market boulevard with a signature archway"
+          emoji="🌲"
+          title="FrassKicks District"
+          copy="Through lush Jamaican scenery, left into a street market bounded by the signature archway."
+          meta="Retail marketplace & department store"
+          to="/shop-frass"
+          accent="var(--gold)"
+        />
+        <District
+          id="hill"
+          image={hillImg}
+          alt="Hill path past an outdoor cafe, a domino game in the shade and an acoustic guitarist"
+          emoji="🏛️"
+          title="Frass Hill"
+          copy="Up the hill path — the café, the domino table, the guitar under the lantern light."
+          meta="Community Square · For Us · Workspaces · Opportunity · Foundation · Vault"
+          to="/welcome-hall"
+          accent="var(--hill-gold)"
+          badge="Builder HQ live"
+        />
+        <District
+          id="luxury"
+          image={luxuryImg}
+          alt="Botanical estate garden with water feature and stone path leading to a grand estate"
+          emoji="🌸"
+          title="Frass Luxury House"
+          copy="Seasonal gardens, water features, the wine pavilion, then the estate doors."
+          meta="Bespoke apparel · high-end footwear · leather goods"
+          to="/capsules"
+          accent="var(--luxe-linen)"
+          portals={[
+            { label: "Men's Luxury Entrance", to: "/frass-drip/men" },
+            { label: "Women's Luxury Entrance", to: "/frass-drip/women" },
+          ]}
+        />
+        <District
+          id="kids"
+          image={kidsImg}
+          alt="Bright green valley with children playing and a colourful family neighbourhood entrance"
+          emoji="🧒"
+          title="Kids Valley"
+          copy="Down into the bright valley — juice vendors, family treats, children playing in the distance."
+          meta="Boutique shopping and experiential Kids World"
+          to="/frass-kicks"
+          accent="var(--kids-coral)"
+          portals={[
+            { label: "🧸 Kids Boutique", to: "/frass-kicks" },
+            { label: "🌈 Kids World", to: "/academy" },
+          ]}
+        />
+      </div>
+
+      <section className="mx-auto max-w-[1600px] px-6 pb-24 lg:px-10">
+        <h2 className="text-[10px] uppercase tracking-[0.35em] text-muted-foreground">
+          Kids World — by age group
+        </h2>
+        <div className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          {[
+            { age: "Ages 0–3", copy: "Sensory play & early discovery.", color: "var(--kids-coral)" },
+            { age: "Ages 3–6", copy: "Storytelling, imagination & basic concepts.", color: "var(--kids-turquoise)" },
+            { age: "Ages 6–12", copy: "Creative projects & interactive games.", color: "var(--kids-sun)" },
+            { age: "Ages 12+", copy: "Leadership, youth entrepreneurship, financial literacy & Builder thinking.", color: "var(--hill-gold)" },
+          ].map((a) => (
+            <div key={a.age} className="rounded-3xl border border-border bg-card p-6">
+              <span className="block h-1 w-10 rounded-full" style={{ background: a.color }} />
+              <h3 className="mt-4 font-display text-xl uppercase">{a.age}</h3>
+              <p className="mt-2 text-sm text-muted-foreground">{a.copy}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+    </div>
+  );
+}
+
+function District({
+  id,
+  image,
+  alt,
+  emoji,
+  title,
+  copy,
+  meta,
+  to,
+  accent,
+  badge,
+  portals,
+}: {
+  id: string;
+  image: string;
+  alt: string;
+  emoji: string;
+  title: string;
+  copy: string;
+  meta: string;
+  to: string;
+  accent: string;
+  badge?: string;
+  portals?: { label: string; to: string }[];
+}) {
+  return (
+    <article
+      id={id}
+      className="group relative overflow-hidden rounded-[2rem] border border-border bg-card transition duration-500 hover:-translate-y-1.5"
+      style={{ boxShadow: `0 30px 90px -50px ${accent}` }}
+    >
+      <Link to={to} aria-label={`${title} — ${meta}`} className="block">
+        <div className="relative h-64 overflow-hidden md:h-80">
+          <img
+            src={image}
+            alt={alt}
+            loading="lazy"
+            width={1280}
+            height={960}
+            className="h-full w-full object-cover transition-transform duration-[1200ms] ease-out will-change-transform group-hover:scale-105"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/25 to-transparent" />
+          {badge && (
+            <span
+              className="absolute right-4 top-4 rounded-full px-3 py-1 text-[9px] font-bold uppercase tracking-[0.22em] text-black"
+              style={{ background: accent }}
+            >
+              {badge}
+            </span>
+          )}
+          <div className="absolute inset-x-0 bottom-0 p-6">
+            <span className="text-2xl">{emoji}</span>
+            <h2 className="mt-1 font-display text-3xl uppercase leading-none text-white md:text-4xl">
+              {title}
+            </h2>
+            <p className="mt-2 max-w-md text-sm text-white/75">{copy}</p>
+          </div>
+        </div>
+      </Link>
+      <div className="flex flex-wrap items-center justify-between gap-3 px-6 py-5">
+        <span className="min-w-0 text-[10px] uppercase tracking-[0.22em] text-muted-foreground">
+          {meta}
+        </span>
+        <div className="flex shrink-0 flex-wrap gap-2">
+          {(portals ?? [{ label: "Enter", to }]).map((p) => (
+            <Link
+              key={p.label}
+              to={p.to}
+              className="rounded-full border px-4 py-2 text-[10px] font-bold uppercase tracking-[0.22em] transition hover:bg-foreground/5"
+              style={{ borderColor: accent, color: accent }}
+            >
+              {p.label}
+            </Link>
+          ))}
+        </div>
+      </div>
+    </article>
+  );
+}

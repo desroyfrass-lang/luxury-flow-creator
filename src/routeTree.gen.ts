@@ -17,6 +17,7 @@ import { Route as MusicMediaRouteImport } from './routes/music-media'
 import { Route as McpRouteImport } from './routes/mcp'
 import { Route as LookbookRouteImport } from './routes/lookbook'
 import { Route as GatewayRouteImport } from './routes/gateway'
+import { Route as FrassWorldRouteImport } from './routes/frass-world'
 import { Route as FrassKicksRouteImport } from './routes/frass-kicks'
 import { Route as FrassDripRouteImport } from './routes/frass-drip'
 import { Route as CheckoutRouteImport } from './routes/checkout'
@@ -136,6 +137,11 @@ const LookbookRoute = LookbookRouteImport.update({
 const GatewayRoute = GatewayRouteImport.update({
   id: '/gateway',
   path: '/gateway',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FrassWorldRoute = FrassWorldRouteImport.update({
+  id: '/frass-world',
+  path: '/frass-world',
   getParentRoute: () => rootRouteImport,
 } as any)
 const FrassKicksRoute = FrassKicksRouteImport.update({
@@ -571,6 +577,7 @@ export interface FileRoutesByFullPath {
   '/checkout': typeof CheckoutRoute
   '/frass-drip': typeof FrassDripRouteWithChildren
   '/frass-kicks': typeof FrassKicksRouteWithChildren
+  '/frass-world': typeof FrassWorldRoute
   '/gateway': typeof GatewayRoute
   '/lookbook': typeof LookbookRouteWithChildren
   '/mcp': typeof McpRoute
@@ -654,6 +661,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/checkout': typeof CheckoutRoute
+  '/frass-world': typeof FrassWorldRoute
   '/gateway': typeof GatewayRoute
   '/mcp': typeof McpRoute
   '/music-media': typeof MusicMediaRoute
@@ -738,6 +746,7 @@ export interface FileRoutesById {
   '/checkout': typeof CheckoutRoute
   '/frass-drip': typeof FrassDripRouteWithChildren
   '/frass-kicks': typeof FrassKicksRouteWithChildren
+  '/frass-world': typeof FrassWorldRoute
   '/gateway': typeof GatewayRoute
   '/lookbook': typeof LookbookRouteWithChildren
   '/mcp': typeof McpRoute
@@ -829,6 +838,7 @@ export interface FileRouteTypes {
     | '/checkout'
     | '/frass-drip'
     | '/frass-kicks'
+    | '/frass-world'
     | '/gateway'
     | '/lookbook'
     | '/mcp'
@@ -912,6 +922,7 @@ export interface FileRouteTypes {
     | '/'
     | '/auth'
     | '/checkout'
+    | '/frass-world'
     | '/gateway'
     | '/mcp'
     | '/music-media'
@@ -995,6 +1006,7 @@ export interface FileRouteTypes {
     | '/checkout'
     | '/frass-drip'
     | '/frass-kicks'
+    | '/frass-world'
     | '/gateway'
     | '/lookbook'
     | '/mcp'
@@ -1086,6 +1098,7 @@ export interface RootRouteChildren {
   CheckoutRoute: typeof CheckoutRoute
   FrassDripRoute: typeof FrassDripRouteWithChildren
   FrassKicksRoute: typeof FrassKicksRouteWithChildren
+  FrassWorldRoute: typeof FrassWorldRoute
   GatewayRoute: typeof GatewayRoute
   LookbookRoute: typeof LookbookRouteWithChildren
   McpRoute: typeof McpRoute
@@ -1162,6 +1175,13 @@ declare module '@tanstack/react-router' {
       path: '/gateway'
       fullPath: '/gateway'
       preLoaderRoute: typeof GatewayRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/frass-world': {
+      id: '/frass-world'
+      path: '/frass-world'
+      fullPath: '/frass-world'
+      preLoaderRoute: typeof FrassWorldRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/frass-kicks': {
@@ -2043,6 +2063,7 @@ const rootRouteChildren: RootRouteChildren = {
   CheckoutRoute: CheckoutRoute,
   FrassDripRoute: FrassDripRouteWithChildren,
   FrassKicksRoute: FrassKicksRouteWithChildren,
+  FrassWorldRoute: FrassWorldRoute,
   GatewayRoute: GatewayRoute,
   LookbookRoute: LookbookRouteWithChildren,
   McpRoute: McpRoute,
