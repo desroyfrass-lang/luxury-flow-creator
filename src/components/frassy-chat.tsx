@@ -182,8 +182,9 @@ export function FrassyChat() {
 
   const dictation = useVoiceDictation(
     (text) => {
-      if (modeRef.current !== "silent") void send(text);
-      else setInput((current) => (current ? `${current} ${text}` : text));
+      // Stop-ship containment: a transcript may fill the composer, but it can
+      // never create a model turn. The Builder must press Send.
+      setInput((current) => (current ? `${current} ${text}` : text));
     },
     {
       // Push-to-interrupt: talking over Frassy stops her instantly.
@@ -272,7 +273,8 @@ export function FrassyChat() {
     setConsentOpen(false);
   };
 
-  // Frassy activation: ~5s after landing, subtle pulse + (optional) spoken greeting.
+  // Frassy activation: ~5s after landing, visual only. Voice is never started
+  // without an explicit Builder turn.
   // Suppressed at checkout, auth, and workspace routes (situational awareness).
   useEffect(() => {
     if (!hydrated || nudged) return;
@@ -315,12 +317,7 @@ export function FrassyChat() {
       setLiveMessage(line);
       setPulse(true);
       window.sessionStorage.setItem(GREETED_STORAGE_KEY, "1");
-      if (speechEnabled) {
-        speakReply(line, "welcome");
-        setTimeout(() => setPulse(false), 9000);
-      } else {
-        setTimeout(() => setPulse(false), 4000);
-      }
+      setTimeout(() => setPulse(false), speechEnabled ? 9000 : 4000);
       setTimeout(() => setGreetingText(null), 9000);
     }, 5000);
     return () => clearTimeout(t);
@@ -382,32 +379,10 @@ export function FrassyChat() {
     if (open) {
       setPulse(false);
       setTimeout(() => inputRef.current?.focus(), 50);
-      if (modeRef.current !== "silent" && !speaking) {
-        const lastReply = [...messagesRef.current]
-          .reverse()
-          .find((message) => message.role === "assistant")?.content;
-        if (lastReply && lastSpokenRef.current !== lastReply) speakReply(lastReply, "welcome");
-      }
     } else {
       dictationRef.current.stop();
     }
   }, [open]);
-
-  // Hands-free conversation: after Frassy finishes, automatically return the floor.
-  useEffect(() => {
-    if (!open || modeRef.current === "silent" || voiceBlocked) return;
-    if (loading || speaking || dictation.listening || !dictation.supported) return;
-    const timer = window.setTimeout(() => dictationRef.current.start(), 900);
-    return () => window.clearTimeout(timer);
-  }, [
-    open,
-    prefs.communicationMode,
-    voiceBlocked,
-    loading,
-    speaking,
-    dictation.listening,
-    dictation.supported,
-  ]);
 
   // Bump visit counter once per browser session for memory-aware greetings.
   useEffect(() => {
@@ -439,11 +414,7 @@ export function FrassyChat() {
     turnAbortRef.current?.abort();
     turnAbortRef.current = turnController;
     setLoading(true);
-    // Keep the microphone alive through thinking and playback. This is the
-    // barge-in channel; closing it here made interruption impossible.
-    if (modeRef.current !== "silent" && !dictationRef.current.listening) {
-      dictationRef.current.start();
-    }
+    dictationRef.current.stop();
     try {
       const cartContext =
         cartCount > 0
@@ -963,7 +934,18 @@ export function FrassyChat() {
             onSend={(text, files) => send(text, files)}
             disabled={loading}
             mode={prefs.communicationMode}
-            dictation={dictation}
+            dictation={{
+              ...dictation,
+              start: () => {
+                interruptedRef.current = true;
+                turnAbortRef.current?.abort();
+                turnAbortRef.current = null;
+                stopSpeaking();
+                setSpeaking(false);
+                setLoading(false);
+                dictation.start();
+              },
+            }}
             canSaveToVault={journey.signedIn}
             thinking={loading}
             speaking={speaking}

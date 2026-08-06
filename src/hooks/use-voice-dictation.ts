@@ -277,7 +277,8 @@ export function useVoiceDictation(
       try {
         const rec = new Ctor();
         rec.lang = "en-US";
-        rec.continuous = true;
+        // Stop-ship containment: one explicit microphone press owns one capture.
+        rec.continuous = false;
         rec.interimResults = true;
         rec.maxAlternatives = 1;
         rec.onresult = (e: any) => {
@@ -289,16 +290,7 @@ export function useVoiceDictation(
           setInterim(live.trim());
         };
         rec.onerror = () => {};
-        rec.onend = () => {
-          // Chrome ends the session periodically; keep the transcript alive.
-          if (activeRef.current) {
-            try {
-              rec.start();
-            } catch {
-              /* noop */
-            }
-          }
-        };
+        rec.onend = () => {};
         recRef.current = rec;
         rec.start();
       } catch {
