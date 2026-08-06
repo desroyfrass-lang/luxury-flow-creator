@@ -4,13 +4,13 @@ import { Search, ChevronDown, KeyRound } from "lucide-react";
 import { CartDrawer } from "./cart-drawer";
 import fullLogo from "@/assets/frass-logo-full.asset.json";
 
-const CATEGORIES = [
+const CATEGORIES: { label: string; to: string; editorial?: boolean }[] = [
   { label: "Women", to: "/frass-drip/women" },
   { label: "Men", to: "/frass-drip/men" },
   { label: "Plus Size", to: "/bare-drip", editorial: true },
   { label: "Frass Luxury House", to: "/capsules" },
   { label: "New Looks", to: "/social-media-virals" },
-] as const;
+];
 
 const CURRENCIES = ["USD", "GBP", "EUR", "JMD", "CAD"];
 

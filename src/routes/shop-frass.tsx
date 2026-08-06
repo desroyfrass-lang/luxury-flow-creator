@@ -100,10 +100,8 @@ function ShopFrassPage() {
               aria-label={`${d.title} — ${d.copy}`}
               className="group relative overflow-hidden rounded-3xl border border-border bg-card p-6 transition duration-300 hover:-translate-y-1.5 hover:border-[color:var(--gold)]"
             >
-              <span
-                className="block h-1 w-12 rounded-full"
-                style={{ background: `var(--${""}${d.accent.replace("var(--", "").replace(")", "")})` }}
-              />
+              <span className="block h-1 w-12 rounded-full" style={{ background: d.accent }} />
+
               <h3 className="mt-5 font-display text-2xl uppercase leading-none">{d.title}</h3>
               <p className="mt-3 text-sm text-muted-foreground">{d.copy}</p>
               <span className="mt-6 inline-block text-[10px] uppercase tracking-[0.28em] text-muted-foreground transition group-hover:text-[color:var(--gold)]">
