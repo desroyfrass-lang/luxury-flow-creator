@@ -489,7 +489,22 @@ function OnboardingPage() {
                 </button>
               )}
             </div>
+
+            {mode !== "text" && voiceBlocked && (
+              <button
+                type="button"
+                onClick={enableVoicePlayback}
+                className="mt-3 w-full rounded-sm border border-[color:var(--gold)] bg-[color:var(--gold)]/10 px-4 py-3 text-left text-xs text-[color:var(--gold)] transition hover:bg-[color:var(--gold)]/20"
+              >
+                <span className="font-bold uppercase tracking-[0.24em]">Tap to let Frassy speak</span>
+                <span className="mt-1 block normal-case tracking-normal text-muted-foreground">
+                  Your browser blocks sound until you interact with the page once. One tap and the
+                  conversation runs hands-free from here.
+                </span>
+              </button>
+            )}
           </header>
+
 
 
           <div className="space-y-6 px-6 py-8">
