@@ -244,7 +244,9 @@ function OnboardingPage() {
 
   // First session on this track: let Frassy open the conversation.
   useEffect(() => {
-    if (isLoading || roleLoading || !data || openedRef.current) return;
+    // Wait for the saved voice preference, otherwise the opening line is
+    // generated while mode is still "text" and is never spoken.
+    if (isLoading || roleLoading || !prefsHydrated || !data || openedRef.current) return;
     if (isAdmin === true && track !== "owner") return;
     // Founder corrections and legacy Builder-style prompts must not suppress
     // the deterministic Control Room opening. The server removes contaminated
@@ -252,11 +254,25 @@ function OnboardingPage() {
     const hasValidAssistantOpening = (data.messages ?? []).some(
       (m: JourneyMessage) => trackOf(m.stage) === track && m.role === "assistant",
     );
+    openedRef.current = true;
     if (!hasValidAssistantOpening) {
-      openedRef.current = true;
       void send("", true);
+    } else if (modeRef.current !== "text") {
+      // Returning to a voice session: Frassy greets out loud with where we left off.
+      const lastReply = [...messagesRef.current].reverse().find((m) => m.role === "assistant");
+      if (lastReply) speakReply(lastReply.content);
     }
-  }, [isLoading, roleLoading, data, isAdmin, track]);
+  }, [isLoading, roleLoading, prefsHydrated, data, isAdmin, track]);
+
+  // Hands-free loop: whenever Frassy is done and nothing is happening,
+  // the microphone reopens on its own in the voice modes.
+  useEffect(() => {
+    if (mode === "text" || voiceBlocked) return;
+    if (busy || speaking || dictation.listening || !dictation.supported) return;
+    const t = window.setTimeout(() => dictationRef.current.start(), 400);
+    return () => window.clearTimeout(t);
+  }, [mode, voiceBlocked, busy, speaking, dictation.listening, dictation.supported]);
+
 
 
   const onSubmit = (e: React.FormEvent) => {
