@@ -47,6 +47,8 @@ export type VoiceDictation = {
   status: DictationStatus;
   /** 0–1 input level, for the live meter. */
   level: number;
+  lastTranscript: string;
+  transcriptSource: "User" | "Assistant Echo" | "Noise" | "Discarded" | "—";
   start: () => void;
   stop: () => void;
 };
@@ -61,6 +63,8 @@ export type VoiceDictationOptions = {
    * window is speaker echo, not the Builder, and is discarded.
    */
   isMuted?: () => boolean;
+  /** Return true when a transcript matches Frassy's current spoken output. */
+  isAssistantEcho?: (text: string) => boolean;
 };
 
 /**
@@ -144,6 +148,8 @@ export function useVoiceDictation(
   const [interim, setInterim] = useState("");
   const [status, setStatus] = useState<DictationStatus>("idle");
   const [level, setLevel] = useState(0);
+  const [lastTranscript, setLastTranscript] = useState("");
+  const [transcriptSource, setTranscriptSource] = useState<VoiceDictation["transcriptSource"]>("—");
 
   const finalRef = useRef(onFinal);
   finalRef.current = onFinal;
@@ -151,6 +157,8 @@ export function useVoiceDictation(
   speechStartRef.current = options.onSpeechStart;
   const mutedRef = useRef(options.isMuted);
   mutedRef.current = options.isMuted;
+  const echoRef = useRef(options.isAssistantEcho);
+  echoRef.current = options.isAssistantEcho;
   const pauseMs = options.pauseMs ?? 700;
 
   const recRef = useRef<SpeechRecognitionLike | null>(null);
@@ -164,6 +172,7 @@ export function useVoiceDictation(
   const silenceMsRef = useRef(0);
   const activeRef = useRef(false);
   const interimTextRef = useRef("");
+  const beganWhileMutedRef = useRef(false);
 
   useEffect(() => {
     setSupported(
@@ -194,6 +203,7 @@ export function useVoiceDictation(
     ctxRef.current = null;
     chunksRef.current = [];
     speakingRef.current = false;
+    beganWhileMutedRef.current = false;
     voicedMsRef.current = 0;
     silenceMsRef.current = 0;
     setLevel(0);
@@ -234,10 +244,25 @@ export function useVoiceDictation(
     }
     const result = text || fallback;
     if (activeRef.current) setStatus("listening");
-    // Discard anything captured while Frassy was talking (speaker echo) and
-    // anything that doesn't look like a real spoken phrase.
-    if (mutedRef.current?.()) return;
-    if (result && isLikelySpeech(result)) finalRef.current(result);
+    setLastTranscript(result);
+    const beganWhileMuted = beganWhileMutedRef.current;
+    beganWhileMutedRef.current = false;
+    if (!result || !isLikelySpeech(result)) {
+      setTranscriptSource("Noise");
+      return;
+    }
+    if (beganWhileMuted && echoRef.current?.(result)) {
+      setTranscriptSource("Assistant Echo");
+      console.info("[frassy] discarded assistant echo transcript", { transcript: result });
+      return;
+    }
+    if (mutedRef.current?.()) {
+      setTranscriptSource("Discarded");
+      console.info("[frassy] discarded transcript while turn was not owned by Builder", { transcript: result });
+      return;
+    }
+    setTranscriptSource("User");
+    finalRef.current(result);
   }, []);
 
   const start = useCallback(() => {
@@ -320,6 +345,7 @@ export function useVoiceDictation(
           if (rms > SPEECH_RMS) {
             if (!speakingRef.current) {
               speakingRef.current = true;
+              beganWhileMutedRef.current = Boolean(mutedRef.current?.());
               setStatus("hearing");
               // Push-to-interrupt: the Builder talking always wins.
               speechStartRef.current?.();
@@ -357,5 +383,5 @@ export function useVoiceDictation(
 
   useEffect(() => () => teardown(), [teardown]);
 
-  return { supported, listening, interim, status, level, start, stop };
+  return { supported, listening, interim, status, level, lastTranscript, transcriptSource, start, stop };
 }
