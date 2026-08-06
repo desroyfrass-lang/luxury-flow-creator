@@ -10,7 +10,6 @@ import {
 } from "@/lib/journey";
 import {
   buildBuilderSystemPrompt,
-  founderControlRoomOpening,
   buildFounderSystemPrompt,
   founderSafetyReply,
   isFounderIdentityDiscovery,
@@ -126,7 +125,7 @@ export const journeyTurn = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((d: unknown) =>
     z
-      .object({ message: z.string(), opening: z.boolean().optional() })
+      .object({ message: z.string().trim().min(1), opening: z.literal(false).optional() })
       .parse(d),
   )
   .handler(async ({ context, data }) => {
@@ -158,11 +157,9 @@ export const journeyTurn = createServerFn({ method: "POST" })
     }
 
     const userText = data.message.trim();
-    if (userText) {
-      await sb
-        .from("builder_journey_messages")
-        .insert({ user_id: userId, stage: stage.id, role: "user", content: userText });
-    }
+    await sb
+      .from("builder_journey_messages")
+      .insert({ user_id: userId, stage: stage.id, role: "user", content: userText });
 
     const { data: profile } = await sb
       .from("profiles")
@@ -173,39 +170,6 @@ export const journeyTurn = createServerFn({ method: "POST" })
       activeTrack === "owner"
         ? "Nicky"
         : profile?.display_name ?? profile?.full_name ?? null;
-
-    // Founder entry is deterministic: do not let a model reinterpret commissioning
-    // as identity discovery before the Control Room is established.
-    if (activeTrack === "owner" && data.opening) {
-      const completedStageIds = Object.keys(state.stageProgress).filter(
-        (id) => trackOf(id) === "owner",
-      );
-      const reply = founderControlRoomOpening(stage.id, completedStageIds, displayName);
-      const { error: openingError } = await sb
-        .from("builder_journey_messages")
-        .insert({ user_id: userId, stage: stage.id, role: "assistant", content: reply });
-      if (openingError) throw new Error(openingError.message);
-      return {
-        reply,
-        stageId: stage.id,
-        movedTo: null,
-        completed: false,
-        remembered: 0,
-        diagnostics: {
-          conversationMode: "Founder",
-          systemPrompt: "founder_control_room",
-          promptVersion: "v4",
-          sessionType: "platform_commissioning",
-          memoryNamespace: "platform",
-          routingDecision: "authenticated admin → owner track",
-          historySource: "platform_session",
-          fallback: "deterministic_opening",
-          identityDiscovery: "disabled",
-          stageId: stage.id,
-          historyMessages: 0,
-        } satisfies ConversationDiagnostics,
-      };
-    }
 
     const history = state.messages
       .filter((message) => trackOf(message.stage) === activeTrack)
@@ -218,16 +182,7 @@ export const journeyTurn = createServerFn({ method: "POST" })
       )
       .slice(-40)
       .map((m) => ({ role: m.role, content: m.content }));
-    if (userText) history.push({ role: "user", content: userText });
-    if (!history.length) {
-      history.push({
-        role: "user",
-        content:
-          activeTrack === "owner"
-            ? "Open the control room. Continue commissioning Frass Operating System with me — greet me as the Founder and take us straight to the platform decision waiting in this step. Do not ask me about myself."
-            : "I've just created my account. Begin my journey — welcome me and start where we should start.",
-      });
-    }
+    history.push({ role: "user", content: userText });
 
 
     const { createLovableAiGatewayProvider } = await import("@/lib/ai-gateway.server");

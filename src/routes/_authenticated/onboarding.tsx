@@ -5,11 +5,9 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { toast } from "sonner";
 import { SiteShell } from "@/components/site-shell";
 import { PageFeedback } from "@/components/page-feedback";
-import { BuilderComposer } from "@/components/builder-composer";
-import { describeAttachments } from "@/lib/builder-attachments";
+import { ComposerShell } from "@/components/composer-shell";
 import {
   getBuilderJourney,
-  journeyTurn,
   setJourneyStage,
   startJourneyTrack,
   type ConversationDiagnostics,
@@ -19,27 +17,6 @@ import { stageById, stageIndex, stagesFor, trackMinutes, trackOf } from "@/lib/j
 import { useIsAdminStatus } from "@/hooks/use-is-admin";
 import { LaunchReadiness } from "@/components/launch-readiness";
 import { COMMISSIONING_PHASES } from "@/lib/commissioning";
-import { useFrassyPrefs } from "@/hooks/use-frassy-prefs";
-import { createSpeechSession, stopSpeaking } from "@/lib/frassy-voice";
-import { SentencePump } from "@/lib/voice/sentence-pump";
-import {
-  installAudioUnlockListener,
-  isAudioRunning,
-  isAudioUnlocked,
-  unlockAudio,
-  type AudioBlockReason,
-} from "@/lib/audio-unlock";
-import { VoiceGate } from "@/components/voice-gate";
-import { VoicePlaybackDebugger } from "@/components/voice-playback-debugger";
-import { ConversationIntegrityOverlay } from "@/components/conversation-integrity-overlay";
-import { useVoiceDictation } from "@/hooks/use-voice-dictation";
-
-type ConversationMode = "text" | "voice_text" | "voice_only";
-const MODE_LABELS: Record<ConversationMode, string> = {
-  text: "Text only",
-  voice_text: "Voice + text",
-  voice_only: "Voice only",
-};
 
 export const Route = createFileRoute("/_authenticated/onboarding")({
   head: () => ({
@@ -68,7 +45,6 @@ type LocalMessage = { role: "user" | "assistant"; content: string; pending?: boo
 
 function OnboardingPage() {
   const loadJourney = useServerFn(getBuilderJourney);
-  const turn = useServerFn(journeyTurn);
   const jumpStage = useServerFn(setJourneyStage);
   const switchTrack = useServerFn(startJourneyTrack);
   const { isAdmin, loading: roleLoading } = useIsAdminStatus();
@@ -78,51 +54,12 @@ function OnboardingPage() {
     queryFn: () => loadJourney(),
   });
 
-  const [draft, setDraft] = useState("");
   const [busy, setBusy] = useState(false);
   const [local, setLocal] = useState<LocalMessage[]>([]);
-  const [mode, setMode] = useState<ConversationMode>("text");
-  const [speaking, setSpeaking] = useState(false);
-  const [voiceBlocked, setVoiceBlocked] = useState(false);
-  const [blockReason, setBlockReason] = useState<AudioBlockReason | null>(null);
   const [diagnostics, setDiagnostics] = useState<ConversationDiagnostics | null>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const endRef = useRef<HTMLDivElement>(null);
-  const openedRef = useRef(false);
   const founderRef = useRef(false);
-  const modeRef = useRef<ConversationMode>("text");
-  modeRef.current = mode;
-  const lastSpokenRef = useRef<string>("");
-  const speakingRef = useRef(false);
-  speakingRef.current = speaking;
-  const busyRef = useRef(false);
-  busyRef.current = busy;
-
-  const { prefs, update: updatePrefs, hydrated: prefsHydrated } = useFrassyPrefs();
-
-  // Prime the browser's audio gate on the very first gesture anywhere on the page.
-  useEffect(() => installAudioUnlockListener(), []);
-
-  useEffect(() => {
-    if (!prefsHydrated) return;
-    setMode(prefs.communicationMode === "silent" ? "text" : "voice_text");
-  }, [prefsHydrated, prefs.communicationMode]);
-
-  const chooseMode = (m: ConversationMode) => {
-    // This click IS the user gesture — use it to unlock audio playback.
-    unlockAudio();
-    setMode(m);
-    modeRef.current = m;
-    updatePrefs({ communicationMode: m === "text" ? "silent" : m, muted: false });
-    if (m === "text") {
-      stopSpeaking();
-      setSpeaking(false);
-      dictationRef.current?.stop();
-      return;
-    }
-    setVoiceBlocked(false);
-    // Push-to-talk containment: changing modes never starts playback or the mic.
-  };
 
   const stage = stageById(data?.currentStage ?? "mission");
   const idx = stageIndex(stage.id);
@@ -160,95 +97,6 @@ function OnboardingPage() {
     endRef.current?.scrollIntoView({ behavior: "smooth", block: "end" });
   }, [messages.length, busy]);
 
-  useEffect(() => () => stopSpeaking(), []);
-
-  const dictation = useVoiceDictation(
-    (text) => {
-      // A transcript belongs to the Builder, but only pressing Send creates a turn.
-      setDraft((p) => (p ? `${p} ${text}` : text));
-    },
-    {
-      // Push-to-interrupt: the Builder speaking always takes the floor.
-      onSpeechStart: () => {
-        if (!speakingRef.current && !busyRef.current) return;
-        stopSpeaking();
-        setSpeaking(false);
-      },
-      // While Frassy is speaking or thinking, the mic only hears her — drop it.
-      isMuted: () => speakingRef.current || busyRef.current,
-      isAssistantEcho: (text) => {
-        const spoken = lastSpokenRef.current.toLowerCase();
-        const words = text.toLowerCase().split(/\s+/).filter((word) => word.length > 3);
-        return words.length > 0 && words.filter((word) => spoken.includes(word)).length / words.length >= 0.6;
-      },
-    },
-  );
-
-  const dictationRef = useRef(dictation);
-  dictationRef.current = dictation;
-
-  const speakReply = (text: string) => {
-    if (modeRef.current === "text" || !text) return;
-    lastSpokenRef.current = text;
-    if (!isAudioUnlocked() || !isAudioRunning()) {
-      // No gesture yet — the browser will refuse. Ask once instead of failing mute.
-      setBlockReason("browser-blocked-audio");
-      setVoiceBlocked(true);
-      return;
-    }
-    setVoiceBlocked(false);
-    setBlockReason(null);
-    setSpeaking(true);
-    const session = createSpeechSession({
-      prefs: { ...prefs, muted: false, communicationMode: "voice_text" },
-      tone: "welcome",
-      onDone: () => {
-        setSpeaking(false);
-      },
-      onBlocked: (reason) => {
-        setSpeaking(false);
-        setBlockReason(reason);
-        setVoiceBlocked(true);
-      },
-    });
-    // Speak sentence by sentence: the first clause is synthesized and played
-    // while the rest is still being generated upstream.
-    const pump = new SentencePump((sentence) => session.push(sentence));
-    pump.push(text);
-    pump.flush();
-    session.end();
-  };
-
-  const send = async (text: string, opening = false) => {
-    if (busy) return;
-    stopSpeaking();
-    setBusy(true);
-    if (text) setLocal((p) => [...p, { role: "user", content: text }]);
-    try {
-      const res = await turn({ data: { message: text, opening } });
-      setDiagnostics(res.diagnostics);
-      setLocal([]);
-      await refetch();
-      speakReply(res.reply);
-      if (res.movedTo) {
-        toast.success(
-          `${isOwnerTrack ? "Commissioned" : "Chapter"} complete — next: ${stageById(res.movedTo).title}`,
-        );
-      }
-      if (res.completed)
-        toast.success(
-          isOwnerTrack
-            ? "Frass OS is commissioned and ready to welcome its first Builder."
-            : "Your Builder Journey is complete.",
-        );
-    } catch (err) {
-      setLocal((p) => p.filter((m) => m.content !== text));
-      toast.error(err instanceof Error ? err.message : "Frassy couldn't respond just now.");
-    } finally {
-      setBusy(false);
-    }
-  };
-
   // Founders land in the Commissioning Journey, not the Builder Journey.
   useEffect(() => {
     if (isLoading || roleLoading || !data || founderRef.current || isAdmin !== true) return;
@@ -262,36 +110,6 @@ function OnboardingPage() {
       await refetch();
     })();
   }, [isLoading, roleLoading, data, isAdmin, switchTrack, refetch]);
-
-  // Mark the track as opened without generating or speaking autonomously.
-  useEffect(() => {
-    // Wait for the saved voice preference, otherwise the opening line is
-    // generated while mode is still "text" and is never spoken.
-    if (isLoading || roleLoading || !prefsHydrated || !data || openedRef.current) return;
-    if (isAdmin === true && track !== "owner") return;
-    // Founder corrections and legacy Builder-style prompts must not suppress
-    // the deterministic Control Room opening. The server removes contaminated
-    // assistant replies; only a valid assistant turn proves this track opened.
-    const hasValidAssistantOpening = (data.messages ?? []).some(
-      (m: JourneyMessage) => trackOf(m.stage) === track && m.role === "assistant",
-    );
-    openedRef.current = true;
-    void hasValidAssistantOpening;
-  }, [isLoading, roleLoading, prefsHydrated, data, isAdmin, track]);
-
-  // Close the mic entirely while Frassy talks or thinks — an open mic next to
-  // the speaker transcribes her own voice and answers itself.
-  useEffect(() => {
-    if ((speaking || busy) && dictation.listening) dictationRef.current.stop();
-  }, [speaking, busy, dictation.listening]);
-
-  const onSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    const text = draft.trim();
-    if (!text) return;
-    setDraft("");
-    void send(text);
-  };
 
   return (
     <SiteShell>
@@ -496,76 +314,10 @@ function OnboardingPage() {
               <h2 className="mt-2 font-display text-2xl">{stage.title}</h2>
               <p className="mt-1 text-sm text-muted-foreground">{stage.purpose}</p>
 
-              <div className="mt-4 flex flex-wrap items-center gap-2">
-                <span className="text-[10px] uppercase tracking-[0.28em] text-muted-foreground">
-                  How we talk
-                </span>
-                {(["text", "voice_text"] as const).map((m) => (
-                  <button
-                    key={m}
-                    type="button"
-                    onClick={() => chooseMode(m)}
-                    className={`rounded-sm border px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.2em] transition ${
-                      mode === m
-                        ? "border-[color:var(--gold)] bg-[color:var(--gold)]/10 text-[color:var(--gold)]"
-                        : "border-border text-muted-foreground hover:text-foreground"
-                    }`}
-                  >
-                    {MODE_LABELS[m]}
-                  </button>
-                ))}
-                {speaking && (
-                  <button
-                    type="button"
-                    onClick={() => {
-                      stopSpeaking();
-                      setSpeaking(false);
-                    }}
-                    className="rounded-sm border border-border px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground hover:text-foreground"
-                  >
-                    Stop voice
-                  </button>
-                )}
+              <div className="mt-4 text-[10px] font-bold uppercase tracking-[0.2em] text-[color:var(--gold)]">
+                Manual text mode · voice temporarily disabled
               </div>
-
-              <VoiceGate
-                open={mode !== "text" && voiceBlocked}
-                reason={blockReason}
-                speaking={speaking}
-                listening={dictation.listening}
-                onEnable={(ok) => {
-                  if (!ok) {
-                    setBlockReason("browser-blocked-audio");
-                    return;
-                  }
-                  setVoiceBlocked(false);
-                  setBlockReason(null);
-                }}
-                onDismiss={() => {
-                  setVoiceBlocked(false);
-                  chooseMode("text");
-                }}
-              />
             </header>
-            <VoicePlaybackDebugger
-              microphone={dictation.listening}
-              sttConnected={dictation.listening}
-              transcriptProduced={messages.some((message) => message.role === "user")}
-              llmResponseReceived={messages.some((message) => message.role === "assistant")}
-            />
-            <ConversationIntegrityOverlay
-              state={busy ? "THINKING" : speaking ? "SPEAKING" : dictation.status === "transcribing" ? "TRANSCRIBING" : dictation.listening ? "LISTENING" : "WAITING_FOR_USER"}
-              microphone={dictation.listening}
-              stt={dictation.status === "transcribing"}
-              tts={speaking}
-              conversationId={`journey:${stage.id}`}
-              turnId={messages.filter((message) => message.role === "user").length}
-              speaker={speaking ? "Frassy" : dictation.status === "hearing" ? "Builder" : "None"}
-              lastUserAt={messages.some((message) => message.role === "user") ? new Date().toISOString() : null}
-              lastAssistantAt={messages.some((message) => message.role === "assistant") ? new Date().toISOString() : null}
-              transcript={dictation.lastTranscript}
-              source={dictation.transcriptSource}
-            />
 
             <div className="space-y-6 px-6 py-8">
               {isLoading && (
@@ -586,15 +338,6 @@ function OnboardingPage() {
                       </div>
                     )}
                     {m.content}
-                    {m.role === "assistant" && mode !== "text" && (
-                      <button
-                        type="button"
-                        onClick={() => speakReply(m.content)}
-                        className="mt-3 block text-[10px] font-bold uppercase tracking-[0.2em] text-[color:var(--gold)] hover:text-foreground"
-                      >
-                        Hear Frassy
-                      </button>
-                    )}
                   </div>
                 </div>
               ))}
@@ -603,50 +346,12 @@ function OnboardingPage() {
                   Frassy is thinking…
                 </div>
               )}
-              {speaking && !busy && (
-                <div role="status" aria-live="polite" className="text-sm text-[color:var(--gold)]">
-                  Frassy is speaking…
-                </div>
-              )}
-              {dictation.listening && (
-                <div role="status" aria-live="polite" className="text-sm text-muted-foreground">
-                  Listening… {dictation.interim}
-                </div>
-              )}
               <div ref={endRef} />
             </div>
 
-            <BuilderComposer
-              variant="page"
-              value={draft}
-              onChange={setDraft}
-              onSend={(text, files) => {
-                stopSpeaking();
-                setSpeaking(false);
-                const line = files.length ? `[Attached: ${describeAttachments(files)}]` : "";
-                const payload = [text.trim(), line].filter(Boolean).join("\n");
-                if (payload) void send(payload);
-              }}
-              disabled={busy}
-              mode={mode}
-              dictation={{
-                ...dictation,
-                start: () => {
-                  stopSpeaking();
-                  setSpeaking(false);
-                  dictation.start();
-                },
-              }}
-              thinking={busy}
-              speaking={speaking}
-              canSaveToVault
-              placeholder={
-                mode === "voice_text"
-                  ? "Tap the microphone, speak, then press Send."
-                  : "Answer in your own words, or attach a file, photo, or note…"
-              }
-              hint="Saved automatically"
-            />
+            <div className="border-t border-border px-6 py-4 text-xs text-muted-foreground">
+              Journey conversation is paused during containment. Use the Frassy button for the single manual text channel.
+            </div>
           </section>
         </div>
       </div>

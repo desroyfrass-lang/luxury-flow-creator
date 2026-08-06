@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { convertToModelMessages, generateText, stepCountIs, streamText } from "ai";
+import { convertToModelMessages, generateText, stepCountIs } from "ai";
 import { createLovableAiGatewayProvider } from "@/lib/ai-gateway.server";
 import { buildFrassyTools } from "@/lib/frassy-tools.server";
 import { isFounderIdentityDiscovery } from "@/lib/journey-prompts.server";
@@ -106,6 +106,22 @@ export const Route = createFileRoute("/api/chat")({
             !isFounderIdentityDiscovery(message.content),
         );
 
+        // Emergency containment: only a fresh, explicit, non-empty user text
+        // submission may create a Frassy turn. Legacy streaming/background
+        // clients are rejected rather than allowed to start another runtime.
+        const lastMessage = clientMessages.at(-1);
+        if (
+          body.stream === true ||
+          attachments.length > 0 ||
+          lastMessage?.role !== "user" ||
+          !lastMessage.content.trim()
+        ) {
+          return Response.json(
+            { error: "Frassy is temporarily available through manual text submission only." },
+            { status: 409 },
+          );
+        }
+
         const key = process.env.LOVABLE_API_KEY;
         if (!key) {
           return Response.json({ error: "AI is not configured." }, { status: 500 });
@@ -182,104 +198,6 @@ export const Route = createFileRoute("/api/chat")({
             /* noop */
           }
         })();
-
-        // ── Streaming turn (voice + live text) ──────────────────────────────
-        // Emits token deltas immediately so the client can speak sentence by
-        // sentence, then a terminal `done` frame carrying product/order cards.
-        if (body.stream === true) {
-          const gateway = createLovableAiGatewayProvider(key);
-          const model = gateway("google/gemini-3.5-flash");
-          const encoder = new TextEncoder();
-
-          const sse = new ReadableStream<Uint8Array>({
-            async start(controller) {
-              const send = (payload: unknown) =>
-                controller.enqueue(encoder.encode(`data: ${JSON.stringify(payload)}\n\n`));
-              try {
-                const result = streamText({
-                  model,
-                  system,
-                  messages: await convertToModelMessages(uiMessages),
-                  tools: buildFrassyTools(),
-                  stopWhen: stepCountIs(6),
-                  abortSignal: request.signal,
-                });
-
-                let full = "";
-                for await (const delta of result.textStream) {
-                  full += delta;
-                  send({ type: "delta", text: delta });
-                }
-
-                const products: ProductCard[] = [];
-                let order: OrderCard | null = null;
-                const steps = await result.steps;
-                for (const step of steps) {
-                  for (const part of (step.content ?? []) as Array<{
-                    type: string;
-                    output?: unknown;
-                    result?: unknown;
-                  }>) {
-                    if (part.type !== "tool-result" && part.type !== "tool_result") continue;
-                    const output = (part.output ?? part.result) as
-                      | { results?: ProductCard[]; order?: OrderCard; found?: boolean }
-                      | undefined;
-                    if (!output) continue;
-                    if (Array.isArray(output.results)) products.push(...output.results);
-                    if (output.found && output.order) order = output.order;
-                  }
-                }
-
-                const founderFallback =
-                  "Welcome back, Nicky. Your identity and business are already settled. Continue the 8-hour Frass OS commissioning in the Founder Control Room, where we configure the platform one decision at a time.";
-                const guarded =
-                  body.experienceContext === "founder" && isFounderIdentityDiscovery(full);
-
-                send({
-                  type: "done",
-                  reply: guarded ? founderFallback : full || "…",
-                  replaced: guarded,
-                  cards: { products: products.slice(0, 6), order },
-                  ...(body.experienceContext === "founder"
-                    ? {
-                        diagnostics: {
-                          conversationMode: "Founder",
-                          systemPrompt: "storefront_plus_founder_context",
-                          promptVersion: "v1",
-                          sessionType: "streaming_voice_chat",
-                          memoryNamespace: "storefront_browser_memory",
-                          routingDecision: "client admin signal → founder storefront context",
-                          historySource: "floating_chat_client_state",
-                          fallback: guarded ? "founder_safety_interceptor" : "disabled",
-                          identityDiscovery: "disabled",
-                        },
-                      }
-                    : {}),
-                });
-              } catch (err) {
-                const message = err instanceof Error ? err.message : "Unknown error";
-                send({
-                  type: "error",
-                  error: /402|credit/i.test(message)
-                    ? "The concierge is briefly offline (credits exhausted). Please try again shortly."
-                    : /429|rate/i.test(message)
-                      ? "One moment — I'm handling a few requests. Try again in a few seconds."
-                      : "I hit a snag reaching my systems. Try again in a sec?",
-                });
-              } finally {
-                controller.close();
-              }
-            },
-          });
-
-          return new Response(sse, {
-            headers: {
-              "Content-Type": "text/event-stream",
-              "Cache-Control": "no-cache, no-transform",
-              Connection: "keep-alive",
-            },
-          });
-        }
 
         try {
           const gateway = createLovableAiGatewayProvider(key);
