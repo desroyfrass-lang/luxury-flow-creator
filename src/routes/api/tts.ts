@@ -43,6 +43,8 @@ export const Route = createFileRoute("/api/tts")({
           typeof body.speed === "number" && body.speed >= 0.7 && body.speed <= 1.3
             ? body.speed
             : 1.0;
+        // Streaming mode: raw PCM over SSE so playback starts on the first chunk.
+        const stream = body.stream === true;
 
         const key = process.env.LOVABLE_API_KEY;
         if (!key) return new Response("TTS not configured", { status: 500 });
@@ -59,9 +61,12 @@ export const Route = createFileRoute("/api/tts")({
               input: text,
               voice,
               speed,
-              response_format: "mp3",
+              ...(stream
+                ? { stream_format: "sse", response_format: "pcm" }
+                : { response_format: "mp3" }),
               ...(instructions ? { instructions } : {}),
             }),
+            signal: request.signal,
           });
 
           if (!upstream.ok) {
@@ -71,10 +76,16 @@ export const Route = createFileRoute("/api/tts")({
           }
 
           return new Response(upstream.body, {
-            headers: {
-              "Content-Type": "audio/mpeg",
-              "Cache-Control": "private, max-age=3600",
-            },
+            headers: stream
+              ? {
+                  "Content-Type": "text/event-stream",
+                  "Cache-Control": "no-cache, no-transform",
+                  Connection: "keep-alive",
+                }
+              : {
+                  "Content-Type": "audio/mpeg",
+                  "Cache-Control": "private, max-age=3600",
+                },
           });
         } catch (err) {
           return new Response(err instanceof Error ? err.message : "TTS failed", { status: 500 });
