@@ -52,14 +52,6 @@ function AuthPage() {
         const { error } = await supabase.auth.signInWithPassword({ email, password });
         if (error) throw error;
         toast.success("Signed in");
-        // Frassy routes each identity into its authoritative first experience.
-        if (!next) {
-          const status = await fetchJourneyStatus();
-          if (status.needsJourney) {
-            window.location.assign("/onboarding");
-            return;
-          }
-        }
       } else {
         const { error } = await supabase.auth.signUp({
           email,
@@ -68,17 +60,28 @@ function AuthPage() {
         });
         if (error) throw error;
         toast.success("Welcome — Frassy is ready to begin");
-        // Frassy resolves the account role before opening the correct experience.
         window.location.assign("/onboarding");
         return;
       }
-      window.location.assign(dest);
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : "Could not sign in");
-    } finally {
       setBusy(false);
+      toast.error(err instanceof Error ? err.message : "Could not sign in");
+      return;
     }
+
+    // Signed in. Routing must never be able to strand the Builder on this page.
+    let target = dest;
+    if (!next) {
+      try {
+        const status = await fetchJourneyStatus();
+        if (status.needsJourney) target = "/onboarding";
+      } catch {
+        /* journey lookup is advisory only */
+      }
+    }
+    window.location.assign(target);
   };
+
 
 
   return (
