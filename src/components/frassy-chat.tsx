@@ -323,9 +323,9 @@ export function FrassyChat() {
           <div className="w-fit rounded-lg bg-white/5 px-3 py-2 text-sm text-white/50">Typing…</div>
         )}
 
-        {error && (
+        {(error || voice.voiceError) && (
           <div className="rounded-sm border border-red-500/30 bg-red-500/10 px-3 py-2 text-xs text-red-200">
-            {error}
+            {error ?? voice.voiceError}
           </div>
         )}
       </div>
@@ -336,7 +336,16 @@ export function FrassyChat() {
         onSend={() => void send()}
         disabled={loading}
         placeholder="Ask Frassy anything…"
+        onMicToggle={() => void toggleMic()}
+        micState={
+          voice.phase === "recording"
+            ? "recording"
+            : voice.phase === "transcribing" || (loading && !error)
+              ? "busy"
+              : "idle"
+        }
       />
+
     </div>
   );
 }
