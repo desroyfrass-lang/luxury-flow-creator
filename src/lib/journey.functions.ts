@@ -18,6 +18,7 @@ import {
 } from "@/lib/journey-prompts.server";
 import {
   loadJourneyState,
+  isExplicitStageApproval,
   parseJourneyMarkers,
   type JourneyDatabase,
 } from "@/lib/journey-state.server";
@@ -246,7 +247,11 @@ export const journeyTurn = createServerFn({ method: "POST" })
     const parsed = parseJourneyMarkers(raw);
     const rejectedFounderReply = activeTrack === "owner" && isFounderIdentityDiscovery(parsed.text);
     const text = rejectedFounderReply ? founderSafetyReply(stage.id, displayName) : parsed.text;
-    const stageComplete = rejectedFounderReply ? false : parsed.stageComplete;
+    // A model marker is only a proposal. Progress can move only when the
+    // Builder explicitly approves it in the originating user turn.
+    const stageComplete = rejectedFounderReply
+      ? false
+      : parsed.stageComplete && isExplicitStageApproval(userText);
     const memory = rejectedFounderReply ? [] : parsed.memory;
     const reply = text || (activeTrack === "owner"
       ? founderSafetyReply(stage.id, displayName)

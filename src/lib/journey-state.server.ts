@@ -69,6 +69,11 @@ export function parseJourneyMarkers(raw: string) {
   return { text: text.trim(), stageComplete, memory };
 }
 
+export function isExplicitStageApproval(text: string): boolean {
+  const clean = text.trim().toLowerCase();
+  return /^(yes|yes,|approved|approve|i approve|confirmed|confirm|continue|proceed|move on|next)(\b|[.!])/i.test(clean);
+}
+
 export async function loadJourneyState(
   database: JourneyDatabase,
   userId: string,
