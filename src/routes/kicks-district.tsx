@@ -14,7 +14,8 @@ import storeKicksMen from "@/assets/store-kicks-men.jpg";
 import storeKicksWomen from "@/assets/store-kicks-women.jpg";
 import storeDripMen from "@/assets/store-drip-men.jpg";
 import storeDripWomen from "@/assets/store-drip-women.jpg";
-import storeBare from "@/assets/store-bare.jpg";
+import storeBareMen from "@/assets/store-bare-men.jpg";
+import storeBareWomen from "@/assets/store-bare-women.jpg";
 
 export const Route = createFileRoute("/kicks-district")({
   head: () => ({
