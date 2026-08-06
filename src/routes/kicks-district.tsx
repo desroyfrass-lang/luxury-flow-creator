@@ -14,7 +14,8 @@ import storeKicksMen from "@/assets/store-kicks-men.jpg";
 import storeKicksWomen from "@/assets/store-kicks-women.jpg";
 import storeDripMen from "@/assets/store-drip-men.jpg";
 import storeDripWomen from "@/assets/store-drip-women.jpg";
-import storeBare from "@/assets/store-bare.jpg";
+import storeBareMen from "@/assets/store-bare-men.jpg";
+import storeBareWomen from "@/assets/store-bare-women.jpg";
 
 export const Route = createFileRoute("/kicks-district")({
   head: () => ({
@@ -51,36 +52,6 @@ type Storefront = {
 
 const STOREFRONTS: Storefront[] = [
   {
-    sign: "KICKZ",
-    label: "Frass Kicks — Men",
-    blurb: "The flagship. Street, classic and casual silhouettes, lit like jewellery.",
-    featured: ["Street Kicks", "Classic Kicks", "Casual Kicks"],
-    image: storeKicksMen,
-    to: "/frass-kicks/men",
-    accent: "var(--gold)",
-    side: "Men's side",
-  },
-  {
-    sign: "DRIP",
-    label: "Frass Drip — Men",
-    blurb: "Tailoring, texture and attitude, cut for the men's side of the walk.",
-    featured: ["Sets", "Outerwear", "Capsules"],
-    image: storeDripMen,
-    to: "/frass-drip/men",
-    accent: "var(--hill-gold)",
-    side: "Men's side",
-  },
-  {
-    sign: "SPORTS",
-    label: "Sports Drip — Men",
-    blurb: "Performance pieces carrying district attitude off the court.",
-    featured: ["Trainers", "Tracksuits", "Layers"],
-    image: cardMen,
-    to: "/shop-frass",
-    accent: "var(--hill-green)",
-    side: "Men's side",
-  },
-  {
     sign: "SOLE",
     label: "Frass Kicks — Women",
     blurb: "Statement steppers, refined icons and everyday essentials.",
@@ -89,6 +60,16 @@ const STOREFRONTS: Storefront[] = [
     to: "/frass-kicks/women",
     accent: "var(--gold)",
     side: "Women's side",
+  },
+  {
+    sign: "KICKZ",
+    label: "Frass Kicks — Men",
+    blurb: "The flagship. Street, classic and casual silhouettes, lit like jewellery.",
+    featured: ["Street Kicks", "Classic Kicks", "Casual Kicks"],
+    image: storeKicksMen,
+    to: "/frass-kicks/men",
+    accent: "var(--gold)",
+    side: "Men's side",
   },
   {
     sign: "DRIP",
@@ -101,14 +82,44 @@ const STOREFRONTS: Storefront[] = [
     side: "Women's side",
   },
   {
+    sign: "DRIP",
+    label: "Frass Drip — Men",
+    blurb: "Tailoring, texture and attitude, cut for the men's side of the walk.",
+    featured: ["Sets", "Outerwear", "Capsules"],
+    image: storeDripMen,
+    to: "/frass-drip/men",
+    accent: "var(--hill-gold)",
+    side: "Men's side",
+  },
+  {
     sign: "BARE",
-    label: "Bare Drip",
+    label: "Bare Drip — Women",
     blurb: "Swim, resort and lingerie — sun, salt and confidence.",
     featured: ["Swim", "Resort", "Lingerie"],
-    image: storeBare,
-    to: "/bare-drip",
+    image: storeBareWomen,
+    to: "/bare-drip/women",
     accent: "var(--kids-coral)",
     side: "Women's side",
+  },
+  {
+    sign: "BARE",
+    label: "Bare Drip — Men",
+    blurb: "Resort, swim and sun-ready essentials built for the men's side.",
+    featured: ["Swim", "Resort", "Shorts"],
+    image: storeBareMen,
+    to: "/bare-drip/men",
+    accent: "var(--kids-coral)",
+    side: "Men's side",
+  },
+  {
+    sign: "SPORTS",
+    label: "Sports Drip",
+    blurb: "Performance pieces carrying district attitude off the court.",
+    featured: ["Trainers", "Tracksuits", "Layers"],
+    image: cardMen,
+    to: "/shop-frass",
+    accent: "var(--hill-green)",
+    side: "Both sides",
   },
   {
     sign: "PARTY",
