@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { GatewayNav } from "@/components/gateway-nav";
 import cinematic from "@/assets/frasskicks-cinematic.mp4.asset.json";
 import gatewayImg from "@/assets/kicks-gateway.jpg";
@@ -7,6 +7,11 @@ import promenadeImg from "@/assets/kicks-promenade.jpg";
 import storefrontsImg from "@/assets/kicks-storefronts.jpg";
 import nightlifeImg from "@/assets/kicks-nightlife.jpg";
 import districtImg from "@/assets/district-kicks.jpg";
+import cardMen from "@/assets/card-men.jpg";
+import cardWomen from "@/assets/card-women.jpg";
+import cardBare from "@/assets/card-bare.jpg";
+import cardDrip from "@/assets/card-drip.jpg";
+import cardKicks from "@/assets/card-kicks.jpg";
 
 export const Route = createFileRoute("/kicks-district")({
   head: () => ({
@@ -15,12 +20,13 @@ export const Route = createFileRoute("/kicks-district")({
       {
         name: "description",
         content:
-          "Walk the Frass Kicks Promenade: an open-air fashion district of storefronts, street life and shoppable collections — Kickz, Sole, Bare, Drip and more.",
+          "Walk the Frass Promenade: an open-air luxury fashion district of storefronts, street life and shoppable collections — Kicks, Drip, Bare, Party, Sports, Denim and more.",
       },
       { property: "og:title", content: "Frass Kicks District — The Fashion Promenade" },
       {
         property: "og:description",
-        content: "A living, open-air fashion district. Explore by walking, enter any storefront.",
+        content:
+          "Not a page — a living fashion neighborhood. Cross the arch, walk the promenade, enter any storefront.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -29,41 +35,158 @@ export const Route = createFileRoute("/kicks-district")({
   component: KicksDistrictPage,
 });
 
-const STOREFRONTS = [
-  { code: "KICKZ", label: "Men", blurb: "Street, classic and casual kicks for men.", to: "/frass-kicks/men" },
-  { code: "SOLE", label: "Women", blurb: "Statement steppers and refined daily icons.", to: "/frass-kicks/women" },
-  { code: "BARE", label: "Swim & Lingerie", blurb: "Bare Drip — skin, sun and confidence.", to: "/bare-drip" },
-  { code: "DRIP", label: "Party", blurb: "Night-out fits built to be photographed.", to: "/frass-drip" },
-  { code: "SPORTS", label: "Sports Drip", blurb: "Performance pieces with district attitude.", to: "/shop-frass" },
-  { code: "DENIM", label: "Denim Drip", blurb: "Raw, washed, cropped, oversized.", to: "/shop-frass" },
-  { code: "ACCESS", label: "Accessories", blurb: "The finishing details of a look.", to: "/shop-frass" },
-  { code: "NEW", label: "New Looks", blurb: "What the district is wearing right now.", to: "/social-media-virals" },
+type Storefront = {
+  sign: string;
+  label: string;
+  blurb: string;
+  featured: string[];
+  image: string;
+  to: string;
+  accent: string;
+};
+
+const STOREFRONTS: Storefront[] = [
+  {
+    sign: "KICKZ",
+    label: "Frass Kicks — Men",
+    blurb: "The flagship. Street, classic and casual silhouettes, lit like jewellery.",
+    featured: ["Street Kicks", "Classic Kicks", "Casual Kicks"],
+    image: storefrontsImg,
+    to: "/frass-kicks/men",
+    accent: "var(--gold)",
+  },
+  {
+    sign: "SOLE",
+    label: "Frass Kicks — Women",
+    blurb: "Statement steppers, refined icons and everyday essentials.",
+    featured: ["Street", "Classic", "Casual"],
+    image: cardWomen,
+    to: "/frass-kicks/women",
+    accent: "var(--gold)",
+  },
+  {
+    sign: "DRIP",
+    label: "Frass Drip",
+    blurb: "Full looks. The house of tailoring, texture and attitude.",
+    featured: ["Men's Drip", "Women's Drip", "Capsules"],
+    image: cardDrip,
+    to: "/frass-drip",
+    accent: "var(--hill-gold)",
+  },
+  {
+    sign: "BARE",
+    label: "Bare Drip",
+    blurb: "Swim, lingerie and skin — sun, salt and confidence.",
+    featured: ["Swim", "Lingerie", "Resort"],
+    image: cardBare,
+    to: "/bare-drip",
+    accent: "var(--kids-coral)",
+  },
+  {
+    sign: "PARTY",
+    label: "Party Drip",
+    blurb: "Night-out fits built to be photographed under lanterns.",
+    featured: ["Night Looks", "Sequins", "Heels"],
+    image: nightlifeImg,
+    to: "/frass-drip/women",
+    accent: "var(--kids-turquoise)",
+  },
+  {
+    sign: "SPORTS",
+    label: "Sports Drip",
+    blurb: "Performance pieces carrying district attitude off the court.",
+    featured: ["Trainers", "Tracksuits", "Layers"],
+    image: cardMen,
+    to: "/shop-frass",
+    accent: "var(--hill-green)",
+  },
+  {
+    sign: "DENIM",
+    label: "Denim Drip",
+    blurb: "Raw, washed, cropped, oversized — denim in every dialect.",
+    featured: ["Jeans", "Jackets", "Sets"],
+    image: districtImg,
+    to: "/shop-frass",
+    accent: "var(--luxe-linen)",
+  },
+  {
+    sign: "ACCESS",
+    label: "Accessories",
+    blurb: "The finishing details — the part people remember.",
+    featured: ["Bags", "Chains", "Eyewear"],
+    image: cardKicks,
+    to: "/shop-frass",
+    accent: "var(--gold)",
+  },
+  {
+    sign: "NEW",
+    label: "New Looks",
+    blurb: "What the district is wearing right now. Restocked constantly.",
+    featured: ["Virals", "Drops", "Trending"],
+    image: promenadeImg,
+    to: "/social-media-virals",
+    accent: "var(--kids-sun)",
+  },
 ];
 
-const MOMENTS = [
-  { label: "Sunset Energy", image: promenadeImg },
-  { label: "Golden Hour Glow", image: gatewayImg },
-  { label: "Night Life", image: nightlifeImg },
-  { label: "Weekend Vibes", image: districtImg },
-  { label: "Festival Nights", image: storefrontsImg },
-];
+const HOURS = [
+  {
+    id: "golden",
+    label: "Golden Hour",
+    overlay:
+      "linear-gradient(to top, rgba(20,8,0,0.88), rgba(255,166,64,0.18) 45%, rgba(255,204,128,0.12))",
+    tint: "saturate(1.08) contrast(1.03)",
+  },
+  {
+    id: "sunset",
+    label: "Sunset Energy",
+    overlay:
+      "linear-gradient(to top, rgba(24,6,0,0.9), rgba(255,94,58,0.24) 40%, rgba(255,163,102,0.1))",
+    tint: "saturate(1.18) contrast(1.05)",
+  },
+  {
+    id: "night",
+    label: "Night Life",
+    overlay:
+      "linear-gradient(to top, rgba(2,4,16,0.94), rgba(12,18,60,0.5) 45%, rgba(80,40,140,0.22))",
+    tint: "saturate(1.05) brightness(0.72) contrast(1.12)",
+  },
+] as const;
 
-const PRINCIPLES = [
-  { icon: "👥", title: "People First", copy: "The people create the atmosphere." },
-  { icon: "🏙️", title: "District, Not Store", copy: "An entire fashion neighbourhood." },
-  { icon: "🧭", title: "Discovery", copy: "Walk, explore, experience." },
-  { icon: "✨", title: "Always Alive", copy: "The district changes, the vibe evolves." },
-];
+const SEASONS = [
+  { id: "spring", label: "Spring", note: "Fresh flowers, colour returning to the displays." },
+  { id: "summer", label: "Summer", note: "Outdoor fashion shows and music down the promenade." },
+  { id: "autumn", label: "Autumn", note: "Warmer light, new seasonal collections in the windows." },
+  { id: "winter", label: "Winter", note: "Holiday installations and the luxury night market." },
+] as const;
 
 function KicksDistrictPage() {
-  const [moment, setMoment] = useState(0);
+  const [entered, setEntered] = useState(false);
+  const [opening, setOpening] = useState(false);
+  const [hour, setHour] = useState(0);
+  const [season, setSeason] = useState(0);
+  const [active, setActive] = useState<number | null>(null);
+  const promenadeRef = useRef<HTMLDivElement>(null);
+
+  const mood = HOURS[hour];
+
+  useEffect(() => {
+    if (!entered) return;
+    promenadeRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+  }, [entered]);
+
+  function enterDistrict() {
+    if (opening) return;
+    setOpening(true);
+    window.setTimeout(() => setEntered(true), 1150);
+  }
 
   return (
     <div className="min-h-screen bg-background">
       <GatewayNav mode="world" />
 
-      {/* THE GATEWAY */}
-      <section className="relative h-[78vh] min-h-[520px] w-full overflow-hidden">
+      {/* ── THE GATEWAY ─────────────────────────────────────────── */}
+      <section className="relative h-[86vh] min-h-[560px] w-full overflow-hidden">
         <video
           src={cinematic.url}
           poster={gatewayImg}
@@ -72,84 +195,256 @@ function KicksDistrictPage() {
           loop
           playsInline
           preload="auto"
-          aria-label="Cinematic walk through the Frass Kicks district at golden hour"
+          aria-label="Cinematic walk beneath the stone arch into the Frass Kicks District"
           className="absolute inset-0 h-full w-full object-cover"
+          style={{ filter: mood.tint }}
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-background via-background/45 to-background/20" />
-        <div className="absolute inset-x-0 bottom-0 mx-auto max-w-[1600px] px-6 pb-14 lg:px-10">
-          <span className="text-[10px] uppercase tracking-[0.35em] text-[color:var(--gold)]">
-            The Fashion Promenade
-          </span>
-          <h1 className="mt-3 font-display text-5xl uppercase leading-[0.9] md:text-8xl">
-            Frass Kicks District
-          </h1>
-          <p className="mt-4 max-w-xl text-sm text-muted-foreground md:text-base">
-            Not a page. A living, open-air fashion district filled with people, culture, energy,
-            style and story. Everything on FrassKicks.com exists here in the promenade.
-          </p>
-          <div className="mt-7 flex flex-wrap gap-3">
-            <a
-              href="#promenade"
-              className="rounded-full bg-foreground px-6 py-3 text-[10px] font-bold uppercase tracking-[0.24em] text-background transition hover:opacity-90"
-            >
-              Enter the promenade
-            </a>
-            <Link
-              to="/shop-frass"
-              className="rounded-full border border-[color:var(--gold)] px-6 py-3 text-[10px] font-bold uppercase tracking-[0.24em] text-[color:var(--gold)] transition hover:bg-foreground/5"
-            >
-              Shop the district
-            </Link>
+        <div className="absolute inset-0" style={{ background: mood.overlay }} />
+
+        {/* ambient life */}
+        <span
+          aria-hidden
+          className="district-bird pointer-events-none absolute left-0 top-[18%] text-lg opacity-40"
+        >
+          𓅯
+        </span>
+        <span
+          aria-hidden
+          className="district-shimmer pointer-events-none absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-[color:var(--gold)]/20 to-transparent"
+        />
+
+        {/* the arch itself — crossing it opens the district */}
+        {!entered && (
+          <div
+            className={`absolute inset-0 grid place-items-center px-6 text-center ${
+              opening ? "district-arch-open" : ""
+            }`}
+          >
+            <div className="max-w-2xl">
+              <span className="text-[10px] uppercase tracking-[0.4em] text-[color:var(--gold)]">
+                The Gateway
+              </span>
+              <h1 className="mt-4 font-display text-5xl uppercase leading-[0.88] md:text-8xl">
+                Frass Kicks District
+              </h1>
+              <p className="mx-auto mt-5 max-w-lg text-sm text-white/75 md:text-base">
+                Not a storefront. An outdoor luxury fashion district. Cross beneath the arch and
+                you are somewhere else.
+              </p>
+              <button
+                type="button"
+                onClick={enterDistrict}
+                className="district-glow mt-8 rounded-full border border-[color:var(--gold)] bg-black/40 px-9 py-4 text-[10px] font-bold uppercase tracking-[0.3em] text-[color:var(--gold)] backdrop-blur transition hover:bg-[color:var(--gold)] hover:text-black"
+              >
+                Cross the arch
+              </button>
+              <p className="mt-5 text-[10px] uppercase tracking-[0.28em] text-white/45">
+                Or{" "}
+                <Link to="/shop-frass" className="underline underline-offset-4 hover:text-white">
+                  skip straight to shopping
+                </Link>
+              </p>
+            </div>
           </div>
+        )}
+
+        {entered && (
+          <div className="gateway-rise absolute inset-x-0 bottom-0 mx-auto max-w-[1600px] px-6 pb-12 lg:px-10">
+            <span className="text-[10px] uppercase tracking-[0.4em] text-[color:var(--gold)]">
+              You are inside the district · {mood.label} · {SEASONS[season].label}
+            </span>
+            <h1 className="mt-3 font-display text-4xl uppercase leading-[0.9] md:text-7xl">
+              Welcome to the Promenade
+            </h1>
+            <p className="mt-3 max-w-xl text-sm text-white/75">{SEASONS[season].note}</p>
+          </div>
+        )}
+      </section>
+
+      {/* ── ATMOSPHERE CONTROLS ─────────────────────────────────── */}
+      <section className="sticky top-[68px] z-40 border-b border-border/60 bg-background/85 backdrop-blur-xl">
+        <div className="mx-auto grid max-w-[1600px] grid-cols-[minmax(0,1fr)_auto] items-center gap-4 px-6 py-3 lg:px-10">
+          <div className="flex min-w-0 items-center gap-2 overflow-x-auto">
+            {HOURS.map((h, i) => (
+              <button
+                key={h.id}
+                type="button"
+                onClick={() => setHour(i)}
+                aria-pressed={i === hour}
+                className={`shrink-0 rounded-full border px-4 py-1.5 text-[10px] font-bold uppercase tracking-[0.2em] transition ${
+                  i === hour
+                    ? "border-[color:var(--gold)] bg-foreground text-background"
+                    : "border-border text-muted-foreground hover:text-foreground"
+                }`}
+              >
+                {h.label}
+              </button>
+            ))}
+            <span aria-hidden className="mx-2 h-4 w-px shrink-0 bg-border" />
+            {SEASONS.map((s, i) => (
+              <button
+                key={s.id}
+                type="button"
+                onClick={() => setSeason(i)}
+                aria-pressed={i === season}
+                className={`shrink-0 rounded-full border px-4 py-1.5 text-[10px] font-bold uppercase tracking-[0.2em] transition ${
+                  i === season
+                    ? "border-[color:var(--hill-gold)] text-[color:var(--hill-gold)]"
+                    : "border-border text-muted-foreground hover:text-foreground"
+                }`}
+              >
+                {s.label}
+              </button>
+            ))}
+          </div>
+          <Link
+            to="/shop-frass"
+            className="shrink-0 rounded-full bg-foreground px-5 py-2 text-[10px] font-bold uppercase tracking-[0.22em] text-background transition hover:opacity-90"
+          >
+            Shop directly
+          </Link>
         </div>
       </section>
 
-      {/* PRINCIPLES */}
-      <section className="mx-auto max-w-[1600px] px-6 py-14 lg:px-10">
-        <div className="grid gap-6 border-y border-border py-10 sm:grid-cols-2 lg:grid-cols-4">
-          {PRINCIPLES.map((p) => (
-            <div key={p.title}>
-              <span className="text-xl">{p.icon}</span>
-              <h2 className="mt-3 text-[11px] font-bold uppercase tracking-[0.24em] text-[color:var(--gold)]">
-                {p.title}
-              </h2>
-              <p className="mt-2 text-sm text-muted-foreground">{p.copy}</p>
-            </div>
+      {/* ── THE PROMENADE ───────────────────────────────────────── */}
+      <section ref={promenadeRef} className="mx-auto max-w-[1600px] px-6 py-14 lg:px-10">
+        <div className="grid grid-cols-[minmax(0,1fr)_auto] items-end gap-6 sm:flex sm:justify-between">
+          <div className="min-w-0">
+            <span className="text-[10px] uppercase tracking-[0.35em] text-muted-foreground">
+              The heart of the district
+            </span>
+            <h2 className="mt-3 font-display text-4xl uppercase leading-none md:text-6xl">
+              The Frass Promenade
+            </h2>
+            <p className="mt-4 max-w-xl text-sm text-muted-foreground">
+              Trees, cafés, fountains, flowers, music and public art. Every collection keeps a
+              storefront along this walk. Wander it — or step straight through any door.
+            </p>
+          </div>
+          <span className="hidden shrink-0 text-[10px] uppercase tracking-[0.24em] text-muted-foreground sm:block">
+            Scroll the walk →
+          </span>
+        </div>
+
+        {/* the walk: horizontal street of storefronts */}
+        <div
+          className="mt-10 flex snap-x snap-mandatory gap-5 overflow-x-auto pb-6"
+          role="list"
+          aria-label="Storefronts along the Frass Promenade"
+        >
+          {STOREFRONTS.map((s, i) => (
+            <Link
+              key={s.sign}
+              to={s.to}
+              role="listitem"
+              onMouseEnter={() => setActive(i)}
+              onMouseLeave={() => setActive(null)}
+              onFocus={() => setActive(i)}
+              onBlur={() => setActive(null)}
+              className="group relative w-[76vw] shrink-0 snap-start overflow-hidden rounded-t-[7rem] rounded-b-3xl border border-border bg-card transition duration-500 hover:-translate-y-2 sm:w-[46vw] lg:w-[27vw]"
+              style={{ boxShadow: `0 40px 90px -60px ${s.accent}` }}
+            >
+              <div className="relative h-[440px] overflow-hidden">
+                <img
+                  src={s.image}
+                  alt={`${s.sign} storefront on the Frass Promenade — ${s.label}`}
+                  loading="lazy"
+                  width={1280}
+                  height={864}
+                  className="h-full w-full object-cover transition-transform duration-[1400ms] ease-out group-hover:scale-110"
+                  style={{ filter: mood.tint }}
+                />
+                <div className="absolute inset-0" style={{ background: mood.overlay }} />
+
+                {/* the sign above the door */}
+                <span
+                  className="district-sway absolute left-1/2 top-6 -translate-x-1/2 rounded-full border px-4 py-1.5 text-[10px] font-bold uppercase tracking-[0.28em] backdrop-blur"
+                  style={{ borderColor: s.accent, color: s.accent, background: "rgba(0,0,0,0.35)" }}
+                >
+                  {s.sign}
+                </span>
+
+                {/* window display reveal */}
+                <div className="absolute inset-x-0 bottom-0 p-6">
+                  <h3 className="font-display text-2xl uppercase leading-none text-white">
+                    {s.label}
+                  </h3>
+                  <div
+                    className={`overflow-hidden transition-all duration-500 ${
+                      active === i ? "mt-3 max-h-40 opacity-100" : "max-h-0 opacity-0"
+                    }`}
+                  >
+                    <p className="text-sm text-white/75">{s.blurb}</p>
+                    <div className="mt-3 flex flex-wrap gap-2">
+                      {s.featured.map((f) => (
+                        <span
+                          key={f}
+                          className="rounded-full border border-white/25 px-3 py-1 text-[9px] uppercase tracking-[0.2em] text-white/80"
+                        >
+                          {f}
+                        </span>
+                      ))}
+                    </div>
+                    <span className="mt-4 inline-block text-[10px] font-bold uppercase tracking-[0.26em] text-white">
+                      Step inside →
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </Link>
+          ))}
+        </div>
+
+        {/* quick doors for people who know what they want */}
+        <div className="mt-4 flex flex-wrap gap-2">
+          {STOREFRONTS.map((s) => (
+            <Link
+              key={`quick-${s.sign}`}
+              to={s.to}
+              className="rounded-full border border-border px-4 py-2 text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground transition hover:border-foreground hover:text-foreground"
+            >
+              {s.label}
+            </Link>
           ))}
         </div>
       </section>
 
-      {/* THE PROMENADE */}
-      <section id="promenade" className="mx-auto max-w-[1600px] px-6 pb-16 lg:px-10">
+      {/* ── PEOPLE MAKE THE ATMOSPHERE ──────────────────────────── */}
+      <section className="mx-auto max-w-[1600px] px-6 pb-16 lg:px-10">
         <div className="grid items-center gap-10 lg:grid-cols-2">
-          <div className="overflow-hidden rounded-[2rem] border border-border">
+          <div className="relative overflow-hidden rounded-[2rem] border border-border">
             <img
               src={promenadeImg}
-              alt="Crowded golden-hour promenade lined with glowing boutiques, cafés and a street guitarist"
+              alt="Friends walking the golden-hour promenade with shopping bags while a guitarist plays outside a boutique"
               loading="lazy"
               width={1280}
               height={864}
-              className="h-full w-full object-cover transition-transform duration-[1200ms] hover:scale-105"
+              className="h-full w-full object-cover"
+              style={{ filter: mood.tint }}
             />
+            <div className="absolute inset-0" style={{ background: mood.overlay, opacity: 0.55 }} />
           </div>
           <div>
             <span className="text-[10px] uppercase tracking-[0.35em] text-muted-foreground">
-              02 · The heart
+              People first
             </span>
             <h2 className="mt-3 font-display text-4xl uppercase leading-none md:text-6xl">
-              The Promenade
+              The people make the district
             </h2>
             <p className="mt-4 max-w-lg text-sm text-muted-foreground">
-              The central walkway is where the world comes alive — people walking, shopping and
-              talking, cafés, performers, art, flowers and fountains. There is always something
-              happening.
+              Friends shopping together. Families. Couples. Someone carrying bags, someone with a
+              coffee, someone taking photos. Fashion here is lived, not posed.
             </p>
-            <ul className="mt-6 space-y-2 text-sm text-muted-foreground">
+            <ul className="mt-6 grid gap-2 text-sm text-muted-foreground sm:grid-cols-2">
               {[
-                "Palm trees, flowers and natural greenery",
-                "Fountains, seating and cafés",
-                "Music, performers and street life",
-                "Banners, lanterns and art installations",
+                "Palm trees in the breeze",
+                "Flowing banners",
+                "Water fountains",
+                "Tropical flowers",
+                "Café seating",
+                "Street musicians",
+                "Public art",
+                "Birds, reflections, movement",
               ].map((l) => (
                 <li key={l} className="flex gap-3">
                   <span className="text-[color:var(--gold)]">—</span>
@@ -161,103 +456,32 @@ function KicksDistrictPage() {
         </div>
       </section>
 
-      {/* STOREFRONTS */}
-      <section className="mx-auto max-w-[1600px] px-6 pb-16 lg:px-10">
-        <div className="mb-8 flex flex-wrap items-end justify-between gap-4">
-          <div>
-            <span className="text-[10px] uppercase tracking-[0.35em] text-muted-foreground">
-              03 · Destinations
-            </span>
-            <h2 className="mt-3 font-display text-4xl uppercase leading-none md:text-6xl">
-              The Storefronts
-            </h2>
-          </div>
-          <p className="max-w-sm text-sm text-muted-foreground">
-            Each collection has its own storefront, its own personality, its own atmosphere. Click
-            any door to walk inside.
-          </p>
-        </div>
-        <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-          {STOREFRONTS.map((s, i) => (
-            <Link
-              key={s.code}
-              to={s.to}
-              className="group relative overflow-hidden rounded-[1.75rem] border border-border bg-card transition duration-500 hover:-translate-y-1.5"
-            >
-              <div className="relative h-56 overflow-hidden">
-                <img
-                  src={[storefrontsImg, promenadeImg, nightlifeImg, districtImg][i % 4]}
-                  alt={`${s.code} storefront — ${s.label}`}
-                  loading="lazy"
-                  width={1280}
-                  height={864}
-                  className="h-full w-full object-cover transition-transform duration-[1200ms] group-hover:scale-110"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent" />
-                <div className="absolute inset-x-0 bottom-0 p-5">
-                  <span className="inline-block rounded-full border border-[color:var(--gold)] px-3 py-1 text-[9px] font-bold uppercase tracking-[0.22em] text-[color:var(--gold)]">
-                    {s.code}
-                  </span>
-                  <h3 className="mt-2 font-display text-2xl uppercase leading-none text-white">
-                    {s.label}
-                  </h3>
-                </div>
-              </div>
-              <p className="px-5 py-4 text-sm text-muted-foreground">{s.blurb}</p>
-              <span className="absolute right-4 top-4 rounded-full bg-background/80 px-3 py-1 text-[9px] font-bold uppercase tracking-[0.2em] opacity-0 transition group-hover:opacity-100">
-                Enter →
-              </span>
-            </Link>
-          ))}
-        </div>
-      </section>
-
-      {/* LIVING ENVIRONMENT / MOMENTS */}
+      {/* ── LONG-TERM VISION ────────────────────────────────────── */}
       <section className="mx-auto max-w-[1600px] px-6 pb-24 lg:px-10">
-        <span className="text-[10px] uppercase tracking-[0.35em] text-muted-foreground">
-          05 · Living environment
-        </span>
-        <h2 className="mt-3 font-display text-4xl uppercase leading-none md:text-6xl">
-          Different moments in the district
-        </h2>
-        <div className="mt-8 overflow-hidden rounded-[2rem] border border-border">
-          <img
-            src={MOMENTS[moment].image}
-            alt={`${MOMENTS[moment].label} in the Frass Kicks district`}
-            loading="lazy"
-            width={1280}
-            height={864}
-            className="h-[420px] w-full object-cover md:h-[560px]"
-          />
-        </div>
-        <div className="mt-5 flex flex-wrap gap-2">
-          {MOMENTS.map((m, i) => (
-            <button
-              key={m.label}
-              type="button"
-              onClick={() => setMoment(i)}
-              aria-pressed={i === moment}
-              className={`rounded-full border px-4 py-2 text-[10px] font-bold uppercase tracking-[0.22em] transition ${
-                i === moment
-                  ? "border-[color:var(--gold)] bg-foreground text-background"
-                  : "border-border text-muted-foreground hover:text-foreground"
-              }`}
-            >
-              {m.label}
-            </button>
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          {[
+            { t: "Fashion pop-ups", c: "Temporary storefronts appear along the walk." },
+            { t: "Designer launches", c: "A whole evening built around one release." },
+            { t: "Live music & culture", c: "The promenade becomes a stage." },
+            { t: "Seasonal festivals", c: "Winter markets, summer shows, spring blooms." },
+          ].map((x) => (
+            <div key={x.t} className="rounded-3xl border border-border bg-card p-6">
+              <h3 className="font-display text-xl uppercase leading-none">{x.t}</h3>
+              <p className="mt-2 text-sm text-muted-foreground">{x.c}</p>
+            </div>
           ))}
         </div>
 
-        <div className="mt-16 rounded-[2rem] border border-border bg-card p-8 md:p-12">
+        <div className="mt-12 rounded-[2rem] border border-border bg-card p-8 md:p-12">
           <span className="text-[10px] uppercase tracking-[0.35em] text-[color:var(--gold)]">
-            The goal
+            The emotional goal
           </span>
-          <p className="mt-4 max-w-2xl font-display text-2xl uppercase leading-tight md:text-4xl">
-            Build a district people fall in love with. A place they remember. A place they return
-            to. A place they want to be part of.
+          <p className="mt-4 max-w-3xl font-display text-2xl uppercase leading-tight md:text-4xl">
+            “I wish this place existed in real life.”
           </p>
-          <p className="mt-4 text-sm font-bold uppercase tracking-[0.24em] text-[color:var(--gold)]">
-            This is Frass Kicks.
+          <p className="mt-5 max-w-2xl text-sm text-muted-foreground">
+            The visitor is not navigating a website. They are walking through the Frass Kicks
+            District.
           </p>
         </div>
       </section>
