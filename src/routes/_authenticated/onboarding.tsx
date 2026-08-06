@@ -286,12 +286,18 @@ function OnboardingPage() {
     }
   }, [isLoading, roleLoading, prefsHydrated, data, isAdmin, track]);
 
+  // Close the mic entirely while Frassy talks or thinks — an open mic next to
+  // the speaker transcribes her own voice and answers itself.
+  useEffect(() => {
+    if ((speaking || busy) && dictation.listening) dictationRef.current.stop();
+  }, [speaking, busy, dictation.listening]);
+
   // Hands-free loop: whenever Frassy is done and nothing is happening,
   // the microphone reopens on its own in the voice modes.
   useEffect(() => {
     if (mode === "text" || voiceBlocked) return;
     if (busy || speaking || dictation.listening || !dictation.supported) return;
-    const t = window.setTimeout(() => dictationRef.current.start(), 400);
+    const t = window.setTimeout(() => dictationRef.current.start(), 900);
     return () => window.clearTimeout(t);
   }, [mode, voiceBlocked, busy, speaking, dictation.listening, dictation.supported]);
 
