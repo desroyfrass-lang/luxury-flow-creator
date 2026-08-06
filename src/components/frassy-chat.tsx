@@ -61,6 +61,7 @@ export function FrassyChat() {
   const items = useCartStore((s) => s.items);
   const ctx = useFrassyContext();
   const { isAdmin } = useIsAdminStatus();
+  const voice = usePushToTalk();
 
   const scrollRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
