@@ -31,7 +31,7 @@ const OPTIONS: {
   {
     id: "voice_only",
     title: "Voice Only",
-    desc: "Coming soon — a voice-first Frassy for hands-free moments.",
+    desc: "A fully hands-free conversation: Frassy speaks, listens, and continues naturally.",
   },
 ];
 
@@ -81,18 +81,12 @@ export function FrassyConsentModal({ open, onChoose, onDefer, prefs }: Props) {
 
           <div className="space-y-2">
             {OPTIONS.map((opt) => {
-              const disabled = opt.id === "voice_only";
               return (
                 <button
                   key={opt.id}
                   type="button"
-                  disabled={disabled}
                   onClick={() => onChoose(opt.id)}
-                  className={`group flex w-full items-start gap-3 rounded-xl border p-3 text-left transition ${
-                    disabled
-                      ? "cursor-not-allowed border-border/60 bg-secondary/20 opacity-60"
-                      : "border-border bg-background hover:border-[color:var(--gold)]/60 hover:bg-secondary/40"
-                  }`}
+                  className="group flex w-full items-start gap-3 rounded-xl border border-border bg-background p-3 text-left transition hover:border-[color:var(--gold)]/60 hover:bg-secondary/40"
                 >
                   <div className="flex-1">
                     <div className="flex items-center gap-2">
