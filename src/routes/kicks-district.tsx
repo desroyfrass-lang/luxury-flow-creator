@@ -8,7 +8,7 @@ import storefrontsImg from "@/assets/kicks-storefronts.jpg";
 import nightlifeImg from "@/assets/kicks-nightlife.jpg";
 import districtImg from "@/assets/district-kicks.jpg";
 import cardMen from "@/assets/card-men.jpg";
-import cardWomen from "@/assets/card-women.jpg";
+
 import cardKicks from "@/assets/card-kicks.jpg";
 import storeKicksMen from "@/assets/store-kicks-men.jpg";
 import storeKicksWomen from "@/assets/store-kicks-women.jpg";
