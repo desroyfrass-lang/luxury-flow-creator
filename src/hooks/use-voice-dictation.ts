@@ -126,7 +126,7 @@ export function useVoiceDictation(
   finalRef.current = onFinal;
   const speechStartRef = useRef(options.onSpeechStart);
   speechStartRef.current = options.onSpeechStart;
-  const pauseMs = options.pauseMs ?? 1300;
+  const pauseMs = options.pauseMs ?? 700;
 
   const recRef = useRef<SpeechRecognitionLike | null>(null);
   const streamRef = useRef<MediaStream | null>(null);
