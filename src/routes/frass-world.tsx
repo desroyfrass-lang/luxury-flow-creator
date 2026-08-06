@@ -133,6 +133,7 @@ function FrassWorldPage() {
 function District({
   id,
   image,
+  video,
   alt,
   emoji,
   title,
@@ -145,6 +146,7 @@ function District({
 }: {
   id: string;
   image: string;
+  video?: string;
   alt: string;
   emoji: string;
   title: string;
@@ -163,14 +165,28 @@ function District({
     >
       <Link to={to} aria-label={`${title} — ${meta}`} className="block">
         <div className="relative h-64 overflow-hidden md:h-80">
-          <img
-            src={image}
-            alt={alt}
-            loading="lazy"
-            width={1280}
-            height={960}
-            className="h-full w-full object-cover transition-transform duration-[1200ms] ease-out will-change-transform group-hover:scale-105"
-          />
+          {video ? (
+            <video
+              src={video}
+              poster={image}
+              autoPlay
+              muted
+              loop
+              playsInline
+              preload="auto"
+              aria-label={alt}
+              className="h-full w-full object-cover transition-transform duration-[1200ms] ease-out will-change-transform group-hover:scale-105"
+            />
+          ) : (
+            <img
+              src={image}
+              alt={alt}
+              loading="lazy"
+              width={1280}
+              height={960}
+              className="h-full w-full object-cover transition-transform duration-[1200ms] ease-out will-change-transform group-hover:scale-105"
+            />
+          )}
           <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/25 to-transparent" />
           {badge && (
             <span
