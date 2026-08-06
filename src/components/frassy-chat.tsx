@@ -1,6 +1,8 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate } from "@tanstack/react-router";
-import { X, Send, ShoppingBag, Volume2, VolumeX, Settings, LifeBuoy, Trash2 } from "lucide-react";
+import { X, ShoppingBag, Volume2, VolumeX, Settings, LifeBuoy, Trash2 } from "lucide-react";
+import { BuilderComposer } from "@/components/builder-composer";
+import { describeAttachments, type BuilderAttachment } from "@/lib/builder-attachments";
 import { useCartStore } from "@/lib/cart-store";
 import symbolAsset from "@/assets/frass-logo-symbol.asset.json";
 import {
