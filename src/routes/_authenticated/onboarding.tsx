@@ -160,9 +160,12 @@ function OnboardingPage() {
     {
       // Push-to-interrupt: the Builder speaking always takes the floor.
       onSpeechStart: () => {
+        if (speakingRef.current || busyRef.current) return;
         stopSpeaking();
         setSpeaking(false);
       },
+      // While Frassy is speaking or thinking, the mic only hears her — drop it.
+      isMuted: () => speakingRef.current || busyRef.current,
     },
   );
 
