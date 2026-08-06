@@ -56,7 +56,30 @@ export type VoiceDictationOptions = {
   onSpeechStart?: () => void;
   /** Silence (ms) that ends a spoken thought. Generous by design. */
   pauseMs?: number;
+  /**
+   * Return true while Frassy is talking / busy. Anything captured in that
+   * window is speaker echo, not the Builder, and is discarded.
+   */
+  isMuted?: () => boolean;
 };
+
+/**
+ * Echo and mis-hear guard. Room noise and speaker bleed come back from STT as
+ * tiny fragments or non-Latin scripts; sending those makes Frassy answer
+ * questions nobody asked.
+ */
+const SHORT_ALLOW = /^(yes|yeah|yep|no|nope|ok|okay|stop|next|go|hi|hey|sure)\b/i;
+function isLikelySpeech(text: string): boolean {
+  const clean = text.trim();
+  if (clean.length < 2) return false;
+  const latin = clean.replace(/[^A-Za-z0-9]/g, "");
+  // Mostly non-Latin => mis-transcribed noise for an English-first assistant.
+  if (latin.length < clean.replace(/\s/g, "").length * 0.6) return false;
+  if (latin.length < 3) return false;
+  const words = clean.split(/\s+/).filter(Boolean);
+  if (words.length < 2 && !SHORT_ALLOW.test(clean)) return false;
+  return true;
+}
 
 const TARGET_RATE = 16000;
 const SPEECH_RMS = 0.014;
