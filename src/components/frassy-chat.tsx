@@ -96,18 +96,37 @@ export function FrassyChat() {
 
   // One user turn → one assistant turn. `spoken` only decides whether that
   // single reply is also read aloud; it never schedules another turn.
+  //
+  // COMPOSER CONTRACT: the composer is the single source of truth. Whatever the
+  // box holds at press time is frozen, appended, sent, and cleared — in that
+  // order — before any await happens.
   async function send(override?: string, spoken = false) {
-    const text = (override ?? input).trim();
-    if (!text || loading) return;
+    // Typed sends are blocked while busy; a voice turn passes its own text in.
+    if (loading || (override === undefined && voice.phase !== "idle")) return;
+    const before = input;
+    const text = (override ?? before).trim();
+    if (!text) return;
 
     const myTurn = ++turnRef.current;
     const userMsg: Msg = { id: nextId(), role: "user", content: text };
     const history = [...messages, userMsg];
 
+    // Freeze + clear synchronously, before the request leaves.
     setMessages(history);
     setInput("");
     setError(null);
     setLoading(true);
+
+    if (import.meta.env.DEV) {
+      // Composer integrity trace: these must agree.
+      console.info("[composer]", {
+        beforeSend: before,
+        outgoing: text,
+        rendered: userMsg.content,
+        inputAfter: "",
+      });
+    }
+
 
     const controller = new AbortController();
     abortRef.current = controller;
@@ -178,7 +197,10 @@ export function FrassyChat() {
     }
     if (voice.phase === "recording") {
       const transcript = await voice.stopRecording();
-      if (transcript) await send(transcript, true);
+      if (!transcript) return;
+      // Anything already typed is part of the same turn — never left behind.
+      const typed = input.trim();
+      await send(typed ? `${typed} ${transcript}` : transcript, true);
       return;
     }
     if (voice.phase === "idle" && !loading) await voice.startRecording();
