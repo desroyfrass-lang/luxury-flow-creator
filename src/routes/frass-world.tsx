@@ -57,10 +57,10 @@ function FrassWorldPage() {
           to="/kicks-district"
           accent="var(--gold)"
           portals={[
+            { label: "🚪 Enter the District", to: "/kicks-district" },
             { label: "🚪 Kicks — Men", to: "/frass-kicks/men" },
             { label: "🚪 Kicks — Women", to: "/frass-kicks/women" },
             { label: "🚪 Bare Drip", to: "/bare-drip" },
-            { label: "🚪 Marketplace", to: "/shop-frass" },
           ]}
         />
         <District
