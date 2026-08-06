@@ -93,6 +93,8 @@ export function BuilderComposer({
   canSaveToVault = false,
   hint,
   variant = "floating",
+  thinking = false,
+  speaking = false,
 }: Props) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [attachments, setAttachments] = useState<BuilderAttachment[]>([]);
