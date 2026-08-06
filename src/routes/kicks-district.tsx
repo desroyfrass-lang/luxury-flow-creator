@@ -8,10 +8,13 @@ import storefrontsImg from "@/assets/kicks-storefronts.jpg";
 import nightlifeImg from "@/assets/kicks-nightlife.jpg";
 import districtImg from "@/assets/district-kicks.jpg";
 import cardMen from "@/assets/card-men.jpg";
-import cardWomen from "@/assets/card-women.jpg";
-import cardBare from "@/assets/card-bare.jpg";
-import cardDrip from "@/assets/card-drip.jpg";
+
 import cardKicks from "@/assets/card-kicks.jpg";
+import storeKicksMen from "@/assets/store-kicks-men.jpg";
+import storeKicksWomen from "@/assets/store-kicks-women.jpg";
+import storeDripMen from "@/assets/store-drip-men.jpg";
+import storeDripWomen from "@/assets/store-drip-women.jpg";
+import storeBare from "@/assets/store-bare.jpg";
 
 export const Route = createFileRoute("/kicks-district")({
   head: () => ({
@@ -43,6 +46,7 @@ type Storefront = {
   image: string;
   to: string;
   accent: string;
+  side: "Men's side" | "Women's side" | "Both sides";
 };
 
 const STOREFRONTS: Storefront[] = [
@@ -51,36 +55,60 @@ const STOREFRONTS: Storefront[] = [
     label: "Frass Kicks — Men",
     blurb: "The flagship. Street, classic and casual silhouettes, lit like jewellery.",
     featured: ["Street Kicks", "Classic Kicks", "Casual Kicks"],
-    image: storefrontsImg,
+    image: storeKicksMen,
     to: "/frass-kicks/men",
     accent: "var(--gold)",
+    side: "Men's side",
+  },
+  {
+    sign: "DRIP",
+    label: "Frass Drip — Men",
+    blurb: "Tailoring, texture and attitude, cut for the men's side of the walk.",
+    featured: ["Sets", "Outerwear", "Capsules"],
+    image: storeDripMen,
+    to: "/frass-drip/men",
+    accent: "var(--hill-gold)",
+    side: "Men's side",
+  },
+  {
+    sign: "SPORTS",
+    label: "Sports Drip — Men",
+    blurb: "Performance pieces carrying district attitude off the court.",
+    featured: ["Trainers", "Tracksuits", "Layers"],
+    image: cardMen,
+    to: "/shop-frass",
+    accent: "var(--hill-green)",
+    side: "Men's side",
   },
   {
     sign: "SOLE",
     label: "Frass Kicks — Women",
     blurb: "Statement steppers, refined icons and everyday essentials.",
     featured: ["Street", "Classic", "Casual"],
-    image: cardWomen,
+    image: storeKicksWomen,
     to: "/frass-kicks/women",
     accent: "var(--gold)",
+    side: "Women's side",
   },
   {
     sign: "DRIP",
-    label: "Frass Drip",
-    blurb: "Full looks. The house of tailoring, texture and attitude.",
-    featured: ["Men's Drip", "Women's Drip", "Capsules"],
-    image: cardDrip,
-    to: "/frass-drip",
+    label: "Frass Drip — Women",
+    blurb: "Full looks under gold light — the house of silhouette and shine.",
+    featured: ["Dresses", "Sets", "Night Looks"],
+    image: storeDripWomen,
+    to: "/frass-drip/women",
     accent: "var(--hill-gold)",
+    side: "Women's side",
   },
   {
     sign: "BARE",
     label: "Bare Drip",
-    blurb: "Swim, lingerie and skin — sun, salt and confidence.",
-    featured: ["Swim", "Lingerie", "Resort"],
-    image: cardBare,
+    blurb: "Swim, resort and lingerie — sun, salt and confidence.",
+    featured: ["Swim", "Resort", "Lingerie"],
+    image: storeBare,
     to: "/bare-drip",
     accent: "var(--kids-coral)",
+    side: "Women's side",
   },
   {
     sign: "PARTY",
@@ -90,15 +118,7 @@ const STOREFRONTS: Storefront[] = [
     image: nightlifeImg,
     to: "/frass-drip/women",
     accent: "var(--kids-turquoise)",
-  },
-  {
-    sign: "SPORTS",
-    label: "Sports Drip",
-    blurb: "Performance pieces carrying district attitude off the court.",
-    featured: ["Trainers", "Tracksuits", "Layers"],
-    image: cardMen,
-    to: "/shop-frass",
-    accent: "var(--hill-green)",
+    side: "Both sides",
   },
   {
     sign: "DENIM",
@@ -108,6 +128,7 @@ const STOREFRONTS: Storefront[] = [
     image: districtImg,
     to: "/shop-frass",
     accent: "var(--luxe-linen)",
+    side: "Both sides",
   },
   {
     sign: "ACCESS",
@@ -117,6 +138,7 @@ const STOREFRONTS: Storefront[] = [
     image: cardKicks,
     to: "/shop-frass",
     accent: "var(--gold)",
+    side: "Both sides",
   },
   {
     sign: "NEW",
@@ -126,8 +148,10 @@ const STOREFRONTS: Storefront[] = [
     image: promenadeImg,
     to: "/social-media-virals",
     accent: "var(--kids-sun)",
+    side: "Both sides",
   },
 ];
+
 
 const HOURS = [
   {
@@ -378,6 +402,10 @@ function KicksDistrictPage() {
                   style={{ borderColor: s.accent, color: s.accent, background: "rgba(0,0,0,0.35)" }}
                 >
                   {s.sign}
+                </span>
+
+                <span className="absolute left-4 top-6 rounded-full border border-white/25 bg-black/40 px-3 py-1 text-[9px] uppercase tracking-[0.2em] text-white/75 backdrop-blur">
+                  {s.side}
                 </span>
 
                 {/* window display reveal */}
