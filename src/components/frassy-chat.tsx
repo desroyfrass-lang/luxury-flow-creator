@@ -146,10 +146,19 @@ export function FrassyChat() {
     });
   };
 
-  const dictation = useVoiceDictation((text) => {
-    if (modeRef.current !== "silent") void send(text);
-    else setInput((current) => (current ? `${current} ${text}` : text));
-  });
+  const dictation = useVoiceDictation(
+    (text) => {
+      if (modeRef.current !== "silent") void send(text);
+      else setInput((current) => (current ? `${current} ${text}` : text));
+    },
+    {
+      // Push-to-interrupt: talking over Frassy stops her instantly.
+      onSpeechStart: () => {
+        stopSpeaking();
+        setSpeaking(false);
+      },
+    },
+  );
   const dictationRef = useRef(dictation);
   dictationRef.current = dictation;
 
