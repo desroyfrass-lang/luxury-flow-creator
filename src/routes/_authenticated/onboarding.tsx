@@ -22,7 +22,14 @@ import { COMMISSIONING_PHASES } from "@/lib/commissioning";
 import { useFrassyPrefs } from "@/hooks/use-frassy-prefs";
 import { createSpeechSession, stopSpeaking } from "@/lib/frassy-voice";
 import { SentencePump } from "@/lib/voice/sentence-pump";
-import { installAudioUnlockListener, isAudioUnlocked, unlockAudio } from "@/lib/audio-unlock";
+import {
+  installAudioUnlockListener,
+  isAudioRunning,
+  isAudioUnlocked,
+  unlockAudio,
+  type AudioBlockReason,
+} from "@/lib/audio-unlock";
+import { VoiceGate } from "@/components/voice-gate";
 import { useVoiceDictation } from "@/hooks/use-voice-dictation";
 
 type ConversationMode = "text" | "voice_text" | "voice_only";
@@ -75,6 +82,7 @@ function OnboardingPage() {
   const [mode, setMode] = useState<ConversationMode>("text");
   const [speaking, setSpeaking] = useState(false);
   const [voiceBlocked, setVoiceBlocked] = useState(false);
+  const [blockReason, setBlockReason] = useState<AudioBlockReason | null>(null);
   const [diagnostics, setDiagnostics] = useState<ConversationDiagnostics | null>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const endRef = useRef<HTMLDivElement>(null);
@@ -179,12 +187,14 @@ function OnboardingPage() {
   const speakReply = (text: string) => {
     if (modeRef.current === "text" || !text) return;
     lastSpokenRef.current = text;
-    if (!isAudioUnlocked()) {
+    if (!isAudioUnlocked() || !isAudioRunning()) {
       // No gesture yet — the browser will refuse. Ask once instead of failing mute.
+      setBlockReason("browser-blocked-audio");
       setVoiceBlocked(true);
       return;
     }
     setVoiceBlocked(false);
+    setBlockReason(null);
     setSpeaking(true);
     const session = createSpeechSession({
       prefs: { ...prefs, muted: false, communicationMode: "voice_text" },
@@ -194,8 +204,9 @@ function OnboardingPage() {
         // Continuous conversation: hand the floor straight back to the speaker.
         if (modeRef.current !== "text") dictationRef.current.start();
       },
-      onBlocked: () => {
+      onBlocked: (reason) => {
         setSpeaking(false);
+        setBlockReason(reason);
         setVoiceBlocked(true);
       },
     });
@@ -212,6 +223,7 @@ function OnboardingPage() {
   const enableVoicePlayback = () => {
     unlockAudio();
     setVoiceBlocked(false);
+    setBlockReason(null);
     const text =
       lastSpokenRef.current ||
       [...messagesRef.current].reverse().find((m) => m.role === "assistant")?.content ||
@@ -544,21 +556,23 @@ function OnboardingPage() {
                 )}
               </div>
 
-              {mode !== "text" && voiceBlocked && (
-                <button
-                  type="button"
-                  onClick={enableVoicePlayback}
-                  className="mt-3 w-full rounded-sm border border-[color:var(--gold)] bg-[color:var(--gold)]/10 px-4 py-3 text-left text-xs text-[color:var(--gold)] transition hover:bg-[color:var(--gold)]/20"
-                >
-                  <span className="font-bold uppercase tracking-[0.24em]">
-                    Tap to let Frassy speak
-                  </span>
-                  <span className="mt-1 block normal-case tracking-normal text-muted-foreground">
-                    Your browser blocks sound until you interact with the page once. One tap and the
-                    conversation runs hands-free from here.
-                  </span>
-                </button>
-              )}
+              <VoiceGate
+                open={mode !== "text" && voiceBlocked}
+                reason={blockReason}
+                speaking={speaking}
+                listening={dictation.listening}
+                onEnable={(ok) => {
+                  if (!ok) {
+                    setBlockReason("browser-blocked-audio");
+                    return;
+                  }
+                  enableVoicePlayback();
+                }}
+                onDismiss={() => {
+                  setVoiceBlocked(false);
+                  chooseMode("text");
+                }}
+              />
             </header>
 
             <div className="space-y-6 px-6 py-8">
