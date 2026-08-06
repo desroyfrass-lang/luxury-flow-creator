@@ -152,12 +152,13 @@ export function ComposerShell({
                 : "Hold a thought — press to talk to Frassy"
           }
           onClick={onMicToggle ?? showNote}
-          disabled={micState === "busy"}
+          disabled={micState === "busy" || !onMicToggle}
           className={
             micState === "recording"
               ? "flex h-9 w-9 shrink-0 animate-pulse items-center justify-center rounded-full border border-red-400/70 bg-red-500/20 text-red-200"
-              : `${iconBtn} ${micState === "busy" ? "opacity-40" : ""}`
+              : `${iconBtn} ${micState === "busy" || !onMicToggle ? "opacity-40" : ""}`
           }
+
         >
           <Mic className="h-4 w-4" />
         </button>
