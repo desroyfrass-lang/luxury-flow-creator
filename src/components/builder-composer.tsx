@@ -23,6 +23,10 @@ import {
   Check,
 } from "lucide-react";
 import { useServerFn } from "@tanstack/react-start";
+import {
+  ConversationStatus,
+  type ConversationPhase,
+} from "@/components/conversation-status";
 import { createVaultItem } from "@/lib/vault.functions";
 import {
   COMPOSER_ACCEPT,
