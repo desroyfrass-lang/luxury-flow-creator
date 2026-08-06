@@ -437,8 +437,10 @@ export function FrassyChat() {
         reply?: string;
         error?: string;
         cards?: { products?: ProductCard[]; order?: OrderCard | null };
+        diagnostics?: FounderChatDiagnostics;
       };
       speech?.end();
+      if (data.diagnostics) setFounderDiagnostics(data.diagnostics);
       if (data.error) {
         const errorReply = data.error;
         setMessages((m) => [
