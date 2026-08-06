@@ -8,7 +8,6 @@ import { PageFeedback } from "@/components/page-feedback";
 import { ComposerShell } from "@/components/composer-shell";
 import {
   getBuilderJourney,
-  journeyTurn,
   setJourneyStage,
   startJourneyTrack,
   type ConversationDiagnostics,
@@ -46,7 +45,6 @@ type LocalMessage = { role: "user" | "assistant"; content: string; pending?: boo
 
 function OnboardingPage() {
   const loadJourney = useServerFn(getBuilderJourney);
-  const turn = useServerFn(journeyTurn);
   const jumpStage = useServerFn(setJourneyStage);
   const switchTrack = useServerFn(startJourneyTrack);
   const { isAdmin, loading: roleLoading } = useIsAdminStatus();
@@ -56,7 +54,6 @@ function OnboardingPage() {
     queryFn: () => loadJourney(),
   });
 
-  const [draft, setDraft] = useState("");
   const [busy, setBusy] = useState(false);
   const [local, setLocal] = useState<LocalMessage[]>([]);
   const [diagnostics, setDiagnostics] = useState<ConversationDiagnostics | null>(null);
@@ -100,34 +97,6 @@ function OnboardingPage() {
     endRef.current?.scrollIntoView({ behavior: "smooth", block: "end" });
   }, [messages.length, busy]);
 
-  const send = async (text: string) => {
-    if (busy) return;
-    setBusy(true);
-    if (text) setLocal((p) => [...p, { role: "user", content: text }]);
-    try {
-      const res = await turn({ data: { message: text } });
-      setDiagnostics(res.diagnostics);
-      setLocal([]);
-      await refetch();
-      if (res.movedTo) {
-        toast.success(
-          `${isOwnerTrack ? "Commissioned" : "Chapter"} complete — next: ${stageById(res.movedTo).title}`,
-        );
-      }
-      if (res.completed)
-        toast.success(
-          isOwnerTrack
-            ? "Frass OS is commissioned and ready to welcome its first Builder."
-            : "Your Builder Journey is complete.",
-        );
-    } catch (err) {
-      setLocal((p) => p.filter((m) => m.content !== text));
-      toast.error(err instanceof Error ? err.message : "Frassy couldn't respond just now.");
-    } finally {
-      setBusy(false);
-    }
-  };
-
   // Founders land in the Commissioning Journey, not the Builder Journey.
   useEffect(() => {
     if (isLoading || roleLoading || !data || founderRef.current || isAdmin !== true) return;
@@ -141,14 +110,6 @@ function OnboardingPage() {
       await refetch();
     })();
   }, [isLoading, roleLoading, data, isAdmin, switchTrack, refetch]);
-
-  const onSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    const text = draft.trim();
-    if (!text) return;
-    setDraft("");
-    void send(text);
-  };
 
   return (
     <SiteShell>
@@ -388,18 +349,9 @@ function OnboardingPage() {
               <div ref={endRef} />
             </div>
 
-            <ComposerShell
-              value={draft}
-              onChange={setDraft}
-              onSend={() => {
-                const text = draft.trim();
-                if (!text) return;
-                setDraft("");
-                void send(text);
-              }}
-              disabled={busy}
-              placeholder="Type your response, then press Send."
-            />
+            <div className="border-t border-border px-6 py-4 text-xs text-muted-foreground">
+              Journey conversation is paused during containment. Use the Frassy button for the single manual text channel.
+            </div>
           </section>
         </div>
       </div>
