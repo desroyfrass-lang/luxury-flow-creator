@@ -78,12 +78,15 @@ export class StreamingGatewayVoice implements VoiceOutput {
 
     const reader = res.body.pipeThrough(new TextDecoderStream()).getReader();
     let buffer = "";
+    let sawAudio = false;
     try {
       while (true) {
         const { value, done } = await reader.read();
         if (done) break;
         if (controller.signal.aborted) return;
-        buffer += value;
+        // Gateway/proxies may emit CRLF SSE framing. Normalize it before
+        // splitting frames or the entire response is mistaken for one frame.
+        buffer += value.replace(/\r\n/g, "\n");
         const frames = buffer.split("\n\n");
         buffer = frames.pop() ?? "";
         for (const frame of frames) {
@@ -94,6 +97,7 @@ export class StreamingGatewayVoice implements VoiceOutput {
           try {
             const payload = JSON.parse(raw) as { type?: string; audio?: string };
             if (payload.type === "speech.audio.delta" && payload.audio) {
+              sawAudio = true;
               player.pushBase64(payload.audio);
             }
           } catch {
@@ -102,6 +106,11 @@ export class StreamingGatewayVoice implements VoiceOutput {
         }
       }
       if (controller.signal.aborted) return;
+      if (!sawAudio) {
+        updatePlaybackDiagnostics({ audioStreamReceived: "failed", playbackCompleted: "failed" });
+        failPlayback("PCM audio frame parsing");
+        throw new Error("TTS stream contained no parsed audio frames");
+      }
       await player.waitForDrain();
       updatePlaybackDiagnostics({ playbackCompleted: "ok" });
     } finally {
