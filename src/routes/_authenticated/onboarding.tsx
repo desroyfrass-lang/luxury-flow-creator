@@ -25,7 +25,9 @@ import { LaunchReadiness } from "@/components/launch-readiness";
 import { COMMISSIONING_PHASES } from "@/lib/commissioning";
 import { useFrassyPrefs } from "@/hooks/use-frassy-prefs";
 import { speakLine, stopSpeaking } from "@/lib/frassy-voice";
+import { installAudioUnlockListener, isAudioUnlocked, unlockAudio } from "@/lib/audio-unlock";
 import { useVoiceDictation } from "@/hooks/use-voice-dictation";
+
 
 type ConversationMode = "text" | "voice_text" | "voice_only";
 const MODE_LABELS: Record<ConversationMode, string> = {
@@ -69,6 +71,7 @@ function OnboardingPage() {
   const [local, setLocal] = useState<LocalMessage[]>([]);
   const [mode, setMode] = useState<ConversationMode>("text");
   const [speaking, setSpeaking] = useState(false);
+  const [voiceBlocked, setVoiceBlocked] = useState(false);
   const [diagnostics, setDiagnostics] = useState<ConversationDiagnostics | null>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const endRef = useRef<HTMLDivElement>(null);
@@ -76,8 +79,12 @@ function OnboardingPage() {
   const founderRef = useRef(false);
   const modeRef = useRef<ConversationMode>("text");
   modeRef.current = mode;
+  const lastSpokenRef = useRef<string>("");
 
   const { prefs, update: updatePrefs, hydrated: prefsHydrated } = useFrassyPrefs();
+
+  // Prime the browser's audio gate on the very first gesture anywhere on the page.
+  useEffect(() => installAudioUnlockListener(), []);
 
   useEffect(() => {
     if (!prefsHydrated) return;
@@ -85,13 +92,23 @@ function OnboardingPage() {
   }, [prefsHydrated, prefs.communicationMode]);
 
   const chooseMode = (m: ConversationMode) => {
+    // This click IS the user gesture — use it to unlock audio playback.
+    unlockAudio();
     setMode(m);
     modeRef.current = m;
     updatePrefs({ communicationMode: m === "text" ? "silent" : m, muted: false });
     if (m === "text") {
       stopSpeaking();
       setSpeaking(false);
+      dictationRef.current?.stop();
+      return;
     }
+    setVoiceBlocked(false);
+    // Entering a voice mode should immediately give Frassy her voice back.
+    const lastReply = [...messagesRef.current].reverse().find((x) => x.role === "assistant");
+    if (lastReply) speakReply(lastReply.content);
+    else dictationRef.current?.start();
+
   };
 
   const stage = stageById(data?.currentStage ?? "mission");
@@ -112,6 +129,9 @@ function OnboardingPage() {
       .map((m: JourneyMessage) => ({ role: m.role, content: m.content }));
     return [...saved, ...local];
   }, [data?.messages, local, track]);
+
+  const messagesRef = useRef<LocalMessage[]>(messages);
+  messagesRef.current = messages;
 
   // Founder decisions are Platform Memory, kept separate from Builder memory.
   const platformMemory = useMemo(
@@ -141,6 +161,13 @@ function OnboardingPage() {
 
   const speakReply = (text: string) => {
     if (modeRef.current === "text" || !text) return;
+    lastSpokenRef.current = text;
+    if (!isAudioUnlocked()) {
+      // No gesture yet — the browser will refuse. Ask once instead of failing mute.
+      setVoiceBlocked(true);
+      return;
+    }
+    setVoiceBlocked(false);
     setSpeaking(true);
     speakLine(text, {
       prefs: { ...prefs, muted: false, communicationMode: "voice_text" },
@@ -150,8 +177,25 @@ function OnboardingPage() {
         // Continuous conversation: hand the floor straight back to the speaker.
         if (modeRef.current !== "text") dictationRef.current.start();
       },
+      onBlocked: () => {
+        setSpeaking(false);
+        setVoiceBlocked(true);
+      },
     });
   };
+
+  /** User tapped "Let Frassy speak" — a real gesture, so unlock and replay. */
+  const enableVoicePlayback = () => {
+    unlockAudio();
+    setVoiceBlocked(false);
+    const text =
+      lastSpokenRef.current ||
+      [...messagesRef.current].reverse().find((m) => m.role === "assistant")?.content ||
+      "";
+    if (text) speakReply(text);
+    else dictationRef.current.start();
+  };
+
 
 
   const send = async (text: string, opening = false) => {
@@ -200,7 +244,9 @@ function OnboardingPage() {
 
   // First session on this track: let Frassy open the conversation.
   useEffect(() => {
-    if (isLoading || roleLoading || !data || openedRef.current) return;
+    // Wait for the saved voice preference, otherwise the opening line is
+    // generated while mode is still "text" and is never spoken.
+    if (isLoading || roleLoading || !prefsHydrated || !data || openedRef.current) return;
     if (isAdmin === true && track !== "owner") return;
     // Founder corrections and legacy Builder-style prompts must not suppress
     // the deterministic Control Room opening. The server removes contaminated
@@ -208,11 +254,25 @@ function OnboardingPage() {
     const hasValidAssistantOpening = (data.messages ?? []).some(
       (m: JourneyMessage) => trackOf(m.stage) === track && m.role === "assistant",
     );
+    openedRef.current = true;
     if (!hasValidAssistantOpening) {
-      openedRef.current = true;
       void send("", true);
+    } else if (modeRef.current !== "text") {
+      // Returning to a voice session: Frassy greets out loud with where we left off.
+      const lastReply = [...messagesRef.current].reverse().find((m) => m.role === "assistant");
+      if (lastReply) speakReply(lastReply.content);
     }
-  }, [isLoading, roleLoading, data, isAdmin, track]);
+  }, [isLoading, roleLoading, prefsHydrated, data, isAdmin, track]);
+
+  // Hands-free loop: whenever Frassy is done and nothing is happening,
+  // the microphone reopens on its own in the voice modes.
+  useEffect(() => {
+    if (mode === "text" || voiceBlocked) return;
+    if (busy || speaking || dictation.listening || !dictation.supported) return;
+    const t = window.setTimeout(() => dictationRef.current.start(), 400);
+    return () => window.clearTimeout(t);
+  }, [mode, voiceBlocked, busy, speaking, dictation.listening, dictation.supported]);
+
 
 
   const onSubmit = (e: React.FormEvent) => {
@@ -429,7 +489,22 @@ function OnboardingPage() {
                 </button>
               )}
             </div>
+
+            {mode !== "text" && voiceBlocked && (
+              <button
+                type="button"
+                onClick={enableVoicePlayback}
+                className="mt-3 w-full rounded-sm border border-[color:var(--gold)] bg-[color:var(--gold)]/10 px-4 py-3 text-left text-xs text-[color:var(--gold)] transition hover:bg-[color:var(--gold)]/20"
+              >
+                <span className="font-bold uppercase tracking-[0.24em]">Tap to let Frassy speak</span>
+                <span className="mt-1 block normal-case tracking-normal text-muted-foreground">
+                  Your browser blocks sound until you interact with the page once. One tap and the
+                  conversation runs hands-free from here.
+                </span>
+              </button>
+            )}
           </header>
+
 
 
           <div className="space-y-6 px-6 py-8">
