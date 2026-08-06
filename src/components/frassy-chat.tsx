@@ -10,6 +10,8 @@ import {
   type FrassyCommunicationMode,
 } from "@/hooks/use-frassy-prefs";
 import { canSpeak, speakLine, stopSpeaking, VOICE_PROFILE_LABELS } from "@/lib/frassy-voice";
+import { installAudioUnlockListener, isAudioUnlocked, unlockAudio } from "@/lib/audio-unlock";
+import { useVoiceDictation } from "@/hooks/use-voice-dictation";
 import { FrassyConsentModal } from "@/components/frassy-consent";
 import { useFrassyMemory, memoryContext, rememberCartSnapshot } from "@/lib/frassy-memory";
 import { useFrassyContext, currentSeason, seasonalAccent } from "@/hooks/use-frassy-context";
@@ -104,6 +106,8 @@ export function FrassyChat() {
   const [pulse, setPulse] = useState(false);
   const [greetingText, setGreetingText] = useState<string | null>(null);
   const [liveMessage, setLiveMessage] = useState("");
+  const [speaking, setSpeaking] = useState(false);
+  const [voiceBlocked, setVoiceBlocked] = useState(false);
   const [founderDiagnostics, setFounderDiagnostics] = useState<FounderChatDiagnostics | null>(null);
   const [consentOpen, setConsentOpen] = useState(false);
   const [idleOffered, setIdleOffered] = useState(false);
@@ -112,6 +116,53 @@ export function FrassyChat() {
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const lastCartCountRef = useRef(0);
   const dismissedRef = useRef(false);
+  const modeRef = useRef(prefs.communicationMode);
+  const openRef = useRef(open);
+  const messagesRef = useRef(messages);
+  const lastSpokenRef = useRef("");
+  modeRef.current = prefs.communicationMode;
+  openRef.current = open;
+  messagesRef.current = messages;
+
+  useEffect(() => installAudioUnlockListener(), []);
+
+  const speakReply = (text: string, tone: "calm" | "welcome" = "calm") => {
+    if (!text.trim() || modeRef.current === "silent" || prefs.muted) return;
+    lastSpokenRef.current = text;
+    if (!isAudioUnlocked()) {
+      setVoiceBlocked(true);
+      return;
+    }
+    setVoiceBlocked(false);
+    setSpeaking(true);
+    speakLine(text, {
+      prefs: { ...prefs, muted: false },
+      tone,
+      onDone: () => setSpeaking(false),
+      onBlocked: () => {
+        setSpeaking(false);
+        setVoiceBlocked(true);
+      },
+    });
+  };
+
+  const dictation = useVoiceDictation((text) => {
+    if (modeRef.current !== "silent") void send(text);
+    else setInput((current) => (current ? `${current} ${text}` : text));
+  });
+  const dictationRef = useRef(dictation);
+  dictationRef.current = dictation;
+
+  const enableVoicePlayback = () => {
+    unlockAudio();
+    setVoiceBlocked(false);
+    const lastReply =
+      lastSpokenRef.current ||
+      [...messagesRef.current].reverse().find((message) => message.role === "assistant")?.content ||
+      "";
+    if (lastReply) speakReply(lastReply, "welcome");
+    else dictationRef.current.start();
+  };
 
   const season = useMemo(() => currentSeason(), []);
   const journey = useJourneyStatus();
@@ -158,9 +209,8 @@ export function FrassyChat() {
   }, [hydrated, prefs.consentedAt, prefs.consentDismissCount]);
 
   const handleConsentChoose = (mode: FrassyCommunicationMode) => {
-    // Voice Only is future-ready; treat as voice_text for now.
-    const applied: FrassyCommunicationMode = mode === "voice_only" ? "voice_text" : mode;
-    update({ communicationMode: applied, consentedAt: new Date().toISOString() });
+    if (mode !== "silent") unlockAudio();
+    update({ communicationMode: mode, consentedAt: new Date().toISOString(), muted: false });
     setConsentOpen(false);
   };
   const handleConsentDefer = () => {
@@ -212,11 +262,7 @@ export function FrassyChat() {
       setPulse(true);
       window.sessionStorage.setItem(GREETED_STORAGE_KEY, "1");
       if (speechEnabled) {
-        speakLine(line, {
-          prefs,
-          tone: "welcome",
-          onDone: () => setPulse(false),
-        });
+        speakReply(line, "welcome");
         setTimeout(() => setPulse(false), 9000);
       } else {
         setTimeout(() => setPulse(false), 4000);
@@ -287,8 +333,24 @@ export function FrassyChat() {
     if (open) {
       setPulse(false);
       setTimeout(() => inputRef.current?.focus(), 50);
+      if (modeRef.current !== "silent" && !speaking) {
+        const lastReply = [...messagesRef.current]
+          .reverse()
+          .find((message) => message.role === "assistant")?.content;
+        if (lastReply && lastSpokenRef.current !== lastReply) speakReply(lastReply, "welcome");
+      }
+    } else {
+      dictationRef.current.stop();
     }
-  }, [open, messages.length]);
+  }, [open]);
+
+  // Hands-free conversation: after Frassy finishes, automatically return the floor.
+  useEffect(() => {
+    if (!open || modeRef.current === "silent" || voiceBlocked) return;
+    if (loading || speaking || dictation.listening || !dictation.supported) return;
+    const timer = window.setTimeout(() => dictationRef.current.start(), 400);
+    return () => window.clearTimeout(timer);
+  }, [open, prefs.communicationMode, voiceBlocked, loading, speaking, dictation.listening, dictation.supported]);
 
   // Bump visit counter once per browser session for memory-aware greetings.
   useEffect(() => {
@@ -310,6 +372,9 @@ export function FrassyChat() {
     const next: Msg[] = [...messages, { role: "user", content: trimmed }];
     setMessages(next);
     setInput("");
+    dictationRef.current.stop();
+    stopSpeaking();
+    setSpeaking(false);
     setLoading(true);
     try {
       const cartContext =
@@ -338,30 +403,37 @@ export function FrassyChat() {
         diagnostics?: FounderChatDiagnostics;
       };
       if (!res.ok) {
+        const errorReply = data.error ?? "I hit a snag. Try again in a sec?";
         setMessages((m) => [
           ...m,
           {
             role: "assistant",
-            content: data.error ?? "I hit a snag. Try again in a sec?",
+            content: errorReply,
           },
         ]);
+        speakReply(errorReply);
       } else {
         if (data.diagnostics) setFounderDiagnostics(data.diagnostics);
+        const reply = data.reply ?? "…";
         setMessages((m) => [
           ...m,
           {
             role: "assistant",
-            content: data.reply ?? "…",
+            content: reply,
             products: data.cards?.products,
             order: data.cards?.order ?? null,
           },
         ]);
+        setLiveMessage(reply);
+        speakReply(reply);
       }
     } catch {
+      const errorReply = "Connection hiccup — try again?";
       setMessages((m) => [
         ...m,
-        { role: "assistant", content: "Connection hiccup — try again?" },
+        { role: "assistant", content: errorReply },
       ]);
+      speakReply(errorReply);
     } finally {
       setLoading(false);
     }
@@ -573,6 +645,16 @@ export function FrassyChat() {
             />
           )}
 
+          {voiceBlocked && (
+            <button
+              type="button"
+              onClick={enableVoicePlayback}
+              className="border-b border-[color:var(--gold)]/40 bg-[color:var(--gold)]/10 px-4 py-3 text-left text-xs font-semibold text-[color:var(--gold)]"
+            >
+              Tap to let Frassy speak
+            </button>
+          )}
+
 
 
 
@@ -682,6 +764,17 @@ export function FrassyChat() {
                 </div>
               </div>
             )}
+            {prefs.communicationMode !== "silent" && !loading && (
+              <div className="px-1 text-[11px] text-muted-foreground" aria-live="polite">
+                {speaking
+                  ? "Frassy is speaking…"
+                  : dictation.listening
+                    ? dictation.interim || "Listening…"
+                    : dictation.supported
+                      ? "Preparing microphone…"
+                      : "Voice input is unavailable in this browser."}
+              </div>
+            )}
 
             {/* Route each signed-in identity to its authoritative experience. */}
             {needsJourney && !loading && (
@@ -755,7 +848,7 @@ export function FrassyChat() {
             }}
             className="flex items-end gap-2 border-t border-border bg-background px-3 py-2"
           >
-            <textarea
+            {prefs.communicationMode !== "voice_only" && <textarea
               ref={inputRef}
               value={input}
               onChange={(e) => setInput(e.target.value)}
@@ -768,15 +861,20 @@ export function FrassyChat() {
               rows={1}
               placeholder="Ask Frassy anything…"
               className="max-h-32 flex-1 resize-none rounded-xl border border-border bg-background px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-foreground/20"
-            />
-            <button
+            />}
+            {prefs.communicationMode !== "voice_only" && <button
               type="submit"
               disabled={loading || !input.trim()}
               className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-foreground text-background disabled:opacity-40"
               aria-label="Send"
             >
               <Send className="h-4 w-4" />
-            </button>
+            </button>}
+            {prefs.communicationMode === "voice_only" && (
+              <div className="flex min-h-9 flex-1 items-center justify-center text-xs text-muted-foreground">
+                {speaking ? "Frassy is speaking…" : dictation.interim || "Listening…"}
+              </div>
+            )}
           </form>
         </div>
       )}
@@ -840,14 +938,16 @@ function FrassySettingsPanel({
               communicationMode: mode,
               consentedAt: prefs.consentedAt ?? new Date().toISOString(),
             });
-            if (mode === "silent") stopSpeaking();
+            if (mode === "silent") {
+              stopSpeaking();
+            } else {
+              unlockAudio();
+            }
           }}
         >
           <option value="silent">Silent Concierge — text only</option>
           <option value="voice_text">Voice &amp; Text (premium neural)</option>
-          <option value="voice_only" disabled>
-            Voice Only (coming soon)
-          </option>
+          <option value="voice_only">Voice Only (hands-free)</option>
         </select>
       </Row>
       <div className="grid grid-cols-2 gap-3">
