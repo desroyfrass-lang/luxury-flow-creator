@@ -187,19 +187,35 @@ function KicksDistrictPage() {
 
       {/* ── THE GATEWAY ─────────────────────────────────────────── */}
       <section className="relative h-[86vh] min-h-[560px] w-full overflow-hidden">
-        <video
-          src={cinematic.url}
-          poster={gatewayImg}
-          autoPlay
-          muted
-          loop
-          playsInline
-          preload="auto"
-          aria-label="Cinematic walk beneath the stone arch into the Frass Kicks District"
-          className="absolute inset-0 h-full w-full object-cover"
-          style={{ filter: mood.tint }}
-        />
-        <div className="absolute inset-0" style={{ background: mood.overlay }} />
+        {!entered ? (
+          <>
+            {/* first entry: the Jamaica gateway infographic */}
+            <img
+              src={gatewayImg}
+              alt="Frass Kicks District gateway — a luxury open-air Jamaican fashion promenade"
+              className="absolute inset-0 h-full w-full object-cover"
+              style={{ filter: mood.tint }}
+            />
+            <div className="absolute inset-0" style={{ background: mood.overlay }} />
+          </>
+        ) : (
+          <>
+            {/* inside the district: the original labeled storefront cinematic */}
+            <video
+              src={cinematic.url}
+              poster={storefrontsImg}
+              autoPlay
+              muted
+              loop
+              playsInline
+              preload="auto"
+              aria-label="Cinematic walk beneath the stone arch into the Frass Kicks District"
+              className="absolute inset-0 h-full w-full object-cover"
+              style={{ filter: mood.tint }}
+            />
+            <div className="absolute inset-0" style={{ background: mood.overlay }} />
+          </>
+        )}
 
         {/* ambient life */}
         <span
