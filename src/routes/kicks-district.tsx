@@ -404,6 +404,10 @@ function KicksDistrictPage() {
                   {s.sign}
                 </span>
 
+                <span className="absolute left-4 top-6 rounded-full border border-white/25 bg-black/40 px-3 py-1 text-[9px] uppercase tracking-[0.2em] text-white/75 backdrop-blur">
+                  {s.side}
+                </span>
+
                 {/* window display reveal */}
                 <div className="absolute inset-x-0 bottom-0 p-6">
                   <h3 className="font-display text-2xl uppercase leading-none text-white">
