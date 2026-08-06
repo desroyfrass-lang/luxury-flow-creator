@@ -292,6 +292,19 @@ export function FrassyChat() {
               <p className="whitespace-pre-wrap">{m.content}</p>
             </div>
 
+            {/* "Hear Frassy" only exists while playback is provably healthy. */}
+            {m.role === "assistant" && voice.voiceAvailable && voice.phase !== "recording" && (
+              <button
+                type="button"
+                onClick={() => void voice.speak(m.content)}
+                disabled={voice.phase === "speaking"}
+                className="mt-2 inline-flex items-center gap-1.5 rounded-sm border border-white/15 px-2 py-1 text-[10px] uppercase tracking-[0.2em] text-white/60 hover:text-white disabled:opacity-40"
+              >
+                <Volume2 className="h-3 w-3" /> Hear Frassy
+              </button>
+            )}
+
+
             {!!m.products?.length && (
               <div className="mt-3 grid grid-cols-2 gap-2">
                 {m.products.map((p) => (
