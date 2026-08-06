@@ -63,11 +63,26 @@ async function mapLimit<T, R>(items: T[], limit: number, fn: (item: T) => Promis
 }
 
 export const runLinkCheck = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
   .inputValidator((data: unknown) => inputSchema.parse(data))
-  .handler(async ({ data }): Promise<LinkCheckReport> => {
+  .handler(async ({ data, context }): Promise<LinkCheckReport> => {
+    const { data: isAdmin } = await context.supabase.rpc("has_role", {
+      _user_id: context.userId,
+      _role: "admin",
+    });
+    const { data: isSuperAdmin } = await context.supabase.rpc("has_role", {
+      _user_id: context.userId,
+      _role: "super_admin",
+    });
+    if (!isAdmin && !isSuperAdmin) throw new Error("Admin only");
+
     const base = new URL(data.baseUrl);
     const origin = base.origin;
+    if (!ALLOWED_ORIGINS.includes(origin)) {
+      throw new Error("This site cannot be scanned.");
+    }
     const maxPages = data.maxPages ?? 30;
+
 
     const queue: string[] = [origin + "/"];
     const visited = new Set<string>();
