@@ -31,6 +31,9 @@ type Props = {
   onSend: () => void;
   disabled?: boolean;
   placeholder?: string;
+  /** Phase 2 push-to-talk. Omit to keep the mic inert. */
+  onMicToggle?: () => void;
+  micState?: "idle" | "recording" | "busy";
 };
 
 const MENU: Array<{ id: string; label: string; icon: typeof Plus }> = [
@@ -48,7 +51,15 @@ const MENU: Array<{ id: string; label: string; icon: typeof Plus }> = [
 
 const DISABLED_NOTE = "Coming back shortly — Frassy's conversation engine is being rebuilt.";
 
-export function ComposerShell({ value, onChange, onSend, disabled, placeholder }: Props) {
+export function ComposerShell({
+  value,
+  onChange,
+  onSend,
+  disabled,
+  placeholder,
+  onMicToggle,
+  micState = "idle",
+}: Props) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [note, setNote] = useState<string | null>(null);
   const menuRef = useRef<HTMLDivElement>(null);
@@ -129,15 +140,27 @@ export function ComposerShell({ value, onChange, onSend, disabled, placeholder }
           <Camera className="h-4 w-4" />
         </button>
 
-        {/* 🎤 voice */}
+        {/* 🎤 push-to-talk (Phase 2) */}
         <button
           type="button"
-          aria-label="Talk to Frassy (temporarily unavailable)"
-          onClick={showNote}
-          className={iconBtn}
+          aria-label={
+            !onMicToggle
+              ? "Talk to Frassy (temporarily unavailable)"
+              : micState === "recording"
+                ? "Stop recording and send to Frassy"
+                : "Hold a thought — press to talk to Frassy"
+          }
+          onClick={onMicToggle ?? showNote}
+          disabled={micState === "busy"}
+          className={
+            micState === "recording"
+              ? "flex h-9 w-9 shrink-0 animate-pulse items-center justify-center rounded-full border border-red-400/70 bg-red-500/20 text-red-200"
+              : `${iconBtn} ${micState === "busy" ? "opacity-40" : ""}`
+          }
         >
           <Mic className="h-4 w-4" />
         </button>
+
 
         <textarea
           ref={textRef}

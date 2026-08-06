@@ -18,6 +18,7 @@ import symbolAsset from "@/assets/frass-logo-symbol.asset.json";
 import { useFrassyContext } from "@/hooks/use-frassy-context";
 import { useIsAdminStatus } from "@/hooks/use-is-admin";
 import { ComposerShell } from "@/components/composer-shell";
+import { usePushToTalk } from "@/hooks/use-push-to-talk";
 
 type ProductCard = {
   handle: string;
@@ -60,6 +61,7 @@ export function FrassyChat() {
   const items = useCartStore((s) => s.items);
   const ctx = useFrassyContext();
   const { isAdmin } = useIsAdminStatus();
+  const voice = usePushToTalk();
 
   const scrollRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
@@ -92,8 +94,10 @@ export function FrassyChat() {
     setLoading(false);
   }
 
-  async function send() {
-    const text = input.trim();
+  // One user turn → one assistant turn. `spoken` only decides whether that
+  // single reply is also read aloud; it never schedules another turn.
+  async function send(override?: string, spoken = false) {
+    const text = (override ?? input).trim();
     if (!text || loading) return;
 
     const myTurn = ++turnRef.current;
@@ -136,16 +140,23 @@ export function FrassyChat() {
         return;
       }
 
+      const reply = data.reply?.trim() || "…";
       setMessages((prev) => [
         ...prev,
         {
           id: nextId(),
           role: "assistant",
-          content: data.reply?.trim() || "…",
+          content: reply,
           products: data.cards?.products ?? [],
           order: data.cards?.order ?? null,
         },
       ]);
+
+      if (spoken) {
+        setLoading(false);
+        await voice.speak(reply);
+        // Playback finished → conversation waits. The mic stays closed.
+      }
     } catch (err) {
       if (turnRef.current !== myTurn) return;
       if ((err as Error)?.name === "AbortError") return;
@@ -158,6 +169,21 @@ export function FrassyChat() {
       }
     }
   }
+
+  // Push-to-talk: press → record, press again → transcribe → one spoken turn.
+  async function toggleMic() {
+    if (voice.phase === "speaking") {
+      voice.stopSpeaking();
+      return;
+    }
+    if (voice.phase === "recording") {
+      const transcript = await voice.stopRecording();
+      if (transcript) await send(transcript, true);
+      return;
+    }
+    if (voice.phase === "idle" && !loading) await voice.startRecording();
+  }
+
 
   if (!open) {
     return (
@@ -180,7 +206,15 @@ export function FrassyChat() {
           <div>
             <div className="text-sm text-white">Frassy</div>
             <div className="text-[10px] uppercase tracking-[0.3em] text-white/40">
-              {loading ? "Thinking…" : "Ready"}
+              {voice.phase === "recording"
+                ? "Listening…"
+                : voice.phase === "transcribing"
+                  ? "Transcribing…"
+                  : voice.phase === "speaking"
+                    ? "Speaking…"
+                    : loading
+                      ? "Thinking…"
+                      : "Waiting"}
             </div>
           </div>
         </div>
@@ -289,9 +323,9 @@ export function FrassyChat() {
           <div className="w-fit rounded-lg bg-white/5 px-3 py-2 text-sm text-white/50">Typing…</div>
         )}
 
-        {error && (
+        {(error || voice.voiceError) && (
           <div className="rounded-sm border border-red-500/30 bg-red-500/10 px-3 py-2 text-xs text-red-200">
-            {error}
+            {error ?? voice.voiceError}
           </div>
         )}
       </div>
@@ -302,7 +336,16 @@ export function FrassyChat() {
         onSend={() => void send()}
         disabled={loading}
         placeholder="Ask Frassy anything…"
+        onMicToggle={() => void toggleMic()}
+        micState={
+          voice.phase === "recording"
+            ? "recording"
+            : voice.phase === "transcribing" || (loading && !error)
+              ? "busy"
+              : "idle"
+        }
       />
+
     </div>
   );
 }

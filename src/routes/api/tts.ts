@@ -1,7 +1,8 @@
-// Premium neural TTS for Frassy — Lovable AI Gateway (openai/gpt-4o-mini-tts).
-// Returns a full MP3 file (stream_format omitted → audio) so the client can just
-// `new Audio(url).play()`. Short greetings/replies stay well under any latency
-// budget; streaming PCM is a future optimization we don't need for luxury lines.
+// Neural TTS for Frassy — Lovable AI Gateway (openai/gpt-4o-mini-tts).
+//
+// PHASE 2 SCOPE: one request → one complete MP3 file → client plays it once.
+// SSE/PCM streaming stays disabled; streaming playback belongs to Phase 3 and
+// was a source of the turn-ownership regressions.
 
 import { createFileRoute } from "@tanstack/react-router";
 
@@ -31,16 +32,13 @@ export const Route = createFileRoute("/api/tts")({
   server: {
     handlers: {
       POST: async ({ request }) => {
-        // STOP-SHIP containment: prevent old or cached clients from creating
-        // any further speech requests while voice turn-taking is unstable.
-        request.signal.throwIfAborted();
-        return new Response("Frassy voice is temporarily disabled", {
-          status: 503,
-          headers: { "Retry-After": "3600" },
-        });
-
-        /* c8 ignore start -- retained for controlled reactivation
         const body = (await request.json().catch(() => ({}))) as Body;
+
+        // Phase 2 guard: streaming playback stays off.
+        if (body.stream === true) {
+          return new Response("Streaming TTS is disabled", { status: 400 });
+        }
+
         const text = typeof body.text === "string" ? body.text.trim() : "";
         if (!text) return new Response("Missing text", { status: 400 });
         if (text.length > 800) return new Response("Text too long", { status: 400 });
@@ -53,8 +51,6 @@ export const Route = createFileRoute("/api/tts")({
           typeof body.speed === "number" && body.speed >= 0.7 && body.speed <= 1.3
             ? body.speed
             : 1.0;
-        // Streaming mode: raw PCM over SSE so playback starts on the first chunk.
-        const stream = body.stream === true;
 
         const key = process.env.LOVABLE_API_KEY;
         if (!key) return new Response("TTS not configured", { status: 500 });
@@ -71,36 +67,27 @@ export const Route = createFileRoute("/api/tts")({
               input: text,
               voice,
               speed,
-              ...(stream
-                ? { stream_format: "sse", response_format: "pcm" }
-                : { response_format: "mp3" }),
+              response_format: "mp3",
               ...(instructions ? { instructions } : {}),
             }),
-            signal: request.signal,
           });
 
           if (!upstream.ok) {
             const errText = await upstream.text().catch(() => "");
-            const status = upstream.status === 402 || upstream.status === 429 ? upstream.status : 502;
+            const status =
+              upstream.status === 402 || upstream.status === 429 ? upstream.status : 502;
             return new Response(errText || "TTS upstream error", { status });
           }
 
           return new Response(upstream.body, {
-            headers: stream
-              ? {
-                  "Content-Type": "text/event-stream",
-                  "Cache-Control": "no-cache, no-transform",
-                  Connection: "keep-alive",
-                }
-              : {
-                  "Content-Type": "audio/mpeg",
-                  "Cache-Control": "private, max-age=3600",
-                },
+            headers: {
+              "Content-Type": "audio/mpeg",
+              "Cache-Control": "private, max-age=3600",
+            },
           });
         } catch (err) {
           return new Response(err instanceof Error ? err.message : "TTS failed", { status: 500 });
         }
-        c8 ignore stop */
       },
     },
   },
