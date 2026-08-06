@@ -9,6 +9,7 @@ import {
   type FrassyVoice,
   type FrassyVoiceProfile,
 } from "@/hooks/use-frassy-prefs";
+import { StreamingGatewayVoice } from "@/lib/voice/streaming-voice";
 
 export type FrassyTone =
   | "calm"
