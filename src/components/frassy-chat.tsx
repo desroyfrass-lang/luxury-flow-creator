@@ -604,6 +604,24 @@ export function FrassyChat() {
             >
               {muted ? <VolumeX className="h-4 w-4" /> : <Volume2 className="h-4 w-4" />}
             </button>
+            {(speaking || loading) && (
+              <button
+                type="button"
+                onClick={() => {
+                  interruptedRef.current = true;
+                  turnAbortRef.current?.abort();
+                  turnAbortRef.current = null;
+                  dictationRef.current.stop();
+                  stopSpeaking();
+                  setSpeaking(false);
+                  setLoading(false);
+                }}
+                className="rounded-sm border border-border px-2 py-1 text-[10px] font-bold uppercase tracking-[0.18em]"
+                aria-label="Stop Frassy immediately"
+              >
+                Stop
+              </button>
+            )}
             <button
               type="button"
               onClick={() => setEscalateOpen((s) => !s)}
