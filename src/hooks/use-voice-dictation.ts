@@ -149,6 +149,8 @@ export function useVoiceDictation(
   finalRef.current = onFinal;
   const speechStartRef = useRef(options.onSpeechStart);
   speechStartRef.current = options.onSpeechStart;
+  const mutedRef = useRef(options.isMuted);
+  mutedRef.current = options.isMuted;
   const pauseMs = options.pauseMs ?? 700;
 
   const recRef = useRef<SpeechRecognitionLike | null>(null);
