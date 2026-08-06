@@ -102,7 +102,12 @@ export type SpeakOptions = {
   onBlocked?: (reason: AudioBlockReason) => void;
 };
 
+// STOP-SHIP containment. Voice remains off until the conversation engine
+// passes the interruption and turn-ownership acceptance test.
+export const VOICE_TEMPORARILY_DISABLED = true;
+
 export function canSpeak(prefs: FrassyPrefs): boolean {
+  if (VOICE_TEMPORARILY_DISABLED) return false;
   if (prefs.muted) return false;
   return prefs.communicationMode === "voice_text" || prefs.communicationMode === "voice_only";
 }
@@ -141,6 +146,21 @@ export type SpeechSession = {
  * still generating, so speech starts long before the reply is complete.
  */
 export function createSpeechSession(opts: SpeakOptions): SpeechSession {
+  if (VOICE_TEMPORARILY_DISABLED) {
+    let ended = false;
+    return {
+      push() {},
+      end() {
+        if (ended) return;
+        ended = true;
+        queueMicrotask(() => opts.onDone?.());
+      },
+      stop() {
+        ended = true;
+        stopSpeaking();
+      },
+    };
+  }
   const { prefs, tone = "calm", onDone, onBlocked } = opts;
   const mine = ++generation;
   const voice = pickNeuralVoice(prefs.voice, prefs.voiceProfile);
