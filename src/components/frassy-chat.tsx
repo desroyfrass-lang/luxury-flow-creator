@@ -92,8 +92,10 @@ export function FrassyChat() {
     setLoading(false);
   }
 
-  async function send() {
-    const text = input.trim();
+  // One user turn → one assistant turn. `spoken` only decides whether that
+  // single reply is also read aloud; it never schedules another turn.
+  async function send(override?: string, spoken = false) {
+    const text = (override ?? input).trim();
     if (!text || loading) return;
 
     const myTurn = ++turnRef.current;
@@ -136,16 +138,23 @@ export function FrassyChat() {
         return;
       }
 
+      const reply = data.reply?.trim() || "…";
       setMessages((prev) => [
         ...prev,
         {
           id: nextId(),
           role: "assistant",
-          content: data.reply?.trim() || "…",
+          content: reply,
           products: data.cards?.products ?? [],
           order: data.cards?.order ?? null,
         },
       ]);
+
+      if (spoken) {
+        setLoading(false);
+        await voice.speak(reply);
+        // Playback finished → conversation waits. The mic stays closed.
+      }
     } catch (err) {
       if (turnRef.current !== myTurn) return;
       if ((err as Error)?.name === "AbortError") return;
@@ -158,6 +167,21 @@ export function FrassyChat() {
       }
     }
   }
+
+  // Push-to-talk: press → record, press again → transcribe → one spoken turn.
+  async function toggleMic() {
+    if (voice.phase === "speaking") {
+      voice.stopSpeaking();
+      return;
+    }
+    if (voice.phase === "recording") {
+      const transcript = await voice.stopRecording();
+      if (transcript) await send(transcript, true);
+      return;
+    }
+    if (voice.phase === "idle" && !loading) await voice.startRecording();
+  }
+
 
   if (!open) {
     return (
