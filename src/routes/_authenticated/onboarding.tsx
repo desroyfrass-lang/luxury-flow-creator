@@ -105,7 +105,7 @@ function OnboardingPage() {
 
   useEffect(() => {
     if (!prefsHydrated) return;
-    setMode(prefs.communicationMode === "silent" ? "text" : prefs.communicationMode);
+    setMode(prefs.communicationMode === "silent" ? "text" : "voice_text");
   }, [prefsHydrated, prefs.communicationMode]);
 
   const chooseMode = (m: ConversationMode) => {
@@ -121,10 +121,7 @@ function OnboardingPage() {
       return;
     }
     setVoiceBlocked(false);
-    // Entering a voice mode should immediately give Frassy her voice back.
-    const lastReply = [...messagesRef.current].reverse().find((x) => x.role === "assistant");
-    if (lastReply) speakReply(lastReply.content);
-    else dictationRef.current?.start();
+    // Push-to-talk containment: changing modes never starts playback or the mic.
   };
 
   const stage = stageById(data?.currentStage ?? "mission");
@@ -167,9 +164,8 @@ function OnboardingPage() {
 
   const dictation = useVoiceDictation(
     (text) => {
-      // Voice modes are continuous: what you say is sent, no button press.
-      if (modeRef.current !== "text") void send(text);
-      else setDraft((p) => (p ? `${p} ${text}` : text));
+      // A transcript belongs to the Builder, but only pressing Send creates a turn.
+      setDraft((p) => (p ? `${p} ${text}` : text));
     },
     {
       // Push-to-interrupt: the Builder speaking always takes the floor.
@@ -208,8 +204,6 @@ function OnboardingPage() {
       tone: "welcome",
       onDone: () => {
         setSpeaking(false);
-        // Continuous conversation: hand the floor straight back to the speaker.
-        if (modeRef.current !== "text") dictationRef.current.start();
       },
       onBlocked: (reason) => {
         setSpeaking(false);
@@ -269,7 +263,7 @@ function OnboardingPage() {
     })();
   }, [isLoading, roleLoading, data, isAdmin, switchTrack, refetch]);
 
-  // First session on this track: let Frassy open the conversation.
+  // Mark the track as opened without generating or speaking autonomously.
   useEffect(() => {
     // Wait for the saved voice preference, otherwise the opening line is
     // generated while mode is still "text" and is never spoken.
@@ -282,13 +276,7 @@ function OnboardingPage() {
       (m: JourneyMessage) => trackOf(m.stage) === track && m.role === "assistant",
     );
     openedRef.current = true;
-    if (!hasValidAssistantOpening) {
-      void send("", true);
-    } else if (modeRef.current !== "text") {
-      // Returning to a voice session: Frassy greets out loud with where we left off.
-      const lastReply = [...messagesRef.current].reverse().find((m) => m.role === "assistant");
-      if (lastReply) speakReply(lastReply.content);
-    }
+    void hasValidAssistantOpening;
   }, [isLoading, roleLoading, prefsHydrated, data, isAdmin, track]);
 
   // Close the mic entirely while Frassy talks or thinks — an open mic next to
@@ -296,15 +284,6 @@ function OnboardingPage() {
   useEffect(() => {
     if ((speaking || busy) && dictation.listening) dictationRef.current.stop();
   }, [speaking, busy, dictation.listening]);
-
-  // Hands-free loop: whenever Frassy is done and nothing is happening,
-  // the microphone reopens on its own in the voice modes.
-  useEffect(() => {
-    if (mode === "text" || voiceBlocked) return;
-    if (busy || speaking || dictation.listening || !dictation.supported) return;
-    const t = window.setTimeout(() => dictationRef.current.start(), 900);
-    return () => window.clearTimeout(t);
-  }, [mode, voiceBlocked, busy, speaking, dictation.listening, dictation.supported]);
 
   const onSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -521,7 +500,7 @@ function OnboardingPage() {
                 <span className="text-[10px] uppercase tracking-[0.28em] text-muted-foreground">
                   How we talk
                 </span>
-                {(["text", "voice_text", "voice_only"] as const).map((m) => (
+                {(["text", "voice_text"] as const).map((m) => (
                   <button
                     key={m}
                     type="button"
@@ -561,7 +540,6 @@ function OnboardingPage() {
                   }
                   setVoiceBlocked(false);
                   setBlockReason(null);
-                  speakReply("Perfect. I can hear you now, and you can hear me.");
                 }}
                 onDismiss={() => {
                   setVoiceBlocked(false);
@@ -651,13 +629,20 @@ function OnboardingPage() {
               }}
               disabled={busy}
               mode={mode}
-              dictation={dictation}
+              dictation={{
+                ...dictation,
+                start: () => {
+                  stopSpeaking();
+                  setSpeaking(false);
+                  dictation.start();
+                },
+              }}
               thinking={busy}
               speaking={speaking}
               canSaveToVault
               placeholder={
                 mode === "voice_text"
-                  ? "Speak or type — upload anything Frassy should see."
+                  ? "Tap the microphone, speak, then press Send."
                   : "Answer in your own words, or attach a file, photo, or note…"
               }
               hint="Saved automatically"

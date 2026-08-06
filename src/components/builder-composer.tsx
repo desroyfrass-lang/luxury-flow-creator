@@ -51,7 +51,7 @@ type Props = {
   onChange: (value: string) => void;
   onSend: (text: string, attachments: BuilderAttachment[]) => void;
   disabled?: boolean;
-  /** "silent" = text only, "voice_text" = voice + text, "voice_only" = hands-free */
+  /** Voice is explicit push-to-talk; continuous hands-free mode is disabled. */
   mode: "silent" | "voice_text" | "voice_only" | "text";
   dictation?: ComposerDictation;
   placeholder?: string;
@@ -464,7 +464,7 @@ export function BuilderComposer({
           <div className="flex min-h-9 flex-1 items-center justify-center rounded-xl border border-dashed border-border px-3 text-xs text-muted-foreground">
             {dictation?.listening
               ? dictation.interim || "Listening…"
-              : "Hands-free — Frassy is with you."}
+              : "Tap the microphone to speak."}
           </div>
         )}
 
