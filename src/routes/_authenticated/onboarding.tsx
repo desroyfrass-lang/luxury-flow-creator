@@ -566,7 +566,9 @@ function OnboardingPage() {
                     setBlockReason("browser-blocked-audio");
                     return;
                   }
-                  enableVoicePlayback();
+                  setVoiceBlocked(false);
+                  setBlockReason(null);
+                  speakReply("Perfect. I can hear you now, and you can hear me.");
                 }}
                 onDismiss={() => {
                   setVoiceBlocked(false);
