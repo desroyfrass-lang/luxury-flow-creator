@@ -27,6 +27,7 @@ import {
 } from "@/lib/audio-unlock";
 import { VoiceGate } from "@/components/voice-gate";
 import { VoicePlaybackDebugger } from "@/components/voice-playback-debugger";
+import { ConversationIntegrityOverlay } from "@/components/conversation-integrity-overlay";
 import { useVoiceDictation } from "@/hooks/use-voice-dictation";
 import { FrassyConsentModal } from "@/components/frassy-consent";
 import { useFrassyMemory, memoryContext, rememberCartSnapshot } from "@/lib/frassy-memory";
@@ -198,6 +199,11 @@ export function FrassyChat() {
       // Used after capture to reject unresolved speaker echo. A real barge-in
       // stops playback immediately, so the completed utterance is accepted.
       isMuted: () => speakingRef.current || loadingRef.current,
+      isAssistantEcho: (text) => {
+        const spoken = lastSpokenRef.current.toLowerCase();
+        const words = text.toLowerCase().split(/\s+/).filter((word) => word.length > 3);
+        return words.length > 0 && words.filter((word) => spoken.includes(word)).length / words.length >= 0.6;
+      },
     },
   );
   const dictationRef = useRef(dictation);
@@ -749,6 +755,19 @@ export function FrassyChat() {
             sttConnected={dictation.listening}
             transcriptProduced={messages.some((message) => message.role === "user")}
             llmResponseReceived={messages.some((message) => message.role === "assistant")}
+          />
+          <ConversationIntegrityOverlay
+            state={loading ? "THINKING" : speaking ? "SPEAKING" : dictation.status === "transcribing" ? "TRANSCRIBING" : dictation.listening ? "LISTENING" : "WAITING_FOR_USER"}
+            microphone={dictation.listening}
+            stt={dictation.status === "transcribing"}
+            tts={speaking}
+            conversationId="frassy-storefront"
+            turnId={messages.filter((message) => message.role === "user").length}
+            speaker={speaking ? "Frassy" : dictation.status === "hearing" ? "Builder" : "None"}
+            lastUserAt={messages.some((message) => message.role === "user") ? new Date().toISOString() : null}
+            lastAssistantAt={messages.some((message) => message.role === "assistant") ? new Date().toISOString() : null}
+            transcript={dictation.lastTranscript}
+            source={dictation.transcriptSource}
           />
 
           {/* Messages */}
