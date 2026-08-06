@@ -11,10 +11,12 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as VisualSearchRouteImport } from './routes/visual-search'
 import { Route as SocialMediaViralsRouteImport } from './routes/social-media-virals'
+import { Route as ShopFrassRouteImport } from './routes/shop-frass'
 import { Route as RewardsRouteImport } from './routes/rewards'
 import { Route as MusicMediaRouteImport } from './routes/music-media'
 import { Route as McpRouteImport } from './routes/mcp'
 import { Route as LookbookRouteImport } from './routes/lookbook'
+import { Route as GatewayRouteImport } from './routes/gateway'
 import { Route as FrassKicksRouteImport } from './routes/frass-kicks'
 import { Route as FrassDripRouteImport } from './routes/frass-drip'
 import { Route as CheckoutRouteImport } from './routes/checkout'
@@ -106,6 +108,11 @@ const SocialMediaViralsRoute = SocialMediaViralsRouteImport.update({
   path: '/social-media-virals',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ShopFrassRoute = ShopFrassRouteImport.update({
+  id: '/shop-frass',
+  path: '/shop-frass',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const RewardsRoute = RewardsRouteImport.update({
   id: '/rewards',
   path: '/rewards',
@@ -124,6 +131,11 @@ const McpRoute = McpRouteImport.update({
 const LookbookRoute = LookbookRouteImport.update({
   id: '/lookbook',
   path: '/lookbook',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const GatewayRoute = GatewayRouteImport.update({
+  id: '/gateway',
+  path: '/gateway',
   getParentRoute: () => rootRouteImport,
 } as any)
 const FrassKicksRoute = FrassKicksRouteImport.update({
@@ -559,10 +571,12 @@ export interface FileRoutesByFullPath {
   '/checkout': typeof CheckoutRoute
   '/frass-drip': typeof FrassDripRouteWithChildren
   '/frass-kicks': typeof FrassKicksRouteWithChildren
+  '/gateway': typeof GatewayRoute
   '/lookbook': typeof LookbookRouteWithChildren
   '/mcp': typeof McpRoute
   '/music-media': typeof MusicMediaRoute
   '/rewards': typeof RewardsRoute
+  '/shop-frass': typeof ShopFrassRoute
   '/social-media-virals': typeof SocialMediaViralsRouteWithChildren
   '/visual-search': typeof VisualSearchRoute
   '/.mcp/list-tools': typeof Char91DotmcpChar93ListToolsRoute
@@ -640,9 +654,11 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/checkout': typeof CheckoutRoute
+  '/gateway': typeof GatewayRoute
   '/mcp': typeof McpRoute
   '/music-media': typeof MusicMediaRoute
   '/rewards': typeof RewardsRoute
+  '/shop-frass': typeof ShopFrassRoute
   '/visual-search': typeof VisualSearchRoute
   '/.mcp/list-tools': typeof Char91DotmcpChar93ListToolsRoute
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
@@ -722,10 +738,12 @@ export interface FileRoutesById {
   '/checkout': typeof CheckoutRoute
   '/frass-drip': typeof FrassDripRouteWithChildren
   '/frass-kicks': typeof FrassKicksRouteWithChildren
+  '/gateway': typeof GatewayRoute
   '/lookbook': typeof LookbookRouteWithChildren
   '/mcp': typeof McpRoute
   '/music-media': typeof MusicMediaRoute
   '/rewards': typeof RewardsRoute
+  '/shop-frass': typeof ShopFrassRoute
   '/social-media-virals': typeof SocialMediaViralsRouteWithChildren
   '/visual-search': typeof VisualSearchRoute
   '/.mcp/list-tools': typeof Char91DotmcpChar93ListToolsRoute
@@ -811,10 +829,12 @@ export interface FileRouteTypes {
     | '/checkout'
     | '/frass-drip'
     | '/frass-kicks'
+    | '/gateway'
     | '/lookbook'
     | '/mcp'
     | '/music-media'
     | '/rewards'
+    | '/shop-frass'
     | '/social-media-virals'
     | '/visual-search'
     | '/.mcp/list-tools'
@@ -892,9 +912,11 @@ export interface FileRouteTypes {
     | '/'
     | '/auth'
     | '/checkout'
+    | '/gateway'
     | '/mcp'
     | '/music-media'
     | '/rewards'
+    | '/shop-frass'
     | '/visual-search'
     | '/.mcp/list-tools'
     | '/.well-known/oauth-protected-resource'
@@ -973,10 +995,12 @@ export interface FileRouteTypes {
     | '/checkout'
     | '/frass-drip'
     | '/frass-kicks'
+    | '/gateway'
     | '/lookbook'
     | '/mcp'
     | '/music-media'
     | '/rewards'
+    | '/shop-frass'
     | '/social-media-virals'
     | '/visual-search'
     | '/.mcp/list-tools'
@@ -1062,10 +1086,12 @@ export interface RootRouteChildren {
   CheckoutRoute: typeof CheckoutRoute
   FrassDripRoute: typeof FrassDripRouteWithChildren
   FrassKicksRoute: typeof FrassKicksRouteWithChildren
+  GatewayRoute: typeof GatewayRoute
   LookbookRoute: typeof LookbookRouteWithChildren
   McpRoute: typeof McpRoute
   MusicMediaRoute: typeof MusicMediaRoute
   RewardsRoute: typeof RewardsRoute
+  ShopFrassRoute: typeof ShopFrassRoute
   SocialMediaViralsRoute: typeof SocialMediaViralsRouteWithChildren
   VisualSearchRoute: typeof VisualSearchRoute
   Char91DotmcpChar93ListToolsRoute: typeof Char91DotmcpChar93ListToolsRoute
@@ -1096,6 +1122,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SocialMediaViralsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/shop-frass': {
+      id: '/shop-frass'
+      path: '/shop-frass'
+      fullPath: '/shop-frass'
+      preLoaderRoute: typeof ShopFrassRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/rewards': {
       id: '/rewards'
       path: '/rewards'
@@ -1122,6 +1155,13 @@ declare module '@tanstack/react-router' {
       path: '/lookbook'
       fullPath: '/lookbook'
       preLoaderRoute: typeof LookbookRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/gateway': {
+      id: '/gateway'
+      path: '/gateway'
+      fullPath: '/gateway'
+      preLoaderRoute: typeof GatewayRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/frass-kicks': {
@@ -2003,10 +2043,12 @@ const rootRouteChildren: RootRouteChildren = {
   CheckoutRoute: CheckoutRoute,
   FrassDripRoute: FrassDripRouteWithChildren,
   FrassKicksRoute: FrassKicksRouteWithChildren,
+  GatewayRoute: GatewayRoute,
   LookbookRoute: LookbookRouteWithChildren,
   McpRoute: McpRoute,
   MusicMediaRoute: MusicMediaRoute,
   RewardsRoute: RewardsRoute,
+  ShopFrassRoute: ShopFrassRoute,
   SocialMediaViralsRoute: SocialMediaViralsRouteWithChildren,
   VisualSearchRoute: VisualSearchRoute,
   Char91DotmcpChar93ListToolsRoute: Char91DotmcpChar93ListToolsRoute,
