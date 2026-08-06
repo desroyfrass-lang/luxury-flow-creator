@@ -10,6 +10,7 @@ type Body = {
   voice?: unknown;
   instructions?: unknown;
   speed?: unknown;
+  stream?: unknown;
 };
 
 const ALLOWED_VOICES = new Set([
