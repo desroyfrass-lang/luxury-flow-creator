@@ -47,10 +47,10 @@ function FrassWorldPage() {
         <District
           id="kicks"
           image={kicksImg}
-          alt="Lush Jamaican street opening into a market boulevard with a signature archway"
+          alt="Caribbean street-fashion district with sneaker walls, boutique racks and stylish crowds under the signature archway"
           emoji="🌲"
           title="FrassKicks District"
-          copy="Through lush Jamaican scenery, left into a street market bounded by the signature archway."
+          copy="Sneaker walls, boutique racks and every trend on the boulevard — style moving through the archway."
           meta="Retail marketplace & department store"
           to="/shop-frass"
           accent="var(--gold)"
@@ -70,10 +70,10 @@ function FrassWorldPage() {
         <District
           id="luxury"
           image={luxuryImg}
-          alt="Botanical estate garden with water feature and stone path leading to a grand estate"
+          alt="Colossal oceanfront mansion with a gold and chrome drive-through and a crystal ice-sculpture waterfall fountain"
           emoji="🌸"
           title="Frass Luxury House"
-          copy="Seasonal gardens, water features, the wine pavilion, then the estate doors."
+          copy="One house on the ocean. Through the gates, around the drive, past the ice-sculpture waterfall — gold and chrome all the way to the doors."
           meta="Bespoke apparel · high-end footwear · leather goods"
           to="/capsules"
           accent="var(--luxe-linen)"
@@ -85,10 +85,10 @@ function FrassWorldPage() {
         <District
           id="kids"
           image={kidsImg}
-          alt="Bright green valley with children playing and a colourful family neighbourhood entrance"
+          alt="Bright valley full of children playing, biking, kites, balloons and colourful painted houses"
           emoji="🧒"
           title="Kids Valley"
-          copy="Down into the bright valley — juice vendors, family treats, children playing in the distance."
+          copy="Down into the colour — kites, bubbles, bikes, ice-cream carts and the whole valley playing."
           meta="Boutique shopping and experiential Kids World"
           to="/frass-kicks"
           accent="var(--kids-coral)"
