@@ -364,7 +364,7 @@ export function BuilderComposer({
             <Plus className={`h-4 w-4 transition-transform ${menuOpen ? "rotate-45" : ""}`} />
           </button>
           {menuOpen && (
-            <div className="absolute bottom-11 left-0 z-50 w-56 overflow-hidden rounded-xl border border-border bg-background p-1 shadow-2xl">
+            <div className="absolute bottom-11 left-0 z-50 max-h-[min(60vh,22rem)] w-56 overflow-y-auto rounded-xl border border-border bg-background p-1 shadow-2xl">
               {menuItems.map((m) => (
                 <button
                   key={m.id}
