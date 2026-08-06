@@ -58,19 +58,10 @@ export const getPublicProfileByHandle = createServerFn({ method: "GET" })
     z.object({ handle: z.string().max(40) }).parse(d),
   )
   .handler(async ({ data }) => {
-    const { createClient } = await import("@supabase/supabase-js");
-    const supabasePublic = createClient<Database>(
-      process.env.SUPABASE_URL!,
-      process.env.SUPABASE_PUBLISHABLE_KEY!,
-      {
-        auth: {
-          storage: undefined,
-          persistSession: false,
-          autoRefreshToken: false,
-        },
-      },
-    );
-    const { data: profile, error } = await supabasePublic
+    // Served server-side with an explicit safe-column projection: visitors have
+    // no direct database read access to profiles.
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { data: profile, error } = await supabaseAdmin
       .from("profiles")
       .select(
         "id, display_name, handle, bio, avatar_url, builder_stage, primary_district, created_at, updated_at",
@@ -81,3 +72,4 @@ export const getPublicProfileByHandle = createServerFn({ method: "GET" })
     if (error) throw error;
     return profile;
   });
+
