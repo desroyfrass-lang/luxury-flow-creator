@@ -31,6 +31,15 @@ export const Route = createFileRoute("/api/tts")({
   server: {
     handlers: {
       POST: async ({ request }) => {
+        // STOP-SHIP containment: prevent old or cached clients from creating
+        // any further speech requests while voice turn-taking is unstable.
+        request.signal.throwIfAborted();
+        return new Response("Frassy voice is temporarily disabled", {
+          status: 503,
+          headers: { "Retry-After": "3600" },
+        });
+
+        /* c8 ignore start -- retained for controlled reactivation
         const body = (await request.json().catch(() => ({}))) as Body;
         const text = typeof body.text === "string" ? body.text.trim() : "";
         if (!text) return new Response("Missing text", { status: 400 });
@@ -91,6 +100,7 @@ export const Route = createFileRoute("/api/tts")({
         } catch (err) {
           return new Response(err instanceof Error ? err.message : "TTS failed", { status: 500 });
         }
+        c8 ignore stop */
       },
     },
   },
