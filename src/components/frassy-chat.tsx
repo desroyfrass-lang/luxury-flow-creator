@@ -96,18 +96,36 @@ export function FrassyChat() {
 
   // One user turn → one assistant turn. `spoken` only decides whether that
   // single reply is also read aloud; it never schedules another turn.
+  //
+  // COMPOSER CONTRACT: the composer is the single source of truth. Whatever the
+  // box holds at press time is frozen, appended, sent, and cleared — in that
+  // order — before any await happens.
   async function send(override?: string, spoken = false) {
-    const text = (override ?? input).trim();
-    if (!text || loading) return;
+    if (loading || voice.phase !== "idle") return; // busy → never silently swap text
+    const before = input;
+    const text = (override ?? before).trim();
+    if (!text) return;
 
     const myTurn = ++turnRef.current;
     const userMsg: Msg = { id: nextId(), role: "user", content: text };
     const history = [...messages, userMsg];
 
+    // Freeze + clear synchronously, before the request leaves.
     setMessages(history);
     setInput("");
     setError(null);
     setLoading(true);
+
+    if (import.meta.env.DEV) {
+      // Composer integrity trace: these must agree.
+      console.info("[composer]", {
+        beforeSend: before,
+        outgoing: text,
+        rendered: userMsg.content,
+        inputAfter: "",
+      });
+    }
+
 
     const controller = new AbortController();
     abortRef.current = controller;
