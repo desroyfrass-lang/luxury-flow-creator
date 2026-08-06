@@ -53,14 +53,14 @@ function FrassWorldPage() {
           emoji="🌲"
           title="FrassKicks District"
           copy="Walk the boulevard. Kicks for men on the left, kicks for women beside it, Bare Drip across the way — pick your door."
-          meta="Retail marketplace & department store · four doors"
-          to="/shop-frass"
+          meta="Retail marketplace & department store · the fashion promenade"
+          to="/kicks-district"
           accent="var(--gold)"
           portals={[
+            { label: "🚪 Enter the District", to: "/kicks-district" },
             { label: "🚪 Kicks — Men", to: "/frass-kicks/men" },
             { label: "🚪 Kicks — Women", to: "/frass-kicks/women" },
             { label: "🚪 Bare Drip", to: "/bare-drip" },
-            { label: "🚪 Marketplace", to: "/shop-frass" },
           ]}
         />
         <District
