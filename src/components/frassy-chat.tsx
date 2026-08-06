@@ -41,6 +41,17 @@ type Msg = {
   products?: ProductCard[];
   order?: OrderCard | null;
 };
+type FounderChatDiagnostics = {
+  conversationMode: string;
+  systemPrompt: string;
+  promptVersion: string;
+  sessionType: string;
+  memoryNamespace: string;
+  routingDecision: string;
+  historySource: string;
+  fallback: string;
+  identityDiscovery: string;
+};
 
 const INITIAL_MSG: Msg = {
   role: "assistant",
@@ -93,6 +104,7 @@ export function FrassyChat() {
   const [pulse, setPulse] = useState(false);
   const [greetingText, setGreetingText] = useState<string | null>(null);
   const [liveMessage, setLiveMessage] = useState("");
+  const [founderDiagnostics, setFounderDiagnostics] = useState<FounderChatDiagnostics | null>(null);
   const [consentOpen, setConsentOpen] = useState(false);
   const [idleOffered, setIdleOffered] = useState(false);
   const items = useCartStore((s) => s.items);
@@ -323,6 +335,7 @@ export function FrassyChat() {
         reply?: string;
         error?: string;
         cards?: { products?: ProductCard[]; order?: OrderCard | null };
+        diagnostics?: FounderChatDiagnostics;
       };
       if (!res.ok) {
         setMessages((m) => [
@@ -333,6 +346,7 @@ export function FrassyChat() {
           },
         ]);
       } else {
+        if (data.diagnostics) setFounderDiagnostics(data.diagnostics);
         setMessages((m) => [
           ...m,
           {
@@ -564,6 +578,23 @@ export function FrassyChat() {
 
           {/* Messages */}
           <div ref={scrollRef} className="flex-1 space-y-3 overflow-y-auto px-4 py-4">
+            {isAdmin === true && founderDiagnostics && (
+              <details className="rounded-xl border border-[color:var(--gold)]/40 bg-[color:var(--gold)]/5 p-3 text-[10px]" open>
+                <summary className="cursor-pointer font-bold uppercase tracking-[0.18em] text-[color:var(--gold)]">
+                  Founder routing diagnostics · temporary
+                </summary>
+                <div className="mt-2 space-y-1 font-mono text-muted-foreground">
+                  <div>Mode: {founderDiagnostics.conversationMode}</div>
+                  <div>Prompt: {founderDiagnostics.systemPrompt}_{founderDiagnostics.promptVersion}</div>
+                  <div>Session: {founderDiagnostics.sessionType}</div>
+                  <div>Memory: {founderDiagnostics.memoryNamespace}</div>
+                  <div>History: {founderDiagnostics.historySource}</div>
+                  <div>Fallback: {founderDiagnostics.fallback}</div>
+                  <div>Identity Discovery: {founderDiagnostics.identityDiscovery}</div>
+                  <div className="font-sans">Route: {founderDiagnostics.routingDecision}</div>
+                </div>
+              </details>
+            )}
             {messages.map((m, i) => (
               <div key={i} className="space-y-2">
                 <div className={`flex ${m.role === "user" ? "justify-end" : "justify-start"}`}>
