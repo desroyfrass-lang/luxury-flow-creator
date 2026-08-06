@@ -144,7 +144,7 @@ export function BuilderComposer({
     const text = value.trim();
     if (disabled || (!text && attachments.length === 0)) return;
     onSend(text, attachments);
-    setAttachments({} && []);
+    setAttachments([]);
     setSaved({});
   };
 
