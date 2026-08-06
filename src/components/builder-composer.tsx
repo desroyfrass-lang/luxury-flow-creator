@@ -225,6 +225,18 @@ export function BuilderComposer({
   const iconBtn =
     "flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-border text-muted-foreground transition hover:border-[color:var(--gold)]/60 hover:text-foreground disabled:opacity-40";
 
+  const phase: ConversationPhase = speaking
+    ? "speaking"
+    : thinking
+      ? "thinking"
+      : dictation?.status === "transcribing"
+        ? "understanding"
+        : dictation?.status === "hearing"
+          ? "hearing"
+          : dictation?.listening
+            ? "listening"
+            : "idle";
+
   return (
     <div
       className={
@@ -233,6 +245,14 @@ export function BuilderComposer({
           : "border-t border-border bg-background px-3 py-2"
       }
     >
+      {voiceEnabled && (
+        <ConversationStatus
+          phase={phase}
+          level={dictation?.level ?? 0}
+          transcript={dictation?.interim}
+        />
+      )}
+
       {/* hidden pickers */}
       <input
         ref={fileRef}
