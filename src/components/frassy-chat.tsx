@@ -855,7 +855,8 @@ export function FrassyChat() {
             mode={prefs.communicationMode}
             dictation={dictation}
             canSaveToVault={journey.signedIn}
-            hint={speaking ? "Frassy is speaking…" : undefined}
+            thinking={loading}
+            speaking={speaking}
           />
         </div>
       )}
