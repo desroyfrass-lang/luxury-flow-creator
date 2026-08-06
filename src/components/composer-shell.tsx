@@ -31,6 +31,9 @@ type Props = {
   onSend: () => void;
   disabled?: boolean;
   placeholder?: string;
+  /** Phase 2 push-to-talk. Omit to keep the mic inert. */
+  onMicToggle?: () => void;
+  micState?: "idle" | "recording" | "busy";
 };
 
 const MENU: Array<{ id: string; label: string; icon: typeof Plus }> = [
@@ -48,7 +51,15 @@ const MENU: Array<{ id: string; label: string; icon: typeof Plus }> = [
 
 const DISABLED_NOTE = "Coming back shortly — Frassy's conversation engine is being rebuilt.";
 
-export function ComposerShell({ value, onChange, onSend, disabled, placeholder }: Props) {
+export function ComposerShell({
+  value,
+  onChange,
+  onSend,
+  disabled,
+  placeholder,
+  onMicToggle,
+  micState = "idle",
+}: Props) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [note, setNote] = useState<string | null>(null);
   const menuRef = useRef<HTMLDivElement>(null);
