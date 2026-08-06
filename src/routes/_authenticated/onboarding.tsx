@@ -150,11 +150,20 @@ function OnboardingPage() {
 
   useEffect(() => () => stopSpeaking(), []);
 
-  const dictation = useVoiceDictation((text) => {
-    // Voice modes are continuous: what you say is sent, no button press.
-    if (modeRef.current !== "text") void send(text);
-    else setDraft((p) => (p ? `${p} ${text}` : text));
-  });
+  const dictation = useVoiceDictation(
+    (text) => {
+      // Voice modes are continuous: what you say is sent, no button press.
+      if (modeRef.current !== "text") void send(text);
+      else setDraft((p) => (p ? `${p} ${text}` : text));
+    },
+    {
+      // Push-to-interrupt: the Builder speaking always takes the floor.
+      onSpeechStart: () => {
+        stopSpeaking();
+        setSpeaking(false);
+      },
+    },
+  );
 
   const dictationRef = useRef(dictation);
   dictationRef.current = dictation;
