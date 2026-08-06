@@ -97,6 +97,7 @@ export function ComposerShell({
       <form
         onSubmit={(e) => {
           e.preventDefault();
+          if (disabled || !value.trim()) return;
           onSend();
         }}
         className="flex items-end gap-2"
