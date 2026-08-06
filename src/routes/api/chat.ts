@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { convertToModelMessages, generateText, stepCountIs } from "ai";
+import { convertToModelMessages, generateText, stepCountIs, streamText } from "ai";
 import { createLovableAiGatewayProvider } from "@/lib/ai-gateway.server";
 import { buildFrassyTools } from "@/lib/frassy-tools.server";
 import { isFounderIdentityDiscovery } from "@/lib/journey-prompts.server";
@@ -89,6 +89,7 @@ export const Route = createFileRoute("/api/chat")({
           modeContext?: string;
           seasonContext?: string;
           experienceContext?: "founder" | "builder" | "storefront";
+          stream?: boolean;
           attachments?: Array<{
             name: string;
             mime: string;
