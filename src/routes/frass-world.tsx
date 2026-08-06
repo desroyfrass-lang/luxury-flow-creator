@@ -47,13 +47,19 @@ function FrassWorldPage() {
         <District
           id="kicks"
           image={kicksImg}
-          alt="Caribbean street-fashion district with sneaker walls, boutique racks and stylish crowds under the signature archway"
+          alt="Street-fashion boulevard lined with gold-trimmed doorways: men's kicks, women's kicks and Bare Drip entrances"
           emoji="🌲"
           title="FrassKicks District"
-          copy="Sneaker walls, boutique racks and every trend on the boulevard — style moving through the archway."
-          meta="Retail marketplace & department store"
+          copy="Walk the boulevard. Kicks for men on the left, kicks for women beside it, Bare Drip across the way — pick your door."
+          meta="Retail marketplace & department store · four doors"
           to="/shop-frass"
           accent="var(--gold)"
+          portals={[
+            { label: "🚪 Kicks — Men", to: "/frass-kicks/men" },
+            { label: "🚪 Kicks — Women", to: "/frass-kicks/women" },
+            { label: "🚪 Bare Drip", to: "/bare-drip" },
+            { label: "🚪 Marketplace", to: "/shop-frass" },
+          ]}
         />
         <District
           id="hill"
