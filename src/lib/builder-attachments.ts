@@ -77,7 +77,8 @@ export function readAttachment(file: File, capture = false): Promise<BuilderAtta
     const reader = new FileReader();
     reader.onerror = () => reject(new Error(`Couldn't read ${file.name}.`));
     reader.onload = () => {
-      const kind = capture && file.type.startsWith("image/") ? "photo" : inferKind(file.name, file.type);
+      const kind =
+        capture && file.type.startsWith("image/") ? "photo" : inferKind(file.name, file.type);
       resolve({
         id: `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
         name: file.name || "capture",
@@ -95,9 +96,7 @@ export function readAttachment(file: File, capture = false): Promise<BuilderAtta
 
 export function describeAttachments(list: BuilderAttachment[]): string {
   if (!list.length) return "";
-  return list
-    .map((a) => `${a.name} (${a.kind}, ${(a.size / 1024).toFixed(0)}KB)`)
-    .join("; ");
+  return list.map((a) => `${a.name} (${a.kind}, ${(a.size / 1024).toFixed(0)}KB)`).join("; ");
 }
 
 export function formatSize(bytes: number) {

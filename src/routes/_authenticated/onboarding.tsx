@@ -15,13 +15,7 @@ import {
   type ConversationDiagnostics,
   type JourneyMessage,
 } from "@/lib/journey.functions";
-import {
-  stageById,
-  stageIndex,
-  stagesFor,
-  trackMinutes,
-  trackOf,
-} from "@/lib/journey";
+import { stageById, stageIndex, stagesFor, trackMinutes, trackOf } from "@/lib/journey";
 import { useIsAdminStatus } from "@/hooks/use-is-admin";
 import { LaunchReadiness } from "@/components/launch-readiness";
 import { COMMISSIONING_PHASES } from "@/lib/commissioning";
@@ -30,7 +24,6 @@ import { speakLine, stopSpeaking } from "@/lib/frassy-voice";
 import { installAudioUnlockListener, isAudioUnlocked, unlockAudio } from "@/lib/audio-unlock";
 import { useVoiceDictation } from "@/hooks/use-voice-dictation";
 
-
 type ConversationMode = "text" | "voice_text" | "voice_only";
 const MODE_LABELS: Record<ConversationMode, string> = {
   text: "Text only",
@@ -38,14 +31,21 @@ const MODE_LABELS: Record<ConversationMode, string> = {
   voice_only: "Voice only",
 };
 
-
 export const Route = createFileRoute("/_authenticated/onboarding")({
   head: () => ({
     meta: [
       { title: "Founder Commissioning | Frass OS" },
-      { name: "description", content: "Commission Frass OS with Frassy across identity, commerce, Builder experience, operations, and launch readiness." },
+      {
+        name: "description",
+        content:
+          "Commission Frass OS with Frassy across identity, commerce, Builder experience, operations, and launch readiness.",
+      },
       { property: "og:title", content: "Founder Commissioning | Frass OS" },
-      { property: "og:description", content: "Commission Frass OS with Frassy across identity, commerce, Builder experience, operations, and launch readiness." },
+      {
+        property: "og:description",
+        content:
+          "Commission Frass OS with Frassy across identity, commerce, Builder experience, operations, and launch readiness.",
+      },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
       { name: "robots", content: "noindex,nofollow" },
@@ -110,7 +110,6 @@ function OnboardingPage() {
     const lastReply = [...messagesRef.current].reverse().find((x) => x.role === "assistant");
     if (lastReply) speakReply(lastReply.content);
     else dictationRef.current?.start();
-
   };
 
   const stage = stageById(data?.currentStage ?? "mission");
@@ -140,7 +139,6 @@ function OnboardingPage() {
     () => (data?.memory ?? []).filter((m) => m.category.startsWith("platform:")),
     [data?.memory],
   );
-
 
   useEffect(() => {
     inputRef.current?.focus();
@@ -197,8 +195,6 @@ function OnboardingPage() {
     if (text) speakReply(text);
     else dictationRef.current.start();
   };
-
-
 
   const send = async (text: string, opening = false) => {
     if (busy) return;
@@ -275,8 +271,6 @@ function OnboardingPage() {
     return () => window.clearTimeout(t);
   }, [mode, voiceBlocked, busy, speaking, dictation.listening, dictation.supported]);
 
-
-
   const onSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const text = draft.trim();
@@ -284,9 +278,6 @@ function OnboardingPage() {
     setDraft("");
     void send(text);
   };
-
-
-
 
   return (
     <SiteShell>
@@ -307,7 +298,6 @@ function OnboardingPage() {
             as you like. Everything is saved — leave whenever you want and Frassy picks up exactly
             where you left off.
           </p>
-
 
           {isAdmin && isOwnerTrack && (
             <div className="mt-5 rounded-sm border border-[color:var(--gold)]/40 bg-[color:var(--gold)]/5 px-4 py-3">
@@ -337,7 +327,8 @@ function OnboardingPage() {
               />
             </div>
             <div className="mt-2 text-[11px] uppercase tracking-[0.25em] text-muted-foreground">
-              {completedCount} of {stages.length} {isOwnerTrack ? "commissioning steps" : "chapters"}
+              {completedCount} of {stages.length}{" "}
+              {isOwnerTrack ? "commissioning steps" : "chapters"}
             </div>
           </div>
 
@@ -405,7 +396,6 @@ function OnboardingPage() {
             </Link>
           )}
 
-
           {finished && (
             <Link
               to="/welcome-hall"
@@ -414,171 +404,205 @@ function OnboardingPage() {
               Enter the Welcome Hall
             </Link>
           )}
-
         </aside>
 
         <div className="space-y-8">
-        {isOwnerTrack && (
-          <LaunchReadiness
-            eyebrow="Commissioning Dashboard"
-            heading="Platform Readiness"
-            completedStageIds={Object.keys(data?.stageProgress ?? {}).filter(
-              (id) => trackOf(id) === "owner",
-            )}
-            onSelectStage={async (stageId) => {
-              await jumpStage({ data: { stageId } });
-              await refetch();
-            }}
-          />
-        )}
-
-
-        {/* Conversation */}
-        <section className="min-h-[70vh] rounded-sm border border-border bg-background/40">
-          {isOwnerTrack && diagnostics && (
-            <details className="border-b border-[color:var(--gold)]/30 bg-[color:var(--gold)]/5 px-6 py-4" open>
-              <summary className="cursor-pointer text-[10px] font-bold uppercase tracking-[0.24em] text-[color:var(--gold)]">
-                Founder routing diagnostics · temporary
-              </summary>
-              <dl className="mt-4 grid gap-x-6 gap-y-2 text-xs sm:grid-cols-2">
-                <div><dt className="inline text-muted-foreground">Conversation Mode: </dt><dd className="inline">{diagnostics.conversationMode}</dd></div>
-                <div><dt className="inline text-muted-foreground">System Prompt: </dt><dd className="inline font-mono">{diagnostics.systemPrompt}_{diagnostics.promptVersion}</dd></div>
-                <div><dt className="inline text-muted-foreground">Session Type: </dt><dd className="inline font-mono">{diagnostics.sessionType}</dd></div>
-                <div><dt className="inline text-muted-foreground">Memory: </dt><dd className="inline font-mono">{diagnostics.memoryNamespace}</dd></div>
-                <div><dt className="inline text-muted-foreground">History: </dt><dd className="inline font-mono">{diagnostics.historySource} ({diagnostics.historyMessages})</dd></div>
-                <div><dt className="inline text-muted-foreground">Fallback: </dt><dd className="inline font-mono">{diagnostics.fallback}</dd></div>
-                <div><dt className="inline text-muted-foreground">Identity Discovery: </dt><dd className="inline font-mono">{diagnostics.identityDiscovery}</dd></div>
-                <div><dt className="inline text-muted-foreground">Stage: </dt><dd className="inline font-mono">{diagnostics.stageId}</dd></div>
-                <div className="sm:col-span-2"><dt className="inline text-muted-foreground">Routing Decision: </dt><dd className="inline">{diagnostics.routingDecision}</dd></div>
-              </dl>
-            </details>
+          {isOwnerTrack && (
+            <LaunchReadiness
+              eyebrow="Commissioning Dashboard"
+              heading="Platform Readiness"
+              completedStageIds={Object.keys(data?.stageProgress ?? {}).filter(
+                (id) => trackOf(id) === "owner",
+              )}
+              onSelectStage={async (stageId) => {
+                await jumpStage({ data: { stageId } });
+                await refetch();
+              }}
+            />
           )}
-          <header className="border-b border-border px-6 py-5">
-            <div className="text-[11px] uppercase tracking-[0.3em] text-muted-foreground">
-              {isOwnerTrack ? stage.chapter : `Chapter ${idx + 1} · ${stage.chapter}`}
-            </div>
-            <h2 className="mt-2 font-display text-2xl">{stage.title}</h2>
-            <p className="mt-1 text-sm text-muted-foreground">{stage.purpose}</p>
 
-            <div className="mt-4 flex flex-wrap items-center gap-2">
-              <span className="text-[10px] uppercase tracking-[0.28em] text-muted-foreground">
-                How we talk
-              </span>
-              {(["text", "voice_text", "voice_only"] as const).map((m) => (
+          {/* Conversation */}
+          <section className="min-h-[70vh] rounded-sm border border-border bg-background/40">
+            {isOwnerTrack && diagnostics && (
+              <details
+                className="border-b border-[color:var(--gold)]/30 bg-[color:var(--gold)]/5 px-6 py-4"
+                open
+              >
+                <summary className="cursor-pointer text-[10px] font-bold uppercase tracking-[0.24em] text-[color:var(--gold)]">
+                  Founder routing diagnostics · temporary
+                </summary>
+                <dl className="mt-4 grid gap-x-6 gap-y-2 text-xs sm:grid-cols-2">
+                  <div>
+                    <dt className="inline text-muted-foreground">Conversation Mode: </dt>
+                    <dd className="inline">{diagnostics.conversationMode}</dd>
+                  </div>
+                  <div>
+                    <dt className="inline text-muted-foreground">System Prompt: </dt>
+                    <dd className="inline font-mono">
+                      {diagnostics.systemPrompt}_{diagnostics.promptVersion}
+                    </dd>
+                  </div>
+                  <div>
+                    <dt className="inline text-muted-foreground">Session Type: </dt>
+                    <dd className="inline font-mono">{diagnostics.sessionType}</dd>
+                  </div>
+                  <div>
+                    <dt className="inline text-muted-foreground">Memory: </dt>
+                    <dd className="inline font-mono">{diagnostics.memoryNamespace}</dd>
+                  </div>
+                  <div>
+                    <dt className="inline text-muted-foreground">History: </dt>
+                    <dd className="inline font-mono">
+                      {diagnostics.historySource} ({diagnostics.historyMessages})
+                    </dd>
+                  </div>
+                  <div>
+                    <dt className="inline text-muted-foreground">Fallback: </dt>
+                    <dd className="inline font-mono">{diagnostics.fallback}</dd>
+                  </div>
+                  <div>
+                    <dt className="inline text-muted-foreground">Identity Discovery: </dt>
+                    <dd className="inline font-mono">{diagnostics.identityDiscovery}</dd>
+                  </div>
+                  <div>
+                    <dt className="inline text-muted-foreground">Stage: </dt>
+                    <dd className="inline font-mono">{diagnostics.stageId}</dd>
+                  </div>
+                  <div className="sm:col-span-2">
+                    <dt className="inline text-muted-foreground">Routing Decision: </dt>
+                    <dd className="inline">{diagnostics.routingDecision}</dd>
+                  </div>
+                </dl>
+              </details>
+            )}
+            <header className="border-b border-border px-6 py-5">
+              <div className="text-[11px] uppercase tracking-[0.3em] text-muted-foreground">
+                {isOwnerTrack ? stage.chapter : `Chapter ${idx + 1} · ${stage.chapter}`}
+              </div>
+              <h2 className="mt-2 font-display text-2xl">{stage.title}</h2>
+              <p className="mt-1 text-sm text-muted-foreground">{stage.purpose}</p>
+
+              <div className="mt-4 flex flex-wrap items-center gap-2">
+                <span className="text-[10px] uppercase tracking-[0.28em] text-muted-foreground">
+                  How we talk
+                </span>
+                {(["text", "voice_text", "voice_only"] as const).map((m) => (
+                  <button
+                    key={m}
+                    type="button"
+                    onClick={() => chooseMode(m)}
+                    className={`rounded-sm border px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.2em] transition ${
+                      mode === m
+                        ? "border-[color:var(--gold)] bg-[color:var(--gold)]/10 text-[color:var(--gold)]"
+                        : "border-border text-muted-foreground hover:text-foreground"
+                    }`}
+                  >
+                    {MODE_LABELS[m]}
+                  </button>
+                ))}
+                {speaking && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      stopSpeaking();
+                      setSpeaking(false);
+                    }}
+                    className="rounded-sm border border-border px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground hover:text-foreground"
+                  >
+                    Stop voice
+                  </button>
+                )}
+              </div>
+
+              {mode !== "text" && voiceBlocked && (
                 <button
-                  key={m}
                   type="button"
-                  onClick={() => chooseMode(m)}
-                  className={`rounded-sm border px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.2em] transition ${
-                    mode === m
-                      ? "border-[color:var(--gold)] bg-[color:var(--gold)]/10 text-[color:var(--gold)]"
-                      : "border-border text-muted-foreground hover:text-foreground"
-                  }`}
+                  onClick={enableVoicePlayback}
+                  className="mt-3 w-full rounded-sm border border-[color:var(--gold)] bg-[color:var(--gold)]/10 px-4 py-3 text-left text-xs text-[color:var(--gold)] transition hover:bg-[color:var(--gold)]/20"
                 >
-                  {MODE_LABELS[m]}
-                </button>
-              ))}
-              {speaking && (
-                <button
-                  type="button"
-                  onClick={() => {
-                    stopSpeaking();
-                    setSpeaking(false);
-                  }}
-                  className="rounded-sm border border-border px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground hover:text-foreground"
-                >
-                  Stop voice
+                  <span className="font-bold uppercase tracking-[0.24em]">
+                    Tap to let Frassy speak
+                  </span>
+                  <span className="mt-1 block normal-case tracking-normal text-muted-foreground">
+                    Your browser blocks sound until you interact with the page once. One tap and the
+                    conversation runs hands-free from here.
+                  </span>
                 </button>
               )}
+            </header>
+
+            <div className="space-y-6 px-6 py-8">
+              {isLoading && (
+                <p className="text-sm text-muted-foreground">Bringing your journey back…</p>
+              )}
+              {messages.map((m, i) => (
+                <div key={i} className={m.role === "user" ? "flex justify-end" : ""}>
+                  <div
+                    className={
+                      m.role === "user"
+                        ? "max-w-[78%] rounded-sm bg-foreground/5 px-4 py-3 text-sm"
+                        : "max-w-[78%] text-[15px] leading-relaxed whitespace-pre-wrap"
+                    }
+                  >
+                    {m.role === "assistant" && (
+                      <div className="mb-1 text-[11px] uppercase tracking-[0.3em] text-[color:var(--gold)]">
+                        Frassy
+                      </div>
+                    )}
+                    {m.content}
+                    {m.role === "assistant" && mode !== "text" && (
+                      <button
+                        type="button"
+                        onClick={() => speakReply(m.content)}
+                        className="mt-3 block text-[10px] font-bold uppercase tracking-[0.2em] text-[color:var(--gold)] hover:text-foreground"
+                      >
+                        Hear Frassy
+                      </button>
+                    )}
+                  </div>
+                </div>
+              ))}
+              {busy && (
+                <div role="status" aria-live="polite" className="text-sm text-muted-foreground">
+                  Frassy is thinking…
+                </div>
+              )}
+              {speaking && !busy && (
+                <div role="status" aria-live="polite" className="text-sm text-[color:var(--gold)]">
+                  Frassy is speaking…
+                </div>
+              )}
+              {dictation.listening && (
+                <div role="status" aria-live="polite" className="text-sm text-muted-foreground">
+                  Listening… {dictation.interim}
+                </div>
+              )}
+              <div ref={endRef} />
             </div>
 
-            {mode !== "text" && voiceBlocked && (
-              <button
-                type="button"
-                onClick={enableVoicePlayback}
-                className="mt-3 w-full rounded-sm border border-[color:var(--gold)] bg-[color:var(--gold)]/10 px-4 py-3 text-left text-xs text-[color:var(--gold)] transition hover:bg-[color:var(--gold)]/20"
-              >
-                <span className="font-bold uppercase tracking-[0.24em]">Tap to let Frassy speak</span>
-                <span className="mt-1 block normal-case tracking-normal text-muted-foreground">
-                  Your browser blocks sound until you interact with the page once. One tap and the
-                  conversation runs hands-free from here.
-                </span>
-              </button>
-            )}
-          </header>
-
-
-
-          <div className="space-y-6 px-6 py-8">
-            {isLoading && (
-              <p className="text-sm text-muted-foreground">Bringing your journey back…</p>
-            )}
-            {messages.map((m, i) => (
-              <div key={i} className={m.role === "user" ? "flex justify-end" : ""}>
-                <div
-                  className={
-                    m.role === "user"
-                      ? "max-w-[78%] rounded-sm bg-foreground/5 px-4 py-3 text-sm"
-                      : "max-w-[78%] text-[15px] leading-relaxed whitespace-pre-wrap"
-                  }
-                >
-                  {m.role === "assistant" && (
-                    <div className="mb-1 text-[11px] uppercase tracking-[0.3em] text-[color:var(--gold)]">
-                      Frassy
-                    </div>
-                  )}
-                  {m.content}
-                  {m.role === "assistant" && mode !== "text" && (
-                    <button
-                      type="button"
-                      onClick={() => speakReply(m.content)}
-                      className="mt-3 block text-[10px] font-bold uppercase tracking-[0.2em] text-[color:var(--gold)] hover:text-foreground"
-                    >
-                      Hear Frassy
-                    </button>
-                  )}
-                </div>
-              </div>
-            ))}
-            {busy && (
-              <div role="status" aria-live="polite" className="text-sm text-muted-foreground">Frassy is thinking…</div>
-            )}
-            {speaking && !busy && (
-              <div role="status" aria-live="polite" className="text-sm text-[color:var(--gold)]">Frassy is speaking…</div>
-            )}
-            {dictation.listening && (
-              <div role="status" aria-live="polite" className="text-sm text-muted-foreground">
-                Listening… {dictation.interim}
-              </div>
-            )}
-            <div ref={endRef} />
-          </div>
-
-          <BuilderComposer
-            variant="page"
-            value={draft}
-            onChange={setDraft}
-            onSend={(text, files) => {
-              stopSpeaking();
-              setSpeaking(false);
-              const line = files.length ? `[Attached: ${describeAttachments(files)}]` : "";
-              const payload = [text.trim(), line].filter(Boolean).join("\n");
-              if (payload) void send(payload);
-            }}
-            disabled={busy}
-            mode={mode}
-            dictation={dictation}
-            canSaveToVault
-            placeholder={
-              mode === "voice_text"
-                ? "Speak or type — upload anything Frassy should see."
-                : "Answer in your own words, or attach a file, photo, or note…"
-            }
-            hint="Saved automatically"
-          />
-
-
-        </section>
+            <BuilderComposer
+              variant="page"
+              value={draft}
+              onChange={setDraft}
+              onSend={(text, files) => {
+                stopSpeaking();
+                setSpeaking(false);
+                const line = files.length ? `[Attached: ${describeAttachments(files)}]` : "";
+                const payload = [text.trim(), line].filter(Boolean).join("\n");
+                if (payload) void send(payload);
+              }}
+              disabled={busy}
+              mode={mode}
+              dictation={dictation}
+              canSaveToVault
+              placeholder={
+                mode === "voice_text"
+                  ? "Speak or type — upload anything Frassy should see."
+                  : "Answer in your own words, or attach a file, photo, or note…"
+              }
+              hint="Saved automatically"
+            />
+          </section>
         </div>
       </div>
       <PageFeedback pageTitle={isOwnerTrack ? "Founder Commissioning" : "Builder Onboarding"} />

@@ -20,7 +20,6 @@ import { useFrassyContext, currentSeason, seasonalAccent } from "@/hooks/use-fra
 import { useJourneyStatus } from "@/hooks/use-journey-status";
 import { useIsAdminStatus } from "@/hooks/use-is-admin";
 
-
 type ProductCard = {
   handle: string;
   title: string;
@@ -75,7 +74,6 @@ const FOUNDER_MSG: Msg = {
   content:
     "Welcome back. Your Founder Control Room is ready. We’re commissioning Frass OS itself—not onboarding you as a Builder. Continue with Platform Readiness, operating decisions, and launch preparation below.",
 };
-
 
 const QUICK_ACTIONS = [
   { label: "🎁 Unlock 40% OFF", prompt: "How do I unlock the 40% off first purchase reward?" },
@@ -189,14 +187,8 @@ export function FrassyChat() {
     );
   }, [needsJourney, needsCommissioning]);
 
-
-
-
   const cartCount = items.reduce((n, i) => n + i.quantity, 0);
-  const cartTotal = items.reduce(
-    (n, i) => n + Number(i.price.amount) * i.quantity,
-    0,
-  );
+  const cartTotal = items.reduce((n, i) => n + Number(i.price.amount) * i.quantity, 0);
 
   const muted = prefs.muted;
   const speechEnabled = canSpeak(prefs);
@@ -231,7 +223,10 @@ export function FrassyChat() {
     if (consentOpen) return;
     if (!prefs.consentedAt && prefs.consentDismissCount < 2) return;
     if (!ctx.canProactivelySpeak) return;
-    if (prefs.disableHomepageGreeting) { setNudged(true); return; }
+    if (prefs.disableHomepageGreeting) {
+      setNudged(true);
+      return;
+    }
     if (prefs.greetingStyle === "quiet") {
       setNudged(true);
       return;
@@ -299,10 +294,6 @@ export function FrassyChat() {
     setTimeout(() => setGreetingText(null), 9000);
   }, [ctx.shouldOfferHelp, idleOffered, open, prefs.disableProactive]);
 
-
-
-
-
   // Cart-add trigger — respect situational awareness (never at checkout/auth/workspace).
   useEffect(() => {
     const prev = lastCartCountRef.current;
@@ -330,7 +321,6 @@ export function FrassyChat() {
     }
   }, [cartCount, ctx.canAutoOpenOnCart, items]);
 
-
   useEffect(() => {
     if (open) {
       setPulse(false);
@@ -352,7 +342,15 @@ export function FrassyChat() {
     if (loading || speaking || dictation.listening || !dictation.supported) return;
     const timer = window.setTimeout(() => dictationRef.current.start(), 400);
     return () => window.clearTimeout(timer);
-  }, [open, prefs.communicationMode, voiceBlocked, loading, speaking, dictation.listening, dictation.supported]);
+  }, [
+    open,
+    prefs.communicationMode,
+    voiceBlocked,
+    loading,
+    speaking,
+    dictation.listening,
+    dictation.supported,
+  ]);
 
   // Bump visit counter once per browser session for memory-aware greetings.
   useEffect(() => {
@@ -366,7 +364,6 @@ export function FrassyChat() {
   useEffect(() => {
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" });
   }, [messages, loading]);
-
 
   const send = async (text: string, attachments: BuilderAttachment[] = []) => {
     const trimmed = text.trim();
@@ -405,10 +402,9 @@ export function FrassyChat() {
           memoryContext: memoryContext(memory),
           modeContext: `${ctx.mode} (route ${ctx.pathname})`,
           seasonContext: seasonalAccent(season) ?? "",
-          experienceContext: isAdmin === true ? "founder" : journey.signedIn ? "builder" : "storefront",
+          experienceContext:
+            isAdmin === true ? "founder" : journey.signedIn ? "builder" : "storefront",
         }),
-
-
       });
       const data = (await res.json()) as {
         reply?: string;
@@ -443,10 +439,7 @@ export function FrassyChat() {
       }
     } catch {
       const errorReply = "Connection hiccup — try again?";
-      setMessages((m) => [
-        ...m,
-        { role: "assistant", content: errorReply },
-      ]);
+      setMessages((m) => [...m, { role: "assistant", content: errorReply }]);
       speakReply(errorReply);
     } finally {
       setLoading(false);
@@ -520,7 +513,6 @@ export function FrassyChat() {
             pulse && !open ? pulseClass : ""
           }`}
         >
-
           {open ? (
             <X className="h-6 w-6 text-[color:var(--gold)]" />
           ) : (
@@ -537,7 +529,6 @@ export function FrassyChat() {
           )}
         </button>
       </div>
-
 
       {/* Panel */}
       {open && (
@@ -669,19 +660,21 @@ export function FrassyChat() {
             </button>
           )}
 
-
-
-
           {/* Messages */}
           <div ref={scrollRef} className="flex-1 space-y-3 overflow-y-auto px-4 py-4">
             {isAdmin === true && founderDiagnostics && (
-              <details className="rounded-xl border border-[color:var(--gold)]/40 bg-[color:var(--gold)]/5 p-3 text-[10px]" open>
+              <details
+                className="rounded-xl border border-[color:var(--gold)]/40 bg-[color:var(--gold)]/5 p-3 text-[10px]"
+                open
+              >
                 <summary className="cursor-pointer font-bold uppercase tracking-[0.18em] text-[color:var(--gold)]">
                   Founder routing diagnostics · temporary
                 </summary>
                 <div className="mt-2 space-y-1 font-mono text-muted-foreground">
                   <div>Mode: {founderDiagnostics.conversationMode}</div>
-                  <div>Prompt: {founderDiagnostics.systemPrompt}_{founderDiagnostics.promptVersion}</div>
+                  <div>
+                    Prompt: {founderDiagnostics.systemPrompt}_{founderDiagnostics.promptVersion}
+                  </div>
                   <div>Session: {founderDiagnostics.sessionType}</div>
                   <div>Memory: {founderDiagnostics.memoryNamespace}</div>
                   <div>History: {founderDiagnostics.historySource}</div>
@@ -823,7 +816,6 @@ export function FrassyChat() {
               </div>
             )}
 
-
             {cartCount > 0 && (
               <div className="flex flex-wrap gap-2 pt-1">
                 <button
@@ -865,7 +857,6 @@ export function FrassyChat() {
             canSaveToVault={journey.signedIn}
             hint={speaking ? "Frassy is speaking…" : undefined}
           />
-
         </div>
       )}
     </>
@@ -1084,7 +1075,10 @@ function FrassySettingsPanel({
               value={memory.preferredColors.join(", ")}
               onChange={(e) =>
                 updateMemory({
-                  preferredColors: e.target.value.split(",").map((s) => s.trim()).filter(Boolean),
+                  preferredColors: e.target.value
+                    .split(",")
+                    .map((s) => s.trim())
+                    .filter(Boolean),
                 })
               }
               placeholder="black, cream, olive"
@@ -1097,7 +1091,10 @@ function FrassySettingsPanel({
               value={memory.preferredBrands.join(", ")}
               onChange={(e) =>
                 updateMemory({
-                  preferredBrands: e.target.value.split(",").map((s) => s.trim()).filter(Boolean),
+                  preferredBrands: e.target.value
+                    .split(",")
+                    .map((s) => s.trim())
+                    .filter(Boolean),
                 })
               }
               placeholder="Frass Kicks, Bare Drip"
@@ -1112,7 +1109,10 @@ function FrassySettingsPanel({
             value={memory.likes.join(", ")}
             onChange={(e) =>
               updateMemory({
-                likes: e.target.value.split(",").map((s) => s.trim()).filter(Boolean),
+                likes: e.target.value
+                  .split(",")
+                  .map((s) => s.trim())
+                  .filter(Boolean),
               })
             }
             placeholder="neutral colors, oversized hoodies"
@@ -1125,7 +1125,10 @@ function FrassySettingsPanel({
             value={memory.dislikes.join(", ")}
             onChange={(e) =>
               updateMemory({
-                dislikes: e.target.value.split(",").map((s) => s.trim()).filter(Boolean),
+                dislikes: e.target.value
+                  .split(",")
+                  .map((s) => s.trim())
+                  .filter(Boolean),
               })
             }
             placeholder="floral prints, bright colors"
@@ -1153,7 +1156,10 @@ function FrassySettingsPanel({
               <div className="text-xs text-foreground">Wishlist</div>
               <div className="text-[10px] text-muted-foreground truncate">
                 {memory.wishlist.length
-                  ? `${memory.wishlist.length} saved · ${memory.wishlist.slice(0, 2).map((w) => w.title).join(", ")}${memory.wishlist.length > 2 ? "…" : ""}`
+                  ? `${memory.wishlist.length} saved · ${memory.wishlist
+                      .slice(0, 2)
+                      .map((w) => w.title)
+                      .join(", ")}${memory.wishlist.length > 2 ? "…" : ""}`
                   : "Nothing saved yet."}
               </div>
             </div>
@@ -1175,8 +1181,7 @@ function FrassySettingsPanel({
         </div>
 
         <p className="text-[10px] leading-relaxed text-muted-foreground">
-          Stored only on this device. Frassy never remembers payment info, addresses, or
-          passwords.
+          Stored only on this device. Frassy never remembers payment info, addresses, or passwords.
         </p>
       </div>
 
@@ -1222,5 +1227,3 @@ function FrassySettingsPanel({
     </div>
   );
 }
-
-

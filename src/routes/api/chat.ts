@@ -103,19 +103,20 @@ export const Route = createFileRoute("/api/chat")({
             !isFounderIdentityDiscovery(message.content),
         );
 
-
         const key = process.env.LOVABLE_API_KEY;
         if (!key) {
-          return Response.json(
-            { error: "AI is not configured." },
-            { status: 500 },
-          );
+          return Response.json({ error: "AI is not configured." }, { status: 500 });
         }
 
         const attachmentContext = attachments.length
           ? `Builder attached: ${attachments
-              .map((a) => `${a.name} (${a.kind}${a.analyzable ? ", inline for analysis" : ", not inline"})`)
-              .join("; ")}. Infer what each asset is without asking. Offer the most useful next step — summarise a document, pull insights from a sheet, analyse an image, draft a Marketplace listing from a product photo, turn a whiteboard or sketch into notes or a project, log a receipt as an expense, or file it in the Builder Vault. Ask one intelligent follow-up, not a list.`
+              .map(
+                (a) =>
+                  `${a.name} (${a.kind}${a.analyzable ? ", inline for analysis" : ", not inline"})`,
+              )
+              .join(
+                "; ",
+              )}. Infer what each asset is without asking. Offer the most useful next step — summarise a document, pull insights from a sheet, analyse an image, draft a Marketplace listing from a product photo, turn a whiteboard or sketch into notes or a project, log a receipt as an expense, or file it in the Builder Vault. Ask one intelligent follow-up, not a list.`
           : "";
 
         const contextBlock = [
@@ -128,9 +129,10 @@ export const Route = createFileRoute("/api/chat")({
           .filter(Boolean)
           .join("\n");
 
-        const basePrompt = body.experienceContext === "founder"
-          ? `${SYSTEM_PROMPT}\n\n${FOUNDER_CONTEXT}`
-          : SYSTEM_PROMPT;
+        const basePrompt =
+          body.experienceContext === "founder"
+            ? `${SYSTEM_PROMPT}\n\n${FOUNDER_CONTEXT}`
+            : SYSTEM_PROMPT;
         const system = contextBlock ? `${basePrompt}\n\n${contextBlock}` : basePrompt;
 
         // Convert simple {role, content} messages into UI-message shape for the SDK.
@@ -158,7 +160,6 @@ export const Route = createFileRoute("/api/chat")({
             });
           }
         }
-
 
         // Fire-and-forget daily-report log.
         void (async () => {
@@ -201,7 +202,8 @@ export const Route = createFileRoute("/api/chat")({
             output?: unknown;
             result?: unknown;
           };
-          const steps = (result as unknown as { steps?: Array<{ content?: ToolResultPart[] }> }).steps ?? [];
+          const steps =
+            (result as unknown as { steps?: Array<{ content?: ToolResultPart[] }> }).steps ?? [];
           for (const step of steps) {
             for (const part of step.content ?? []) {
               if (part.type !== "tool-result" && part.type !== "tool_result") continue;
@@ -247,11 +249,7 @@ export const Route = createFileRoute("/api/chat")({
           });
         } catch (err) {
           const message = err instanceof Error ? err.message : "Unknown error";
-          const status = /429|rate/i.test(message)
-            ? 429
-            : /402|credit/i.test(message)
-              ? 402
-              : 500;
+          const status = /429|rate/i.test(message) ? 429 : /402|credit/i.test(message) ? 402 : 500;
           return Response.json(
             {
               error:

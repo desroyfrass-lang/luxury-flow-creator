@@ -130,7 +130,9 @@ export function BuilderComposer({
     setBusyRead(true);
     try {
       const read = await Promise.all(
-        Array.from(files).slice(0, 5).map((f) => readAttachment(f, capture)),
+        Array.from(files)
+          .slice(0, 5)
+          .map((f) => readAttachment(f, capture)),
       );
       setAttachments((prev) => [...prev, ...read].slice(0, 8));
     } catch (e) {
