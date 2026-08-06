@@ -202,15 +202,21 @@ export const journeyTurn = createServerFn({ method: "POST" })
     const parsed = parseJourneyMarkers(raw);
     const rejectedFounderReply = activeTrack === "owner" && isFounderIdentityDiscovery(parsed.text);
     const text = rejectedFounderReply ? founderSafetyReply(stage.id, displayName) : parsed.text;
-    // A model marker is only a proposal. Progress can move only when the
-    // Builder explicitly approves it in the originating user turn.
-    const stageComplete = rejectedFounderReply
-      ? false
-      : parsed.stageComplete && isExplicitStageApproval(userText);
+
+    // ── WORKFLOW ENGINE (independent of the conversation engine) ───────────────
+    // Progress moves only on an explicit instruction from the Founder/Builder.
+    // A direct advance word ("next", "continue", "proceed", "move on") always
+    // advances the step; a plain approval ("yes", "approved") advances only when
+    // the conversation engine proposed completion. The conversation text itself
+    // never restarts or rewinds the workflow.
+    const advanceWord = /^(next|continue|proceed|move on|skip)(\b|[.!,])/i.test(userText.trim());
+    const stageComplete =
+      advanceWord || (isExplicitStageApproval(userText) && parsed.stageComplete && !rejectedFounderReply);
     const memory = rejectedFounderReply ? [] : parsed.memory;
     const reply = text || (activeTrack === "owner"
       ? founderSafetyReply(stage.id, displayName)
       : "I'm here. Take your time — tell me a little more.");
+
 
     await sb
       .from("builder_journey_messages")
