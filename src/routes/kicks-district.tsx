@@ -9,9 +9,12 @@ import nightlifeImg from "@/assets/kicks-nightlife.jpg";
 import districtImg from "@/assets/district-kicks.jpg";
 import cardMen from "@/assets/card-men.jpg";
 import cardWomen from "@/assets/card-women.jpg";
-import cardBare from "@/assets/card-bare.jpg";
-import cardDrip from "@/assets/card-drip.jpg";
 import cardKicks from "@/assets/card-kicks.jpg";
+import storeKicksMen from "@/assets/store-kicks-men.jpg";
+import storeKicksWomen from "@/assets/store-kicks-women.jpg";
+import storeDripMen from "@/assets/store-drip-men.jpg";
+import storeDripWomen from "@/assets/store-drip-women.jpg";
+import storeBare from "@/assets/store-bare.jpg";
 
 export const Route = createFileRoute("/kicks-district")({
   head: () => ({
