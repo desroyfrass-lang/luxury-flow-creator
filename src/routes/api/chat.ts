@@ -240,6 +240,21 @@ export const Route = createFileRoute("/api/chat")({
                   reply: guarded ? founderFallback : full || "…",
                   replaced: guarded,
                   cards: { products: products.slice(0, 6), order },
+                  ...(body.experienceContext === "founder"
+                    ? {
+                        diagnostics: {
+                          conversationMode: "Founder",
+                          systemPrompt: "storefront_plus_founder_context",
+                          promptVersion: "v1",
+                          sessionType: "streaming_voice_chat",
+                          memoryNamespace: "storefront_browser_memory",
+                          routingDecision: "client admin signal → founder storefront context",
+                          historySource: "floating_chat_client_state",
+                          fallback: guarded ? "founder_safety_interceptor" : "disabled",
+                          identityDiscovery: "disabled",
+                        },
+                      }
+                    : {}),
                 });
               } catch (err) {
                 const message = err instanceof Error ? err.message : "Unknown error";
