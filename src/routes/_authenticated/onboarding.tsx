@@ -178,7 +178,7 @@ function OnboardingPage() {
     }
     setVoiceBlocked(false);
     setSpeaking(true);
-    speakLine(text, {
+    const session = createSpeechSession({
       prefs: { ...prefs, muted: false, communicationMode: "voice_text" },
       tone: "welcome",
       onDone: () => {
@@ -191,7 +191,14 @@ function OnboardingPage() {
         setVoiceBlocked(true);
       },
     });
+    // Speak sentence by sentence: the first clause is synthesized and played
+    // while the rest is still being generated upstream.
+    const pump = new SentencePump((sentence) => session.push(sentence));
+    pump.push(text);
+    pump.flush();
+    session.end();
   };
+
 
   /** User tapped "Let Frassy speak" — a real gesture, so unlock and replay. */
   const enableVoicePlayback = () => {
