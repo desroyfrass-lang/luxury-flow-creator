@@ -103,8 +103,7 @@ export function VoiceDiagnostics({
     };
   }, []);
 
-  const mic =
-    typeof navigator !== "undefined" && Boolean(navigator.mediaDevices?.getUserMedia);
+  const mic = typeof navigator !== "undefined" && Boolean(navigator.mediaDevices?.getUserMedia);
   const rows: [string, boolean | null | string][] = [
     ["Microphone / STT", mic],
     ["Frassy intelligence", true],
@@ -124,9 +123,7 @@ export function VoiceDiagnostics({
         {rows.map(([k, v]) => (
           <div key={k} className="flex items-center justify-between gap-3">
             <span className="text-muted-foreground">{k}</span>
-            <span>
-              {typeof v === "string" ? v : v === null ? "…" : v ? "✅" : "❌"}
-            </span>
+            <span>{typeof v === "string" ? v : v === null ? "…" : v ? "✅" : "❌"}</span>
           </div>
         ))}
       </div>

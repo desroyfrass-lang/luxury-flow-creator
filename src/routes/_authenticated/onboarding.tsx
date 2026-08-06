@@ -218,8 +218,6 @@ function OnboardingPage() {
     session.end();
   };
 
-
-
   const send = async (text: string, opening = false) => {
     if (busy) return;
     stopSpeaking();

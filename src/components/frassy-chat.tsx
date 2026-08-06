@@ -176,7 +176,6 @@ export function FrassyChat() {
     session.end();
   };
 
-
   const dictation = useVoiceDictation(
     (text) => {
       if (modeRef.current !== "silent") void send(text);
