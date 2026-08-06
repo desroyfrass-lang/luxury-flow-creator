@@ -18,7 +18,14 @@ import {
   VOICE_PROFILE_LABELS,
 } from "@/lib/frassy-voice";
 import { streamFrassyChat } from "@/lib/voice/chat-stream";
-import { installAudioUnlockListener, isAudioUnlocked, unlockAudio } from "@/lib/audio-unlock";
+import {
+  installAudioUnlockListener,
+  isAudioRunning,
+  isAudioUnlocked,
+  unlockAudio,
+  type AudioBlockReason,
+} from "@/lib/audio-unlock";
+import { VoiceGate } from "@/components/voice-gate";
 import { useVoiceDictation } from "@/hooks/use-voice-dictation";
 import { FrassyConsentModal } from "@/components/frassy-consent";
 import { useFrassyMemory, memoryContext, rememberCartSnapshot } from "@/lib/frassy-memory";
@@ -114,6 +121,7 @@ export function FrassyChat() {
   const [liveMessage, setLiveMessage] = useState("");
   const [speaking, setSpeaking] = useState(false);
   const [voiceBlocked, setVoiceBlocked] = useState(false);
+  const [blockReason, setBlockReason] = useState<AudioBlockReason | null>(null);
   const [founderDiagnostics, setFounderDiagnostics] = useState<FounderChatDiagnostics | null>(null);
   const [consentOpen, setConsentOpen] = useState(false);
   const [idleOffered, setIdleOffered] = useState(false);
@@ -139,18 +147,21 @@ export function FrassyChat() {
   /** Opens a streaming speech session so Frassy talks while she's still thinking. */
   const openSpeech = (tone: "calm" | "welcome" = "calm") => {
     if (modeRef.current === "silent" || prefs.muted) return null;
-    if (!isAudioUnlocked()) {
+    if (!isAudioUnlocked() || !isAudioRunning()) {
+      setBlockReason("browser-blocked-audio");
       setVoiceBlocked(true);
       return null;
     }
     setVoiceBlocked(false);
+    setBlockReason(null);
     setSpeaking(true);
     return createSpeechSession({
       prefs: { ...prefs, muted: false },
       tone,
       onDone: () => setSpeaking(false),
-      onBlocked: () => {
+      onBlocked: (reason) => {
         setSpeaking(false);
+        setBlockReason(reason);
         setVoiceBlocked(true);
       },
     });
@@ -188,6 +199,7 @@ export function FrassyChat() {
   const enableVoicePlayback = () => {
     unlockAudio();
     setVoiceBlocked(false);
+    setBlockReason(null);
     const lastReply =
       lastSpokenRef.current ||
       [...messagesRef.current].reverse().find((message) => message.role === "assistant")?.content ||
@@ -573,7 +585,7 @@ export function FrassyChat() {
 
       {/* Panel */}
       {open && (
-        <div className="fixed inset-x-3 bottom-24 z-[59] flex max-h-[70vh] flex-col overflow-hidden rounded-2xl border border-border bg-background shadow-2xl md:inset-x-auto md:right-5 md:bottom-24 md:w-[380px]">
+        <div className="fixed inset-x-3 bottom-24 z-[59] flex max-h-[70vh] flex-col overflow-hidden relative rounded-2xl border border-border bg-background shadow-2xl md:inset-x-auto md:right-5 md:bottom-24 md:w-[380px]">
           {/* Header */}
           <div className="flex items-center gap-3 border-b border-border bg-foreground px-4 py-3 text-background">
             <div className="flex h-9 w-9 items-center justify-center rounded-full bg-background/10 overflow-hidden">
@@ -691,15 +703,25 @@ export function FrassyChat() {
             />
           )}
 
-          {voiceBlocked && (
-            <button
-              type="button"
-              onClick={enableVoicePlayback}
-              className="border-b border-[color:var(--gold)]/40 bg-[color:var(--gold)]/10 px-4 py-3 text-left text-xs font-semibold text-[color:var(--gold)]"
-            >
-              Tap to let Frassy speak
-            </button>
-          )}
+          <VoiceGate
+            open={voiceBlocked && prefs.communicationMode !== "silent"}
+            reason={blockReason}
+            speaking={speaking}
+            listening={dictation.listening}
+            onEnable={(ok) => {
+              if (!ok) {
+                setBlockReason("browser-blocked-audio");
+                return;
+              }
+              enableVoicePlayback();
+              speakReply("Perfect. I can hear you now, and you can hear me.", "welcome");
+            }}
+            onDismiss={() => {
+              setVoiceBlocked(false);
+              update({ communicationMode: "silent" });
+              stopSpeaking();
+            }}
+          />
 
           {/* Messages */}
           <div ref={scrollRef} className="flex-1 space-y-3 overflow-y-auto px-4 py-4">
