@@ -71,6 +71,7 @@ function OnboardingPage() {
   const [local, setLocal] = useState<LocalMessage[]>([]);
   const [mode, setMode] = useState<ConversationMode>("text");
   const [speaking, setSpeaking] = useState(false);
+  const [voiceBlocked, setVoiceBlocked] = useState(false);
   const [diagnostics, setDiagnostics] = useState<ConversationDiagnostics | null>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const endRef = useRef<HTMLDivElement>(null);
@@ -78,8 +79,12 @@ function OnboardingPage() {
   const founderRef = useRef(false);
   const modeRef = useRef<ConversationMode>("text");
   modeRef.current = mode;
+  const lastSpokenRef = useRef<string>("");
 
   const { prefs, update: updatePrefs, hydrated: prefsHydrated } = useFrassyPrefs();
+
+  // Prime the browser's audio gate on the very first gesture anywhere on the page.
+  useEffect(() => installAudioUnlockListener(), []);
 
   useEffect(() => {
     if (!prefsHydrated) return;
@@ -87,13 +92,23 @@ function OnboardingPage() {
   }, [prefsHydrated, prefs.communicationMode]);
 
   const chooseMode = (m: ConversationMode) => {
+    // This click IS the user gesture — use it to unlock audio playback.
+    unlockAudio();
     setMode(m);
     modeRef.current = m;
     updatePrefs({ communicationMode: m === "text" ? "silent" : m, muted: false });
     if (m === "text") {
       stopSpeaking();
       setSpeaking(false);
+      dictationRef.current?.stop();
+      return;
     }
+    setVoiceBlocked(false);
+    // Entering a voice mode should immediately give Frassy her voice back.
+    const lastReply = [...messagesRef.current].reverse().find((x) => x.role === "assistant");
+    if (lastReply) speakReply(lastReply.content);
+    else dictationRef.current?.start();
+
   };
 
   const stage = stageById(data?.currentStage ?? "mission");
