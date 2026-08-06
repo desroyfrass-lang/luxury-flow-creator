@@ -304,37 +304,13 @@ export function FrassyChat() {
         )}
       </div>
 
-      <form
-        onSubmit={(e) => {
-          e.preventDefault();
-          void send();
-        }}
-        className="border-t border-white/10 p-3"
-      >
-        <div className="flex items-end gap-2">
-          <textarea
-            ref={inputRef}
-            value={input}
-            rows={1}
-            onChange={(e) => setInput(e.target.value)}
-            onKeyDown={(e) => {
-              if (e.key === "Enter" && !e.shiftKey) {
-                e.preventDefault();
-                void send();
-              }
-            }}
-            placeholder="Type a message…"
-            className="max-h-32 flex-1 resize-none rounded-sm border border-white/15 bg-transparent px-3 py-2 text-sm text-white placeholder:text-white/30 focus:border-[color:var(--gold)] focus:outline-none"
-          />
-          <button
-            type="submit"
-            disabled={loading || !input.trim()}
-            className="rounded-sm border border-[color:var(--gold)] bg-[color:var(--gold)] px-4 py-2 text-[11px] uppercase tracking-[0.25em] text-[color:var(--ink)] disabled:opacity-40"
-          >
-            Send
-          </button>
-        </div>
-      </form>
+      <ComposerShell
+        value={input}
+        onChange={setInput}
+        onSend={() => void send()}
+        disabled={loading}
+        placeholder="Ask Frassy anything…"
+      />
     </div>
   );
 }
