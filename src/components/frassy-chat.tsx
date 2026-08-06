@@ -139,6 +139,8 @@ export function FrassyChat() {
   speakingRef.current = speaking;
   const loadingRef = useRef(false);
   loadingRef.current = loading;
+  const turnAbortRef = useRef<AbortController | null>(null);
+  const interruptedRef = useRef(false);
   modeRef.current = prefs.communicationMode;
   openRef.current = open;
   messagesRef.current = messages;
@@ -185,11 +187,16 @@ export function FrassyChat() {
     {
       // Push-to-interrupt: talking over Frassy stops her instantly.
       onSpeechStart: () => {
-        if (speakingRef.current || loadingRef.current) return;
+        if (!speakingRef.current && !loadingRef.current) return;
+        interruptedRef.current = true;
+        turnAbortRef.current?.abort();
+        turnAbortRef.current = null;
         stopSpeaking();
         setSpeaking(false);
+        setLoading(false);
       },
-      // An open mic next to the speaker hears Frassy, not the Builder.
+      // Used after capture to reject unresolved speaker echo. A real barge-in
+      // stops playback immediately, so the completed utterance is accepted.
       isMuted: () => speakingRef.current || loadingRef.current,
     },
   );
@@ -380,11 +387,6 @@ export function FrassyChat() {
     }
   }, [open]);
 
-  // Close the mic while Frassy talks or thinks, so she can't answer her own echo.
-  useEffect(() => {
-    if ((speaking || loading) && dictation.listening) dictationRef.current.stop();
-  }, [speaking, loading, dictation.listening]);
-
   // Hands-free conversation: after Frassy finishes, automatically return the floor.
   useEffect(() => {
     if (!open || modeRef.current === "silent" || voiceBlocked) return;
@@ -424,10 +426,18 @@ export function FrassyChat() {
     const next: Msg[] = [...messages, { role: "user", content: shown }];
     setMessages(next);
     setInput("");
-    dictationRef.current.stop();
     stopSpeaking();
     setSpeaking(false);
+    interruptedRef.current = false;
+    const turnController = new AbortController();
+    turnAbortRef.current?.abort();
+    turnAbortRef.current = turnController;
     setLoading(true);
+    // Keep the microphone alive through thinking and playback. This is the
+    // barge-in channel; closing it here made interruption impossible.
+    if (modeRef.current !== "silent" && !dictationRef.current.listening) {
+      dictationRef.current.start();
+    }
     try {
       const cartContext =
         cartCount > 0
@@ -456,6 +466,7 @@ export function FrassyChat() {
         },
         {
           onSentence: (sentence) => speech?.push(sentence),
+          signal: turnController.signal,
         },
       )) as {
         reply?: string;
@@ -490,12 +501,22 @@ export function FrassyChat() {
         setLiveMessage(reply);
         if (!speech) speakReply(reply);
       }
-    } catch {
+    } catch (error) {
+      if (
+        turnController.signal.aborted ||
+        interruptedRef.current ||
+        (error instanceof DOMException && error.name === "AbortError")
+      ) {
+        return;
+      }
       const errorReply = "Connection hiccup — try again?";
       setMessages((m) => [...m, { role: "assistant", content: errorReply }]);
       speakReply(errorReply);
     } finally {
-      setLoading(false);
+      if (turnAbortRef.current === turnController) {
+        turnAbortRef.current = null;
+        setLoading(false);
+      }
     }
   };
 
