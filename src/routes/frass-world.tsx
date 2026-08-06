@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { GatewayNav } from "@/components/gateway-nav";
 import kicksImg from "@/assets/district-kicks.jpg";
+import kicksCinematic from "@/assets/frasskicks-cinematic.mp4.asset.json";
 import hillImg from "@/assets/district-hill.jpg";
 import luxuryImg from "@/assets/district-luxury.jpg";
 import kidsImg from "@/assets/district-kids.jpg";
