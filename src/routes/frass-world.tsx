@@ -48,6 +48,7 @@ function FrassWorldPage() {
         <District
           id="kicks"
           image={kicksImg}
+          video={kicksCinematic.url}
           alt="Street-fashion boulevard lined with gold-trimmed doorways: men's kicks, women's kicks and Bare Drip entrances"
           emoji="🌲"
           title="FrassKicks District"
