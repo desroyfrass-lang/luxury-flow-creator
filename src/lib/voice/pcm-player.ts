@@ -6,6 +6,11 @@
 // buffer source is tracked so a barge-in can be honoured on the same frame.
 
 import { getSharedAudioContext } from "@/lib/audio-unlock";
+import {
+  failPlayback,
+  markPlaybackTimestamp,
+  updatePlaybackDiagnostics,
+} from "@/lib/voice/playback-diagnostics";
 
 const SAMPLE_RATE = 24000;
 
@@ -24,7 +29,16 @@ export class PcmPlayer {
     // Always the shared, gesture-unlocked context — creating a private one here
     // is what made Frassy silent: it started suspended and never resumed.
     this.ctx = await getSharedAudioContext();
-    if (!this.ctx || this.ctx.state !== "running") return null;
+    if (!this.ctx || this.ctx.state !== "running") {
+      updatePlaybackDiagnostics({ destinationConnected: "failed" });
+      failPlayback("AudioContext running");
+      return null;
+    }
+    updatePlaybackDiagnostics({
+      destinationConnected: "ok",
+      audioContextState: this.ctx.state,
+      sampleRate: this.ctx.sampleRate,
+    });
     return this.ctx;
   }
 
@@ -46,6 +60,8 @@ export class PcmPlayer {
     const usable = merged.length - (merged.length % 2);
     this.pending = merged.slice(usable);
     if (usable === 0) return;
+    updatePlaybackDiagnostics({ pcmChunksDecoded: "ok", pcmBufferBytes: usable });
+    markPlaybackTimestamp("pcmDecoded");
 
     const samples = new Int16Array(merged.buffer.slice(0, usable));
     const floats = new Float32Array(samples.length);
@@ -56,6 +72,7 @@ export class PcmPlayer {
     const source = this.ctx.createBufferSource();
     source.buffer = buffer;
     source.connect(this.ctx.destination);
+    updatePlaybackDiagnostics({ destinationConnected: "ok" });
 
     // First chunk gets a small lead-in; the device output has not started yet.
     if (this.playhead === 0) this.playhead = this.ctx.currentTime + 0.06;
@@ -65,13 +82,31 @@ export class PcmPlayer {
     this.playhead += buffer.duration;
     this.tailEndsAt = this.playhead;
     this.sources.add(source);
-    source.onended = () => this.sources.delete(source);
+    updatePlaybackDiagnostics({
+      chunksQueued: "ok",
+      playbackStarted: "active",
+      queueLength: this.sources.size,
+      playbackPosition: this.ctx.currentTime,
+    });
+    markPlaybackTimestamp("pcmQueued");
+    markPlaybackTimestamp("pcmPlayed");
+    source.onended = () => {
+      this.sources.delete(source);
+      updatePlaybackDiagnostics({
+        queueLength: this.sources.size,
+        playbackStarted: "ok",
+        playbackCompleted: this.sources.size === 0 ? "ok" : "active",
+        playbackPosition: this.ctx?.currentTime ?? 0,
+      });
+    };
   }
 
   pushBase64(b64: string) {
     const binary = atob(b64);
     const bytes = new Uint8Array(binary.length);
     for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
+    updatePlaybackDiagnostics({ audioStreamReceived: "ok", pcmBufferBytes: bytes.length });
+    markPlaybackTimestamp("pcmReceived");
     this.push(bytes);
   }
 
@@ -97,5 +132,6 @@ export class PcmPlayer {
     this.tailEndsAt = 0;
     // The context is shared and stays unlocked for the session — never close it.
     this.ctx = null;
+    updatePlaybackDiagnostics({ queueLength: 0, pcmBufferBytes: 0 });
   }
 }

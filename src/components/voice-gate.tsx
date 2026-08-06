@@ -12,6 +12,7 @@ import {
   unlockAudioVerified,
   type AudioBlockReason,
 } from "@/lib/audio-unlock";
+import { VoicePlaybackDebugger } from "@/components/voice-playback-debugger";
 
 export type VoiceGateProps = {
   open: boolean;
@@ -72,6 +73,7 @@ export function VoiceGate({
           </button>
         )}
         <VoiceDiagnostics speaking={speaking} listening={listening} />
+        <VoicePlaybackDebugger microphone={listening} sttConnected={listening} />
       </div>
     </div>
   );

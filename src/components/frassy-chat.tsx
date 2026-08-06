@@ -26,6 +26,7 @@ import {
   type AudioBlockReason,
 } from "@/lib/audio-unlock";
 import { VoiceGate } from "@/components/voice-gate";
+import { VoicePlaybackDebugger } from "@/components/voice-playback-debugger";
 import { useVoiceDictation } from "@/hooks/use-voice-dictation";
 import { FrassyConsentModal } from "@/components/frassy-consent";
 import { useFrassyMemory, memoryContext, rememberCartSnapshot } from "@/lib/frassy-memory";
@@ -720,6 +721,13 @@ export function FrassyChat() {
               update({ communicationMode: "silent" });
               stopSpeaking();
             }}
+          />
+
+          <VoicePlaybackDebugger
+            microphone={dictation.listening}
+            sttConnected={dictation.listening}
+            transcriptProduced={messages.some((message) => message.role === "user")}
+            llmResponseReceived={messages.some((message) => message.role === "assistant")}
           />
 
           {/* Messages */}

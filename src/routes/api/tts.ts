@@ -55,7 +55,7 @@ export const Route = createFileRoute("/api/tts")({
             method: "POST",
             headers: {
               "Content-Type": "application/json",
-              "Lovable-API-Key": key,
+              Authorization: `Bearer ${key}`,
             },
             body: JSON.stringify({
               model: "openai/gpt-4o-mini-tts",
