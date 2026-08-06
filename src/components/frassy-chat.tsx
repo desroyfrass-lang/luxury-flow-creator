@@ -585,7 +585,7 @@ export function FrassyChat() {
 
       {/* Panel */}
       {open && (
-        <div className="fixed inset-x-3 bottom-24 z-[59] flex max-h-[70vh] flex-col overflow-hidden relative rounded-2xl border border-border bg-background shadow-2xl md:inset-x-auto md:right-5 md:bottom-24 md:w-[380px]">
+        <div className="fixed inset-x-3 bottom-24 z-[59] flex max-h-[70vh] flex-col overflow-hidden rounded-2xl border border-border bg-background shadow-2xl md:inset-x-auto md:right-5 md:bottom-24 md:w-[380px]">
           {/* Header */}
           <div className="flex items-center gap-3 border-b border-border bg-foreground px-4 py-3 text-background">
             <div className="flex h-9 w-9 items-center justify-center rounded-full bg-background/10 overflow-hidden">
