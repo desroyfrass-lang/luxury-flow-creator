@@ -126,16 +126,16 @@ export function FrassyChat() {
 
   useEffect(() => installAudioUnlockListener(), []);
 
-  const speakReply = (text: string, tone: "calm" | "welcome" = "calm") => {
-    if (!text.trim() || modeRef.current === "silent" || prefs.muted) return;
-    lastSpokenRef.current = text;
+  /** Opens a streaming speech session so Frassy talks while she's still thinking. */
+  const openSpeech = (tone: "calm" | "welcome" = "calm") => {
+    if (modeRef.current === "silent" || prefs.muted) return null;
     if (!isAudioUnlocked()) {
       setVoiceBlocked(true);
-      return;
+      return null;
     }
     setVoiceBlocked(false);
     setSpeaking(true);
-    speakLine(text, {
+    return createSpeechSession({
       prefs: { ...prefs, muted: false },
       tone,
       onDone: () => setSpeaking(false),
@@ -145,6 +145,16 @@ export function FrassyChat() {
       },
     });
   };
+
+  const speakReply = (text: string, tone: "calm" | "welcome" = "calm") => {
+    if (!text.trim()) return;
+    lastSpokenRef.current = text;
+    const session = openSpeech(tone);
+    if (!session) return;
+    session.push(text);
+    session.end();
+  };
+
 
   const dictation = useVoiceDictation(
     (text) => {
