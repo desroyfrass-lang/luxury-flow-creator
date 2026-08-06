@@ -36,6 +36,8 @@ export type ComposerDictation = {
   supported: boolean;
   listening: boolean;
   interim: string;
+  status?: "idle" | "listening" | "hearing" | "transcribing";
+  level?: number;
   start: () => void;
   stop: () => void;
 };
@@ -54,6 +56,10 @@ type Props = {
   /** Right-hand status caption under the composer. */
   hint?: string;
   variant?: "floating" | "page";
+  /** Frassy is generating a reply. */
+  thinking?: boolean;
+  /** Frassy is speaking out loud. */
+  speaking?: boolean;
 };
 
 const KIND_ICON: Record<BuilderAttachmentKind, typeof FileText> = {
