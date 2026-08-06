@@ -43,12 +43,15 @@ export function isFounderIdentityDiscovery(text: string): boolean {
 
 const FOUNDER_DISCOVERY_PATTERNS = FORBIDDEN_FOUNDER_DISCOVERY;
 
-export function founderSafetyReply(stageId: string, displayName?: string | null): string {
+// Conversation-engine fallback ONLY. It must never re-introduce the Founder or
+// re-open the session: a mid-session welcome reads as a restart. Keep it a short
+// continuation line that hands control straight back to the Founder.
+export function founderSafetyReply(stageId: string, _displayName?: string | null): string {
   const stage = stageById(stageId);
   const firstObjective = stage.objectives[0] ?? "the next platform decision";
-  const founder = displayName ?? "Founder";
-  return `Welcome back, ${founder}. You are in the Founder Control Room for the 8-hour commissioning of Frass OS—not a Builder onboarding journey. Your identity and business are already settled: you are the Founder and Owner / Operator, Frass OS is the operating system, and FrassKicks is the commerce brand.\n\nFor “${stage.title},” my recommendation is that we settle ${firstObjective.toLowerCase()} first. Is that platform direction approved, or what should Frass OS change?`;
+  return `Staying on the platform decision. For “${stage.title},” my recommendation is that we settle ${firstObjective.toLowerCase()} first. Approved, or what should Frass OS change?`;
 }
+
 
 export function founderControlRoomOpening(
   stageId: string,
