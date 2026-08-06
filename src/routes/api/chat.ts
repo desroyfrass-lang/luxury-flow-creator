@@ -153,7 +153,14 @@ export const Route = createFileRoute("/api/chat")({
               )}. Infer what each asset is without asking. Offer the most useful next step — summarise a document, pull insights from a sheet, analyse an image, draft a Marketplace listing from a product photo, turn a whiteboard or sketch into notes or a project, log a receipt as an expense, or file it in the Builder Vault. Ask one intelligent follow-up, not a list.`
           : "";
 
+        const interactionMode = body.interactionMode ?? "text";
+        const voiceAvailable = body.voiceAvailable !== false;
+        const modeLine = voiceAvailable
+          ? `Active interaction mode: ${interactionMode}. Voice is available — the person can press the microphone to speak with you, and you speak replies aloud in voice modes. You are never text-only.`
+          : `Active interaction mode: ${interactionMode}. Voice is temporarily unavailable while it is being updated — say exactly that if asked, and never claim you are fundamentally text-only.`;
+
         const contextBlock = [
+          modeLine,
           body.modeContext && `Current context: ${body.modeContext}`,
           body.seasonContext && `Season accent: ${body.seasonContext}`,
           body.memoryContext && `Shopper memory: ${body.memoryContext}`,
