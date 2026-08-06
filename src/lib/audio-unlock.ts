@@ -8,6 +8,7 @@
 // its own context, or the unlock won't apply to it.
 
 const SAMPLE_RATE = 24000;
+import { updatePlaybackDiagnostics } from "@/lib/voice/playback-diagnostics";
 
 let unlocked = false;
 let ctx: AudioContext | null = null;
@@ -80,6 +81,16 @@ export async function getSharedAudioContext(): Promise<AudioContext | null> {
     await c.resume().catch(() => {});
   }
   if (c.state === "running") markUnlocked();
+  updatePlaybackDiagnostics({
+    audioContextState: c.state,
+    autoplayState: c.state === "running" ? "unlocked" : "blocked",
+    sampleRate: c.sampleRate,
+    outputLatencyMs:
+      "outputLatency" in c && typeof c.outputLatency === "number"
+        ? Math.round(c.outputLatency * 1000)
+        : null,
+    playbackPosition: c.currentTime,
+  });
   return c;
 }
 

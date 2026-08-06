@@ -30,6 +30,7 @@ import {
   type AudioBlockReason,
 } from "@/lib/audio-unlock";
 import { VoiceGate } from "@/components/voice-gate";
+import { VoicePlaybackDebugger } from "@/components/voice-playback-debugger";
 import { useVoiceDictation } from "@/hooks/use-voice-dictation";
 
 type ConversationMode = "text" | "voice_text" | "voice_only";
@@ -562,6 +563,12 @@ function OnboardingPage() {
                 }}
               />
             </header>
+            <VoicePlaybackDebugger
+              microphone={dictation.listening}
+              sttConnected={dictation.listening}
+              transcriptProduced={messages.some((message) => message.role === "user")}
+              llmResponseReceived={messages.some((message) => message.role === "assistant")}
+            />
 
             <div className="space-y-6 px-6 py-8">
               {isLoading && (

@@ -6,6 +6,12 @@
 
 import { PcmPlayer } from "./pcm-player";
 import type { SpeakRequest, VoiceOutput } from "./types";
+import {
+  failPlayback,
+  markPlaybackTimestamp,
+  resetPlaybackDiagnostics,
+  updatePlaybackDiagnostics,
+} from "./playback-diagnostics";
 
 export class StreamingGatewayVoice implements VoiceOutput {
   readonly id = "lovable-gateway-tts-stream";
@@ -34,6 +40,7 @@ export class StreamingGatewayVoice implements VoiceOutput {
     if (!text) return;
 
     this.stop();
+    resetPlaybackDiagnostics();
     const controller = new AbortController();
     this.abort = controller;
     const player = new PcmPlayer();
@@ -46,6 +53,7 @@ export class StreamingGatewayVoice implements VoiceOutput {
       throw new Error("audio-context-unavailable");
     }
 
+    updatePlaybackDiagnostics({ ttsRequestSent: "ok" });
     const res = await fetch("/api/tts", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -60,8 +68,13 @@ export class StreamingGatewayVoice implements VoiceOutput {
     });
     if (!res.ok || !res.body) {
       this.active = false;
-      throw new Error(`TTS ${res.status}`);
+      updatePlaybackDiagnostics({ audioStreamReceived: "failed" });
+      failPlayback(`TTS response (${res.status})`);
+      const detail = await res.text().catch(() => "");
+      throw new Error(`TTS ${res.status}${detail ? `: ${detail}` : ""}`);
     }
+    updatePlaybackDiagnostics({ audioStreamReceived: "active" });
+    markPlaybackTimestamp("ttsGenerated");
 
     const reader = res.body.pipeThrough(new TextDecoderStream()).getReader();
     let buffer = "";
@@ -90,6 +103,7 @@ export class StreamingGatewayVoice implements VoiceOutput {
       }
       if (controller.signal.aborted) return;
       await player.waitForDrain();
+      updatePlaybackDiagnostics({ playbackCompleted: "ok" });
     } finally {
       if (this.player === player) {
         player.stop();
