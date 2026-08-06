@@ -552,67 +552,29 @@ function OnboardingPage() {
             <div ref={endRef} />
           </div>
 
-          <form onSubmit={onSubmit} className="border-t border-border px-6 py-5">
-            {mode !== "voice_only" && (
-              <textarea
-                ref={inputRef}
-                rows={3}
-                value={draft}
-                onChange={(e) => setDraft(e.target.value)}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter" && !e.shiftKey) {
-                    e.preventDefault();
-                    onSubmit(e);
-                  }
-                }}
-                placeholder={
-                  mode === "voice_text"
-                    ? "Speak or type — Frassy answers out loud."
-                    : "Take your time — answer in your own words."
-                }
-                className="w-full resize-none rounded-sm border border-border bg-background/60 px-4 py-3 text-sm outline-none focus:border-[color:var(--gold)]"
-              />
-            )}
-            <div className="mt-3 flex flex-wrap items-center justify-between gap-3">
-              <span className="text-[11px] uppercase tracking-[0.25em] text-muted-foreground">
-                {mode === "voice_only" ? "Speak freely — saved automatically" : "Saved automatically"}
-              </span>
-              <div className="flex items-center gap-3">
-                {mode !== "text" &&
-                  (dictation.supported ? (
-                    <button
-                      type="button"
-                      disabled={busy}
-                      onClick={() => {
-                        stopSpeaking();
-                        setSpeaking(false);
-                        dictation.listening ? dictation.stop() : dictation.start();
-                      }}
-                      className={`rounded-sm border px-5 py-2.5 text-[11px] font-bold uppercase tracking-[0.25em] transition disabled:opacity-40 ${
-                        dictation.listening
-                          ? "border-[color:var(--gold)] bg-[color:var(--gold)]/10 text-[color:var(--gold)]"
-                          : "border-border text-muted-foreground hover:text-foreground"
-                      }`}
-                    >
-                      {dictation.listening ? "Stop listening" : "Speak"}
-                    </button>
-                  ) : (
-                    <span className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground">
-                      Voice input needs Chrome or Safari
-                    </span>
-                  ))}
-                {mode !== "voice_only" && (
-                  <button
-                    type="submit"
-                    disabled={busy || !draft.trim()}
-                    className="lux-press rounded-sm border border-[color:var(--gold)] bg-[color:var(--gold)] px-6 py-2.5 text-[11px] font-bold uppercase tracking-[0.3em] text-[color:var(--ink)] disabled:opacity-40"
-                  >
-                    Send
-                  </button>
-                )}
-              </div>
-            </div>
-          </form>
+          <BuilderComposer
+            variant="page"
+            value={draft}
+            onChange={setDraft}
+            onSend={(text, files) => {
+              stopSpeaking();
+              setSpeaking(false);
+              const line = files.length ? `[Attached: ${describeAttachments(files)}]` : "";
+              const payload = [text.trim(), line].filter(Boolean).join("\n");
+              if (payload) void send(payload);
+            }}
+            disabled={busy}
+            mode={mode}
+            dictation={dictation}
+            canSaveToVault
+            placeholder={
+              mode === "voice_text"
+                ? "Speak or type — upload anything Frassy should see."
+                : "Answer in your own words, or attach a file, photo, or note…"
+            }
+            hint="Saved automatically"
+          />
+
 
         </section>
         </div>
