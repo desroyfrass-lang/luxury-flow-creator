@@ -112,11 +112,18 @@ export const Route = createFileRoute("/api/chat")({
           );
         }
 
+        const attachmentContext = attachments.length
+          ? `Builder attached: ${attachments
+              .map((a) => `${a.name} (${a.kind}${a.analyzable ? ", inline for analysis" : ", not inline"})`)
+              .join("; ")}. Infer what each asset is without asking. Offer the most useful next step — summarise a document, pull insights from a sheet, analyse an image, draft a Marketplace listing from a product photo, turn a whiteboard or sketch into notes or a project, log a receipt as an expense, or file it in the Builder Vault. Ask one intelligent follow-up, not a list.`
+          : "";
+
         const contextBlock = [
           body.modeContext && `Current context: ${body.modeContext}`,
           body.seasonContext && `Season accent: ${body.seasonContext}`,
           body.memoryContext && `Shopper memory: ${body.memoryContext}`,
           body.cartContext && `Cart: ${body.cartContext}`,
+          attachmentContext,
         ]
           .filter(Boolean)
           .join("\n");
@@ -127,13 +134,31 @@ export const Route = createFileRoute("/api/chat")({
         const system = contextBlock ? `${basePrompt}\n\n${contextBlock}` : basePrompt;
 
         // Convert simple {role, content} messages into UI-message shape for the SDK.
+        type UiPart =
+          | { type: "text"; text: string }
+          | { type: "file"; mediaType: string; url: string; filename?: string };
         const uiMessages = clientMessages
           .filter((m) => m.role === "user" || m.role === "assistant")
           .map((m, i) => ({
             id: `m-${i}`,
             role: m.role,
-            parts: [{ type: "text" as const, text: m.content }],
+            parts: [{ type: "text" as const, text: m.content }] as UiPart[],
           }));
+
+        // Inline analyzable assets (images, PDFs) onto the latest user turn.
+        const lastUserIdx = uiMessages.map((m) => m.role).lastIndexOf("user");
+        if (lastUserIdx !== -1 && attachments.length) {
+          for (const a of attachments) {
+            if (!a.analyzable || !a.dataUrl) continue;
+            uiMessages[lastUserIdx]!.parts.push({
+              type: "file",
+              mediaType: a.mime,
+              url: a.dataUrl,
+              filename: a.name,
+            });
+          }
+        }
+
 
         // Fire-and-forget daily-report log.
         void (async () => {
