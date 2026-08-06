@@ -87,7 +87,15 @@ export const Route = createFileRoute("/api/chat")({
           modeContext?: string;
           seasonContext?: string;
           experienceContext?: "founder" | "builder" | "storefront";
+          attachments?: Array<{
+            name: string;
+            mime: string;
+            kind: string;
+            analyzable?: boolean;
+            dataUrl?: string;
+          }>;
         };
+        const attachments = Array.isArray(body.attachments) ? body.attachments : [];
         const clientMessages = (Array.isArray(body.messages) ? body.messages : []).filter(
           (message) =>
             body.experienceContext !== "founder" ||
@@ -97,34 +105,61 @@ export const Route = createFileRoute("/api/chat")({
 
         const key = process.env.LOVABLE_API_KEY;
         if (!key) {
-          return Response.json(
-            { error: "AI is not configured." },
-            { status: 500 },
-          );
+          return Response.json({ error: "AI is not configured." }, { status: 500 });
         }
+
+        const attachmentContext = attachments.length
+          ? `Builder attached: ${attachments
+              .map(
+                (a) =>
+                  `${a.name} (${a.kind}${a.analyzable ? ", inline for analysis" : ", not inline"})`,
+              )
+              .join(
+                "; ",
+              )}. Infer what each asset is without asking. Offer the most useful next step — summarise a document, pull insights from a sheet, analyse an image, draft a Marketplace listing from a product photo, turn a whiteboard or sketch into notes or a project, log a receipt as an expense, or file it in the Builder Vault. Ask one intelligent follow-up, not a list.`
+          : "";
 
         const contextBlock = [
           body.modeContext && `Current context: ${body.modeContext}`,
           body.seasonContext && `Season accent: ${body.seasonContext}`,
           body.memoryContext && `Shopper memory: ${body.memoryContext}`,
           body.cartContext && `Cart: ${body.cartContext}`,
+          attachmentContext,
         ]
           .filter(Boolean)
           .join("\n");
 
-        const basePrompt = body.experienceContext === "founder"
-          ? `${SYSTEM_PROMPT}\n\n${FOUNDER_CONTEXT}`
-          : SYSTEM_PROMPT;
+        const basePrompt =
+          body.experienceContext === "founder"
+            ? `${SYSTEM_PROMPT}\n\n${FOUNDER_CONTEXT}`
+            : SYSTEM_PROMPT;
         const system = contextBlock ? `${basePrompt}\n\n${contextBlock}` : basePrompt;
 
         // Convert simple {role, content} messages into UI-message shape for the SDK.
+        type UiPart =
+          | { type: "text"; text: string }
+          | { type: "file"; mediaType: string; url: string; filename?: string };
         const uiMessages = clientMessages
           .filter((m) => m.role === "user" || m.role === "assistant")
           .map((m, i) => ({
             id: `m-${i}`,
             role: m.role,
-            parts: [{ type: "text" as const, text: m.content }],
+            parts: [{ type: "text" as const, text: m.content }] as UiPart[],
           }));
+
+        // Inline analyzable assets (images, PDFs) onto the latest user turn.
+        const lastUserIdx = uiMessages.map((m) => m.role).lastIndexOf("user");
+        if (lastUserIdx !== -1 && attachments.length) {
+          for (const a of attachments) {
+            if (!a.analyzable || !a.dataUrl) continue;
+            uiMessages[lastUserIdx]!.parts.push({
+              type: "file",
+              mediaType: a.mime,
+              url: a.dataUrl,
+              filename: a.name,
+            });
+          }
+        }
 
         // Fire-and-forget daily-report log.
         void (async () => {
@@ -167,7 +202,8 @@ export const Route = createFileRoute("/api/chat")({
             output?: unknown;
             result?: unknown;
           };
-          const steps = (result as unknown as { steps?: Array<{ content?: ToolResultPart[] }> }).steps ?? [];
+          const steps =
+            (result as unknown as { steps?: Array<{ content?: ToolResultPart[] }> }).steps ?? [];
           for (const step of steps) {
             for (const part of step.content ?? []) {
               if (part.type !== "tool-result" && part.type !== "tool_result") continue;
@@ -213,11 +249,7 @@ export const Route = createFileRoute("/api/chat")({
           });
         } catch (err) {
           const message = err instanceof Error ? err.message : "Unknown error";
-          const status = /429|rate/i.test(message)
-            ? 429
-            : /402|credit/i.test(message)
-              ? 402
-              : 500;
+          const status = /429|rate/i.test(message) ? 429 : /402|credit/i.test(message) ? 402 : 500;
           return Response.json(
             {
               error:
