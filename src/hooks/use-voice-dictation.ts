@@ -234,7 +234,10 @@ export function useVoiceDictation(
     }
     const result = text || fallback;
     if (activeRef.current) setStatus("listening");
-    if (result) finalRef.current(result);
+    // Discard anything captured while Frassy was talking (speaker echo) and
+    // anything that doesn't look like a real spoken phrase.
+    if (mutedRef.current?.()) return;
+    if (result && isLikelySpeech(result)) finalRef.current(result);
   }, []);
 
   const start = useCallback(() => {
