@@ -47,19 +47,12 @@ type Msg = {
   order?: OrderCard | null;
 };
 
-const WELCOME: Msg = {
-  id: "welcome",
-  role: "assistant",
-  content:
-    "Welcome to Frass Hill — I'm Frassy. Ask me anything about sizing, styling, your order, or the 40% welcome offer.",
-};
-
 let seq = 0;
 const nextId = () => `m${++seq}-${Date.now()}`;
 
 export function FrassyChat() {
   const [open, setOpen] = useState(false);
-  const [messages, setMessages] = useState<Msg[]>([WELCOME]);
+  const [messages, setMessages] = useState<Msg[]>([]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -121,9 +114,7 @@ export function FrassyChat() {
         headers: { "Content-Type": "application/json" },
         signal: controller.signal,
         body: JSON.stringify({
-          messages: history
-            .filter((m) => m.id !== "welcome")
-            .map((m) => ({ role: m.role, content: m.content })),
+          messages: history.map((m) => ({ role: m.role, content: m.content })),
           cartContext,
           modeContext: ctx.mode,
           experienceContext: isAdmin ? "founder" : "storefront",
@@ -208,7 +199,7 @@ export function FrassyChat() {
             aria-label="Clear conversation"
             onClick={() => {
               stopTurn();
-              setMessages([WELCOME]);
+              setMessages([]);
               setError(null);
             }}
             className="rounded-sm p-2 text-white/50 hover:bg-white/10 hover:text-white"

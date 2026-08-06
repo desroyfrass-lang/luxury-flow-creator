@@ -106,6 +106,22 @@ export const Route = createFileRoute("/api/chat")({
             !isFounderIdentityDiscovery(message.content),
         );
 
+        // Emergency containment: only a fresh, explicit, non-empty user text
+        // submission may create a Frassy turn. Legacy streaming/background
+        // clients are rejected rather than allowed to start another runtime.
+        const lastMessage = clientMessages.at(-1);
+        if (
+          body.stream === true ||
+          attachments.length > 0 ||
+          lastMessage?.role !== "user" ||
+          !lastMessage.content.trim()
+        ) {
+          return Response.json(
+            { error: "Frassy is temporarily available through manual text submission only." },
+            { status: 409 },
+          );
+        }
+
         const key = process.env.LOVABLE_API_KEY;
         if (!key) {
           return Response.json({ error: "AI is not configured." }, { status: 500 });
@@ -186,7 +202,7 @@ export const Route = createFileRoute("/api/chat")({
         // ── Streaming turn (voice + live text) ──────────────────────────────
         // Emits token deltas immediately so the client can speak sentence by
         // sentence, then a terminal `done` frame carrying product/order cards.
-        if (body.stream === true) {
+        if (false) {
           const gateway = createLovableAiGatewayProvider(key);
           const model = gateway("google/gemini-3.5-flash");
           const encoder = new TextEncoder();
