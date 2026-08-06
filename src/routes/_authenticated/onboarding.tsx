@@ -603,6 +603,8 @@ function OnboardingPage() {
               disabled={busy}
               mode={mode}
               dictation={dictation}
+              thinking={busy}
+              speaking={speaking}
               canSaveToVault
               placeholder={
                 mode === "voice_text"
