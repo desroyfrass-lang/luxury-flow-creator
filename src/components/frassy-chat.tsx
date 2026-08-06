@@ -126,6 +126,10 @@ export function FrassyChat() {
   const openRef = useRef(open);
   const messagesRef = useRef(messages);
   const lastSpokenRef = useRef("");
+  const speakingRef = useRef(false);
+  speakingRef.current = speaking;
+  const loadingRef = useRef(false);
+  loadingRef.current = loading;
   modeRef.current = prefs.communicationMode;
   openRef.current = open;
   messagesRef.current = messages;
@@ -170,9 +174,12 @@ export function FrassyChat() {
     {
       // Push-to-interrupt: talking over Frassy stops her instantly.
       onSpeechStart: () => {
+        if (speakingRef.current || loadingRef.current) return;
         stopSpeaking();
         setSpeaking(false);
       },
+      // An open mic next to the speaker hears Frassy, not the Builder.
+      isMuted: () => speakingRef.current || loadingRef.current,
     },
   );
   const dictationRef = useRef(dictation);
@@ -361,11 +368,16 @@ export function FrassyChat() {
     }
   }, [open]);
 
+  // Close the mic while Frassy talks or thinks, so she can't answer her own echo.
+  useEffect(() => {
+    if ((speaking || loading) && dictation.listening) dictationRef.current.stop();
+  }, [speaking, loading, dictation.listening]);
+
   // Hands-free conversation: after Frassy finishes, automatically return the floor.
   useEffect(() => {
     if (!open || modeRef.current === "silent" || voiceBlocked) return;
     if (loading || speaking || dictation.listening || !dictation.supported) return;
-    const timer = window.setTimeout(() => dictationRef.current.start(), 400);
+    const timer = window.setTimeout(() => dictationRef.current.start(), 900);
     return () => window.clearTimeout(timer);
   }, [
     open,
