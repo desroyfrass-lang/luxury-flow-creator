@@ -146,7 +146,7 @@ export function stopSpeaking() {
 }
 
 export function speakLine(text: string, opts: SpeakOptions) {
-  const { prefs, tone = "calm", onDone } = opts;
+  const { prefs, tone = "calm", onDone, onBlocked } = opts;
   if (!canSpeak(prefs) || !text.trim()) {
     onDone?.();
     return;
@@ -167,7 +167,7 @@ export function speakLine(text: string, opts: SpeakOptions) {
   fetch("/api/tts", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ text, voice, instructions, speed }),
+    body: JSON.stringify({ text: text.slice(0, 800), voice, instructions, speed }),
     signal: controller.signal,
   })
     .then(async (res) => {
@@ -177,8 +177,12 @@ export function speakLine(text: string, opts: SpeakOptions) {
       const url = URL.createObjectURL(blob);
       currentUrl = url;
       const audio = new Audio(url);
+      audio.preload = "auto";
       currentAudio = audio;
+      let settled = false;
       const cleanup = () => {
+        if (settled) return;
+        settled = true;
         if (currentAudio === audio) currentAudio = null;
         if (currentUrl === url) {
           URL.revokeObjectURL(url);
@@ -188,9 +192,12 @@ export function speakLine(text: string, opts: SpeakOptions) {
       };
       audio.onended = cleanup;
       audio.onerror = cleanup;
-      audio.play().catch(() => {
-        // Autoplay blocked — fall back to browser voice silently.
-        fallbackSpeak(text, prefs, onDone);
+      audio.play().catch((err) => {
+        // Autoplay gate — the browser refused playback without a gesture.
+        // Try the synthesis path, and surface the block so the UI can prompt.
+        fallbackSpeak(text, prefs, cleanup, () =>
+          onBlocked?.(err instanceof Error ? err.name : "autoplay-blocked"),
+        );
       });
     })
     .catch((err) => {
@@ -198,29 +205,52 @@ export function speakLine(text: string, opts: SpeakOptions) {
       // Network / auth / gateway failure — fall back so the user still hears something.
       // eslint-disable-next-line no-console
       console.warn("[frassy] TTS fallback:", err);
-      fallbackSpeak(text, prefs, onDone);
+      fallbackSpeak(text, prefs, onDone, () => onBlocked?.("tts-unavailable"));
     });
 }
 
-function fallbackSpeak(text: string, prefs: FrassyPrefs, onDone?: () => void) {
+function fallbackSpeak(
+  text: string,
+  prefs: FrassyPrefs,
+  onDone?: () => void,
+  onBlocked?: () => void,
+) {
   if (typeof window === "undefined" || !("speechSynthesis" in window)) {
+    onBlocked?.();
     onDone?.();
     return;
   }
   try {
+    const synth = window.speechSynthesis;
     const u = new SpeechSynthesisUtterance(text);
     const v = pickVoice(prefs.voice, prefs.language);
     if (v) u.voice = v;
     u.rate = 0.95;
     u.pitch = prefs.voice === "masculine" ? 0.9 : 1.05;
     u.volume = 0.9;
+    let started = false;
+    u.onstart = () => {
+      started = true;
+    };
     u.onend = () => onDone?.();
-    u.onerror = () => onDone?.();
-    window.speechSynthesis.speak(u);
+    u.onerror = () => {
+      onBlocked?.();
+      onDone?.();
+    };
+    synth.speak(u);
+    // If nothing started shortly after speak(), the gesture gate ate it.
+    window.setTimeout(() => {
+      if (!started && !synth.speaking) {
+        onBlocked?.();
+        onDone?.();
+      }
+    }, 900);
   } catch {
+    onBlocked?.();
     onDone?.();
   }
 }
+
 
 export const VOICE_PROFILE_LABELS: Record<FrassyVoiceProfile, string> = {
   "calm-luxury": "Calm Luxury",
