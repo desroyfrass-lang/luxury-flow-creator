@@ -197,7 +197,10 @@ export function FrassyChat() {
     }
     if (voice.phase === "recording") {
       const transcript = await voice.stopRecording();
-      if (transcript) await send(transcript, true);
+      if (!transcript) return;
+      // Anything already typed is part of the same turn — never left behind.
+      const typed = input.trim();
+      await send(typed ? `${typed} ${transcript}` : transcript, true);
       return;
     }
     if (voice.phase === "idle" && !loading) await voice.startRecording();
