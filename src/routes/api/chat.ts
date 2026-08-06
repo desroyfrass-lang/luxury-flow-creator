@@ -87,13 +87,22 @@ export const Route = createFileRoute("/api/chat")({
           modeContext?: string;
           seasonContext?: string;
           experienceContext?: "founder" | "builder" | "storefront";
+          attachments?: Array<{
+            name: string;
+            mime: string;
+            kind: string;
+            analyzable?: boolean;
+            dataUrl?: string;
+          }>;
         };
+        const attachments = Array.isArray(body.attachments) ? body.attachments : [];
         const clientMessages = (Array.isArray(body.messages) ? body.messages : []).filter(
           (message) =>
             body.experienceContext !== "founder" ||
             message.role !== "assistant" ||
             !isFounderIdentityDiscovery(message.content),
         );
+
 
         const key = process.env.LOVABLE_API_KEY;
         if (!key) {
