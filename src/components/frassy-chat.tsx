@@ -368,10 +368,14 @@ export function FrassyChat() {
   }, [messages, loading]);
 
 
-  const send = async (text: string) => {
+  const send = async (text: string, attachments: BuilderAttachment[] = []) => {
     const trimmed = text.trim();
-    if (!trimmed || loading) return;
-    const next: Msg[] = [...messages, { role: "user", content: trimmed }];
+    if ((!trimmed && attachments.length === 0) || loading) return;
+    const attachmentLine = attachments.length
+      ? `[Attached: ${describeAttachments(attachments)}]`
+      : "";
+    const shown = [trimmed, attachmentLine].filter(Boolean).join("\n");
+    const next: Msg[] = [...messages, { role: "user", content: shown }];
     setMessages(next);
     setInput("");
     dictationRef.current.stop();
@@ -390,12 +394,20 @@ export function FrassyChat() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           messages: next.map((m) => ({ role: m.role, content: m.content })),
+          attachments: attachments.map((a) => ({
+            name: a.name,
+            mime: a.mime,
+            kind: a.kind,
+            analyzable: a.analyzable,
+            dataUrl: a.analyzable ? a.dataUrl : undefined,
+          })),
           cartContext,
           memoryContext: memoryContext(memory),
           modeContext: `${ctx.mode} (route ${ctx.pathname})`,
           seasonContext: seasonalAccent(season) ?? "",
           experienceContext: isAdmin === true ? "founder" : journey.signedIn ? "builder" : "storefront",
         }),
+
 
       });
       const data = (await res.json()) as {
