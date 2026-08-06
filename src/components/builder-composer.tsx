@@ -23,6 +23,10 @@ import {
   Check,
 } from "lucide-react";
 import { useServerFn } from "@tanstack/react-start";
+import {
+  ConversationStatus,
+  type ConversationPhase,
+} from "@/components/conversation-status";
 import { createVaultItem } from "@/lib/vault.functions";
 import {
   COMPOSER_ACCEPT,
@@ -36,6 +40,8 @@ export type ComposerDictation = {
   supported: boolean;
   listening: boolean;
   interim: string;
+  status?: "idle" | "listening" | "hearing" | "transcribing";
+  level?: number;
   start: () => void;
   stop: () => void;
 };
@@ -54,6 +60,10 @@ type Props = {
   /** Right-hand status caption under the composer. */
   hint?: string;
   variant?: "floating" | "page";
+  /** Frassy is generating a reply. */
+  thinking?: boolean;
+  /** Frassy is speaking out loud. */
+  speaking?: boolean;
 };
 
 const KIND_ICON: Record<BuilderAttachmentKind, typeof FileText> = {
@@ -87,6 +97,8 @@ export function BuilderComposer({
   canSaveToVault = false,
   hint,
   variant = "floating",
+  thinking = false,
+  speaking = false,
 }: Props) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [attachments, setAttachments] = useState<BuilderAttachment[]>([]);
@@ -217,6 +229,18 @@ export function BuilderComposer({
   const iconBtn =
     "flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-border text-muted-foreground transition hover:border-[color:var(--gold)]/60 hover:text-foreground disabled:opacity-40";
 
+  const phase: ConversationPhase = speaking
+    ? "speaking"
+    : thinking
+      ? "thinking"
+      : dictation?.status === "transcribing"
+        ? "understanding"
+        : dictation?.status === "hearing"
+          ? "hearing"
+          : dictation?.listening
+            ? "listening"
+            : "idle";
+
   return (
     <div
       className={
@@ -225,6 +249,14 @@ export function BuilderComposer({
           : "border-t border-border bg-background px-3 py-2"
       }
     >
+      {voiceEnabled && (
+        <ConversationStatus
+          phase={phase}
+          level={dictation?.level ?? 0}
+          transcript={dictation?.interim}
+        />
+      )}
+
       {/* hidden pickers */}
       <input
         ref={fileRef}

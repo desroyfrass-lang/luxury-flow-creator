@@ -47,6 +47,7 @@ import { Route as BlogSlugRouteImport } from './routes/blog.$slug'
 import { Route as BareDripWomenRouteImport } from './routes/bare-drip.women'
 import { Route as BareDripMenRouteImport } from './routes/bare-drip.men'
 import { Route as ApiTtsRouteImport } from './routes/api/tts'
+import { Route as ApiSttRouteImport } from './routes/api/stt'
 import { Route as ApiChatRouteImport } from './routes/api/chat'
 import { Route as AfroDesignersDesignersRouteImport } from './routes/afro-designers.designers'
 import { Route as AuthenticatedWorkspaceRouteImport } from './routes/_authenticated/workspace'
@@ -283,6 +284,11 @@ const BareDripMenRoute = BareDripMenRouteImport.update({
 const ApiTtsRoute = ApiTtsRouteImport.update({
   id: '/api/tts',
   path: '/api/tts',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiSttRoute = ApiSttRouteImport.update({
+  id: '/api/stt',
+  path: '/api/stt',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiChatRoute = ApiChatRouteImport.update({
@@ -575,6 +581,7 @@ export interface FileRoutesByFullPath {
   '/workspace': typeof AuthenticatedWorkspaceRouteWithChildren
   '/afro-designers/designers': typeof AfroDesignersDesignersRouteWithChildren
   '/api/chat': typeof ApiChatRoute
+  '/api/stt': typeof ApiSttRoute
   '/api/tts': typeof ApiTtsRoute
   '/bare-drip/men': typeof BareDripMenRouteWithChildren
   '/bare-drip/women': typeof BareDripWomenRouteWithChildren
@@ -652,6 +659,7 @@ export interface FileRoutesByTo {
   '/workspace': typeof AuthenticatedWorkspaceRouteWithChildren
   '/afro-designers/designers': typeof AfroDesignersDesignersRouteWithChildren
   '/api/chat': typeof ApiChatRoute
+  '/api/stt': typeof ApiSttRoute
   '/api/tts': typeof ApiTtsRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/builder/$handle': typeof BuilderHandleRoute
@@ -736,6 +744,7 @@ export interface FileRoutesById {
   '/_authenticated/workspace': typeof AuthenticatedWorkspaceRouteWithChildren
   '/afro-designers/designers': typeof AfroDesignersDesignersRouteWithChildren
   '/api/chat': typeof ApiChatRoute
+  '/api/stt': typeof ApiSttRoute
   '/api/tts': typeof ApiTtsRoute
   '/bare-drip/men': typeof BareDripMenRouteWithChildren
   '/bare-drip/women': typeof BareDripWomenRouteWithChildren
@@ -824,6 +833,7 @@ export interface FileRouteTypes {
     | '/workspace'
     | '/afro-designers/designers'
     | '/api/chat'
+    | '/api/stt'
     | '/api/tts'
     | '/bare-drip/men'
     | '/bare-drip/women'
@@ -901,6 +911,7 @@ export interface FileRouteTypes {
     | '/workspace'
     | '/afro-designers/designers'
     | '/api/chat'
+    | '/api/stt'
     | '/api/tts'
     | '/blog/$slug'
     | '/builder/$handle'
@@ -984,6 +995,7 @@ export interface FileRouteTypes {
     | '/_authenticated/workspace'
     | '/afro-designers/designers'
     | '/api/chat'
+    | '/api/stt'
     | '/api/tts'
     | '/bare-drip/men'
     | '/bare-drip/women'
@@ -1059,6 +1071,7 @@ export interface RootRouteChildren {
   Char91DotmcpChar93ListToolsRoute: typeof Char91DotmcpChar93ListToolsRoute
   Char91DotwellKnownChar93OauthProtectedResourceRoute: typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   ApiChatRoute: typeof ApiChatRoute
+  ApiSttRoute: typeof ApiSttRoute
   ApiTtsRoute: typeof ApiTtsRoute
   BuilderHandleRoute: typeof BuilderHandleRoute
   CollectionHandleRoute: typeof CollectionHandleRoute
@@ -1333,6 +1346,13 @@ declare module '@tanstack/react-router' {
       path: '/api/tts'
       fullPath: '/api/tts'
       preLoaderRoute: typeof ApiTtsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/stt': {
+      id: '/api/stt'
+      path: '/api/stt'
+      fullPath: '/api/stt'
+      preLoaderRoute: typeof ApiSttRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/chat': {
@@ -1993,6 +2013,7 @@ const rootRouteChildren: RootRouteChildren = {
   Char91DotwellKnownChar93OauthProtectedResourceRoute:
     Char91DotwellKnownChar93OauthProtectedResourceRoute,
   ApiChatRoute: ApiChatRoute,
+  ApiSttRoute: ApiSttRoute,
   ApiTtsRoute: ApiTtsRoute,
   BuilderHandleRoute: BuilderHandleRoute,
   CollectionHandleRoute: CollectionHandleRoute,
