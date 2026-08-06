@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { GatewayNav } from "@/components/gateway-nav";
 import kicksImg from "@/assets/district-kicks.jpg";
+import kicksCinematic from "@/assets/frasskicks-cinematic.mp4.asset.json";
 import hillImg from "@/assets/district-hill.jpg";
 import luxuryImg from "@/assets/district-luxury.jpg";
 import kidsImg from "@/assets/district-kids.jpg";
@@ -47,6 +48,7 @@ function FrassWorldPage() {
         <District
           id="kicks"
           image={kicksImg}
+          video={kicksCinematic.url}
           alt="Street-fashion boulevard lined with gold-trimmed doorways: men's kicks, women's kicks and Bare Drip entrances"
           emoji="🌲"
           title="FrassKicks District"
@@ -131,6 +133,7 @@ function FrassWorldPage() {
 function District({
   id,
   image,
+  video,
   alt,
   emoji,
   title,
@@ -143,6 +146,7 @@ function District({
 }: {
   id: string;
   image: string;
+  video?: string;
   alt: string;
   emoji: string;
   title: string;
@@ -161,14 +165,28 @@ function District({
     >
       <Link to={to} aria-label={`${title} — ${meta}`} className="block">
         <div className="relative h-64 overflow-hidden md:h-80">
-          <img
-            src={image}
-            alt={alt}
-            loading="lazy"
-            width={1280}
-            height={960}
-            className="h-full w-full object-cover transition-transform duration-[1200ms] ease-out will-change-transform group-hover:scale-105"
-          />
+          {video ? (
+            <video
+              src={video}
+              poster={image}
+              autoPlay
+              muted
+              loop
+              playsInline
+              preload="auto"
+              aria-label={alt}
+              className="h-full w-full object-cover transition-transform duration-[1200ms] ease-out will-change-transform group-hover:scale-105"
+            />
+          ) : (
+            <img
+              src={image}
+              alt={alt}
+              loading="lazy"
+              width={1280}
+              height={960}
+              className="h-full w-full object-cover transition-transform duration-[1200ms] ease-out will-change-transform group-hover:scale-105"
+            />
+          )}
           <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/25 to-transparent" />
           {badge && (
             <span
