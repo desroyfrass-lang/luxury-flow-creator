@@ -1,5 +1,13 @@
 import { createServerFn } from "@tanstack/react-start";
+import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import { z } from "zod";
+
+/** Only these origins may be crawled — prevents SSRF / internal network probing. */
+const ALLOWED_ORIGINS = [
+  "https://frasskicks.com",
+  "https://www.frasskicks.com",
+  "https://luxury-flow-creator.lovable.app",
+];
 
 const inputSchema = z.object({
   baseUrl: z.string().url(),
