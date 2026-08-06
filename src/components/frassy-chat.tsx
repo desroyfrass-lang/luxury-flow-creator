@@ -17,6 +17,7 @@ import { useCartStore } from "@/lib/cart-store";
 import symbolAsset from "@/assets/frass-logo-symbol.asset.json";
 import { useFrassyContext } from "@/hooks/use-frassy-context";
 import { useIsAdminStatus } from "@/hooks/use-is-admin";
+import { ComposerShell } from "@/components/composer-shell";
 
 type ProductCard = {
   handle: string;
