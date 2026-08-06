@@ -96,7 +96,10 @@ export type SpeakOptions = {
   prefs: FrassyPrefs;
   tone?: FrassyTone;
   onDone?: () => void;
+  /** Fired when the browser refused to play audio (autoplay gate) or TTS failed. */
+  onBlocked?: (reason: string) => void;
 };
+
 
 export function canSpeak(prefs: FrassyPrefs): boolean {
   if (prefs.muted) return false;
