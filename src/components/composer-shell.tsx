@@ -167,16 +167,19 @@ export function ComposerShell({
           ref={textRef}
           value={value}
           rows={1}
+          disabled={disabled}
           onChange={(e) => onChange(e.target.value)}
           onKeyDown={(e) => {
             if (e.key === "Enter" && !e.shiftKey) {
               e.preventDefault();
+              if (disabled || !value.trim()) return;
               onSend();
             }
           }}
-          placeholder={placeholder ?? "Type a message…"}
-          className="max-h-32 min-h-9 flex-1 resize-none rounded-xl border border-white/15 bg-transparent px-3 py-2 text-sm text-white placeholder:text-white/30 focus:border-[color:var(--gold)] focus:outline-none"
+          placeholder={disabled ? "Frassy is replying…" : (placeholder ?? "Type a message…")}
+          className="max-h-32 min-h-9 flex-1 resize-none rounded-xl border border-white/15 bg-transparent px-3 py-2 text-sm text-white placeholder:text-white/30 focus:border-[color:var(--gold)] focus:outline-none disabled:opacity-60"
         />
+
 
         <button
           type="submit"
