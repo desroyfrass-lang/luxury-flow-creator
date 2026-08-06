@@ -18,6 +18,7 @@ import symbolAsset from "@/assets/frass-logo-symbol.asset.json";
 import { useFrassyContext } from "@/hooks/use-frassy-context";
 import { useIsAdminStatus } from "@/hooks/use-is-admin";
 import { ComposerShell } from "@/components/composer-shell";
+import { usePushToTalk } from "@/hooks/use-push-to-talk";
 
 type ProductCard = {
   handle: string;
