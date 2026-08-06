@@ -100,42 +100,23 @@ export type SpeakOptions = {
   onBlocked?: (reason: string) => void;
 };
 
-
 export function canSpeak(prefs: FrassyPrefs): boolean {
   if (prefs.muted) return false;
   return prefs.communicationMode === "voice_text" || prefs.communicationMode === "voice_only";
 }
 
-// Track current playback so stopSpeaking() cancels both paths cleanly.
-let currentAudio: HTMLAudioElement | null = null;
-let currentUrl: string | null = null;
-let currentAbort: AbortController | null = null;
+// ── Output provider (swappable — see src/lib/voice/types.ts) ────────────────
+let output: StreamingGatewayVoice | null = null;
+let generation = 0;
+
+function provider(): StreamingGatewayVoice {
+  if (!output) output = new StreamingGatewayVoice();
+  return output;
+}
 
 export function stopSpeaking() {
-  if (currentAudio) {
-    try {
-      currentAudio.pause();
-    } catch {
-      /* noop */
-    }
-    currentAudio = null;
-  }
-  if (currentUrl) {
-    try {
-      URL.revokeObjectURL(currentUrl);
-    } catch {
-      /* noop */
-    }
-    currentUrl = null;
-  }
-  if (currentAbort) {
-    try {
-      currentAbort.abort();
-    } catch {
-      /* noop */
-    }
-    currentAbort = null;
-  }
+  generation += 1;
+  output?.stop();
   if (typeof window !== "undefined" && "speechSynthesis" in window) {
     try {
       window.speechSynthesis.cancel();
@@ -145,69 +126,85 @@ export function stopSpeaking() {
   }
 }
 
-export function speakLine(text: string, opts: SpeakOptions) {
+export type SpeechSession = {
+  /** Queue one sentence — spoken as soon as the previous one finishes. */
+  push: (sentence: string) => void;
+  /** No more sentences will arrive. */
+  end: () => void;
+  stop: () => void;
+};
+
+/**
+ * Opens a streaming speech session. Sentences can be pushed while the model is
+ * still generating, so speech starts long before the reply is complete.
+ */
+export function createSpeechSession(opts: SpeakOptions): SpeechSession {
   const { prefs, tone = "calm", onDone, onBlocked } = opts;
-  if (!canSpeak(prefs) || !text.trim()) {
-    onDone?.();
-    return;
-  }
-  if (typeof window === "undefined") {
-    onDone?.();
-    return;
-  }
-
-  stopSpeaking();
-  const controller = new AbortController();
-  currentAbort = controller;
-
+  const mine = ++generation;
   const voice = pickNeuralVoice(prefs.voice, prefs.voiceProfile);
   const instructions = buildInstructions(prefs, tone);
   const speed = prefs.language === "patois" ? 0.95 : 1.0;
 
-  fetch("/api/tts", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ text: text.slice(0, 800), voice, instructions, speed }),
-    signal: controller.signal,
-  })
-    .then(async (res) => {
-      if (!res.ok) throw new Error(`TTS ${res.status}`);
-      const blob = await res.blob();
-      if (controller.signal.aborted) return;
-      const url = URL.createObjectURL(blob);
-      currentUrl = url;
-      const audio = new Audio(url);
-      audio.preload = "auto";
-      currentAudio = audio;
-      let settled = false;
-      const cleanup = () => {
-        if (settled) return;
-        settled = true;
-        if (currentAudio === audio) currentAudio = null;
-        if (currentUrl === url) {
-          URL.revokeObjectURL(url);
-          currentUrl = null;
-        }
-        onDone?.();
-      };
-      audio.onended = cleanup;
-      audio.onerror = cleanup;
-      audio.play().catch((err) => {
-        // Autoplay gate — the browser refused playback without a gesture.
-        // Try the synthesis path, and surface the block so the UI can prompt.
-        fallbackSpeak(text, prefs, cleanup, () =>
-          onBlocked?.(err instanceof Error ? err.name : "autoplay-blocked"),
-        );
-      });
-    })
-    .catch((err) => {
-      if (controller.signal.aborted) return;
-      // Network / auth / gateway failure — fall back so the user still hears something.
-      // eslint-disable-next-line no-console
-      console.warn("[frassy] TTS fallback:", err);
-      fallbackSpeak(text, prefs, onDone, () => onBlocked?.("tts-unavailable"));
-    });
+  let chain: Promise<void> = Promise.resolve();
+  let ended = false;
+  let pendingCount = 0;
+  let failed = false;
+
+  const settleIfDone = () => {
+    if (ended && pendingCount === 0 && generation === mine) onDone?.();
+  };
+
+  const speakOne = async (sentence: string) => {
+    if (generation !== mine) return;
+    try {
+      await provider().speak({ text: sentence, voice, instructions, speed });
+    } catch (err) {
+      if (generation !== mine) return;
+      if (!failed) {
+        failed = true;
+        // eslint-disable-next-line no-console
+        console.warn("[frassy] streaming TTS fallback:", err);
+        onBlocked?.(err instanceof Error && err.name === "NotAllowedError"
+          ? "autoplay-blocked"
+          : "tts-unavailable");
+      }
+      await new Promise<void>((resolve) => fallbackSpeak(sentence, prefs, resolve, () => {}));
+    }
+  };
+
+  return {
+    push(sentence: string) {
+      const clean = sentence.trim();
+      if (!clean || generation !== mine) return;
+      pendingCount += 1;
+      chain = chain
+        .then(() => speakOne(clean))
+        .finally(() => {
+          pendingCount -= 1;
+          settleIfDone();
+        });
+    },
+    end() {
+      ended = true;
+      settleIfDone();
+    },
+    stop() {
+      if (generation === mine) stopSpeaking();
+    },
+  };
 }
+
+export function speakLine(text: string, opts: SpeakOptions) {
+  if (!canSpeak(opts.prefs) || !text.trim() || typeof window === "undefined") {
+    opts.onDone?.();
+    return;
+  }
+  stopSpeaking();
+  const session = createSpeechSession(opts);
+  session.push(text);
+  session.end();
+}
+
 
 function fallbackSpeak(
   text: string,
