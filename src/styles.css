@@ -424,3 +424,39 @@
 .frassy-pulse-minimal { animation-duration: 2.6s; animation-timing-function: ease-in-out; }
 .frassy-pulse-minimal { --tw-shadow: none; }
 .frassy-pulse-expressive { animation-duration: 1.1s; }
+
+/* ── FRASS GATEWAY DISTRICT ACCENTS ───────────────────────────── */
+:root {
+  --retail-ink: #000000;
+  --retail-card: #ffffff;
+  --hill-green: #1b4d3e;
+  --hill-gold: #d4af37;
+  --luxe-black: #111111;
+  --luxe-linen: #f5f2eb;
+  --kids-coral: #ff6b6b;
+  --kids-turquoise: #4ecdc4;
+  --kids-sun: #ffe66d;
+}
+
+@utility gateway-rise {
+  animation: gateway-rise 0.7s var(--ease-luxury) both;
+}
+
+@keyframes gateway-rise {
+  from { opacity: 0; transform: translate3d(0, 24px, 0); }
+  to { opacity: 1; transform: translate3d(0, 0, 0); }
+}
+
+@keyframes gateway-drift {
+  from { transform: scale(1.06) translate3d(0, 0, 0); }
+  to { transform: scale(1.14) translate3d(0, -1.5%, 0); }
+}
+
+@utility gateway-drift {
+  animation: gateway-drift 24s ease-in-out infinite alternate;
+  will-change: transform;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gateway-drift, .gateway-rise { animation: none !important; }
+}
