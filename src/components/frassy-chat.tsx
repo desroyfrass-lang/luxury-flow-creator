@@ -206,7 +206,15 @@ export function FrassyChat() {
           <div>
             <div className="text-sm text-white">Frassy</div>
             <div className="text-[10px] uppercase tracking-[0.3em] text-white/40">
-              {loading ? "Thinking…" : "Ready"}
+              {voice.phase === "recording"
+                ? "Listening…"
+                : voice.phase === "transcribing"
+                  ? "Transcribing…"
+                  : voice.phase === "speaking"
+                    ? "Speaking…"
+                    : loading
+                      ? "Thinking…"
+                      : "Waiting"}
             </div>
           </div>
         </div>
