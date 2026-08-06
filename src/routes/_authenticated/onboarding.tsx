@@ -20,7 +20,8 @@ import { useIsAdminStatus } from "@/hooks/use-is-admin";
 import { LaunchReadiness } from "@/components/launch-readiness";
 import { COMMISSIONING_PHASES } from "@/lib/commissioning";
 import { useFrassyPrefs } from "@/hooks/use-frassy-prefs";
-import { speakLine, stopSpeaking } from "@/lib/frassy-voice";
+import { createSpeechSession, stopSpeaking } from "@/lib/frassy-voice";
+import { SentencePump } from "@/lib/voice/sentence-pump";
 import { installAudioUnlockListener, isAudioUnlocked, unlockAudio } from "@/lib/audio-unlock";
 import { useVoiceDictation } from "@/hooks/use-voice-dictation";
 
@@ -178,7 +179,7 @@ function OnboardingPage() {
     }
     setVoiceBlocked(false);
     setSpeaking(true);
-    speakLine(text, {
+    const session = createSpeechSession({
       prefs: { ...prefs, muted: false, communicationMode: "voice_text" },
       tone: "welcome",
       onDone: () => {
@@ -191,7 +192,14 @@ function OnboardingPage() {
         setVoiceBlocked(true);
       },
     });
+    // Speak sentence by sentence: the first clause is synthesized and played
+    // while the rest is still being generated upstream.
+    const pump = new SentencePump((sentence) => session.push(sentence));
+    pump.push(text);
+    pump.flush();
+    session.end();
   };
+
 
   /** User tapped "Let Frassy speak" — a real gesture, so unlock and replay. */
   const enableVoicePlayback = () => {
