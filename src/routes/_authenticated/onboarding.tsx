@@ -20,7 +20,8 @@ import { useIsAdminStatus } from "@/hooks/use-is-admin";
 import { LaunchReadiness } from "@/components/launch-readiness";
 import { COMMISSIONING_PHASES } from "@/lib/commissioning";
 import { useFrassyPrefs } from "@/hooks/use-frassy-prefs";
-import { speakLine, stopSpeaking } from "@/lib/frassy-voice";
+import { createSpeechSession, stopSpeaking } from "@/lib/frassy-voice";
+import { SentencePump } from "@/lib/voice/sentence-pump";
 import { installAudioUnlockListener, isAudioUnlocked, unlockAudio } from "@/lib/audio-unlock";
 import { useVoiceDictation } from "@/hooks/use-voice-dictation";
 
