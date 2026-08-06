@@ -426,7 +426,6 @@ export function FrassyChat() {
     const next: Msg[] = [...messages, { role: "user", content: shown }];
     setMessages(next);
     setInput("");
-    dictationRef.current.stop();
     stopSpeaking();
     setSpeaking(false);
     interruptedRef.current = false;
@@ -434,6 +433,11 @@ export function FrassyChat() {
     turnAbortRef.current?.abort();
     turnAbortRef.current = turnController;
     setLoading(true);
+    // Keep the microphone alive through thinking and playback. This is the
+    // barge-in channel; closing it here made interruption impossible.
+    if (modeRef.current !== "silent" && !dictationRef.current.listening) {
+      dictationRef.current.start();
+    }
     try {
       const cartContext =
         cartCount > 0
