@@ -83,6 +83,10 @@ function OnboardingPage() {
   const modeRef = useRef<ConversationMode>("text");
   modeRef.current = mode;
   const lastSpokenRef = useRef<string>("");
+  const speakingRef = useRef(false);
+  speakingRef.current = speaking;
+  const busyRef = useRef(false);
+  busyRef.current = busy;
 
   const { prefs, update: updatePrefs, hydrated: prefsHydrated } = useFrassyPrefs();
 
