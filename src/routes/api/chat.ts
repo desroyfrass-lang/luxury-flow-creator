@@ -102,6 +102,8 @@ export const Route = createFileRoute("/api/chat")({
           modeContext?: string;
           seasonContext?: string;
           experienceContext?: "founder" | "builder" | "storefront";
+          interactionMode?: "text" | "voice_and_text" | "voice_only";
+          voiceAvailable?: boolean;
           stream?: boolean;
           attachments?: Array<{
             name: string;
