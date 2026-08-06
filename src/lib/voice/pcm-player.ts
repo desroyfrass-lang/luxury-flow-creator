@@ -5,6 +5,8 @@
 // Frassy starts speaking before the sentence is finished. Every scheduled
 // buffer source is tracked so a barge-in can be honoured on the same frame.
 
+import { getSharedAudioContext } from "@/lib/audio-unlock";
+
 const SAMPLE_RATE = 24000;
 
 export class PcmPlayer {
@@ -19,16 +21,10 @@ export class PcmPlayer {
 
   async ensureContext(): Promise<AudioContext | null> {
     if (this.stopped) return null;
-    if (!this.ctx) {
-      const Ctx =
-        window.AudioContext ??
-        (window as unknown as { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
-      if (!Ctx) return null;
-      this.ctx = new Ctx({ sampleRate: SAMPLE_RATE });
-    }
-    if (this.ctx.state === "suspended") {
-      await this.ctx.resume().catch(() => {});
-    }
+    // Always the shared, gesture-unlocked context — creating a private one here
+    // is what made Frassy silent: it started suspended and never resumed.
+    this.ctx = await getSharedAudioContext();
+    if (!this.ctx || this.ctx.state !== "running") return null;
     return this.ctx;
   }
 
@@ -99,7 +95,7 @@ export class PcmPlayer {
     this.pending = new Uint8Array(0);
     this.playhead = 0;
     this.tailEndsAt = 0;
-    void this.ctx?.close().catch(() => {});
+    // The context is shared and stays unlocked for the session — never close it.
     this.ctx = null;
   }
 }
