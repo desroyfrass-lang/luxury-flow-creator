@@ -143,7 +143,7 @@ export function FrassyChat() {
           experienceContext: isAdmin ? "founder" : "storefront",
           // Actual runtime interaction mode, so Frassy never misstates her capabilities.
           interactionMode: spoken ? "voice_and_text" : "text",
-          voiceAvailable: true,
+          voiceAvailable: voice.voiceAvailable,
           stream: false,
         }),
       });
@@ -174,7 +174,7 @@ export function FrassyChat() {
         },
       ]);
 
-      if (spoken) {
+      if (spoken && voice.voiceAvailable) {
         setLoading(false);
         await voice.speak(reply);
         // Playback finished → conversation waits. The mic stays closed.
@@ -361,7 +361,7 @@ export function FrassyChat() {
         onSend={() => void send()}
         disabled={loading}
         placeholder="Ask Frassy anything…"
-        onMicToggle={() => void toggleMic()}
+        onMicToggle={voice.voiceAvailable ? () => void toggleMic() : undefined}
         micState={
           voice.phase === "recording"
             ? "recording"

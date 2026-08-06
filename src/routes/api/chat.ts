@@ -67,7 +67,8 @@ Don't know? Say so and offer escalation (Live Chat / Email concierge / Support t
 
 const FOUNDER_CONTEXT = `━━━ FOUNDER CONTROL ROOM CONTEXT ━━━
 The authenticated person is Nicky, Founder / Owner / Operator, commissioning Frass OS. Do not treat Nicky as a shopper or Builder, and never ask what the business is, what Nicky is building, who Nicky is, or what the venture's purpose is. Immutable platform facts: Founder Nicky; platform Frass OS; company and commerce brand FrassKicks; mission commission the operating system before Builders arrive. Founder Mode is a Platform Administrator control room. Answer with platform state and the next configuration decision. Direct commissioning work to /onboarding and discuss only platform identity, Builder Welcome, Marketplace defaults, Community rules, AI mentoring, security, analytics, district readiness, operations, and launch decisions.
-Founder Mode never overrides the capability rules: you are not text-only, and you must answer a direct question directly before mentioning any commissioning step. Do not announce "Step N of M" unless the Founder asks to continue the commissioning journey.`;
+Founder Mode never overrides the capability rules: you are not text-only, and you must answer a direct question directly before mentioning any commissioning step. Do not announce "Step N of M" unless the Founder asks to continue the commissioning journey.
+SESSION CONTINUITY: this conversation is already open. Never greet, welcome, re-introduce yourself, or restate that Nicky is the Founder, that Frass OS is the platform, or that FrassKicks is the commerce brand. No "Welcome back". When the Founder says "next" or "continue", pick up from the last thing discussed and move forward — never reopen or restart the session.`;
 
 type SimpleMessage = { role: "user" | "assistant" | "system"; content: string };
 
@@ -257,8 +258,11 @@ export const Route = createFileRoute("/api/chat")({
             }
           }
 
+          // Continuation, never a re-introduction: a mid-session welcome reads
+          // as the conversation restarting.
           const founderFallback =
-            "Welcome back, Nicky. Your identity and business are already settled. Continue the 8-hour Frass OS commissioning in the Founder Control Room, where we configure the platform one decision at a time.";
+            "Let's stay with the platform decision in front of us. What would you like Frass OS to configure next?";
+
           const reply =
             body.experienceContext === "founder" && isFounderIdentityDiscovery(result.text)
               ? founderFallback

@@ -43,12 +43,15 @@ export function isFounderIdentityDiscovery(text: string): boolean {
 
 const FOUNDER_DISCOVERY_PATTERNS = FORBIDDEN_FOUNDER_DISCOVERY;
 
-export function founderSafetyReply(stageId: string, displayName?: string | null): string {
+// Conversation-engine fallback ONLY. It must never re-introduce the Founder or
+// re-open the session: a mid-session welcome reads as a restart. Keep it a short
+// continuation line that hands control straight back to the Founder.
+export function founderSafetyReply(stageId: string, _displayName?: string | null): string {
   const stage = stageById(stageId);
   const firstObjective = stage.objectives[0] ?? "the next platform decision";
-  const founder = displayName ?? "Founder";
-  return `Welcome back, ${founder}. You are in the Founder Control Room for the 8-hour commissioning of Frass OS—not a Builder onboarding journey. Your identity and business are already settled: you are the Founder and Owner / Operator, Frass OS is the operating system, and FrassKicks is the commerce brand.\n\nFor “${stage.title},” my recommendation is that we settle ${firstObjective.toLowerCase()} first. Is that platform direction approved, or what should Frass OS change?`;
+  return `Staying on the platform decision. For “${stage.title},” my recommendation is that we settle ${firstObjective.toLowerCase()} first. Approved, or what should Frass OS change?`;
 }
+
 
 export function founderControlRoomOpening(
   stageId: string,
@@ -124,6 +127,11 @@ Good Founder questions include:
 ━━━ CAPABILITIES & CONVERSATION ━━━
 You support text, voice, and voice + text. Never say or imply you are text-only or that you "operate strictly through text-based console output" — that is false. If voice is off in the moment, say only: "Voice is temporarily unavailable while it's being updated. Let's continue in text for now."
 When the Founder asks a direct question, answer it plainly and stop. Do not jump back into "Step N of M" or the commissioning checklist in the same breath; resume the step only when the Founder asks to continue.
+
+━━━ SESSION CONTINUITY — NEVER RESTART ━━━
+This session is already open and already in progress. NEVER greet, welcome, re-introduce yourself, restate the Founder's identity, or re-explain what the Control Room is. No "Welcome back", no "You are in the Founder Control Room", no re-stating that Frass OS is the operating system or FrassKicks the commerce brand. Those were said once at the start of the session and must never be repeated.
+When the Founder says "next", "continue", or "proceed", pick up exactly where the conversation left off and move forward into the current step — never rewind, never reopen the session.
+
 
 ━━━ PLATFORM MEMORY ONLY ━━━
 ${memoryBlock}

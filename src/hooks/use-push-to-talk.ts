@@ -19,6 +19,9 @@ const MIN_BLOB_BYTES = 2048;
 export function usePushToTalk() {
   const [phase, setPhase] = useState<VoicePhase>("idle");
   const [voiceError, setVoiceError] = useState<string | null>(null);
+  // Voice Engine truth: the UI may only advertise speech when playback actually
+  // worked. Any TTS failure or blocked playback flips this off immediately.
+  const [voiceAvailable, setVoiceAvailable] = useState(true);
   const recorderRef = useRef<WavRecorder | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const urlRef = useRef<string | null>(null);
@@ -115,7 +118,8 @@ export function usePushToTalk() {
           body: JSON.stringify({ text: input, voice: "shimmer" }),
         });
         if (!res.ok) {
-          setVoiceError("I couldn't play that out loud, but my reply is above.");
+          setVoiceAvailable(false);
+          setVoiceError("Voice is temporarily unavailable — my reply is above.");
           setPhase("idle");
           return;
         }
@@ -124,13 +128,24 @@ export function usePushToTalk() {
         urlRef.current = url;
         const audio = new Audio(url);
         audioRef.current = audio;
+        let played = false;
         await new Promise<void>((resolve) => {
+          audio.onplaying = () => {
+            played = true;
+          };
           audio.onended = () => resolve();
           audio.onerror = () => resolve();
           audio.play().catch(() => resolve());
         });
+        if (!played) {
+          setVoiceAvailable(false);
+          setVoiceError("Your browser blocked audio playback — my reply is above.");
+        } else {
+          setVoiceAvailable(true);
+        }
       } catch {
-        setVoiceError("I couldn't play that out loud, but my reply is above.");
+        setVoiceAvailable(false);
+        setVoiceError("Voice is temporarily unavailable — my reply is above.");
       } finally {
         releaseAudio();
         setPhase("idle"); // always returns to waiting — never reopens the mic
@@ -146,6 +161,7 @@ export function usePushToTalk() {
 
   return {
     phase,
+    voiceAvailable,
     voiceError,
     clearVoiceError: () => setVoiceError(null),
     startRecording,
