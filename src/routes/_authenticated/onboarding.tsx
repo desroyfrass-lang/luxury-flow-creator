@@ -10,6 +10,7 @@ import {
   journeyTurn,
   setJourneyStage,
   startJourneyTrack,
+  type ConversationDiagnostics,
   type JourneyMessage,
 } from "@/lib/journey.functions";
 import {
@@ -68,6 +69,7 @@ function OnboardingPage() {
   const [local, setLocal] = useState<LocalMessage[]>([]);
   const [mode, setMode] = useState<ConversationMode>("text");
   const [speaking, setSpeaking] = useState(false);
+  const [diagnostics, setDiagnostics] = useState<ConversationDiagnostics | null>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const endRef = useRef<HTMLDivElement>(null);
   const openedRef = useRef(false);
@@ -159,6 +161,7 @@ function OnboardingPage() {
     if (text) setLocal((p) => [...p, { role: "user", content: text }]);
     try {
       const res = await turn({ data: { message: text, opening } });
+      setDiagnostics(res.diagnostics);
       setLocal([]);
       await refetch();
       speakReply(res.reply);
@@ -370,6 +373,24 @@ function OnboardingPage() {
 
         {/* Conversation */}
         <section className="min-h-[70vh] rounded-sm border border-border bg-background/40">
+          {isOwnerTrack && diagnostics && (
+            <details className="border-b border-[color:var(--gold)]/30 bg-[color:var(--gold)]/5 px-6 py-4" open>
+              <summary className="cursor-pointer text-[10px] font-bold uppercase tracking-[0.24em] text-[color:var(--gold)]">
+                Founder routing diagnostics · temporary
+              </summary>
+              <dl className="mt-4 grid gap-x-6 gap-y-2 text-xs sm:grid-cols-2">
+                <div><dt className="inline text-muted-foreground">Conversation Mode: </dt><dd className="inline">{diagnostics.conversationMode}</dd></div>
+                <div><dt className="inline text-muted-foreground">System Prompt: </dt><dd className="inline font-mono">{diagnostics.systemPrompt}_{diagnostics.promptVersion}</dd></div>
+                <div><dt className="inline text-muted-foreground">Session Type: </dt><dd className="inline font-mono">{diagnostics.sessionType}</dd></div>
+                <div><dt className="inline text-muted-foreground">Memory: </dt><dd className="inline font-mono">{diagnostics.memoryNamespace}</dd></div>
+                <div><dt className="inline text-muted-foreground">History: </dt><dd className="inline font-mono">{diagnostics.historySource} ({diagnostics.historyMessages})</dd></div>
+                <div><dt className="inline text-muted-foreground">Fallback: </dt><dd className="inline font-mono">{diagnostics.fallback}</dd></div>
+                <div><dt className="inline text-muted-foreground">Identity Discovery: </dt><dd className="inline font-mono">{diagnostics.identityDiscovery}</dd></div>
+                <div><dt className="inline text-muted-foreground">Stage: </dt><dd className="inline font-mono">{diagnostics.stageId}</dd></div>
+                <div className="sm:col-span-2"><dt className="inline text-muted-foreground">Routing Decision: </dt><dd className="inline">{diagnostics.routingDecision}</dd></div>
+              </dl>
+            </details>
+          )}
           <header className="border-b border-border px-6 py-5">
             <div className="text-[11px] uppercase tracking-[0.3em] text-muted-foreground">
               {isOwnerTrack ? stage.chapter : `Chapter ${idx + 1} · ${stage.chapter}`}

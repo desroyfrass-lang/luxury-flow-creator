@@ -47,6 +47,20 @@ export type JourneyState = {
   memory: BuilderMemoryEntry[];
 };
 
+export type ConversationDiagnostics = {
+  conversationMode: "Founder" | "Builder";
+  systemPrompt: "founder_control_room" | "builder_mentor";
+  promptVersion: "v4";
+  sessionType: "platform_commissioning" | "builder_journey";
+  memoryNamespace: "platform" | "builder";
+  routingDecision: string;
+  historySource: "platform_session" | "builder_session";
+  fallback: "disabled" | "founder_safety_interceptor" | "deterministic_opening";
+  identityDiscovery: "disabled" | "enabled";
+  stageId: string;
+  historyMessages: number;
+};
+
 export const getBuilderJourney = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }): Promise<JourneyState> => {
@@ -176,6 +190,19 @@ export const journeyTurn = createServerFn({ method: "POST" })
         movedTo: null,
         completed: false,
         remembered: 0,
+        diagnostics: {
+          conversationMode: "Founder",
+          systemPrompt: "founder_control_room",
+          promptVersion: "v4",
+          sessionType: "platform_commissioning",
+          memoryNamespace: "platform",
+          routingDecision: "authenticated admin → owner track",
+          historySource: "platform_session",
+          fallback: "deterministic_opening",
+          identityDiscovery: "disabled",
+          stageId: stage.id,
+          historyMessages: 0,
+        } satisfies ConversationDiagnostics,
       };
     }
 
@@ -273,6 +300,21 @@ export const journeyTurn = createServerFn({ method: "POST" })
       movedTo,
       completed: stageComplete && !nextStage(stage.id),
       remembered: memory.length,
+      diagnostics: {
+        conversationMode: activeTrack === "owner" ? "Founder" : "Builder",
+        systemPrompt: activeTrack === "owner" ? "founder_control_room" : "builder_mentor",
+        promptVersion: "v4",
+        sessionType: activeTrack === "owner" ? "platform_commissioning" : "builder_journey",
+        memoryNamespace: activeTrack === "owner" ? "platform" : "builder",
+        routingDecision: isAdmin
+          ? "authenticated admin → owner track"
+          : "authenticated participant → builder track",
+        historySource: activeTrack === "owner" ? "platform_session" : "builder_session",
+        fallback: rejectedFounderReply ? "founder_safety_interceptor" : "disabled",
+        identityDiscovery: activeTrack === "owner" ? "disabled" : "enabled",
+        stageId: stage.id,
+        historyMessages: history.length,
+      } satisfies ConversationDiagnostics,
     };
   });
 
