@@ -101,7 +101,8 @@ export function FrassyChat() {
   // box holds at press time is frozen, appended, sent, and cleared — in that
   // order — before any await happens.
   async function send(override?: string, spoken = false) {
-    if (loading || voice.phase !== "idle") return; // busy → never silently swap text
+    // Typed sends are blocked while busy; a voice turn passes its own text in.
+    if (loading || (override === undefined && voice.phase !== "idle")) return;
     const before = input;
     const text = (override ?? before).trim();
     if (!text) return;
