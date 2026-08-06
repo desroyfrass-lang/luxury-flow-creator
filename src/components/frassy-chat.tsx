@@ -244,6 +244,23 @@ export function FrassyChat() {
           </div>
         </div>
         <div className="flex items-center gap-1">
+          {/* Voice playback health — honest about what the speaker actually did. */}
+          <span
+            title={
+              voice.voiceAvailable
+                ? "Voice playback is working"
+                : "Voice output unavailable — replies are text only"
+            }
+            className={`mr-1 inline-flex items-center gap-1 rounded-sm border px-1.5 py-1 text-[9px] uppercase tracking-[0.18em] ${
+              voice.voiceAvailable
+                ? "border-emerald-400/30 text-emerald-300/80"
+                : "border-red-500/30 text-red-300/80"
+            }`}
+          >
+            {voice.voiceAvailable ? <Volume2 className="h-3 w-3" /> : <VolumeX className="h-3 w-3" />}
+            {voice.voiceAvailable ? "Voice" : "No voice"}
+          </span>
+
           {loading && (
             <button
               type="button"
