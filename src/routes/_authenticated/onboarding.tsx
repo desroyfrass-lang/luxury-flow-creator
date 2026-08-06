@@ -130,6 +130,9 @@ function OnboardingPage() {
     return [...saved, ...local];
   }, [data?.messages, local, track]);
 
+  const messagesRef = useRef<LocalMessage[]>(messages);
+  messagesRef.current = messages;
+
   // Founder decisions are Platform Memory, kept separate from Builder memory.
   const platformMemory = useMemo(
     () => (data?.memory ?? []).filter((m) => m.category.startsWith("platform:")),
@@ -158,6 +161,13 @@ function OnboardingPage() {
 
   const speakReply = (text: string) => {
     if (modeRef.current === "text" || !text) return;
+    lastSpokenRef.current = text;
+    if (!isAudioUnlocked()) {
+      // No gesture yet — the browser will refuse. Ask once instead of failing mute.
+      setVoiceBlocked(true);
+      return;
+    }
+    setVoiceBlocked(false);
     setSpeaking(true);
     speakLine(text, {
       prefs: { ...prefs, muted: false, communicationMode: "voice_text" },
@@ -167,8 +177,25 @@ function OnboardingPage() {
         // Continuous conversation: hand the floor straight back to the speaker.
         if (modeRef.current !== "text") dictationRef.current.start();
       },
+      onBlocked: () => {
+        setSpeaking(false);
+        setVoiceBlocked(true);
+      },
     });
   };
+
+  /** User tapped "Let Frassy speak" — a real gesture, so unlock and replay. */
+  const enableVoicePlayback = () => {
+    unlockAudio();
+    setVoiceBlocked(false);
+    const text =
+      lastSpokenRef.current ||
+      [...messagesRef.current].reverse().find((m) => m.role === "assistant")?.content ||
+      "";
+    if (text) speakReply(text);
+    else dictationRef.current.start();
+  };
+
 
 
   const send = async (text: string, opening = false) => {
