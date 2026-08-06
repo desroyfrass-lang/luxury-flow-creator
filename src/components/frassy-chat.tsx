@@ -411,10 +411,10 @@ export function FrassyChat() {
               .map((i) => `${i.product.node.title} (${i.variantTitle}) x${i.quantity}`)
               .join(", ")}.`
           : "Cart is empty.";
-      const res = await fetch("/api/chat", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
+      // Speech starts on the first complete clause, not after the full reply.
+      const speech = openSpeech("calm");
+      const data = (await streamFrassyChat(
+        {
           messages: next.map((m) => ({ role: m.role, content: m.content })),
           attachments: attachments.map((a) => ({
             name: a.name,
@@ -429,16 +429,18 @@ export function FrassyChat() {
           seasonContext: seasonalAccent(season) ?? "",
           experienceContext:
             isAdmin === true ? "founder" : journey.signedIn ? "builder" : "storefront",
-        }),
-      });
-      const data = (await res.json()) as {
+        },
+        {
+          onSentence: (sentence) => speech?.push(sentence),
+        },
+      )) as {
         reply?: string;
         error?: string;
         cards?: { products?: ProductCard[]; order?: OrderCard | null };
-        diagnostics?: FounderChatDiagnostics;
       };
-      if (!res.ok) {
-        const errorReply = data.error ?? "I hit a snag. Try again in a sec?";
+      speech?.end();
+      if (data.error) {
+        const errorReply = data.error;
         setMessages((m) => [
           ...m,
           {
@@ -446,10 +448,10 @@ export function FrassyChat() {
             content: errorReply,
           },
         ]);
-        speakReply(errorReply);
+        if (!speech) speakReply(errorReply);
       } else {
-        if (data.diagnostics) setFounderDiagnostics(data.diagnostics);
-        const reply = data.reply ?? "…";
+        const reply = data.reply || "…";
+        lastSpokenRef.current = reply;
         setMessages((m) => [
           ...m,
           {
@@ -460,7 +462,7 @@ export function FrassyChat() {
           },
         ]);
         setLiveMessage(reply);
-        speakReply(reply);
+        if (!speech) speakReply(reply);
       }
     } catch {
       const errorReply = "Connection hiccup — try again?";
