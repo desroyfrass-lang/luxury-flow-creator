@@ -460,3 +460,52 @@
 @media (prefers-reduced-motion: reduce) {
   .gateway-drift, .gateway-rise { animation: none !important; }
 }
+
+/* ── FRASS KICKS DISTRICT — living environment motion ─────────── */
+@keyframes district-arch-open {
+  from { opacity: 1; transform: scale(1); filter: brightness(1); }
+  to   { opacity: 0; transform: scale(2.6); filter: brightness(1.6); }
+}
+@utility district-arch-open {
+  animation: district-arch-open 1.5s cubic-bezier(0.65, 0, 0.35, 1) forwards;
+  will-change: transform, opacity;
+}
+
+@keyframes district-sway {
+  from { transform: rotate(-1.1deg) translate3d(-4px, 0, 0); }
+  to   { transform: rotate(1.1deg) translate3d(4px, 0, 0); }
+}
+@utility district-sway {
+  animation: district-sway 7s ease-in-out infinite alternate;
+}
+
+@keyframes district-shimmer {
+  0%, 100% { opacity: 0.25; }
+  50%      { opacity: 0.6; }
+}
+@utility district-shimmer {
+  animation: district-shimmer 5.5s ease-in-out infinite;
+}
+
+@keyframes district-bird {
+  from { transform: translate3d(-8vw, 12vh, 0) scale(0.7); opacity: 0; }
+  10%  { opacity: 0.55; }
+  90%  { opacity: 0.45; }
+  to   { transform: translate3d(105vw, -6vh, 0) scale(1); opacity: 0; }
+}
+@utility district-bird {
+  animation: district-bird 26s linear infinite;
+}
+
+@keyframes district-glow {
+  0%, 100% { opacity: 0.45; }
+  50%      { opacity: 0.95; }
+}
+@utility district-glow {
+  animation: district-glow 4s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .district-sway, .district-shimmer, .district-bird, .district-glow { animation: none !important; }
+  .district-arch-open { animation-duration: 0.01s !important; }
+}
