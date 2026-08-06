@@ -9,6 +9,7 @@ import {
   type FrassyVoice,
   type FrassyVoiceProfile,
 } from "@/hooks/use-frassy-prefs";
+import type { AudioBlockReason } from "@/lib/audio-unlock";
 import { StreamingGatewayVoice } from "@/lib/voice/streaming-voice";
 
 export type FrassyTone =
@@ -98,7 +99,7 @@ export type SpeakOptions = {
   tone?: FrassyTone;
   onDone?: () => void;
   /** Fired when the browser refused to play audio (autoplay gate) or TTS failed. */
-  onBlocked?: (reason: string) => void;
+  onBlocked?: (reason: AudioBlockReason) => void;
 };
 
 export function canSpeak(prefs: FrassyPrefs): boolean {
