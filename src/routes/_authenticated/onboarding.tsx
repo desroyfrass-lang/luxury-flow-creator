@@ -5,6 +5,8 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { toast } from "sonner";
 import { SiteShell } from "@/components/site-shell";
 import { PageFeedback } from "@/components/page-feedback";
+import { BuilderComposer } from "@/components/builder-composer";
+import { describeAttachments } from "@/lib/builder-attachments";
 import {
   getBuilderJourney,
   journeyTurn,
