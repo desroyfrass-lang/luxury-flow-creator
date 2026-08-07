@@ -65,7 +65,7 @@ function KidsKicksRoom() {
         crumbs={[
           { label: "Frass District", to: "/" },
           { label: "Frass Kids", to: "/frass-kids" },
-          { label: seg.title, to: "/frass-kids/$segment", params: { segment: seg.slug } },
+          { label: seg.title, to: `/frass-kids/${seg.slug}` },
           { label: "Frass Kicks" },
         ]}
       />

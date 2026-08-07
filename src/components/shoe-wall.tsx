@@ -3,6 +3,15 @@ import { Link } from "@tanstack/react-router";
 import { Loader2 } from "lucide-react";
 import { fetchProducts, type ShopifyProduct } from "@/lib/shopify";
 
+export type WallGender = "men" | "women" | "boys" | "girls";
+
+const GENDER_LABEL: Record<WallGender, string> = {
+  men: "Men",
+  women: "Women",
+  boys: "Boys",
+  girls: "Girls",
+};
+
 export type WallSection = {
   id: string;
   label: string;
@@ -14,7 +23,7 @@ export type WallSection = {
 };
 
 /** One illuminated, independently scrollable column of the shoe wall. */
-function ShelfColumn({ section, gender }: { section: WallSection; gender: "men" | "women" }) {
+function ShelfColumn({ section, gender }: { section: WallSection; gender: WallGender }) {
   const [products, setProducts] = useState<ShopifyProduct[] | null>(null);
 
   const filter = section.filter;
@@ -93,7 +102,7 @@ function ShelfColumn({ section, gender }: { section: WallSection; gender: "men" 
         >
           <span className="md:hidden">View all</span>
           <span className="hidden md:inline">
-            View all {section.label} {gender === "men" ? "— Men" : "— Women"}
+            View all {section.label} — {GENDER_LABEL[gender]}
           </span>
         </Link>
       </div>
@@ -106,7 +115,7 @@ export function ShoeWall({
   gender,
 }: {
   sections: WallSection[];
-  gender: "men" | "women";
+  gender: WallGender;
 }) {
   return (
     <div className="relative overflow-hidden">
