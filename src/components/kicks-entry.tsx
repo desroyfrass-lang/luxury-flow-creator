@@ -4,8 +4,9 @@ import kicksWall from "@/assets/kids-shoe-wall.jpg";
 
 /**
  * The footwear entry. Deliberately NOT a store door — Frass Kicks is its own
- * section wherever it appears (Kids, Plus+). Instead of parting doors you step
- * up to an illuminated shoe wall: three lit bays behind glass.
+ * section wherever it appears (Kids, Plus+). A single illuminated banner card
+ * that walks you straight up to the wall; the Casual / Classic / Street bays
+ * live on the wall itself, each with its own shelf photography.
  */
 export function KicksEntry({
   to,
@@ -13,21 +14,16 @@ export function KicksEntry({
   eyebrow,
   title,
   description,
-  bays = ["Casual", "Classic", "Street"],
   badge,
   image = kicksWall,
-  bayImages,
 }: {
   to: LinkProps["to"];
   params?: Record<string, string>;
   eyebrow: string;
   title: string;
   description: string;
-  bays?: string[];
   badge?: React.ReactNode;
   image?: string;
-  /** Category-specific shelf photography, one per bay. */
-  bayImages?: string[];
 }) {
   return (
     <Link
@@ -48,35 +44,6 @@ export function KicksEntry({
           className="h-full w-full object-cover transition-transform duration-[1600ms] ease-out group-hover:scale-105"
         />
         <div className="absolute inset-0 bg-[linear-gradient(to_top,oklch(0.08_0.01_60/0.95),oklch(0.08_0.01_60/0.45)_60%)]" />
-
-        {/* three lit glass bays — the shoe wall signature */}
-        <div className="absolute inset-x-5 top-6 grid grid-cols-3 gap-3 md:inset-x-10 md:top-10 md:gap-6">
-          {bays.map((bay, i) => (
-            <div
-              key={bay}
-              className="relative overflow-hidden rounded-xl border border-[color:var(--gold)]/40 bg-[oklch(0.08_0.01_60/0.35)] text-center backdrop-blur-[2px] transition duration-700 group-hover:border-[color:var(--gold)]"
-            >
-              <div className="pointer-events-none absolute inset-x-3 -top-1 h-4 rounded-full bg-[color:var(--gold)]/40 blur-lg transition group-hover:bg-[color:var(--gold)]/70" />
-              {bayImages?.[i] ? (
-                <img
-                  src={bayImages[i]}
-                  alt=""
-                  aria-hidden
-                  loading="lazy"
-                  width={1024}
-                  height={576}
-                  className="h-14 w-full object-cover opacity-90 transition duration-700 group-hover:opacity-100 md:h-24"
-                />
-              ) : null}
-              <div className="px-2 py-2 md:px-4 md:py-3">
-                <span className="font-display text-[11px] uppercase tracking-[0.22em] text-[color:var(--gold)] md:text-base md:tracking-[0.3em]">
-                  {bay}
-                </span>
-                <div className="mx-auto mt-2 h-px w-6 bg-[color:var(--gold)]/60 md:w-12" />
-              </div>
-            </div>
-          ))}
-        </div>
 
         {badge ? <div className="absolute right-5 top-5">{badge}</div> : null}
 
