@@ -417,8 +417,12 @@ export function LuckySpin() {
                           : "border-[color:var(--gold)]/25 bg-[color-mix(in_oklab,black_70%,var(--gold))]"
                       }`}
                     >
-                      <span className="text-2xl" aria-hidden="true">
-                        {r.emoji}
+                      <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-[color:var(--gold)]/50 bg-[color-mix(in_oklab,black_78%,var(--gold))] transition-shadow duration-500 group-hover:shadow-[0_0_26px_-4px_oklch(0.78_0.14_78/0.95)]">
+                        <r.Icon
+                          className="h-5 w-5 text-[color:var(--gold)]"
+                          strokeWidth={1.75}
+                          aria-hidden="true"
+                        />
                       </span>
                       <span className="font-display text-base uppercase leading-tight tracking-[0.08em] text-[color:var(--gold)] transition-colors duration-500 group-hover:text-[oklch(0.99_0.05_88)] md:text-lg">
                         {r.label}
