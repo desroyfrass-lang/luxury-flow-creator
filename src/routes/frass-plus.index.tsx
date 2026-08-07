@@ -10,7 +10,8 @@ import {
   SIGNATURE_COLLECTIONS,
   signatureHandle,
 } from "@/lib/frass-plus";
-import hero from "@/assets/plus-hero.jpg";
+import hero from "@/assets/plus-store-front.jpg";
+import frassSymbol from "@/assets/frass-logo-symbol.asset.json";
 
 const TITLE = "Frass Plus+ — The Same Collections, Extended Sizing";
 const DESCRIPTION =
