@@ -123,16 +123,14 @@ function PlusHome() {
           <WingCard
             to="/frass-plus/$gender"
             gender="men"
-            eyebrow="Men's Frass Plus+"
-            title="Men"
+            title="Frass Drip Plus+ for Men"
             blurb="Frass Kicks, every Drip department and Bare Drip — mirrored exactly, cut with room to move."
             count={PLUS_DEPARTMENTS.men.length}
           />
           <WingCard
             to="/frass-plus/$gender"
             gender="women"
-            eyebrow="Women's Frass Plus+"
-            title="Women"
+            title="Frass Drip Plus+ for Women"
             blurb="Frass Kicks, every Drip department and Bare Drip — mirrored exactly, designed to be worn, not endured."
             count={PLUS_DEPARTMENTS.women.length}
           />
