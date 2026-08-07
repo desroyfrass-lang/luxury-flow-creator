@@ -196,15 +196,27 @@ export function LuckySpin() {
 
   const slice = 360 / REWARDS.length;
 
+  const mysteryEligible = spinCount >= 2 && orderCount >= 2;
+
   const spin = () => {
     if (spinning || reward) return;
     setSpinning(true);
     chime("tick");
+
+    const eligibleRewards = REWARDS.filter(
+      (r) => r.id !== "mystery" || mysteryEligible,
+    );
     const golden = Math.random() < GOLDEN_ODDS;
-    const index = Math.floor(Math.random() * REWARDS.length);
-    const won = golden ? GOLDEN : REWARDS[index];
-    const target = 360 * 6 + (360 - index * slice - slice / 2);
+    const pickIndex = Math.floor(Math.random() * eligibleRewards.length);
+    const won = golden ? GOLDEN : eligibleRewards[pickIndex];
+    const actualIndex = REWARDS.findIndex((r) => r.id === won.id);
+    const target = 360 * 6 + (360 - actualIndex * slice - slice / 2);
     setAngle(target);
+
+    const nextSpinCount = spinCount + 1;
+    setSpinCount(nextSpinCount);
+    window.localStorage.setItem(SPIN_COUNT_KEY, String(nextSpinCount));
+
     timer.current = window.setTimeout(() => {
       const exp = Date.now() + 30 * 86400000;
       setSpinning(false);
