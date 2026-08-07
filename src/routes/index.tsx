@@ -86,19 +86,20 @@ const STORES: { title: string; description: string; image: string; to: string; e
     eyebrow: "Women",
   },
   {
-    title: "Plus Size for Men",
-    description: "Extended sizing across every fit.",
-    image: cardMen,
-    to: "/plus-size/men",
+    title: "Frass Plus — Gentlemen",
+    description: "Premium fashion, thoughtfully cut. Style has no size.",
+    image: plusWingMen,
+    to: "/frass-plus/men",
     eyebrow: "Men",
   },
   {
-    title: "Plus Size for Women",
-    description: "Extended sizing across every collection.",
-    image: cardWomen,
-    to: "/plus-size/women",
+    title: "Frass Plus — Ladies",
+    description: "Premium fashion, thoughtfully cut. Confidence has no limits.",
+    image: plusWingWomen,
+    to: "/frass-plus/women",
     eyebrow: "Women",
   },
+
   {
     title: "Frass Kids for Boys",
     description: "Kicks, drip and essentials for young builders.",
