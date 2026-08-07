@@ -44,7 +44,7 @@ function GatewayPage() {
           className="gateway-rise h-10 w-auto object-contain md:h-14"
         />
         <h1
-          className="gateway-rise mt-8 font-display text-4xl leading-[0.95] text-white sm:text-6xl lg:text-8xl"
+          className="gateway-rise mt-8 font-display text-4xl leading-[0.95] text-white drop-shadow-[0_2px_24px_rgba(0,0,0,0.55)] sm:text-6xl lg:text-8xl"
           style={{ animationDelay: "80ms" }}
         >
           Welcome to the World of Frass.
@@ -56,7 +56,7 @@ function GatewayPage() {
           Built by people. Powered by community. Driven by execution.
         </p>
 
-        <div className="mt-12 grid w-full max-w-4xl gap-5 sm:grid-cols-2">
+        <div className="mt-10 grid w-full max-w-3xl gap-4 sm:grid-cols-2">
           <GatewayCard
             to="/shop-frass"
             delay="240ms"
