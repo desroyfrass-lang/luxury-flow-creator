@@ -171,21 +171,8 @@ export function GatewayNav({ mode }: { mode: "shop" | "world" }) {
           >
             <Search className="h-4 w-4" />
           </Link>
-          <label className="sr-only" htmlFor="frass-currency">
-            Currency
-          </label>
-          <select
-            id="frass-currency"
-            value={currency}
-            onChange={(e) => setCurrency(e.target.value)}
-            className="hidden rounded-full border border-border bg-background px-3 py-2 text-[10px] uppercase tracking-[0.2em] outline-none sm:block"
-          >
-            {CURRENCIES.map((c) => (
-              <option key={c} value={c}>
-                {c}
-              </option>
-            ))}
-          </select>
+          <RegionSwitcher />
+
           <Link
             to="/vault"
             aria-label="Frass Hill / Builder Vault login"
