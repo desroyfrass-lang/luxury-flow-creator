@@ -357,8 +357,10 @@ export function LuckySpin() {
                     className="absolute left-1/2 top-1/2 origin-left"
                     style={{ transform: `rotate(${i * slice + slice / 2}deg)` }}
                   >
-                    <span className="ml-10 flex w-32 items-center gap-1.5 font-display text-[11px] uppercase tracking-[0.14em] text-[color:var(--gold-soft,var(--gold))] drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)] md:ml-12 md:w-36 md:text-xs">
-                      <span aria-hidden="true">{r.emoji}</span>
+                    <span className="ml-[22%] flex w-[46%] items-center gap-2 font-display text-[13px] font-bold uppercase leading-tight tracking-[0.08em] text-[oklch(0.99_0.03_88)] [text-shadow:0_1px_2px_rgba(0,0,0,0.95),0_0_14px_oklch(0.78_0.14_78/0.8)] md:text-[17px]">
+                      <span className="text-base md:text-xl" aria-hidden="true">
+                        {r.emoji}
+                      </span>
                       {r.short}
                     </span>
                   </div>
