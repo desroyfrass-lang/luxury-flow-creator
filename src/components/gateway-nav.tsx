@@ -1,6 +1,6 @@
 import { Link, useRouterState } from "@tanstack/react-router";
-import { useEffect, useRef, useState } from "react";
-import { Search, ChevronDown, KeyRound, Menu, X } from "lucide-react";
+import { useEffect, useState } from "react";
+import { Search, KeyRound, Menu, X } from "lucide-react";
 import { CartDrawer } from "./cart-drawer";
 import fullLogo from "@/assets/frass-logo-full.asset.json";
 
@@ -21,7 +21,6 @@ const NAV: NavGroup[] = [
     to: "/frass-kicks",
     match: "/frass-kicks",
     items: [
-      { label: "The Kicks Store", to: "/frass-kicks", note: "Sneaker hall" },
       { label: "Men's Kicks", to: "/frass-kicks/men" },
       { label: "Women's Kicks", to: "/frass-kicks/women" },
       { label: "Kicks District", to: "/kicks-district", note: "The street" },
@@ -32,7 +31,6 @@ const NAV: NavGroup[] = [
     to: "/frass-drip",
     match: "/frass-drip",
     items: [
-      { label: "The Drip Store", to: "/frass-drip" },
       { label: "Men's Drip", to: "/frass-drip/men", note: "Work · Party · Casual · Street" },
       { label: "Women's Drip", to: "/frass-drip/women", note: "Work · Party · Casual · Street" },
     ],
@@ -42,9 +40,8 @@ const NAV: NavGroup[] = [
     to: "/bare-drip",
     match: "/bare-drip",
     items: [
-      { label: "The Bare Drip Store", to: "/bare-drip" },
-      { label: "Men — Underwear & Swim", to: "/bare-drip/men" },
-      { label: "Women — Lingerie & Swim", to: "/bare-drip/women" },
+      { label: "Men — Underwear & Swimwear", to: "/bare-drip/men" },
+      { label: "Women — Lingerie & Swimwear", to: "/bare-drip/women" },
     ],
   },
   {
@@ -105,27 +102,25 @@ const NAV: NavGroup[] = [
   },
 ];
 
+/** Always-visible destinations on the bar itself. */
+const PRIMARY: { label: string; to: string; match: string; editorial?: boolean }[] = [
+  { label: "Frass District", to: "/", match: "/shop-frass" },
+  { label: "Afro Designers", to: "/afro-designers", match: "/afro-designers", editorial: true },
+  { label: "Frass Luxury House", to: "/frass-luxury-house", match: "/frass-luxury-house", editorial: true },
+  { label: "Plus Size", to: "/plus-size/women", match: "/plus-size" },
+  { label: "Frass Kids", to: "/frass-kids/girls", match: "/frass-kids" },
+];
+
 const CURRENCIES = ["USD", "GBP", "EUR", "JMD", "CAD"];
 
 export function GatewayNav({ mode }: { mode: "shop" | "world" }) {
   const path = useRouterState({ select: (r) => r.location.pathname });
-  const [open, setOpen] = useState<string | null>(null);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [currency, setCurrency] = useState("USD");
-  const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
-    setOpen(null);
     setMobileOpen(false);
   }, [path]);
-
-  const enter = (label: string) => {
-    if (closeTimer.current) clearTimeout(closeTimer.current);
-    setOpen(label);
-  };
-  const leave = () => {
-    closeTimer.current = setTimeout(() => setOpen(null), 120);
-  };
 
   return (
     <header className="sticky top-0 z-50 border-b border-border/60 bg-background/85 backdrop-blur-xl">
@@ -204,88 +199,65 @@ export function GatewayNav({ mode }: { mode: "shop" | "world" }) {
             aria-label={mobileOpen ? "Close menu" : "Open menu"}
             aria-expanded={mobileOpen}
             onClick={() => setMobileOpen((o) => !o)}
-            className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-border lg:hidden"
+            className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-border"
           >
             {mobileOpen ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
           </button>
         </div>
       </div>
 
-      {/* Desktop bar */}
+      {/* Always-visible destinations */}
       <nav
         aria-label="Primary navigation"
-        className="mx-auto hidden max-w-[1600px] items-center gap-1 px-5 pb-2 lg:flex lg:px-10"
+        className="mx-auto flex max-w-[1600px] items-center gap-1 overflow-x-auto px-5 pb-2 lg:px-10 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
       >
-        {NAV.map((g) => {
+        {PRIMARY.map((g) => {
           const active = path === g.to || path.startsWith(g.match);
           return (
-            <div
+            <Link
               key={g.label}
-              className="relative shrink-0"
-              onMouseEnter={() => enter(g.label)}
-              onMouseLeave={leave}
+              to={g.to}
+              className={`inline-flex shrink-0 items-center gap-1 whitespace-nowrap rounded-full px-3 py-1.5 text-[10px] uppercase tracking-[0.22em] transition ${
+                g.editorial
+                  ? "border border-[color:var(--gold)]/50 font-bold text-[color:var(--gold)]"
+                  : active
+                    ? "text-foreground"
+                    : "text-muted-foreground hover:text-foreground"
+              }`}
             >
-              <Link
-                to={g.to}
-                aria-haspopup={g.items ? "menu" : undefined}
-                aria-expanded={g.items ? open === g.label : undefined}
-                className={`inline-flex items-center gap-1 whitespace-nowrap rounded-full px-3 py-1.5 text-[10px] uppercase tracking-[0.22em] transition ${
-                  g.editorial
-                    ? "border border-[color:var(--gold)]/50 font-bold text-[color:var(--gold)]"
-                    : active
-                      ? "text-foreground"
-                      : "text-muted-foreground hover:text-foreground"
-                }`}
-              >
-                {g.label}
-                {g.items && <ChevronDown className="h-3 w-3" />}
-              </Link>
-
-              {g.items && open === g.label && (
-                <div
-                  role="menu"
-                  className="absolute left-0 z-50 mt-1 w-72 rounded-2xl border border-border/70 bg-background/95 p-2 shadow-2xl backdrop-blur-xl"
-                >
-                  {g.items.map((i) => (
-                    <Link
-                      key={i.to}
-                      to={i.to}
-                      role="menuitem"
-                      className="block rounded-xl px-4 py-2.5 transition hover:bg-[color:var(--gold)]/10"
-                    >
-                      <span className="block text-[10px] uppercase tracking-[0.22em] text-foreground">
-                        {i.label}
-                      </span>
-                      {i.note && (
-                        <span className="mt-0.5 block text-[10px] normal-case tracking-normal text-muted-foreground">
-                          {i.note}
-                        </span>
-                      )}
-                    </Link>
-                  ))}
-                </div>
-              )}
-            </div>
+              {g.label}
+            </Link>
           );
         })}
       </nav>
 
-      {/* Mobile drawer */}
+      {/* Full destination drawer */}
       {mobileOpen && (
         <nav
           aria-label="All destinations"
-          className="max-h-[70vh] overflow-y-auto border-t border-border/60 px-5 py-4 lg:hidden"
+          className="max-h-[70vh] overflow-y-auto border-t border-border/60 px-5 py-4"
         >
           {NAV.map((g) => (
             <div key={g.label} className="border-b border-border/40 py-3 last:border-0">
-              <Link
-                to={g.to}
-                className={`text-[11px] font-bold uppercase tracking-[0.24em] ${
-                  g.editorial ? "text-[color:var(--gold)]" : "text-foreground"
-                }`}
-              >
-                {g.label}
-              </Link>
+              {g.items ? (
+                <span
+                  className={`block text-[11px] font-bold uppercase tracking-[0.24em] ${
+                    g.editorial ? "text-[color:var(--gold)]" : "text-foreground"
+                  }`}
+                >
+                  {g.label}
+                </span>
+              ) : (
+                <Link
+                  to={g.to}
+                  className={`text-[11px] font-bold uppercase tracking-[0.24em] ${
+                    g.editorial ? "text-[color:var(--gold)]" : "text-foreground"
+                  }`}
+                >
+                  {g.label}
+                </Link>
+              )}
+
               {g.items && (
                 <div className="mt-2 grid gap-1.5 pl-3">
                   {g.items.map((i) => (
