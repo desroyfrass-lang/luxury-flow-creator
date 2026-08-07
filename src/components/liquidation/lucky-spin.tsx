@@ -431,8 +431,9 @@ export function LuckySpin() {
                   );
                 })}
               </ul>
-              <p className="mt-5 text-center font-display text-sm uppercase tracking-[0.24em] text-[color:var(--gold)]/70">
-                👑 Golden Spin — rarer than rare
+              <p className="mt-5 flex items-center justify-center gap-2 text-center font-display text-sm uppercase tracking-[0.24em] text-[color:var(--gold)]/70">
+                <Crown className="h-4 w-4" strokeWidth={1.75} aria-hidden="true" />
+                Golden Spin — rarer than rare
               </p>
             </div>
           </div>
