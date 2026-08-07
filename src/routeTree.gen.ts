@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as VisualSearchRouteImport } from './routes/visual-search'
 import { Route as SocialMediaViralsRouteImport } from './routes/social-media-virals'
 import { Route as ShopFrassRouteImport } from './routes/shop-frass'
+import { Route as SalesClearanceRouteImport } from './routes/sales-clearance'
 import { Route as RewardsRouteImport } from './routes/rewards'
 import { Route as MusicMediaRouteImport } from './routes/music-media'
 import { Route as McpRouteImport } from './routes/mcp'
@@ -119,6 +120,11 @@ const SocialMediaViralsRoute = SocialMediaViralsRouteImport.update({
 const ShopFrassRoute = ShopFrassRouteImport.update({
   id: '/shop-frass',
   path: '/shop-frass',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SalesClearanceRoute = SalesClearanceRouteImport.update({
+  id: '/sales-clearance',
+  path: '/sales-clearance',
   getParentRoute: () => rootRouteImport,
 } as any)
 const RewardsRoute = RewardsRouteImport.update({
@@ -626,6 +632,7 @@ export interface FileRoutesByFullPath {
   '/mcp': typeof McpRoute
   '/music-media': typeof MusicMediaRoute
   '/rewards': typeof RewardsRoute
+  '/sales-clearance': typeof SalesClearanceRoute
   '/shop-frass': typeof ShopFrassRoute
   '/social-media-virals': typeof SocialMediaViralsRouteWithChildren
   '/visual-search': typeof VisualSearchRoute
@@ -716,6 +723,7 @@ export interface FileRoutesByTo {
   '/mcp': typeof McpRoute
   '/music-media': typeof MusicMediaRoute
   '/rewards': typeof RewardsRoute
+  '/sales-clearance': typeof SalesClearanceRoute
   '/shop-frass': typeof ShopFrassRoute
   '/visual-search': typeof VisualSearchRoute
   '/.mcp/list-tools': typeof Char91DotmcpChar93ListToolsRoute
@@ -809,6 +817,7 @@ export interface FileRoutesById {
   '/mcp': typeof McpRoute
   '/music-media': typeof MusicMediaRoute
   '/rewards': typeof RewardsRoute
+  '/sales-clearance': typeof SalesClearanceRoute
   '/shop-frass': typeof ShopFrassRoute
   '/social-media-virals': typeof SocialMediaViralsRouteWithChildren
   '/visual-search': typeof VisualSearchRoute
@@ -908,6 +917,7 @@ export interface FileRouteTypes {
     | '/mcp'
     | '/music-media'
     | '/rewards'
+    | '/sales-clearance'
     | '/shop-frass'
     | '/social-media-virals'
     | '/visual-search'
@@ -998,6 +1008,7 @@ export interface FileRouteTypes {
     | '/mcp'
     | '/music-media'
     | '/rewards'
+    | '/sales-clearance'
     | '/shop-frass'
     | '/visual-search'
     | '/.mcp/list-tools'
@@ -1090,6 +1101,7 @@ export interface FileRouteTypes {
     | '/mcp'
     | '/music-media'
     | '/rewards'
+    | '/sales-clearance'
     | '/shop-frass'
     | '/social-media-virals'
     | '/visual-search'
@@ -1189,6 +1201,7 @@ export interface RootRouteChildren {
   McpRoute: typeof McpRoute
   MusicMediaRoute: typeof MusicMediaRoute
   RewardsRoute: typeof RewardsRoute
+  SalesClearanceRoute: typeof SalesClearanceRoute
   ShopFrassRoute: typeof ShopFrassRoute
   SocialMediaViralsRoute: typeof SocialMediaViralsRouteWithChildren
   VisualSearchRoute: typeof VisualSearchRoute
@@ -1231,6 +1244,13 @@ declare module '@tanstack/react-router' {
       path: '/shop-frass'
       fullPath: '/shop-frass'
       preLoaderRoute: typeof ShopFrassRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sales-clearance': {
+      id: '/sales-clearance'
+      path: '/sales-clearance'
+      fullPath: '/sales-clearance'
+      preLoaderRoute: typeof SalesClearanceRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/rewards': {
@@ -2210,6 +2230,7 @@ const rootRouteChildren: RootRouteChildren = {
   McpRoute: McpRoute,
   MusicMediaRoute: MusicMediaRoute,
   RewardsRoute: RewardsRoute,
+  SalesClearanceRoute: SalesClearanceRoute,
   ShopFrassRoute: ShopFrassRoute,
   SocialMediaViralsRoute: SocialMediaViralsRouteWithChildren,
   VisualSearchRoute: VisualSearchRoute,
