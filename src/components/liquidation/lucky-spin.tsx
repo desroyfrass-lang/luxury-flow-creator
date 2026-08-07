@@ -11,6 +11,10 @@ import {
   Footprints,
   type LucideIcon,
 } from "lucide-react";
+import frassSymbol from "@/assets/frass-logo-symbol.asset.json";
+
+const GOLD_SYMBOL_FILTER =
+  "brightness(1.25) contrast(1.1) sepia(1) saturate(3.5) hue-rotate(-12deg) drop-shadow(0 0 10px oklch(0.78 0.14 78 / 0.95))";
 
 type Reward = {
   id: string;
@@ -215,8 +219,14 @@ export function LuckySpin() {
         {!opened ? (
           /* ── The invitation ─────────────────────────── */
           <div className="relative z-10 mx-auto max-w-2xl text-center">
-            <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full border border-[color:var(--gold)]/50 bg-[color-mix(in_oklab,var(--gold)_12%,transparent)] font-display text-3xl text-[color:var(--gold)] shadow-[0_0_36px_-8px_oklch(0.78_0.14_78/0.9)]">
-              F
+            <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full border border-[color:var(--gold)]/50 bg-[color-mix(in_oklab,var(--gold)_12%,transparent)] shadow-[0_0_36px_-8px_oklch(0.78_0.14_78/0.9)]">
+              <img
+                src={frassSymbol.url}
+                alt="Frass"
+                className="h-10 w-10 object-contain"
+                style={{ filter: GOLD_SYMBOL_FILTER.replace("drop-shadow(0 0 10px", "drop-shadow(0 0 6px") }}
+                draggable={false}
+              />
             </div>
             <p className="mt-6 font-sans text-[11px] uppercase tracking-[0.42em] text-[color:var(--gold)]">
               An invitation
@@ -272,8 +282,14 @@ export function LuckySpin() {
                   </p>
                   <p className="mt-2 text-sm text-muted-foreground">{reward.note}</p>
                   <div className="mt-5 flex items-start gap-3 border-t border-[color:var(--gold)]/25 pt-5">
-                    <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-[color:var(--gold)]/50 font-display text-sm text-[color:var(--gold)]">
-                      F
+                    <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-[color:var(--gold)]/50">
+                      <img
+                        src={frassSymbol.url}
+                        alt="Frass"
+                        className="h-5 w-5 object-contain"
+                        style={{ filter: GOLD_SYMBOL_FILTER }}
+                        draggable={false}
+                      />
                     </div>
                     <p className="text-sm italic leading-relaxed text-foreground/90">
                       &ldquo;{reward.line}&rdquo;
@@ -446,15 +462,21 @@ export function LuckySpin() {
                   className="absolute left-1/2 top-1/2 h-[40%] w-[40%] -translate-x-1/2 -translate-y-1/2 rounded-full"
                   style={{
                     background:
-                      "radial-gradient(circle at 30% 28%, oklch(0.99 0 0 / 0.95), oklch(0.72 0.01 250 / 0.9) 42%, oklch(0.3 0.01 250 / 0.96) 100%)",
+                      "radial-gradient(circle at 30% 28%, oklch(0.78 0.14 78 / 0.95), oklch(0.62 0.12 78 / 0.9) 42%, oklch(0.18 0.06 78 / 0.96) 100%)",
                     boxShadow:
                       "inset 0 0 22px oklch(0 0 0 / 0.6), 0 0 0 3px oklch(0.78 0.14 78 / 0.6), 0 0 40px -4px oklch(0.78 0.14 78 / 0.55)",
                   }}
                 />
               </div>
 
-              <div className="pointer-events-none absolute left-1/2 top-1/2 z-20 flex h-[26%] w-[26%] -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border-2 border-[color:var(--gold)]/70 bg-[color-mix(in_oklab,black_86%,var(--gold))] font-display text-2xl text-[color:var(--gold)] shadow-[0_0_40px_-6px_oklch(0.78_0.14_78/0.9)] md:text-3xl">
-                F
+              <div className="pointer-events-none absolute left-1/2 top-1/2 z-20 flex h-[26%] w-[26%] -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border-2 border-[color:var(--gold)] bg-[color-mix(in_oklab,black_80%,var(--gold))] shadow-[0_0_40px_-6px_oklch(0.78_0.14_78/0.9)]">
+                <img
+                  src={frassSymbol.url}
+                  alt="Frass"
+                  className="h-[55%] w-[55%] object-contain"
+                  style={{ filter: GOLD_SYMBOL_FILTER }}
+                  draggable={false}
+                />
               </div>
             </div>
 
