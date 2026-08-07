@@ -316,5 +316,29 @@ export function getCollectionMeta(handle: string): CollectionMeta {
     };
   }
 
+  // Frass Plus — signature collections and department sub-collections.
+  const plusSignature = handle.match(/^frass-plus-(.+)$/);
+  if (plusSignature) {
+    const [, slug] = plusSignature;
+    return {
+      title: `${titleize(slug)} — Frass Plus`,
+      query: `tag:"frass-plus" tag:"${slug}"`,
+      description: "Premium fashion, thoughtfully cut for extended sizing.",
+    };
+  }
+
+  const plusSub = handle.match(/^(mens|womens)-plus-([a-z0-9-]+?)-(.+)$/);
+  if (plusSub) {
+    const [, gender, dept, sub] = plusSub;
+    const genderKey = gender === "mens" ? "men" : "women";
+    const genderTitle = gender === "mens" ? "Men's" : "Women's";
+    return {
+      title: `${genderTitle} ${titleize(sub)}`,
+      query: `tag:"frass-plus" tag:"${genderKey}" tag:"${dept}" tag:"${sub}"`,
+      description: `Part of Frass Plus ${titleize(dept)}.`,
+    };
+  }
+
   return { title: titleize(handle), query: `tag:"${handle}"` };
+
 }
