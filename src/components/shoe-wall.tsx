@@ -49,35 +49,23 @@ function ShelfColumn({ section, gender }: { section: WallSection; gender: WallGe
       className="relative flex min-w-0 flex-1 flex-col overflow-hidden rounded-2xl border bg-[linear-gradient(180deg,color-mix(in_oklab,var(--foreground)_8%,transparent),color-mix(in_oklab,var(--foreground)_3%,transparent))] backdrop-blur-sm md:rounded-[2rem]"
       style={{ borderColor: `color-mix(in oklab, ${accent} 40%, transparent)` }}
     >
-      {/* bay header — the category's own shelf, so each column reads distinctly */}
-      {section.image ? (
-        <div className="relative h-24 w-full shrink-0 overflow-hidden md:h-40">
-          <img
-            src={section.image}
-            alt={`${section.label} shelf`}
-            loading="lazy"
-            width={1024}
-            height={576}
-            className="h-full w-full object-cover"
-          />
-          <div className="absolute inset-0 bg-[linear-gradient(180deg,transparent_20%,oklch(0.10_0.01_60/0.88))]" />
-          <div
-            className="pointer-events-none absolute inset-x-0 bottom-0 h-[3px]"
-            style={{ background: `linear-gradient(90deg,transparent,${accent},transparent)` }}
-          />
-          <div className="absolute inset-x-0 bottom-1.5 text-center md:bottom-3">
-            <span
-              className="font-display text-[11px] uppercase tracking-[0.28em] md:text-lg md:tracking-[0.34em]"
-              style={{ color: accent, textShadow: `0 0 18px ${accent}` }}
-            >
-              {section.label}
-            </span>
-            <p className="mt-0.5 hidden text-[10px] uppercase tracking-[0.18em] text-[color:var(--luxe-linen,#f6f1e7)]/70 md:block">
-              {section.caption}
-            </p>
-          </div>
-        </div>
-      ) : null}
+      {/* bay header — collection name only, no photography behind the type */}
+      <div className="relative w-full shrink-0 px-2 py-3 text-center md:py-5">
+        <span
+          className="block font-display uppercase leading-none text-[clamp(1.05rem,4.6vw,1.5rem)] tracking-[0.18em] md:text-[clamp(1.75rem,2.4vw,2.5rem)] md:tracking-[0.26em]"
+          style={{ color: accent, textShadow: `0 0 22px ${accent}` }}
+        >
+          {section.label}
+        </span>
+        <p className="mt-1 hidden text-[10px] uppercase tracking-[0.18em] text-muted-foreground md:block">
+          {section.caption}
+        </p>
+        <div
+          className="pointer-events-none absolute inset-x-0 bottom-0 h-[3px]"
+          style={{ background: `linear-gradient(90deg,transparent,${accent},transparent)` }}
+        />
+      </div>
+
 
       {/* scrollable shelf stack */}
       <div className="relative min-h-0 flex-1 overflow-y-auto overscroll-contain px-2 py-3 md:px-4 md:py-4">
