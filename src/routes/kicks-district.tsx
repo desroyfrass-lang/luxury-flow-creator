@@ -77,7 +77,7 @@ const COLUMNS: [DirectoryColumn, DirectoryColumn] = [
       {
         title: "Bare Drip for Men",
         description: "Swimwear, resort wear, and essentials.",
-        image: cardBare,
+        image: storeBareMen,
         to: "/bare-drip/men",
       },
     ],
@@ -100,7 +100,7 @@ const COLUMNS: [DirectoryColumn, DirectoryColumn] = [
       {
         title: "Bare Drip for Women",
         description: "Swimwear, lingerie, and resort collections.",
-        image: viralDress,
+        image: storeBareWomen,
         to: "/bare-drip/women",
       },
     ],
