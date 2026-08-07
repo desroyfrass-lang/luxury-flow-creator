@@ -213,7 +213,7 @@ export function FrassyChat({ embedded = false }: { embedded?: boolean } = {}) {
   }
 
 
-  if (!open) {
+  if (!open && !embedded) {
     return (
       <button
         type="button"
@@ -227,7 +227,14 @@ export function FrassyChat({ embedded = false }: { embedded?: boolean } = {}) {
   }
 
   return (
-    <div className="fixed bottom-5 right-5 z-50 flex h-[min(620px,80vh)] w-[min(400px,calc(100vw-2.5rem))] flex-col overflow-hidden rounded-lg border border-white/10 bg-[#0b0c0e] shadow-2xl">
+    <div
+      className={
+        embedded
+          ? "flex h-[min(620px,75vh)] w-full flex-col overflow-hidden rounded-lg border border-white/10 bg-[#0b0c0e]"
+          : "fixed bottom-5 right-5 z-50 flex h-[min(620px,80vh)] w-[min(400px,calc(100vw-2.5rem))] flex-col overflow-hidden rounded-lg border border-white/10 bg-[#0b0c0e] shadow-2xl"
+      }
+    >
+
       <header className="flex items-center justify-between border-b border-white/10 px-4 py-3">
         <div className="flex items-center gap-3">
           <img src={symbolAsset.url} alt="" className="h-6 w-6 object-contain" />
