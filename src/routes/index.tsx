@@ -19,6 +19,9 @@ import districtLuxury from "@/assets/district-luxury.jpg";
 import districtKids from "@/assets/district-kids.jpg";
 import cardMen from "@/assets/card-men.jpg";
 import cardWomen from "@/assets/card-women.jpg";
+import plusWingMen from "@/assets/plus-wing-men.jpg";
+import plusWingWomen from "@/assets/plus-wing-women.jpg";
+
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -86,19 +89,20 @@ const STORES: { title: string; description: string; image: string; to: string; e
     eyebrow: "Women",
   },
   {
-    title: "Plus Size for Men",
-    description: "Extended sizing across every fit.",
-    image: cardMen,
-    to: "/plus-size/men",
+    title: "Frass Plus — Gentlemen",
+    description: "Premium fashion, thoughtfully cut. Style has no size.",
+    image: plusWingMen,
+    to: "/frass-plus/men",
     eyebrow: "Men",
   },
   {
-    title: "Plus Size for Women",
-    description: "Extended sizing across every collection.",
-    image: cardWomen,
-    to: "/plus-size/women",
+    title: "Frass Plus — Ladies",
+    description: "Premium fashion, thoughtfully cut. Confidence has no limits.",
+    image: plusWingWomen,
+    to: "/frass-plus/women",
     eyebrow: "Women",
   },
+
   {
     title: "Frass Kids for Boys",
     description: "Kicks, drip and essentials for young builders.",
