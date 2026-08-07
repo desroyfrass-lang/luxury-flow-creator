@@ -262,9 +262,11 @@ export function LuckySpin() {
                       : "border-[color:var(--gold)]/40 bg-[color-mix(in_oklab,var(--gold)_7%,transparent)]"
                   }`}
                 >
-                  <div className="text-4xl" aria-hidden="true">
-                    {reward.emoji}
-                  </div>
+                  <reward.Icon
+                    className="h-10 w-10 text-[color:var(--gold)] drop-shadow-[0_0_18px_oklch(0.78_0.14_78/0.9)]"
+                    strokeWidth={1.5}
+                    aria-hidden="true"
+                  />
                   <p className="mt-3 font-display text-3xl uppercase tracking-[0.1em] text-[color:var(--gold)] md:text-4xl">
                     {reward.label}
                   </p>
