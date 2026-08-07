@@ -8,9 +8,9 @@ import heroWall from "@/assets/hero-shoe-wall-women.jpg";
 export const Route = createFileRoute("/frass-kicks/women")({
   head: () => ({
     meta: [
-      { title: "Women's Shoe Room — Frass Kicks" },
-      { name: "description", content: "Step into the women's showroom wall: casual, classic and street footwear, lit shelf to shelf." },
-      { property: "og:title", content: "Women's Shoe Room — Frass Kicks" },
+      { title: "Frass Kicks Show Room for Women" },
+      { name: "description", content: "Step into the Frass Kicks Show Room for Women: casual, classic and street footwear, lit shelf to shelf." },
+      { property: "og:title", content: "Frass Kicks Show Room for Women" },
       { property: "og:description", content: "Casual, classic and street women's footwear on the illuminated Frass Kicks wall." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -48,7 +48,7 @@ function WomensKicksRoom() {
     <SiteShell>
       <PageHeader
         eyebrow="Women"
-        title="The Women's Shoe Room"
+        title="Frass Kicks Show Room for Women"
         description="Three lit bays, floor to ceiling. Casual, Classic, Street — every pair on the wall is live."
         crumbs={[
           { label: "Home", to: "/" },
@@ -69,7 +69,7 @@ function WomensKicksRoom() {
         </div>
       </section>
       <ShoeWall sections={SECTIONS} gender="women" />
-      <PageFeedback pageTitle="Women's Shoe Room" />
+      <PageFeedback pageTitle="Frass Kicks Show Room for Women" />
     </SiteShell>
   );
 }
