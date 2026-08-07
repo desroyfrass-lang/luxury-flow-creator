@@ -126,3 +126,51 @@ function WingPage() {
     </SiteShell>
   );
 }
+
+function SectionMarquee({
+  kicker,
+  title,
+  blurb,
+  accent,
+}: {
+  kicker: string;
+  title: string;
+  blurb: string;
+  accent: string;
+}) {
+  return (
+    <header
+      className="relative mb-12 overflow-hidden rounded-2xl border px-6 py-10 text-center md:px-12 md:py-14"
+      style={{
+        borderColor: `color-mix(in oklab, ${accent} 45%, transparent)`,
+        background: `radial-gradient(120% 140% at 50% 0%, color-mix(in oklab, ${accent} 16%, transparent) 0%, transparent 70%), linear-gradient(180deg, oklch(0.16 0.01 80), oklch(0.10 0.008 80))`,
+        boxShadow: `0 30px 70px -50px ${accent}, inset 0 1px 0 color-mix(in oklab, ${accent} 30%, transparent)`,
+      }}
+    >
+      <span
+        className="pointer-events-none absolute inset-x-10 top-0 h-px"
+        style={{ background: `linear-gradient(90deg, transparent, ${accent}, transparent)` }}
+      />
+      <p
+        className="text-[10px] font-bold uppercase tracking-[0.42em]"
+        style={{ color: accent }}
+      >
+        {kicker}
+      </p>
+      <h2
+        className="mt-4 flex flex-wrap items-center justify-center gap-3 font-display uppercase leading-[0.9] tracking-[0.02em] text-[clamp(2rem,7vw,4rem)]"
+        style={{ color: accent, textShadow: `0 0 34px color-mix(in oklab, ${accent} 55%, transparent)` }}
+      >
+        {title}
+        <PlusBadge size="lg" />
+      </h2>
+      <p className="mx-auto mt-5 max-w-2xl font-script text-base italic text-foreground/80 md:text-lg">
+        {blurb}
+      </p>
+      <span
+        className="pointer-events-none absolute inset-x-10 bottom-0 h-px"
+        style={{ background: `linear-gradient(90deg, transparent, ${accent}, transparent)` }}
+      />
+    </header>
+  );
+}
