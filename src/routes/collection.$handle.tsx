@@ -4,6 +4,7 @@ import { SiteShell } from "@/components/site-shell";
 import { PageHeader } from "@/components/page-header";
 import { ProductGrid } from "@/components/product-grid";
 import { getCollectionMeta } from "@/lib/shopify";
+import { collectionCrumbs } from "@/lib/breadcrumbs";
 
 type Sort = "featured" | "newest" | "best" | "price-asc" | "price-desc";
 
@@ -49,7 +50,7 @@ function CollectionPage() {
         eyebrow="Collection"
         title={title}
         description={meta.description}
-        crumbs={[{ label: "Home", to: "/" }, { label: title }]}
+        crumbs={collectionCrumbs(handle)}
       />
 
       <div className="mx-auto max-w-[1600px] px-6 lg:px-12">

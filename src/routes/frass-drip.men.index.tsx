@@ -36,8 +36,9 @@ export const Route = createFileRoute("/frass-drip/men/")({
         title="Men's Frass Drip"
         crumbs={[
           { label: "Home", to: "/" },
+          { label: "Frass District", to: "/kicks-district" },
           { label: "Frass Drip", to: "/frass-drip" },
-          { label: "Men" },
+          { label: "Frass Drip for Men" },
         ]}
       />
       <section className="mx-auto max-w-[1600px] px-6 lg:px-12">
