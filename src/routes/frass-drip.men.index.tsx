@@ -1,10 +1,11 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { SiteShell } from "@/components/site-shell";
-import { CollectionCard } from "@/components/collection-card";
+import { StorePortalCard } from "@/components/store-portal-card";
 import { PageHeader } from "@/components/page-header";
 import cardDrip from "@/assets/card-drip.jpg";
 import cardMen from "@/assets/card-men.jpg";
 import cardKicks from "@/assets/card-kicks.jpg";
+
 
 const PARENTS = [
   ["work", "Work Drip", "Tailored essentials for the boardroom."],
