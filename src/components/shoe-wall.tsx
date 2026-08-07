@@ -9,6 +9,8 @@ export type WallSection = {
   caption: string;
   query: string;
   handle: string;
+  /** Optional client-side filter, e.g. extended sizing for Frass Plus+. */
+  filter?: (product: ShopifyProduct) => boolean;
 };
 
 /** One illuminated, independently scrollable column of the shoe wall. */
