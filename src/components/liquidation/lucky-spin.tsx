@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { useServerFn } from "@tanstack/react-start";
 import {
   Crown,
   Gift,
@@ -12,6 +13,7 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import frassSymbol from "@/assets/frass-logo-symbol.asset.json";
+import { getOrderCount } from "@/lib/rewards.functions";
 
 const GOLD_SYMBOL_FILTER =
   "brightness(1.25) contrast(1.1) sepia(1) saturate(3.5) hue-rotate(-12deg) drop-shadow(0 0 10px oklch(0.78 0.14 78 / 0.95))";
