@@ -21,7 +21,6 @@ const NAV: NavGroup[] = [
     to: "/frass-kicks",
     match: "/frass-kicks",
     items: [
-      { label: "The Kicks Store", to: "/frass-kicks", note: "Sneaker hall" },
       { label: "Men's Kicks", to: "/frass-kicks/men" },
       { label: "Women's Kicks", to: "/frass-kicks/women" },
       { label: "Kicks District", to: "/kicks-district", note: "The street" },
@@ -32,7 +31,6 @@ const NAV: NavGroup[] = [
     to: "/frass-drip",
     match: "/frass-drip",
     items: [
-      { label: "The Drip Store", to: "/frass-drip" },
       { label: "Men's Drip", to: "/frass-drip/men", note: "Work · Party · Casual · Street" },
       { label: "Women's Drip", to: "/frass-drip/women", note: "Work · Party · Casual · Street" },
     ],
@@ -42,9 +40,8 @@ const NAV: NavGroup[] = [
     to: "/bare-drip",
     match: "/bare-drip",
     items: [
-      { label: "The Bare Drip Store", to: "/bare-drip" },
-      { label: "Men — Underwear & Swim", to: "/bare-drip/men" },
-      { label: "Women — Lingerie & Swim", to: "/bare-drip/women" },
+      { label: "Men — Underwear & Swimwear", to: "/bare-drip/men" },
+      { label: "Women — Lingerie & Swimwear", to: "/bare-drip/women" },
     ],
   },
   {
@@ -103,6 +100,15 @@ const NAV: NavGroup[] = [
       { label: "Frass World Map", to: "/frass-world" },
     ],
   },
+];
+
+/** Always-visible destinations on the bar itself. */
+const PRIMARY: { label: string; to: string; match: string; editorial?: boolean }[] = [
+  { label: "Frass District", to: "/", match: "/shop-frass" },
+  { label: "Afro Designers", to: "/afro-designers", match: "/afro-designers", editorial: true },
+  { label: "Frass Luxury House", to: "/frass-luxury-house", match: "/frass-luxury-house", editorial: true },
+  { label: "Plus Size", to: "/plus-size/women", match: "/plus-size" },
+  { label: "Frass Kids", to: "/frass-kids/girls", match: "/frass-kids" },
 ];
 
 const CURRENCIES = ["USD", "GBP", "EUR", "JMD", "CAD"];
