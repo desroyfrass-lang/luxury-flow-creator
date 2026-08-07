@@ -28,11 +28,11 @@ function GatewayPage() {
     <main className="relative min-h-screen overflow-hidden bg-[color:var(--retail-ink)]">
       <div className="absolute inset-0">
         <img
-          src={heroPeople}
-          alt="A diverse group of people talking, walking and shopping on a warm Caribbean street"
+          src={archHero.url}
+          alt="The carved stone Jamaica Luxury Fashion District archway opening onto a palm-lined promenade"
           width={1920}
           height={1088}
-          className="gateway-drift h-full w-full object-cover"
+          className="gateway-drift h-full w-full object-cover object-top"
         />
         <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/45 to-black/85" />
       </div>
