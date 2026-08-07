@@ -381,6 +381,38 @@ export function LuckySpin() {
                 F
               </div>
             </div>
+
+            {/* Large-print reward legend — trademark gold hover glow */}
+            <div className="md:col-span-2">
+              <p className="mb-5 text-center font-sans text-[11px] uppercase tracking-[0.42em] text-[color:var(--gold)]">
+                What&rsquo;s on the wheel
+              </p>
+              <ul className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
+                {REWARDS.map((r) => {
+                  const active = reward?.id === r.id;
+                  return (
+                    <li
+                      key={`legend-${r.id}`}
+                      className={`group flex items-center gap-3 rounded-2xl border px-4 py-4 transition-all duration-500 hover:-translate-y-1 hover:border-[color:var(--gold)] hover:bg-[color-mix(in_oklab,var(--gold)_14%,transparent)] hover:shadow-[0_0_46px_-10px_oklch(0.78_0.14_78/0.95)] ${
+                        active
+                          ? "border-[color:var(--gold)] bg-[color-mix(in_oklab,var(--gold)_16%,transparent)] shadow-[0_0_50px_-12px_oklch(0.78_0.14_78/0.95)]"
+                          : "border-[color:var(--gold)]/25 bg-[color-mix(in_oklab,black_70%,var(--gold))]"
+                      }`}
+                    >
+                      <span className="text-2xl" aria-hidden="true">
+                        {r.emoji}
+                      </span>
+                      <span className="font-display text-base uppercase leading-tight tracking-[0.08em] text-[color:var(--gold)] transition-colors duration-500 group-hover:text-[oklch(0.99_0.05_88)] md:text-lg">
+                        {r.label}
+                      </span>
+                    </li>
+                  );
+                })}
+              </ul>
+              <p className="mt-5 text-center font-display text-sm uppercase tracking-[0.24em] text-[color:var(--gold)]/70">
+                👑 Golden Spin — rarer than rare
+              </p>
+            </div>
           </div>
         )}
       </div>
