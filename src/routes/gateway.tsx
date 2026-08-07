@@ -32,9 +32,9 @@ function GatewayPage() {
           alt="The carved JAMAICA Luxury Fashion District archway opening onto the palm-lined Frass Kicks promenade"
           width={1920}
           height={1080}
-          className="gateway-drift h-full w-full object-cover object-center"
+          className="gateway-drift h-full w-full object-cover object-[center_30%]"
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-black/45 via-black/25 to-black/70" />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/25 via-transparent to-black/55" />
       </div>
 
       <section className="relative mx-auto flex min-h-screen max-w-[1400px] flex-col items-center justify-center px-6 py-20 text-center">
