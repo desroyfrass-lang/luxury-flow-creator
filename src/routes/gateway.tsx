@@ -29,12 +29,12 @@ function GatewayPage() {
       <div className="absolute inset-0 flex items-center justify-center bg-black">
         <img
           src={archHero.url}
-          alt="The carved stone Jamaica Luxury Fashion District archway opening onto a palm-lined promenade"
+          alt="The carved JAMAICA Luxury Fashion District archway opening onto the palm-lined Frass Kicks promenade"
           width={1920}
-          height={1088}
+          height={1080}
           className="gateway-drift h-full w-full object-contain object-center"
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/45 to-black/85" />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/45 via-black/25 to-black/70" />
       </div>
 
       <section className="relative mx-auto flex min-h-screen max-w-[1400px] flex-col items-center justify-center px-6 py-20 text-center">
