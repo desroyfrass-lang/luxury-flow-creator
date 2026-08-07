@@ -1,7 +1,9 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import archHero from "@/assets/frass-gateway-arch.jpg.asset.json";
+import fullLogo from "@/assets/frass-logo-full.asset.json";
 import frassyGold from "@/assets/frassy-gold.png.asset.json";
+
 
 export const Route = createFileRoute("/gateway")({
   head: () => ({
@@ -38,9 +40,10 @@ function GatewayFrassy() {
         alt="Frassy, the host of the World of Frass"
         className={`absolute drop-shadow-[0_20px_80px_rgba(0,0,0,0.6)] transition-all duration-[1400ms] ease-[cubic-bezier(0.22,1,0.36,1)] ${
           seated
-            ? "bottom-24 right-5 h-16 w-16 rounded-full object-cover opacity-95"
+            ? "bottom-6 right-6 h-16 w-16 rounded-full object-cover opacity-0"
             : "bottom-[12vh] right-1/2 h-[72vh] w-[72vh] translate-x-1/2 object-contain opacity-100"
         }`}
+
       />
     </div>
   );
@@ -65,19 +68,18 @@ function GatewayPage() {
         />
         <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-black/70" />
 
-        {/* Carved into the arch: FRASS · [gold crest already on the building] · KICKS */}
-        <div
-          aria-hidden="true"
-          className="pointer-events-none absolute left-0 right-0 top-[5.1%] flex items-center justify-center"
-        >
-          <span className="w-[22%] pr-[3%] text-right font-display text-[3.4vw] uppercase leading-none tracking-[0.08em] text-[#e8bf5c] drop-shadow-[0_2px_6px_rgba(0,0,0,0.7)] sm:text-[2.6vw]">
-            Frass
-          </span>
-          <span className="w-[19%]" />
-          <span className="w-[22%] pl-[3%] text-left font-display text-[3.4vw] uppercase leading-none tracking-[0.08em] text-[#e8bf5c] drop-shadow-[0_2px_6px_rgba(0,0,0,0.7)] sm:text-[2.6vw]">
-            Kicks
-          </span>
-        </div>
+        {/* The Frass Kicks mark, mounted on the arch as a gold fixture above JAMAICA */}
+        <img
+          src={fullLogo.url}
+          alt="Frass Kicks"
+          className="pointer-events-none absolute left-1/2 top-[3.4%] z-[1] h-[10.5%] w-auto -translate-x-1/2 object-contain"
+          style={{
+            filter:
+              "grayscale(1) brightness(0.95) sepia(1) saturate(6) hue-rotate(-14deg) contrast(1.15) drop-shadow(0 4px 12px rgba(0,0,0,0.8))",
+          }}
+
+        />
+
       </div>
 
 
