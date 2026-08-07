@@ -210,7 +210,7 @@ export function LuckySpin() {
               An invitation
             </p>
             <h2 className="mt-4 font-display text-4xl uppercase leading-[0.95] tracking-[0.05em] md:text-6xl">
-              Frassy&rsquo;s Lucky Spin
+              Spin Rewards
             </h2>
             <p className="mt-6 text-lg leading-relaxed text-[color:var(--gold-soft,var(--gold))]">
               Your monthly Frass Reward is waiting.
@@ -239,7 +239,7 @@ export function LuckySpin() {
                 {reward ? "This month's reward" : "Your complimentary spin"}
               </p>
               <h2 className="mt-4 font-display text-4xl uppercase leading-[0.95] tracking-[0.05em] md:text-6xl">
-                Frassy&rsquo;s Lucky Spin
+                Spin Rewards
               </h2>
 
               {reward ? (
