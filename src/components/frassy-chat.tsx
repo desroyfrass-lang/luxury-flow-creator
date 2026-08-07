@@ -51,12 +51,15 @@ type Msg = {
 let seq = 0;
 const nextId = () => `m${++seq}-${Date.now()}`;
 
-export function FrassyChat() {
-  const [open, setOpen] = useState(false);
+export function FrassyChat({ embedded = false }: { embedded?: boolean } = {}) {
+  const [open, setOpen] = useState(embedded);
   const [messages, setMessages] = useState<Msg[]>([]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  // Frassy speaks her replies aloud again — unless the Builder mutes her.
+  const [speakReplies, setSpeakReplies] = useState(true);
+
 
   const items = useCartStore((s) => s.items);
   const ctx = useFrassyContext();
