@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { GatewayNav } from "@/components/gateway-nav";
-import { DistrictDirectory, type DirectoryColumn } from "@/components/district-directory";
+import { CollectionCard } from "@/components/collection-card";
 import marketStreet from "@/assets/district-kicks.jpg";
 import storeKicksMen from "@/assets/store-kicks-men.jpg";
 import storeKicksWomen from "@/assets/store-kicks-women.jpg";
@@ -12,6 +12,7 @@ import districtLuxury from "@/assets/district-luxury.jpg";
 import districtKids from "@/assets/district-kids.jpg";
 import cardMen from "@/assets/card-men.jpg";
 import cardWomen from "@/assets/card-women.jpg";
+
 
 export const Route = createFileRoute("/shop-frass")({
   head: () => ({
@@ -35,90 +36,93 @@ export const Route = createFileRoute("/shop-frass")({
   component: ShopFrassPage,
 });
 
-const COLUMNS: [DirectoryColumn, DirectoryColumn] = [
+const STORES: { title: string; description: string; image: string; to: string; eyebrow: string }[] = [
   {
-    heading: "Men's Side",
-    stores: [
-      {
-        title: "Frass Kicks for Men",
-        description: "Premium footwear — casual, classic and street.",
-        image: storeKicksMen,
-        to: "/frass-kicks/men",
-      },
-      {
-        title: "Frass Drip for Men",
-        description: "Streetwear, apparel and complete looks.",
-        image: storeDripMen,
-        to: "/frass-drip/men",
-      },
-      {
-        title: "Bare Drip for Men",
-        description: "Swimwear, resort wear and essentials.",
-        image: storeBareMen,
-        to: "/bare-drip/men",
-      },
-      {
-        title: "Plus Size for Men",
-        description: "Extended sizing across every fit.",
-        image: cardMen,
-        to: "/plus-size/men",
-      },
-      {
-        title: "Frass Kids for Boys",
-        description: "Kicks, drip and essentials for young builders.",
-        image: districtKids,
-        to: "/frass-kids/boys",
-      },
-      {
-        title: "Frass Luxury House",
-        description: "Tailored luxury and limited men's editions.",
-        image: districtLuxury,
-        to: "/frass-luxury-house/men",
-      },
-    ],
+    title: "Frass Kicks for Men",
+    description: "Premium footwear — casual, classic and street.",
+    image: storeKicksMen,
+    to: "/frass-kicks/men",
+    eyebrow: "Men",
   },
   {
-    heading: "Women's Side",
-    stores: [
-      {
-        title: "Frass Kicks for Women",
-        description: "Sneakers, heels, sandals and slides.",
-        image: storeKicksWomen,
-        to: "/frass-kicks/women",
-      },
-      {
-        title: "Frass Drip for Women",
-        description: "Fashion, apparel and complete looks.",
-        image: storeDripWomen,
-        to: "/frass-drip/women",
-      },
-      {
-        title: "Bare Drip for Women",
-        description: "Swimwear, lingerie and resort collections.",
-        image: storeBareWomen,
-        to: "/bare-drip/women",
-      },
-      {
-        title: "Plus Size for Women",
-        description: "Extended sizing across every collection.",
-        image: cardWomen,
-        to: "/plus-size/women",
-      },
-      {
-        title: "Frass Kids for Girls",
-        description: "Kicks, drip and essentials for young builders.",
-        image: districtKids,
-        to: "/frass-kids/girls",
-      },
-      {
-        title: "Frass Luxury House",
-        description: "Couture-leaning luxury and limited women's editions.",
-        image: districtLuxury,
-        to: "/frass-luxury-house/women",
-      },
-    ],
+    title: "Frass Kicks for Women",
+    description: "Sneakers, heels, sandals and slides.",
+    image: storeKicksWomen,
+    to: "/frass-kicks/women",
+    eyebrow: "Women",
+  },
+  {
+    title: "Frass Drip for Men",
+    description: "Streetwear, apparel and complete looks.",
+    image: storeDripMen,
+    to: "/frass-drip/men",
+    eyebrow: "Men",
+  },
+  {
+    title: "Frass Drip for Women",
+    description: "Fashion, apparel and complete looks.",
+    image: storeDripWomen,
+    to: "/frass-drip/women",
+    eyebrow: "Women",
+  },
+  {
+    title: "Bare Drip for Men",
+    description: "Swimwear, resort wear and essentials.",
+    image: storeBareMen,
+    to: "/bare-drip/men",
+    eyebrow: "Men",
+  },
+  {
+    title: "Bare Drip for Women",
+    description: "Swimwear, lingerie and resort collections.",
+    image: storeBareWomen,
+    to: "/bare-drip/women",
+    eyebrow: "Women",
+  },
+  {
+    title: "Plus Size for Men",
+    description: "Extended sizing across every fit.",
+    image: cardMen,
+    to: "/plus-size/men",
+    eyebrow: "Men",
+  },
+  {
+    title: "Plus Size for Women",
+    description: "Extended sizing across every collection.",
+    image: cardWomen,
+    to: "/plus-size/women",
+    eyebrow: "Women",
+  },
+  {
+    title: "Frass Kids for Boys",
+    description: "Kicks, drip and essentials for young builders.",
+    image: districtKids,
+    to: "/frass-kids/boys",
+    eyebrow: "Boys",
+  },
+  {
+    title: "Frass Kids for Girls",
+    description: "Kicks, drip and essentials for young builders.",
+    image: districtKids,
+    to: "/frass-kids/girls",
+    eyebrow: "Girls",
+  },
+  {
+    title: "Frass Luxury House for Men",
+    description: "Tailored luxury and limited men's editions.",
+    image: districtLuxury,
+    to: "/frass-luxury-house/men",
+    eyebrow: "Men",
+  },
+  {
+    title: "Frass Luxury House for Women",
+    description: "Couture-leaning luxury and limited women's editions.",
+    image: districtLuxury,
+    to: "/frass-luxury-house/women",
+    eyebrow: "Women",
   },
 ];
+
 
 function ShopFrassPage() {
   return (
@@ -158,12 +162,35 @@ function ShopFrassPage() {
         </div>
       </section>
 
-      <DistrictDirectory
-        headline="Choose Your Side"
-        lines={["Walk Wid Power", "Step Wid Purpose", "Move Wid Meaning"]}
-        intro="Every Frass store, in one directory. Men's side on the left, women's side on the right — pick your door and start shopping."
-        columns={COLUMNS}
-      />
+      <section className="mx-auto max-w-[1100px] px-6 py-20 lg:px-10">
+        <header className="mx-auto max-w-3xl text-center">
+          <h2 className="font-display text-4xl uppercase leading-[0.9] text-[color:var(--gold)] md:text-6xl">
+            Choose Your Side
+          </h2>
+          <p className="mt-4 text-[10px] uppercase tracking-[0.35em] text-muted-foreground">
+            Walk Wid Power · Step Wid Purpose · Move Wid Meaning
+          </p>
+          <p className="mx-auto mt-5 max-w-xl text-sm text-muted-foreground md:text-base">
+            Every Frass store, in one directory — pick your door and start shopping.
+          </p>
+        </header>
+
+        <div className="mt-16 grid gap-10">
+          {STORES.map((s) => (
+            <CollectionCard
+              key={s.to}
+              to={s.to}
+              image={s.image}
+              eyebrow={s.eyebrow}
+              title={s.title}
+              description={s.description}
+              size="lg"
+              cta="Enter Store"
+            />
+          ))}
+        </div>
+      </section>
+
 
       <footer className="border-t border-border/60 bg-card/40">
         <div className="mx-auto grid max-w-[1600px] gap-4 px-6 py-8 text-[10px] uppercase tracking-[0.22em] text-muted-foreground sm:grid-cols-2 lg:grid-cols-4 lg:px-10">

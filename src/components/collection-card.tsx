@@ -19,10 +19,11 @@ interface CollectionCardProps {
 }
 
 const heightClass: Record<NonNullable<CollectionCardProps["size"]>, string> = {
-  // 500-600px range, responsive
-  lg: "h-[560px] md:h-[600px]",
-  md: "h-[500px] md:h-[540px]",
+  // taller, portrait-leaning cards
+  lg: "h-[640px] md:h-[760px]",
+  md: "h-[560px] md:h-[640px]",
 };
+
 
 export function CollectionCard({
   to,
