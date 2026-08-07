@@ -18,6 +18,10 @@ export type WallSection = {
   caption: string;
   query: string;
   handle: string;
+  /** Category-specific shelf photography for this bay. */
+  image?: string;
+  /** Accent light colour for this bay. */
+  accent?: string;
   /** Optional client-side filter, e.g. extended sizing for Frass Plus+. */
   filter?: (product: ShopifyProduct) => boolean;
 };
@@ -38,8 +42,43 @@ function ShelfColumn({ section, gender }: { section: WallSection; gender: WallGe
     };
   }, [section.query, filter]);
 
+  const accent = section.accent ?? "var(--gold)";
+
   return (
-    <div className="relative flex min-w-0 flex-1 flex-col overflow-hidden rounded-2xl border border-[color:var(--gold)]/25 bg-[linear-gradient(180deg,color-mix(in_oklab,var(--foreground)_8%,transparent),color-mix(in_oklab,var(--foreground)_3%,transparent))] backdrop-blur-sm md:rounded-[2rem]">
+    <div
+      className="relative flex min-w-0 flex-1 flex-col overflow-hidden rounded-2xl border bg-[linear-gradient(180deg,color-mix(in_oklab,var(--foreground)_8%,transparent),color-mix(in_oklab,var(--foreground)_3%,transparent))] backdrop-blur-sm md:rounded-[2rem]"
+      style={{ borderColor: `color-mix(in oklab, ${accent} 40%, transparent)` }}
+    >
+      {/* bay header — the category's own shelf, so each column reads distinctly */}
+      {section.image ? (
+        <div className="relative h-24 w-full shrink-0 overflow-hidden md:h-40">
+          <img
+            src={section.image}
+            alt={`${section.label} shelf`}
+            loading="lazy"
+            width={1024}
+            height={576}
+            className="h-full w-full object-cover"
+          />
+          <div className="absolute inset-0 bg-[linear-gradient(180deg,transparent_20%,oklch(0.10_0.01_60/0.88))]" />
+          <div
+            className="pointer-events-none absolute inset-x-0 bottom-0 h-[3px]"
+            style={{ background: `linear-gradient(90deg,transparent,${accent},transparent)` }}
+          />
+          <div className="absolute inset-x-0 bottom-1.5 text-center md:bottom-3">
+            <span
+              className="font-display text-[11px] uppercase tracking-[0.28em] md:text-lg md:tracking-[0.34em]"
+              style={{ color: accent, textShadow: `0 0 18px ${accent}` }}
+            >
+              {section.label}
+            </span>
+            <p className="mt-0.5 hidden text-[10px] uppercase tracking-[0.18em] text-[color:var(--luxe-linen,#f6f1e7)]/70 md:block">
+              {section.caption}
+            </p>
+          </div>
+        </div>
+      ) : null}
+
       {/* scrollable shelf stack */}
       <div className="relative min-h-0 flex-1 overflow-y-auto overscroll-contain px-2 py-3 md:px-4 md:py-4">
         {products === null ? (
