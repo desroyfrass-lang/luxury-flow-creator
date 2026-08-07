@@ -1,35 +1,55 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { SiteShell } from "@/components/site-shell";
-import { CollectionCard } from "@/components/collection-card";
 import { PageHeader } from "@/components/page-header";
-import cardKicks from "@/assets/card-kicks.jpg";
-import cardWomen from "@/assets/card-women.jpg";
-import cardBare from "@/assets/card-bare.jpg";
+import { PageFeedback } from "@/components/page-feedback";
+import { ShoeWall, type WallSection } from "@/components/shoe-wall";
+import storeWomen from "@/assets/store-kicks-women.jpg";
 
 export const Route = createFileRoute("/frass-kicks/women")({
   head: () => ({
     meta: [
-      { title: "Women's Footwear — Frass Kicks" },
-      { name: "description", content: "Street, classic and casual women's kicks." },
-      { property: "og:image", content: cardWomen },
+      { title: "Women's Shoe Room — Frass Kicks" },
+      { name: "description", content: "Step into the women's showroom wall: casual, classic and street footwear, lit shelf to shelf." },
+      { property: "og:title", content: "Women's Shoe Room — Frass Kicks" },
+      { property: "og:description", content: "Casual, classic and street women's footwear on the illuminated Frass Kicks wall." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
-  component: WomensKicks,
+  component: WomensKicksRoom,
 });
 
-const CARDS = [
-  { handle: "street-kicks-women", slot: "kicks-women-street", title: "Street Kicks", image: cardKicks, blurb: "Statement steppers." },
-  { handle: "classic-kicks-women", slot: "kicks-women-classic", title: "Classic Kicks", image: cardBare, blurb: "Heels & icons, reimagined." },
-  { handle: "casual-kicks-women", slot: "kicks-women-casual", title: "Casual Kicks", image: cardWomen, blurb: "Daily essentials, refined." },
+const SECTIONS: WallSection[] = [
+  {
+    id: "casual",
+    label: "Casual",
+    caption: "Daily essentials, refined",
+    handle: "casual-kicks-women",
+    query: 'vendor:"FRASS KICKS" tag:"Women\'s" product_type:"Casual Kicks"',
+  },
+  {
+    id: "classic",
+    label: "Classic",
+    caption: "Heels & icons",
+    handle: "classic-kicks-women",
+    query: 'vendor:"FRASS KICKS" tag:"Women\'s" product_type:"Classic Kicks"',
+  },
+  {
+    id: "street",
+    label: "Street",
+    caption: "Statement steppers",
+    handle: "street-kicks-women",
+    query: 'vendor:"FRASS KICKS" tag:"Women\'s" product_type:"Street Kicks"',
+  },
 ];
 
-
-function WomensKicks() {
+function WomensKicksRoom() {
   return (
     <SiteShell>
       <PageHeader
         eyebrow="Women"
-        title="Women's Footwear"
+        title="The Women's Shoe Room"
+        description="Three lit bays, floor to ceiling. Casual, Classic, Street — every pair on the wall is live."
         crumbs={[
           { label: "Home", to: "/" },
           { label: "Frass Kicks", to: "/frass-kicks" },
@@ -37,22 +57,17 @@ function WomensKicks() {
         ]}
       />
       <section className="mx-auto max-w-[1600px] px-6 lg:px-12">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
-          {CARDS.map((c) => (
-            <CollectionCard
-              key={c.handle}
-              to="/collection/$handle"
-              params={{ handle: c.handle }}
-              slot={c.slot}
-              image={c.image}
-              eyebrow="Women"
-              title={c.title}
-              description={c.blurb}
-            />
-
-          ))}
+        <div className="relative overflow-hidden rounded-[2rem]">
+          <img
+            src={storeWomen}
+            alt="Frass Kicks for Women storefront archway"
+            className="h-[38vh] w-full object-cover"
+          />
+          <div className="absolute inset-0 bg-[linear-gradient(180deg,transparent_35%,color-mix(in_oklab,var(--background)_95%,transparent))]" />
         </div>
       </section>
+      <ShoeWall sections={SECTIONS} gender="women" />
+      <PageFeedback pageTitle="Women's Shoe Room" />
     </SiteShell>
   );
 }
