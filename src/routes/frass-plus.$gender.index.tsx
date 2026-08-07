@@ -5,7 +5,8 @@ import { StorePortalCard } from "@/components/store-portal-card";
 import { PageFeedback } from "@/components/page-feedback";
 import { PlusBadge } from "@/components/plus-badge";
 import { KicksEntry } from "@/components/kicks-entry";
-import { plusWallImages } from "@/lib/wall-images";
+import kicksVarietyMen from "@/assets/plus-kicks-variety-men.jpg";
+import kicksVarietyWomen from "@/assets/plus-kicks-variety-women.jpg";
 import { PLUS_DEPARTMENTS, isPlusGender, plusName } from "@/lib/frass-plus";
 
 const STORE_LABEL = {
@@ -80,7 +81,7 @@ function WingPage() {
             eyebrow={`Frass Plus · ${label}`}
             title="Frass Kicks Plus+"
             description="Casual, Classic and Street on the illuminated wall — every pair that runs 10.5 and up."
-            image={plusWallImages(gender).street}
+            image={gender === "men" ? kicksVarietyMen : kicksVarietyWomen}
 
             badge={<PlusBadge size="lg" />}
           />
