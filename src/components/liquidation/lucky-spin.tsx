@@ -1,8 +1,20 @@
 import { useEffect, useRef, useState } from "react";
+import {
+  Crown,
+  Gift,
+  KeyRound,
+  ShoppingBag,
+  Sparkles,
+  Star,
+  Truck,
+  Coins,
+  Footprints,
+  type LucideIcon,
+} from "lucide-react";
 
 type Reward = {
   id: string;
-  emoji: string;
+  Icon: LucideIcon;
   label: string;
   short: string;
   note: string;
@@ -12,7 +24,7 @@ type Reward = {
 const REWARDS: Reward[] = [
   {
     id: "off10",
-    emoji: "🛍️",
+    Icon: ShoppingBag,
     label: "10% OFF",
     short: "10% Off",
     note: "Perfect for everyday shopping.",
@@ -20,7 +32,7 @@ const REWARDS: Reward[] = [
   },
   {
     id: "off15",
-    emoji: "🎁",
+    Icon: Star,
     label: "15% OFF",
     short: "15% Off",
     note: "One of our most popular rewards.",
@@ -28,7 +40,7 @@ const REWARDS: Reward[] = [
   },
   {
     id: "off20",
-    emoji: "⭐",
+    Icon: Sparkles,
     label: "20% OFF",
     short: "20% Off",
     note: "A premium reward for your next purchase.",
@@ -36,7 +48,7 @@ const REWARDS: Reward[] = [
   },
   {
     id: "ship",
-    emoji: "🚚",
+    Icon: Truck,
     label: "FREE SHIPPING",
     short: "Free Shipping",
     note: "No minimum purchase.",
@@ -44,7 +56,7 @@ const REWARDS: Reward[] = [
   },
   {
     id: "points",
-    emoji: "🎉",
+    Icon: Coins,
     label: "DOUBLE POINTS",
     short: "2× Points",
     note: "Earn twice the Builder Rewards points on your next order.",
@@ -52,7 +64,7 @@ const REWARDS: Reward[] = [
   },
   {
     id: "mystery",
-    emoji: "🎁",
+    Icon: Gift,
     label: "MYSTERY GIFT",
     short: "Mystery Gift",
     note: "A surprise gift with your next qualifying purchase.",
@@ -60,7 +72,7 @@ const REWARDS: Reward[] = [
   },
   {
     id: "early",
-    emoji: "✨",
+    Icon: KeyRound,
     label: "EARLY ACCESS",
     short: "Early Access",
     note: "Shop the next collection before everyone else.",
@@ -68,7 +80,7 @@ const REWARDS: Reward[] = [
   },
   {
     id: "walk",
-    emoji: "👟",
+    Icon: Footprints,
     label: "WALK WID POWER",
     short: "Walk Wid Power",
     note: "One exclusive product at a members-only price.",
@@ -78,7 +90,7 @@ const REWARDS: Reward[] = [
 
 const GOLDEN: Reward = {
   id: "golden",
-  emoji: "👑",
+  Icon: Crown,
   label: "GOLDEN SPIN",
   short: "Golden Spin",
   note: "30% off · VIP Shopping Pass · Premium shipping for 30 days · Exclusive Frass merch · Limited-drop early access · Bonus Builder points.",
