@@ -401,20 +401,25 @@ function KicksDistrictPage() {
 
         {/* the walk: horizontal street of storefronts */}
         <div
+          ref={walkRef}
           className="mt-10 flex snap-x snap-mandatory gap-5 overflow-x-auto pb-6"
           role="list"
           aria-label="Storefronts along the Frass Promenade"
         >
           {STOREFRONTS.map((s, i) => (
-            <Link
+            <button
               key={s.sign}
-              to={s.to}
+              type="button"
               role="listitem"
               onMouseEnter={() => setActive(i)}
               onMouseLeave={() => setActive(null)}
               onFocus={() => setActive(i)}
               onBlur={() => setActive(null)}
-              className="group relative w-[76vw] shrink-0 snap-start overflow-hidden rounded-t-[7rem] rounded-b-3xl border border-border bg-card transition duration-500 hover:-translate-y-2 sm:w-[46vw] lg:w-[27vw]"
+              onClick={() => {
+                setZoomedIndex(i);
+                scrollToDoor(i);
+              }}
+              className="group relative w-[76vw] shrink-0 cursor-zoom-in snap-start overflow-hidden rounded-t-[7rem] rounded-b-3xl border border-border bg-card text-left transition duration-500 hover:-translate-y-2 sm:w-[46vw] lg:w-[27vw]"
               style={{ boxShadow: `0 40px 90px -60px ${s.accent}` }}
             >
               <div className="relative h-[440px] overflow-hidden">
@@ -463,12 +468,46 @@ function KicksDistrictPage() {
                       ))}
                     </div>
                     <span className="mt-4 inline-block text-[10px] font-bold uppercase tracking-[0.26em] text-white">
-                      Step inside →
+                      Zoom in →
                     </span>
                   </div>
                 </div>
               </div>
-            </Link>
+            </button>
+          ))}
+        </div>
+
+        {/* door progress / mini-map */}
+        <div className="mt-6 flex items-center gap-3 overflow-x-auto pb-2">
+          <span className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground">
+            Doors
+          </span>
+          {STOREFRONTS.map((s, i) => (
+            <button
+              key={`dot-${s.sign}`}
+              type="button"
+              onClick={() => {
+                setZoomedIndex(i);
+                scrollToDoor(i);
+              }}
+              aria-label={`Open ${s.label}`}
+              className={`relative h-10 w-10 shrink-0 overflow-hidden rounded-full border transition hover:scale-110 ${
+                active === i ? "border-[color:var(--gold)]" : "border-border"
+              }`}
+            >
+              <img
+                src={s.image}
+                alt=""
+                className="h-full w-full object-cover opacity-70"
+                style={{ filter: mood.tint }}
+              />
+              <span
+                className="absolute inset-0 flex items-center justify-center text-[9px] font-bold uppercase tracking-[0.1em] text-white"
+                style={{ textShadow: "0 1px 4px rgba(0,0,0,0.8)" }}
+              >
+                {i + 1}
+              </span>
+            </button>
           ))}
         </div>
 
