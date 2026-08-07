@@ -8,7 +8,6 @@ import {
   PLUS_DEPARTMENTS,
   PLUS_WING_IMAGE,
   SIGNATURE_COLLECTIONS,
-  plusName,
   signatureHandle,
 } from "@/lib/frass-plus";
 import hero from "@/assets/plus-hero.jpg";

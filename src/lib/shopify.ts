@@ -259,6 +259,19 @@ export function getCollectionMeta(handle: string): CollectionMeta {
   const exact = STATIC_MAP[handle];
   if (exact) return exact;
 
+  // Frass Plus+ mirrors the standard architecture: every Plus handle is the
+  // standard handle with a `-plus` extension. Resolve the mirror, then narrow
+  // the query to extended sizing and append the Plus+ designation.
+  if (handle.endsWith("-plus")) {
+    const base = getCollectionMeta(handle.slice(0, -"-plus".length));
+    return {
+      ...base,
+      title: `${base.title} Plus+`,
+      query: `${base.query} tag:"plus"`,
+      description: base.description ?? "The same Frass collection, in extended sizing.",
+    };
+  }
+
   const kicks = handle.match(/^(street|classic|casual)-kicks-(men|women)$/);
   if (kicks) {
     const [, type, gender] = kicks;
@@ -313,29 +326,6 @@ export function getCollectionMeta(handle: string): CollectionMeta {
       title: `${genderTitle} ${titleize(sub)}`,
       query: `tag:"bare-drip" tag:"${genderKey}" tag:"${cat}" tag:"${sub}"`,
       description: `Part of ${genderTitle} Bare Drip ${BARE_CATEGORY_LABEL[cat]}.`,
-    };
-  }
-
-  // Frass Plus — signature collections and department sub-collections.
-  const plusSignature = handle.match(/^frass-plus-(.+)$/);
-  if (plusSignature) {
-    const [, slug] = plusSignature;
-    return {
-      title: `${titleize(slug)} — Frass Plus`,
-      query: `tag:"frass-plus" tag:"${slug}"`,
-      description: "Premium fashion, thoughtfully cut for extended sizing.",
-    };
-  }
-
-  const plusSub = handle.match(/^(mens|womens)-plus-([a-z0-9-]+?)-(.+)$/);
-  if (plusSub) {
-    const [, gender, dept, sub] = plusSub;
-    const genderKey = gender === "mens" ? "men" : "women";
-    const genderTitle = gender === "mens" ? "Men's" : "Women's";
-    return {
-      title: `${genderTitle} ${titleize(sub)}`,
-      query: `tag:"frass-plus" tag:"${genderKey}" tag:"${dept}" tag:"${sub}"`,
-      description: `Part of Frass Plus ${titleize(dept)}.`,
     };
   }
 
