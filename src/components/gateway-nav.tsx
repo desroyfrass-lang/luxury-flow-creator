@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { Search, KeyRound, Menu, X, UserRound } from "lucide-react";
 import { useAccountSection } from "@/hooks/use-my-roles";
 import { CartDrawer } from "./cart-drawer";
+import { RegionSwitcher } from "./region-switcher";
 import fullLogo from "@/assets/frass-logo-full.asset.json";
 
 type NavItem = { label: string; to: string; note?: string };
@@ -112,12 +113,10 @@ const PRIMARY: { label: string; to: string; match: string; editorial?: boolean }
   { label: "Frass Kids", to: "/frass-kids/girls", match: "/frass-kids" },
 ];
 
-const CURRENCIES = ["USD", "GBP", "EUR", "JMD", "CAD"];
 
 export function GatewayNav({ mode }: { mode: "shop" | "world" }) {
   const path = useRouterState({ select: (r) => r.location.pathname });
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [currency, setCurrency] = useState("USD");
 
   useEffect(() => {
     setMobileOpen(false);
@@ -171,21 +170,8 @@ export function GatewayNav({ mode }: { mode: "shop" | "world" }) {
           >
             <Search className="h-4 w-4" />
           </Link>
-          <label className="sr-only" htmlFor="frass-currency">
-            Currency
-          </label>
-          <select
-            id="frass-currency"
-            value={currency}
-            onChange={(e) => setCurrency(e.target.value)}
-            className="hidden rounded-full border border-border bg-background px-3 py-2 text-[10px] uppercase tracking-[0.2em] outline-none sm:block"
-          >
-            {CURRENCIES.map((c) => (
-              <option key={c} value={c}>
-                {c}
-              </option>
-            ))}
-          </select>
+          <RegionSwitcher />
+
           <Link
             to="/vault"
             aria-label="Frass Hill / Builder Vault login"
