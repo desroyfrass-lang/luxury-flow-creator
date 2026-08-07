@@ -81,62 +81,57 @@ function PlusHome() {
         ))}
       </nav>
 
-      {/* Mirrored stores */}
-      <section className="mx-auto max-w-[1600px] px-6 pb-16 lg:px-12">
-        <header className="mb-8 max-w-2xl">
-          <p className="text-[10px] uppercase tracking-[0.38em] text-[color:var(--gold)]">
-            One architecture
-          </p>
-          <h2 className="mt-3 font-display text-3xl uppercase md:text-5xl">
-            The same stores, extended
-          </h2>
-          <p className="mt-4 text-sm text-muted-foreground">
-            Frass Plus+ has no separate collection names. Every store, department and
-            sub-collection mirrors the main district exactly — the Plus+ badge is the only
-            difference.
-          </p>
-        </header>
-        <div className="grid gap-6 md:grid-cols-3">
-          {MIRRORED_STORES.map((s) => (
-            <article
-              key={s.key}
-              className="relative overflow-hidden rounded-2xl border border-[color:var(--gold)]/20 bg-card"
-            >
-              <div className="relative aspect-[16/10] w-full overflow-hidden">
-                <img src={s.image} alt={s.title} loading="lazy" className="h-full w-full object-cover" />
-                <div className="absolute inset-0 bg-[linear-gradient(to_top,oklch(0.08_0.01_60/0.92),transparent_65%)]" />
-              </div>
-              <div className="p-6">
-                <h3 className="flex flex-wrap items-center gap-2 font-display text-xl uppercase">
-                  {s.title}
-                  <PlusBadge />
-                </h3>
-                <p className="mt-2 text-xs text-muted-foreground">{s.blurb}</p>
-              </div>
-            </article>
-          ))}
-        </div>
-      </section>
-
-      {/* Two wings */}
+      {/* Frass Drip Plus+ — the two department wings */}
       <section className="mx-auto max-w-[1600px] px-6 pb-20 lg:px-12">
         <div className="grid gap-8 md:grid-cols-2">
           <WingCard
             to="/frass-plus/$gender"
             gender="men"
             title="Frass Drip Plus+ for Men"
-            blurb="Frass Kicks, every Drip department and Bare Drip — mirrored exactly, cut with room to move."
+            blurb="Frass Kicks and every Drip department — mirrored exactly, cut with room to move."
             count={PLUS_DEPARTMENTS.men.length}
           />
           <WingCard
             to="/frass-plus/$gender"
             gender="women"
             title="Frass Drip Plus+ for Women"
-            blurb="Frass Kicks, every Drip department and Bare Drip — mirrored exactly, designed to be worn, not endured."
+            blurb="Frass Kicks and every Drip department — mirrored exactly, designed to be worn, not endured."
             count={PLUS_DEPARTMENTS.women.length}
           />
         </div>
       </section>
+
+      {/* Bare Drip Plus+ — same navigation as the main Bare Drip floor */}
+      <section className="mx-auto max-w-[1600px] px-6 pb-20 lg:px-12">
+        <header className="mb-8 max-w-2xl">
+          <p className="text-[10px] uppercase tracking-[0.38em] text-[color:var(--gold)]">
+            Bare Drip Plus+
+          </p>
+          <h2 className="mt-3 font-display text-3xl uppercase md:text-5xl">
+            Two rooms, one floor
+          </h2>
+          <p className="mt-4 text-sm text-muted-foreground">
+            The same Bare Drip navigation, lighter and beachier — underwear, lingerie and swim
+            in extended sizing.
+          </p>
+        </header>
+        <div className="grid gap-8 md:grid-cols-2">
+          <BareWingCard
+            gender="men"
+            title="Bare Drip Plus+ for Men"
+            blurb="The Underwear Room and the Swim Room, in extended sizing."
+            image={barePlusMen}
+          />
+          <BareWingCard
+            gender="women"
+            title="Bare Drip Plus+ for Women"
+            blurb="The Lingerie Salon and the Swim Room, in extended sizing."
+            image={barePlusWomen}
+          />
+        </div>
+      </section>
+
+
 
 
       {/* Signature collections */}
