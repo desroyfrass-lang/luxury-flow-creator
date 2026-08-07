@@ -32,9 +32,9 @@ function GatewayPage() {
           alt="The carved JAMAICA Luxury Fashion District archway opening onto the palm-lined Frass Kicks promenade"
           width={1920}
           height={1080}
-          className="gateway-drift h-full w-full object-cover object-center"
+          className="gateway-drift h-full w-full object-cover object-[center_30%]"
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-black/45 via-black/25 to-black/70" />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/25 via-transparent to-black/55" />
       </div>
 
       <section className="relative mx-auto flex min-h-screen max-w-[1400px] flex-col items-center justify-center px-6 py-20 text-center">
@@ -44,7 +44,7 @@ function GatewayPage() {
           className="gateway-rise h-10 w-auto object-contain md:h-14"
         />
         <h1
-          className="gateway-rise mt-8 font-display text-4xl leading-[0.95] text-white sm:text-6xl lg:text-8xl"
+          className="gateway-rise mt-8 font-display text-4xl leading-[0.95] text-white drop-shadow-[0_2px_24px_rgba(0,0,0,0.55)] sm:text-6xl lg:text-8xl"
           style={{ animationDelay: "80ms" }}
         >
           Welcome to the World of Frass.
@@ -56,7 +56,7 @@ function GatewayPage() {
           Built by people. Powered by community. Driven by execution.
         </p>
 
-        <div className="mt-12 grid w-full max-w-4xl gap-5 sm:grid-cols-2">
+        <div className="mt-10 grid w-full max-w-3xl gap-4 sm:grid-cols-2">
           <GatewayCard
             to="/shop-frass"
             delay="240ms"
@@ -104,17 +104,17 @@ function GatewayCard({
       to={to}
       aria-label={`${title} — ${copy}`}
       style={{ animationDelay: delay }}
-      className={`gateway-rise group relative overflow-hidden rounded-3xl border p-7 text-left backdrop-blur-xl transition duration-300 will-change-transform hover:-translate-y-1.5 ${
+      className={`gateway-rise group relative overflow-hidden rounded-2xl border p-5 text-left backdrop-blur-xl transition duration-300 will-change-transform hover:-translate-y-1.5 ${
         light
-          ? "border-white/70 bg-white/92 text-[color:var(--retail-ink)] hover:shadow-[0_30px_80px_-30px_rgba(255,255,255,0.5)]"
-          : "border-[color:var(--hill-gold)]/50 bg-[color:var(--hill-green)]/85 text-[color:var(--luxe-linen)] hover:shadow-[0_30px_80px_-30px_rgba(212,175,55,0.6)]"
+          ? "border-white/70 bg-white/92 text-[color:var(--retail-ink)] hover:shadow-[0_20px_60px_-20px_rgba(255,255,255,0.5)]"
+          : "border-[color:var(--hill-gold)]/50 bg-[color:var(--hill-green)]/85 text-[color:var(--luxe-linen)] hover:shadow-[0_20px_60px_-20px_rgba(212,175,55,0.6)]"
       }`}
     >
-      <span className="text-3xl">{emoji}</span>
-      <h2 className="mt-4 font-display text-3xl uppercase leading-none md:text-4xl">{title}</h2>
-      <p className={`mt-3 text-sm ${light ? "text-black/65" : "text-[color:var(--luxe-linen)]/75"}`}>{copy}</p>
+      <span className="text-2xl">{emoji}</span>
+      <h2 className="mt-3 font-display text-2xl uppercase leading-none md:text-3xl">{title}</h2>
+      <p className={`mt-2 text-xs ${light ? "text-black/65" : "text-[color:var(--luxe-linen)]/75"}`}>{copy}</p>
       <span
-        className={`mt-6 inline-flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.28em] ${
+        className={`mt-4 inline-flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.28em] ${
           light ? "text-black/70" : "text-[color:var(--hill-gold)]"
         }`}
       >
