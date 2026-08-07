@@ -65,19 +65,22 @@ function GatewayPage() {
           className="gateway-drift absolute inset-0 h-full w-full object-cover object-center"
         />
         <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-black/70" />
+
+        {/* Carved into the arch: FRASS · [gold crest already on the building] · KICKS */}
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute left-0 right-0 top-[6.6%] flex items-center justify-center"
+        >
+          <span className="w-[22%] pr-[3%] text-right font-display text-[3.4vw] uppercase leading-none tracking-[0.08em] text-[#e8bf5c] drop-shadow-[0_2px_6px_rgba(0,0,0,0.7)] sm:text-[2.6vw]">
+            Frass
+          </span>
+          <span className="w-[8%]" />
+          <span className="w-[22%] pl-[3%] text-left font-display text-[3.4vw] uppercase leading-none tracking-[0.08em] text-[#e8bf5c] drop-shadow-[0_2px_6px_rgba(0,0,0,0.7)] sm:text-[2.6vw]">
+            Kicks
+          </span>
+        </div>
       </div>
 
-      {/* The house sign — the full Frass Kicks mark in gold, crowning the arch */}
-      <img
-        src={fullLogo.url}
-        alt="Frass Kicks"
-        className="gateway-rise pointer-events-none absolute left-1/2 top-2 z-20 h-12 w-auto -translate-x-1/2 object-contain md:top-4 md:h-20"
-        style={{
-          animationDelay: "60ms",
-          filter:
-            "grayscale(1) brightness(1.15) sepia(1) saturate(5) hue-rotate(-8deg) drop-shadow(0 4px 24px rgba(0,0,0,0.65))",
-        }}
-      />
 
       <GatewayFrassy />
 
