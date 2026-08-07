@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { useServerFn } from "@tanstack/react-start";
 import {
   Crown,
   Gift,
@@ -12,6 +13,7 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import frassSymbol from "@/assets/frass-logo-symbol.asset.json";
+import { getOrderCount } from "@/lib/rewards.functions";
 
 const GOLD_SYMBOL_FILTER =
   "brightness(1.25) contrast(1.1) sepia(1) saturate(3.5) hue-rotate(-12deg) drop-shadow(0 0 10px oklch(0.78 0.14 78 / 0.95))";
@@ -102,6 +104,7 @@ const GOLDEN: Reward = {
 };
 
 const KEY = "frass-lucky-spin";
+const SPIN_COUNT_KEY = "frass-lucky-spin-lifetime-count";
 const GOLDEN_ODDS = 0.008;
 
 function currentMonth() {
@@ -149,41 +152,71 @@ export function LuckySpin() {
   const [reward, setReward] = useState<Reward | null>(null);
   const [expires, setExpires] = useState<number | null>(null);
   const [hovered, setHovered] = useState(false);
+  const [spinCount, setSpinCount] = useState(0);
+  const [orderCount, setOrderCount] = useState(0);
   const timer = useRef<number | null>(null);
+  const fetchOrderCount = useServerFn(getOrderCount);
 
   useEffect(() => {
     setMounted(true);
     const raw = window.localStorage.getItem(KEY);
-    if (!raw) return;
-    try {
-      const saved = JSON.parse(raw) as { month: string; id: string; expires: number };
-      if (saved.month === currentMonth()) {
-        const r = findReward(saved.id);
-        if (r) {
-          setReward(r);
-          setExpires(saved.expires);
-          setOpened(true);
+    if (raw) {
+      try {
+        const saved = JSON.parse(raw) as { month: string; id: string; expires: number };
+        if (saved.month === currentMonth()) {
+          const r = findReward(saved.id);
+          if (r) {
+            setReward(r);
+            setExpires(saved.expires);
+            setOpened(true);
+          }
         }
+      } catch {
+        window.localStorage.removeItem(KEY);
       }
-    } catch {
-      window.localStorage.removeItem(KEY);
     }
+
+    const countRaw = window.localStorage.getItem(SPIN_COUNT_KEY);
+    if (countRaw) {
+      try {
+        setSpinCount(Math.max(0, parseInt(countRaw, 10) || 0));
+      } catch {
+        window.localStorage.removeItem(SPIN_COUNT_KEY);
+      }
+    }
+
+    fetchOrderCount({ data: undefined })
+      .then((res) => setOrderCount(res.count))
+      .catch(() => setOrderCount(0));
+
     return () => {
       if (timer.current) window.clearTimeout(timer.current);
     };
-  }, []);
+  }, [fetchOrderCount]);
 
   const slice = 360 / REWARDS.length;
+
+  const mysteryEligible = spinCount >= 2 && orderCount >= 2;
 
   const spin = () => {
     if (spinning || reward) return;
     setSpinning(true);
     chime("tick");
+
+    const eligibleRewards = REWARDS.filter(
+      (r) => r.id !== "mystery" || mysteryEligible,
+    );
     const golden = Math.random() < GOLDEN_ODDS;
-    const index = Math.floor(Math.random() * REWARDS.length);
-    const won = golden ? GOLDEN : REWARDS[index];
-    const target = 360 * 6 + (360 - index * slice - slice / 2);
+    const pickIndex = Math.floor(Math.random() * eligibleRewards.length);
+    const won = golden ? GOLDEN : eligibleRewards[pickIndex];
+    const actualIndex = REWARDS.findIndex((r) => r.id === won.id);
+    const target = 360 * 6 + (360 - actualIndex * slice - slice / 2);
     setAngle(target);
+
+    const nextSpinCount = spinCount + 1;
+    setSpinCount(nextSpinCount);
+    window.localStorage.setItem(SPIN_COUNT_KEY, String(nextSpinCount));
+
     timer.current = window.setTimeout(() => {
       const exp = Date.now() + 30 * 86400000;
       setSpinning(false);

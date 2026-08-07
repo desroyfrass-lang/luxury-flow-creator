@@ -245,3 +245,16 @@ export const validateCoupon = createServerFn({ method: "POST" })
     if (row.redeemed_at) return { valid: false as const, reason: "Coupon already used" };
     return { valid: true as const, percentOff: row.percent_off };
   });
+
+export const getOrderCount = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }) => {
+    const { supabase, userId } = context;
+    const { count, error } = await supabase
+      .from("orders")
+      .select("*", { count: "exact", head: true })
+      .eq("user_id", userId)
+      .in("status", ["paid", "completed", "fulfilled"]);
+    if (error) throw new Error(error.message);
+    return { count: count ?? 0 };
+  });
