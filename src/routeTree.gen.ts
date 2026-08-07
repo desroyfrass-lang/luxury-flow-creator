@@ -62,6 +62,7 @@ import { Route as BareDripMenRouteImport } from './routes/bare-drip.men'
 import { Route as ApiTtsRouteImport } from './routes/api/tts'
 import { Route as ApiSttRouteImport } from './routes/api/stt'
 import { Route as ApiChatRouteImport } from './routes/api/chat'
+import { Route as AfroDesignersJoinRouteImport } from './routes/afro-designers.join'
 import { Route as AfroDesignersDesignersRouteImport } from './routes/afro-designers.designers'
 import { Route as AuthenticatedWorkspaceRouteImport } from './routes/_authenticated/workspace'
 import { Route as AuthenticatedWelcomeHallRouteImport } from './routes/_authenticated/welcome-hall'
@@ -374,6 +375,11 @@ const ApiChatRoute = ApiChatRouteImport.update({
   path: '/api/chat',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AfroDesignersJoinRoute = AfroDesignersJoinRouteImport.update({
+  id: '/join',
+  path: '/join',
+  getParentRoute: () => AfroDesignersRoute,
+} as any)
 const AfroDesignersDesignersRoute = AfroDesignersDesignersRouteImport.update({
   id: '/designers',
   path: '/designers',
@@ -664,6 +670,7 @@ export interface FileRoutesByFullPath {
   '/welcome-hall': typeof AuthenticatedWelcomeHallRoute
   '/workspace': typeof AuthenticatedWorkspaceRouteWithChildren
   '/afro-designers/designers': typeof AfroDesignersDesignersRouteWithChildren
+  '/afro-designers/join': typeof AfroDesignersJoinRoute
   '/api/chat': typeof ApiChatRoute
   '/api/stt': typeof ApiSttRoute
   '/api/tts': typeof ApiTtsRoute
@@ -754,6 +761,7 @@ export interface FileRoutesByTo {
   '/welcome-hall': typeof AuthenticatedWelcomeHallRoute
   '/workspace': typeof AuthenticatedWorkspaceRouteWithChildren
   '/afro-designers/designers': typeof AfroDesignersDesignersRouteWithChildren
+  '/afro-designers/join': typeof AfroDesignersJoinRoute
   '/api/chat': typeof ApiChatRoute
   '/api/stt': typeof ApiSttRoute
   '/api/tts': typeof ApiTtsRoute
@@ -852,6 +860,7 @@ export interface FileRoutesById {
   '/_authenticated/welcome-hall': typeof AuthenticatedWelcomeHallRoute
   '/_authenticated/workspace': typeof AuthenticatedWorkspaceRouteWithChildren
   '/afro-designers/designers': typeof AfroDesignersDesignersRouteWithChildren
+  '/afro-designers/join': typeof AfroDesignersJoinRoute
   '/api/chat': typeof ApiChatRoute
   '/api/stt': typeof ApiSttRoute
   '/api/tts': typeof ApiTtsRoute
@@ -954,6 +963,7 @@ export interface FileRouteTypes {
     | '/welcome-hall'
     | '/workspace'
     | '/afro-designers/designers'
+    | '/afro-designers/join'
     | '/api/chat'
     | '/api/stt'
     | '/api/tts'
@@ -1044,6 +1054,7 @@ export interface FileRouteTypes {
     | '/welcome-hall'
     | '/workspace'
     | '/afro-designers/designers'
+    | '/afro-designers/join'
     | '/api/chat'
     | '/api/stt'
     | '/api/tts'
@@ -1141,6 +1152,7 @@ export interface FileRouteTypes {
     | '/_authenticated/welcome-hall'
     | '/_authenticated/workspace'
     | '/afro-designers/designers'
+    | '/afro-designers/join'
     | '/api/chat'
     | '/api/stt'
     | '/api/tts'
@@ -1617,6 +1629,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiChatRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/afro-designers/join': {
+      id: '/afro-designers/join'
+      path: '/join'
+      fullPath: '/afro-designers/join'
+      preLoaderRoute: typeof AfroDesignersJoinRouteImport
+      parentRoute: typeof AfroDesignersRoute
+    }
     '/afro-designers/designers': {
       id: '/afro-designers/designers'
       path: '/designers'
@@ -2046,12 +2065,14 @@ const AfroDesignersDesignersRouteWithChildren =
 
 interface AfroDesignersRouteChildren {
   AfroDesignersDesignersRoute: typeof AfroDesignersDesignersRouteWithChildren
+  AfroDesignersJoinRoute: typeof AfroDesignersJoinRoute
   AfroDesignersIndexRoute: typeof AfroDesignersIndexRoute
   AfroDesignersCollectionsSlugRoute: typeof AfroDesignersCollectionsSlugRoute
 }
 
 const AfroDesignersRouteChildren: AfroDesignersRouteChildren = {
   AfroDesignersDesignersRoute: AfroDesignersDesignersRouteWithChildren,
+  AfroDesignersJoinRoute: AfroDesignersJoinRoute,
   AfroDesignersIndexRoute: AfroDesignersIndexRoute,
   AfroDesignersCollectionsSlugRoute: AfroDesignersCollectionsSlugRoute,
 }
