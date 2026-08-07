@@ -31,6 +31,7 @@ import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as SocialMediaViralsIndexRouteImport } from './routes/social-media-virals.index'
 import { Route as LookbookIndexRouteImport } from './routes/lookbook.index'
+import { Route as FrassKicksIndexRouteImport } from './routes/frass-kicks.index'
 import { Route as FrassDripIndexRouteImport } from './routes/frass-drip.index'
 import { Route as CapsulesIndexRouteImport } from './routes/capsules.index'
 import { Route as BlogIndexRouteImport } from './routes/blog.index'
@@ -213,6 +214,11 @@ const LookbookIndexRoute = LookbookIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => LookbookRoute,
+} as any)
+const FrassKicksIndexRoute = FrassKicksIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => FrassKicksRoute,
 } as any)
 const FrassDripIndexRoute = FrassDripIndexRouteImport.update({
   id: '/',
@@ -665,6 +671,7 @@ export interface FileRoutesByFullPath {
   '/blog/': typeof BlogIndexRoute
   '/capsules/': typeof CapsulesIndexRoute
   '/frass-drip/': typeof FrassDripIndexRoute
+  '/frass-kicks/': typeof FrassKicksIndexRoute
   '/lookbook/': typeof LookbookIndexRoute
   '/social-media-virals/': typeof SocialMediaViralsIndexRoute
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
@@ -703,7 +710,6 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/checkout': typeof CheckoutRoute
-  '/frass-kicks': typeof FrassKicksRouteWithChildren
   '/frass-world': typeof FrassWorldRoute
   '/gateway': typeof GatewayRoute
   '/kicks-district': typeof KicksDistrictRoute
@@ -749,6 +755,7 @@ export interface FileRoutesByTo {
   '/blog': typeof BlogIndexRoute
   '/capsules': typeof CapsulesIndexRoute
   '/frass-drip': typeof FrassDripIndexRoute
+  '/frass-kicks': typeof FrassKicksIndexRoute
   '/lookbook': typeof LookbookIndexRoute
   '/social-media-virals': typeof SocialMediaViralsIndexRoute
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
@@ -847,6 +854,7 @@ export interface FileRoutesById {
   '/blog/': typeof BlogIndexRoute
   '/capsules/': typeof CapsulesIndexRoute
   '/frass-drip/': typeof FrassDripIndexRoute
+  '/frass-kicks/': typeof FrassKicksIndexRoute
   '/lookbook/': typeof LookbookIndexRoute
   '/social-media-virals/': typeof SocialMediaViralsIndexRoute
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
@@ -945,6 +953,7 @@ export interface FileRouteTypes {
     | '/blog/'
     | '/capsules/'
     | '/frass-drip/'
+    | '/frass-kicks/'
     | '/lookbook/'
     | '/social-media-virals/'
     | '/.lovable/oauth/consent'
@@ -983,7 +992,6 @@ export interface FileRouteTypes {
     | '/'
     | '/auth'
     | '/checkout'
-    | '/frass-kicks'
     | '/frass-world'
     | '/gateway'
     | '/kicks-district'
@@ -1029,6 +1037,7 @@ export interface FileRouteTypes {
     | '/blog'
     | '/capsules'
     | '/frass-drip'
+    | '/frass-kicks'
     | '/lookbook'
     | '/social-media-virals'
     | '/.lovable/oauth/consent'
@@ -1126,6 +1135,7 @@ export interface FileRouteTypes {
     | '/blog/'
     | '/capsules/'
     | '/frass-drip/'
+    | '/frass-kicks/'
     | '/lookbook/'
     | '/social-media-virals/'
     | '/.lovable/oauth/consent'
@@ -1355,6 +1365,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/lookbook/'
       preLoaderRoute: typeof LookbookIndexRouteImport
       parentRoute: typeof LookbookRoute
+    }
+    '/frass-kicks/': {
+      id: '/frass-kicks/'
+      path: '/'
+      fullPath: '/frass-kicks/'
+      preLoaderRoute: typeof FrassKicksIndexRouteImport
+      parentRoute: typeof FrassKicksRoute
     }
     '/frass-drip/': {
       id: '/frass-drip/'
@@ -2105,11 +2122,13 @@ const FrassDripRouteWithChildren = FrassDripRoute._addFileChildren(
 interface FrassKicksRouteChildren {
   FrassKicksMenRoute: typeof FrassKicksMenRoute
   FrassKicksWomenRoute: typeof FrassKicksWomenRoute
+  FrassKicksIndexRoute: typeof FrassKicksIndexRoute
 }
 
 const FrassKicksRouteChildren: FrassKicksRouteChildren = {
   FrassKicksMenRoute: FrassKicksMenRoute,
   FrassKicksWomenRoute: FrassKicksWomenRoute,
+  FrassKicksIndexRoute: FrassKicksIndexRoute,
 }
 
 const FrassKicksRouteWithChildren = FrassKicksRoute._addFileChildren(
