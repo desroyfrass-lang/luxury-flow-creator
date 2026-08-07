@@ -7,8 +7,8 @@ import { ShoeWall, type WallSection } from "@/components/shoe-wall";
 import { isPlusGender } from "@/lib/frass-plus";
 import type { ShopifyProduct } from "@/lib/shopify";
 import { plusWallImages, WALL_ACCENT, type WallCategory } from "@/lib/wall-images";
-import heroMen from "@/assets/hero-shoe-wall-men.jpg";
-import heroWomen from "@/assets/hero-shoe-wall-women.jpg";
+import heroMen from "@/assets/plus-kicks-variety-men.jpg";
+import heroWomen from "@/assets/plus-kicks-variety-women.jpg";
 
 /** Extended sizing: every pair offered in 10.5 and up. */
 const MIN_SIZE = 10.5;
@@ -95,7 +95,7 @@ function PlusKicksRoom() {
         <div className="relative overflow-hidden rounded-2xl md:rounded-[2rem]">
           <img
             src={hero}
-            alt={`Illuminated wall of ${label.toLowerCase()}'s extended-size shoes on lit shelves`}
+            alt={`Illuminated wall of ${label.toLowerCase()}'s extended-size footwear — casual slides and low-tops, classic dress styles and bold street sneakers on lit glass shelves`}
             width={1920}
             height={1024}
             className="h-[40vh] w-full object-cover md:h-[58vh]"
