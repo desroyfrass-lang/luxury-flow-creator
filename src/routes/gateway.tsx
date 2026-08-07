@@ -38,17 +38,19 @@ function GatewayPage() {
       </div>
 
       <section className="relative mx-auto flex min-h-screen max-w-[1400px] flex-col items-center justify-center px-6 py-20 text-center">
-        <img
-          src={fullLogo.url}
-          alt="Frass"
-          className="gateway-rise h-10 w-auto object-contain md:h-14"
-        />
         <h1
-          className="gateway-rise mt-8 font-display text-4xl leading-[0.95] text-white drop-shadow-[0_2px_24px_rgba(0,0,0,0.55)] sm:text-6xl lg:text-8xl"
+          className="gateway-rise font-display text-4xl leading-[0.95] text-white drop-shadow-[0_2px_24px_rgba(0,0,0,0.55)] sm:text-6xl lg:text-8xl"
           style={{ animationDelay: "80ms" }}
         >
           Welcome to the World of Frass.
         </h1>
+        <img
+          src={fullLogo.url}
+          alt="Frass"
+          className="gateway-rise mt-6 h-10 w-auto object-contain md:h-14"
+          style={{ animationDelay: "120ms" }}
+        />
+
         <p
           className="gateway-rise mt-5 max-w-2xl text-sm uppercase tracking-[0.3em] text-white/75 sm:text-base"
           style={{ animationDelay: "160ms" }}
