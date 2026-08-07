@@ -160,24 +160,39 @@ export function LuckySpin() {
   useEffect(() => {
     setMounted(true);
     const raw = window.localStorage.getItem(KEY);
-    if (!raw) return;
-    try {
-      const saved = JSON.parse(raw) as { month: string; id: string; expires: number };
-      if (saved.month === currentMonth()) {
-        const r = findReward(saved.id);
-        if (r) {
-          setReward(r);
-          setExpires(saved.expires);
-          setOpened(true);
+    if (raw) {
+      try {
+        const saved = JSON.parse(raw) as { month: string; id: string; expires: number };
+        if (saved.month === currentMonth()) {
+          const r = findReward(saved.id);
+          if (r) {
+            setReward(r);
+            setExpires(saved.expires);
+            setOpened(true);
+          }
         }
+      } catch {
+        window.localStorage.removeItem(KEY);
       }
-    } catch {
-      window.localStorage.removeItem(KEY);
     }
+
+    const countRaw = window.localStorage.getItem(SPIN_COUNT_KEY);
+    if (countRaw) {
+      try {
+        setSpinCount(Math.max(0, parseInt(countRaw, 10) || 0));
+      } catch {
+        window.localStorage.removeItem(SPIN_COUNT_KEY);
+      }
+    }
+
+    fetchOrderCount({ data: undefined })
+      .then((res) => setOrderCount(res.count))
+      .catch(() => setOrderCount(0));
+
     return () => {
       if (timer.current) window.clearTimeout(timer.current);
     };
-  }, []);
+  }, [fetchOrderCount]);
 
   const slice = 360 / REWARDS.length;
 
