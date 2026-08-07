@@ -162,12 +162,35 @@ function ShopFrassPage() {
         </div>
       </section>
 
-      <DistrictDirectory
-        headline="Choose Your Side"
-        lines={["Walk Wid Power", "Step Wid Purpose", "Move Wid Meaning"]}
-        intro="Every Frass store, in one directory. Men's side on the left, women's side on the right — pick your door and start shopping."
-        columns={COLUMNS}
-      />
+      <section className="mx-auto max-w-[1100px] px-6 py-20 lg:px-10">
+        <header className="mx-auto max-w-3xl text-center">
+          <h2 className="font-display text-4xl uppercase leading-[0.9] text-[color:var(--gold)] md:text-6xl">
+            Choose Your Side
+          </h2>
+          <p className="mt-4 text-[10px] uppercase tracking-[0.35em] text-muted-foreground">
+            Walk Wid Power · Step Wid Purpose · Move Wid Meaning
+          </p>
+          <p className="mx-auto mt-5 max-w-xl text-sm text-muted-foreground md:text-base">
+            Every Frass store, in one directory — pick your door and start shopping.
+          </p>
+        </header>
+
+        <div className="mt-16 grid gap-10">
+          {STORES.map((s) => (
+            <CollectionCard
+              key={s.to}
+              to={s.to}
+              image={s.image}
+              eyebrow={s.eyebrow}
+              title={s.title}
+              description={s.description}
+              size="lg"
+              cta="Enter Store"
+            />
+          ))}
+        </div>
+      </section>
+
 
       <footer className="border-t border-border/60 bg-card/40">
         <div className="mx-auto grid max-w-[1600px] gap-4 px-6 py-8 text-[10px] uppercase tracking-[0.22em] text-muted-foreground sm:grid-cols-2 lg:grid-cols-4 lg:px-10">
