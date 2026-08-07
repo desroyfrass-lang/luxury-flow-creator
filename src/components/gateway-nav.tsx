@@ -84,9 +84,25 @@ const NAV: NavGroup[] = [
     to: "/frass-kids",
     match: "/frass-kids",
     items: [
-      { label: "Shop by age & gender", to: "/frass-kids" },
+      { label: "🛍 Shop Kids", to: "/frass-kids", note: "Shop by age & gender" },
+      { label: "🌈 Enter Kids World", to: "/kids-world", note: "A district of Frass Hill" },
+      { label: "Parent Dashboard", to: "/kids-world/parents" },
     ],
   },
+  {
+    label: "Kids World",
+    to: "/kids-world",
+    match: "/kids-world",
+    items: [
+      { label: "The valley", to: "/kids-world" },
+      { label: "👶 Ages 0–3", to: "/kids-world/0-3" },
+      { label: "🧒 Ages 3–6", to: "/kids-world/3-6" },
+      { label: "🧑 Ages 6–12", to: "/kids-world/6-12" },
+      { label: "🌟 Ages 12+", to: "/kids-world/12-plus" },
+      { label: "Parent Dashboard", to: "/kids-world/parents" },
+    ],
+  },
+
   { label: "Social Media Virals", to: "/social-media-virals", match: "/social-media-virals" },
   {
     label: "Discover",
