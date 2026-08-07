@@ -104,6 +104,7 @@ const GOLDEN: Reward = {
 };
 
 const KEY = "frass-lucky-spin";
+const SPIN_COUNT_KEY = "frass-lucky-spin-lifetime-count";
 const GOLDEN_ODDS = 0.008;
 
 function currentMonth() {
