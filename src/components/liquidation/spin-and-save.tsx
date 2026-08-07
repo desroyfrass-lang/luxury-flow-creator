@@ -65,7 +65,7 @@ export function SpinAndSave() {
             Spin &amp; Save
           </h2>
           <p className="mt-4 max-w-sm text-sm leading-relaxed text-muted-foreground">
-            One spin per visitor,每 month. Quiet luxury rewards — no cheap gimmicks, no pop-ups
+            One spin per visitor, per month. Quiet luxury rewards — no cheap gimmicks, no pop-ups
             chasing you around the district.
           </p>
           <p className="mt-6 text-sm text-muted-foreground">
