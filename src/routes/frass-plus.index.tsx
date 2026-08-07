@@ -38,7 +38,7 @@ function PlusHome() {
       <section className="relative h-[78vh] min-h-[520px] w-full overflow-hidden">
         <img
           src={hero}
-          alt="Three confident models in premium tailoring inside the Frass Plus boutique"
+          alt="Confident plus-size men and women in black and gold tailoring outside the Frass Plus flagship boutique"
           width={1920}
           height={1088}
           className="h-full w-full object-cover"
