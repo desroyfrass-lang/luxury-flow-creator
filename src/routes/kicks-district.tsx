@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
 import { GatewayNav } from "@/components/gateway-nav";
 import cinematic from "@/assets/frasskicks-cinematic.mp4.asset.json";
-import gatewayImg from "@/assets/kicks-gateway.jpg";
+import districtHero from "@/assets/kicks-district-hero.jpg.asset.json";
 import promenadeImg from "@/assets/kicks-promenade.jpg";
 import storefrontsImg from "@/assets/kicks-storefronts.jpg";
 import nightlifeImg from "@/assets/kicks-nightlife.jpg";
