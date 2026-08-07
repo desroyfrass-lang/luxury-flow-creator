@@ -38,13 +38,13 @@ function GatewayPage() {
           alt="The carved JAMAICA Luxury Fashion District archway opening onto the palm-lined Frass Kicks promenade"
           width={1920}
           height={1080}
-          className="gateway-drift absolute inset-0 h-full w-full object-contain object-center"
+          className="gateway-drift absolute inset-0 h-full w-full object-cover object-center"
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-black/25 via-transparent to-black/55" />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-black/70" />
       </div>
 
 
-      <section className="relative mx-auto flex min-h-screen max-w-[1400px] flex-col items-center justify-center px-6 py-20 text-center">
+      <section className="gateway-swell relative mx-auto flex min-h-screen max-w-[1400px] flex-col items-center justify-end px-6 pb-14 pt-[38vh] text-center">
         <h1
           className="gateway-rise font-display text-4xl leading-[0.95] text-white drop-shadow-[0_2px_24px_rgba(0,0,0,0.55)] sm:text-6xl lg:text-8xl"
           style={{ animationDelay: "80ms" }}
