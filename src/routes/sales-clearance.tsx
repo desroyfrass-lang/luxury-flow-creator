@@ -3,6 +3,7 @@ import { SiteShell } from "@/components/site-shell";
 import { PageHeader } from "@/components/page-header";
 import { PageFeedback } from "@/components/page-feedback";
 import { SaleWall, type SaleColumn } from "@/components/sale-wall";
+import { WallSigns } from "@/components/wall-signs";
 import heroImage from "@/assets/sale-clearance-hero.jpg";
 
 export const Route = createFileRoute("/sales-clearance")({
@@ -63,7 +64,8 @@ function SalesClearancePage() {
         ]}
       />
 
-      {/* Single wide hero banner with three overhead signs */}
+      <WallSigns labels={SIGNS} />
+
       <section className="relative mx-auto max-w-[1600px] px-2 md:px-12">
         <div className="relative overflow-hidden rounded-2xl border border-[color:var(--gold)]/25 md:rounded-[2rem]">
           <img
@@ -74,15 +76,6 @@ function SalesClearancePage() {
             className="h-[34vw] min-h-[180px] w-full object-cover md:h-auto"
           />
           <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(0,0,0,0.55),transparent_35%,rgba(0,0,0,0.5))]" />
-          <div className="pointer-events-none absolute inset-x-0 top-0 grid grid-cols-3">
-            {SIGNS.map((s) => (
-              <div key={s} className="px-1 py-3 text-center md:py-6">
-                <span className="inline-block rounded-full border border-[color:var(--gold)]/50 bg-black/50 px-3 py-1 font-display text-[10px] uppercase tracking-[0.22em] text-[color:var(--gold)] backdrop-blur-sm md:px-6 md:py-2 md:text-lg md:tracking-[0.3em]">
-                  {s}
-                </span>
-              </div>
-            ))}
-          </div>
         </div>
       </section>
 
