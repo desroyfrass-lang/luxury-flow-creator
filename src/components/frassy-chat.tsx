@@ -51,12 +51,15 @@ type Msg = {
 let seq = 0;
 const nextId = () => `m${++seq}-${Date.now()}`;
 
-export function FrassyChat() {
-  const [open, setOpen] = useState(false);
+export function FrassyChat({ embedded = false }: { embedded?: boolean } = {}) {
+  const [open, setOpen] = useState(embedded);
   const [messages, setMessages] = useState<Msg[]>([]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  // Frassy speaks her replies aloud again — unless the Builder mutes her.
+  const [speakReplies, setSpeakReplies] = useState(true);
+
 
   const items = useCartStore((s) => s.items);
   const ctx = useFrassyContext();
@@ -174,7 +177,7 @@ export function FrassyChat() {
         },
       ]);
 
-      if (spoken && voice.voiceAvailable) {
+      if ((spoken || speakReplies) && voice.voiceAvailable) {
         setLoading(false);
         await voice.speak(reply);
         // Playback finished → conversation waits. The mic stays closed.
@@ -210,7 +213,7 @@ export function FrassyChat() {
   }
 
 
-  if (!open) {
+  if (!open && !embedded) {
     return (
       <button
         type="button"
@@ -224,7 +227,14 @@ export function FrassyChat() {
   }
 
   return (
-    <div className="fixed bottom-5 right-5 z-50 flex h-[min(620px,80vh)] w-[min(400px,calc(100vw-2.5rem))] flex-col overflow-hidden rounded-lg border border-white/10 bg-[#0b0c0e] shadow-2xl">
+    <div
+      className={
+        embedded
+          ? "flex h-[min(620px,75vh)] w-full flex-col overflow-hidden rounded-lg border border-white/10 bg-[#0b0c0e]"
+          : "fixed bottom-5 right-5 z-50 flex h-[min(620px,80vh)] w-[min(400px,calc(100vw-2.5rem))] flex-col overflow-hidden rounded-lg border border-white/10 bg-[#0b0c0e] shadow-2xl"
+      }
+    >
+
       <header className="flex items-center justify-between border-b border-white/10 px-4 py-3">
         <div className="flex items-center gap-3">
           <img src={symbolAsset.url} alt="" className="h-6 w-6 object-contain" />
@@ -244,22 +254,28 @@ export function FrassyChat() {
           </div>
         </div>
         <div className="flex items-center gap-1">
-          {/* Voice playback health — honest about what the speaker actually did. */}
-          <span
+          {/* Voice: tap to let Frassy speak her replies aloud, or mute her. */}
+          <button
+            type="button"
+            onClick={() => {
+              if (speakReplies && voice.phase === "speaking") voice.stopSpeaking();
+              setSpeakReplies((v) => !v);
+            }}
             title={
-              voice.voiceAvailable
-                ? "Voice playback is working"
-                : "Voice output unavailable — replies are text only"
+              speakReplies
+                ? "Frassy speaks her replies — tap to mute"
+                : "Frassy is muted — tap to let her speak"
             }
-            className={`mr-1 inline-flex items-center gap-1 rounded-sm border px-1.5 py-1 text-[9px] uppercase tracking-[0.18em] ${
-              voice.voiceAvailable
-                ? "border-emerald-400/30 text-emerald-300/80"
-                : "border-red-500/30 text-red-300/80"
+            className={`mr-1 inline-flex items-center gap-1 rounded-sm border px-1.5 py-1 text-[9px] uppercase tracking-[0.18em] transition ${
+              speakReplies
+                ? "border-[color:var(--gold)]/40 text-[color:var(--gold)]"
+                : "border-white/20 text-white/50 hover:text-white"
             }`}
           >
-            {voice.voiceAvailable ? <Volume2 className="h-3 w-3" /> : <VolumeX className="h-3 w-3" />}
-            {voice.voiceAvailable ? "Voice" : "No voice"}
-          </span>
+            {speakReplies ? <Volume2 className="h-3 w-3" /> : <VolumeX className="h-3 w-3" />}
+            {speakReplies ? "Voice on" : "Muted"}
+          </button>
+
 
           {loading && (
             <button
@@ -282,17 +298,20 @@ export function FrassyChat() {
           >
             <Trash2 className="h-4 w-4" />
           </button>
-          <button
-            type="button"
-            aria-label="Close Frassy chat"
-            onClick={() => {
-              stopTurn();
-              setOpen(false);
-            }}
-            className="rounded-sm p-2 text-white/50 hover:bg-white/10 hover:text-white"
-          >
-            <X className="h-4 w-4" />
-          </button>
+          {!embedded && (
+            <button
+              type="button"
+              aria-label="Close Frassy chat"
+              onClick={() => {
+                stopTurn();
+                setOpen(false);
+              }}
+              className="rounded-sm p-2 text-white/50 hover:bg-white/10 hover:text-white"
+            >
+              <X className="h-4 w-4" />
+            </button>
+          )}
+
         </div>
       </header>
 

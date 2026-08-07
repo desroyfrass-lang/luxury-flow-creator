@@ -5,6 +5,8 @@ import { useServerFn } from "@tanstack/react-start";
 import { SiteShell } from "@/components/site-shell";
 import { PageFeedback } from "@/components/page-feedback";
 import { LaunchReadiness } from "@/components/launch-readiness";
+import { FrassyChat } from "@/components/frassy-chat";
+
 import { useIsAdmin } from "@/hooks/use-is-admin";
 import { getBuilderJourney, startJourneyTrack } from "@/lib/journey.functions";
 import { COMMISSIONING_PHASES } from "@/lib/commissioning";
@@ -155,10 +157,23 @@ function FounderPage() {
           </span>
         </section>
 
+        {/* Frassy — the founder's direct line */}
+        <section className="mt-14">
+          <h2 className="font-display text-2xl">Talk to Frassy</h2>
+          <p className="mt-2 max-w-2xl text-sm text-muted-foreground">
+            She knows the districts, the catalog, and where commissioning stands. Type or press
+            the mic — she speaks back unless you mute her.
+          </p>
+          <div className="mt-5 max-w-3xl">
+            <FrassyChat embedded />
+          </div>
+        </section>
+
         {/* Readiness */}
         <section className="mt-14">
           <LaunchReadiness completedStageIds={completed} />
         </section>
+
 
         {/* District management */}
         <section className="mt-14">
