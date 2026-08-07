@@ -177,7 +177,7 @@ export function FrassyChat({ embedded = false }: { embedded?: boolean } = {}) {
         },
       ]);
 
-      if (spoken && voice.voiceAvailable) {
+      if ((spoken || speakReplies) && voice.voiceAvailable) {
         setLoading(false);
         await voice.speak(reply);
         // Playback finished → conversation waits. The mic stays closed.
