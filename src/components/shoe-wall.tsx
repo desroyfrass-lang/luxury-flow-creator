@@ -28,17 +28,6 @@ function ShelfColumn({ section, gender }: { section: WallSection; gender: "men" 
 
   return (
     <div className="relative flex min-w-0 flex-1 flex-col overflow-hidden rounded-2xl border border-[color:var(--gold)]/25 bg-[linear-gradient(180deg,color-mix(in_oklab,var(--foreground)_8%,transparent),color-mix(in_oklab,var(--foreground)_3%,transparent))] backdrop-blur-sm md:rounded-[2rem]">
-      {/* header sign */}
-      <div className="relative z-10 shrink-0 border-b border-[color:var(--gold)]/20 px-2 py-3 text-center md:px-6 md:py-5">
-        <div className="mx-auto mb-2 h-px w-8 bg-[color:var(--gold)]/60 md:mb-3 md:w-16" />
-        <h3 className="font-display text-sm tracking-[0.14em] uppercase text-foreground md:text-2xl md:tracking-[0.18em]">
-          {section.label}
-        </h3>
-        <p className="mt-1 hidden text-[10px] uppercase tracking-[0.3em] text-muted-foreground md:block">
-          {section.caption}
-        </p>
-      </div>
-
       {/* scrollable shelf stack */}
       <div className="relative min-h-0 flex-1 overflow-y-auto overscroll-contain px-2 py-3 md:px-4 md:py-4">
         {products === null ? (
