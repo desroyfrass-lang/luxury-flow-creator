@@ -39,7 +39,13 @@ import { Route as BareDripIndexRouteImport } from './routes/bare-drip.index'
 import { Route as AfroDesignersIndexRouteImport } from './routes/afro-designers.index'
 import { Route as SocialMediaViralsCategoryRouteImport } from './routes/social-media-virals.$category'
 import { Route as ProductHandleRouteImport } from './routes/product.$handle'
+import { Route as PlusSizeWomenRouteImport } from './routes/plus-size.women'
+import { Route as PlusSizeMenRouteImport } from './routes/plus-size.men'
 import { Route as LookbookStoryRouteImport } from './routes/lookbook.$story'
+import { Route as FrassLuxuryHouseWomenRouteImport } from './routes/frass-luxury-house.women'
+import { Route as FrassLuxuryHouseMenRouteImport } from './routes/frass-luxury-house.men'
+import { Route as FrassKidsGirlsRouteImport } from './routes/frass-kids.girls'
+import { Route as FrassKidsBoysRouteImport } from './routes/frass-kids.boys'
 import { Route as FrassKicksWomenRouteImport } from './routes/frass-kicks.women'
 import { Route as FrassKicksMenRouteImport } from './routes/frass-kicks.men'
 import { Route as FrassDripWomenRouteImport } from './routes/frass-drip.women'
@@ -250,10 +256,40 @@ const ProductHandleRoute = ProductHandleRouteImport.update({
   path: '/product/$handle',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PlusSizeWomenRoute = PlusSizeWomenRouteImport.update({
+  id: '/plus-size/women',
+  path: '/plus-size/women',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PlusSizeMenRoute = PlusSizeMenRouteImport.update({
+  id: '/plus-size/men',
+  path: '/plus-size/men',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const LookbookStoryRoute = LookbookStoryRouteImport.update({
   id: '/$story',
   path: '/$story',
   getParentRoute: () => LookbookRoute,
+} as any)
+const FrassLuxuryHouseWomenRoute = FrassLuxuryHouseWomenRouteImport.update({
+  id: '/frass-luxury-house/women',
+  path: '/frass-luxury-house/women',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FrassLuxuryHouseMenRoute = FrassLuxuryHouseMenRouteImport.update({
+  id: '/frass-luxury-house/men',
+  path: '/frass-luxury-house/men',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FrassKidsGirlsRoute = FrassKidsGirlsRouteImport.update({
+  id: '/frass-kids/girls',
+  path: '/frass-kids/girls',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FrassKidsBoysRoute = FrassKidsBoysRouteImport.update({
+  id: '/frass-kids/boys',
+  path: '/frass-kids/boys',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const FrassKicksWomenRoute = FrassKicksWomenRouteImport.update({
   id: '/women',
@@ -621,7 +657,13 @@ export interface FileRoutesByFullPath {
   '/frass-drip/women': typeof FrassDripWomenRouteWithChildren
   '/frass-kicks/men': typeof FrassKicksMenRoute
   '/frass-kicks/women': typeof FrassKicksWomenRoute
+  '/frass-kids/boys': typeof FrassKidsBoysRoute
+  '/frass-kids/girls': typeof FrassKidsGirlsRoute
+  '/frass-luxury-house/men': typeof FrassLuxuryHouseMenRoute
+  '/frass-luxury-house/women': typeof FrassLuxuryHouseWomenRoute
   '/lookbook/$story': typeof LookbookStoryRoute
+  '/plus-size/men': typeof PlusSizeMenRoute
+  '/plus-size/women': typeof PlusSizeWomenRoute
   '/product/$handle': typeof ProductHandleRoute
   '/social-media-virals/$category': typeof SocialMediaViralsCategoryRouteWithChildren
   '/afro-designers/': typeof AfroDesignersIndexRoute
@@ -699,7 +741,13 @@ export interface FileRoutesByTo {
   '/collection/$handle': typeof CollectionHandleRoute
   '/frass-kicks/men': typeof FrassKicksMenRoute
   '/frass-kicks/women': typeof FrassKicksWomenRoute
+  '/frass-kids/boys': typeof FrassKidsBoysRoute
+  '/frass-kids/girls': typeof FrassKidsGirlsRoute
+  '/frass-luxury-house/men': typeof FrassLuxuryHouseMenRoute
+  '/frass-luxury-house/women': typeof FrassLuxuryHouseWomenRoute
   '/lookbook/$story': typeof LookbookStoryRoute
+  '/plus-size/men': typeof PlusSizeMenRoute
+  '/plus-size/women': typeof PlusSizeWomenRoute
   '/product/$handle': typeof ProductHandleRoute
   '/social-media-virals/$category': typeof SocialMediaViralsCategoryRouteWithChildren
   '/afro-designers': typeof AfroDesignersIndexRoute
@@ -792,7 +840,13 @@ export interface FileRoutesById {
   '/frass-drip/women': typeof FrassDripWomenRouteWithChildren
   '/frass-kicks/men': typeof FrassKicksMenRoute
   '/frass-kicks/women': typeof FrassKicksWomenRoute
+  '/frass-kids/boys': typeof FrassKidsBoysRoute
+  '/frass-kids/girls': typeof FrassKidsGirlsRoute
+  '/frass-luxury-house/men': typeof FrassLuxuryHouseMenRoute
+  '/frass-luxury-house/women': typeof FrassLuxuryHouseWomenRoute
   '/lookbook/$story': typeof LookbookStoryRoute
+  '/plus-size/men': typeof PlusSizeMenRoute
+  '/plus-size/women': typeof PlusSizeWomenRoute
   '/product/$handle': typeof ProductHandleRoute
   '/social-media-virals/$category': typeof SocialMediaViralsCategoryRouteWithChildren
   '/afro-designers/': typeof AfroDesignersIndexRoute
@@ -885,7 +939,13 @@ export interface FileRouteTypes {
     | '/frass-drip/women'
     | '/frass-kicks/men'
     | '/frass-kicks/women'
+    | '/frass-kids/boys'
+    | '/frass-kids/girls'
+    | '/frass-luxury-house/men'
+    | '/frass-luxury-house/women'
     | '/lookbook/$story'
+    | '/plus-size/men'
+    | '/plus-size/women'
     | '/product/$handle'
     | '/social-media-virals/$category'
     | '/afro-designers/'
@@ -963,7 +1023,13 @@ export interface FileRouteTypes {
     | '/collection/$handle'
     | '/frass-kicks/men'
     | '/frass-kicks/women'
+    | '/frass-kids/boys'
+    | '/frass-kids/girls'
+    | '/frass-luxury-house/men'
+    | '/frass-luxury-house/women'
     | '/lookbook/$story'
+    | '/plus-size/men'
+    | '/plus-size/women'
     | '/product/$handle'
     | '/social-media-virals/$category'
     | '/afro-designers'
@@ -1055,7 +1121,13 @@ export interface FileRouteTypes {
     | '/frass-drip/women'
     | '/frass-kicks/men'
     | '/frass-kicks/women'
+    | '/frass-kids/boys'
+    | '/frass-kids/girls'
+    | '/frass-luxury-house/men'
+    | '/frass-luxury-house/women'
     | '/lookbook/$story'
+    | '/plus-size/men'
+    | '/plus-size/women'
     | '/product/$handle'
     | '/social-media-virals/$category'
     | '/afro-designers/'
@@ -1127,6 +1199,12 @@ export interface RootRouteChildren {
   ApiTtsRoute: typeof ApiTtsRoute
   BuilderHandleRoute: typeof BuilderHandleRoute
   CollectionHandleRoute: typeof CollectionHandleRoute
+  FrassKidsBoysRoute: typeof FrassKidsBoysRoute
+  FrassKidsGirlsRoute: typeof FrassKidsGirlsRoute
+  FrassLuxuryHouseMenRoute: typeof FrassLuxuryHouseMenRoute
+  FrassLuxuryHouseWomenRoute: typeof FrassLuxuryHouseWomenRoute
+  PlusSizeMenRoute: typeof PlusSizeMenRoute
+  PlusSizeWomenRoute: typeof PlusSizeWomenRoute
   ProductHandleRoute: typeof ProductHandleRoute
   DotlovableOauthConsentRoute: typeof DotlovableOauthConsentRoute
   Char91DotmcpChar93InvokeToolToolRoute: typeof Char91DotmcpChar93InvokeToolToolRoute
@@ -1344,12 +1422,54 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProductHandleRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/plus-size/women': {
+      id: '/plus-size/women'
+      path: '/plus-size/women'
+      fullPath: '/plus-size/women'
+      preLoaderRoute: typeof PlusSizeWomenRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/plus-size/men': {
+      id: '/plus-size/men'
+      path: '/plus-size/men'
+      fullPath: '/plus-size/men'
+      preLoaderRoute: typeof PlusSizeMenRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/lookbook/$story': {
       id: '/lookbook/$story'
       path: '/$story'
       fullPath: '/lookbook/$story'
       preLoaderRoute: typeof LookbookStoryRouteImport
       parentRoute: typeof LookbookRoute
+    }
+    '/frass-luxury-house/women': {
+      id: '/frass-luxury-house/women'
+      path: '/frass-luxury-house/women'
+      fullPath: '/frass-luxury-house/women'
+      preLoaderRoute: typeof FrassLuxuryHouseWomenRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/frass-luxury-house/men': {
+      id: '/frass-luxury-house/men'
+      path: '/frass-luxury-house/men'
+      fullPath: '/frass-luxury-house/men'
+      preLoaderRoute: typeof FrassLuxuryHouseMenRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/frass-kids/girls': {
+      id: '/frass-kids/girls'
+      path: '/frass-kids/girls'
+      fullPath: '/frass-kids/girls'
+      preLoaderRoute: typeof FrassKidsGirlsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/frass-kids/boys': {
+      id: '/frass-kids/boys'
+      path: '/frass-kids/boys'
+      fullPath: '/frass-kids/boys'
+      preLoaderRoute: typeof FrassKidsBoysRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/frass-kicks/women': {
       id: '/frass-kicks/women'
@@ -2101,6 +2221,12 @@ const rootRouteChildren: RootRouteChildren = {
   ApiTtsRoute: ApiTtsRoute,
   BuilderHandleRoute: BuilderHandleRoute,
   CollectionHandleRoute: CollectionHandleRoute,
+  FrassKidsBoysRoute: FrassKidsBoysRoute,
+  FrassKidsGirlsRoute: FrassKidsGirlsRoute,
+  FrassLuxuryHouseMenRoute: FrassLuxuryHouseMenRoute,
+  FrassLuxuryHouseWomenRoute: FrassLuxuryHouseWomenRoute,
+  PlusSizeMenRoute: PlusSizeMenRoute,
+  PlusSizeWomenRoute: PlusSizeWomenRoute,
   ProductHandleRoute: ProductHandleRoute,
   DotlovableOauthConsentRoute: DotlovableOauthConsentRoute,
   Char91DotmcpChar93InvokeToolToolRoute: Char91DotmcpChar93InvokeToolToolRoute,
