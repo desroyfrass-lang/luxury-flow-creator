@@ -1,22 +1,131 @@
 import { Link, useRouterState } from "@tanstack/react-router";
-import { useState } from "react";
-import { Search, ChevronDown, KeyRound } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { Search, ChevronDown, KeyRound, Menu, X } from "lucide-react";
 import { CartDrawer } from "./cart-drawer";
 import fullLogo from "@/assets/frass-logo-full.asset.json";
 
-const CATEGORIES: { label: string; to: string; editorial?: boolean }[] = [
-  { label: "Frass District", to: "/shop-frass" },
-  { label: "Plus Size", to: "/plus-size/women" },
-  { label: "Frass Luxury House", to: "/frass-luxury-house/women", editorial: true },
-  { label: "Social Media Virals", to: "/social-media-virals" },
+type NavItem = { label: string; to: string; note?: string };
+type NavGroup = {
+  label: string;
+  to: string;
+  match: string;
+  editorial?: boolean;
+  items?: NavItem[];
+};
+
+/** Every destination in the World of Frass is reachable from this bar. */
+const NAV: NavGroup[] = [
+  { label: "Frass District", to: "/", match: "/shop-frass" },
+  {
+    label: "Frass Kicks",
+    to: "/frass-kicks",
+    match: "/frass-kicks",
+    items: [
+      { label: "The Kicks Store", to: "/frass-kicks", note: "Sneaker hall" },
+      { label: "Men's Kicks", to: "/frass-kicks/men" },
+      { label: "Women's Kicks", to: "/frass-kicks/women" },
+      { label: "Kicks District", to: "/kicks-district", note: "The street" },
+    ],
+  },
+  {
+    label: "Frass Drip",
+    to: "/frass-drip",
+    match: "/frass-drip",
+    items: [
+      { label: "The Drip Store", to: "/frass-drip" },
+      { label: "Men's Drip", to: "/frass-drip/men", note: "Work · Party · Casual · Street" },
+      { label: "Women's Drip", to: "/frass-drip/women", note: "Work · Party · Casual · Street" },
+    ],
+  },
+  {
+    label: "Bare Drip",
+    to: "/bare-drip",
+    match: "/bare-drip",
+    items: [
+      { label: "The Bare Drip Store", to: "/bare-drip" },
+      { label: "Men — Underwear & Swim", to: "/bare-drip/men" },
+      { label: "Women — Lingerie & Swim", to: "/bare-drip/women" },
+    ],
+  },
+  {
+    label: "Frass Luxury House",
+    to: "/frass-luxury-house",
+    match: "/frass-luxury-house",
+    editorial: true,
+    items: [
+      { label: "The Estate", to: "/frass-luxury-house" },
+      { label: "East Wing — Gentlemen", to: "/frass-luxury-house/men" },
+      { label: "West Wing — Ladies", to: "/frass-luxury-house/women" },
+    ],
+  },
+  {
+    label: "Afro Designers",
+    to: "/afro-designers",
+    match: "/afro-designers",
+    editorial: true,
+    items: [
+      { label: "The Marketplace", to: "/afro-designers", note: "Where culture meets luxury" },
+      { label: "All Designers", to: "/afro-designers/designers" },
+      { label: "Become a Designer", to: "/afro-designers/join", note: "Registration — coming soon" },
+    ],
+  },
+  {
+    label: "Plus Size",
+    to: "/plus-size/women",
+    match: "/plus-size",
+    items: [
+      { label: "Women's Plus", to: "/plus-size/women" },
+      { label: "Men's Big & Tall", to: "/plus-size/men" },
+    ],
+  },
+  {
+    label: "Frass Kids",
+    to: "/frass-kids/girls",
+    match: "/frass-kids",
+    items: [
+      { label: "Girls", to: "/frass-kids/girls" },
+      { label: "Boys", to: "/frass-kids/boys" },
+    ],
+  },
+  { label: "Social Media Virals", to: "/social-media-virals", match: "/social-media-virals" },
+  {
+    label: "Discover",
+    to: "/frass-world",
+    match: "/frass-world",
+    items: [
+      { label: "The Liquidation Room", to: "/sales-clearance", note: "Sale · Vault · Lucky Spin" },
+      { label: "Capsules", to: "/capsules" },
+      { label: "Lookbook", to: "/lookbook" },
+      { label: "Brand Journal", to: "/blog" },
+      { label: "Music & Media", to: "/music-media" },
+      { label: "Visual Search", to: "/visual-search" },
+      { label: "Rewards", to: "/rewards" },
+      { label: "Frass World Map", to: "/frass-world" },
+    ],
+  },
 ];
 
 const CURRENCIES = ["USD", "GBP", "EUR", "JMD", "CAD"];
 
 export function GatewayNav({ mode }: { mode: "shop" | "world" }) {
   const path = useRouterState({ select: (r) => r.location.pathname });
-  const [kidsOpen, setKidsOpen] = useState(false);
+  const [open, setOpen] = useState<string | null>(null);
+  const [mobileOpen, setMobileOpen] = useState(false);
   const [currency, setCurrency] = useState("USD");
+  const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => {
+    setOpen(null);
+    setMobileOpen(false);
+  }, [path]);
+
+  const enter = (label: string) => {
+    if (closeTimer.current) clearTimeout(closeTimer.current);
+    setOpen(label);
+  };
+  const leave = () => {
+    closeTimer.current = setTimeout(() => setOpen(null), 120);
+  };
 
   return (
     <header className="sticky top-0 z-50 border-b border-border/60 bg-background/85 backdrop-blur-xl">
@@ -32,7 +141,7 @@ export function GatewayNav({ mode }: { mode: "shop" | "world" }) {
             className="hidden shrink-0 items-center rounded-full border border-border bg-background/70 p-1 sm:flex"
           >
             <Link
-              to="/shop-frass"
+              to="/"
               role="tab"
               aria-selected={mode === "shop"}
               className={`rounded-full px-4 py-1.5 text-[10px] font-bold uppercase tracking-[0.22em] transition ${
@@ -59,12 +168,13 @@ export function GatewayNav({ mode }: { mode: "shop" | "world" }) {
         </div>
 
         <div className="flex items-center justify-end gap-2">
-          <button
+          <Link
+            to="/visual-search"
             aria-label="Universal search"
-            className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-border hover:border-[color:var(--gold)] transition"
+            className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-border transition hover:border-[color:var(--gold)]"
           >
             <Search className="h-4 w-4" />
-          </button>
+          </Link>
           <label className="sr-only" htmlFor="frass-currency">
             Currency
           </label>
@@ -89,64 +199,110 @@ export function GatewayNav({ mode }: { mode: "shop" | "world" }) {
             Builder Vault
           </Link>
           <CartDrawer />
+          <button
+            type="button"
+            aria-label={mobileOpen ? "Close menu" : "Open menu"}
+            aria-expanded={mobileOpen}
+            onClick={() => setMobileOpen((o) => !o)}
+            className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-border lg:hidden"
+          >
+            {mobileOpen ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
+          </button>
         </div>
       </div>
 
+      {/* Desktop bar */}
       <nav
-        aria-label="Primary shopping categories"
-        className="mx-auto flex max-w-[1600px] items-center gap-1 overflow-x-auto px-5 pb-2 lg:px-10"
+        aria-label="Primary navigation"
+        className="mx-auto hidden max-w-[1600px] items-center gap-1 px-5 pb-2 lg:flex lg:px-10"
       >
-        {CATEGORIES.map((c) => (
-          <Link
-            key={c.label}
-            to={c.to}
-            className={`shrink-0 whitespace-nowrap rounded-full px-3 py-1.5 text-[10px] uppercase tracking-[0.24em] transition ${
-              path.startsWith(c.to) ? "text-foreground" : "text-muted-foreground"
-            } ${c.editorial ? "border border-[color:var(--gold)]/50 font-bold text-[color:var(--gold)]" : "hover:text-foreground"}`}
-          >
-            {c.label}
-          </Link>
-        ))}
-
-        <div
-          className="relative shrink-0"
-          onMouseEnter={() => setKidsOpen(true)}
-          onMouseLeave={() => setKidsOpen(false)}
-        >
-          <button
-            type="button"
-            aria-haspopup="menu"
-            aria-expanded={kidsOpen}
-            onClick={() => setKidsOpen((o) => !o)}
-            className="inline-flex items-center gap-1 whitespace-nowrap rounded-full px-3 py-1.5 text-[10px] uppercase tracking-[0.24em] text-muted-foreground transition hover:text-foreground"
-          >
-            Frass Kids <ChevronDown className="h-3 w-3" />
-          </button>
-          {kidsOpen && (
+        {NAV.map((g) => {
+          const active = path === g.to || path.startsWith(g.match);
+          return (
             <div
-              role="menu"
-              className="absolute left-0 z-50 mt-2 w-64 rounded-2xl border border-border/70 bg-background/95 p-2 shadow-2xl backdrop-blur-xl"
+              key={g.label}
+              className="relative shrink-0"
+              onMouseEnter={() => enter(g.label)}
+              onMouseLeave={leave}
             >
               <Link
-                to="/frass-world"
-                hash="kids"
-                role="menuitem"
-                className="block rounded-xl px-4 py-3 text-[10px] uppercase tracking-[0.22em] text-muted-foreground transition hover:bg-[color:var(--kids-coral)]/10 hover:text-foreground"
+                to={g.to}
+                aria-haspopup={g.items ? "menu" : undefined}
+                aria-expanded={g.items ? open === g.label : undefined}
+                className={`inline-flex items-center gap-1 whitespace-nowrap rounded-full px-3 py-1.5 text-[10px] uppercase tracking-[0.22em] transition ${
+                  g.editorial
+                    ? "border border-[color:var(--gold)]/50 font-bold text-[color:var(--gold)]"
+                    : active
+                      ? "text-foreground"
+                      : "text-muted-foreground hover:text-foreground"
+                }`}
               >
-                🧸 Kids Boutique
+                {g.label}
+                {g.items && <ChevronDown className="h-3 w-3" />}
               </Link>
-              <Link
-                to="/frass-world"
-                hash="kids"
-                role="menuitem"
-                className="block rounded-xl px-4 py-3 text-[10px] uppercase tracking-[0.22em] text-muted-foreground transition hover:bg-[color:var(--kids-turquoise)]/10 hover:text-foreground"
-              >
-                🌈 Kids World
-              </Link>
+
+              {g.items && open === g.label && (
+                <div
+                  role="menu"
+                  className="absolute left-0 z-50 mt-1 w-72 rounded-2xl border border-border/70 bg-background/95 p-2 shadow-2xl backdrop-blur-xl"
+                >
+                  {g.items.map((i) => (
+                    <Link
+                      key={i.to}
+                      to={i.to}
+                      role="menuitem"
+                      className="block rounded-xl px-4 py-2.5 transition hover:bg-[color:var(--gold)]/10"
+                    >
+                      <span className="block text-[10px] uppercase tracking-[0.22em] text-foreground">
+                        {i.label}
+                      </span>
+                      {i.note && (
+                        <span className="mt-0.5 block text-[10px] normal-case tracking-normal text-muted-foreground">
+                          {i.note}
+                        </span>
+                      )}
+                    </Link>
+                  ))}
+                </div>
+              )}
             </div>
-          )}
-        </div>
+          );
+        })}
       </nav>
+
+      {/* Mobile drawer */}
+      {mobileOpen && (
+        <nav
+          aria-label="All destinations"
+          className="max-h-[70vh] overflow-y-auto border-t border-border/60 px-5 py-4 lg:hidden"
+        >
+          {NAV.map((g) => (
+            <div key={g.label} className="border-b border-border/40 py-3 last:border-0">
+              <Link
+                to={g.to}
+                className={`text-[11px] font-bold uppercase tracking-[0.24em] ${
+                  g.editorial ? "text-[color:var(--gold)]" : "text-foreground"
+                }`}
+              >
+                {g.label}
+              </Link>
+              {g.items && (
+                <div className="mt-2 grid gap-1.5 pl-3">
+                  {g.items.map((i) => (
+                    <Link
+                      key={i.to}
+                      to={i.to}
+                      className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground"
+                    >
+                      {i.label}
+                    </Link>
+                  ))}
+                </div>
+              )}
+            </div>
+          ))}
+        </nav>
+      )}
     </header>
   );
 }
