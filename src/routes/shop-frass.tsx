@@ -165,7 +165,7 @@ function ShopFrassPage() {
       <section className="mx-auto max-w-[1100px] px-6 py-20 lg:px-10">
         <header className="mx-auto max-w-3xl text-center">
           <h2 className="font-display text-4xl uppercase leading-[0.9] text-[color:var(--gold)] md:text-6xl">
-            Choose Your Side
+            Choose Your Lane
           </h2>
           <p className="mt-4 text-[10px] uppercase tracking-[0.35em] text-muted-foreground">
             Walk Wid Power · Step Wid Purpose · Move Wid Meaning
