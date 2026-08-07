@@ -43,23 +43,30 @@ export const Route = createFileRoute("/frass-drip/men/")({
         ]}
       />
       <section className="mx-auto max-w-[1600px] px-6 lg:px-12">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
+        <header className="mx-auto mb-14 max-w-2xl text-center">
+          <p className="text-[10px] uppercase tracking-[0.38em] text-[color:var(--gold)]">
+            The Department Floor
+          </p>
+          <p className="mt-4 text-sm text-muted-foreground md:text-base">
+            Every doorway is a showroom of its own. Step through the one that matches your day.
+          </p>
+        </header>
+        <div className="grid grid-cols-1 gap-x-8 gap-y-16 sm:grid-cols-2 lg:grid-cols-3">
           {PARENTS.map(([slug, title, description], i) => (
-            <CollectionCard
+            <StorePortalCard
               key={slug}
               to="/frass-drip/men/$category"
               params={{ category: slug }}
               slot={`drip-men-${slug}`}
               image={IMAGES[i % IMAGES.length]}
-              eyebrow="Men"
+              eyebrow={`Department ${String(i + 1).padStart(2, "0")}`}
               title={title}
               description={description}
-              size="lg"
             />
           ))}
-
         </div>
       </section>
     </SiteShell>
   ),
 });
+
