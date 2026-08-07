@@ -52,8 +52,55 @@ function KidsHome() {
         </div>
       </section>
 
+      {/* Two doors — shopping, or the children's world inside Frass Hill */}
+      <section className="mx-auto max-w-[1600px] px-6 pt-14 lg:px-12">
+        <div className="grid gap-6 md:grid-cols-2">
+          <a
+            href="#shop-kids"
+            className="group rounded-[2rem] border border-[color:var(--gold)]/30 bg-card p-8 transition hover:-translate-y-1 hover:border-[color:var(--gold)]/70"
+          >
+            <span className="text-3xl" aria-hidden>
+              🛍
+            </span>
+            <h2 className="mt-3 font-display text-3xl uppercase leading-none md:text-4xl">
+              Shop Kids
+            </h2>
+            <p className="mt-3 max-w-md text-sm text-muted-foreground">
+              The children's flagship floor — Frass Kicks, School Drip and every
+              collection, sized 0–3 through 12+.
+            </p>
+            <span className="mt-6 inline-block text-[10px] font-bold uppercase tracking-[0.26em] text-[color:var(--gold)]">
+              Choose a store →
+            </span>
+          </a>
+          <Link
+            to="/kids-world"
+            className="group rounded-[2rem] border border-[color:var(--kids-turquoise,#4ec9c1)]/40 bg-card p-8 transition hover:-translate-y-1"
+            style={{ boxShadow: "0 30px 80px -60px var(--kids-turquoise, #4ec9c1)" }}
+          >
+            <span className="text-3xl" aria-hidden>
+              🌈
+            </span>
+            <h2 className="mt-3 font-display text-3xl uppercase leading-none md:text-4xl">
+              Enter Kids World
+            </h2>
+            <p className="mt-3 max-w-md text-sm text-muted-foreground">
+              A district of Frass Hill: learning villages, creative studios, music
+              gardens and young-builder spaces — with a parent-issued passport.
+            </p>
+            <span
+              className="mt-6 inline-block text-[10px] font-bold uppercase tracking-[0.26em]"
+              style={{ color: "var(--kids-turquoise, #4ec9c1)" }}
+            >
+              Step into the valley →
+            </span>
+          </Link>
+        </div>
+      </section>
+
       {/* Age & gender — one single selection */}
-      <section className="mx-auto max-w-[1600px] px-6 pb-16 pt-14 lg:px-12">
+      <section id="shop-kids" className="mx-auto max-w-[1600px] px-6 pb-16 pt-14 lg:px-12">
+
         <header className="mb-9 max-w-2xl">
           <p className="text-[10px] uppercase tracking-[0.38em] text-[color:var(--gold)]">
             Choose a store

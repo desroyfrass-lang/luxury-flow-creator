@@ -97,14 +97,16 @@ function FrassWorldPage() {
           emoji="🧒"
           title="Kids Valley"
           copy="Down into the colour — kites, bubbles, bikes, ice-cream carts and the whole valley playing."
-          meta="Boutique shopping and experiential Kids World"
-          to="/frass-kicks"
+          meta="Kids World — a district of Frass Hill · and the children's boutique"
+          to="/kids-world"
           accent="var(--kids-coral)"
+          badge="Kids World live"
           portals={[
-            { label: "🧸 Kids Boutique", to: "/frass-kicks" },
-            { label: "🌈 Kids World", to: "/academy" },
+            { label: "🌈 Enter Kids World", to: "/kids-world" },
+            { label: "🧸 Shop Kids", to: "/frass-kids" },
           ]}
         />
+
       </div>
 
       <section className="mx-auto max-w-[1600px] px-6 pb-24 lg:px-10">
