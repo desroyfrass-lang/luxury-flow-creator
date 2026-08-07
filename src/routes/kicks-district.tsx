@@ -226,8 +226,8 @@ function KicksDistrictPage() {
           <>
             {/* first entry: the Jamaica gateway infographic */}
             <img
-              src={gatewayImg}
-              alt="Frass Kicks District gateway — a luxury open-air Jamaican fashion promenade"
+              src={districtHero.url}
+              alt="Frass Kicks District promenade at golden hour — KICKZ Men, SOLE Women and BARE storefronts under gold-lit arches"
               className="absolute inset-0 h-full w-full object-cover"
               style={{ filter: mood.tint }}
             />
