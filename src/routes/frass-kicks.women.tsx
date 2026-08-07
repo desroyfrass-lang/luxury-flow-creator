@@ -57,22 +57,15 @@ function WomensKicksRoom() {
         ]}
       />
       <section className="relative mx-auto max-w-[1600px] px-2 md:px-12">
-        <div className="relative overflow-hidden rounded-t-2xl md:rounded-t-[2rem]">
+        <div className="relative overflow-hidden rounded-2xl md:rounded-[2rem]">
           <img
             src={heroWall}
-            alt="Illuminated wall of women's shoes: casual, classic and street shelves"
+            alt="Illuminated wall of women's shoes on lit shelves"
             width={1920}
             height={1024}
-            className="h-[26vh] w-full object-cover md:h-[38vh]"
+            className="h-[40vh] w-full object-cover md:h-[58vh]"
           />
-          <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,transparent_55%,color-mix(in_oklab,var(--background)_92%,transparent))]" />
-          <div className="pointer-events-none absolute inset-x-0 bottom-0 grid grid-cols-3">
-            {["Casual", "Classic", "Street"].map((l) => (
-              <div key={l} className="border-t border-[color:var(--gold)]/40 py-2 text-center text-[9px] uppercase tracking-[0.28em] text-foreground/85 md:text-[11px]">
-                {l}
-              </div>
-            ))}
-          </div>
+          <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,transparent_65%,color-mix(in_oklab,var(--background)_88%,transparent))]" />
         </div>
       </section>
       <ShoeWall sections={SECTIONS} gender="women" />
