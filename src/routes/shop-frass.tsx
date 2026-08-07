@@ -147,10 +147,10 @@ function ShopFrassPage() {
           </h1>
           <div className="mt-6 flex flex-wrap gap-3">
             <Link
-              to="/frass-kicks"
+              to="/sales-clearance"
               className="rounded-full bg-white px-6 py-3 text-[10px] font-bold uppercase tracking-[0.28em] text-black transition hover:scale-[1.03]"
             >
-              Shop the drop
+              Shop Sales and Clearance
             </Link>
             <Link
               to="/frass-world"
