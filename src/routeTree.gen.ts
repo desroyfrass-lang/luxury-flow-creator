@@ -110,6 +110,7 @@ import { Route as AfroDesignersCollectionsSlugRouteImport } from './routes/afro-
 import { Route as AuthenticatedWorkspaceProfileRouteImport } from './routes/_authenticated/workspace.profile'
 import { Route as AuthenticatedWorkspaceMerchRouteImport } from './routes/_authenticated/workspace.merch'
 import { Route as AuthenticatedWorkspaceInsightsRouteImport } from './routes/_authenticated/workspace.insights'
+import { Route as AuthenticatedWorkspaceAffiliateRouteImport } from './routes/_authenticated/workspace.affiliate'
 import { Route as AuthenticatedAdminVisualIndexRouteImport } from './routes/_authenticated/admin.visual-index'
 import { Route as AuthenticatedAdminViralsRouteImport } from './routes/_authenticated/admin.virals'
 import { Route as AuthenticatedAdminTextRouteImport } from './routes/_authenticated/admin.text'
@@ -644,6 +645,12 @@ const AuthenticatedWorkspaceInsightsRoute =
     path: '/insights',
     getParentRoute: () => AuthenticatedWorkspaceRoute,
   } as any)
+const AuthenticatedWorkspaceAffiliateRoute =
+  AuthenticatedWorkspaceAffiliateRouteImport.update({
+    id: '/affiliate',
+    path: '/affiliate',
+    getParentRoute: () => AuthenticatedWorkspaceRoute,
+  } as any)
 const AuthenticatedAdminVisualIndexRoute =
   AuthenticatedAdminVisualIndexRouteImport.update({
     id: '/visual-index',
@@ -828,6 +835,7 @@ export interface FileRoutesByFullPath {
   '/admin/text': typeof AuthenticatedAdminTextRoute
   '/admin/virals': typeof AuthenticatedAdminViralsRoute
   '/admin/visual-index': typeof AuthenticatedAdminVisualIndexRoute
+  '/workspace/affiliate': typeof AuthenticatedWorkspaceAffiliateRoute
   '/workspace/insights': typeof AuthenticatedWorkspaceInsightsRoute
   '/workspace/merch': typeof AuthenticatedWorkspaceMerchRoute
   '/workspace/profile': typeof AuthenticatedWorkspaceProfileRoute
@@ -929,6 +937,7 @@ export interface FileRoutesByTo {
   '/admin/text': typeof AuthenticatedAdminTextRoute
   '/admin/virals': typeof AuthenticatedAdminViralsRoute
   '/admin/visual-index': typeof AuthenticatedAdminVisualIndexRoute
+  '/workspace/affiliate': typeof AuthenticatedWorkspaceAffiliateRoute
   '/workspace/insights': typeof AuthenticatedWorkspaceInsightsRoute
   '/workspace/merch': typeof AuthenticatedWorkspaceMerchRoute
   '/workspace/profile': typeof AuthenticatedWorkspaceProfileRoute
@@ -1049,6 +1058,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/text': typeof AuthenticatedAdminTextRoute
   '/_authenticated/admin/virals': typeof AuthenticatedAdminViralsRoute
   '/_authenticated/admin/visual-index': typeof AuthenticatedAdminVisualIndexRoute
+  '/_authenticated/workspace/affiliate': typeof AuthenticatedWorkspaceAffiliateRoute
   '/_authenticated/workspace/insights': typeof AuthenticatedWorkspaceInsightsRoute
   '/_authenticated/workspace/merch': typeof AuthenticatedWorkspaceMerchRoute
   '/_authenticated/workspace/profile': typeof AuthenticatedWorkspaceProfileRoute
@@ -1169,6 +1179,7 @@ export interface FileRouteTypes {
     | '/admin/text'
     | '/admin/virals'
     | '/admin/visual-index'
+    | '/workspace/affiliate'
     | '/workspace/insights'
     | '/workspace/merch'
     | '/workspace/profile'
@@ -1270,6 +1281,7 @@ export interface FileRouteTypes {
     | '/admin/text'
     | '/admin/virals'
     | '/admin/visual-index'
+    | '/workspace/affiliate'
     | '/workspace/insights'
     | '/workspace/merch'
     | '/workspace/profile'
@@ -1389,6 +1401,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/text'
     | '/_authenticated/admin/virals'
     | '/_authenticated/admin/visual-index'
+    | '/_authenticated/workspace/affiliate'
     | '/_authenticated/workspace/insights'
     | '/_authenticated/workspace/merch'
     | '/_authenticated/workspace/profile'
@@ -2165,6 +2178,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedWorkspaceInsightsRouteImport
       parentRoute: typeof AuthenticatedWorkspaceRoute
     }
+    '/_authenticated/workspace/affiliate': {
+      id: '/_authenticated/workspace/affiliate'
+      path: '/affiliate'
+      fullPath: '/workspace/affiliate'
+      preLoaderRoute: typeof AuthenticatedWorkspaceAffiliateRouteImport
+      parentRoute: typeof AuthenticatedWorkspaceRoute
+    }
     '/_authenticated/admin/visual-index': {
       id: '/_authenticated/admin/visual-index'
       path: '/visual-index'
@@ -2318,6 +2338,7 @@ const AuthenticatedAdminRouteWithChildren =
   AuthenticatedAdminRoute._addFileChildren(AuthenticatedAdminRouteChildren)
 
 interface AuthenticatedWorkspaceRouteChildren {
+  AuthenticatedWorkspaceAffiliateRoute: typeof AuthenticatedWorkspaceAffiliateRoute
   AuthenticatedWorkspaceInsightsRoute: typeof AuthenticatedWorkspaceInsightsRoute
   AuthenticatedWorkspaceMerchRoute: typeof AuthenticatedWorkspaceMerchRoute
   AuthenticatedWorkspaceProfileRoute: typeof AuthenticatedWorkspaceProfileRoute
@@ -2325,6 +2346,7 @@ interface AuthenticatedWorkspaceRouteChildren {
 
 const AuthenticatedWorkspaceRouteChildren: AuthenticatedWorkspaceRouteChildren =
   {
+    AuthenticatedWorkspaceAffiliateRoute: AuthenticatedWorkspaceAffiliateRoute,
     AuthenticatedWorkspaceInsightsRoute: AuthenticatedWorkspaceInsightsRoute,
     AuthenticatedWorkspaceMerchRoute: AuthenticatedWorkspaceMerchRoute,
     AuthenticatedWorkspaceProfileRoute: AuthenticatedWorkspaceProfileRoute,
