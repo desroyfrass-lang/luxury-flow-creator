@@ -53,7 +53,6 @@ function MensKicksRoom() {
         crumbs={[
           { label: "Home", to: "/" },
           { label: "Frass District", to: "/kicks-district" },
-          { label: "Frass Kicks", to: "/frass-kicks" },
           { label: "Frass Kicks for Men" },
         ]}
       />
