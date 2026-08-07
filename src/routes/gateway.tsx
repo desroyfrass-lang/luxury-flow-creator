@@ -29,13 +29,20 @@ function GatewayPage() {
       <div className="absolute inset-0 bg-black">
         <img
           src={archHero.url}
+          alt=""
+          aria-hidden="true"
+          className="absolute inset-0 h-full w-full scale-110 object-cover blur-2xl brightness-50"
+        />
+        <img
+          src={archHero.url}
           alt="The carved JAMAICA Luxury Fashion District archway opening onto the palm-lined Frass Kicks promenade"
           width={1920}
           height={1080}
-          className="gateway-drift h-full w-full object-cover object-[center_30%]"
+          className="gateway-drift absolute inset-0 h-full w-full object-contain object-center"
         />
         <div className="absolute inset-0 bg-gradient-to-b from-black/25 via-transparent to-black/55" />
       </div>
+
 
       <section className="relative mx-auto flex min-h-screen max-w-[1400px] flex-col items-center justify-center px-6 py-20 text-center">
         <h1
@@ -47,7 +54,7 @@ function GatewayPage() {
         <img
           src={fullLogo.url}
           alt="Frass"
-          className="gateway-rise mt-6 h-10 w-auto object-contain md:h-14"
+          className="gateway-rise mt-6 h-16 w-auto object-contain md:h-24"
           style={{ animationDelay: "120ms" }}
         />
 
