@@ -20,7 +20,7 @@ export function PageHeader({
     <section className="relative pt-16 md:pt-24 pb-10 md:pb-16">
       <div className="mx-auto max-w-[1600px] px-6 lg:px-12">
         {crumbs && (
-          <nav className="mb-6 flex items-center gap-2 text-[11px] uppercase tracking-[0.25em] text-muted-foreground">
+          <nav className="mb-5 flex flex-wrap items-center gap-x-2 gap-y-1 text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
             {crumbs.map((c, i) => (
               <span key={i} className="flex items-center gap-2">
                 {c.to ? (
