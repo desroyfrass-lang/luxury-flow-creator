@@ -317,78 +317,133 @@ export function LuckySpin() {
             </div>
 
             <div className="relative mx-auto aspect-square w-full max-w-[480px]">
+              {/* Aura — gold at rest, platinum on hover */}
               <div
                 className="absolute -inset-8 rounded-full"
                 style={{
-                  background:
-                    "radial-gradient(circle, oklch(0.78 0.14 78 / 0.24) 0%, transparent 66%)",
-                  filter: hovered || spinning ? "blur(36px) brightness(1.4)" : "blur(28px)",
-                  transition: "filter 700ms ease",
+                  background: hovered
+                    ? "radial-gradient(circle, oklch(0.95 0.01 250 / 0.4) 0%, transparent 68%)"
+                    : "radial-gradient(circle, oklch(0.78 0.14 78 / 0.24) 0%, transparent 66%)",
+                  filter: hovered || spinning ? "blur(40px) brightness(1.5)" : "blur(28px)",
+                  transition: "filter 700ms ease, background 700ms ease",
                 }}
               />
 
               <div className="absolute left-1/2 top-0 z-30 h-0 w-0 -translate-x-1/2 border-x-[14px] border-t-[28px] border-x-transparent border-t-[color:var(--gold)] drop-shadow-[0_0_18px_oklch(0.78_0.14_78/1)]" />
 
+              {/* Chrome + gold bezel */}
               <div
-                className="absolute -inset-3 rounded-full"
+                className="absolute -inset-4 rounded-full"
                 style={{
                   background:
-                    "conic-gradient(from 0deg, oklch(0.9 0.01 250), oklch(0.68 0.01 250) 12%, oklch(0.97 0.005 250) 26%, oklch(0.78 0.14 78) 38%, oklch(0.94 0.1 85) 50%, oklch(0.78 0.14 78) 62%, oklch(0.97 0.005 250) 76%, oklch(0.68 0.01 250) 88%, oklch(0.9 0.01 250) 100%)",
-                  boxShadow:
-                    "inset 0 0 30px oklch(0 0 0 / 0.7), 0 0 0 2px oklch(0.78 0.14 78 / 0.55), 0 40px 110px -40px oklch(0 0 0 / 0.9), 0 0 60px -12px oklch(0.78 0.14 78 / 0.5)",
+                    "conic-gradient(from 0deg, oklch(0.97 0.005 250), oklch(0.62 0.01 250) 9%, oklch(1 0 0) 18%, oklch(0.78 0.14 78) 30%, oklch(0.96 0.11 88) 38%, oklch(0.72 0.13 78) 46%, oklch(1 0 0) 58%, oklch(0.6 0.01 250) 68%, oklch(0.98 0.005 250) 78%, oklch(0.82 0.13 78) 88%, oklch(0.97 0.005 250) 100%)",
+                  boxShadow: hovered
+                    ? "inset 0 0 30px oklch(0 0 0 / 0.6), 0 0 0 2px oklch(0.96 0.005 250 / 0.8), 0 40px 110px -40px oklch(0 0 0 / 0.9), 0 0 90px -8px oklch(0.95 0.01 250 / 0.8)"
+                    : "inset 0 0 30px oklch(0 0 0 / 0.7), 0 0 0 2px oklch(0.78 0.14 78 / 0.55), 0 40px 110px -40px oklch(0 0 0 / 0.9), 0 0 60px -12px oklch(0.78 0.14 78 / 0.5)",
+                  transition: "box-shadow 700ms ease",
                 }}
               />
 
+              {/* Marquee lights around the bezel */}
+              <div className="pointer-events-none absolute -inset-4 z-20 rounded-full">
+                {Array.from({ length: 24 }).map((_, i) => (
+                  <span
+                    key={`bulb-${i}`}
+                    className="absolute left-1/2 top-1/2 h-[1.5px] w-[1.5px] origin-center"
+                    style={{ transform: `rotate(${(360 / 24) * i}deg) translateY(-50%)` }}
+                  >
+                    <span
+                      className="block h-2 w-2 -translate-x-1/2 rounded-full md:h-2.5 md:w-2.5"
+                      style={{
+                        background: hovered
+                          ? "oklch(0.99 0.005 250)"
+                          : "oklch(0.96 0.09 88)",
+                        boxShadow: hovered
+                          ? "0 0 14px 3px oklch(0.97 0.01 250 / 0.95)"
+                          : "0 0 10px 2px oklch(0.85 0.13 78 / 0.85)",
+                        opacity: i % 2 === 0 ? 1 : 0.55,
+                        transition: "all 600ms ease",
+                      }}
+                    />
+                  </span>
+                ))}
+              </div>
+
               <div
-                className="relative h-full w-full rounded-full border-[6px] border-[color:var(--gold)]/50"
+                className="relative h-full w-full rounded-full border-[6px]"
                 style={{
+                  borderColor: hovered
+                    ? "oklch(0.95 0.008 250 / 0.85)"
+                    : "color-mix(in oklab, var(--gold) 50%, transparent)",
                   transform: `rotate(${angle}deg)`,
-                  transition: "transform 6s cubic-bezier(0.12, 0.75, 0.05, 1)",
+                  transition:
+                    "transform 6s cubic-bezier(0.12, 0.75, 0.05, 1), border-color 600ms ease",
                   background: `conic-gradient(${REWARDS.map((_, i) => {
                     const c =
                       i % 2 === 0
-                        ? "color-mix(in oklab, var(--gold) 46%, black)"
-                        : "color-mix(in oklab, black 92%, var(--gold))";
+                        ? "color-mix(in oklab, var(--gold) 42%, black)"
+                        : "color-mix(in oklab, oklch(0.72 0.01 250) 26%, black)";
                     return `${c} ${i * slice}deg ${(i + 1) * slice}deg`;
                   }).join(", ")})`,
                 }}
               >
+                {/* Chrome spokes */}
                 {REWARDS.map((_, i) => (
                   <div
                     key={`beam-${i}`}
-                    className="absolute left-1/2 top-1/2 h-[50%] w-[2px] origin-top"
+                    className="absolute left-1/2 top-1/2 h-[50%] w-[3px] origin-top"
                     style={{
                       transform: `rotate(${i * slice}deg)`,
                       background:
-                        "linear-gradient(180deg, oklch(0.96 0.1 85 / 0.95), oklch(0.78 0.14 78 / 0.5), transparent)",
+                        "linear-gradient(180deg, oklch(1 0 0 / 0.95), oklch(0.9 0.05 85 / 0.7) 45%, transparent)",
                     }}
                   />
                 ))}
 
-                {REWARDS.map((r, i) => (
-                  <div
-                    key={r.id}
-                    className="absolute left-1/2 top-1/2 origin-left"
-                    style={{ transform: `rotate(${i * slice + slice / 2}deg)` }}
-                  >
-                    <span className="ml-[20%] flex w-[50%] items-center gap-2 font-display text-[13px] font-bold uppercase leading-tight tracking-[0.08em] text-[oklch(0.99_0.03_88)] [text-shadow:0_1px_2px_rgba(0,0,0,0.95),0_0_14px_oklch(0.78_0.14_78/0.8)] md:text-[17px]">
-                      <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-[color:var(--gold)]/70 bg-[color-mix(in_oklab,black_80%,var(--gold))] shadow-[0_0_16px_-3px_oklch(0.78_0.14_78/0.9)] md:h-9 md:w-9">
+                {/* One symbol per slice — no text */}
+                {REWARDS.map((r, i) => {
+                  const a = i * slice + slice / 2;
+                  return (
+                    <div
+                      key={r.id}
+                      className="absolute left-1/2 top-1/2 h-0 w-0"
+                      style={{ transform: `rotate(${a}deg) translateX(34%)` }}
+                    >
+                      <span
+                        className="flex h-11 w-11 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border md:h-14 md:w-14"
+                        style={{
+                          transform: `translate(-50%, -50%) rotate(${-a}deg)`,
+                          borderColor: hovered
+                            ? "oklch(0.96 0.005 250 / 0.9)"
+                            : "color-mix(in oklab, var(--gold) 70%, transparent)",
+                          background:
+                            "radial-gradient(circle at 32% 28%, oklch(0.28 0.01 250), oklch(0.09 0 0))",
+                          boxShadow: hovered
+                            ? "0 0 24px -4px oklch(0.97 0.01 250 / 0.95)"
+                            : "0 0 20px -5px oklch(0.85 0.13 78 / 0.95)",
+                          transition: "all 600ms ease",
+                        }}
+                      >
                         <r.Icon
-                          className="h-4 w-4 text-[color:var(--gold)] md:h-5 md:w-5"
-                          strokeWidth={2}
+                          className="h-5 w-5 md:h-7 md:w-7"
+                          strokeWidth={1.75}
                           aria-hidden="true"
+                          style={{
+                            color: hovered ? "oklch(0.98 0.005 250)" : "oklch(0.9 0.11 85)",
+                            transition: "color 600ms ease",
+                          }}
                         />
+                        <span className="sr-only">{r.label}</span>
                       </span>
-                      {r.short}
-                    </span>
-                  </div>
-                ))}
+                    </div>
+                  );
+                })}
 
                 <div
                   className="absolute left-1/2 top-1/2 h-[40%] w-[40%] -translate-x-1/2 -translate-y-1/2 rounded-full"
                   style={{
                     background:
-                      "radial-gradient(circle at 30% 30%, oklch(1 0 0 / 0.98), oklch(0.85 0.01 250 / 0.9) 38%, oklch(0.5 0.02 250 / 0.95) 100%)",
+                      "radial-gradient(circle at 30% 28%, oklch(0.99 0 0 / 0.95), oklch(0.72 0.01 250 / 0.9) 42%, oklch(0.3 0.01 250 / 0.96) 100%)",
                     boxShadow:
                       "inset 0 0 22px oklch(0 0 0 / 0.6), 0 0 0 3px oklch(0.78 0.14 78 / 0.6), 0 0 40px -4px oklch(0.78 0.14 78 / 0.55)",
                   }}
