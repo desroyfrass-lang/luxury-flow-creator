@@ -24,6 +24,10 @@ export function ProductCard({ product }: { product: ShopifyProduct }) {
     });
   };
 
+  const isSale = node.tags?.some((t) => t.toLowerCase() === "sale");
+  const isClearance = node.tags?.some((t) => t.toLowerCase() === "clearance");
+  const badge = isClearance ? "Clearance" : isSale ? "Sale" : null;
+
   return (
     <Link
       to="/product/$handle"
@@ -31,6 +35,11 @@ export function ProductCard({ product }: { product: ShopifyProduct }) {
       className="lux-card group relative block overflow-hidden rounded-2xl bg-card"
     >
       <div className="relative aspect-[4/5] overflow-hidden bg-muted">
+        {badge && (
+          <span className="absolute left-3 top-3 z-20 rounded-full bg-[color:var(--gold)] px-3 py-1 text-[10px] font-bold uppercase tracking-[0.2em] text-[color:var(--gold-foreground)]">
+            {badge}
+          </span>
+        )}
         {primary ? (
           <>
             <img
