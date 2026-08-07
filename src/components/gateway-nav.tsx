@@ -69,13 +69,13 @@ const NAV: NavGroup[] = [
     ],
   },
   {
-    label: "Frass Plus",
+    label: "Frass Plus+",
     to: "/frass-plus",
     match: "/frass-plus",
     items: [
-      { label: "The Boutique", to: "/frass-plus", note: "Style has no size" },
-      { label: "Gentlemen's Collection", to: "/frass-plus/men" },
-      { label: "Ladies' Collection", to: "/frass-plus/women" },
+      { label: "Frass Plus+", to: "/frass-plus", note: "Same collections, extended sizing" },
+      { label: "Men's Frass Plus+", to: "/frass-plus/men" },
+      { label: "Women's Frass Plus+", to: "/frass-plus/women" },
     ],
   },
 
@@ -111,7 +111,7 @@ const PRIMARY: { label: string; to: string; match: string; editorial?: boolean }
   { label: "Frass District", to: "/", match: "/shop-frass" },
   { label: "Afro Designers", to: "/afro-designers", match: "/afro-designers", editorial: true },
   { label: "Frass Luxury House", to: "/frass-luxury-house", match: "/frass-luxury-house", editorial: true },
-  { label: "Frass Plus", to: "/frass-plus", match: "/frass-plus" },
+  { label: "Frass Plus+", to: "/frass-plus", match: "/frass-plus" },
   { label: "Frass Kids", to: "/frass-kids/girls", match: "/frass-kids" },
 ];
 

@@ -1,30 +1,38 @@
 ---
-name: Frass Plus flagship boutique
-description: Plus Size is now "Frass Plus" — a flagship Frass District destination with wings, departments and signature confidence collections
+name: Frass Plus+ mirrored collection architecture
+description: Frass Plus has no independent collection names — it mirrors Frass Kicks, Frass Drip and Bare Drip exactly, with a gold Plus+ badge
 type: feature
 ---
-# Frass Plus
+# Frass Plus+
 
-Extended sizing is a **flagship destination**, never a subsection. Name locked:
-**Frass Plus** ("Style has no size. Confidence has no limits.").
+Extended sizing is a **flagship destination** named **Frass Plus+**.
 
-Routes:
-- `/frass-plus` — boutique landing (editorial hero, browse rails, two wings,
-  signature collections)
-- `/frass-plus/men` · `/frass-plus/women` — Gentlemen's / Ladies' Collection
-  department floors using `StorePortalCard`
-- `/frass-plus/$gender/$category` — themed showrooms (`ShowroomScene` +
-  `ShowroomRack`) leading to `/collection/$handle`
+## Architectural rule (locked)
+The Plus store has **no independent collection names**. It mirrors the standard
+Frass District architecture exactly, department for department:
+- Frass Kicks Plus+ — Casual / Classic / Street
+- Frass Drip Plus+ — Work / Party / Casual / Street / Vacay / Sport / Crown /
+  Extra / 90's, with identical sub-collections
+- Bare Drip Plus+ — Underwear / Lingerie / Swim, with identical sub-collections
 
-Legacy `/plus-size/*` redirects to the matching Frass Plus wing.
+Naming: standard name stays dominant, `Plus+` is appended (`Work Drip Plus+`).
+`Plus+` renders as a gold premium badge (`src/components/plus-badge.tsx`).
 
-Rules:
-- Navigate by collection, occasion and lifestyle — **never** by size. Size is a
-  product attribute only.
-- Magazine-quality editorial photography with confident, diverse models; no
-  clinical "big & tall" catalogue styling.
-- Signature collections: Everyday / Executive / Evening / Island / Street /
-  Active Confidence + Celebration Collection.
-- Structure lives in `src/lib/frass-plus.ts`; collection handles are
-  `{mens|womens}-plus-{department}-{sub}` and `frass-plus-{signature}`,
-  resolved in `getCollectionMeta` in `src/lib/shopify.ts`.
+## Source of truth
+`src/lib/drip-catalog.ts` holds the standard category maps (also imported by the
+Drip and Bare Drip routes). `src/lib/frass-plus.ts` derives the Plus floors from
+it — never hand-maintain a second list.
+
+## Handles
+Plus handle = standard handle + `-plus` (e.g. `mens-work-drip-blazers-plus`).
+`getCollectionMeta` in `src/lib/shopify.ts` resolves the mirror recursively and
+adds `tag:"plus"`.
+
+## Routes
+- `/frass-plus` — landing: mirrored-stores explainer, wings, signature collections
+- `/frass-plus/men` · `/frass-plus/women` — full mirrored floors grouped by store
+- `/frass-plus/$gender/$category` — showroom (`ShowroomScene` + `ShowroomRack`)
+Legacy `/plus-size/*` redirects here.
+
+Consistency: same styling, photography and release timing as the main district.
+Never navigate by size — size is a product attribute.
