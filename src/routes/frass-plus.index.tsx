@@ -4,13 +4,14 @@ import { PageFeedback } from "@/components/page-feedback";
 import { PlusBadge } from "@/components/plus-badge";
 import {
   BROWSE_RAILS,
-  MIRRORED_STORES,
   PLUS_DEPARTMENTS,
   PLUS_WING_IMAGE,
   SIGNATURE_COLLECTIONS,
   signatureHandle,
 } from "@/lib/frass-plus";
 import hero from "@/assets/plus-store-front.jpg";
+import barePlusMen from "@/assets/store-bare-plus-men.jpg";
+import barePlusWomen from "@/assets/store-bare-plus-women.jpg";
 import frassSymbol from "@/assets/frass-logo-symbol.asset.json";
 
 const TITLE = "Frass Plus+ — The Same Collections, Extended Sizing";
