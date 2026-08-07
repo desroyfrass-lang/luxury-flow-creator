@@ -1,12 +1,14 @@
 import { createFileRoute, notFound } from "@tanstack/react-router";
 import { SiteShell } from "@/components/site-shell";
-import { CollectionCard } from "@/components/collection-card";
 import { PageHeader } from "@/components/page-header";
+import { ShowroomRack } from "@/components/showroom-rack";
+import { getShowroomTheme } from "@/lib/showroom-themes";
 import cardDrip from "@/assets/card-drip.jpg";
 import cardMen from "@/assets/card-men.jpg";
 import cardKicks from "@/assets/card-kicks.jpg";
 
 type Sub = readonly [slug: string, title: string, handleOverride?: string];
+
 
 const MEN_CATEGORIES: Record<string, { title: string; tagline: string; subs: readonly Sub[] }> = {
   work: {
@@ -152,35 +154,39 @@ export const Route = createFileRoute("/frass-drip/men/$category")({
 function CategoryPage() {
   const { category } = Route.useParams();
   const cat = MEN_CATEGORIES[category]!;
+  const theme = getShowroomTheme(category);
+  const items = cat.subs.map(([slug, title, handleOverride], i) => ({
+    handle: handleOverride ?? `mens-${category}-drip-${slug}`,
+    title,
+    image: IMAGES[i % IMAGES.length]!,
+  }));
+
   return (
     <SiteShell>
-      <PageHeader
-        eyebrow={`Men · ${cat.title}`}
-        title={cat.title}
-        description={cat.tagline}
-        crumbs={[
-          { label: "Home", to: "/" },
-          { label: "Frass District", to: "/shop-frass" },
-          { label: "Frass Drip", to: "/frass-drip" },
-          { label: "Frass Drip for Men", to: "/frass-drip/men" },
-          { label: cat.title },
-        ]}
-      />
-      <section className="mx-auto max-w-[1600px] px-6 lg:px-12">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
-          {cat.subs.map(([slug, title, handleOverride], i) => (
-            <CollectionCard
-              key={slug}
-              to="/collection/$handle"
-              params={{ handle: handleOverride ?? `mens-${category}-drip-${slug}` }}
-              image={IMAGES[i % IMAGES.length]}
-              eyebrow={cat.title}
-              title={title}
-              size="md"
-            />
-          ))}
-        </div>
-      </section>
+      <div style={{ background: theme.backdrop }}>
+        <PageHeader
+          eyebrow={`Men · ${theme.room}`}
+          title={cat.title}
+          description={cat.tagline}
+          crumbs={[
+            { label: "Home", to: "/" },
+            { label: "Frass District", to: "/shop-frass" },
+            { label: "Frass Drip for Men", to: "/frass-drip/men" },
+            { label: cat.title },
+          ]}
+        />
+        <section className="relative mx-auto max-w-[1600px] px-6 pb-24 lg:px-12">
+          <div
+            className="pointer-events-none absolute inset-x-0 top-0 h-72"
+            style={{ background: theme.ambient }}
+          />
+          <p className="relative mb-14 max-w-xl text-sm text-muted-foreground">{theme.mood}</p>
+          <div className="relative">
+            <ShowroomRack items={items} theme={theme} eyebrow={cat.title} />
+          </div>
+        </section>
+      </div>
     </SiteShell>
   );
 }
+
