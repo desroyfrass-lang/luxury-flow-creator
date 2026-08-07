@@ -14,6 +14,56 @@ export type Database = {
   }
   public: {
     Tables: {
+      affiliate_campaigns: {
+        Row: {
+          commission_rate: number
+          created_at: string
+          economics_id: string | null
+          ends_at: string | null
+          id: string
+          kind: string
+          name: string
+          starts_at: string | null
+          status: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          commission_rate?: number
+          created_at?: string
+          economics_id?: string | null
+          ends_at?: string | null
+          id?: string
+          kind?: string
+          name: string
+          starts_at?: string | null
+          status?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          commission_rate?: number
+          created_at?: string
+          economics_id?: string | null
+          ends_at?: string | null
+          id?: string
+          kind?: string
+          name?: string
+          starts_at?: string | null
+          status?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "affiliate_campaigns_economics_id_fkey"
+            columns: ["economics_id"]
+            isOneToOne: false
+            referencedRelation: "product_economics"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       affiliate_clicks: {
         Row: {
           clicked_at: string
@@ -100,6 +150,48 @@ export type Database = {
           token?: string
           updated_at?: string
           user_id?: string
+        }
+        Relationships: []
+      }
+      affiliate_policy: {
+        Row: {
+          default_commission_rate: number
+          default_min_margin_pct: number
+          id: boolean
+          max_commission_rate: number
+          min_commission_rate: number
+          platform_allocation_rate: number
+          promo_ends_at: string | null
+          promo_label: string | null
+          promo_max_commission_rate: number | null
+          promo_starts_at: string | null
+          updated_at: string
+        }
+        Insert: {
+          default_commission_rate?: number
+          default_min_margin_pct?: number
+          id?: boolean
+          max_commission_rate?: number
+          min_commission_rate?: number
+          platform_allocation_rate?: number
+          promo_ends_at?: string | null
+          promo_label?: string | null
+          promo_max_commission_rate?: number | null
+          promo_starts_at?: string | null
+          updated_at?: string
+        }
+        Update: {
+          default_commission_rate?: number
+          default_min_margin_pct?: number
+          id?: boolean
+          max_commission_rate?: number
+          min_commission_rate?: number
+          platform_allocation_rate?: number
+          promo_ends_at?: string | null
+          promo_label?: string | null
+          promo_max_commission_rate?: number | null
+          promo_starts_at?: string | null
+          updated_at?: string
         }
         Relationships: []
       }
@@ -1578,6 +1670,81 @@ export type Database = {
           slug?: string
           status?: Database["public"]["Enums"]["pod_provider_status"]
           updated_at?: string
+        }
+        Relationships: []
+      }
+      product_economics: {
+        Row: {
+          affiliate_enabled: boolean
+          commission_rate: number | null
+          cost_of_goods: number
+          created_at: string
+          currency: string
+          discount_pct: number
+          estimated_monthly_units: number
+          id: string
+          marketplace_fee_pct: number
+          notes: string | null
+          other_cost: number
+          packaging_cost: number
+          payment_fee_fixed: number
+          payment_fee_pct: number
+          product_ref: string
+          selling_price: number
+          shipping_cost: number
+          target_margin_pct: number
+          tax_pct: number
+          title: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          affiliate_enabled?: boolean
+          commission_rate?: number | null
+          cost_of_goods?: number
+          created_at?: string
+          currency?: string
+          discount_pct?: number
+          estimated_monthly_units?: number
+          id?: string
+          marketplace_fee_pct?: number
+          notes?: string | null
+          other_cost?: number
+          packaging_cost?: number
+          payment_fee_fixed?: number
+          payment_fee_pct?: number
+          product_ref: string
+          selling_price?: number
+          shipping_cost?: number
+          target_margin_pct?: number
+          tax_pct?: number
+          title: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          affiliate_enabled?: boolean
+          commission_rate?: number | null
+          cost_of_goods?: number
+          created_at?: string
+          currency?: string
+          discount_pct?: number
+          estimated_monthly_units?: number
+          id?: string
+          marketplace_fee_pct?: number
+          notes?: string | null
+          other_cost?: number
+          packaging_cost?: number
+          payment_fee_fixed?: number
+          payment_fee_pct?: number
+          product_ref?: string
+          selling_price?: number
+          shipping_cost?: number
+          target_margin_pct?: number
+          tax_pct?: number
+          title?: string
+          updated_at?: string
+          user_id?: string
         }
         Relationships: []
       }
