@@ -525,3 +525,9 @@
   .district-sway, .district-shimmer, .district-bird, .district-glow { animation: none !important; }
   .district-arch-open { animation-duration: 0.01s !important; }
 }
+
+/* Frassy host — slow, living breath while she welcomes you. */
+@keyframes frassy-host-breathe {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.035); }
+}
