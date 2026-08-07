@@ -21,7 +21,7 @@ import fullLogo from "@/assets/frass-logo-full.asset.json";
 import symbolLogo from "@/assets/frass-logo-symbol.asset.json";
 
 const NAV_ITEMS = [
-  { to: "/kicks-district", slot: "nav-kicks-district", fallback: "Kicks District" },
+  { to: "/shop-frass", slot: "nav-kicks-district", fallback: "Kicks District" },
   { to: "/frass-kicks", slot: "nav-frass-kicks", fallback: "Frass Kicks" },
   { to: "/frass-drip", slot: "nav-frass-drip", fallback: "Frass Drip" },
   { to: "/bare-drip", slot: "nav-bare-drip", fallback: "Bare Drip" },
