@@ -41,17 +41,18 @@ export function StorePortalCard({
       className="group relative block"
     >
       {/* marquee sign above the doorway */}
-      <div className="relative z-20 mx-auto -mb-3 w-[86%]">
-        <div className="rounded-t-xl border border-[color:var(--gold)]/50 bg-[linear-gradient(180deg,oklch(0.18_0.01_80),oklch(0.10_0.008_80))] px-5 py-4 text-center shadow-[0_18px_40px_-24px_oklch(0.92_0.12_85_/_0.7)]">
+      <div className="relative z-20 mx-auto -mb-3 w-[92%]">
+        <div className="rounded-t-xl border border-[color:var(--gold)]/50 bg-[linear-gradient(180deg,oklch(0.18_0.01_80),oklch(0.10_0.008_80))] px-5 py-5 text-center shadow-[0_18px_40px_-24px_oklch(0.92_0.12_85_/_0.7)] md:py-6">
           {eyebrow && (
-            <span className="block text-[9px] uppercase tracking-[0.42em] text-foreground/45">
+            <span className="block text-[12px] font-semibold uppercase tracking-[0.34em] text-foreground/65 md:text-[13px]">
               {eyebrow}
             </span>
           )}
-          <span className="mt-1 block font-display uppercase leading-[0.95] tracking-[0.02em] text-[clamp(1.15rem,2.6vw,1.85rem)] text-[color:var(--gold-soft,#f0d78c)] title-glow">
+          <span className="mt-2 block font-display uppercase leading-[0.95] tracking-[0.03em] text-[clamp(1.7rem,6.5vw,2.9rem)] text-[color:var(--gold-soft,#f0d78c)] title-glow">
             {title}
           </span>
         </div>
+
         {/* sign under-glow spilling onto the doorway */}
         <div className="pointer-events-none mx-auto h-6 w-[70%] bg-[radial-gradient(60%_100%_at_50%_0%,oklch(0.92_0.12_85_/_0.30),transparent_75%)] opacity-70 transition-opacity duration-700 group-hover:opacity-100" />
       </div>
