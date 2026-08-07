@@ -130,6 +130,10 @@ const PRODUCT_FRAGMENT = `
           amount
           currencyCode
         }
+        compareAtPrice {
+          amount
+          currencyCode
+        }
         availableForSale
         selectedOptions {
           name
