@@ -20,6 +20,7 @@ export interface ShopifyVariant {
   id: string;
   title: string;
   price: ShopifyMoney;
+  compareAtPrice: ShopifyMoney | null;
   availableForSale: boolean;
   selectedOptions: Array<{ name: string; value: string }>;
 }
@@ -126,6 +127,10 @@ const PRODUCT_FRAGMENT = `
         id
         title
         price {
+          amount
+          currencyCode
+        }
+        compareAtPrice {
           amount
           currencyCode
         }
