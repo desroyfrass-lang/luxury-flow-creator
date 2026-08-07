@@ -201,19 +201,41 @@ function KicksDistrictPage() {
   const [hour, setHour] = useState(0);
   const [season, setSeason] = useState(0);
   const [active, setActive] = useState<number | null>(null);
+  const [zoomedIndex, setZoomedIndex] = useState<number | null>(null);
   const promenadeRef = useRef<HTMLDivElement>(null);
+  const walkRef = useRef<HTMLDivElement>(null);
 
   const mood = HOURS[hour];
+  const zoomed = zoomedIndex !== null ? STOREFRONTS[zoomedIndex] : null;
 
   useEffect(() => {
     if (!entered) return;
     promenadeRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
   }, [entered]);
 
+  useEffect(() => {
+    function onKey(e: KeyboardEvent) {
+      if (zoomedIndex === null) return;
+      if (e.key === "Escape") setZoomedIndex(null);
+      if (e.key === "ArrowRight") setZoomedIndex((i) => (i === null ? null : (i + 1) % STOREFRONTS.length));
+      if (e.key === "ArrowLeft") setZoomedIndex((i) => (i === null ? null : (i - 1 + STOREFRONTS.length) % STOREFRONTS.length));
+    }
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [zoomedIndex]);
+
   function enterDistrict() {
     if (opening) return;
     setOpening(true);
     window.setTimeout(() => setEntered(true), 1150);
+  }
+
+  function scrollToDoor(index: number) {
+    const walk = walkRef.current;
+    if (!walk) return;
+    const child = walk.children[index] as HTMLElement | undefined;
+    if (!child) return;
+    child.scrollIntoView({ behavior: "smooth", inline: "center", block: "nearest" });
   }
 
   return (
