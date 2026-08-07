@@ -66,14 +66,13 @@ function WingPage() {
 
       <section className="mx-auto max-w-[1600px] px-6 pb-24 lg:px-12">
         {/* Footwear is its own section — never a store door. */}
-        <div className="mb-20">
-          <header className="mb-10 flex flex-wrap items-center gap-3 border-b border-[color:var(--gold)]/20 pb-4">
-            <h2 className="font-display text-2xl uppercase md:text-4xl">Frass Kicks</h2>
-            <PlusBadge size="lg" />
-            <span className="text-[10px] uppercase tracking-[0.28em] text-muted-foreground">
-              The shoe section
-            </span>
-          </header>
+        <div className="mb-24">
+          <SectionMarquee
+            kicker="Section 01 · Footwear"
+            title="Frass Kicks"
+            accent="oklch(0.92 0.02 240)"
+            blurb="The shoe department. An illuminated three-bay wall — Casual, Classic and Street — every pair carried in 10.5 and up."
+          />
           <KicksEntry
             to="/frass-plus/$gender/kicks"
             params={{ gender }}
@@ -84,20 +83,25 @@ function WingPage() {
           />
         </div>
 
-        {STORE_ORDER.filter((s) => s !== "kicks").map((store) => {
+        {STORE_ORDER.filter((s) => s !== "kicks").map((store, si) => {
           const list = departments.filter((d) => d.store === store);
           if (!list.length) return null;
           return (
-            <div key={store} className="mb-20">
-              <header className="mb-10 flex flex-wrap items-center gap-3 border-b border-[color:var(--gold)]/20 pb-4">
-                <h2 className="font-display text-2xl uppercase md:text-4xl">
-                  {STORE_LABEL[store].replace(" Plus+", "")}
-                </h2>
-                <PlusBadge size="lg" />
-                <span className="text-[10px] uppercase tracking-[0.28em] text-muted-foreground">
-                  Mirrored collection
-                </span>
-              </header>
+            <div key={store} className="mb-24">
+              <SectionMarquee
+                kicker={`Section ${String(si + 2).padStart(2, "0")} · ${
+                  store === "drip" ? "Clothing" : "Intimates & Swim"
+                }`}
+                title={STORE_LABEL[store].replace(" Plus+", "")}
+                accent={
+                  store === "drip" ? "oklch(0.72 0.20 305)" : "oklch(0.80 0.13 200)"
+                }
+                blurb={
+                  store === "drip"
+                    ? "The clothing floor. Every doorway is a showroom of its own — step through the one that matches your day."
+                    : "The intimates and swim floor. Two rooms, one boutique — cut and carried in extended sizing."
+                }
+              />
 
               <div className="grid grid-cols-1 gap-x-8 gap-y-16 sm:grid-cols-2 lg:grid-cols-3">
                 {list.map((d, i) => (
@@ -107,7 +111,7 @@ function WingPage() {
                     params={{ gender, category: d.slug }}
                     slot={`plus-${gender}-${d.slug}`}
                     image={d.image}
-                    eyebrow={`${STORE_LABEL[store]} · ${String(i + 1).padStart(2, "0")}`}
+                    eyebrow={`Department ${String(i + 1).padStart(2, "0")}`}
                     title={plusName(d.title)}
                     description={d.tagline}
                   />
@@ -116,6 +120,7 @@ function WingPage() {
             </div>
           );
         })}
+      </section>
       </section>
 
       <PageFeedback pageTitle={`Frass Plus — ${label}`} />
