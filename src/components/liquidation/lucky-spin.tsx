@@ -152,7 +152,10 @@ export function LuckySpin() {
   const [reward, setReward] = useState<Reward | null>(null);
   const [expires, setExpires] = useState<number | null>(null);
   const [hovered, setHovered] = useState(false);
+  const [spinCount, setSpinCount] = useState(0);
+  const [orderCount, setOrderCount] = useState(0);
   const timer = useRef<number | null>(null);
+  const fetchOrderCount = useServerFn(getOrderCount);
 
   useEffect(() => {
     setMounted(true);
