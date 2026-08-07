@@ -40,9 +40,10 @@ function GatewayFrassy() {
         alt="Frassy, the host of the World of Frass"
         className={`absolute drop-shadow-[0_20px_80px_rgba(0,0,0,0.6)] transition-all duration-[1400ms] ease-[cubic-bezier(0.22,1,0.36,1)] ${
           seated
-            ? "bottom-24 right-5 h-16 w-16 rounded-full object-cover opacity-95"
+            ? "bottom-6 right-6 h-16 w-16 rounded-full object-cover opacity-0"
             : "bottom-[12vh] right-1/2 h-[72vh] w-[72vh] translate-x-1/2 object-contain opacity-100"
         }`}
+
       />
     </div>
   );
