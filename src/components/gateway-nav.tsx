@@ -229,7 +229,9 @@ export function GatewayNav({ mode }: { mode: "shop" | "world" }) {
             </Link>
           );
         })}
+        <AccountNavSection />
       </nav>
+
 
       {/* Full destination drawer */}
       {mobileOpen && (
