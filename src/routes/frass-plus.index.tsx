@@ -194,14 +194,13 @@ function PlusHome() {
 function WingCard({
   to,
   gender,
-  eyebrow,
   title,
   blurb,
   count,
 }: {
   to: string;
   gender: "men" | "women";
-  eyebrow: string;
+  eyebrow?: string;
   title: string;
   blurb: string;
   count: number;
@@ -210,25 +209,37 @@ function WingCard({
     <Link
       to={to}
       params={{ gender }}
+      aria-label={`${title} — enter the store`}
       className="group relative block overflow-hidden rounded-[26px] border border-[color:var(--gold)]/25 bg-card"
     >
       <div className="relative h-[520px] w-full overflow-hidden md:h-[640px]">
         <img
           src={PLUS_WING_IMAGE[gender]}
-          alt={`${title} collection`}
+          alt={`${title} storefront with extended-size looks in the window`}
           loading="lazy"
           className="h-full w-full object-cover transition-transform duration-[1600ms] ease-out group-hover:scale-[1.06]"
         />
+        {/* the only mark above the store: the Frass symbol on the sign */}
+        <div className="pointer-events-none absolute inset-x-0 top-0 flex justify-center pt-6 md:pt-9">
+          <img
+            src={frassSymbol.url}
+            alt=""
+            aria-hidden="true"
+            loading="lazy"
+            className="h-14 w-auto opacity-95 drop-shadow-[0_6px_18px_rgba(0,0,0,0.6)] md:h-20"
+            style={{
+              filter:
+                "brightness(0) saturate(100%) invert(78%) sepia(56%) saturate(560%) hue-rotate(2deg) brightness(96%) contrast(94%) drop-shadow(0 0 14px rgba(212,175,55,0.55))",
+            }}
+          />
+        </div>
         <div className="absolute inset-0 bg-[linear-gradient(to_top,oklch(0.08_0.01_60/0.94),transparent_55%)]" />
         <div className="pointer-events-none absolute inset-4 rounded-[20px] ring-1 ring-[color:var(--gold)]/25" />
-        <div className="absolute inset-x-0 bottom-0 p-8">
-          <span className="text-[10px] uppercase tracking-[0.34em] text-[color:var(--gold)]">
-            {eyebrow}
-          </span>
-          <h2 className="mt-3 font-display text-4xl uppercase leading-none text-[color:var(--luxe-linen,#f6f1e7)] md:text-6xl">
+        <div className="absolute inset-x-0 bottom-0 p-8 text-center">
+          <h2 className="font-display text-2xl uppercase leading-tight text-[color:var(--luxe-linen,#f6f1e7)] md:text-4xl">
             {title}
           </h2>
-          <p className="mt-3 max-w-md text-sm text-[color:var(--luxe-linen,#f6f1e7)]/80">
+          <p className="mx-auto mt-3 max-w-md text-sm text-[color:var(--luxe-linen,#f6f1e7)]/80">
             {blurb}
           </p>
           <span className="mt-6 inline-flex items-center rounded-sm border border-[color:var(--gold)] px-7 py-3 text-[10px] font-bold uppercase tracking-[0.3em] text-[color:var(--gold)] transition group-hover:bg-[color:var(--gold)] group-hover:text-[color:var(--ink)]">
@@ -239,3 +250,4 @@ function WingCard({
     </Link>
   );
 }
+
