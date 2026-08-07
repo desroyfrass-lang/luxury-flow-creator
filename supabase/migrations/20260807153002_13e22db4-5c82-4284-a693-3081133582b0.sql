@@ -1,0 +1,1 @@
+REVOKE ALL ON FUNCTION public.enforce_affiliate_link_rate() FROM PUBLIC, anon, authenticated;
