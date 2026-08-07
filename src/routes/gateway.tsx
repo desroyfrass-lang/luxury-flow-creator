@@ -72,11 +72,12 @@ function GatewayPage() {
         <img
           src={fullLogo.url}
           alt="Frass Kicks"
-          className="pointer-events-none absolute left-1/2 top-[1.5%] z-[1] h-[13%] w-auto -translate-x-1/2 object-contain mix-blend-screen"
+          className="pointer-events-none absolute left-1/2 top-[3.4%] z-[1] h-[10.5%] w-auto -translate-x-1/2 object-contain"
           style={{
             filter:
-              "grayscale(1) brightness(1.2) sepia(1) saturate(4.2) hue-rotate(-12deg) drop-shadow(0 3px 10px rgba(0,0,0,0.75))",
+              "grayscale(1) brightness(0.95) sepia(1) saturate(6) hue-rotate(-14deg) contrast(1.15) drop-shadow(0 4px 12px rgba(0,0,0,0.8))",
           }}
+
         />
 
       </div>
