@@ -5,6 +5,8 @@ import { useServerFn } from "@tanstack/react-start";
 import { SiteShell } from "@/components/site-shell";
 import { PageFeedback } from "@/components/page-feedback";
 import { LaunchReadiness } from "@/components/launch-readiness";
+import { FrassyChat } from "@/components/frassy-chat";
+
 import { useIsAdmin } from "@/hooks/use-is-admin";
 import { getBuilderJourney, startJourneyTrack } from "@/lib/journey.functions";
 import { COMMISSIONING_PHASES } from "@/lib/commissioning";
