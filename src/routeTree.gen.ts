@@ -39,6 +39,7 @@ import { Route as BareDripIndexRouteImport } from './routes/bare-drip.index'
 import { Route as AfroDesignersIndexRouteImport } from './routes/afro-designers.index'
 import { Route as SocialMediaViralsCategoryRouteImport } from './routes/social-media-virals.$category'
 import { Route as ProductHandleRouteImport } from './routes/product.$handle'
+import { Route as PlusSizeMenRouteImport } from './routes/plus-size.men'
 import { Route as LookbookStoryRouteImport } from './routes/lookbook.$story'
 import { Route as FrassKicksWomenRouteImport } from './routes/frass-kicks.women'
 import { Route as FrassKicksMenRouteImport } from './routes/frass-kicks.men'
@@ -248,6 +249,11 @@ const SocialMediaViralsCategoryRoute =
 const ProductHandleRoute = ProductHandleRouteImport.update({
   id: '/product/$handle',
   path: '/product/$handle',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PlusSizeMenRoute = PlusSizeMenRouteImport.update({
+  id: '/plus-size/men',
+  path: '/plus-size/men',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LookbookStoryRoute = LookbookStoryRouteImport.update({
@@ -622,6 +628,7 @@ export interface FileRoutesByFullPath {
   '/frass-kicks/men': typeof FrassKicksMenRoute
   '/frass-kicks/women': typeof FrassKicksWomenRoute
   '/lookbook/$story': typeof LookbookStoryRoute
+  '/plus-size/men': typeof PlusSizeMenRoute
   '/product/$handle': typeof ProductHandleRoute
   '/social-media-virals/$category': typeof SocialMediaViralsCategoryRouteWithChildren
   '/afro-designers/': typeof AfroDesignersIndexRoute
@@ -700,6 +707,7 @@ export interface FileRoutesByTo {
   '/frass-kicks/men': typeof FrassKicksMenRoute
   '/frass-kicks/women': typeof FrassKicksWomenRoute
   '/lookbook/$story': typeof LookbookStoryRoute
+  '/plus-size/men': typeof PlusSizeMenRoute
   '/product/$handle': typeof ProductHandleRoute
   '/social-media-virals/$category': typeof SocialMediaViralsCategoryRouteWithChildren
   '/afro-designers': typeof AfroDesignersIndexRoute
@@ -793,6 +801,7 @@ export interface FileRoutesById {
   '/frass-kicks/men': typeof FrassKicksMenRoute
   '/frass-kicks/women': typeof FrassKicksWomenRoute
   '/lookbook/$story': typeof LookbookStoryRoute
+  '/plus-size/men': typeof PlusSizeMenRoute
   '/product/$handle': typeof ProductHandleRoute
   '/social-media-virals/$category': typeof SocialMediaViralsCategoryRouteWithChildren
   '/afro-designers/': typeof AfroDesignersIndexRoute
@@ -886,6 +895,7 @@ export interface FileRouteTypes {
     | '/frass-kicks/men'
     | '/frass-kicks/women'
     | '/lookbook/$story'
+    | '/plus-size/men'
     | '/product/$handle'
     | '/social-media-virals/$category'
     | '/afro-designers/'
@@ -964,6 +974,7 @@ export interface FileRouteTypes {
     | '/frass-kicks/men'
     | '/frass-kicks/women'
     | '/lookbook/$story'
+    | '/plus-size/men'
     | '/product/$handle'
     | '/social-media-virals/$category'
     | '/afro-designers'
@@ -1056,6 +1067,7 @@ export interface FileRouteTypes {
     | '/frass-kicks/men'
     | '/frass-kicks/women'
     | '/lookbook/$story'
+    | '/plus-size/men'
     | '/product/$handle'
     | '/social-media-virals/$category'
     | '/afro-designers/'
@@ -1127,6 +1139,7 @@ export interface RootRouteChildren {
   ApiTtsRoute: typeof ApiTtsRoute
   BuilderHandleRoute: typeof BuilderHandleRoute
   CollectionHandleRoute: typeof CollectionHandleRoute
+  PlusSizeMenRoute: typeof PlusSizeMenRoute
   ProductHandleRoute: typeof ProductHandleRoute
   DotlovableOauthConsentRoute: typeof DotlovableOauthConsentRoute
   Char91DotmcpChar93InvokeToolToolRoute: typeof Char91DotmcpChar93InvokeToolToolRoute
@@ -1342,6 +1355,13 @@ declare module '@tanstack/react-router' {
       path: '/product/$handle'
       fullPath: '/product/$handle'
       preLoaderRoute: typeof ProductHandleRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/plus-size/men': {
+      id: '/plus-size/men'
+      path: '/plus-size/men'
+      fullPath: '/plus-size/men'
+      preLoaderRoute: typeof PlusSizeMenRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/lookbook/$story': {
@@ -2101,6 +2121,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiTtsRoute: ApiTtsRoute,
   BuilderHandleRoute: BuilderHandleRoute,
   CollectionHandleRoute: CollectionHandleRoute,
+  PlusSizeMenRoute: PlusSizeMenRoute,
   ProductHandleRoute: ProductHandleRoute,
   DotlovableOauthConsentRoute: DotlovableOauthConsentRoute,
   Char91DotmcpChar93InvokeToolToolRoute: Char91DotmcpChar93InvokeToolToolRoute,
