@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
 import { GatewayNav } from "@/components/gateway-nav";
 import cinematic from "@/assets/frasskicks-cinematic.mp4.asset.json";
-import gatewayImg from "@/assets/kicks-gateway.jpg";
+import districtHero from "@/assets/kicks-district-hero.jpg.asset.json";
 import promenadeImg from "@/assets/kicks-promenade.jpg";
 import storefrontsImg from "@/assets/kicks-storefronts.jpg";
 import nightlifeImg from "@/assets/kicks-nightlife.jpg";
@@ -226,8 +226,8 @@ function KicksDistrictPage() {
           <>
             {/* first entry: the Jamaica gateway infographic */}
             <img
-              src={gatewayImg}
-              alt="Frass Kicks District gateway — a luxury open-air Jamaican fashion promenade"
+              src={districtHero.url}
+              alt="Frass Kicks District promenade at golden hour — KICKZ Men, SOLE Women and BARE storefronts under gold-lit arches"
               className="absolute inset-0 h-full w-full object-cover"
               style={{ filter: mood.tint }}
             />
