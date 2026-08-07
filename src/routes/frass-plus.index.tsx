@@ -2,14 +2,10 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { SiteShell } from "@/components/site-shell";
 import { PageFeedback } from "@/components/page-feedback";
 import { PlusBadge } from "@/components/plus-badge";
-import {
-  BROWSE_RAILS,
-  PLUS_DEPARTMENTS,
-  PLUS_WING_IMAGE,
-  SIGNATURE_COLLECTIONS,
-  signatureHandle,
-} from "@/lib/frass-plus";
+import { BROWSE_RAILS, PLUS_DEPARTMENTS, PLUS_WING_IMAGE, toPlusHandle } from "@/lib/frass-plus";
 import hero from "@/assets/plus-store-front.jpg";
+import newLooksImage from "@/assets/plus-ed-w1.jpg";
+import salesImage from "@/assets/sale-clearance-hero.jpg";
 import barePlusMen from "@/assets/store-bare-plus-men.jpg";
 import barePlusWomen from "@/assets/store-bare-plus-women.jpg";
 import frassSymbol from "@/assets/frass-logo-symbol.asset.json";
@@ -134,49 +130,57 @@ function PlusHome() {
 
 
 
-      {/* Signature collections */}
+      {/* New Looks + the Frass Plus+ sale floor */}
       <section className="mx-auto max-w-[1600px] px-6 pb-24 lg:px-12">
-        <header className="mb-10 max-w-2xl">
-          <p className="text-[10px] uppercase tracking-[0.38em] text-[color:var(--gold)]">
-            Signature Collections
-          </p>
-          <h2 className="mt-3 font-display text-3xl uppercase md:text-5xl">
-            Mirrored, signature-for-signature
-          </h2>
-          <p className="mt-4 text-sm text-muted-foreground">
-            Signature Frass collections, released in extended sizing at the same time, with
-            the same styling, photography and campaign.
-          </p>
-        </header>
-
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {SIGNATURE_COLLECTIONS.map((c) => (
-            <Link
-              key={c.slug}
-              to="/collection/$handle"
-              params={{ handle: signatureHandle(c.slug) }}
-              className="group relative overflow-hidden rounded-2xl border border-[color:var(--gold)]/20 bg-card"
-            >
-              <div className="relative aspect-[4/5] w-full overflow-hidden">
-                <img
-                  src={c.image}
-                  alt={c.title}
-                  loading="lazy"
-                  className="h-full w-full object-cover transition-transform duration-[1400ms] ease-out group-hover:scale-[1.07]"
-                />
-                <div className="absolute inset-0 bg-[linear-gradient(to_top,oklch(0.08_0.01_60/0.92),transparent_60%)]" />
-                <div className="absolute inset-x-0 bottom-0 p-6">
-                  <h3 className="flex flex-wrap items-center gap-2 font-display text-2xl uppercase leading-none text-[color:var(--luxe-linen,#f6f1e7)]">
-                    {c.title}
-                    <PlusBadge />
-                  </h3>
-                  <p className="mt-2 text-xs text-[color:var(--luxe-linen,#f6f1e7)]/75">
-                    {c.blurb}
-                  </p>
-                </div>
+        <div className="grid gap-8 md:grid-cols-2">
+          <Link
+            to="/collection/$handle"
+            params={{ handle: toPlusHandle("frass-new-looks") }}
+            className="group relative block overflow-hidden rounded-[26px] border border-[color:var(--gold)]/25 bg-card"
+          >
+            <div className="relative h-[380px] w-full overflow-hidden md:h-[460px]">
+              <img
+                src={newLooksImage}
+                alt="The newest Frass Plus+ looks, released the same day as the main district"
+                loading="lazy"
+                className="h-full w-full object-cover transition-transform duration-[1600ms] ease-out group-hover:scale-[1.06]"
+              />
+              <div className="absolute inset-0 bg-[linear-gradient(to_top,oklch(0.08_0.01_60/0.92),transparent_58%)]" />
+              <div className="absolute inset-x-0 bottom-0 p-8 text-center">
+                <h3 className="flex flex-wrap items-center justify-center gap-2 font-display text-2xl uppercase text-[color:var(--luxe-linen,#f6f1e7)] md:text-4xl">
+                  New Looks
+                  <PlusBadge />
+                </h3>
+                <p className="mx-auto mt-3 max-w-sm text-xs text-[color:var(--luxe-linen,#f6f1e7)]/75 md:text-sm">
+                  Every new Frass release, launched in extended sizing on the same day.
+                </p>
               </div>
-            </Link>
-          ))}
+            </div>
+          </Link>
+
+          <Link
+            to="/frass-plus/sales"
+            className="group relative block overflow-hidden rounded-[26px] border border-[color:var(--gold)]/25 bg-card"
+          >
+            <div className="relative h-[380px] w-full overflow-hidden md:h-[460px]">
+              <img
+                src={salesImage}
+                alt="The Frass Plus+ liquidation floor with men's and women's sale racks"
+                loading="lazy"
+                className="h-full w-full object-cover transition-transform duration-[1600ms] ease-out group-hover:scale-[1.06]"
+              />
+              <div className="absolute inset-0 bg-[linear-gradient(to_top,oklch(0.08_0.01_60/0.92),transparent_58%)]" />
+              <div className="absolute inset-x-0 bottom-0 p-8 text-center">
+                <h3 className="flex flex-wrap items-center justify-center gap-2 font-display text-2xl uppercase text-[color:var(--luxe-linen,#f6f1e7)] md:text-4xl">
+                  Sales &amp; Clearance
+                  <PlusBadge />
+                </h3>
+                <p className="mx-auto mt-3 max-w-sm text-xs text-[color:var(--luxe-linen,#f6f1e7)]/75 md:text-sm">
+                  The Frass Plus+ liquidation floor — men's rack, women's rack and final markdowns.
+                </p>
+              </div>
+            </div>
+          </Link>
         </div>
       </section>
 
