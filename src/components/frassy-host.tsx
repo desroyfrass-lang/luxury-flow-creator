@@ -76,15 +76,15 @@ export function FrassyHost() {
       typeof window !== "undefined" &&
       window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
 
-    const readMs = Math.min(11000, 3200 + dest.welcome.length * 42);
+    const readMs = Math.min(3000, 2000 + dest.welcome.length * 12);
 
-    timers.current.push(setTimeout(() => setPhase("speak"), reduced ? 60 : 700));
+    timers.current.push(setTimeout(() => setPhase("speak"), reduced ? 60 : 350));
     timers.current.push(setTimeout(() => setPhase("depart"), readMs));
     timers.current.push(
       setTimeout(() => {
         setGreeting(null);
         setPhase("enter");
-      }, readMs + 1150),
+      }, readMs + 700),
     );
 
   }, [pathname]);
@@ -101,7 +101,7 @@ export function FrassyHost() {
       setTimeout(() => {
         setGreeting(null);
         setPhase("enter");
-      }, 1150),
+      }, 700),
     );
   };
 
@@ -141,7 +141,7 @@ export function FrassyHost() {
     >
       {/* The environment softens — never hidden, only quieted. */}
       <div
-        className="absolute inset-0 backdrop-blur-[6px] transition-opacity duration-[900ms] ease-out"
+        className="absolute inset-0 backdrop-blur-[6px] transition-opacity duration-[600ms] ease-out"
         style={{
           background:
             "radial-gradient(70% 55% at 50% 45%, rgba(6,6,8,0.62), rgba(6,6,8,0.88))",
@@ -150,7 +150,7 @@ export function FrassyHost() {
       />
 
       <div
-        className="relative flex flex-col items-center text-center transition-all duration-[1100ms]"
+        className="relative flex flex-col items-center text-center transition-all duration-[700ms]"
         style={{
           transitionTimingFunction: "cubic-bezier(0.22, 1, 0.36, 1)",
           opacity: phase === "enter" ? 0 : 1,
