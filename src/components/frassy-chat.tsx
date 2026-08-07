@@ -298,17 +298,20 @@ export function FrassyChat({ embedded = false }: { embedded?: boolean } = {}) {
           >
             <Trash2 className="h-4 w-4" />
           </button>
-          <button
-            type="button"
-            aria-label="Close Frassy chat"
-            onClick={() => {
-              stopTurn();
-              setOpen(false);
-            }}
-            className="rounded-sm p-2 text-white/50 hover:bg-white/10 hover:text-white"
-          >
-            <X className="h-4 w-4" />
-          </button>
+          {!embedded && (
+            <button
+              type="button"
+              aria-label="Close Frassy chat"
+              onClick={() => {
+                stopTurn();
+                setOpen(false);
+              }}
+              className="rounded-sm p-2 text-white/50 hover:bg-white/10 hover:text-white"
+            >
+              <X className="h-4 w-4" />
+            </button>
+          )}
+
         </div>
       </header>
 
