@@ -3,6 +3,7 @@ import { SiteShell } from "@/components/site-shell";
 import { PageHeader } from "@/components/page-header";
 import { PageFeedback } from "@/components/page-feedback";
 import { ShoeWall, type WallSection } from "@/components/shoe-wall";
+import { WallSigns } from "@/components/wall-signs";
 import heroWall from "@/assets/hero-shoe-wall-women.jpg";
 
 export const Route = createFileRoute("/frass-kicks/women")({
@@ -56,6 +57,7 @@ function WomensKicksRoom() {
           { label: "Frass Kicks for Women" },
         ]}
       />
+      <WallSigns labels={SECTIONS.map((s) => s.label)} />
       <section className="relative mx-auto max-w-[1600px] px-2 md:px-12">
         <div className="relative overflow-hidden rounded-2xl md:rounded-[2rem]">
           <img
