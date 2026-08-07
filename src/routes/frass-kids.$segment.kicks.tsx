@@ -5,7 +5,7 @@ import { PageFeedback } from "@/components/page-feedback";
 import { ShoeWall, type WallSection } from "@/components/shoe-wall";
 import { WallSigns } from "@/components/wall-signs";
 import { getKidsSegment, kidsHandle, type KidsSegment } from "@/lib/frass-kids";
-import kicksWall from "@/assets/kids-shoe-wall.jpg";
+import { kidsWallImages, WALL_ACCENT, type WallCategory } from "@/lib/wall-images";
 
 const SECTION_META = [
   ["casual", "Casual", "Everyday, elevated", "Casual Kicks"],
@@ -14,10 +14,13 @@ const SECTION_META = [
 ] as const;
 
 function sections(seg: KidsSegment): WallSection[] {
+  const shelves = kidsWallImages(seg.slug);
   return SECTION_META.map(([id, label, caption, type]) => ({
     id,
     label,
     caption,
+    image: shelves?.[id as WallCategory],
+    accent: WALL_ACCENT[id as WallCategory],
     handle: kidsHandle(seg, "kicks", id),
     query: `tag:"kids" tag:"${seg.ageTag}" tag:"${seg.gender}" product_type:"${type}"`,
   }));
@@ -69,19 +72,7 @@ function KidsKicksRoom() {
           { label: "Frass Kicks" },
         ]}
       />
-      <WallSigns labels={wall.map((s) => s.label)} />
-      <section className="relative mx-auto max-w-[1600px] px-2 md:px-12">
-        <div className="relative overflow-hidden rounded-2xl md:rounded-[2rem]">
-          <img
-            src={kicksWall}
-            alt={`Illuminated wall of children's shoes for ${seg.title}`}
-            width={1920}
-            height={1024}
-            className="h-[34vh] w-full object-cover md:h-[52vh]"
-          />
-          <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,transparent_65%,color-mix(in_oklab,var(--background)_88%,transparent))]" />
-        </div>
-      </section>
+      <WallSigns labels={wall.map((sct) => sct.label)} />
       <ShoeWall sections={wall} gender={seg.gender} />
       <PageFeedback pageTitle={`Frass Kicks — ${seg.title}`} />
     </SiteShell>

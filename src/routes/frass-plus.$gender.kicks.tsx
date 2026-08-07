@@ -7,6 +7,7 @@ import { ShoeWall, type WallSection } from "@/components/shoe-wall";
 import { WallSigns } from "@/components/wall-signs";
 import { isPlusGender } from "@/lib/frass-plus";
 import type { ShopifyProduct } from "@/lib/shopify";
+import { plusWallImages, WALL_ACCENT, type WallCategory } from "@/lib/wall-images";
 import heroMen from "@/assets/hero-shoe-wall-men.jpg";
 import heroWomen from "@/assets/hero-shoe-wall-women.jpg";
 
@@ -31,10 +32,13 @@ const SECTION_META = [
 
 function sections(gender: "men" | "women"): WallSection[] {
   const tag = gender === "men" ? "Men's" : "Women's";
+  const shelves = plusWallImages(gender);
   return SECTION_META.map(([id, label, caption, type]) => ({
     id,
     label,
     caption,
+    image: shelves[id as WallCategory],
+    accent: WALL_ACCENT[id as WallCategory],
     handle: `${id}-kicks-${gender}-plus`,
     query: `vendor:"FRASS KICKS" tag:"${tag}" product_type:"${type}"`,
     filter: isExtendedSize,
