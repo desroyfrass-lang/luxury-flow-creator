@@ -57,12 +57,22 @@ export const DISTRICTS: District[] = [
     to: "/academy",
   },
   {
+    id: "kids_world",
+    name: "Kids World",
+    purpose:
+      "The children's district of Frass Hill — learning villages, creative studios and young-builder spaces, with a parent-issued passport.",
+    chapter: "Society",
+    status: "open",
+    to: "/kids-world",
+  },
+  {
     id: "marketplace",
     name: "Marketplace District",
     purpose: "A trusted Builder Economy — sell, earn, and build real reputation.",
     chapter: "Growth",
     status: "planned",
   },
+
   {
     id: "community",
     name: "Community Square",

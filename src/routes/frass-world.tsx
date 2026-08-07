@@ -115,18 +115,24 @@ function FrassWorldPage() {
         </h2>
         <div className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {[
-            { age: "Ages 0–3", copy: "Sensory play & early discovery.", color: "var(--kids-coral)" },
-            { age: "Ages 3–6", copy: "Storytelling, imagination & basic concepts.", color: "var(--kids-turquoise)" },
-            { age: "Ages 6–12", copy: "Creative projects & interactive games.", color: "var(--kids-sun)" },
-            { age: "Ages 12+", copy: "Leadership, youth entrepreneurship, financial literacy & Builder thinking.", color: "var(--hill-gold)" },
+            { slug: "0-3", age: "Ages 0–3", copy: "Sensory play & early discovery.", color: "var(--kids-coral)" },
+            { slug: "3-6", age: "Ages 3–6", copy: "Storytelling, imagination & basic concepts.", color: "var(--kids-turquoise)" },
+            { slug: "6-12", age: "Ages 6–12", copy: "Creative projects & interactive games.", color: "var(--kids-sun)" },
+            { slug: "12-plus", age: "Ages 12+", copy: "Leadership, youth entrepreneurship, financial literacy & Builder thinking.", color: "var(--hill-gold)" },
           ].map((a) => (
-            <div key={a.age} className="rounded-3xl border border-border bg-card p-6">
+            <Link
+              key={a.age}
+              to="/kids-world/$age"
+              params={{ age: a.slug }}
+              className="rounded-3xl border border-border bg-card p-6 transition hover:-translate-y-1"
+            >
               <span className="block h-1 w-10 rounded-full" style={{ background: a.color }} />
               <h3 className="mt-4 font-display text-xl uppercase">{a.age}</h3>
               <p className="mt-2 text-sm text-muted-foreground">{a.copy}</p>
-            </div>
+            </Link>
           ))}
         </div>
+
       </section>
     </div>
   );
