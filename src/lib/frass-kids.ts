@@ -12,6 +12,14 @@ import kids612b from "@/assets/kids-6-12-boys.jpg";
 import kids612g from "@/assets/kids-6-12-girls.jpg";
 import kids12b from "@/assets/kids-12-boys.jpg";
 import kids12g from "@/assets/kids-12-girls.jpg";
+import ban03b from "@/assets/kids-banner-0-3-boys.jpg";
+import ban03g from "@/assets/kids-banner-0-3-girls.jpg";
+import ban36b from "@/assets/kids-banner-3-6-boys.jpg";
+import ban36g from "@/assets/kids-banner-3-6-girls.jpg";
+import ban612b from "@/assets/kids-banner-6-12-boys.jpg";
+import ban612g from "@/assets/kids-banner-6-12-girls.jpg";
+import ban12b from "@/assets/kids-banner-12-plus-boys.jpg";
+import ban12g from "@/assets/kids-banner-12-plus-girls.jpg";
 
 export interface KidsSegment {
   /** Route slug, e.g. "0-3-boys" */
@@ -23,6 +31,10 @@ export interface KidsSegment {
   title: string;
   blurb: string;
   image: string;
+  /** Wide age-true Caribbean hero banner for the segment floor. */
+  banner: string;
+  /** One-line caption printed over the hero banner. */
+  bannerCaption: string;
 }
 
 export const KIDS_SEGMENTS: KidsSegment[] = [
@@ -35,6 +47,8 @@ export const KIDS_SEGMENTS: KidsSegment[] = [
     title: "0–3 Boys",
     blurb: "First steps, first sneakers. Soft cottons and easy island layers.",
     image: kids03b,
+    banner: ban03b,
+    bannerCaption: "Barefoot mornings on the grass — first steps in island linen.",
   },
   {
     slug: "0-3-girls",
@@ -45,6 +59,8 @@ export const KIDS_SEGMENTS: KidsSegment[] = [
     title: "0–3 Girls",
     blurb: "Little bloom. Breezy prints, gentle fabrics, tiny sandals.",
     image: kids03g,
+    banner: ban03g,
+    bannerCaption: "Garden days and tiny sandals — bloom season in the Caribbean.",
   },
   {
     slug: "3-6-boys",
@@ -55,6 +71,8 @@ export const KIDS_SEGMENTS: KidsSegment[] = [
     title: "3–6 Boys",
     blurb: "Built to run, climb and get gloriously messy.",
     image: kids36b,
+    banner: ban36b,
+    bannerCaption: "Courtyard sprints and climbing frames — built for full speed.",
   },
   {
     slug: "3-6-girls",
@@ -65,6 +83,8 @@ export const KIDS_SEGMENTS: KidsSegment[] = [
     title: "3–6 Girls",
     blurb: "Twirl-tested. Colour, comfort and courtyard energy.",
     image: kids36g,
+    banner: ban36g,
+    bannerCaption: "Twirls in the courtyard — colour, comfort and island light.",
   },
   {
     slug: "6-12-boys",
@@ -75,6 +95,8 @@ export const KIDS_SEGMENTS: KidsSegment[] = [
     title: "6–12 Boys",
     blurb: "School mornings, street afternoons, sport all weekend.",
     image: kids612b,
+    banner: ban612b,
+    bannerCaption: "School mornings under the palms — uniform sharp, sneakers clean.",
   },
   {
     slug: "6-12-girls",
@@ -85,6 +107,8 @@ export const KIDS_SEGMENTS: KidsSegment[] = [
     title: "6–12 Girls",
     blurb: "Confidence in every fit — classroom to courtyard.",
     image: kids612g,
+    banner: ban612g,
+    bannerCaption: "Classroom to courtyard — confidence in every fit.",
   },
   {
     slug: "12-plus-boys",
@@ -95,6 +119,8 @@ export const KIDS_SEGMENTS: KidsSegment[] = [
     title: "12+ Boys",
     blurb: "Their own taste, their own drip. Junior sizing, full Frass.",
     image: kids12b,
+    banner: ban12b,
+    bannerCaption: "High-school afternoons — their own taste, full Frass.",
   },
   {
     slug: "12-plus-girls",
@@ -105,6 +131,8 @@ export const KIDS_SEGMENTS: KidsSegment[] = [
     title: "12+ Girls",
     blurb: "Grown-up styling, teen fit. The district in junior sizing.",
     image: kids12g,
+    banner: ban12g,
+    bannerCaption: "High-school afternoons — grown-up styling, junior fit.",
   },
 ];
 
