@@ -34,6 +34,7 @@ import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as SocialMediaViralsIndexRouteImport } from './routes/social-media-virals.index'
 import { Route as LookbookIndexRouteImport } from './routes/lookbook.index'
+import { Route as FrassPlusIndexRouteImport } from './routes/frass-plus.index'
 import { Route as FrassLuxuryHouseIndexRouteImport } from './routes/frass-luxury-house.index'
 import { Route as FrassKicksIndexRouteImport } from './routes/frass-kicks.index'
 import { Route as FrassDripIndexRouteImport } from './routes/frass-drip.index'
@@ -79,12 +80,14 @@ import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/
 import { Route as AuthenticatedAcademyRouteImport } from './routes/_authenticated/academy'
 import { Route as Char91DotwellKnownChar93OauthProtectedResourceRouteImport } from './routes/[.well-known]/oauth-protected-resource'
 import { Route as Char91DotmcpChar93ListToolsRouteImport } from './routes/[.mcp]/list-tools'
+import { Route as FrassPlusGenderIndexRouteImport } from './routes/frass-plus.$gender.index'
 import { Route as FrassDripWomenIndexRouteImport } from './routes/frass-drip.women.index'
 import { Route as FrassDripMenIndexRouteImport } from './routes/frass-drip.men.index'
 import { Route as BareDripWomenIndexRouteImport } from './routes/bare-drip.women.index'
 import { Route as BareDripMenIndexRouteImport } from './routes/bare-drip.men.index'
 import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated/admin.index'
 import { Route as SocialMediaViralsCategorySubRouteImport } from './routes/social-media-virals.$category.$sub'
+import { Route as FrassPlusGenderCategoryRouteImport } from './routes/frass-plus.$gender.$category'
 import { Route as FrassDripWomenCategoryRouteImport } from './routes/frass-drip.women.$category'
 import { Route as FrassDripMenCategoryRouteImport } from './routes/frass-drip.men.$category'
 import { Route as BareDripWomenCategoryRouteImport } from './routes/bare-drip.women.$category'
@@ -234,6 +237,11 @@ const LookbookIndexRoute = LookbookIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => LookbookRoute,
+} as any)
+const FrassPlusIndexRoute = FrassPlusIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => FrassPlusRoute,
 } as any)
 const FrassLuxuryHouseIndexRoute = FrassLuxuryHouseIndexRouteImport.update({
   id: '/',
@@ -466,6 +474,11 @@ const Char91DotmcpChar93ListToolsRoute =
     path: '/.mcp/list-tools',
     getParentRoute: () => rootRouteImport,
   } as any)
+const FrassPlusGenderIndexRoute = FrassPlusGenderIndexRouteImport.update({
+  id: '/$gender/',
+  path: '/$gender/',
+  getParentRoute: () => FrassPlusRoute,
+} as any)
 const FrassDripWomenIndexRoute = FrassDripWomenIndexRouteImport.update({
   id: '/',
   path: '/',
@@ -497,6 +510,11 @@ const SocialMediaViralsCategorySubRoute =
     path: '/$sub',
     getParentRoute: () => SocialMediaViralsCategoryRoute,
   } as any)
+const FrassPlusGenderCategoryRoute = FrassPlusGenderCategoryRouteImport.update({
+  id: '/$gender/$category',
+  path: '/$gender/$category',
+  getParentRoute: () => FrassPlusRoute,
+} as any)
 const FrassDripWomenCategoryRoute = FrassDripWomenCategoryRouteImport.update({
   id: '/$category',
   path: '/$category',
@@ -650,7 +668,7 @@ export interface FileRoutesByFullPath {
   '/frass-drip': typeof FrassDripRouteWithChildren
   '/frass-kicks': typeof FrassKicksRouteWithChildren
   '/frass-luxury-house': typeof FrassLuxuryHouseRouteWithChildren
-  '/frass-plus': typeof FrassPlusRoute
+  '/frass-plus': typeof FrassPlusRouteWithChildren
   '/frass-world': typeof FrassWorldRoute
   '/gateway': typeof GatewayRoute
   '/kicks-district': typeof KicksDistrictRoute
@@ -707,6 +725,7 @@ export interface FileRoutesByFullPath {
   '/frass-drip/': typeof FrassDripIndexRoute
   '/frass-kicks/': typeof FrassKicksIndexRoute
   '/frass-luxury-house/': typeof FrassLuxuryHouseIndexRoute
+  '/frass-plus/': typeof FrassPlusIndexRoute
   '/lookbook/': typeof LookbookIndexRoute
   '/social-media-virals/': typeof SocialMediaViralsIndexRoute
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
@@ -733,19 +752,20 @@ export interface FileRoutesByFullPath {
   '/bare-drip/women/$category': typeof BareDripWomenCategoryRoute
   '/frass-drip/men/$category': typeof FrassDripMenCategoryRoute
   '/frass-drip/women/$category': typeof FrassDripWomenCategoryRoute
+  '/frass-plus/$gender/$category': typeof FrassPlusGenderCategoryRoute
   '/social-media-virals/$category/$sub': typeof SocialMediaViralsCategorySubRouteWithChildren
   '/admin/': typeof AuthenticatedAdminIndexRoute
   '/bare-drip/men/': typeof BareDripMenIndexRoute
   '/bare-drip/women/': typeof BareDripWomenIndexRoute
   '/frass-drip/men/': typeof FrassDripMenIndexRoute
   '/frass-drip/women/': typeof FrassDripWomenIndexRoute
+  '/frass-plus/$gender/': typeof FrassPlusGenderIndexRoute
   '/social-media-virals/$category/$sub/$product': typeof SocialMediaViralsCategorySubProductRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/checkout': typeof CheckoutRoute
-  '/frass-plus': typeof FrassPlusRoute
   '/frass-world': typeof FrassWorldRoute
   '/gateway': typeof GatewayRoute
   '/kicks-district': typeof KicksDistrictRoute
@@ -795,6 +815,7 @@ export interface FileRoutesByTo {
   '/frass-drip': typeof FrassDripIndexRoute
   '/frass-kicks': typeof FrassKicksIndexRoute
   '/frass-luxury-house': typeof FrassLuxuryHouseIndexRoute
+  '/frass-plus': typeof FrassPlusIndexRoute
   '/lookbook': typeof LookbookIndexRoute
   '/social-media-virals': typeof SocialMediaViralsIndexRoute
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
@@ -821,12 +842,14 @@ export interface FileRoutesByTo {
   '/bare-drip/women/$category': typeof BareDripWomenCategoryRoute
   '/frass-drip/men/$category': typeof FrassDripMenCategoryRoute
   '/frass-drip/women/$category': typeof FrassDripWomenCategoryRoute
+  '/frass-plus/$gender/$category': typeof FrassPlusGenderCategoryRoute
   '/social-media-virals/$category/$sub': typeof SocialMediaViralsCategorySubRouteWithChildren
   '/admin': typeof AuthenticatedAdminIndexRoute
   '/bare-drip/men': typeof BareDripMenIndexRoute
   '/bare-drip/women': typeof BareDripWomenIndexRoute
   '/frass-drip/men': typeof FrassDripMenIndexRoute
   '/frass-drip/women': typeof FrassDripWomenIndexRoute
+  '/frass-plus/$gender': typeof FrassPlusGenderIndexRoute
   '/social-media-virals/$category/$sub/$product': typeof SocialMediaViralsCategorySubProductRoute
 }
 export interface FileRoutesById {
@@ -842,7 +865,7 @@ export interface FileRoutesById {
   '/frass-drip': typeof FrassDripRouteWithChildren
   '/frass-kicks': typeof FrassKicksRouteWithChildren
   '/frass-luxury-house': typeof FrassLuxuryHouseRouteWithChildren
-  '/frass-plus': typeof FrassPlusRoute
+  '/frass-plus': typeof FrassPlusRouteWithChildren
   '/frass-world': typeof FrassWorldRoute
   '/gateway': typeof GatewayRoute
   '/kicks-district': typeof KicksDistrictRoute
@@ -899,6 +922,7 @@ export interface FileRoutesById {
   '/frass-drip/': typeof FrassDripIndexRoute
   '/frass-kicks/': typeof FrassKicksIndexRoute
   '/frass-luxury-house/': typeof FrassLuxuryHouseIndexRoute
+  '/frass-plus/': typeof FrassPlusIndexRoute
   '/lookbook/': typeof LookbookIndexRoute
   '/social-media-virals/': typeof SocialMediaViralsIndexRoute
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
@@ -925,12 +949,14 @@ export interface FileRoutesById {
   '/bare-drip/women/$category': typeof BareDripWomenCategoryRoute
   '/frass-drip/men/$category': typeof FrassDripMenCategoryRoute
   '/frass-drip/women/$category': typeof FrassDripWomenCategoryRoute
+  '/frass-plus/$gender/$category': typeof FrassPlusGenderCategoryRoute
   '/social-media-virals/$category/$sub': typeof SocialMediaViralsCategorySubRouteWithChildren
   '/_authenticated/admin/': typeof AuthenticatedAdminIndexRoute
   '/bare-drip/men/': typeof BareDripMenIndexRoute
   '/bare-drip/women/': typeof BareDripWomenIndexRoute
   '/frass-drip/men/': typeof FrassDripMenIndexRoute
   '/frass-drip/women/': typeof FrassDripWomenIndexRoute
+  '/frass-plus/$gender/': typeof FrassPlusGenderIndexRoute
   '/social-media-virals/$category/$sub/$product': typeof SocialMediaViralsCategorySubProductRoute
 }
 export interface FileRouteTypes {
@@ -1003,6 +1029,7 @@ export interface FileRouteTypes {
     | '/frass-drip/'
     | '/frass-kicks/'
     | '/frass-luxury-house/'
+    | '/frass-plus/'
     | '/lookbook/'
     | '/social-media-virals/'
     | '/.lovable/oauth/consent'
@@ -1029,19 +1056,20 @@ export interface FileRouteTypes {
     | '/bare-drip/women/$category'
     | '/frass-drip/men/$category'
     | '/frass-drip/women/$category'
+    | '/frass-plus/$gender/$category'
     | '/social-media-virals/$category/$sub'
     | '/admin/'
     | '/bare-drip/men/'
     | '/bare-drip/women/'
     | '/frass-drip/men/'
     | '/frass-drip/women/'
+    | '/frass-plus/$gender/'
     | '/social-media-virals/$category/$sub/$product'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/auth'
     | '/checkout'
-    | '/frass-plus'
     | '/frass-world'
     | '/gateway'
     | '/kicks-district'
@@ -1091,6 +1119,7 @@ export interface FileRouteTypes {
     | '/frass-drip'
     | '/frass-kicks'
     | '/frass-luxury-house'
+    | '/frass-plus'
     | '/lookbook'
     | '/social-media-virals'
     | '/.lovable/oauth/consent'
@@ -1117,12 +1146,14 @@ export interface FileRouteTypes {
     | '/bare-drip/women/$category'
     | '/frass-drip/men/$category'
     | '/frass-drip/women/$category'
+    | '/frass-plus/$gender/$category'
     | '/social-media-virals/$category/$sub'
     | '/admin'
     | '/bare-drip/men'
     | '/bare-drip/women'
     | '/frass-drip/men'
     | '/frass-drip/women'
+    | '/frass-plus/$gender'
     | '/social-media-virals/$category/$sub/$product'
   id:
     | '__root__'
@@ -1194,6 +1225,7 @@ export interface FileRouteTypes {
     | '/frass-drip/'
     | '/frass-kicks/'
     | '/frass-luxury-house/'
+    | '/frass-plus/'
     | '/lookbook/'
     | '/social-media-virals/'
     | '/.lovable/oauth/consent'
@@ -1220,12 +1252,14 @@ export interface FileRouteTypes {
     | '/bare-drip/women/$category'
     | '/frass-drip/men/$category'
     | '/frass-drip/women/$category'
+    | '/frass-plus/$gender/$category'
     | '/social-media-virals/$category/$sub'
     | '/_authenticated/admin/'
     | '/bare-drip/men/'
     | '/bare-drip/women/'
     | '/frass-drip/men/'
     | '/frass-drip/women/'
+    | '/frass-plus/$gender/'
     | '/social-media-virals/$category/$sub/$product'
   fileRoutesById: FileRoutesById
 }
@@ -1241,7 +1275,7 @@ export interface RootRouteChildren {
   FrassDripRoute: typeof FrassDripRouteWithChildren
   FrassKicksRoute: typeof FrassKicksRouteWithChildren
   FrassLuxuryHouseRoute: typeof FrassLuxuryHouseRouteWithChildren
-  FrassPlusRoute: typeof FrassPlusRoute
+  FrassPlusRoute: typeof FrassPlusRouteWithChildren
   FrassWorldRoute: typeof FrassWorldRoute
   GatewayRoute: typeof GatewayRoute
   KicksDistrictRoute: typeof KicksDistrictRoute
@@ -1445,6 +1479,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/lookbook/'
       preLoaderRoute: typeof LookbookIndexRouteImport
       parentRoute: typeof LookbookRoute
+    }
+    '/frass-plus/': {
+      id: '/frass-plus/'
+      path: '/'
+      fullPath: '/frass-plus/'
+      preLoaderRoute: typeof FrassPlusIndexRouteImport
+      parentRoute: typeof FrassPlusRoute
     }
     '/frass-luxury-house/': {
       id: '/frass-luxury-house/'
@@ -1761,6 +1802,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof Char91DotmcpChar93ListToolsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/frass-plus/$gender/': {
+      id: '/frass-plus/$gender/'
+      path: '/$gender'
+      fullPath: '/frass-plus/$gender/'
+      preLoaderRoute: typeof FrassPlusGenderIndexRouteImport
+      parentRoute: typeof FrassPlusRoute
+    }
     '/frass-drip/women/': {
       id: '/frass-drip/women/'
       path: '/'
@@ -1802,6 +1850,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/social-media-virals/$category/$sub'
       preLoaderRoute: typeof SocialMediaViralsCategorySubRouteImport
       parentRoute: typeof SocialMediaViralsCategoryRoute
+    }
+    '/frass-plus/$gender/$category': {
+      id: '/frass-plus/$gender/$category'
+      path: '/$gender/$category'
+      fullPath: '/frass-plus/$gender/$category'
+      preLoaderRoute: typeof FrassPlusGenderCategoryRouteImport
+      parentRoute: typeof FrassPlusRoute
     }
     '/frass-drip/women/$category': {
       id: '/frass-drip/women/$category'
@@ -2246,6 +2301,22 @@ const FrassLuxuryHouseRouteChildren: FrassLuxuryHouseRouteChildren = {
 const FrassLuxuryHouseRouteWithChildren =
   FrassLuxuryHouseRoute._addFileChildren(FrassLuxuryHouseRouteChildren)
 
+interface FrassPlusRouteChildren {
+  FrassPlusIndexRoute: typeof FrassPlusIndexRoute
+  FrassPlusGenderCategoryRoute: typeof FrassPlusGenderCategoryRoute
+  FrassPlusGenderIndexRoute: typeof FrassPlusGenderIndexRoute
+}
+
+const FrassPlusRouteChildren: FrassPlusRouteChildren = {
+  FrassPlusIndexRoute: FrassPlusIndexRoute,
+  FrassPlusGenderCategoryRoute: FrassPlusGenderCategoryRoute,
+  FrassPlusGenderIndexRoute: FrassPlusGenderIndexRoute,
+}
+
+const FrassPlusRouteWithChildren = FrassPlusRoute._addFileChildren(
+  FrassPlusRouteChildren,
+)
+
 interface LookbookRouteChildren {
   LookbookStoryRoute: typeof LookbookStoryRoute
   LookbookIndexRoute: typeof LookbookIndexRoute
@@ -2315,7 +2386,7 @@ const rootRouteChildren: RootRouteChildren = {
   FrassDripRoute: FrassDripRouteWithChildren,
   FrassKicksRoute: FrassKicksRouteWithChildren,
   FrassLuxuryHouseRoute: FrassLuxuryHouseRouteWithChildren,
-  FrassPlusRoute: FrassPlusRoute,
+  FrassPlusRoute: FrassPlusRouteWithChildren,
   FrassWorldRoute: FrassWorldRoute,
   GatewayRoute: GatewayRoute,
   KicksDistrictRoute: KicksDistrictRoute,
