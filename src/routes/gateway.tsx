@@ -1,6 +1,5 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import archHero from "@/assets/frass-gateway-arch.jpg.asset.json";
-import fullLogo from "@/assets/frass-logo-full.asset.json";
 
 export const Route = createFileRoute("/gateway")({
   head: () => ({
@@ -25,111 +24,14 @@ export const Route = createFileRoute("/gateway")({
 
 function GatewayPage() {
   return (
-    <main className="relative min-h-screen overflow-hidden bg-[color:var(--retail-ink)]">
-      <div className="absolute inset-0 bg-black">
-        <img
-          src={archHero.url}
-          alt=""
-          aria-hidden="true"
-          className="absolute inset-0 h-full w-full scale-110 object-cover blur-2xl brightness-50"
-        />
-        <img
-          src={archHero.url}
-          alt="The carved JAMAICA Luxury Fashion District archway opening onto the palm-lined Frass Kicks promenade"
-          width={1920}
-          height={1080}
-          className="gateway-drift absolute inset-0 h-full w-full object-contain object-center"
-        />
-        <div className="absolute inset-0 bg-gradient-to-b from-black/25 via-transparent to-black/55" />
-      </div>
-
-
-      <section className="relative mx-auto flex min-h-screen max-w-[1400px] flex-col items-center justify-center px-6 py-20 text-center">
-        <h1
-          className="gateway-rise font-display text-4xl leading-[0.95] text-white drop-shadow-[0_2px_24px_rgba(0,0,0,0.55)] sm:text-6xl lg:text-8xl"
-          style={{ animationDelay: "80ms" }}
-        >
-          Welcome to the World of Frass.
-        </h1>
-        <img
-          src={fullLogo.url}
-          alt="Frass"
-          className="gateway-rise mt-6 h-16 w-auto object-contain md:h-24"
-          style={{ animationDelay: "120ms" }}
-        />
-
-        <p
-          className="gateway-rise mt-5 max-w-2xl text-sm uppercase tracking-[0.3em] text-white/75 sm:text-base"
-          style={{ animationDelay: "160ms" }}
-        >
-          Built by people. Powered by community. Driven by execution.
-        </p>
-
-        <div className="mt-10 grid w-full max-w-3xl gap-4 sm:grid-cols-2">
-          <GatewayCard
-            to="/shop-frass"
-            delay="240ms"
-            emoji="🛍️"
-            title="Shop Frass"
-            copy="Fast, direct access to FrassKicks marketplace drops, luxury releases, and collections."
-            cta="Enter the store"
-            tone="light"
-          />
-          <GatewayCard
-            to="/frass-world"
-            delay="320ms"
-            emoji="🌍"
-            title="Explore Frass World"
-            copy="Enter the living ecosystem map — Frass Hill, Luxury House, Kids Valley, and Builder HQ."
-            cta="Enter the world"
-            tone="dark"
-          />
-        </div>
-      </section>
+    <main className="relative h-screen w-screen overflow-hidden bg-black">
+      <img
+        src={archHero.url}
+        alt="The carved JAMAICA Luxury Fashion District archway opening onto the palm-lined Frass Kicks promenade"
+        width={1920}
+        height={1080}
+        className="gateway-drift absolute inset-0 h-full w-full object-cover object-center"
+      />
     </main>
-  );
-}
-
-function GatewayCard({
-  to,
-  emoji,
-  title,
-  copy,
-  cta,
-  tone,
-  delay,
-}: {
-  to: string;
-  emoji: string;
-  title: string;
-  copy: string;
-  cta: string;
-  tone: "light" | "dark";
-  delay: string;
-}) {
-  const light = tone === "light";
-  return (
-    <Link
-      to={to}
-      aria-label={`${title} — ${copy}`}
-      style={{ animationDelay: delay }}
-      className={`gateway-rise group relative overflow-hidden rounded-2xl border p-5 text-left backdrop-blur-xl transition duration-300 will-change-transform hover:-translate-y-1.5 ${
-        light
-          ? "border-white/70 bg-white/92 text-[color:var(--retail-ink)] hover:shadow-[0_20px_60px_-20px_rgba(255,255,255,0.5)]"
-          : "border-[color:var(--hill-gold)]/50 bg-[color:var(--hill-green)]/85 text-[color:var(--luxe-linen)] hover:shadow-[0_20px_60px_-20px_rgba(212,175,55,0.6)]"
-      }`}
-    >
-      <span className="text-2xl">{emoji}</span>
-      <h2 className="mt-3 font-display text-2xl uppercase leading-none md:text-3xl">{title}</h2>
-      <p className={`mt-2 text-xs ${light ? "text-black/65" : "text-[color:var(--luxe-linen)]/75"}`}>{copy}</p>
-      <span
-        className={`mt-4 inline-flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.28em] ${
-          light ? "text-black/70" : "text-[color:var(--hill-gold)]"
-        }`}
-      >
-        {cta}
-        <span className="transition-transform duration-300 group-hover:translate-x-1">→</span>
-      </span>
-    </Link>
   );
 }
