@@ -1,10 +1,15 @@
 import { createFileRoute, notFound } from "@tanstack/react-router";
 import { SiteShell } from "@/components/site-shell";
-import { CollectionCard } from "@/components/collection-card";
 import { PageHeader } from "@/components/page-header";
-import cardMen from "@/assets/card-men.jpg";
-import cardBare from "@/assets/card-bare.jpg";
-import cardKicks from "@/assets/card-kicks.jpg";
+import { ShowroomRack } from "@/components/showroom-rack";
+import { ShowroomScene } from "@/components/showroom-scene";
+import { getBareTheme, isBrightBareRoom } from "@/lib/showroom-themes";
+import swimRoom from "@/assets/bare-men-swim-room.jpg";
+import underwearRoom from "@/assets/bare-men-underwear-room.jpg";
+import swimCard1 from "@/assets/bare-card-m-swim-1.jpg";
+import swimCard2 from "@/assets/bare-card-m-swim-2.jpg";
+import underCard1 from "@/assets/bare-card-m-under-1.jpg";
+import underCard2 from "@/assets/bare-card-m-under-2.jpg";
 
 type Sub = readonly [slug: string, title: string];
 
@@ -34,7 +39,12 @@ const MEN_CATEGORIES: Record<string, { title: string; tagline: string; subs: rea
   },
 };
 
-const IMAGES = [cardMen, cardKicks, cardBare];
+const CARD_IMAGES: Record<string, string[]> = {
+  swimwear: [swimCard1, swimCard2],
+  underwear: [underCard1, underCard2],
+};
+
+const ROOM_PHOTO: Record<string, string> = { swimwear: swimRoom, underwear: underwearRoom };
 
 export const Route = createFileRoute("/bare-drip/men/$category")({
   beforeLoad: ({ params }) => {
@@ -60,33 +70,41 @@ export const Route = createFileRoute("/bare-drip/men/$category")({
 function CategoryPage() {
   const { category } = Route.useParams();
   const cat = MEN_CATEGORIES[category]!;
+  const theme = getBareTheme("men", category);
+  const bright = isBrightBareRoom("men", category);
+  const photo = ROOM_PHOTO[category];
+  const pool = CARD_IMAGES[category] ?? [];
+  const items = cat.subs.map(([slug, title], i) => ({
+    handle: `mens-bare-drip-${category}-${slug}`,
+    title,
+    image: pool[i % pool.length]!,
+  }));
+
   return (
     <SiteShell>
       <PageHeader
-        eyebrow={`Men · ${cat.title}`}
+        eyebrow={`Men · ${theme.room}`}
         title={cat.title}
         description={cat.tagline}
         crumbs={[
-          { label: "Home", to: "/" },
-          { label: "Frass District", to: "/shop-frass" },
-          { label: "Bare Drip", to: "/bare-drip" },
+          { label: "Frass District", to: "/" },
           { label: "Bare Drip for Men", to: "/bare-drip/men" },
           { label: cat.title },
         ]}
       />
-      <section className="mx-auto max-w-[1600px] px-6 lg:px-12">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
-          {cat.subs.map(([slug, title], i) => (
-            <CollectionCard
-              key={slug}
-              to="/collection/$handle"
-              params={{ handle: `mens-bare-drip-${category}-${slug}` }}
-              image={IMAGES[i % IMAGES.length]}
-              eyebrow={cat.title}
-              title={title}
-              size="md"
-            />
-          ))}
+      <section
+        className="relative mx-auto mb-24 max-w-[1600px] overflow-hidden rounded-[28px] px-6 pb-24 pt-12 lg:px-12"
+        style={{ background: theme.backdrop }}
+      >
+        <ShowroomScene theme={theme} photo={photo} bright={bright} />
+        <p
+          className="relative mb-14 max-w-xl text-sm"
+          style={{ color: bright ? "oklch(0.32 0.03 220)" : undefined }}
+        >
+          <span className={bright ? "" : "text-foreground/80"}>{theme.mood}</span>
+        </p>
+        <div className="relative">
+          <ShowroomRack items={items} theme={theme} eyebrow={cat.title} />
         </div>
       </section>
     </SiteShell>

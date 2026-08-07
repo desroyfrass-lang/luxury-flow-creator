@@ -186,3 +186,81 @@ export const SHOWROOM_THEMES: Record<string, ShowroomTheme> = {
 export function getShowroomTheme(category: string): ShowroomTheme {
   return SHOWROOM_THEMES[category] ?? DEFAULT_THEME;
 }
+
+/* ------------------------------------------------------------------ *
+ * Bare Drip rooms
+ * Each Bare Drip floor is its own set: a bright crystal cabana for swim,
+ * a soft boudoir for lingerie, an intimate Caribbean bedroom for men's
+ * underwear. Keyed by `${gender}-${category}`.
+ * ------------------------------------------------------------------ */
+export const BARE_THEMES: Record<string, ShowroomTheme> = {
+  "women-swimwear": {
+    accent: "oklch(0.88 0.11 200)",
+    accentSoft: "oklch(0.97 0.04 200)",
+    backdrop:
+      "linear-gradient(180deg, oklch(0.97 0.012 200) 0%, oklch(0.94 0.02 195) 55%, oklch(0.90 0.03 190) 100%)",
+    ambient:
+      "radial-gradient(120% 60% at 50% 0%, oklch(0.99 0.03 200 / 0.55) 0%, transparent 72%)",
+    mood: "Crystal light, open louvers, salt in the air. Sun-ready swim.",
+    room: "The Crystal Cabana",
+    wall: "linear-gradient(180deg, oklch(0.99 0.006 200) 0%, oklch(0.93 0.015 195) 100%)",
+    panel:
+      "repeating-linear-gradient(0deg, oklch(0.70 0.05 200 / 0.10) 0 2px, transparent 2px 26px), radial-gradient(60% 50% at 18% 18%, oklch(0.92 0.09 195 / 0.35), transparent 70%)",
+    floor:
+      "linear-gradient(180deg, oklch(0.93 0.02 90) 0%, oklch(0.84 0.03 88) 100%)",
+  },
+  "men-swimwear": {
+    accent: "oklch(0.84 0.13 205)",
+    accentSoft: "oklch(0.95 0.05 205)",
+    backdrop:
+      "linear-gradient(180deg, oklch(0.96 0.012 200) 0%, oklch(0.92 0.025 200) 55%, oklch(0.88 0.035 198) 100%)",
+    ambient:
+      "radial-gradient(120% 60% at 50% 0%, oklch(0.98 0.04 200 / 0.50) 0%, transparent 72%)",
+    mood: "Whitewashed cabana, turquoise water light. Beach club ready.",
+    room: "The Beach Club Floor",
+    wall: "linear-gradient(180deg, oklch(0.98 0.006 200) 0%, oklch(0.91 0.02 198) 100%)",
+    panel:
+      "repeating-linear-gradient(90deg, oklch(0.60 0.06 205 / 0.10) 0 3px, transparent 3px 90px), radial-gradient(55% 45% at 80% 16%, oklch(0.90 0.10 200 / 0.32), transparent 70%)",
+    floor:
+      "linear-gradient(180deg, oklch(0.92 0.025 88) 0%, oklch(0.82 0.035 86) 100%)",
+  },
+  "women-lingerie": {
+    accent: "oklch(0.80 0.09 20)",
+    accentSoft: "oklch(0.92 0.05 25)",
+    backdrop:
+      "linear-gradient(180deg, oklch(0.24 0.03 20) 0%, oklch(0.18 0.025 18) 55%, oklch(0.14 0.02 15) 100%)",
+    ambient:
+      "radial-gradient(120% 60% at 50% 0%, oklch(0.85 0.09 25 / 0.30) 0%, transparent 70%)",
+    mood: "Candlelight, silk drapes, doors closed. Take your time.",
+    room: "The Boudoir",
+    wall: "linear-gradient(180deg, oklch(0.32 0.045 22) 0%, oklch(0.17 0.03 18) 100%)",
+    panel:
+      "repeating-linear-gradient(90deg, oklch(0.80 0.09 20 / 0.12) 0 2px, transparent 2px 74px), radial-gradient(60% 55% at 50% 8%, oklch(0.88 0.07 30 / 0.22), transparent 72%)",
+    floor:
+      "linear-gradient(180deg, oklch(0.34 0.04 22) 0%, oklch(0.17 0.02 18) 100%)",
+  },
+  "men-underwear": {
+    accent: "oklch(0.82 0.11 65)",
+    accentSoft: "oklch(0.92 0.06 70)",
+    backdrop:
+      "linear-gradient(180deg, oklch(0.23 0.025 60) 0%, oklch(0.17 0.02 55) 55%, oklch(0.13 0.015 50) 100%)",
+    mood: "Low amber light, mahogany and linen. Private quarters.",
+    room: "The Private Quarters",
+    ambient:
+      "radial-gradient(120% 60% at 50% 0%, oklch(0.88 0.10 70 / 0.26) 0%, transparent 70%)",
+    wall: "linear-gradient(180deg, oklch(0.30 0.035 58) 0%, oklch(0.16 0.025 52) 100%)",
+    panel:
+      "repeating-linear-gradient(90deg, oklch(0.12 0.02 50 / 0.55) 0 3px, transparent 3px 104px), radial-gradient(55% 50% at 30% 12%, oklch(0.88 0.09 70 / 0.20), transparent 72%)",
+    floor:
+      "linear-gradient(180deg, oklch(0.32 0.03 55) 0%, oklch(0.16 0.02 50) 100%)",
+  },
+};
+
+/** True for Bare Drip rooms lit as bright daylight sets. */
+export function isBrightBareRoom(gender: string, category: string) {
+  return category === "swimwear";
+}
+
+export function getBareTheme(gender: "men" | "women", category: string): ShowroomTheme {
+  return BARE_THEMES[`${gender}-${category}`] ?? DEFAULT_THEME;
+}
