@@ -13,6 +13,9 @@ Frass OS Constitution v1.0 at `FRASS_OS_CONSTITUTION.md` is the permanent source
 Implementation hold is lifted. The `FINAL_LOVABLE_DIRECTIVE.md` commissioning is the active build charter: Builder experience above everything; optimize for confidence, timelessness, and meaningful progress.
 
 ## Memories
+- [Product Population Phase brief](mem://features/frass-product-population-brief) — Frassy is Curator of the Frass Marketplace: 8–10h catalog population, approved store structure, categorization discipline
+- [Luxury House Marketplace](mem://features/luxury-house-marketplace) — Three ownership models (Frass Collection / Marketplace Partner / Curated Luxury Brand); classify before publishing
+- [The Frass Bridal Experience](mem://features/frass-bridal-program) — Bridal as a wedding operating system: nine journeys, registry, vendor marketplace, honeymoon, Vision Maps, cultural inclusion
 - [FRASS Kids World](mem://features/frass-kids-world) — Kids World is a district of Frass Hill with multiple entrances, parent-issued passport, four age worlds; "Enter Kids World" never "Activities"
 
 - [Frass Plus flagship](mem://features/frass-plus) — Extended sizing as a flagship boutique: wings, departments, signature confidence collections; never navigate by size
