@@ -1,12 +1,14 @@
 import { createFileRoute, notFound } from "@tanstack/react-router";
 import { SiteShell } from "@/components/site-shell";
-import { CollectionCard } from "@/components/collection-card";
 import { PageHeader } from "@/components/page-header";
+import { ShowroomRack } from "@/components/showroom-rack";
+import { getShowroomTheme } from "@/lib/showroom-themes";
 import cardDrip from "@/assets/card-drip.jpg";
 import cardMen from "@/assets/card-men.jpg";
 import cardKicks from "@/assets/card-kicks.jpg";
 
 type Sub = readonly [slug: string, title: string, handleOverride?: string];
+
 
 const MEN_CATEGORIES: Record<string, { title: string; tagline: string; subs: readonly Sub[] }> = {
   work: {
