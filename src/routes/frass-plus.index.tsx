@@ -4,13 +4,14 @@ import { PageFeedback } from "@/components/page-feedback";
 import { PlusBadge } from "@/components/plus-badge";
 import {
   BROWSE_RAILS,
-  MIRRORED_STORES,
   PLUS_DEPARTMENTS,
   PLUS_WING_IMAGE,
   SIGNATURE_COLLECTIONS,
   signatureHandle,
 } from "@/lib/frass-plus";
 import hero from "@/assets/plus-store-front.jpg";
+import barePlusMen from "@/assets/store-bare-plus-men.jpg";
+import barePlusWomen from "@/assets/store-bare-plus-women.jpg";
 import frassSymbol from "@/assets/frass-logo-symbol.asset.json";
 
 const TITLE = "Frass Plus+ — The Same Collections, Extended Sizing";
@@ -80,62 +81,57 @@ function PlusHome() {
         ))}
       </nav>
 
-      {/* Mirrored stores */}
-      <section className="mx-auto max-w-[1600px] px-6 pb-16 lg:px-12">
-        <header className="mb-8 max-w-2xl">
-          <p className="text-[10px] uppercase tracking-[0.38em] text-[color:var(--gold)]">
-            One architecture
-          </p>
-          <h2 className="mt-3 font-display text-3xl uppercase md:text-5xl">
-            The same stores, extended
-          </h2>
-          <p className="mt-4 text-sm text-muted-foreground">
-            Frass Plus+ has no separate collection names. Every store, department and
-            sub-collection mirrors the main district exactly — the Plus+ badge is the only
-            difference.
-          </p>
-        </header>
-        <div className="grid gap-6 md:grid-cols-3">
-          {MIRRORED_STORES.map((s) => (
-            <article
-              key={s.key}
-              className="relative overflow-hidden rounded-2xl border border-[color:var(--gold)]/20 bg-card"
-            >
-              <div className="relative aspect-[16/10] w-full overflow-hidden">
-                <img src={s.image} alt={s.title} loading="lazy" className="h-full w-full object-cover" />
-                <div className="absolute inset-0 bg-[linear-gradient(to_top,oklch(0.08_0.01_60/0.92),transparent_65%)]" />
-              </div>
-              <div className="p-6">
-                <h3 className="flex flex-wrap items-center gap-2 font-display text-xl uppercase">
-                  {s.title}
-                  <PlusBadge />
-                </h3>
-                <p className="mt-2 text-xs text-muted-foreground">{s.blurb}</p>
-              </div>
-            </article>
-          ))}
-        </div>
-      </section>
-
-      {/* Two wings */}
+      {/* Frass Drip Plus+ — the two department wings */}
       <section className="mx-auto max-w-[1600px] px-6 pb-20 lg:px-12">
         <div className="grid gap-8 md:grid-cols-2">
           <WingCard
             to="/frass-plus/$gender"
             gender="men"
             title="Frass Drip Plus+ for Men"
-            blurb="Frass Kicks, every Drip department and Bare Drip — mirrored exactly, cut with room to move."
+            blurb="Frass Kicks and every Drip department — mirrored exactly, cut with room to move."
             count={PLUS_DEPARTMENTS.men.length}
           />
           <WingCard
             to="/frass-plus/$gender"
             gender="women"
             title="Frass Drip Plus+ for Women"
-            blurb="Frass Kicks, every Drip department and Bare Drip — mirrored exactly, designed to be worn, not endured."
+            blurb="Frass Kicks and every Drip department — mirrored exactly, designed to be worn, not endured."
             count={PLUS_DEPARTMENTS.women.length}
           />
         </div>
       </section>
+
+      {/* Bare Drip Plus+ — same navigation as the main Bare Drip floor */}
+      <section className="mx-auto max-w-[1600px] px-6 pb-20 lg:px-12">
+        <header className="mb-8 max-w-2xl">
+          <p className="text-[10px] uppercase tracking-[0.38em] text-[color:var(--gold)]">
+            Bare Drip Plus+
+          </p>
+          <h2 className="mt-3 font-display text-3xl uppercase md:text-5xl">
+            Two rooms, one floor
+          </h2>
+          <p className="mt-4 text-sm text-muted-foreground">
+            The same Bare Drip navigation, lighter and beachier — underwear, lingerie and swim
+            in extended sizing.
+          </p>
+        </header>
+        <div className="grid gap-8 md:grid-cols-2">
+          <BareWingCard
+            gender="men"
+            title="Bare Drip Plus+ for Men"
+            blurb="The Underwear Room and the Swim Room, in extended sizing."
+            image={barePlusMen}
+          />
+          <BareWingCard
+            gender="women"
+            title="Bare Drip Plus+ for Women"
+            blurb="The Lingerie Salon and the Swim Room, in extended sizing."
+            image={barePlusWomen}
+          />
+        </div>
+      </section>
+
+
 
 
       {/* Signature collections */}
@@ -249,3 +245,59 @@ function WingCard({
   );
 }
 
+
+function BareWingCard({
+  gender,
+  title,
+  blurb,
+  image,
+}: {
+  gender: "men" | "women";
+  title: string;
+  blurb: string;
+  image: string;
+}) {
+  return (
+    <Link
+      to="/frass-plus/$gender/bare"
+      params={{ gender }}
+      aria-label={`${title} — enter the floor`}
+      className="group relative block overflow-hidden rounded-[26px] border border-[color:var(--gold)]/25 bg-card"
+    >
+      <div className="relative h-[420px] w-full overflow-hidden md:h-[540px]">
+        <img
+          src={image}
+          alt={`${title} storefront with extended-size mannequins in the windows`}
+          loading="lazy"
+          className="h-full w-full object-cover transition-transform duration-[1600ms] ease-out group-hover:scale-[1.06]"
+        />
+        <div className="pointer-events-none absolute inset-x-0 top-0 flex justify-center pt-6 md:pt-9">
+          <img
+            src={frassSymbol.url}
+            alt=""
+            aria-hidden="true"
+            loading="lazy"
+            className="h-12 w-auto opacity-95 drop-shadow-[0_6px_18px_rgba(0,0,0,0.5)] md:h-16"
+            style={{
+              filter:
+                "brightness(0) saturate(100%) invert(78%) sepia(56%) saturate(560%) hue-rotate(2deg) brightness(96%) contrast(94%) drop-shadow(0 0 14px rgba(212,175,55,0.55))",
+            }}
+          />
+        </div>
+        <div className="absolute inset-0 bg-[linear-gradient(to_top,oklch(0.08_0.01_60/0.9),transparent_58%)]" />
+        <div className="pointer-events-none absolute inset-4 rounded-[20px] ring-1 ring-[color:var(--gold)]/25" />
+        <div className="absolute inset-x-0 bottom-0 p-8 text-center">
+          <h3 className="flex flex-wrap items-center justify-center gap-2 font-display text-2xl uppercase leading-tight text-[color:var(--luxe-linen,#f6f1e7)] md:text-4xl">
+            {title}
+          </h3>
+          <p className="mx-auto mt-3 max-w-sm text-xs text-[color:var(--luxe-linen,#f6f1e7)]/75 md:text-sm">
+            {blurb}
+          </p>
+          <span className="mt-6 inline-flex items-center gap-3 rounded-full border border-[color:var(--gold)]/60 px-6 py-3 text-[10px] font-bold uppercase tracking-[0.3em] text-[color:var(--gold)] transition group-hover:bg-[color:var(--gold)] group-hover:text-[color:var(--ink)]">
+            Enter the floor
+          </span>
+        </div>
+      </div>
+    </Link>
+  );
+}
