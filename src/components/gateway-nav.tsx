@@ -219,7 +219,7 @@ export function GatewayNav({ mode }: { mode: "shop" | "world" }) {
               to={g.to}
               className={`inline-flex shrink-0 items-center gap-1 whitespace-nowrap rounded-full px-3 py-1.5 text-[10px] uppercase tracking-[0.22em] transition ${
                 g.editorial
-                  ? "border border-[color:var(--gold)]/50 font-bold text-[color:var(--gold)]"
+                  ? "font-bold text-[color:var(--gold)]"
                   : active
                     ? "text-foreground"
                     : "text-muted-foreground hover:text-foreground"
