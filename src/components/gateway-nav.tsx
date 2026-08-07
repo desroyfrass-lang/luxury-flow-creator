@@ -84,8 +84,7 @@ const NAV: NavGroup[] = [
     to: "/frass-kids",
     match: "/frass-kids",
     items: [
-      { label: "Girls", to: "/frass-kids" },
-      { label: "Boys", to: "/frass-kids/boys" },
+      { label: "Shop by age & gender", to: "/frass-kids" },
     ],
   },
   { label: "Social Media Virals", to: "/social-media-virals", match: "/social-media-virals" },
