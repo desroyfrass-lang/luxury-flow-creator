@@ -1,20 +1,32 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { GatewayNav } from "@/components/gateway-nav";
+import { DistrictDirectory, type DirectoryColumn } from "@/components/district-directory";
 import marketStreet from "@/assets/district-kicks.jpg";
+import storeKicksMen from "@/assets/store-kicks-men.jpg";
+import storeKicksWomen from "@/assets/store-kicks-women.jpg";
+import storeDripMen from "@/assets/store-drip-men.jpg";
+import storeDripWomen from "@/assets/store-drip-women.jpg";
+import storeBareMen from "@/assets/store-bare-men.jpg";
+import storeBareWomen from "@/assets/store-bare-women.jpg";
+import districtLuxury from "@/assets/district-luxury.jpg";
+import districtKids from "@/assets/district-kids.jpg";
+import cardMen from "@/assets/card-men.jpg";
+import cardWomen from "@/assets/card-women.jpg";
 
 export const Route = createFileRoute("/shop-frass")({
   head: () => ({
     meta: [
-      { title: "Shop Frass — FrassKicks Marketplace & Department Store" },
+      { title: "Frass District — Shop Every Frass Store" },
       {
         name: "description",
         content:
-          "Footwear and limited drops, apparel and streetwear, music and audio, digital goods. The FrassKicks commercial marketplace.",
+          "The Frass District directory: Frass Kicks, Frass Drip, Bare Drip, Plus Size, Frass Kids and Frass Luxury House — for men and women.",
       },
-      { property: "og:title", content: "Shop Frass — FrassKicks Marketplace" },
+      { property: "og:title", content: "Frass District — Shop Every Frass Store" },
       {
         property: "og:description",
-        content: "Signature footwear, limited drops, Frass Drip apparel, independent music and creator assets.",
+        content:
+          "Two columns, every store. Kicks, Drip, Bare, Plus Size, Kids and the Luxury House — men's side and women's side.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -23,30 +35,88 @@ export const Route = createFileRoute("/shop-frass")({
   component: ShopFrassPage,
 });
 
-const DEPARTMENTS = [
+const COLUMNS: [DirectoryColumn, DirectoryColumn] = [
   {
-    title: "Footwear & Drops",
-    copy: "Frass Kicks flagship footwear and limited releases.",
-    to: "/frass-kicks",
-    accent: "var(--gold)",
+    heading: "Men's Side",
+    stores: [
+      {
+        title: "Frass Kicks for Men",
+        description: "Premium footwear — casual, classic and street.",
+        image: storeKicksMen,
+        to: "/frass-kicks/men",
+      },
+      {
+        title: "Frass Drip for Men",
+        description: "Streetwear, apparel and complete looks.",
+        image: storeDripMen,
+        to: "/frass-drip/men",
+      },
+      {
+        title: "Bare Drip for Men",
+        description: "Swimwear, resort wear and essentials.",
+        image: storeBareMen,
+        to: "/bare-drip/men",
+      },
+      {
+        title: "Plus Size for Men",
+        description: "Extended sizing across every fit.",
+        image: cardMen,
+        to: "/plus-size/men",
+      },
+      {
+        title: "Frass Kids for Boys",
+        description: "Kicks, drip and essentials for young builders.",
+        image: districtKids,
+        to: "/frass-kids/boys",
+      },
+      {
+        title: "Frass Luxury House",
+        description: "Tailored luxury and limited men's editions.",
+        image: districtLuxury,
+        to: "/frass-luxury-house/men",
+      },
+    ],
   },
   {
-    title: "Apparel & Streetwear",
-    copy: "Frass Drip, Bare Drip, Party Drip, Sports Drip, Denim Drip, New Looks.",
-    to: "/frass-drip",
-    accent: "var(--chrome)",
-  },
-  {
-    title: "Music & Audio",
-    copy: "Independent artist drops, stems, and audio packs.",
-    to: "/music-media",
-    accent: "var(--hill-gold)",
-  },
-  {
-    title: "Digital Goods & Templates",
-    copy: "Creator assets, workflows, and templates.",
-    to: "/capsules",
-    accent: "var(--kids-turquoise)",
+    heading: "Women's Side",
+    stores: [
+      {
+        title: "Frass Kicks for Women",
+        description: "Sneakers, heels, sandals and slides.",
+        image: storeKicksWomen,
+        to: "/frass-kicks/women",
+      },
+      {
+        title: "Frass Drip for Women",
+        description: "Fashion, apparel and complete looks.",
+        image: storeDripWomen,
+        to: "/frass-drip/women",
+      },
+      {
+        title: "Bare Drip for Women",
+        description: "Swimwear, lingerie and resort collections.",
+        image: storeBareWomen,
+        to: "/bare-drip/women",
+      },
+      {
+        title: "Plus Size for Women",
+        description: "Extended sizing across every collection.",
+        image: cardWomen,
+        to: "/plus-size/women",
+      },
+      {
+        title: "Frass Kids for Girls",
+        description: "Kicks, drip and essentials for young builders.",
+        image: districtKids,
+        to: "/frass-kids/girls",
+      },
+      {
+        title: "Frass Luxury House",
+        description: "Couture-leaning luxury and limited women's editions.",
+        image: districtLuxury,
+        to: "/frass-luxury-house/women",
+      },
+    ],
   },
 ];
 
@@ -69,7 +139,7 @@ function ShopFrassPage() {
             The FrassKicks Marketplace
           </span>
           <h1 className="gateway-rise mt-3 max-w-3xl font-display text-4xl uppercase leading-[0.95] text-white md:text-7xl">
-            Signature Footwear & Limited Drops
+            Frass District
           </h1>
           <div className="mt-6 flex flex-wrap gap-3">
             <Link
@@ -88,34 +158,17 @@ function ShopFrassPage() {
         </div>
       </section>
 
-      <section className="mx-auto max-w-[1600px] px-6 py-16 lg:px-10">
-        <h2 className="text-[10px] uppercase tracking-[0.35em] text-muted-foreground">
-          Department store
-        </h2>
-        <div className="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-          {DEPARTMENTS.map((d) => (
-            <Link
-              key={d.title}
-              to={d.to}
-              aria-label={`${d.title} — ${d.copy}`}
-              className="group relative overflow-hidden rounded-3xl border border-border bg-card p-6 transition duration-300 hover:-translate-y-1.5 hover:border-[color:var(--gold)]"
-            >
-              <span className="block h-1 w-12 rounded-full" style={{ background: d.accent }} />
-
-              <h3 className="mt-5 font-display text-2xl uppercase leading-none">{d.title}</h3>
-              <p className="mt-3 text-sm text-muted-foreground">{d.copy}</p>
-              <span className="mt-6 inline-block text-[10px] uppercase tracking-[0.28em] text-muted-foreground transition group-hover:text-[color:var(--gold)]">
-                Enter →
-              </span>
-            </Link>
-          ))}
-        </div>
-      </section>
+      <DistrictDirectory
+        headline="Choose Your Side"
+        lines={["Walk Wid Power", "Step Wid Purpose", "Move Wid Meaning"]}
+        intro="Every Frass store, in one directory. Men's side on the left, women's side on the right — pick your door and start shopping."
+        columns={COLUMNS}
+      />
 
       <footer className="border-t border-border/60 bg-card/40">
         <div className="mx-auto grid max-w-[1600px] gap-4 px-6 py-8 text-[10px] uppercase tracking-[0.22em] text-muted-foreground sm:grid-cols-2 lg:grid-cols-4 lg:px-10">
           <span className="text-[color:var(--gold)]">★ FrassKicks Quality Guarantee</span>
-          <span>Batch dispatch · Sunday & Monday</span>
+          <span>Batch dispatch · Sunday &amp; Monday</span>
           <span>14-day return policy</span>
           <span>Landed-cost checkout — no surprise duties</span>
         </div>
