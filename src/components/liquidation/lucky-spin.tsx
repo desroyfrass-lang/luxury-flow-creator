@@ -403,14 +403,17 @@ export function LuckySpin() {
                 {/* One symbol per slice — no text */}
                 {REWARDS.map((r, i) => {
                   const a = i * slice + slice / 2;
+                  const rad = ((a - 90) * Math.PI) / 180;
+                  const x = 50 + 33 * Math.cos(rad);
+                  const y = 50 + 33 * Math.sin(rad);
                   return (
                     <div
                       key={r.id}
-                      className="absolute left-1/2 top-1/2 h-0 w-0"
-                      style={{ transform: `rotate(${a}deg) translateX(34%)` }}
+                      className="absolute"
+                      style={{ left: `${x}%`, top: `${y}%` }}
                     >
                       <span
-                        className="flex h-11 w-11 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border md:h-14 md:w-14"
+                        className="flex h-11 w-11 items-center justify-center rounded-full border md:h-14 md:w-14"
                         style={{
                           transform: `translate(-50%, -50%) rotate(${-a}deg)`,
                           borderColor: hovered
