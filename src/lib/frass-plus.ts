@@ -24,8 +24,8 @@ import edW1 from "@/assets/plus-ed-w1.jpg";
 import edW2 from "@/assets/plus-ed-w2.jpg";
 import edW3 from "@/assets/plus-ed-w3.jpg";
 import edW4 from "@/assets/plus-ed-w4.jpg";
-import wingMen from "@/assets/plus-wing-men.jpg";
-import wingWomen from "@/assets/plus-wing-women.jpg";
+import wingMen from "@/assets/store-drip-plus-men.jpg";
+import wingWomen from "@/assets/store-drip-plus-women.jpg";
 
 export type PlusGender = "men" | "women";
 
