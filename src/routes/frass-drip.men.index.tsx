@@ -43,7 +43,7 @@ export const Route = createFileRoute("/frass-drip/men/")({
         ]}
       />
       <section className="mx-auto max-w-[1600px] px-6 lg:px-12">
-        <header className="mx-auto mb-14 max-w-2xl text-center">
+        <header className="mx-auto mb-16 mt-8 max-w-2xl text-center md:mt-12">
           <p className="text-[10px] uppercase tracking-[0.38em] text-[color:var(--gold)]">
             The Department Floor
           </p>
@@ -51,6 +51,7 @@ export const Route = createFileRoute("/frass-drip/men/")({
             Every doorway is a showroom of its own. Step through the one that matches your day.
           </p>
         </header>
+
         <div className="grid grid-cols-1 gap-x-8 gap-y-16 sm:grid-cols-2 lg:grid-cols-3">
           {PARENTS.map(([slug, title, description], i) => (
             <StorePortalCard
