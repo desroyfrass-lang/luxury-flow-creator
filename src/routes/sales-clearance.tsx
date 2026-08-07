@@ -7,7 +7,7 @@ import { ProductGrid } from "@/components/product-grid";
 import { SaleVsVault } from "@/components/liquidation/sale-vs-vault";
 import { HiddenGem } from "@/components/liquidation/hidden-gem";
 import { FlashDrop } from "@/components/liquidation/flash-drop";
-import { SpinAndSave } from "@/components/liquidation/spin-and-save";
+import { LuckySpin } from "@/components/liquidation/lucky-spin";
 import { TreasureHunt } from "@/components/liquidation/treasure-hunt";
 import { WalkWidPower } from "@/components/liquidation/walk-wid-power";
 import { Link } from "@tanstack/react-router";
@@ -158,7 +158,7 @@ function LiquidationRoomPage() {
           </div>
         </section>
 
-        <SpinAndSave />
+        <LuckySpin />
 
         <WalkWidPower query={SALE_QUERY} />
 
