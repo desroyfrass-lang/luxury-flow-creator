@@ -5,8 +5,7 @@ export interface Crumb {
   to?: string;
 }
 
-const DISTRICT: Crumb = { label: "Frass District", to: "/shop-frass" };
-const HOME: Crumb = { label: "Home", to: "/" };
+const DISTRICT: Crumb = { label: "Frass District", to: "/" };
 
 const KICKS_TYPE: Record<string, string> = {
   casual: "Casual Kicks",
@@ -52,7 +51,7 @@ export function storeCrumbs(
     drip: { label: `Frass Drip for ${g}`, to: `/frass-drip/${gender}` },
     bare: { label: `Bare Drip for ${g}`, to: `/bare-drip/${gender}` },
   } as const;
-  return [HOME, DISTRICT, { ...map[store] }];
+  return [DISTRICT, { ...map[store] }];
 }
 
 /**
@@ -105,5 +104,5 @@ export function collectionCrumbs(handle: string): Crumb[] {
     return trail;
   }
 
-  return [HOME, DISTRICT, { label: title }];
+  return [DISTRICT, { label: title }];
 }
