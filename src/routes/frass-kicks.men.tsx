@@ -52,8 +52,9 @@ function MensKicksRoom() {
         description="Three lit bays, floor to ceiling. Casual, Classic, Street — every pair on the wall is live."
         crumbs={[
           { label: "Home", to: "/" },
+          { label: "Frass District", to: "/kicks-district" },
           { label: "Frass Kicks", to: "/frass-kicks" },
-          { label: "Men" },
+          { label: "Frass Kicks for Men" },
         ]}
       />
       <section className="relative mx-auto max-w-[1600px] px-2 md:px-12">

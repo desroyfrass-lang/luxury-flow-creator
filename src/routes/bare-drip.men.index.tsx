@@ -29,8 +29,9 @@ export const Route = createFileRoute("/bare-drip/men/")({
         description="Made for Movement. Built for Confidence."
         crumbs={[
           { label: "Home", to: "/" },
+          { label: "Frass District", to: "/kicks-district" },
           { label: "Bare Drip", to: "/bare-drip" },
-          { label: "Men" },
+          { label: "Bare Drip for Men" },
         ]}
       />
       <section className="mx-auto max-w-[1600px] px-6 lg:px-12">

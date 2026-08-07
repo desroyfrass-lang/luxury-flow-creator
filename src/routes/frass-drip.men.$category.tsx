@@ -160,8 +160,9 @@ function CategoryPage() {
         description={cat.tagline}
         crumbs={[
           { label: "Home", to: "/" },
+          { label: "Frass District", to: "/kicks-district" },
           { label: "Frass Drip", to: "/frass-drip" },
-          { label: "Men", to: "/frass-drip/men" },
+          { label: "Frass Drip for Men", to: "/frass-drip/men" },
           { label: cat.title },
         ]}
       />
