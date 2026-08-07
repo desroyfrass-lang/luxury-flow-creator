@@ -124,6 +124,7 @@ import { Route as AuthenticatedAdminCjImportRouteImport } from './routes/_authen
 import { Route as AuthenticatedAdminCapsulesRouteImport } from './routes/_authenticated/admin.capsules'
 import { Route as AuthenticatedAdminBlogRouteImport } from './routes/_authenticated/admin.blog'
 import { Route as AuthenticatedAdminApprovalsRouteImport } from './routes/_authenticated/admin.approvals'
+import { Route as AuthenticatedAdminAffiliatePolicyRouteImport } from './routes/_authenticated/admin.affiliate-policy'
 import { Route as Char91DotmcpChar93InvokeToolToolRouteImport } from './routes/[.mcp]/invoke-tool/$tool'
 import { Route as DotlovableOauthConsentRouteImport } from './routes/[.]lovable.oauth.consent'
 import { Route as SocialMediaViralsCategorySubProductRouteImport } from './routes/social-media-virals.$category.$sub.$product'
@@ -725,6 +726,12 @@ const AuthenticatedAdminApprovalsRoute =
     path: '/approvals',
     getParentRoute: () => AuthenticatedAdminRoute,
   } as any)
+const AuthenticatedAdminAffiliatePolicyRoute =
+  AuthenticatedAdminAffiliatePolicyRouteImport.update({
+    id: '/affiliate-policy',
+    path: '/affiliate-policy',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
 const Char91DotmcpChar93InvokeToolToolRoute =
   Char91DotmcpChar93InvokeToolToolRouteImport.update({
     id: '/.mcp/invoke-tool/$tool',
@@ -822,6 +829,7 @@ export interface FileRoutesByFullPath {
   '/social-media-virals/': typeof SocialMediaViralsIndexRoute
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
   '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
+  '/admin/affiliate-policy': typeof AuthenticatedAdminAffiliatePolicyRoute
   '/admin/approvals': typeof AuthenticatedAdminApprovalsRoute
   '/admin/blog': typeof AuthenticatedAdminBlogRoute
   '/admin/capsules': typeof AuthenticatedAdminCapsulesRoute
@@ -924,6 +932,7 @@ export interface FileRoutesByTo {
   '/social-media-virals': typeof SocialMediaViralsIndexRoute
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
   '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
+  '/admin/affiliate-policy': typeof AuthenticatedAdminAffiliatePolicyRoute
   '/admin/approvals': typeof AuthenticatedAdminApprovalsRoute
   '/admin/blog': typeof AuthenticatedAdminBlogRoute
   '/admin/capsules': typeof AuthenticatedAdminCapsulesRoute
@@ -1045,6 +1054,7 @@ export interface FileRoutesById {
   '/social-media-virals/': typeof SocialMediaViralsIndexRoute
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
   '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
+  '/_authenticated/admin/affiliate-policy': typeof AuthenticatedAdminAffiliatePolicyRoute
   '/_authenticated/admin/approvals': typeof AuthenticatedAdminApprovalsRoute
   '/_authenticated/admin/blog': typeof AuthenticatedAdminBlogRoute
   '/_authenticated/admin/capsules': typeof AuthenticatedAdminCapsulesRoute
@@ -1166,6 +1176,7 @@ export interface FileRouteTypes {
     | '/social-media-virals/'
     | '/.lovable/oauth/consent'
     | '/.mcp/invoke-tool/$tool'
+    | '/admin/affiliate-policy'
     | '/admin/approvals'
     | '/admin/blog'
     | '/admin/capsules'
@@ -1268,6 +1279,7 @@ export interface FileRouteTypes {
     | '/social-media-virals'
     | '/.lovable/oauth/consent'
     | '/.mcp/invoke-tool/$tool'
+    | '/admin/affiliate-policy'
     | '/admin/approvals'
     | '/admin/blog'
     | '/admin/capsules'
@@ -1388,6 +1400,7 @@ export interface FileRouteTypes {
     | '/social-media-virals/'
     | '/.lovable/oauth/consent'
     | '/.mcp/invoke-tool/$tool'
+    | '/_authenticated/admin/affiliate-policy'
     | '/_authenticated/admin/approvals'
     | '/_authenticated/admin/blog'
     | '/_authenticated/admin/capsules'
@@ -2276,6 +2289,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminApprovalsRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
+    '/_authenticated/admin/affiliate-policy': {
+      id: '/_authenticated/admin/affiliate-policy'
+      path: '/affiliate-policy'
+      fullPath: '/admin/affiliate-policy'
+      preLoaderRoute: typeof AuthenticatedAdminAffiliatePolicyRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
     '/.mcp/invoke-tool/$tool': {
       id: '/.mcp/invoke-tool/$tool'
       path: '/.mcp/invoke-tool/$tool'
@@ -2301,6 +2321,7 @@ declare module '@tanstack/react-router' {
 }
 
 interface AuthenticatedAdminRouteChildren {
+  AuthenticatedAdminAffiliatePolicyRoute: typeof AuthenticatedAdminAffiliatePolicyRoute
   AuthenticatedAdminApprovalsRoute: typeof AuthenticatedAdminApprovalsRoute
   AuthenticatedAdminBlogRoute: typeof AuthenticatedAdminBlogRoute
   AuthenticatedAdminCapsulesRoute: typeof AuthenticatedAdminCapsulesRoute
@@ -2318,6 +2339,8 @@ interface AuthenticatedAdminRouteChildren {
 }
 
 const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
+  AuthenticatedAdminAffiliatePolicyRoute:
+    AuthenticatedAdminAffiliatePolicyRoute,
   AuthenticatedAdminApprovalsRoute: AuthenticatedAdminApprovalsRoute,
   AuthenticatedAdminBlogRoute: AuthenticatedAdminBlogRoute,
   AuthenticatedAdminCapsulesRoute: AuthenticatedAdminCapsulesRoute,
