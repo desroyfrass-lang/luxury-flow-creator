@@ -185,9 +185,18 @@ export function LuckySpin() {
       }
     }
 
-    fetchOrderCount({ data: undefined })
-      .then((res) => setOrderCount(res.count))
-      .catch(() => setOrderCount(0));
+    // Only call the authenticated server fn when a session exists —
+    // otherwise it throws a 401 Response that surfaces as a runtime error.
+    void supabase.auth.getSession().then(({ data }) => {
+      if (!data.session) {
+        setOrderCount(0);
+        return;
+      }
+      fetchOrderCount({ data: undefined })
+        .then((res) => setOrderCount(res.count))
+        .catch(() => setOrderCount(0));
+    });
+
 
     return () => {
       if (timer.current) window.clearTimeout(timer.current);
