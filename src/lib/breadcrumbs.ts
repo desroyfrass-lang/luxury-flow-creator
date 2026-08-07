@@ -5,7 +5,7 @@ export interface Crumb {
   to?: string;
 }
 
-const DISTRICT: Crumb = { label: "Frass District", to: "/kicks-district" };
+const DISTRICT: Crumb = { label: "Frass District", to: "/shop-frass" };
 const HOME: Crumb = { label: "Home", to: "/" };
 
 const KICKS_TYPE: Record<string, string> = {
