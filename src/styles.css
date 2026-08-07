@@ -450,26 +450,24 @@
 @keyframes gateway-drift {
   0%   { transform: scale(1.55); }
   55%  { transform: scale(1); }
-  68%  { transform: scale(1); }
-  100% { transform: scale(1.55); }
+  100% { transform: scale(1); }
 }
 
 @utility gateway-drift {
-  animation: gateway-drift 30s cubic-bezier(0.33, 0, 0.2, 1) infinite;
+  animation: gateway-drift 30s cubic-bezier(0.33, 0, 0.2, 1) forwards;
   will-change: transform;
 }
 
-/* Content swells in sync with the arch zoom-out, then eases back */
+/* Content swells in sync with the arch zoom-out, then holds */
 @keyframes gateway-swell {
   0%   { transform: scale(0.72) translate3d(0, 18px, 0); opacity: 0.15; }
   40%  { transform: scale(0.92) translate3d(0, 6px, 0); opacity: 0.85; }
   55%  { transform: scale(1) translate3d(0, 0, 0); opacity: 1; }
-  68%  { transform: scale(1) translate3d(0, 0, 0); opacity: 1; }
-  100% { transform: scale(0.72) translate3d(0, 18px, 0); opacity: 0.15; }
+  100% { transform: scale(1) translate3d(0, 0, 0); opacity: 1; }
 }
 
 @utility gateway-swell {
-  animation: gateway-swell 30s cubic-bezier(0.33, 0, 0.2, 1) infinite;
+  animation: gateway-swell 30s cubic-bezier(0.33, 0, 0.2, 1) forwards;
   transform-origin: center bottom;
   will-change: transform, opacity;
 }
