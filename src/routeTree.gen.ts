@@ -52,6 +52,7 @@ import { Route as PlusSizeWomenRouteImport } from './routes/plus-size.women'
 import { Route as PlusSizeMenRouteImport } from './routes/plus-size.men'
 import { Route as LookbookStoryRouteImport } from './routes/lookbook.$story'
 import { Route as KidsWorldParentsRouteImport } from './routes/kids-world.parents'
+import { Route as FrassPlusSalesRouteImport } from './routes/frass-plus.sales'
 import { Route as FrassLuxuryHouseWomenRouteImport } from './routes/frass-luxury-house.women'
 import { Route as FrassLuxuryHouseMenRouteImport } from './routes/frass-luxury-house.men'
 import { Route as FrassKidsGirlsRouteImport } from './routes/frass-kids.girls'
@@ -340,6 +341,11 @@ const KidsWorldParentsRoute = KidsWorldParentsRouteImport.update({
   id: '/parents',
   path: '/parents',
   getParentRoute: () => KidsWorldRoute,
+} as any)
+const FrassPlusSalesRoute = FrassPlusSalesRouteImport.update({
+  id: '/sales',
+  path: '/sales',
+  getParentRoute: () => FrassPlusRoute,
 } as any)
 const FrassLuxuryHouseWomenRoute = FrassLuxuryHouseWomenRouteImport.update({
   id: '/women',
@@ -788,6 +794,7 @@ export interface FileRoutesByFullPath {
   '/frass-kids/girls': typeof FrassKidsGirlsRoute
   '/frass-luxury-house/men': typeof FrassLuxuryHouseMenRoute
   '/frass-luxury-house/women': typeof FrassLuxuryHouseWomenRoute
+  '/frass-plus/sales': typeof FrassPlusSalesRoute
   '/kids-world/parents': typeof KidsWorldParentsRoute
   '/lookbook/$story': typeof LookbookStoryRoute
   '/plus-size/men': typeof PlusSizeMenRoute
@@ -888,6 +895,7 @@ export interface FileRoutesByTo {
   '/frass-kids/girls': typeof FrassKidsGirlsRoute
   '/frass-luxury-house/men': typeof FrassLuxuryHouseMenRoute
   '/frass-luxury-house/women': typeof FrassLuxuryHouseWomenRoute
+  '/frass-plus/sales': typeof FrassPlusSalesRoute
   '/kids-world/parents': typeof KidsWorldParentsRoute
   '/lookbook/$story': typeof LookbookStoryRoute
   '/plus-size/men': typeof PlusSizeMenRoute
@@ -1007,6 +1015,7 @@ export interface FileRoutesById {
   '/frass-kids/girls': typeof FrassKidsGirlsRoute
   '/frass-luxury-house/men': typeof FrassLuxuryHouseMenRoute
   '/frass-luxury-house/women': typeof FrassLuxuryHouseWomenRoute
+  '/frass-plus/sales': typeof FrassPlusSalesRoute
   '/kids-world/parents': typeof KidsWorldParentsRoute
   '/lookbook/$story': typeof LookbookStoryRoute
   '/plus-size/men': typeof PlusSizeMenRoute
@@ -1126,6 +1135,7 @@ export interface FileRouteTypes {
     | '/frass-kids/girls'
     | '/frass-luxury-house/men'
     | '/frass-luxury-house/women'
+    | '/frass-plus/sales'
     | '/kids-world/parents'
     | '/lookbook/$story'
     | '/plus-size/men'
@@ -1226,6 +1236,7 @@ export interface FileRouteTypes {
     | '/frass-kids/girls'
     | '/frass-luxury-house/men'
     | '/frass-luxury-house/women'
+    | '/frass-plus/sales'
     | '/kids-world/parents'
     | '/lookbook/$story'
     | '/plus-size/men'
@@ -1344,6 +1355,7 @@ export interface FileRouteTypes {
     | '/frass-kids/girls'
     | '/frass-luxury-house/men'
     | '/frass-luxury-house/women'
+    | '/frass-plus/sales'
     | '/kids-world/parents'
     | '/lookbook/$story'
     | '/plus-size/men'
@@ -1746,6 +1758,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/kids-world/parents'
       preLoaderRoute: typeof KidsWorldParentsRouteImport
       parentRoute: typeof KidsWorldRoute
+    }
+    '/frass-plus/sales': {
+      id: '/frass-plus/sales'
+      path: '/sales'
+      fullPath: '/frass-plus/sales'
+      preLoaderRoute: typeof FrassPlusSalesRouteImport
+      parentRoute: typeof FrassPlusRoute
     }
     '/frass-luxury-house/women': {
       id: '/frass-luxury-house/women'
@@ -2549,6 +2568,7 @@ const FrassLuxuryHouseRouteWithChildren =
   FrassLuxuryHouseRoute._addFileChildren(FrassLuxuryHouseRouteChildren)
 
 interface FrassPlusRouteChildren {
+  FrassPlusSalesRoute: typeof FrassPlusSalesRoute
   FrassPlusIndexRoute: typeof FrassPlusIndexRoute
   FrassPlusGenderCategoryRoute: typeof FrassPlusGenderCategoryRoute
   FrassPlusGenderBareRoute: typeof FrassPlusGenderBareRoute
@@ -2557,6 +2577,7 @@ interface FrassPlusRouteChildren {
 }
 
 const FrassPlusRouteChildren: FrassPlusRouteChildren = {
+  FrassPlusSalesRoute: FrassPlusSalesRoute,
   FrassPlusIndexRoute: FrassPlusIndexRoute,
   FrassPlusGenderCategoryRoute: FrassPlusGenderCategoryRoute,
   FrassPlusGenderBareRoute: FrassPlusGenderBareRoute,
