@@ -17,16 +17,17 @@ export type WallSection = {
 function ShelfColumn({ section, gender }: { section: WallSection; gender: "men" | "women" }) {
   const [products, setProducts] = useState<ShopifyProduct[] | null>(null);
 
+  const filter = section.filter;
   useEffect(() => {
     let cancelled = false;
     setProducts(null);
-    fetchProducts({ first: 30, query: section.query })
-      .then((p) => !cancelled && setProducts(p))
+    fetchProducts({ first: 60, query: section.query })
+      .then((p) => !cancelled && setProducts(filter ? p.filter(filter) : p))
       .catch(() => !cancelled && setProducts([]));
     return () => {
       cancelled = true;
     };
-  }, [section.query]);
+  }, [section.query, filter]);
 
   return (
     <div className="relative flex min-w-0 flex-1 flex-col overflow-hidden rounded-2xl border border-[color:var(--gold)]/25 bg-[linear-gradient(180deg,color-mix(in_oklab,var(--foreground)_8%,transparent),color-mix(in_oklab,var(--foreground)_3%,transparent))] backdrop-blur-sm md:rounded-[2rem]">
