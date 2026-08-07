@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import archHero from "@/assets/kicks-district-hero.jpg.asset.json";
+import archHero from "@/assets/frass-gateway-arch.jpg.asset.json";
 import fullLogo from "@/assets/frass-logo-full.asset.json";
 
 export const Route = createFileRoute("/gateway")({
