@@ -3,16 +3,25 @@ import { SiteShell } from "@/components/site-shell";
 import { PageHeader } from "@/components/page-header";
 import { StorePortalCard } from "@/components/store-portal-card";
 import { PageFeedback } from "@/components/page-feedback";
-import { PLUS_DEPARTMENTS, isPlusGender } from "@/lib/frass-plus";
+import { PlusBadge } from "@/components/plus-badge";
+import { PLUS_DEPARTMENTS, isPlusGender, plusName } from "@/lib/frass-plus";
+
+const STORE_LABEL = {
+  kicks: "Frass Kicks Plus+",
+  drip: "Frass Drip Plus+",
+  bare: "Bare Drip Plus+",
+} as const;
+
+const STORE_ORDER = ["kicks", "drip", "bare"] as const;
 
 export const Route = createFileRoute("/frass-plus/$gender/")({
   beforeLoad: ({ params }) => {
     if (!isPlusGender(params.gender)) throw notFound();
   },
   head: ({ params }) => {
-    const label = params.gender === "men" ? "Gentlemen's" : "Ladies'";
-    const title = `Frass Plus — The ${label} Collection`;
-    const description = `${label} footwear, apparel, tailoring, resort and activewear at Frass Plus, thoughtfully cut for extended sizing.`;
+    const label = params.gender === "men" ? "Men's" : "Women's";
+    const title = `${label} Frass Plus+ — The Full Collection`;
+    const description = `Every ${label} Frass collection — Kicks, Drip and Bare Drip — mirrored department for department in extended sizing.`;
     return {
       meta: [
         { title },
@@ -38,15 +47,15 @@ export const Route = createFileRoute("/frass-plus/$gender/")({
 function WingPage() {
   const { gender } = Route.useParams();
   if (!isPlusGender(gender)) return null;
-  const label = gender === "men" ? "Gentlemen" : "Ladies";
+  const label = gender === "men" ? "Men" : "Women";
   const departments = PLUS_DEPARTMENTS[gender];
 
   return (
     <SiteShell>
       <PageHeader
         eyebrow={`Frass Plus · ${label}`}
-        title={`The ${label}' Collection`}
-        description="Browse by collection, occasion and lifestyle. Fit is a promise, not a category."
+        title={`${label}'s Frass Plus+`}
+        description="The exact same collection architecture as the main Frass District — every department mirrored, every drop released together. Only the fit is extended."
         crumbs={[
           { label: "Frass District", to: "/" },
           { label: "Frass Plus", to: "/frass-plus" },
@@ -55,20 +64,38 @@ function WingPage() {
       />
 
       <section className="mx-auto max-w-[1600px] px-6 pb-24 lg:px-12">
-        <div className="grid grid-cols-1 gap-x-8 gap-y-16 sm:grid-cols-2 lg:grid-cols-3">
-          {departments.map((d, i) => (
-            <StorePortalCard
-              key={d.slug}
-              to="/frass-plus/$gender/$category"
-              params={{ gender, category: d.slug }}
-              slot={`plus-${gender}-${d.slug}`}
-              image={d.image}
-              eyebrow={`Department ${String(i + 1).padStart(2, "0")}`}
-              title={d.title}
-              description={d.tagline}
-            />
-          ))}
-        </div>
+        {STORE_ORDER.map((store) => {
+          const list = departments.filter((d) => d.store === store);
+          if (!list.length) return null;
+          return (
+            <div key={store} className="mb-20">
+              <header className="mb-10 flex flex-wrap items-center gap-3 border-b border-[color:var(--gold)]/20 pb-4">
+                <h2 className="font-display text-2xl uppercase md:text-4xl">
+                  {STORE_LABEL[store].replace(" Plus+", "")}
+                </h2>
+                <PlusBadge size="lg" />
+                <span className="text-[10px] uppercase tracking-[0.28em] text-muted-foreground">
+                  Mirrored collection
+                </span>
+              </header>
+
+              <div className="grid grid-cols-1 gap-x-8 gap-y-16 sm:grid-cols-2 lg:grid-cols-3">
+                {list.map((d, i) => (
+                  <StorePortalCard
+                    key={d.slug}
+                    to="/frass-plus/$gender/$category"
+                    params={{ gender, category: d.slug }}
+                    slot={`plus-${gender}-${d.slug}`}
+                    image={d.image}
+                    eyebrow={`${STORE_LABEL[store]} · ${String(i + 1).padStart(2, "0")}`}
+                    title={plusName(d.title)}
+                    description={d.tagline}
+                  />
+                ))}
+              </div>
+            </div>
+          );
+        })}
       </section>
 
       <PageFeedback pageTitle={`Frass Plus — ${label}`} />
