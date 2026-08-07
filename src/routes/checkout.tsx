@@ -2,8 +2,8 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { SiteShell } from "@/components/site-shell";
 import { PageFeedback } from "@/components/page-feedback";
 import { useCartStore } from "@/lib/cart-store";
-import { Trash2, ArrowLeft, Lock, Gift, Loader2 } from "lucide-react";
-import { useState } from "react";
+import { Trash2, ArrowLeft, Lock, Gift, Loader2, Heart } from "lucide-react";
+import { useEffect, useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import { validateCoupon } from "@/lib/rewards.functions";
 import { toast } from "sonner";
@@ -42,7 +42,24 @@ function CheckoutPage() {
   const [redirecting, setRedirecting] = useState(false);
   const validate = useServerFn(validateCoupon);
   const discount = applied ? eligibleSubtotal * (applied.percentOff / 100) : 0;
-  const total = Math.max(0, subtotal - discount);
+
+  // Optional giving — Frass Foundation (children) or Frass Hill community.
+  const [cause, setCause] = useState<"kids" | "community">("community");
+  const [donation, setDonation] = useState(0);
+  useEffect(() => {
+    try {
+      const stored = localStorage.getItem("frass:donation-cause");
+      if (stored === "kids" || stored === "community") setCause(stored);
+    } catch {
+      /* ignore */
+    }
+  }, []);
+  const causeLabel =
+    cause === "kids"
+      ? "Frass Foundation — children's initiatives"
+      : "Frass Hill community initiatives";
+
+  const total = Math.max(0, subtotal - discount) + donation;
 
   const applyCoupon = async () => {
     const code = couponInput.trim().toUpperCase();
@@ -74,6 +91,12 @@ function CheckoutPage() {
     url.searchParams.set("channel", "online_store");
     if (applied?.code) {
       url.searchParams.set("discount", applied.code);
+    }
+    if (donation > 0) {
+      url.searchParams.set(
+        "attributes[Donation]",
+        `${currency} ${donation.toFixed(2)} — ${causeLabel}`,
+      );
     }
     window.location.href = url.toString();
   };
@@ -166,6 +189,16 @@ function CheckoutPage() {
                     )}
                   </>
                 )}
+                {donation > 0 && (
+                  <div className="flex justify-between text-[color:var(--gold,#c9a24a)]">
+                    <span className="inline-flex items-center gap-1">
+                      <Heart className="h-3.5 w-3.5" /> Donation
+                    </span>
+                    <span className="tabular-nums">
+                      {currency} {donation.toFixed(2)}
+                    </span>
+                  </div>
+                )}
                 <div className="flex justify-between">
                   <span className="text-muted-foreground">Shipping</span>
                   <span className="text-muted-foreground">Calculated at next step</span>
@@ -176,6 +209,42 @@ function CheckoutPage() {
                     {currency} {total.toFixed(2)}
                   </span>
                 </div>
+              </div>
+
+              {/* Optional giving */}
+              <div className="mt-6 rounded-2xl border border-[color:var(--gold,#c9a24a)]/30 p-4">
+                <p className="text-[10px] uppercase tracking-[0.25em] text-[color:var(--gold,#c9a24a)]">
+                  Add a donation (optional)
+                </p>
+                <p className="mt-2 text-xs text-muted-foreground">
+                  {cause === "kids"
+                    ? "Support children and families through the Frass Foundation."
+                    : "Support Frass Hill community initiatives."}
+                </p>
+                <div className="mt-3 flex flex-wrap gap-2">
+                  {[0, 2, 5, 10, 25].map((amt) => (
+                    <button
+                      key={amt}
+                      type="button"
+                      onClick={() => setDonation(amt)}
+                      aria-pressed={donation === amt}
+                      className={`rounded-full border px-4 py-1.5 text-[11px] uppercase tracking-[0.2em] transition ${
+                        donation === amt
+                          ? "border-[color:var(--gold,#c9a24a)] bg-[color:var(--gold,#c9a24a)] text-background"
+                          : "border-border text-muted-foreground hover:text-foreground"
+                      }`}
+                    >
+                      {amt === 0 ? "No thanks" : `${currency} ${amt}`}
+                    </button>
+                  ))}
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setCause(cause === "kids" ? "community" : "kids")}
+                  className="mt-3 text-[11px] text-muted-foreground underline hover:text-foreground"
+                >
+                  Give to {cause === "kids" ? "Frass Hill community" : "children's"} initiatives instead
+                </button>
               </div>
 
               {!applied ? (
