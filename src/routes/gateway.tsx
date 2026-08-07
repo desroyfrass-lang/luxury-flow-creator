@@ -1,6 +1,8 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { useEffect, useState } from "react";
 import archHero from "@/assets/frass-gateway-arch.jpg.asset.json";
 import fullLogo from "@/assets/frass-logo-full.asset.json";
+import frassyGold from "@/assets/frassy-gold.png.asset.json";
 
 export const Route = createFileRoute("/gateway")({
   head: () => ({
