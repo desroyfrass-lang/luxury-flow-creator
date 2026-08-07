@@ -10,34 +10,9 @@ import swimCard1 from "@/assets/bare-card-m-swim-1.jpg";
 import swimCard2 from "@/assets/bare-card-m-swim-2.jpg";
 import underCard1 from "@/assets/bare-card-m-under-1.jpg";
 import underCard2 from "@/assets/bare-card-m-under-2.jpg";
+import { BARE_MEN_CATEGORIES as MEN_CATEGORIES } from "@/lib/drip-catalog";
 
-type Sub = readonly [slug: string, title: string];
 
-const MEN_CATEGORIES: Record<string, { title: string; tagline: string; subs: readonly Sub[] }> = {
-  swimwear: {
-    title: "Men's Bare Drip Swimwear",
-    tagline: "Swim shorts, trunks, beach shorts and performance swimwear.",
-    subs: [
-      ["swim-shorts", "Swim Shorts"],
-      ["swim-trunks", "Swim Trunks"],
-      ["beach-shorts", "Beach Shorts"],
-      ["performance-swimwear", "Performance Swimwear"],
-    ],
-  },
-  underwear: {
-    title: "Men's Bare Drip Underwear",
-    tagline: "Boxers, briefs, tanks, undershirts and sleepwear.",
-    subs: [
-      ["boxers", "Boxers"],
-      ["boxer-briefs", "Boxer Briefs"],
-      ["briefs", "Briefs"],
-      ["performance-underwear", "Performance Underwear"],
-      ["undershirts", "Undershirts"],
-      ["tank-tops", "Tank Tops"],
-      ["sleepwear", "Sleepwear"],
-    ],
-  },
-};
 
 const CARD_IMAGES: Record<string, string[]> = {
   swimwear: [swimCard1, swimCard2],

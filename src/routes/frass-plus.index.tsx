@@ -1,17 +1,21 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { SiteShell } from "@/components/site-shell";
 import { PageFeedback } from "@/components/page-feedback";
+import { PlusBadge } from "@/components/plus-badge";
 import {
   BROWSE_RAILS,
+  MIRRORED_STORES,
   PLUS_DEPARTMENTS,
   PLUS_WING_IMAGE,
   SIGNATURE_COLLECTIONS,
+  signatureHandle,
 } from "@/lib/frass-plus";
 import hero from "@/assets/plus-hero.jpg";
 
-const TITLE = "Frass Plus — Premium Fashion, Extended Sizing";
+const TITLE = "Frass Plus+ — The Same Collections, Extended Sizing";
 const DESCRIPTION =
-  "Frass Plus is a flagship fashion boutique in the Frass District — premium footwear, apparel, occasion and resort collections thoughtfully cut for extended sizing.";
+  "Frass Plus+ mirrors the Frass District exactly — Frass Kicks, Frass Drip and Bare Drip, department for department, released on the same day in extended sizing.";
+
 
 export const Route = createFileRoute("/frass-plus/")({
   head: () => ({
@@ -43,16 +47,18 @@ function PlusHome() {
           <span className="text-[10px] uppercase tracking-[0.42em] text-[color:var(--gold)]">
             Frass District · Flagship
           </span>
-          <h1 className="mt-4 font-display text-5xl uppercase leading-[0.88] text-[color:var(--luxe-linen,#f6f1e7)] md:text-8xl">
+          <h1 className="mt-4 flex flex-wrap items-center gap-4 font-display text-5xl uppercase leading-[0.88] text-[color:var(--luxe-linen,#f6f1e7)] md:text-8xl">
             Frass Plus
+            <PlusBadge size="lg" className="translate-y-1" />
           </h1>
           <p className="mt-5 max-w-2xl text-sm text-[color:var(--luxe-linen,#f6f1e7)]/80 md:text-lg">
-            Premium fashion thoughtfully designed for extended sizing — without compromising
-            style, craftsmanship, or confidence.
+            The exact same collections as the main Frass District — Frass Kicks, Frass Drip and
+            Bare Drip — mirrored department for department, released on the same day.
           </p>
           <p className="mt-3 font-script text-lg italic text-[color:var(--gold)] md:text-2xl">
             Style has no size. Confidence has no limits.
           </p>
+
         </div>
       </section>
 
@@ -73,27 +79,65 @@ function PlusHome() {
         ))}
       </nav>
 
+      {/* Mirrored stores */}
+      <section className="mx-auto max-w-[1600px] px-6 pb-16 lg:px-12">
+        <header className="mb-8 max-w-2xl">
+          <p className="text-[10px] uppercase tracking-[0.38em] text-[color:var(--gold)]">
+            One architecture
+          </p>
+          <h2 className="mt-3 font-display text-3xl uppercase md:text-5xl">
+            The same stores, extended
+          </h2>
+          <p className="mt-4 text-sm text-muted-foreground">
+            Frass Plus+ has no separate collection names. Every store, department and
+            sub-collection mirrors the main district exactly — the Plus+ badge is the only
+            difference.
+          </p>
+        </header>
+        <div className="grid gap-6 md:grid-cols-3">
+          {MIRRORED_STORES.map((s) => (
+            <article
+              key={s.key}
+              className="relative overflow-hidden rounded-2xl border border-[color:var(--gold)]/20 bg-card"
+            >
+              <div className="relative aspect-[16/10] w-full overflow-hidden">
+                <img src={s.image} alt={s.title} loading="lazy" className="h-full w-full object-cover" />
+                <div className="absolute inset-0 bg-[linear-gradient(to_top,oklch(0.08_0.01_60/0.92),transparent_65%)]" />
+              </div>
+              <div className="p-6">
+                <h3 className="flex flex-wrap items-center gap-2 font-display text-xl uppercase">
+                  {s.title}
+                  <PlusBadge />
+                </h3>
+                <p className="mt-2 text-xs text-muted-foreground">{s.blurb}</p>
+              </div>
+            </article>
+          ))}
+        </div>
+      </section>
+
       {/* Two wings */}
       <section className="mx-auto max-w-[1600px] px-6 pb-20 lg:px-12">
         <div className="grid gap-8 md:grid-cols-2">
           <WingCard
             to="/frass-plus/$gender"
             gender="men"
-            eyebrow="The Gentlemen's Collection"
-            title="Gentlemen"
-            blurb="Tailoring, streetwear, resort and activewear — cut with room to move and lines that hold."
+            eyebrow="Men's Frass Plus+"
+            title="Men"
+            blurb="Frass Kicks, every Drip department and Bare Drip — mirrored exactly, cut with room to move."
             count={PLUS_DEPARTMENTS.men.length}
           />
           <WingCard
             to="/frass-plus/$gender"
             gender="women"
-            eyebrow="The Ladies' Collection"
-            title="Ladies"
-            blurb="Dresses, sets, tailoring, swim and intimates — designed to be worn, not endured."
+            eyebrow="Women's Frass Plus+"
+            title="Women"
+            blurb="Frass Kicks, every Drip department and Bare Drip — mirrored exactly, designed to be worn, not endured."
             count={PLUS_DEPARTMENTS.women.length}
           />
         </div>
       </section>
+
 
       {/* Signature collections */}
       <section className="mx-auto max-w-[1600px] px-6 pb-24 lg:px-12">
@@ -102,11 +146,11 @@ function PlusHome() {
             Signature Collections
           </p>
           <h2 className="mt-3 font-display text-3xl uppercase md:text-5xl">
-            Shop the confidence, not the size
+            Mirrored, signature-for-signature
           </h2>
           <p className="mt-4 text-sm text-muted-foreground">
-            Every collection is styled as a complete look — fit notes, coordinated accessories
-            and outfit inspiration included.
+            Signature Frass collections, released in extended sizing at the same time, with
+            the same styling, photography and campaign.
           </p>
         </header>
 
@@ -115,7 +159,7 @@ function PlusHome() {
             <Link
               key={c.slug}
               to="/collection/$handle"
-              params={{ handle: `frass-plus-${c.slug}` }}
+              params={{ handle: signatureHandle(c.slug) }}
               className="group relative overflow-hidden rounded-2xl border border-[color:var(--gold)]/20 bg-card"
             >
               <div className="relative aspect-[4/5] w-full overflow-hidden">
@@ -127,8 +171,9 @@ function PlusHome() {
                 />
                 <div className="absolute inset-0 bg-[linear-gradient(to_top,oklch(0.08_0.01_60/0.92),transparent_60%)]" />
                 <div className="absolute inset-x-0 bottom-0 p-6">
-                  <h3 className="font-display text-2xl uppercase leading-none text-[color:var(--luxe-linen,#f6f1e7)]">
+                  <h3 className="flex flex-wrap items-center gap-2 font-display text-2xl uppercase leading-none text-[color:var(--luxe-linen,#f6f1e7)]">
                     {c.title}
+                    <PlusBadge />
                   </h3>
                   <p className="mt-2 text-xs text-[color:var(--luxe-linen,#f6f1e7)]/75">
                     {c.blurb}

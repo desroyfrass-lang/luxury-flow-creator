@@ -10,39 +10,9 @@ import swimCard1 from "@/assets/bare-card-w-swim-1.jpg";
 import swimCard2 from "@/assets/bare-card-w-swim-2.jpg";
 import lingCard1 from "@/assets/bare-card-w-ling-1.jpg";
 import lingCard2 from "@/assets/bare-card-w-ling-2.jpg";
+import { BARE_WOMEN_CATEGORIES as WOMEN_CATEGORIES } from "@/lib/drip-catalog";
 
-type Sub = readonly [slug: string, title: string];
 
-const WOMEN_CATEGORIES: Record<string, { title: string; tagline: string; subs: readonly Sub[] }> = {
-  swimwear: {
-    title: "Women's Bare Drip Swimwear",
-    tagline: "Bikinis, one-pieces, cover-ups and swim skirts.",
-    subs: [
-      ["bikini-sets", "Bikini Sets"],
-      ["bikini-tops", "Bikini Tops"],
-      ["bikini-bottoms", "Bikini Bottoms"],
-      ["one-piece-monokinis", "One-Piece & Monokinis"],
-      ["cover-ups", "Cover-Ups"],
-      ["photo-shoot-worthy", "Photo Shoot Worthy"],
-      ["swim-skirts", "Swim Skirts"],
-    ],
-  },
-  lingerie: {
-    title: "Women's Bare Drip Lingerie",
-    tagline: "Bras, panties, sets, bodysuits, sleepwear & shapewear.",
-    subs: [
-      ["bras", "Bras"],
-      ["panties", "Panties"],
-      ["bras-panty-sets", "Bras & Panty Sets"],
-      ["bodysuits", "Bodysuits"],
-      ["lingerie-sets", "Lingerie Sets"],
-      ["sleepwear", "Sleepwear"],
-      ["babydolls", "Babydolls"],
-      ["teddies", "Teddies"],
-      ["shapewear", "Shapewear"],
-    ],
-  },
-};
 
 const CARD_IMAGES: Record<string, string[]> = {
   swimwear: [swimCard1, swimCard2],

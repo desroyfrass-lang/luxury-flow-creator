@@ -1,5 +1,20 @@
-// Frass Plus — the extended-sizing flagship boutique of the Frass District.
-// Fashion first: departments read as collections, never as "sizes".
+// Frass Plus — the extended-sizing flagship of the Frass District.
+//
+// Architectural rule: the Plus store has NO independent collection names.
+// It mirrors the exact collection architecture of the standard Frass stores
+// (Frass Kicks, Frass Drip, Bare Drip) and appends the permanent "Plus+"
+// designation. Style never changes because of size — only the fit does.
+
+import {
+  BARE_MEN_CATEGORIES,
+  BARE_WOMEN_CATEGORIES,
+  DRIP_PARENTS_MEN,
+  DRIP_PARENTS_WOMEN,
+  KICKS_SECTIONS,
+  MEN_CATEGORIES,
+  WOMEN_CATEGORIES,
+  type DripCategory,
+} from "@/lib/drip-catalog";
 
 import edM1 from "@/assets/plus-ed-m1.jpg";
 import edM2 from "@/assets/plus-ed-m2.jpg";
@@ -14,14 +29,34 @@ import wingWomen from "@/assets/plus-wing-women.jpg";
 
 export type PlusGender = "men" | "women";
 
-export interface PlusDepartment {
+/** The permanent extended-size designation. Always written in full. */
+export const PLUS_SUFFIX = "Plus+";
+
+/** `Work Drip` → `Work Drip Plus+` */
+export function plusName(name: string) {
+  return `${name} ${PLUS_SUFFIX}`;
+}
+
+export interface PlusSub {
   slug: string;
+  /** Standard collection name — stays dominant. */
+  title: string;
+  /** Mirrored standard handle with the `-plus` extension. */
+  handle: string;
+}
+
+export interface PlusDepartment {
+  /** Route slug under /frass-plus/$gender/ */
+  slug: string;
+  /** Standard collection name, e.g. "Work Drip". Plus+ is rendered as a badge. */
   title: string;
   tagline: string;
-  /** Showroom theme key reused from the Drip department floors. */
+  /** Showroom theme key, mirrored from the standard store. */
   theme: string;
+  /** Which standard store this department mirrors. */
+  store: "kicks" | "drip" | "bare";
   image: string;
-  subs: readonly (readonly [slug: string, title: string])[];
+  subs: PlusSub[];
 }
 
 export const MEN_EDITORIAL = [edM2, edM1, edM3, edM4];
@@ -32,263 +67,90 @@ export const PLUS_WING_IMAGE: Record<PlusGender, string> = {
   women: wingWomen,
 };
 
-const MEN: PlusDepartment[] = [
-  {
-    slug: "footwear",
-    title: "Footwear",
-    tagline: "Sneakers, classics and boots cut for comfort and presence.",
-    theme: "casual",
-    image: edM1,
-    subs: [
-      ["sneakers", "Sneakers"],
-      ["casual-shoes", "Casual Shoes"],
-      ["classic-shoes", "Classic Shoes"],
-      ["street-collection", "Street Collection"],
-      ["boots", "Boots"],
-      ["sandals", "Sandals"],
-    ],
-  },
-  {
-    slug: "apparel",
-    title: "Apparel",
-    tagline: "Premium basics and elevated everyday layers.",
-    theme: "casual",
-    image: edM2,
-    subs: [
-      ["graphic-tees", "Graphic Tees"],
-      ["premium-basics", "Premium Basics"],
-      ["polo-shirts", "Polo Shirts"],
-      ["dress-shirts", "Dress Shirts"],
-      ["hoodies", "Hoodies"],
-      ["sweatshirts", "Sweatshirts"],
-      ["knitwear", "Knitwear"],
-    ],
-  },
-  {
-    slug: "bottoms",
-    title: "Bottoms",
-    tagline: "Denim, chinos and joggers with a fit that moves.",
-    theme: "street",
-    image: edM1,
-    subs: [
-      ["denim", "Denim"],
-      ["casual-pants", "Casual Pants"],
-      ["chinos", "Chinos"],
-      ["joggers", "Joggers"],
-      ["shorts", "Shorts"],
-      ["cargo-pants", "Cargo Pants"],
-    ],
-  },
-  {
-    slug: "outerwear",
-    title: "Outerwear",
-    tagline: "Jackets, blazers and coats with clean shoulders.",
-    theme: "work",
-    image: edM2,
-    subs: [
-      ["jackets", "Jackets"],
-      ["blazers", "Blazers"],
-      ["coats", "Coats"],
-      ["bombers", "Bombers"],
-      ["windbreakers", "Windbreakers"],
-    ],
-  },
-  {
-    slug: "activewear",
-    title: "Activewear",
-    tagline: "Gym, running and lifestyle fits built for movement.",
-    theme: "sport",
-    image: edM4,
-    subs: [
-      ["gym-collection", "Gym Collection"],
-      ["running", "Running"],
-      ["lifestyle", "Lifestyle"],
-      ["compression-fits", "Compression-Friendly Fits"],
-    ],
-  },
-  {
-    slug: "occasion",
-    title: "Occasion Wear",
-    tagline: "Weddings, business and evening — tailored properly.",
-    theme: "party",
-    image: edM2,
-    subs: [
-      ["weddings", "Weddings"],
-      ["business", "Business"],
-      ["formal-events", "Formal Events"],
-      ["evening", "Evening"],
-    ],
-  },
-  {
-    slug: "resort",
-    title: "Resort Collection",
-    tagline: "Linen sets, swim and vacation essentials.",
-    theme: "vacay",
-    image: edM3,
-    subs: [
-      ["swimwear", "Swimwear"],
-      ["vacation", "Vacation"],
-      ["beachwear", "Beachwear"],
-      ["linen-sets", "Linen Sets"],
-    ],
-  },
-  {
-    slug: "accessories",
-    title: "Accessories",
-    tagline: "Belts, hats, watches and finishing pieces.",
-    theme: "crown",
-    image: edM3,
-    subs: [
-      ["belts", "Belts"],
-      ["hats", "Hats"],
-      ["watches", "Watches"],
-      ["sunglasses", "Sunglasses"],
-      ["bags", "Bags"],
-    ],
-  },
-];
+const GENDER_PREFIX: Record<PlusGender, "mens" | "womens"> = {
+  men: "mens",
+  women: "womens",
+};
 
-const WOMEN: PlusDepartment[] = [
-  {
-    slug: "footwear",
-    title: "Footwear",
-    tagline: "Sneakers, heels, flats and boots that carry you all day.",
+/** Standard handle + the permanent `-plus` extension. */
+export function toPlusHandle(standardHandle: string) {
+  return `${standardHandle}-plus`;
+}
+
+function editorial(gender: PlusGender, i: number) {
+  const pool = gender === "men" ? MEN_EDITORIAL : WOMEN_EDITORIAL;
+  return pool[i % pool.length]!;
+}
+
+/** Frass Kicks Plus+ — mirrors the Casual / Classic / Street wall. */
+function kicksDepartment(gender: PlusGender): PlusDepartment {
+  return {
+    slug: "kicks",
+    title: "Frass Kicks",
+    tagline: "Casual, Classic and Street — the same wall, cut with wider fits.",
     theme: "casual",
-    image: edW1,
-    subs: [
-      ["sneakers", "Sneakers"],
-      ["heels", "Heels"],
-      ["flats", "Flats"],
-      ["boots", "Boots"],
-      ["sandals", "Sandals"],
-    ],
-  },
-  {
-    slug: "dresses",
-    title: "Dresses",
-    tagline: "From easy daytime to full evening drama.",
-    theme: "party",
-    image: edW1,
-    subs: [
-      ["casual-dresses", "Casual Dresses"],
-      ["evening-dresses", "Evening Dresses"],
-      ["cocktail", "Cocktail"],
-      ["maxi", "Maxi"],
-      ["midi", "Midi"],
-      ["occasion", "Occasion"],
-    ],
-  },
-  {
-    slug: "tops",
-    title: "Tops",
-    tagline: "Blouses, knitwear and bodysuits with beautiful drape.",
-    theme: "casual",
-    image: edW2,
-    subs: [
-      ["blouses", "Blouses"],
-      ["tees", "Tees"],
-      ["shirts", "Shirts"],
-      ["knitwear", "Knitwear"],
-      ["bodysuits", "Bodysuits"],
-    ],
-  },
-  {
-    slug: "bottoms",
-    title: "Bottoms",
-    tagline: "Jeans, trousers, skirts and leggings that fit right.",
-    theme: "street",
-    image: edW4,
-    subs: [
-      ["jeans", "Jeans"],
-      ["trousers", "Trousers"],
-      ["leggings", "Leggings"],
-      ["skirts", "Skirts"],
-      ["shorts", "Shorts"],
-    ],
-  },
-  {
-    slug: "matching-sets",
-    title: "Matching Sets",
-    tagline: "Co-ords, lounge and vacation sets — one decision, done.",
-    theme: "vacay",
-    image: edW3,
-    subs: [
-      ["lounge-sets", "Lounge Sets"],
-      ["co-ords", "Co-ords"],
-      ["vacation-sets", "Vacation Sets"],
-    ],
-  },
-  {
-    slug: "outerwear",
-    title: "Outerwear",
-    tagline: "Blazers, coats and cardigans with structure.",
-    theme: "work",
-    image: edW2,
-    subs: [
-      ["blazers", "Blazers"],
-      ["jackets", "Jackets"],
-      ["coats", "Coats"],
-      ["cardigans", "Cardigans"],
-    ],
-  },
-  {
-    slug: "activewear",
-    title: "Activewear",
-    tagline: "Fitness, yoga, walking and lifestyle.",
-    theme: "sport",
-    image: edW4,
-    subs: [
-      ["fitness", "Fitness"],
-      ["yoga", "Yoga"],
-      ["walking", "Walking"],
-      ["lifestyle", "Lifestyle"],
-    ],
-  },
-  {
-    slug: "swim-resort",
-    title: "Swim & Resort",
-    tagline: "Swim, cover-ups and resort dressing for island days.",
-    theme: "vacay",
-    image: edW3,
-    subs: [
-      ["swimwear", "Swimwear"],
-      ["cover-ups", "Cover-Ups"],
-      ["resort-dresses", "Resort Dresses"],
-      ["vacation-essentials", "Vacation Essentials"],
-    ],
-  },
-  {
-    slug: "intimates",
-    title: "Intimates",
-    tagline: "Lingerie, sleepwear and everyday comfort.",
-    theme: "crown",
-    image: edW1,
-    subs: [
-      ["lingerie", "Lingerie"],
-      ["sleepwear", "Sleepwear"],
-      ["shapewear", "Shapewear"],
-      ["everyday-comfort", "Everyday Comfort"],
-    ],
-  },
-  {
-    slug: "accessories",
-    title: "Accessories",
-    tagline: "Jewelry, bags, scarves and sunglasses.",
-    theme: "crown",
-    image: edW2,
-    subs: [
-      ["jewelry", "Jewelry"],
-      ["bags", "Bags"],
-      ["scarves", "Scarves"],
-      ["hats", "Hats"],
-      ["sunglasses", "Sunglasses"],
-    ],
-  },
-];
+    store: "kicks",
+    image: editorial(gender, 0),
+    subs: KICKS_SECTIONS.map(([slug, title]) => ({
+      slug,
+      title,
+      handle: toPlusHandle(`${slug}-kicks-${gender}`),
+    })),
+  };
+}
+
+/** Frass Drip Plus+ — mirrors every Drip department, department for department. */
+function dripDepartments(gender: PlusGender): PlusDepartment[] {
+  const parents = gender === "men" ? DRIP_PARENTS_MEN : DRIP_PARENTS_WOMEN;
+  const cats: Record<string, DripCategory> =
+    gender === "men" ? MEN_CATEGORIES : WOMEN_CATEGORIES;
+  const prefix = GENDER_PREFIX[gender];
+
+  return parents
+    .filter(([slug]) => cats[slug])
+    .map(([slug, title, tagline], i) => ({
+      slug,
+      title,
+      tagline,
+      theme: slug,
+      store: "drip" as const,
+      image: editorial(gender, i + 1),
+      subs: cats[slug]!.subs.map(([subSlug, subTitle, override]) => ({
+        slug: subSlug,
+        title: subTitle,
+        handle: toPlusHandle(override ?? `${prefix}-${slug}-drip-${subSlug}`),
+      })),
+    }));
+}
+
+/** Bare Drip Plus+ — mirrors the two rooms on the Bare floor. */
+function bareDepartments(gender: PlusGender): PlusDepartment[] {
+  const cats: Record<string, DripCategory> =
+    gender === "men" ? BARE_MEN_CATEGORIES : BARE_WOMEN_CATEGORIES;
+  const prefix = GENDER_PREFIX[gender];
+
+  return Object.entries(cats).map(([slug, cat], i) => ({
+    slug: `bare-${slug}`,
+    title: `Bare Drip ${slug === "swimwear" ? "Swim" : slug === "lingerie" ? "Lingerie" : "Underwear"}`,
+    tagline: cat.tagline,
+    theme: slug === "swimwear" ? "vacay" : "crown",
+    store: "bare" as const,
+    image: editorial(gender, i + 2),
+    subs: cat.subs.map(([subSlug, subTitle]) => ({
+      slug: subSlug,
+      title: subTitle,
+      handle: toPlusHandle(`${prefix}-bare-drip-${slug}-${subSlug}`),
+    })),
+  }));
+}
+
+function buildFloor(gender: PlusGender): PlusDepartment[] {
+  return [kicksDepartment(gender), ...dripDepartments(gender), ...bareDepartments(gender)];
+}
 
 export const PLUS_DEPARTMENTS: Record<PlusGender, PlusDepartment[]> = {
-  men: MEN,
-  women: WOMEN,
+  men: buildFloor("men"),
+  women: buildFloor("women"),
 };
 
 export function getPlusDepartment(gender: PlusGender, slug: string) {
@@ -299,61 +161,86 @@ export function isPlusGender(value: string): value is PlusGender {
   return value === "men" || value === "women";
 }
 
-/** Signature Frass Plus collections — browse by lifestyle, not by size. */
+/**
+ * Signature Frass collections, mirrored in extended sizing. Names mirror the
+ * standard store — never a separate fashion language.
+ */
 export const SIGNATURE_COLLECTIONS = [
   {
-    slug: "everyday-confidence",
-    title: "Everyday Confidence",
-    blurb: "Elevated everyday essentials that never need an occasion.",
+    slug: "new-looks",
+    title: "New Looks",
+    blurb: "The newest Frass releases, launched in extended sizing on the same day.",
     image: edW1,
   },
   {
-    slug: "executive-confidence",
-    title: "Executive Confidence",
-    blurb: "Power dressing, business tailoring and boardroom polish.",
+    slug: "work-drip",
+    title: "Work Drip",
+    blurb: "Boardroom tailoring, dress shirts and professional sets.",
     image: edW2,
   },
   {
-    slug: "evening-confidence",
-    title: "Evening Confidence",
-    blurb: "Luxury evening looks for the nights that matter.",
+    slug: "party-drip",
+    title: "Party Drip",
+    blurb: "Nightlife fits, evening looks and luxury streetwear.",
     image: wingWomen,
   },
   {
-    slug: "island-confidence",
-    title: "Island Confidence",
-    blurb: "Caribbean-inspired resort wear and relaxed luxury.",
+    slug: "resort-drip",
+    title: "Resort Drip",
+    blurb: "Caribbean-inspired resort dressing and vacation essentials.",
     image: edM3,
   },
   {
-    slug: "street-confidence",
-    title: "Street Confidence",
-    blurb: "Modern streetwear, urban styling, statement pieces.",
+    slug: "street-drip",
+    title: "Street Drip",
+    blurb: "Cargo, denim, tracksuits and statement pieces.",
     image: edM1,
   },
   {
-    slug: "active-confidence",
-    title: "Active Confidence",
-    blurb: "Movement, fitness and walking fits built to perform.",
+    slug: "sport-drip",
+    title: "Sport Drip",
+    blurb: "Training, running and court performance built to move.",
     image: edW4,
   },
   {
-    slug: "celebration-collection",
-    title: "Celebration Collection",
-    blurb: "Weddings, graduations, birthdays and family moments.",
+    slug: "seasonal-drip",
+    title: "Seasonal Drip",
+    blurb: "Every seasonal release, synchronized with the main collection.",
     image: wingMen,
   },
 ] as const;
 
+/** Signature collections resolve to the standard handle + `-plus`. */
+export function signatureHandle(slug: string) {
+  return toPlusHandle(`frass-${slug}`);
+}
+
 /** Browse-by rails — size is a product attribute, never the navigation. */
 export const BROWSE_RAILS = [
-  { label: "New Arrivals", handle: "frass-plus-new-arrivals" },
-  { label: "Best Sellers", handle: "frass-plus-best-sellers" },
-  { label: "By Occasion", handle: "frass-plus-occasion" },
-  { label: "By Lifestyle", handle: "frass-plus-lifestyle" },
+  { label: "New Arrivals", handle: toPlusHandle("frass-new-arrivals") },
+  { label: "Best Sellers", handle: toPlusHandle("frass-best-sellers") },
+  { label: "By Occasion", handle: toPlusHandle("frass-occasion") },
+  { label: "By Lifestyle", handle: toPlusHandle("frass-lifestyle") },
 ] as const;
 
-/** Collection handle for a department sub-collection. */
-export function plusHandle(gender: PlusGender, dept: string, sub: string) {
-  return `${gender === "men" ? "mens" : "womens"}-plus-${dept}-${sub}`;
-}
+/** The three mirrored stores presented on the Frass Plus landing page. */
+export const MIRRORED_STORES = [
+  {
+    key: "kicks",
+    title: "Frass Kicks",
+    blurb: "Casual, Classic and Street — the same wall, in extended widths and fits.",
+    image: wingMen,
+  },
+  {
+    key: "drip",
+    title: "Frass Drip",
+    blurb: "Work, Party, Casual, Street, Vacay, Sport, Crown and Extra — department for department.",
+    image: wingWomen,
+  },
+  {
+    key: "bare",
+    title: "Bare Drip",
+    blurb: "Underwear, Lingerie and Swim — the same rooms, thoughtfully extended.",
+    image: edW3,
+  },
+] as const;
