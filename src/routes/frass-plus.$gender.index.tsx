@@ -4,6 +4,7 @@ import { PageHeader } from "@/components/page-header";
 import { StorePortalCard } from "@/components/store-portal-card";
 import { PageFeedback } from "@/components/page-feedback";
 import { PlusBadge } from "@/components/plus-badge";
+import { KicksEntry } from "@/components/kicks-entry";
 import { PLUS_DEPARTMENTS, isPlusGender, plusName } from "@/lib/frass-plus";
 
 const STORE_LABEL = {
@@ -64,7 +65,26 @@ function WingPage() {
       />
 
       <section className="mx-auto max-w-[1600px] px-6 pb-24 lg:px-12">
-        {STORE_ORDER.map((store) => {
+        {/* Footwear is its own section — never a store door. */}
+        <div className="mb-20">
+          <header className="mb-10 flex flex-wrap items-center gap-3 border-b border-[color:var(--gold)]/20 pb-4">
+            <h2 className="font-display text-2xl uppercase md:text-4xl">Frass Kicks</h2>
+            <PlusBadge size="lg" />
+            <span className="text-[10px] uppercase tracking-[0.28em] text-muted-foreground">
+              The shoe section
+            </span>
+          </header>
+          <KicksEntry
+            to="/frass-plus/$gender/kicks"
+            params={{ gender }}
+            eyebrow={`Frass Plus · ${label}`}
+            title="Frass Kicks Plus+"
+            description="Casual, Classic and Street on the illuminated wall — every pair that runs 10.5 and up."
+            badge={<PlusBadge size="lg" />}
+          />
+        </div>
+
+        {STORE_ORDER.filter((s) => s !== "kicks").map((store) => {
           const list = departments.filter((d) => d.store === store);
           if (!list.length) return null;
           return (

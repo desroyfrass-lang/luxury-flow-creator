@@ -3,6 +3,7 @@ import { SiteShell } from "@/components/site-shell";
 import { PageHeader } from "@/components/page-header";
 import { StorePortalCard } from "@/components/store-portal-card";
 import { PageFeedback } from "@/components/page-feedback";
+import { KicksEntry } from "@/components/kicks-entry";
 import { KIDS_COLLECTIONS, getKidsSegment } from "@/lib/frass-kids";
 
 export const Route = createFileRoute("/frass-kids/$segment/")({
@@ -42,13 +43,24 @@ function SegmentFloor() {
     <SiteShell>
       <section className="relative h-[46vh] min-h-[320px] w-full overflow-hidden">
         <img
-          src={seg.image}
-          alt={`${seg.title} — Frass Kids`}
-          width={1024}
-          height={1280}
-          className="h-full w-full object-cover object-top"
+          src={seg.banner}
+          alt={`${seg.title} — Frass Kids in the Caribbean`}
+          width={1920}
+          height={900}
+          className="h-full w-full object-cover"
         />
         <div className="absolute inset-0 bg-[linear-gradient(to_top,oklch(0.09_0.01_60/0.94),oklch(0.09_0.01_60/0.2)_65%)]" />
+        <div className="absolute inset-x-0 bottom-0 mx-auto max-w-[1600px] px-6 pb-8 lg:px-12">
+          <span className="text-[10px] uppercase tracking-[0.4em] text-[color:var(--gold)]">
+            Frass Kids · Ages {seg.age}
+          </span>
+          <h2 className="mt-3 font-display text-3xl uppercase leading-none text-[color:var(--luxe-linen,#f6f1e7)] md:text-6xl">
+            {seg.title}
+          </h2>
+          <p className="mt-3 max-w-2xl text-xs text-[color:var(--luxe-linen,#f6f1e7)]/80 md:text-base">
+            {seg.bannerCaption}
+          </p>
+        </div>
       </section>
 
       <PageHeader
@@ -62,8 +74,34 @@ function SegmentFloor() {
         ]}
       />
 
+      {/* Footwear — its own section, its own entrance. Never a store door. */}
+      <section className="mx-auto max-w-[1600px] px-6 pb-16 lg:px-12">
+        <header className="mb-6 flex flex-wrap items-end justify-between gap-3 border-b border-[color:var(--gold)]/20 pb-4">
+          <h2 className="font-display text-2xl uppercase md:text-4xl">The Shoe Section</h2>
+          <span className="text-[10px] uppercase tracking-[0.28em] text-muted-foreground">
+            Footwear stands alone
+          </span>
+        </header>
+        <KicksEntry
+          to="/frass-kids/$segment/kicks"
+          params={{ segment: seg.slug }}
+          eyebrow={`Frass Kids · ${seg.title}`}
+          title="Frass Kicks"
+          description="Three lit bays of Casual, Classic and Street — sized for growing feet. No doors here; you walk straight up to the wall."
+        />
+      </section>
+
+      <section className="mx-auto max-w-[1600px] px-6 pb-6 lg:px-12">
+        <header className="mb-2 flex flex-wrap items-end justify-between gap-3 border-b border-[color:var(--gold)]/20 pb-4">
+          <h2 className="font-display text-2xl uppercase md:text-4xl">The Clothing Floors</h2>
+          <span className="text-[10px] uppercase tracking-[0.28em] text-muted-foreground">
+            Step through a door
+          </span>
+        </header>
+      </section>
+
       <section className="mx-auto grid max-w-[1600px] grid-cols-1 gap-8 px-6 pb-24 sm:grid-cols-2 lg:grid-cols-3 lg:px-12">
-        {KIDS_COLLECTIONS.map((c, i) => (
+        {KIDS_COLLECTIONS.filter((c) => c.slug !== "kicks").map((c, i) => (
           <StorePortalCard
             key={c.slug}
             to="/frass-kids/$segment/$collection"
