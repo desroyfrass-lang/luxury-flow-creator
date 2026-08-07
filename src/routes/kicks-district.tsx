@@ -201,19 +201,41 @@ function KicksDistrictPage() {
   const [hour, setHour] = useState(0);
   const [season, setSeason] = useState(0);
   const [active, setActive] = useState<number | null>(null);
+  const [zoomedIndex, setZoomedIndex] = useState<number | null>(null);
   const promenadeRef = useRef<HTMLDivElement>(null);
+  const walkRef = useRef<HTMLDivElement>(null);
 
   const mood = HOURS[hour];
+  const zoomed = zoomedIndex !== null ? STOREFRONTS[zoomedIndex] : null;
 
   useEffect(() => {
     if (!entered) return;
     promenadeRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
   }, [entered]);
 
+  useEffect(() => {
+    function onKey(e: KeyboardEvent) {
+      if (zoomedIndex === null) return;
+      if (e.key === "Escape") setZoomedIndex(null);
+      if (e.key === "ArrowRight") setZoomedIndex((i) => (i === null ? null : (i + 1) % STOREFRONTS.length));
+      if (e.key === "ArrowLeft") setZoomedIndex((i) => (i === null ? null : (i - 1 + STOREFRONTS.length) % STOREFRONTS.length));
+    }
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [zoomedIndex]);
+
   function enterDistrict() {
     if (opening) return;
     setOpening(true);
     window.setTimeout(() => setEntered(true), 1150);
+  }
+
+  function scrollToDoor(index: number) {
+    const walk = walkRef.current;
+    if (!walk) return;
+    const child = walk.children[index] as HTMLElement | undefined;
+    if (!child) return;
+    child.scrollIntoView({ behavior: "smooth", inline: "center", block: "nearest" });
   }
 
   return (
@@ -379,20 +401,25 @@ function KicksDistrictPage() {
 
         {/* the walk: horizontal street of storefronts */}
         <div
+          ref={walkRef}
           className="mt-10 flex snap-x snap-mandatory gap-5 overflow-x-auto pb-6"
           role="list"
           aria-label="Storefronts along the Frass Promenade"
         >
           {STOREFRONTS.map((s, i) => (
-            <Link
+            <button
               key={s.sign}
-              to={s.to}
+              type="button"
               role="listitem"
               onMouseEnter={() => setActive(i)}
               onMouseLeave={() => setActive(null)}
               onFocus={() => setActive(i)}
               onBlur={() => setActive(null)}
-              className="group relative w-[76vw] shrink-0 snap-start overflow-hidden rounded-t-[7rem] rounded-b-3xl border border-border bg-card transition duration-500 hover:-translate-y-2 sm:w-[46vw] lg:w-[27vw]"
+              onClick={() => {
+                setZoomedIndex(i);
+                scrollToDoor(i);
+              }}
+              className="group relative w-[76vw] shrink-0 cursor-zoom-in snap-start overflow-hidden rounded-t-[7rem] rounded-b-3xl border border-border bg-card text-left transition duration-500 hover:-translate-y-2 sm:w-[46vw] lg:w-[27vw]"
               style={{ boxShadow: `0 40px 90px -60px ${s.accent}` }}
             >
               <div className="relative h-[440px] overflow-hidden">
@@ -441,12 +468,46 @@ function KicksDistrictPage() {
                       ))}
                     </div>
                     <span className="mt-4 inline-block text-[10px] font-bold uppercase tracking-[0.26em] text-white">
-                      Step inside →
+                      Zoom in →
                     </span>
                   </div>
                 </div>
               </div>
-            </Link>
+            </button>
+          ))}
+        </div>
+
+        {/* door progress / mini-map */}
+        <div className="mt-6 flex items-center gap-3 overflow-x-auto pb-2">
+          <span className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground">
+            Doors
+          </span>
+          {STOREFRONTS.map((s, i) => (
+            <button
+              key={`dot-${s.sign}`}
+              type="button"
+              onClick={() => {
+                setZoomedIndex(i);
+                scrollToDoor(i);
+              }}
+              aria-label={`Open ${s.label}`}
+              className={`relative h-10 w-10 shrink-0 overflow-hidden rounded-full border transition hover:scale-110 ${
+                active === i ? "border-[color:var(--gold)]" : "border-border"
+              }`}
+            >
+              <img
+                src={s.image}
+                alt=""
+                className="h-full w-full object-cover opacity-70"
+                style={{ filter: mood.tint }}
+              />
+              <span
+                className="absolute inset-0 flex items-center justify-center text-[9px] font-bold uppercase tracking-[0.1em] text-white"
+                style={{ textShadow: "0 1px 4px rgba(0,0,0,0.8)" }}
+              >
+                {i + 1}
+              </span>
+            </button>
           ))}
         </div>
 
@@ -463,6 +524,123 @@ function KicksDistrictPage() {
           ))}
         </div>
       </section>
+
+      {/* ── ZOOMED DOOR OVERLAY ───────────────────────────────────── */}
+      {zoomed && zoomedIndex !== null && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 p-4 backdrop-blur-xl animate-fade-in"
+          onClick={() => setZoomedIndex(null)}
+          role="dialog"
+          aria-modal="true"
+          aria-label={`${zoomed.label} storefront`}
+        >
+          <button
+            type="button"
+            onClick={() => setZoomedIndex(null)}
+            className="absolute right-5 top-5 z-10 rounded-full border border-white/20 bg-black/40 px-4 py-2 text-[10px] font-bold uppercase tracking-[0.2em] text-white backdrop-blur transition hover:bg-white/10"
+          >
+            Close
+          </button>
+
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              setZoomedIndex((i) => (i === null ? null : (i - 1 + STOREFRONTS.length) % STOREFRONTS.length));
+            }}
+            className="absolute left-4 top-1/2 z-10 hidden -translate-y-1/2 rounded-full border border-white/20 bg-black/40 p-4 text-white backdrop-blur transition hover:bg-white/10 md:block"
+            aria-label="Previous door"
+          >
+            ←
+          </button>
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              setZoomedIndex((i) => (i === null ? null : (i + 1) % STOREFRONTS.length));
+            }}
+            className="absolute right-4 top-1/2 z-10 hidden -translate-y-1/2 rounded-full border border-white/20 bg-black/40 p-4 text-white backdrop-blur transition hover:bg-white/10 md:block"
+            aria-label="Next door"
+          >
+            →
+          </button>
+
+          <div
+            className="relative w-full max-w-5xl overflow-hidden rounded-t-[7rem] rounded-b-3xl border border-white/10 bg-card shadow-2xl animate-scale-in"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="relative h-[60vh] min-h-[420px] overflow-hidden">
+              <img
+                src={zoomed.image}
+                alt={`${zoomed.sign} storefront — ${zoomed.label}`}
+                className="h-full w-full object-cover transition-transform duration-[2000ms] ease-out scale-110"
+                style={{ filter: mood.tint }}
+              />
+              <div className="absolute inset-0" style={{ background: mood.overlay }} />
+
+              <span
+                className="district-sway absolute left-1/2 top-8 -translate-x-1/2 rounded-full border px-6 py-2 text-xs font-bold uppercase tracking-[0.3em] backdrop-blur"
+                style={{ borderColor: zoomed.accent, color: zoomed.accent, background: "rgba(0,0,0,0.4)" }}
+              >
+                {zoomed.sign}
+              </span>
+
+              <span className="absolute left-6 top-8 rounded-full border border-white/25 bg-black/40 px-4 py-1.5 text-[10px] uppercase tracking-[0.2em] text-white/75 backdrop-blur">
+                {zoomed.side}
+              </span>
+            </div>
+
+            <div className="border-t border-white/10 bg-black/60 p-8 backdrop-blur-xl md:p-12">
+              <div className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
+                <div>
+                  <h3 className="font-display text-3xl uppercase leading-none text-white md:text-5xl">
+                    {zoomed.label}
+                  </h3>
+                  <p className="mt-3 max-w-xl text-sm text-white/75 md:text-base">{zoomed.blurb}</p>
+                  <div className="mt-4 flex flex-wrap gap-2">
+                    {zoomed.featured.map((f) => (
+                      <span
+                        key={f}
+                        className="rounded-full border border-white/25 px-3 py-1 text-[10px] uppercase tracking-[0.2em] text-white/80"
+                      >
+                        {f}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+                <Link
+                  to={zoomed.to}
+                  onClick={() => setZoomedIndex(null)}
+                  className="shrink-0 rounded-full bg-[color:var(--gold)] px-8 py-4 text-center text-[10px] font-bold uppercase tracking-[0.25em] text-black transition hover:opacity-90"
+                >
+                  Step inside →
+                </Link>
+              </div>
+
+              {/* door counter */}
+              <div className="mt-8 flex items-center justify-center gap-2">
+                {STOREFRONTS.map((_, i) => (
+                  <button
+                    key={`zoom-dot-${i}`}
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setZoomedIndex(i);
+                    }}
+                    aria-label={`Go to door ${i + 1}`}
+                    className={`h-2 rounded-full transition-all ${
+                      i === zoomedIndex ? "w-8 bg-[color:var(--gold)]" : "w-2 bg-white/30 hover:bg-white/50"
+                    }`}
+                  />
+                ))}
+              </div>
+              <p className="mt-3 text-center text-[10px] uppercase tracking-[0.2em] text-white/40">
+                Door {zoomedIndex + 1} of {STOREFRONTS.length} · Use ← → keys
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* ── PEOPLE MAKE THE ATMOSPHERE ──────────────────────────── */}
       <section className="mx-auto max-w-[1600px] px-6 pb-16 lg:px-10">
