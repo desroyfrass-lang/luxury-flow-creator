@@ -68,12 +68,12 @@ function GatewayPage() {
         {/* Carved into the arch: FRASS · [gold crest already on the building] · KICKS */}
         <div
           aria-hidden="true"
-          className="pointer-events-none absolute left-0 right-0 top-[6.6%] flex items-center justify-center"
+          className="pointer-events-none absolute left-0 right-0 top-[5.1%] flex items-center justify-center"
         >
           <span className="w-[22%] pr-[3%] text-right font-display text-[3.4vw] uppercase leading-none tracking-[0.08em] text-[#e8bf5c] drop-shadow-[0_2px_6px_rgba(0,0,0,0.7)] sm:text-[2.6vw]">
             Frass
           </span>
-          <span className="w-[8%]" />
+          <span className="w-[19%]" />
           <span className="w-[22%] pl-[3%] text-left font-display text-[3.4vw] uppercase leading-none tracking-[0.08em] text-[#e8bf5c] drop-shadow-[0_2px_6px_rgba(0,0,0,0.7)] sm:text-[2.6vw]">
             Kicks
           </span>
