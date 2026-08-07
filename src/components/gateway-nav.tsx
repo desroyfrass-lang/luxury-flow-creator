@@ -1,6 +1,6 @@
 import { Link, useRouterState } from "@tanstack/react-router";
-import { useEffect, useRef, useState } from "react";
-import { Search, ChevronDown, KeyRound, Menu, X } from "lucide-react";
+import { useEffect, useState } from "react";
+import { Search, KeyRound, Menu, X } from "lucide-react";
 import { CartDrawer } from "./cart-drawer";
 import fullLogo from "@/assets/frass-logo-full.asset.json";
 
@@ -115,23 +115,12 @@ const CURRENCIES = ["USD", "GBP", "EUR", "JMD", "CAD"];
 
 export function GatewayNav({ mode }: { mode: "shop" | "world" }) {
   const path = useRouterState({ select: (r) => r.location.pathname });
-  const [open, setOpen] = useState<string | null>(null);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [currency, setCurrency] = useState("USD");
-  const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
-    setOpen(null);
     setMobileOpen(false);
   }, [path]);
-
-  const enter = (label: string) => {
-    if (closeTimer.current) clearTimeout(closeTimer.current);
-    setOpen(label);
-  };
-  const leave = () => {
-    closeTimer.current = setTimeout(() => setOpen(null), 120);
-  };
 
   return (
     <header className="sticky top-0 z-50 border-b border-border/60 bg-background/85 backdrop-blur-xl">
@@ -210,7 +199,7 @@ export function GatewayNav({ mode }: { mode: "shop" | "world" }) {
             aria-label={mobileOpen ? "Close menu" : "Open menu"}
             aria-expanded={mobileOpen}
             onClick={() => setMobileOpen((o) => !o)}
-            className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-border lg:hidden"
+            className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-border"
           >
             {mobileOpen ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
           </button>
