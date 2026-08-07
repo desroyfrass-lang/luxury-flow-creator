@@ -5,6 +5,7 @@ import { StorePortalCard } from "@/components/store-portal-card";
 import { PageFeedback } from "@/components/page-feedback";
 import { KicksEntry } from "@/components/kicks-entry";
 import { KIDS_COLLECTIONS, getKidsSegment } from "@/lib/frass-kids";
+import { kidsWallImages } from "@/lib/wall-images";
 
 export const Route = createFileRoute("/frass-kids/$segment/")({
   beforeLoad: ({ params }) => {
@@ -88,6 +89,11 @@ function SegmentFloor() {
           eyebrow={`Frass Kids · ${seg.title}`}
           title="Frass Kicks"
           description="Three lit bays of Casual, Classic and Street — sized for growing feet. No doors here; you walk straight up to the wall."
+          image={kidsWallImages(seg.slug)?.casual}
+          bayImages={(() => {
+            const w = kidsWallImages(seg.slug);
+            return w ? [w.casual, w.classic, w.street] : undefined;
+          })()}
         />
       </section>
 

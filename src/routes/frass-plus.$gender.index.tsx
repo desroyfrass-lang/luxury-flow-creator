@@ -5,6 +5,7 @@ import { StorePortalCard } from "@/components/store-portal-card";
 import { PageFeedback } from "@/components/page-feedback";
 import { PlusBadge } from "@/components/plus-badge";
 import { KicksEntry } from "@/components/kicks-entry";
+import { plusWallImages } from "@/lib/wall-images";
 import { PLUS_DEPARTMENTS, isPlusGender, plusName } from "@/lib/frass-plus";
 
 const STORE_LABEL = {
@@ -79,6 +80,12 @@ function WingPage() {
             eyebrow={`Frass Plus · ${label}`}
             title="Frass Kicks Plus+"
             description="Casual, Classic and Street on the illuminated wall — every pair that runs 10.5 and up."
+            image={plusWallImages(gender).street}
+            bayImages={[
+              plusWallImages(gender).casual,
+              plusWallImages(gender).classic,
+              plusWallImages(gender).street,
+            ]}
             badge={<PlusBadge size="lg" />}
           />
         </div>
