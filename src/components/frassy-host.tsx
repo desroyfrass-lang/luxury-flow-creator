@@ -1,0 +1,205 @@
+import { useEffect, useRef, useState } from "react";
+import { useRouterState } from "@tanstack/react-router";
+import frassyAvatar from "@/assets/frassy-gold.png.asset.json";
+import { resolveDestination, type FrassyDestination } from "@/lib/frassy-destinations";
+
+/**
+ * Frassy Entrance — the universal host behaviour.
+ *
+ * First arrival at a major destination in a session: the environment softens,
+ * Frassy rises into the centre at ~35% of the viewport, welcomes the visitor,
+ * then shrinks and glides to the lower-right corner where she stays available
+ * as the companion. Already visited this session: no takeover — she simply
+ * says "Welcome back" from the corner.
+ *
+ * She never blocks: a click, Escape or the skip control sends her aside early.
+ */
+
+type Phase = "enter" | "speak" | "depart";
+
+const SESSION_PREFIX = "frassy-host:";
+
+function seenThisSession(id: string) {
+  if (typeof window === "undefined") return true;
+  try {
+    return sessionStorage.getItem(SESSION_PREFIX + id) === "1";
+  } catch {
+    return true;
+  }
+}
+
+function markSeen(id: string) {
+  try {
+    sessionStorage.setItem(SESSION_PREFIX + id, "1");
+  } catch {
+    /* private mode — greet again, no harm */
+  }
+}
+
+export function FrassyHost() {
+  const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const [greeting, setGreeting] = useState<FrassyDestination | null>(null);
+  const [phase, setPhase] = useState<Phase>("enter");
+  const [welcomeBack, setWelcomeBack] = useState<string | null>(null);
+  const timers = useRef<ReturnType<typeof setTimeout>[]>([]);
+  // Destination this instance already reacted to (StrictMode-safe).
+  const handled = useRef<string | null>(null);
+
+  const clearTimers = () => {
+    timers.current.forEach(clearTimeout);
+    timers.current = [];
+  };
+
+  // Decide what to do on each destination change.
+  useEffect(() => {
+    const dest = resolveDestination(pathname);
+    if (!dest) return;
+    if (handled.current === dest.id) return;
+    handled.current = dest.id;
+
+    clearTimers();
+
+
+    if (seenThisSession(dest.id)) {
+      // Returning visitor — stay minimized, one quiet line.
+      setWelcomeBack("Welcome back.");
+      timers.current.push(setTimeout(() => setWelcomeBack(null), 4200));
+      return;
+    }
+
+    markSeen(dest.id);
+    setWelcomeBack(null);
+    setGreeting(dest);
+    setPhase("enter");
+
+    const reduced =
+      typeof window !== "undefined" &&
+      window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
+
+    const readMs = Math.min(11000, 3200 + dest.welcome.length * 42);
+
+    timers.current.push(setTimeout(() => setPhase("speak"), reduced ? 60 : 700));
+    timers.current.push(setTimeout(() => setPhase("depart"), readMs));
+    timers.current.push(
+      setTimeout(() => {
+        setGreeting(null);
+        setPhase("enter");
+      }, readMs + 1150),
+    );
+
+  }, [pathname]);
+
+
+  useEffect(() => () => clearTimers(), []);
+
+  // Let her step aside early.
+  const stepAside = () => {
+    if (!greeting || phase === "depart") return;
+    clearTimers();
+    setPhase("depart");
+    timers.current.push(
+      setTimeout(() => {
+        setGreeting(null);
+        setPhase("enter");
+      }, 1150),
+    );
+  };
+
+  useEffect(() => {
+    if (!greeting) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") stepAside();
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  });
+
+  if (welcomeBack) {
+    return (
+      <div
+        className="pointer-events-none fixed bottom-[5.5rem] right-5 z-40 animate-fade-in"
+        aria-live="polite"
+      >
+        <span className="block rounded-full border border-[color:var(--gold)]/40 bg-[#0b0c0e]/95 px-4 py-2 text-[11px] uppercase tracking-[0.22em] text-[color:var(--gold)] shadow-[0_10px_40px_-16px_rgba(0,0,0,0.9)]">
+          {welcomeBack}
+        </span>
+      </div>
+    );
+  }
+
+  if (!greeting) return null;
+
+  const departing = phase === "depart";
+
+  return (
+    <div
+      className="fixed inset-0 z-[60] flex items-center justify-center"
+      role="dialog"
+      aria-live="polite"
+      aria-label={`Frassy welcomes you to ${greeting.label}`}
+      onClick={stepAside}
+    >
+      {/* The environment softens — never hidden, only quieted. */}
+      <div
+        className="absolute inset-0 backdrop-blur-[6px] transition-opacity duration-[900ms] ease-out"
+        style={{
+          background:
+            "radial-gradient(70% 55% at 50% 45%, rgba(6,6,8,0.62), rgba(6,6,8,0.88))",
+          opacity: departing ? 0 : 1,
+        }}
+      />
+
+      <div
+        className="relative flex flex-col items-center text-center transition-all duration-[1100ms]"
+        style={{
+          transitionTimingFunction: "cubic-bezier(0.22, 1, 0.36, 1)",
+          opacity: phase === "enter" ? 0 : 1,
+          transform: departing
+            ? "translate(calc(50vw - 3.75rem), calc(50vh - 3.75rem)) scale(0.16)"
+            : phase === "enter"
+              ? "translateY(18px) scale(0.94)"
+              : "none",
+        }}
+      >
+        <div className="relative">
+          <span
+            aria-hidden
+            className="absolute inset-0 -z-10 rounded-full blur-3xl"
+            style={{ background: "radial-gradient(closest-side, rgba(212,175,55,0.35), transparent 72%)" }}
+          />
+          <img
+            src={frassyAvatar.url}
+            alt="Frassy, host of the Frass ecosystem"
+            className="h-[min(36vh,64vw)] w-[min(36vh,64vw)] rounded-full object-cover"
+            style={{
+              animation: departing ? undefined : "frassy-host-breathe 6s ease-in-out infinite",
+              boxShadow: "0 40px 120px -50px rgba(212,175,55,0.8)",
+            }}
+          />
+        </div>
+
+        <div
+          className="mt-8 max-w-[min(38rem,88vw)] px-2 transition-opacity duration-700"
+          style={{ opacity: phase === "speak" ? 1 : 0 }}
+        >
+          <span className="text-[10px] uppercase tracking-[0.4em] text-[color:var(--gold)]">
+            {greeting.label}
+          </span>
+          <p className="mt-4 text-balance text-base leading-relaxed text-white/90 md:text-lg">
+            {greeting.welcome}
+          </p>
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              stepAside();
+            }}
+            className="mt-8 rounded-full border border-white/25 px-6 py-2.5 text-[10px] font-bold uppercase tracking-[0.28em] text-white/80 transition hover:border-[color:var(--gold)]/60 hover:text-white"
+          >
+            Start exploring
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
