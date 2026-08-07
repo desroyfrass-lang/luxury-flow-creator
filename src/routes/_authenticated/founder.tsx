@@ -8,7 +8,11 @@ import { LaunchReadiness } from "@/components/launch-readiness";
 import { FrassyChat } from "@/components/frassy-chat";
 
 import { useIsAdmin } from "@/hooks/use-is-admin";
-import { getBuilderJourney, startJourneyTrack } from "@/lib/journey.functions";
+import {
+  getBuilderJourney,
+  setJourneyStage,
+  startJourneyTrack,
+} from "@/lib/journey.functions";
 import { COMMISSIONING_PHASES } from "@/lib/commissioning";
 import { DISTRICTS } from "@/lib/districts";
 import { trackOf } from "@/lib/journey";
@@ -66,6 +70,7 @@ function FounderPage() {
   const navigate = useNavigate();
   const loadJourney = useServerFn(getBuilderJourney);
   const beginCommissioning = useServerFn(startJourneyTrack);
+  const jumpStage = useServerFn(setJourneyStage);
 
   const { data } = useQuery({
     queryKey: ["builder-journey"],
@@ -171,7 +176,19 @@ function FounderPage() {
 
         {/* Readiness */}
         <section className="mt-14">
-          <LaunchReadiness completedStageIds={completed} />
+          <p className="mb-4 max-w-2xl text-sm text-muted-foreground">
+            Every line below is a live conversation. Click one and Frassy picks the chat back up
+            exactly where the two of you left off — resume it, or amend what was already settled.
+          </p>
+          <LaunchReadiness
+            eyebrow="Commissioning Dashboard"
+            heading="Platform Readiness"
+            completedStageIds={completed}
+            onSelectStage={async (stageId) => {
+              await jumpStage({ data: { stageId } });
+              void navigate({ to: "/onboarding" });
+            }}
+          />
         </section>
 
 

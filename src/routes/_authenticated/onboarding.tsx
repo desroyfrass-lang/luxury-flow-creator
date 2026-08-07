@@ -8,6 +8,7 @@ import { PageFeedback } from "@/components/page-feedback";
 import { ComposerShell } from "@/components/composer-shell";
 import {
   getBuilderJourney,
+  journeyTurn,
   setJourneyStage,
   startJourneyTrack,
   type ConversationDiagnostics,
@@ -17,6 +18,8 @@ import { stageById, stageIndex, stagesFor, trackMinutes, trackOf } from "@/lib/j
 import { useIsAdminStatus } from "@/hooks/use-is-admin";
 import { LaunchReadiness } from "@/components/launch-readiness";
 import { COMMISSIONING_PHASES } from "@/lib/commissioning";
+import { usePushToTalk } from "@/hooks/use-push-to-talk";
+import { Volume2, VolumeX } from "lucide-react";
 
 export const Route = createFileRoute("/_authenticated/onboarding")({
   head: () => ({
@@ -46,6 +49,7 @@ type LocalMessage = { role: "user" | "assistant"; content: string; pending?: boo
 function OnboardingPage() {
   const loadJourney = useServerFn(getBuilderJourney);
   const jumpStage = useServerFn(setJourneyStage);
+  const takeTurn = useServerFn(journeyTurn);
   const switchTrack = useServerFn(startJourneyTrack);
   const { isAdmin, loading: roleLoading } = useIsAdminStatus();
 
@@ -57,6 +61,10 @@ function OnboardingPage() {
   const [busy, setBusy] = useState(false);
   const [local, setLocal] = useState<LocalMessage[]>([]);
   const [diagnostics, setDiagnostics] = useState<ConversationDiagnostics | null>(null);
+  const [draft, setDraft] = useState("");
+  // Frassy speaks her replies aloud unless the Founder mutes her.
+  const [speakReplies, setSpeakReplies] = useState(true);
+  const voice = usePushToTalk();
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const endRef = useRef<HTMLDivElement>(null);
   const founderRef = useRef(false);
@@ -110,6 +118,41 @@ function OnboardingPage() {
       await refetch();
     })();
   }, [isLoading, roleLoading, data, isAdmin, switchTrack, refetch]);
+
+  async function send(text: string) {
+    const message = text.trim();
+    if (!message || busy) return;
+    setDraft("");
+    setLocal((prev) => [...prev, { role: "user", content: message }]);
+    setBusy(true);
+    try {
+      const result = await takeTurn({ data: { message } });
+      setLocal((prev) => [...prev, { role: "assistant", content: result.reply }]);
+      setDiagnostics(result.diagnostics);
+      if (speakReplies && voice.voiceAvailable) void voice.speak(result.reply);
+      await refetch();
+      setLocal([]);
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Frassy could not answer just now.");
+      setLocal((prev) => prev.slice(0, -1));
+      setDraft(message);
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  async function toggleMic() {
+    if (voice.phase === "speaking") {
+      voice.stopSpeaking();
+      return;
+    }
+    if (voice.phase === "recording") {
+      const transcript = await voice.stopRecording();
+      if (transcript?.trim()) await send(transcript);
+      return;
+    }
+    if (voice.phase === "idle" && !busy) await voice.startRecording();
+  }
 
   return (
     <SiteShell>
@@ -314,8 +357,31 @@ function OnboardingPage() {
               <h2 className="mt-2 font-display text-2xl">{stage.title}</h2>
               <p className="mt-1 text-sm text-muted-foreground">{stage.purpose}</p>
 
-              <div className="mt-4 text-[10px] font-bold uppercase tracking-[0.2em] text-[color:var(--gold)]">
-                Manual text mode · voice temporarily disabled
+              <div className="mt-4 flex flex-wrap items-center gap-3">
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (speakReplies && voice.phase === "speaking") voice.stopSpeaking();
+                    setSpeakReplies((v) => !v);
+                  }}
+                  className={`inline-flex items-center gap-2 rounded-full border px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.2em] transition ${
+                    speakReplies
+                      ? "border-[color:var(--gold)] text-[color:var(--gold)]"
+                      : "border-border text-muted-foreground"
+                  }`}
+                >
+                  {speakReplies ? <Volume2 className="h-3 w-3" /> : <VolumeX className="h-3 w-3" />}
+                  {speakReplies ? "Voice on" : "Muted"}
+                </button>
+                <span className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground">
+                  {voice.phase === "recording"
+                    ? "Listening…"
+                    : voice.phase === "transcribing"
+                      ? "Transcribing…"
+                      : voice.phase === "speaking"
+                        ? "Frassy is speaking"
+                        : "Type or hold the mic"}
+                </span>
               </div>
             </header>
 
@@ -349,8 +415,25 @@ function OnboardingPage() {
               <div ref={endRef} />
             </div>
 
-            <div className="border-t border-border px-6 py-4 text-xs text-muted-foreground">
-              Journey conversation is paused during containment. Use the Frassy button for the single manual text channel.
+            <div className="border-t border-border px-6 py-4">
+              {(voice.voiceError) && (
+                <p className="mb-2 text-xs text-destructive">{voice.voiceError}</p>
+              )}
+              <ComposerShell
+                value={draft}
+                onChange={setDraft}
+                onSend={() => void send(draft)}
+                disabled={busy}
+                placeholder={`Talk to Frassy about ${stage.title}…`}
+                onMicToggle={voice.voiceAvailable ? () => void toggleMic() : undefined}
+                micState={
+                  voice.phase === "recording"
+                    ? "recording"
+                    : voice.phase === "transcribing" || busy
+                      ? "busy"
+                      : "idle"
+                }
+              />
             </div>
           </section>
         </div>
