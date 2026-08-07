@@ -72,7 +72,7 @@ function DepartmentPage() {
           crumbs={[
             { label: "Frass District", to: "/" },
             { label: "Frass Plus", to: "/frass-plus" },
-            { label, to: `/frass-plus/${gender}` },
+            { label, to: gender === "men" ? "/frass-plus/men" : "/frass-plus/women" },
             { label: dept.title },
           ]}
         />
