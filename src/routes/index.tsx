@@ -104,18 +104,11 @@ const STORES: { title: string; description: string; image: string; to: string; e
   },
 
   {
-    title: "Frass Kids for Boys",
-    description: "Kicks, drip and essentials for young builders.",
+    title: "Frass Kids",
+    description: "The children's flagship — eight age & gender stores, one Frass architecture.",
     image: districtKids,
-    to: "/frass-kids/boys",
-    eyebrow: "Boys",
-  },
-  {
-    title: "Frass Kids for Girls",
-    description: "Kicks, drip and essentials for young builders.",
-    image: districtKids,
-    to: "/frass-kids/girls",
-    eyebrow: "Girls",
+    to: "/frass-kids",
+    eyebrow: "Ages 0–3 to 12+",
   },
   {
     title: "Frass Luxury House",

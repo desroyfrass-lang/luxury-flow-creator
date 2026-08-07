@@ -329,6 +329,26 @@ export function getCollectionMeta(handle: string): CollectionMeta {
     };
   }
 
+  // FRASS Kids — kids-{age}-{gender}-{collection}[-{sub}]
+  const kids = handle.match(
+    /^kids-(0-3|3-6|6-12|12-plus)-(boys|girls)-([a-z]+)(?:-(.+))?$/,
+  );
+  if (kids) {
+    const [, age, gender, collection, sub] = kids;
+    const ageLabel = age === "12-plus" ? "12+" : age.replace("-", "–");
+    const genderTitle = gender === "boys" ? "Boys" : "Girls";
+    const base = `tag:"frass-kids" tag:"${gender}" tag:"age-${age}" tag:"${collection}"`;
+    const collectionLabel = collection === "kicks" ? "Frass Kicks" : `${titleize(collection)} Drip`;
+    return {
+      title: sub
+        ? `${genderTitle} ${ageLabel} ${titleize(sub)}`
+        : `${genderTitle} ${ageLabel} ${collectionLabel}`,
+      query: sub ? `${base} tag:"${sub}"` : base,
+      description: `Part of Frass Kids ${ageLabel} ${genderTitle} — ${collectionLabel}.`,
+    };
+  }
+
   return { title: titleize(handle), query: `tag:"${handle}"` };
+
 
 }
