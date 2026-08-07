@@ -22,7 +22,6 @@ import symbolLogo from "@/assets/frass-logo-symbol.asset.json";
 
 const NAV_ITEMS = [
   { to: "/shop-frass", slot: "nav-frass-district", fallback: "Frass District" },
-  { to: "/frass-kicks", slot: "nav-frass-kicks", fallback: "Frass Kicks" },
   { to: "/frass-drip", slot: "nav-frass-drip", fallback: "Frass Drip" },
   { to: "/bare-drip", slot: "nav-bare-drip", fallback: "Bare Drip" },
   { to: "/afro-designers", slot: "nav-afro-designers", fallback: "Afro Designers" },
