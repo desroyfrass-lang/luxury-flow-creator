@@ -19,6 +19,9 @@ import districtLuxury from "@/assets/district-luxury.jpg";
 import districtKids from "@/assets/district-kids.jpg";
 import cardMen from "@/assets/card-men.jpg";
 import cardWomen from "@/assets/card-women.jpg";
+import plusWingMen from "@/assets/plus-wing-men.jpg";
+import plusWingWomen from "@/assets/plus-wing-women.jpg";
+
 
 export const Route = createFileRoute("/")({
   head: () => ({
