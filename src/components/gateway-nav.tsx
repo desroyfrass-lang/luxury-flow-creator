@@ -1,6 +1,7 @@
 import { Link, useRouterState } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { Search, KeyRound, Menu, X } from "lucide-react";
+import { Search, KeyRound, Menu, X, UserRound } from "lucide-react";
+import { useAccountSection } from "@/hooks/use-my-roles";
 import { CartDrawer } from "./cart-drawer";
 import fullLogo from "@/assets/frass-logo-full.asset.json";
 
@@ -278,5 +279,51 @@ export function GatewayNav({ mode }: { mode: "shop" | "world" }) {
         </nav>
       )}
     </header>
+  );
+}
+
+/** Role-aware account section — last item on the nav bar. */
+function AccountNavSection() {
+  const section = useAccountSection();
+  const [open, setOpen] = useState(false);
+  const path = useRouterState({ select: (r) => r.location.pathname });
+
+  useEffect(() => {
+    setOpen(false);
+  }, [path]);
+
+  if (!section) return null;
+
+  return (
+    <div className="relative ml-auto shrink-0">
+      <button
+        type="button"
+        onClick={() => setOpen((v) => !v)}
+        aria-expanded={open}
+        className="inline-flex items-center gap-1.5 whitespace-nowrap px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.22em] text-[color:var(--hill-gold)] transition hover:text-foreground"
+      >
+        <UserRound className="h-3.5 w-3.5" />
+        {section.label}
+      </button>
+
+      {open && (
+        <div className="absolute right-0 top-full z-50 mt-2 w-60 rounded-lg border border-border/70 bg-background/95 p-2 shadow-xl backdrop-blur-xl">
+          {section.items.map((i) => (
+            <Link
+              key={i.to}
+              to={i.to}
+              className="block rounded-sm px-3 py-2 text-[10px] uppercase tracking-[0.2em] text-muted-foreground transition hover:bg-foreground/5 hover:text-foreground"
+            >
+              {i.label}
+              {i.note && (
+                <span className="mt-0.5 block text-[9px] normal-case tracking-normal opacity-60">
+                  {i.note}
+                </span>
+              )}
+            </Link>
+          ))}
+        </div>
+      )}
+    </div>
   );
 }
