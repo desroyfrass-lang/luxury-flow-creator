@@ -1,8 +1,20 @@
 import { useEffect, useRef, useState } from "react";
+import {
+  Crown,
+  Gift,
+  KeyRound,
+  ShoppingBag,
+  Sparkles,
+  Star,
+  Truck,
+  Coins,
+  Footprints,
+  type LucideIcon,
+} from "lucide-react";
 
 type Reward = {
   id: string;
-  emoji: string;
+  Icon: LucideIcon;
   label: string;
   short: string;
   note: string;
@@ -12,7 +24,7 @@ type Reward = {
 const REWARDS: Reward[] = [
   {
     id: "off10",
-    emoji: "🛍️",
+    Icon: ShoppingBag,
     label: "10% OFF",
     short: "10% Off",
     note: "Perfect for everyday shopping.",
@@ -20,7 +32,7 @@ const REWARDS: Reward[] = [
   },
   {
     id: "off15",
-    emoji: "🎁",
+    Icon: Star,
     label: "15% OFF",
     short: "15% Off",
     note: "One of our most popular rewards.",
@@ -28,7 +40,7 @@ const REWARDS: Reward[] = [
   },
   {
     id: "off20",
-    emoji: "⭐",
+    Icon: Sparkles,
     label: "20% OFF",
     short: "20% Off",
     note: "A premium reward for your next purchase.",
@@ -36,7 +48,7 @@ const REWARDS: Reward[] = [
   },
   {
     id: "ship",
-    emoji: "🚚",
+    Icon: Truck,
     label: "FREE SHIPPING",
     short: "Free Shipping",
     note: "No minimum purchase.",
@@ -44,7 +56,7 @@ const REWARDS: Reward[] = [
   },
   {
     id: "points",
-    emoji: "🎉",
+    Icon: Coins,
     label: "DOUBLE POINTS",
     short: "2× Points",
     note: "Earn twice the Builder Rewards points on your next order.",
@@ -52,7 +64,7 @@ const REWARDS: Reward[] = [
   },
   {
     id: "mystery",
-    emoji: "🎁",
+    Icon: Gift,
     label: "MYSTERY GIFT",
     short: "Mystery Gift",
     note: "A surprise gift with your next qualifying purchase.",
@@ -60,7 +72,7 @@ const REWARDS: Reward[] = [
   },
   {
     id: "early",
-    emoji: "✨",
+    Icon: KeyRound,
     label: "EARLY ACCESS",
     short: "Early Access",
     note: "Shop the next collection before everyone else.",
@@ -68,7 +80,7 @@ const REWARDS: Reward[] = [
   },
   {
     id: "walk",
-    emoji: "👟",
+    Icon: Footprints,
     label: "WALK WID POWER",
     short: "Walk Wid Power",
     note: "One exclusive product at a members-only price.",
@@ -78,7 +90,7 @@ const REWARDS: Reward[] = [
 
 const GOLDEN: Reward = {
   id: "golden",
-  emoji: "👑",
+  Icon: Crown,
   label: "GOLDEN SPIN",
   short: "Golden Spin",
   note: "30% off · VIP Shopping Pass · Premium shipping for 30 days · Exclusive Frass merch · Limited-drop early access · Bonus Builder points.",
@@ -250,9 +262,11 @@ export function LuckySpin() {
                       : "border-[color:var(--gold)]/40 bg-[color-mix(in_oklab,var(--gold)_7%,transparent)]"
                   }`}
                 >
-                  <div className="text-4xl" aria-hidden="true">
-                    {reward.emoji}
-                  </div>
+                  <reward.Icon
+                    className="h-10 w-10 text-[color:var(--gold)] drop-shadow-[0_0_18px_oklch(0.78_0.14_78/0.9)]"
+                    strokeWidth={1.5}
+                    aria-hidden="true"
+                  />
                   <p className="mt-3 font-display text-3xl uppercase tracking-[0.1em] text-[color:var(--gold)] md:text-4xl">
                     {reward.label}
                   </p>
@@ -357,9 +371,13 @@ export function LuckySpin() {
                     className="absolute left-1/2 top-1/2 origin-left"
                     style={{ transform: `rotate(${i * slice + slice / 2}deg)` }}
                   >
-                    <span className="ml-[22%] flex w-[46%] items-center gap-2 font-display text-[13px] font-bold uppercase leading-tight tracking-[0.08em] text-[oklch(0.99_0.03_88)] [text-shadow:0_1px_2px_rgba(0,0,0,0.95),0_0_14px_oklch(0.78_0.14_78/0.8)] md:text-[17px]">
-                      <span className="text-base md:text-xl" aria-hidden="true">
-                        {r.emoji}
+                    <span className="ml-[20%] flex w-[50%] items-center gap-2 font-display text-[13px] font-bold uppercase leading-tight tracking-[0.08em] text-[oklch(0.99_0.03_88)] [text-shadow:0_1px_2px_rgba(0,0,0,0.95),0_0_14px_oklch(0.78_0.14_78/0.8)] md:text-[17px]">
+                      <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-[color:var(--gold)]/70 bg-[color-mix(in_oklab,black_80%,var(--gold))] shadow-[0_0_16px_-3px_oklch(0.78_0.14_78/0.9)] md:h-9 md:w-9">
+                        <r.Icon
+                          className="h-4 w-4 text-[color:var(--gold)] md:h-5 md:w-5"
+                          strokeWidth={2}
+                          aria-hidden="true"
+                        />
                       </span>
                       {r.short}
                     </span>
@@ -399,8 +417,12 @@ export function LuckySpin() {
                           : "border-[color:var(--gold)]/25 bg-[color-mix(in_oklab,black_70%,var(--gold))]"
                       }`}
                     >
-                      <span className="text-2xl" aria-hidden="true">
-                        {r.emoji}
+                      <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-[color:var(--gold)]/50 bg-[color-mix(in_oklab,black_78%,var(--gold))] transition-shadow duration-500 group-hover:shadow-[0_0_26px_-4px_oklch(0.78_0.14_78/0.95)]">
+                        <r.Icon
+                          className="h-5 w-5 text-[color:var(--gold)]"
+                          strokeWidth={1.75}
+                          aria-hidden="true"
+                        />
                       </span>
                       <span className="font-display text-base uppercase leading-tight tracking-[0.08em] text-[color:var(--gold)] transition-colors duration-500 group-hover:text-[oklch(0.99_0.05_88)] md:text-lg">
                         {r.label}
@@ -409,8 +431,9 @@ export function LuckySpin() {
                   );
                 })}
               </ul>
-              <p className="mt-5 text-center font-display text-sm uppercase tracking-[0.24em] text-[color:var(--gold)]/70">
-                👑 Golden Spin — rarer than rare
+              <p className="mt-5 flex items-center justify-center gap-2 text-center font-display text-sm uppercase tracking-[0.24em] text-[color:var(--gold)]/70">
+                <Crown className="h-4 w-4" strokeWidth={1.75} aria-hidden="true" />
+                Golden Spin — rarer than rare
               </p>
             </div>
           </div>
