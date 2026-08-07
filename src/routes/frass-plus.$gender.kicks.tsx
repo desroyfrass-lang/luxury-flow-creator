@@ -4,7 +4,6 @@ import { PageHeader } from "@/components/page-header";
 import { PageFeedback } from "@/components/page-feedback";
 import { PlusBadge } from "@/components/plus-badge";
 import { ShoeWall, type WallSection } from "@/components/shoe-wall";
-import { WallSigns } from "@/components/wall-signs";
 import { isPlusGender } from "@/lib/frass-plus";
 import type { ShopifyProduct } from "@/lib/shopify";
 import { plusWallImages, WALL_ACCENT, type WallCategory } from "@/lib/wall-images";
@@ -92,7 +91,6 @@ function PlusKicksRoom() {
           { label: "Frass Kicks Plus+" },
         ]}
       />
-      <WallSigns labels={wall.map((s) => s.label)} />
       <section className="relative mx-auto max-w-[1600px] px-2 md:px-12">
         <div className="relative overflow-hidden rounded-2xl md:rounded-[2rem]">
           <img
