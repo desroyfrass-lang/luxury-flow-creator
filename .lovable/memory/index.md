@@ -13,6 +13,8 @@ Frass OS Constitution v1.0 at `FRASS_OS_CONSTITUTION.md` is the permanent source
 Implementation hold is lifted. The `FINAL_LOVABLE_DIRECTIVE.md` commissioning is the active build charter: Builder experience above everything; optimize for confidence, timelessness, and meaningful progress.
 
 ## Memories
+- [Frass Luxury House](mem://features/frass-luxury-house) — Estate landing, East/West Wings, live top-3 collections per wing, full roster + House Collections still on deck
+- [Showroom lighting](mem://design/showroom-lighting) — Themed store sets behind every drip showroom, per-category neon (party purple locked), hover glows + floor light pools; Bare Drip split rooms
 - [FINAL LOVABLE DIRECTIVE](FINAL_LOVABLE_DIRECTIVE.md) — Active commissioning charter: stop designing, start building; Builder experience is the north star; decision filter is "which choice creates the best Builder experience?"
 - [Frass OS Constitution v1.0](FRASS_OS_CONSTITUTION.md) — Foundational charter: mission, vision, Builder principles, district definitions, and constitutional oaths for every future contributor
 - [Original Frass visual direction](mem://design/original-frass-visual-direction) — Dark streetwear direction, block letters, chrome/gold brand cues, real uploaded logo assets

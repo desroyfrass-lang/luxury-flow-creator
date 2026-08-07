@@ -10,8 +10,9 @@ export interface RackItem {
 
 /**
  * A department-store rack: cards hang from a lit rail, tilt slightly and
- * lift forward on hover. Clicking a card opens the full product grid for
- * that collection.
+ * lift forward on hover. Every card carries its own neon hover glow and a
+ * light pool on the floor beneath it. Clicking a card opens the full
+ * product grid for that collection.
  */
 export function ShowroomRack({
   items,
@@ -51,14 +52,25 @@ export function ShowroomRack({
             />
           </div>
 
+          {/* neon halo behind the card — blooms on hover */}
+          <div
+            className="pointer-events-none absolute inset-x-2 top-6 bottom-2 rounded-[18px] opacity-0 blur-2xl transition-opacity duration-500 group-hover:opacity-80 group-focus-visible:opacity-80"
+            style={{ background: theme.accent }}
+          />
+
           {/* the garment card */}
           <div
             className="relative overflow-hidden rounded-[14px] border bg-card transition-all duration-500 ease-out group-hover:-translate-y-2 group-hover:rotate-0 rotate-[-0.6deg] group-even:rotate-[0.6deg]"
             style={{
-              borderColor: `color-mix(in oklab, ${theme.accent} 35%, transparent)`,
+              borderColor: `color-mix(in oklab, ${theme.accent} 45%, transparent)`,
               boxShadow: `0 26px 60px -34px ${theme.accent}`,
             }}
           >
+            {/* neon ring on hover */}
+            <div
+              className="pointer-events-none absolute inset-0 z-10 rounded-[14px] opacity-0 transition-opacity duration-500 group-hover:opacity-100"
+              style={{ boxShadow: `inset 0 0 0 1.5px ${theme.accentSoft}, 0 0 34px -4px ${theme.accent}` }}
+            />
             <div className="relative aspect-[3/4] w-full overflow-hidden">
               <img
                 src={item.image}
@@ -94,9 +106,9 @@ export function ShowroomRack({
             </div>
           </div>
 
-          {/* floor reflection */}
+          {/* floor light pool under every card */}
           <div
-            className="pointer-events-none mx-auto mt-2 h-4 w-[78%] rounded-[50%] blur-[6px] opacity-45 transition-opacity duration-500 group-hover:opacity-70"
+            className="pointer-events-none mx-auto mt-2 h-5 w-[80%] rounded-[50%] blur-[8px] opacity-55 transition-all duration-500 group-hover:opacity-95 group-hover:w-[92%]"
             style={{ background: `radial-gradient(60% 100% at 50% 0%, ${theme.accent}, transparent 75%)` }}
           />
         </Link>
