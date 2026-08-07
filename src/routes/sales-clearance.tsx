@@ -2,7 +2,8 @@ import { createFileRoute } from "@tanstack/react-router";
 import { SiteShell } from "@/components/site-shell";
 import { PageHeader } from "@/components/page-header";
 import { PageFeedback } from "@/components/page-feedback";
-import { ProductGrid } from "@/components/product-grid";
+import { SaleWall, type SaleColumn } from "@/components/sale-wall";
+import heroImage from "@/assets/sale-clearance-hero.jpg";
 
 export const Route = createFileRoute("/sales-clearance")({
   head: () => ({
@@ -11,7 +12,7 @@ export const Route = createFileRoute("/sales-clearance")({
       {
         name: "description",
         content:
-          "Shop Frass sales and clearance: discounted kicks, drip, bare essentials and luxury pieces while stock lasts.",
+          "Shop the Frass unisex clearance floor: men's, women's and mixed clearance racks with discounted kicks, drip and luxury pieces while stock lasts.",
       },
       { property: "og:title", content: "Sales & Clearance — Frass District" },
       {
@@ -25,13 +26,36 @@ export const Route = createFileRoute("/sales-clearance")({
   component: SalesClearancePage,
 });
 
+const COLUMNS: SaleColumn[] = [
+  {
+    id: "men",
+    label: "Men",
+    caption: "Marked down",
+    query: '(tag:"sale" OR tag:"clearance") AND (tag:"men" OR product_type:Men)',
+  },
+  {
+    id: "women",
+    label: "Women",
+    caption: "Marked down",
+    query: '(tag:"sale" OR tag:"clearance") AND (tag:"women" OR product_type:Women)',
+  },
+  {
+    id: "clearance",
+    label: "Clearance",
+    caption: "Men & women — final",
+    query: 'tag:"clearance"',
+  },
+];
+
+const SIGNS = ["Men", "Women", "Clearance"];
+
 function SalesClearancePage() {
   return (
     <SiteShell>
       <PageHeader
         eyebrow="Frass District"
         title="Sales & Clearance"
-        description="Last pairs, end-of-season drops and limited clearance pieces across every Frass store. No discount code needed — prices are already cut."
+        description="One unisex clearance floor. Men's rack, women's rack and the mixed circle rack — last pairs and end-of-season pieces at cut prices. No code needed."
         crumbs={[
           { label: "Home", to: "/" },
           { label: "Frass District", to: "/shop-frass" },
@@ -39,31 +63,31 @@ function SalesClearancePage() {
         ]}
       />
 
-      <section className="mx-auto max-w-[1600px] px-6 pb-24 lg:px-12">
-        <div className="mb-10 flex flex-wrap items-center justify-between gap-4 border-y border-border py-4">
-          <div className="text-xs uppercase tracking-[0.25em] text-muted-foreground">
-            Filter by tag
-          </div>
-          <div className="flex flex-wrap gap-2">
-            <span className="rounded-full bg-[color:var(--gold)] px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.2em] text-[color:var(--gold-foreground)]">
-              All Sale
-            </span>
-            <span className="rounded-full border border-border px-3 py-1.5 text-[10px] uppercase tracking-[0.2em] text-muted-foreground">
-              Sale
-            </span>
-            <span className="rounded-full border border-border px-3 py-1.5 text-[10px] uppercase tracking-[0.2em] text-muted-foreground">
-              Clearance
-            </span>
+      {/* Single wide hero banner with three overhead signs */}
+      <section className="relative mx-auto max-w-[1600px] px-2 md:px-12">
+        <div className="relative overflow-hidden rounded-2xl border border-[color:var(--gold)]/25 md:rounded-[2rem]">
+          <img
+            src={heroImage}
+            alt="Frass clearance floor: men's rack, women's rack and a circular mixed clearance rack with shoes and hats"
+            width={1920}
+            height={768}
+            className="h-[34vw] min-h-[180px] w-full object-cover md:h-auto"
+          />
+          <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(0,0,0,0.55),transparent_35%,rgba(0,0,0,0.5))]" />
+          <div className="pointer-events-none absolute inset-x-0 top-0 grid grid-cols-3">
+            {SIGNS.map((s) => (
+              <div key={s} className="px-1 py-3 text-center md:py-6">
+                <span className="inline-block rounded-full border border-[color:var(--gold)]/50 bg-black/50 px-3 py-1 font-display text-[10px] uppercase tracking-[0.22em] text-[color:var(--gold)] backdrop-blur-sm md:px-6 md:py-2 md:text-lg md:tracking-[0.3em]">
+                  {s}
+                </span>
+              </div>
+            ))}
           </div>
         </div>
-
-        <ProductGrid
-          query='tag:"sale" OR tag:"clearance"'
-          first={48}
-          emptyTitle="No sale items right now"
-          emptyHint="Check back soon — new clearance drops land every Sunday and Monday."
-        />
       </section>
+
+      {/* Three scrolling product columns aligned to the racks above */}
+      <SaleWall columns={COLUMNS} />
 
       <PageFeedback pageTitle="Sales & Clearance" />
     </SiteShell>
