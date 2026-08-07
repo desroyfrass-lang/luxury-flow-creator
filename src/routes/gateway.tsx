@@ -26,13 +26,13 @@ export const Route = createFileRoute("/gateway")({
 function GatewayPage() {
   return (
     <main className="relative min-h-screen overflow-hidden bg-[color:var(--retail-ink)]">
-      <div className="absolute inset-0 flex items-center justify-center bg-black">
+      <div className="absolute inset-0 bg-black">
         <img
           src={archHero.url}
           alt="The carved JAMAICA Luxury Fashion District archway opening onto the palm-lined Frass Kicks promenade"
           width={1920}
           height={1080}
-          className="gateway-drift h-full w-full object-contain object-center"
+          className="gateway-drift h-full w-full object-cover object-center"
         />
         <div className="absolute inset-0 bg-gradient-to-b from-black/45 via-black/25 to-black/70" />
       </div>
