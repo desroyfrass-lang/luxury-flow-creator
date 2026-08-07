@@ -51,6 +51,7 @@ import { Route as ProductHandleRouteImport } from './routes/product.$handle'
 import { Route as PlusSizeWomenRouteImport } from './routes/plus-size.women'
 import { Route as PlusSizeMenRouteImport } from './routes/plus-size.men'
 import { Route as LookbookStoryRouteImport } from './routes/lookbook.$story'
+import { Route as KidsWorldParentsRouteImport } from './routes/kids-world.parents'
 import { Route as FrassLuxuryHouseWomenRouteImport } from './routes/frass-luxury-house.women'
 import { Route as FrassLuxuryHouseMenRouteImport } from './routes/frass-luxury-house.men'
 import { Route as FrassKidsGirlsRouteImport } from './routes/frass-kids.girls'
@@ -334,6 +335,11 @@ const LookbookStoryRoute = LookbookStoryRouteImport.update({
   id: '/$story',
   path: '/$story',
   getParentRoute: () => LookbookRoute,
+} as any)
+const KidsWorldParentsRoute = KidsWorldParentsRouteImport.update({
+  id: '/parents',
+  path: '/parents',
+  getParentRoute: () => KidsWorldRoute,
 } as any)
 const FrassLuxuryHouseWomenRoute = FrassLuxuryHouseWomenRouteImport.update({
   id: '/women',
@@ -782,6 +788,7 @@ export interface FileRoutesByFullPath {
   '/frass-kids/girls': typeof FrassKidsGirlsRoute
   '/frass-luxury-house/men': typeof FrassLuxuryHouseMenRoute
   '/frass-luxury-house/women': typeof FrassLuxuryHouseWomenRoute
+  '/kids-world/parents': typeof KidsWorldParentsRoute
   '/lookbook/$story': typeof LookbookStoryRoute
   '/plus-size/men': typeof PlusSizeMenRoute
   '/plus-size/women': typeof PlusSizeWomenRoute
@@ -881,6 +888,7 @@ export interface FileRoutesByTo {
   '/frass-kids/girls': typeof FrassKidsGirlsRoute
   '/frass-luxury-house/men': typeof FrassLuxuryHouseMenRoute
   '/frass-luxury-house/women': typeof FrassLuxuryHouseWomenRoute
+  '/kids-world/parents': typeof KidsWorldParentsRoute
   '/lookbook/$story': typeof LookbookStoryRoute
   '/plus-size/men': typeof PlusSizeMenRoute
   '/plus-size/women': typeof PlusSizeWomenRoute
@@ -999,6 +1007,7 @@ export interface FileRoutesById {
   '/frass-kids/girls': typeof FrassKidsGirlsRoute
   '/frass-luxury-house/men': typeof FrassLuxuryHouseMenRoute
   '/frass-luxury-house/women': typeof FrassLuxuryHouseWomenRoute
+  '/kids-world/parents': typeof KidsWorldParentsRoute
   '/lookbook/$story': typeof LookbookStoryRoute
   '/plus-size/men': typeof PlusSizeMenRoute
   '/plus-size/women': typeof PlusSizeWomenRoute
@@ -1117,6 +1126,7 @@ export interface FileRouteTypes {
     | '/frass-kids/girls'
     | '/frass-luxury-house/men'
     | '/frass-luxury-house/women'
+    | '/kids-world/parents'
     | '/lookbook/$story'
     | '/plus-size/men'
     | '/plus-size/women'
@@ -1216,6 +1226,7 @@ export interface FileRouteTypes {
     | '/frass-kids/girls'
     | '/frass-luxury-house/men'
     | '/frass-luxury-house/women'
+    | '/kids-world/parents'
     | '/lookbook/$story'
     | '/plus-size/men'
     | '/plus-size/women'
@@ -1333,6 +1344,7 @@ export interface FileRouteTypes {
     | '/frass-kids/girls'
     | '/frass-luxury-house/men'
     | '/frass-luxury-house/women'
+    | '/kids-world/parents'
     | '/lookbook/$story'
     | '/plus-size/men'
     | '/plus-size/women'
@@ -1727,6 +1739,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/lookbook/$story'
       preLoaderRoute: typeof LookbookStoryRouteImport
       parentRoute: typeof LookbookRoute
+    }
+    '/kids-world/parents': {
+      id: '/kids-world/parents'
+      path: '/parents'
+      fullPath: '/kids-world/parents'
+      preLoaderRoute: typeof KidsWorldParentsRouteImport
+      parentRoute: typeof KidsWorldRoute
     }
     '/frass-luxury-house/women': {
       id: '/frass-luxury-house/women'
@@ -2550,12 +2569,14 @@ const FrassPlusRouteWithChildren = FrassPlusRoute._addFileChildren(
 )
 
 interface KidsWorldRouteChildren {
+  KidsWorldParentsRoute: typeof KidsWorldParentsRoute
   KidsWorldIndexRoute: typeof KidsWorldIndexRoute
   KidsWorldAgePlaceRoute: typeof KidsWorldAgePlaceRoute
   KidsWorldAgeIndexRoute: typeof KidsWorldAgeIndexRoute
 }
 
 const KidsWorldRouteChildren: KidsWorldRouteChildren = {
+  KidsWorldParentsRoute: KidsWorldParentsRoute,
   KidsWorldIndexRoute: KidsWorldIndexRoute,
   KidsWorldAgePlaceRoute: KidsWorldAgePlaceRoute,
   KidsWorldAgeIndexRoute: KidsWorldAgeIndexRoute,
