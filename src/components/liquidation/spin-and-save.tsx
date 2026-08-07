@@ -16,7 +16,7 @@ function currentMonth() {
   return `${d.getFullYear()}-${d.getMonth()}`;
 }
 
-/** Once-a-month luxury prize wheel. Frost Kicks chrome + gold edition. */
+/** Frost Kicks luxury prize wheel — chrome, gold, light, glow. */
 export function SpinAndSave() {
   const [used, setUsed] = useState<string | null>(null);
   const [angle, setAngle] = useState(0);
@@ -42,7 +42,7 @@ export function SpinAndSave() {
     setSpinning(true);
     const index = Math.floor(Math.random() * PRIZES.length);
     const slice = 360 / PRIZES.length;
-    const target = 360 * 6 + (360 - index * slice - slice / 2);
+    const target = 360 * 7 + (360 - index * slice - slice / 2);
     setAngle(target);
     window.setTimeout(() => {
       setSpinning(false);
@@ -50,122 +50,142 @@ export function SpinAndSave() {
       setPrize(won);
       setUsed(won);
       window.localStorage.setItem(KEY, `${currentMonth()}|${won}`);
-    }, 4200);
+    }, 4600);
   };
 
   const slice = 360 / PRIZES.length;
 
   return (
-    <section className="mx-auto max-w-[1200px] px-4 py-14 md:px-12 md:py-20">
+    <section className="mx-auto max-w-[1400px] px-4 py-16 md:px-12 md:py-24">
       <div
-        className="relative grid items-center gap-10 overflow-hidden rounded-[1.5rem] border border-[color:var(--gold)]/25 bg-[color-mix(in_oklab,var(--foreground)_5%,transparent)] p-8 backdrop-blur-sm md:grid-cols-2 md:gap-16 md:p-14"
+        className="relative grid items-center gap-12 overflow-hidden rounded-[2rem] border border-[color:var(--gold)]/30 bg-[color-mix(in_oklab,var(--foreground)_4%,transparent)] p-10 backdrop-blur-md md:grid-cols-2 md:gap-20 md:p-16"
         onMouseEnter={() => setHovered(true)}
         onMouseLeave={() => setHovered(false)}
       >
-        {/* Animated gold glow background */}
+        {/* Animated gold aura */}
         <div
-          className="pointer-events-none absolute inset-0 opacity-60 transition-opacity duration-700"
+          className="pointer-events-none absolute inset-0 transition-all duration-700"
           style={{
             background:
-              "radial-gradient(circle at 70% 50%, oklch(0.78 0.14 78 / 0.22), transparent 55%), radial-gradient(circle at 30% 20%, oklch(0.82 0.01 250 / 0.12), transparent 45%)",
-            filter: hovered ? "blur(40px) brightness(1.25)" : "blur(34px)",
+              "radial-gradient(circle at 75% 45%, oklch(0.78 0.14 78 / 0.32), transparent 58%), radial-gradient(circle at 20% 20%, oklch(0.82 0.01 250 / 0.18), transparent 48%), radial-gradient(circle at 80% 80%, oklch(0.78 0.14 78 / 0.12), transparent 45%)",
+            filter: hovered ? "blur(48px) brightness(1.4)" : "blur(38px)",
+            opacity: hovered ? 0.9 : 0.7,
             transition: "filter 700ms ease, opacity 700ms ease",
           }}
         />
 
-        {/* Chrome shimmer overlay */}
+        {/* Rotating chrome light rays */}
         <div
-          className="pointer-events-none absolute inset-0 opacity-30"
+          className="pointer-events-none absolute inset-0 opacity-40"
           style={{
             background:
-              "linear-gradient(135deg, transparent 0%, oklch(1 0 0 / 0.06) 25%, transparent 50%, oklch(1 0 0 / 0.04) 75%, transparent 100%)",
-            backgroundSize: "200% 200%",
-            animation: "chrome-pan 10s ease-in-out infinite",
+              "conic-gradient(from 0deg, transparent 0deg, oklch(1 0 0 / 0.08) 20deg, transparent 40deg, oklch(1 0 0 / 0.06) 60deg, transparent 80deg, oklch(1 0 0 / 0.1) 100deg, transparent 120deg, oklch(1 0 0 / 0.05) 140deg, transparent 160deg, oklch(1 0 0 / 0.09) 180deg, transparent 200deg, oklch(1 0 0 / 0.06) 220deg, transparent 240deg, oklch(1 0 0 / 0.08) 260deg, transparent 280deg, oklch(1 0 0 / 0.05) 300deg, transparent 320deg, oklch(1 0 0 / 0.07) 340deg, transparent 360deg)",
+            animation: "chrome-pan 12s linear infinite",
+          }}
+        />
+
+        {/* Chrome shimmer sweep */}
+        <div
+          className="pointer-events-none absolute inset-0 opacity-50"
+          style={{
+            background:
+              "linear-gradient(105deg, transparent 0%, oklch(1 0 0 / 0.08) 28%, transparent 52%, oklch(1 0 0 / 0.05) 74%, transparent 100%)",
+            backgroundSize: "250% 250%",
+            animation: "chrome-pan 8s ease-in-out infinite",
           }}
         />
 
         <div className="relative z-10">
-          <p className="text-[10px] uppercase tracking-[0.35em] text-[color:var(--gold)]">
+          <p className="font-sans text-[11px] uppercase tracking-[0.42em] text-[color:var(--gold)]">
             Once a month
           </p>
-          <h2 className="mt-3 font-display text-3xl uppercase tracking-[0.08em] md:text-5xl">
+          <h2 className="mt-4 font-display text-4xl uppercase tracking-[0.07em] md:text-6xl lg:text-7xl">
             Spin &amp; Save
           </h2>
-          <p className="mt-4 max-w-sm text-sm leading-relaxed text-muted-foreground">
+          <p className="mt-5 max-w-md text-base leading-relaxed text-muted-foreground md:text-lg">
             One spin per visitor, per month. Quiet luxury rewards — no cheap gimmicks, no pop-ups
             chasing you around the district.
           </p>
-          <p className="mt-6 text-sm text-muted-foreground">
-            {prize ? (
-              <span className="font-display text-lg uppercase tracking-[0.16em] text-[color:var(--gold)]">
-                You hold: {prize}
-              </span>
-            ) : (
-              "Your spin is waiting."
-            )}
-          </p>
+          <div className="mt-8 flex items-center gap-4">
+            <div
+              className="flex h-14 w-14 items-center justify-center rounded-full border border-[color:var(--gold)]/40 bg-[color-mix(in_oklab,var(--gold)_12%,transparent)] font-display text-2xl text-[color:var(--gold)] shadow-[0_0_24px_-6px_oklch(0.78_0.14_78/0.7)]"
+              aria-hidden="true"
+            >
+              F
+            </div>
+            <p className="text-sm text-muted-foreground">
+              {prize ? (
+                <span className="font-display text-xl uppercase tracking-[0.14em] text-[color:var(--gold)] md:text-2xl">
+                  You hold: {prize}
+                </span>
+              ) : (
+                "Your spin is waiting."
+              )}
+            </p>
+          </div>
           <button
             type="button"
             onClick={spin}
             disabled={spinning || used !== null}
-            className="group relative mt-6 inline-flex items-center overflow-hidden rounded-full border border-[color:var(--gold)]/60 bg-[color-mix(in_oklab,var(--gold)_8%,transparent)] px-8 py-3 text-[11px] uppercase tracking-[0.28em] text-[color:var(--gold)] transition-all duration-500 hover:border-[color:var(--gold)] hover:bg-[color:var(--gold)] hover:text-[color:var(--gold-foreground)] hover:shadow-[0_0_40px_-8px_oklch(0.78_0.14_78/0.85)] disabled:cursor-not-allowed disabled:opacity-40"
+            className="group relative mt-8 inline-flex items-center overflow-hidden rounded-full border-2 border-[color:var(--gold)] bg-[color-mix(in_oklab,var(--gold)_10%,transparent)] px-10 py-4 font-display text-sm uppercase tracking-[0.22em] text-[color:var(--gold)] transition-all duration-500 hover:bg-[color:var(--gold)] hover:text-[color:var(--gold-foreground)] hover:shadow-[0_0_60px_-10px_oklch(0.78_0.14_78/0.95)] disabled:cursor-not-allowed disabled:opacity-40"
           >
             <span className="relative z-10">
               {used !== null ? "Come back next month" : spinning ? "Spinning…" : "Spin the wheel"}
             </span>
-            <span className="absolute inset-0 -translate-x-full bg-[var(--gradient-gold)] opacity-0 transition-all duration-500 group-hover:translate-x-0 group-hover:opacity-20" />
+            <span className="absolute inset-0 -translate-x-full bg-[var(--gradient-gold)] opacity-0 transition-all duration-500 group-hover:translate-x-0 group-hover:opacity-25" />
           </button>
         </div>
 
-        <div className="relative z-10 mx-auto aspect-square w-full max-w-[360px]">
-          {/* Outer chrome halo */}
+        <div className="relative z-10 mx-auto aspect-square w-full max-w-[480px]">
+          {/* Outer gold halo */}
           <div
-            className="absolute -inset-6 rounded-full opacity-70 transition-all duration-700"
+            className="absolute -inset-8 rounded-full transition-all duration-700"
             style={{
               background:
-                "radial-gradient(circle, oklch(0.78 0.14 78 / 0.18) 0%, oklch(0.82 0.01 250 / 0.08) 45%, transparent 70%)",
-              filter: hovered ? "blur(28px) brightness(1.3)" : "blur(22px)",
+                "radial-gradient(circle, oklch(0.78 0.14 78 / 0.22) 0%, oklch(0.82 0.01 250 / 0.1) 40%, transparent 68%)",
+              filter: hovered ? "blur(36px) brightness(1.35)" : "blur(28px)",
             }}
           />
 
           {/* Gold pointer */}
-          <div className="absolute left-1/2 top-0 z-30 h-0 w-0 -translate-x-1/2 border-x-8 border-t-[22px] border-x-transparent border-t-[color:var(--gold)] drop-shadow-[0_0_12px_oklch(0.78_0.14_78/0.9)]" />
+          <div className="absolute left-1/2 top-0 z-30 h-0 w-0 -translate-x-1/2 border-x-[14px] border-t-[28px] border-x-transparent border-t-[color:var(--gold)] drop-shadow-[0_0_18px_oklch(0.78_0.14_78/1)]" />
 
-          {/* Wheel rim / chrome bezel */}
+          {/* Chrome + gold rim */}
           <div
-            className="absolute -inset-2 rounded-full"
+            className="absolute -inset-3 rounded-full"
             style={{
               background:
-                "conic-gradient(from 0deg, oklch(0.88 0.01 250) 0%, oklch(0.72 0.01 250) 12%, oklch(0.95 0.005 250) 25%, oklch(0.78 0.14 78) 38%, oklch(0.92 0.09 85) 50%, oklch(0.78 0.14 78) 62%, oklch(0.95 0.005 250) 75%, oklch(0.72 0.01 250) 88%, oklch(0.88 0.01 250) 100%)",
+                "conic-gradient(from 0deg, oklch(0.9 0.01 250) 0%, oklch(0.7 0.01 250) 10%, oklch(0.96 0.005 250) 24%, oklch(0.78 0.14 78) 36%, oklch(0.94 0.1 85) 50%, oklch(0.78 0.14 78) 64%, oklch(0.96 0.005 250) 76%, oklch(0.7 0.01 250) 90%, oklch(0.9 0.01 250) 100%)",
               boxShadow:
-                "inset 0 0 24px oklch(0 0 0 / 0.65), 0 0 0 1px oklch(0.78 0.14 78 / 0.45), 0 30px 90px -30px oklch(0 0 0 / 0.85)",
+                "inset 0 0 30px oklch(0 0 0 / 0.7), 0 0 0 2px oklch(0.78 0.14 78 / 0.55), 0 40px 110px -40px oklch(0 0 0 / 0.9), 0 0 60px -12px oklch(0.78 0.14 78 / 0.5)",
             }}
           />
 
           {/* Spinning wheel */}
           <div
-            className="relative h-full w-full rounded-full border-[5px] border-[color:var(--gold)]/40 shadow-[0_30px_80px_-30px_rgba(0,0,0,0.8)]"
+            className="relative h-full w-full rounded-full border-[6px] border-[color:var(--gold)]/50 shadow-[0_40px_100px_-40px_rgba(0,0,0,0.9)]"
             style={{
               transform: `rotate(${angle}deg)`,
-              transition: "transform 4s cubic-bezier(0.16, 1, 0.3, 1)",
+              transition: "transform 4.2s cubic-bezier(0.16, 1, 0.3, 1)",
               background: `conic-gradient(${PRIZES.map((_, i) => {
                 const c =
                   i % 2 === 0
-                    ? "color-mix(in oklab, var(--gold) 48%, black)"
-                    : "color-mix(in oklab, black 90%, var(--gold))";
+                    ? "color-mix(in oklab, var(--gold) 52%, black)"
+                    : "color-mix(in oklab, black 88%, var(--gold))";
                 return `${c} ${i * slice}deg ${(i + 1) * slice}deg`;
               }).join(", ")})`,
             }}
           >
-            {/* Chrome divider lines */}
+            {/* Gold divider beams */}
             {PRIZES.map((_, i) => (
               <div
                 key={`line-${i}`}
-                className="absolute left-1/2 top-1/2 h-[50%] w-[2px] origin-top"
+                className="absolute left-1/2 top-1/2 h-[50%] w-[3px] origin-top"
                 style={{
                   transform: `rotate(${i * slice}deg)`,
                   background:
-                    "linear-gradient(180deg, oklch(0.92 0.09 85 / 0.95), oklch(0.78 0.14 78 / 0.4), transparent)",
+                    "linear-gradient(180deg, oklch(0.96 0.1 85 / 0.98), oklch(0.78 0.14 78 / 0.6), transparent)",
+                  boxShadow: "0 0 8px oklch(0.78 0.14 78 / 0.5)",
                 }}
               />
             ))}
@@ -176,7 +196,7 @@ export function SpinAndSave() {
                 className="absolute left-1/2 top-1/2 origin-left"
                 style={{ transform: `rotate(${i * slice + slice / 2}deg)` }}
               >
-                <span className="ml-10 block w-24 text-[9px] uppercase tracking-[0.14em] text-[color:var(--gold-soft)] drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]">
+                <span className="ml-12 block w-28 font-display text-[11px] uppercase tracking-[0.16em] text-[color:var(--gold-soft)] drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)] md:ml-14 md:w-32 md:text-xs">
                   {p}
                 </span>
               </div>
@@ -184,12 +204,12 @@ export function SpinAndSave() {
 
             {/* Inner chrome ring */}
             <div
-              className="absolute left-1/2 top-1/2 h-[42%] w-[42%] -translate-x-1/2 -translate-y-1/2 rounded-full"
+              className="absolute left-1/2 top-1/2 h-[44%] w-[44%] -translate-x-1/2 -translate-y-1/2 rounded-full"
               style={{
                 background:
-                  "radial-gradient(circle at 30% 30%, oklch(1 0 0 / 0.95), oklch(0.82 0.01 250 / 0.85) 40%, oklch(0.55 0.02 250 / 0.9) 100%)",
+                  "radial-gradient(circle at 30% 30%, oklch(1 0 0 / 0.98), oklch(0.85 0.01 250 / 0.9) 38%, oklch(0.55 0.02 250 / 0.95) 100%)",
                 boxShadow:
-                  "inset 0 0 18px oklch(0 0 0 / 0.55), 0 0 0 2px oklch(0.78 0.14 78 / 0.5), 0 0 30px -4px oklch(0.78 0.14 78 / 0.45)",
+                  "inset 0 0 22px oklch(0 0 0 / 0.6), 0 0 0 3px oklch(0.78 0.14 78 / 0.6), 0 0 40px -4px oklch(0.78 0.14 78 / 0.55)",
               }}
             />
           </div>
@@ -199,9 +219,9 @@ export function SpinAndSave() {
             type="button"
             onClick={spin}
             disabled={spinning || used !== null}
-            className="absolute left-1/2 top-1/2 z-20 flex h-14 w-14 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border border-[color:var(--gold)]/70 bg-gradient-to-br from-[color:var(--chrome-soft)] via-[color:var(--chrome)] to-[color:var(--gold)] text-[10px] font-display uppercase tracking-wider text-[color:var(--ink)] shadow-[0_0_30px_-4px_oklch(0.78_0.14_78/0.65)] transition-all duration-300 hover:scale-105 hover:shadow-[0_0_50px_-2px_oklch(0.78_0.14_78/0.9)] disabled:cursor-not-allowed disabled:opacity-50"
+            className="absolute left-1/2 top-1/2 z-20 flex h-20 w-20 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border-2 border-[color:var(--gold)] bg-gradient-to-br from-[color:var(--chrome-soft)] via-[color:var(--chrome)] to-[color:var(--gold)] font-display text-xs uppercase tracking-wider text-[color:var(--ink)] shadow-[0_0_40px_-4px_oklch(0.78_0.14_78/0.75)] transition-all duration-300 hover:scale-110 hover:shadow-[0_0_70px_-2px_oklch(0.78_0.14_78/1)] active:scale-95 disabled:cursor-not-allowed disabled:opacity-50 md:h-24 md:w-24 md:text-sm"
           >
-            <span className="drop-shadow-[0_1px_1px_rgba(255,255,255,0.4)]">
+            <span className="drop-shadow-[0_1px_2px_rgba(255,255,255,0.5)]">
               {spinning ? "…" : "Spin"}
             </span>
           </button>
