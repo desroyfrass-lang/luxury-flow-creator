@@ -66,14 +66,13 @@ function WingPage() {
 
       <section className="mx-auto max-w-[1600px] px-6 pb-24 lg:px-12">
         {/* Footwear is its own section — never a store door. */}
-        <div className="mb-20">
-          <header className="mb-10 flex flex-wrap items-center gap-3 border-b border-[color:var(--gold)]/20 pb-4">
-            <h2 className="font-display text-2xl uppercase md:text-4xl">Frass Kicks</h2>
-            <PlusBadge size="lg" />
-            <span className="text-[10px] uppercase tracking-[0.28em] text-muted-foreground">
-              The shoe section
-            </span>
-          </header>
+        <div className="mb-24">
+          <SectionMarquee
+            kicker="Section 01 · Footwear"
+            title="Frass Kicks"
+            accent="oklch(0.92 0.02 240)"
+            blurb="The shoe department. An illuminated three-bay wall — Casual, Classic and Street — every pair carried in 10.5 and up."
+          />
           <KicksEntry
             to="/frass-plus/$gender/kicks"
             params={{ gender }}
@@ -84,20 +83,25 @@ function WingPage() {
           />
         </div>
 
-        {STORE_ORDER.filter((s) => s !== "kicks").map((store) => {
+        {STORE_ORDER.filter((s) => s !== "kicks").map((store, si) => {
           const list = departments.filter((d) => d.store === store);
           if (!list.length) return null;
           return (
-            <div key={store} className="mb-20">
-              <header className="mb-10 flex flex-wrap items-center gap-3 border-b border-[color:var(--gold)]/20 pb-4">
-                <h2 className="font-display text-2xl uppercase md:text-4xl">
-                  {STORE_LABEL[store].replace(" Plus+", "")}
-                </h2>
-                <PlusBadge size="lg" />
-                <span className="text-[10px] uppercase tracking-[0.28em] text-muted-foreground">
-                  Mirrored collection
-                </span>
-              </header>
+            <div key={store} className="mb-24">
+              <SectionMarquee
+                kicker={`Section ${String(si + 2).padStart(2, "0")} · ${
+                  store === "drip" ? "Clothing" : "Intimates & Swim"
+                }`}
+                title={STORE_LABEL[store].replace(" Plus+", "")}
+                accent={
+                  store === "drip" ? "oklch(0.72 0.20 305)" : "oklch(0.80 0.13 200)"
+                }
+                blurb={
+                  store === "drip"
+                    ? "The clothing floor. Every doorway is a showroom of its own — step through the one that matches your day."
+                    : "The intimates and swim floor. Two rooms, one boutique — cut and carried in extended sizing."
+                }
+              />
 
               <div className="grid grid-cols-1 gap-x-8 gap-y-16 sm:grid-cols-2 lg:grid-cols-3">
                 {list.map((d, i) => (
@@ -107,7 +111,7 @@ function WingPage() {
                     params={{ gender, category: d.slug }}
                     slot={`plus-${gender}-${d.slug}`}
                     image={d.image}
-                    eyebrow={`${STORE_LABEL[store]} · ${String(i + 1).padStart(2, "0")}`}
+                    eyebrow={`Department ${String(i + 1).padStart(2, "0")}`}
                     title={plusName(d.title)}
                     description={d.tagline}
                   />
@@ -120,5 +124,53 @@ function WingPage() {
 
       <PageFeedback pageTitle={`Frass Plus — ${label}`} />
     </SiteShell>
+  );
+}
+
+function SectionMarquee({
+  kicker,
+  title,
+  blurb,
+  accent,
+}: {
+  kicker: string;
+  title: string;
+  blurb: string;
+  accent: string;
+}) {
+  return (
+    <header
+      className="relative mb-12 overflow-hidden rounded-2xl border px-6 py-10 text-center md:px-12 md:py-14"
+      style={{
+        borderColor: `color-mix(in oklab, ${accent} 45%, transparent)`,
+        background: `radial-gradient(120% 140% at 50% 0%, color-mix(in oklab, ${accent} 16%, transparent) 0%, transparent 70%), linear-gradient(180deg, oklch(0.16 0.01 80), oklch(0.10 0.008 80))`,
+        boxShadow: `0 30px 70px -50px ${accent}, inset 0 1px 0 color-mix(in oklab, ${accent} 30%, transparent)`,
+      }}
+    >
+      <span
+        className="pointer-events-none absolute inset-x-10 top-0 h-px"
+        style={{ background: `linear-gradient(90deg, transparent, ${accent}, transparent)` }}
+      />
+      <p
+        className="text-[10px] font-bold uppercase tracking-[0.42em]"
+        style={{ color: accent }}
+      >
+        {kicker}
+      </p>
+      <h2
+        className="mt-4 flex flex-wrap items-center justify-center gap-3 font-display uppercase leading-[0.9] tracking-[0.02em] text-[clamp(2rem,7vw,4rem)]"
+        style={{ color: accent, textShadow: `0 0 34px color-mix(in oklab, ${accent} 55%, transparent)` }}
+      >
+        {title}
+        <PlusBadge size="lg" />
+      </h2>
+      <p className="mx-auto mt-5 max-w-2xl font-script text-base italic text-foreground/80 md:text-lg">
+        {blurb}
+      </p>
+      <span
+        className="pointer-events-none absolute inset-x-10 bottom-0 h-px"
+        style={{ background: `linear-gradient(90deg, transparent, ${accent}, transparent)` }}
+      />
+    </header>
   );
 }
