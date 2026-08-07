@@ -5,11 +5,12 @@ import { CartDrawer } from "./cart-drawer";
 import fullLogo from "@/assets/frass-logo-full.asset.json";
 
 const CATEGORIES: { label: string; to: string; editorial?: boolean }[] = [
-  { label: "Women", to: "/frass-drip/women" },
-  { label: "Men", to: "/frass-drip/men" },
-  { label: "Plus Size", to: "/bare-drip", editorial: true },
-  { label: "Frass Luxury House", to: "/capsules" },
-  { label: "New Looks", to: "/social-media-virals" },
+  { label: "Frass Kicks", to: "/frass-kicks/women" },
+  { label: "Frass Drip", to: "/frass-drip/women" },
+  { label: "Bare Drip", to: "/bare-drip/women" },
+  { label: "Plus Size", to: "/plus-size/women" },
+  { label: "Frass Luxury House", to: "/frass-luxury-house/women", editorial: true },
+  { label: "Social Media Virals", to: "/social-media-virals" },
 ];
 
 const CURRENCIES = ["USD", "GBP", "EUR", "JMD", "CAD"];
