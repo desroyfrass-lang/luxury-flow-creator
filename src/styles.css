@@ -48,7 +48,7 @@
   --font-script: "Caveat", cursive;
 
  --shadow-luxury: 0 30px 80px -30px oklch(0.2 0.02 80 / 0.18), 0 8px 24px -12px oklch(0.2 0.02 80 / 0.10);
- --shadow-glow-gold: 0 0 0 1px oklch(0.95 0.18 85 / 0.95), 0 30px 130px -15px oklch(0.9 0.22 82 / 1), 0 0 160px -5px oklch(0.95 0.2 85 / 0.95), 0 0 280px -20px oklch(0.98 0.22 85 / 0.8), 0 0 60px -2px oklch(0.95 0.2 85 / 0.7);
+ --shadow-glow-gold: 0 0 0 1px oklch(0.84 0.13 76 / 0.95), 0 30px 130px -15px oklch(0.76 0.14 74 / 0.95), 0 0 160px -5px oklch(0.8 0.13 75 / 0.8), 0 0 280px -20px oklch(0.82 0.12 76 / 0.6), 0 0 60px -2px oklch(0.8 0.13 75 / 0.6);
   --shadow-chrome: 0 20px 60px -25px oklch(0.55 0.02 250 / 0.25);
 
   --ease-luxury: cubic-bezier(0.22, 1, 0.36, 1);
