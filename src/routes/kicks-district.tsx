@@ -9,8 +9,8 @@ import cardKicks from "@/assets/card-kicks.jpg";
 import cardMen from "@/assets/card-men.jpg";
 import cardWomen from "@/assets/card-women.jpg";
 import cardDrip from "@/assets/card-drip.jpg";
-import cardBare from "@/assets/card-bare.jpg";
-import viralDress from "@/assets/bouncy-viral-dress.jpg";
+import storeBareMen from "@/assets/store-bare-men.jpg";
+import storeBareWomen from "@/assets/store-bare-women.jpg";
 
 export const Route = createFileRoute("/kicks-district")({
   head: () => ({
