@@ -92,7 +92,7 @@ function PlusKicksRoom() {
           { label: "Frass Kicks Plus+" },
         ]}
       />
-      <WallSigns signs={wall.map((s) => ({ label: s.label, caption: s.caption }))} />
+      <WallSigns labels={wall.map((s) => s.label)} />
       <section className="relative mx-auto max-w-[1600px] px-2 md:px-12">
         <div className="relative overflow-hidden rounded-2xl md:rounded-[2rem]">
           <img

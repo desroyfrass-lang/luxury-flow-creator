@@ -72,9 +72,7 @@ function KidsKicksRoom() {
           { label: "Frass Kicks" },
         ]}
       />
-      <WallSigns
-        signs={wall.map((sct) => ({ label: sct.label, caption: sct.caption }))}
-      />
+      <WallSigns labels={wall.map((sct) => sct.label)} />
       <ShoeWall sections={wall} gender={seg.gender} />
       <PageFeedback pageTitle={`Frass Kicks — ${seg.title}`} />
     </SiteShell>
