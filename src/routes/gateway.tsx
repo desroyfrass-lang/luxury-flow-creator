@@ -65,19 +65,17 @@ function GatewayPage() {
         />
         <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-black/70" />
 
-        {/* Carved into the arch: FRASS · [gold crest already on the building] · KICKS */}
-        <div
-          aria-hidden="true"
-          className="pointer-events-none absolute left-0 right-0 top-[5.1%] flex items-center justify-center"
-        >
-          <span className="w-[22%] pr-[3%] text-right font-display text-[3.4vw] uppercase leading-none tracking-[0.08em] text-[#e8bf5c] drop-shadow-[0_2px_6px_rgba(0,0,0,0.7)] sm:text-[2.6vw]">
-            Frass
-          </span>
-          <span className="w-[19%]" />
-          <span className="w-[22%] pl-[3%] text-left font-display text-[3.4vw] uppercase leading-none tracking-[0.08em] text-[#e8bf5c] drop-shadow-[0_2px_6px_rgba(0,0,0,0.7)] sm:text-[2.6vw]">
-            Kicks
-          </span>
-        </div>
+        {/* The Frass Kicks mark, mounted on the arch as a gold fixture above JAMAICA */}
+        <img
+          src={fullLogo.url}
+          alt="Frass Kicks"
+          className="pointer-events-none absolute left-1/2 top-[1.5%] z-[1] h-[13%] w-auto -translate-x-1/2 object-contain mix-blend-screen"
+          style={{
+            filter:
+              "grayscale(1) brightness(1.2) sepia(1) saturate(4.2) hue-rotate(-12deg) drop-shadow(0 3px 10px rgba(0,0,0,0.75))",
+          }}
+        />
+
       </div>
 
 
