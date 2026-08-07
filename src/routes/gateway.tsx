@@ -104,17 +104,17 @@ function GatewayCard({
       to={to}
       aria-label={`${title} — ${copy}`}
       style={{ animationDelay: delay }}
-      className={`gateway-rise group relative overflow-hidden rounded-3xl border p-7 text-left backdrop-blur-xl transition duration-300 will-change-transform hover:-translate-y-1.5 ${
+      className={`gateway-rise group relative overflow-hidden rounded-2xl border p-5 text-left backdrop-blur-xl transition duration-300 will-change-transform hover:-translate-y-1.5 ${
         light
-          ? "border-white/70 bg-white/92 text-[color:var(--retail-ink)] hover:shadow-[0_30px_80px_-30px_rgba(255,255,255,0.5)]"
-          : "border-[color:var(--hill-gold)]/50 bg-[color:var(--hill-green)]/85 text-[color:var(--luxe-linen)] hover:shadow-[0_30px_80px_-30px_rgba(212,175,55,0.6)]"
+          ? "border-white/70 bg-white/92 text-[color:var(--retail-ink)] hover:shadow-[0_20px_60px_-20px_rgba(255,255,255,0.5)]"
+          : "border-[color:var(--hill-gold)]/50 bg-[color:var(--hill-green)]/85 text-[color:var(--luxe-linen)] hover:shadow-[0_20px_60px_-20px_rgba(212,175,55,0.6)]"
       }`}
     >
-      <span className="text-3xl">{emoji}</span>
-      <h2 className="mt-4 font-display text-3xl uppercase leading-none md:text-4xl">{title}</h2>
-      <p className={`mt-3 text-sm ${light ? "text-black/65" : "text-[color:var(--luxe-linen)]/75"}`}>{copy}</p>
+      <span className="text-2xl">{emoji}</span>
+      <h2 className="mt-3 font-display text-2xl uppercase leading-none md:text-3xl">{title}</h2>
+      <p className={`mt-2 text-xs ${light ? "text-black/65" : "text-[color:var(--luxe-linen)]/75"}`}>{copy}</p>
       <span
-        className={`mt-6 inline-flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.28em] ${
+        className={`mt-4 inline-flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.28em] ${
           light ? "text-black/70" : "text-[color:var(--hill-gold)]"
         }`}
       >
