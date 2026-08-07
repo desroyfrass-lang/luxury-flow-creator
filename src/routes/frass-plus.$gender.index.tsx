@@ -121,7 +121,6 @@ function WingPage() {
           );
         })}
       </section>
-      </section>
 
       <PageFeedback pageTitle={`Frass Plus — ${label}`} />
     </SiteShell>
