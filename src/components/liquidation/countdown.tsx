@@ -6,12 +6,15 @@ function pad(n: number) {
 
 /** Elegant countdown to a target timestamp. */
 export function Countdown({ target, compact }: { target: number; compact?: boolean }) {
-  const [now, setNow] = useState(() => Date.now());
+  const [now, setNow] = useState<number | null>(null);
 
   useEffect(() => {
+    setNow(Date.now());
     const id = window.setInterval(() => setNow(Date.now()), 1000);
     return () => window.clearInterval(id);
   }, []);
+
+  if (now === null) return <div className={compact ? "h-10" : "h-16"} aria-hidden="true" />;
 
   const diff = Math.max(0, target - now);
   const d = Math.floor(diff / 86400000);
