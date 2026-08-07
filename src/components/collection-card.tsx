@@ -48,10 +48,13 @@ export function CollectionCard({
           src={src}
           alt={title}
           loading="lazy"
-          className="absolute inset-0 h-full w-full object-contain transition-transform duration-[1400ms] ease-out group-hover:scale-[1.04]"
+          className="absolute inset-0 h-full w-full object-contain brightness-[1.18] contrast-[1.04] saturate-[1.06] transition-transform duration-[1400ms] ease-out group-hover:scale-[1.04]"
         />
-        {/* dark cinematic wash so the title pops like the reference */}
-        <div className="absolute inset-0 bg-[linear-gradient(180deg,oklch(0.07_0.005_80_/_0.45)_0%,oklch(0.07_0.005_80_/_0.55)_45%,oklch(0.07_0.005_80_/_0.85)_100%)]" />
+        {/* light cinematic wash — keeps text legible without dimming the shot */}
+        <div className="absolute inset-0 bg-[linear-gradient(180deg,transparent_0%,oklch(0.07_0.005_80_/_0.08)_45%,oklch(0.07_0.005_80_/_0.62)_100%)]" />
+        {/* soft warm lift across the whole card */}
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(120%_80%_at_50%_35%,oklch(0.95_0.06_85_/_0.10)_0%,transparent_65%)]" />
+
         {/* gold sheen on hover */}
         <div
           className="absolute inset-0 opacity-0 transition-opacity duration-700 group-hover:opacity-100 pointer-events-none"
