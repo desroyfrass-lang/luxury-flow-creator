@@ -1,6 +1,8 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { useEffect, useState } from "react";
 import archHero from "@/assets/frass-gateway-arch.jpg.asset.json";
 import fullLogo from "@/assets/frass-logo-full.asset.json";
+import frassyGold from "@/assets/frassy-gold.png.asset.json";
 
 export const Route = createFileRoute("/gateway")({
   head: () => ({
@@ -23,6 +25,28 @@ export const Route = createFileRoute("/gateway")({
   component: GatewayPage,
 });
 
+function GatewayFrassy() {
+  const [seated, setSeated] = useState(false);
+  useEffect(() => {
+    const reduced = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
+    const t = setTimeout(() => setSeated(true), reduced ? 200 : 3200);
+    return () => clearTimeout(t);
+  }, []);
+  return (
+    <div className="pointer-events-none fixed inset-0 z-30">
+      <img
+        src={frassyGold.url}
+        alt="Frassy, the host of the World of Frass"
+        className={`absolute drop-shadow-[0_20px_80px_rgba(0,0,0,0.6)] transition-all duration-[1400ms] ease-[cubic-bezier(0.22,1,0.36,1)] ${
+          seated
+            ? "bottom-24 right-5 h-16 w-16 rounded-full object-cover opacity-95"
+            : "bottom-[12vh] right-1/2 h-[72vh] w-[72vh] translate-x-1/2 object-contain opacity-100"
+        }`}
+      />
+    </div>
+  );
+}
+
 function GatewayPage() {
   return (
     <main className="relative min-h-screen overflow-hidden bg-[color:var(--retail-ink)]">
@@ -43,20 +67,27 @@ function GatewayPage() {
         <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-black/70" />
       </div>
 
+      {/* The house sign — the full Frass Kicks mark in gold, crowning the arch */}
+      <img
+        src={fullLogo.url}
+        alt="Frass Kicks"
+        className="gateway-rise pointer-events-none absolute left-1/2 top-2 z-20 h-12 w-auto -translate-x-1/2 object-contain md:top-4 md:h-20"
+        style={{
+          animationDelay: "60ms",
+          filter:
+            "grayscale(1) brightness(1.15) sepia(1) saturate(5) hue-rotate(-8deg) drop-shadow(0 4px 24px rgba(0,0,0,0.65))",
+        }}
+      />
 
-      <section className="gateway-swell relative mx-auto flex min-h-screen max-w-[1400px] flex-col items-center justify-end px-6 pb-14 pt-[38vh] text-center">
+      <GatewayFrassy />
+
+      <section className="gateway-swell relative mx-auto flex min-h-screen max-w-[1400px] flex-col items-center justify-end px-6 pb-14 pt-[62vh] text-center">
         <h1
           className="gateway-rise font-display text-4xl leading-[0.95] text-white drop-shadow-[0_2px_24px_rgba(0,0,0,0.55)] sm:text-6xl lg:text-8xl"
           style={{ animationDelay: "80ms" }}
         >
           Welcome to the World of Frass.
         </h1>
-        <img
-          src={fullLogo.url}
-          alt="Frass"
-          className="gateway-rise mt-6 h-16 w-auto object-contain md:h-24"
-          style={{ animationDelay: "120ms" }}
-        />
 
         <p
           className="gateway-rise mt-5 max-w-2xl text-sm uppercase tracking-[0.3em] text-white/75 sm:text-base"
@@ -64,6 +95,7 @@ function GatewayPage() {
         >
           Built by people. Powered by community. Driven by execution.
         </p>
+
 
         <div className="mt-10 grid w-full max-w-3xl gap-4 sm:grid-cols-2">
           <GatewayCard
