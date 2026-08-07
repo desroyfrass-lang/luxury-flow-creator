@@ -81,10 +81,10 @@ const NAV: NavGroup[] = [
 
   {
     label: "Frass Kids",
-    to: "/frass-kids/girls",
+    to: "/frass-kids",
     match: "/frass-kids",
     items: [
-      { label: "Girls", to: "/frass-kids/girls" },
+      { label: "Girls", to: "/frass-kids" },
       { label: "Boys", to: "/frass-kids/boys" },
     ],
   },
@@ -112,7 +112,7 @@ const PRIMARY: { label: string; to: string; match: string; editorial?: boolean }
   { label: "Afro Designers", to: "/afro-designers", match: "/afro-designers", editorial: true },
   { label: "Frass Luxury House", to: "/frass-luxury-house", match: "/frass-luxury-house", editorial: true },
   { label: "Frass Plus+", to: "/frass-plus", match: "/frass-plus" },
-  { label: "Frass Kids", to: "/frass-kids/girls", match: "/frass-kids" },
+  { label: "Frass Kids", to: "/frass-kids", match: "/frass-kids" },
 ];
 
 
