@@ -2,6 +2,7 @@ import { createFileRoute, notFound } from "@tanstack/react-router";
 import { SiteShell } from "@/components/site-shell";
 import { PageHeader } from "@/components/page-header";
 import { ShowroomRack } from "@/components/showroom-rack";
+import { ShowroomScene } from "@/components/showroom-scene";
 import { getShowroomTheme } from "@/lib/showroom-themes";
 import cardDrip from "@/assets/card-drip.jpg";
 import cardMen from "@/assets/card-men.jpg";
@@ -175,12 +176,9 @@ function CategoryPage() {
             { label: cat.title },
           ]}
         />
-        <section className="relative mx-auto max-w-[1600px] px-6 pb-24 lg:px-12">
-          <div
-            className="pointer-events-none absolute inset-x-0 top-0 h-72"
-            style={{ background: theme.ambient }}
-          />
-          <p className="relative mb-14 max-w-xl text-sm text-muted-foreground">{theme.mood}</p>
+        <section className="relative mx-auto max-w-[1600px] px-6 pb-24 pt-4 lg:px-12">
+          <ShowroomScene theme={theme} />
+          <p className="relative mb-14 max-w-xl text-sm text-foreground/80">{theme.mood}</p>
           <div className="relative">
             <ShowroomRack items={items} theme={theme} eyebrow={cat.title} />
           </div>

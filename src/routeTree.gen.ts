@@ -20,6 +20,7 @@ import { Route as LookbookRouteImport } from './routes/lookbook'
 import { Route as KicksDistrictRouteImport } from './routes/kicks-district'
 import { Route as GatewayRouteImport } from './routes/gateway'
 import { Route as FrassWorldRouteImport } from './routes/frass-world'
+import { Route as FrassLuxuryHouseRouteImport } from './routes/frass-luxury-house'
 import { Route as FrassKicksRouteImport } from './routes/frass-kicks'
 import { Route as FrassDripRouteImport } from './routes/frass-drip'
 import { Route as CheckoutRouteImport } from './routes/checkout'
@@ -32,6 +33,7 @@ import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as SocialMediaViralsIndexRouteImport } from './routes/social-media-virals.index'
 import { Route as LookbookIndexRouteImport } from './routes/lookbook.index'
+import { Route as FrassLuxuryHouseIndexRouteImport } from './routes/frass-luxury-house.index'
 import { Route as FrassKicksIndexRouteImport } from './routes/frass-kicks.index'
 import { Route as FrassDripIndexRouteImport } from './routes/frass-drip.index'
 import { Route as CapsulesIndexRouteImport } from './routes/capsules.index'
@@ -162,6 +164,11 @@ const FrassWorldRoute = FrassWorldRouteImport.update({
   path: '/frass-world',
   getParentRoute: () => rootRouteImport,
 } as any)
+const FrassLuxuryHouseRoute = FrassLuxuryHouseRouteImport.update({
+  id: '/frass-luxury-house',
+  path: '/frass-luxury-house',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const FrassKicksRoute = FrassKicksRouteImport.update({
   id: '/frass-kicks',
   path: '/frass-kicks',
@@ -221,6 +228,11 @@ const LookbookIndexRoute = LookbookIndexRouteImport.update({
   path: '/',
   getParentRoute: () => LookbookRoute,
 } as any)
+const FrassLuxuryHouseIndexRoute = FrassLuxuryHouseIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => FrassLuxuryHouseRoute,
+} as any)
 const FrassKicksIndexRoute = FrassKicksIndexRouteImport.update({
   id: '/',
   path: '/',
@@ -278,14 +290,14 @@ const LookbookStoryRoute = LookbookStoryRouteImport.update({
   getParentRoute: () => LookbookRoute,
 } as any)
 const FrassLuxuryHouseWomenRoute = FrassLuxuryHouseWomenRouteImport.update({
-  id: '/frass-luxury-house/women',
-  path: '/frass-luxury-house/women',
-  getParentRoute: () => rootRouteImport,
+  id: '/women',
+  path: '/women',
+  getParentRoute: () => FrassLuxuryHouseRoute,
 } as any)
 const FrassLuxuryHouseMenRoute = FrassLuxuryHouseMenRouteImport.update({
-  id: '/frass-luxury-house/men',
-  path: '/frass-luxury-house/men',
-  getParentRoute: () => rootRouteImport,
+  id: '/men',
+  path: '/men',
+  getParentRoute: () => FrassLuxuryHouseRoute,
 } as any)
 const FrassKidsGirlsRoute = FrassKidsGirlsRouteImport.update({
   id: '/frass-kids/girls',
@@ -625,6 +637,7 @@ export interface FileRoutesByFullPath {
   '/checkout': typeof CheckoutRoute
   '/frass-drip': typeof FrassDripRouteWithChildren
   '/frass-kicks': typeof FrassKicksRouteWithChildren
+  '/frass-luxury-house': typeof FrassLuxuryHouseRouteWithChildren
   '/frass-world': typeof FrassWorldRoute
   '/gateway': typeof GatewayRoute
   '/kicks-district': typeof KicksDistrictRoute
@@ -679,6 +692,7 @@ export interface FileRoutesByFullPath {
   '/capsules/': typeof CapsulesIndexRoute
   '/frass-drip/': typeof FrassDripIndexRoute
   '/frass-kicks/': typeof FrassKicksIndexRoute
+  '/frass-luxury-house/': typeof FrassLuxuryHouseIndexRoute
   '/lookbook/': typeof LookbookIndexRoute
   '/social-media-virals/': typeof SocialMediaViralsIndexRoute
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
@@ -764,6 +778,7 @@ export interface FileRoutesByTo {
   '/capsules': typeof CapsulesIndexRoute
   '/frass-drip': typeof FrassDripIndexRoute
   '/frass-kicks': typeof FrassKicksIndexRoute
+  '/frass-luxury-house': typeof FrassLuxuryHouseIndexRoute
   '/lookbook': typeof LookbookIndexRoute
   '/social-media-virals': typeof SocialMediaViralsIndexRoute
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
@@ -810,6 +825,7 @@ export interface FileRoutesById {
   '/checkout': typeof CheckoutRoute
   '/frass-drip': typeof FrassDripRouteWithChildren
   '/frass-kicks': typeof FrassKicksRouteWithChildren
+  '/frass-luxury-house': typeof FrassLuxuryHouseRouteWithChildren
   '/frass-world': typeof FrassWorldRoute
   '/gateway': typeof GatewayRoute
   '/kicks-district': typeof KicksDistrictRoute
@@ -864,6 +880,7 @@ export interface FileRoutesById {
   '/capsules/': typeof CapsulesIndexRoute
   '/frass-drip/': typeof FrassDripIndexRoute
   '/frass-kicks/': typeof FrassKicksIndexRoute
+  '/frass-luxury-house/': typeof FrassLuxuryHouseIndexRoute
   '/lookbook/': typeof LookbookIndexRoute
   '/social-media-virals/': typeof SocialMediaViralsIndexRoute
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
@@ -910,6 +927,7 @@ export interface FileRouteTypes {
     | '/checkout'
     | '/frass-drip'
     | '/frass-kicks'
+    | '/frass-luxury-house'
     | '/frass-world'
     | '/gateway'
     | '/kicks-district'
@@ -964,6 +982,7 @@ export interface FileRouteTypes {
     | '/capsules/'
     | '/frass-drip/'
     | '/frass-kicks/'
+    | '/frass-luxury-house/'
     | '/lookbook/'
     | '/social-media-virals/'
     | '/.lovable/oauth/consent'
@@ -1049,6 +1068,7 @@ export interface FileRouteTypes {
     | '/capsules'
     | '/frass-drip'
     | '/frass-kicks'
+    | '/frass-luxury-house'
     | '/lookbook'
     | '/social-media-virals'
     | '/.lovable/oauth/consent'
@@ -1094,6 +1114,7 @@ export interface FileRouteTypes {
     | '/checkout'
     | '/frass-drip'
     | '/frass-kicks'
+    | '/frass-luxury-house'
     | '/frass-world'
     | '/gateway'
     | '/kicks-district'
@@ -1148,6 +1169,7 @@ export interface FileRouteTypes {
     | '/capsules/'
     | '/frass-drip/'
     | '/frass-kicks/'
+    | '/frass-luxury-house/'
     | '/lookbook/'
     | '/social-media-virals/'
     | '/.lovable/oauth/consent'
@@ -1194,6 +1216,7 @@ export interface RootRouteChildren {
   CheckoutRoute: typeof CheckoutRoute
   FrassDripRoute: typeof FrassDripRouteWithChildren
   FrassKicksRoute: typeof FrassKicksRouteWithChildren
+  FrassLuxuryHouseRoute: typeof FrassLuxuryHouseRouteWithChildren
   FrassWorldRoute: typeof FrassWorldRoute
   GatewayRoute: typeof GatewayRoute
   KicksDistrictRoute: typeof KicksDistrictRoute
@@ -1214,8 +1237,6 @@ export interface RootRouteChildren {
   CollectionHandleRoute: typeof CollectionHandleRoute
   FrassKidsBoysRoute: typeof FrassKidsBoysRoute
   FrassKidsGirlsRoute: typeof FrassKidsGirlsRoute
-  FrassLuxuryHouseMenRoute: typeof FrassLuxuryHouseMenRoute
-  FrassLuxuryHouseWomenRoute: typeof FrassLuxuryHouseWomenRoute
   PlusSizeMenRoute: typeof PlusSizeMenRoute
   PlusSizeWomenRoute: typeof PlusSizeWomenRoute
   ProductHandleRoute: typeof ProductHandleRoute
@@ -1302,6 +1323,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof FrassWorldRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/frass-luxury-house': {
+      id: '/frass-luxury-house'
+      path: '/frass-luxury-house'
+      fullPath: '/frass-luxury-house'
+      preLoaderRoute: typeof FrassLuxuryHouseRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/frass-kicks': {
       id: '/frass-kicks'
       path: '/frass-kicks'
@@ -1386,6 +1414,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LookbookIndexRouteImport
       parentRoute: typeof LookbookRoute
     }
+    '/frass-luxury-house/': {
+      id: '/frass-luxury-house/'
+      path: '/'
+      fullPath: '/frass-luxury-house/'
+      preLoaderRoute: typeof FrassLuxuryHouseIndexRouteImport
+      parentRoute: typeof FrassLuxuryHouseRoute
+    }
     '/frass-kicks/': {
       id: '/frass-kicks/'
       path: '/'
@@ -1465,17 +1500,17 @@ declare module '@tanstack/react-router' {
     }
     '/frass-luxury-house/women': {
       id: '/frass-luxury-house/women'
-      path: '/frass-luxury-house/women'
+      path: '/women'
       fullPath: '/frass-luxury-house/women'
       preLoaderRoute: typeof FrassLuxuryHouseWomenRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof FrassLuxuryHouseRoute
     }
     '/frass-luxury-house/men': {
       id: '/frass-luxury-house/men'
-      path: '/frass-luxury-house/men'
+      path: '/men'
       fullPath: '/frass-luxury-house/men'
       preLoaderRoute: typeof FrassLuxuryHouseMenRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof FrassLuxuryHouseRoute
     }
     '/frass-kids/girls': {
       id: '/frass-kids/girls'
@@ -2155,6 +2190,21 @@ const FrassKicksRouteWithChildren = FrassKicksRoute._addFileChildren(
   FrassKicksRouteChildren,
 )
 
+interface FrassLuxuryHouseRouteChildren {
+  FrassLuxuryHouseMenRoute: typeof FrassLuxuryHouseMenRoute
+  FrassLuxuryHouseWomenRoute: typeof FrassLuxuryHouseWomenRoute
+  FrassLuxuryHouseIndexRoute: typeof FrassLuxuryHouseIndexRoute
+}
+
+const FrassLuxuryHouseRouteChildren: FrassLuxuryHouseRouteChildren = {
+  FrassLuxuryHouseMenRoute: FrassLuxuryHouseMenRoute,
+  FrassLuxuryHouseWomenRoute: FrassLuxuryHouseWomenRoute,
+  FrassLuxuryHouseIndexRoute: FrassLuxuryHouseIndexRoute,
+}
+
+const FrassLuxuryHouseRouteWithChildren =
+  FrassLuxuryHouseRoute._addFileChildren(FrassLuxuryHouseRouteChildren)
+
 interface LookbookRouteChildren {
   LookbookStoryRoute: typeof LookbookStoryRoute
   LookbookIndexRoute: typeof LookbookIndexRoute
@@ -2223,6 +2273,7 @@ const rootRouteChildren: RootRouteChildren = {
   CheckoutRoute: CheckoutRoute,
   FrassDripRoute: FrassDripRouteWithChildren,
   FrassKicksRoute: FrassKicksRouteWithChildren,
+  FrassLuxuryHouseRoute: FrassLuxuryHouseRouteWithChildren,
   FrassWorldRoute: FrassWorldRoute,
   GatewayRoute: GatewayRoute,
   KicksDistrictRoute: KicksDistrictRoute,
@@ -2244,8 +2295,6 @@ const rootRouteChildren: RootRouteChildren = {
   CollectionHandleRoute: CollectionHandleRoute,
   FrassKidsBoysRoute: FrassKidsBoysRoute,
   FrassKidsGirlsRoute: FrassKidsGirlsRoute,
-  FrassLuxuryHouseMenRoute: FrassLuxuryHouseMenRoute,
-  FrassLuxuryHouseWomenRoute: FrassLuxuryHouseWomenRoute,
   PlusSizeMenRoute: PlusSizeMenRoute,
   PlusSizeWomenRoute: PlusSizeWomenRoute,
   ProductHandleRoute: ProductHandleRoute,

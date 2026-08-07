@@ -108,19 +108,13 @@ const STORES: { title: string; description: string; image: string; to: string; e
     eyebrow: "Girls",
   },
   {
-    title: "Frass Luxury House for Men",
-    description: "Tailored luxury and limited men's editions.",
+    title: "Frass Luxury House",
+    description: "The estate — timeless craftsmanship, tailoring and investment pieces.",
     image: districtLuxury,
-    to: "/frass-luxury-house/men",
-    eyebrow: "Men",
+    to: "/frass-luxury-house",
+    eyebrow: "The Estate",
   },
-  {
-    title: "Frass Luxury House for Women",
-    description: "Couture-leaning luxury and limited women's editions.",
-    image: districtLuxury,
-    to: "/frass-luxury-house/women",
-    eyebrow: "Women",
-  },
+
 ];
 
 
