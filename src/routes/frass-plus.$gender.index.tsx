@@ -81,11 +81,7 @@ function WingPage() {
             title="Frass Kicks Plus+"
             description="Casual, Classic and Street on the illuminated wall — every pair that runs 10.5 and up."
             image={plusWallImages(gender).street}
-            bayImages={[
-              plusWallImages(gender).casual,
-              plusWallImages(gender).classic,
-              plusWallImages(gender).street,
-            ]}
+
             badge={<PlusBadge size="lg" />}
           />
         </div>

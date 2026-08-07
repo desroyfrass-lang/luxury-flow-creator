@@ -90,10 +90,7 @@ function SegmentFloor() {
           title="Frass Kicks"
           description="Three lit bays of Casual, Classic and Street — sized for growing feet. No doors here; you walk straight up to the wall."
           image={kidsWallImages(seg.slug)?.casual}
-          bayImages={(() => {
-            const w = kidsWallImages(seg.slug);
-            return w ? [w.casual, w.classic, w.street] : undefined;
-          })()}
+
         />
       </section>
 
