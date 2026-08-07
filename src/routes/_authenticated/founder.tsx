@@ -59,6 +59,16 @@ const CONTROLS = [
     to: "/admin/feedback",
   },
   {
+    title: "Affiliate governance",
+    blurb: "Commission floors, ceilings, protected margins, and promo windows.",
+    to: "/admin/affiliate-policy",
+  },
+  {
+    title: "Affiliate Intelligence",
+    blurb: "Run the profitability analysis and Commission Simulator on a product.",
+    to: "/workspace/affiliate",
+  },
+  {
     title: "Admin roles",
     blurb: "Who may operate Frass alongside you, and what they may do.",
     to: "/admin/roles",
