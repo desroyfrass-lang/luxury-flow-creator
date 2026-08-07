@@ -64,9 +64,23 @@ export function ProductCard({ product }: { product: ShopifyProduct }) {
       <div className="px-1 pt-5 pb-2">
         <div className="flex items-start justify-between gap-4">
           <h3 className="font-display text-xl leading-tight">{node.title}</h3>
-          <span className="shrink-0 text-sm tabular-nums text-foreground/80">
-            {Number(node.priceRange.minVariantPrice.amount).toFixed(2)}{" "}
-            <span className="text-muted-foreground">{node.priceRange.minVariantPrice.currencyCode}</span>
+          <span className="shrink-0 text-right text-sm tabular-nums">
+            {variant?.compareAtPrice && Number(variant.compareAtPrice.amount) > Number(variant.price.amount) ? (
+              <>
+                <span className="block text-xs text-muted-foreground line-through">
+                  {Number(variant.compareAtPrice.amount).toFixed(2)} {variant.compareAtPrice.currencyCode}
+                </span>
+                <span className="block text-foreground/80">
+                  {Number(variant.price.amount).toFixed(2)}{" "}
+                  <span className="text-muted-foreground">{variant.price.currencyCode}</span>
+                </span>
+              </>
+            ) : (
+              <span className="text-foreground/80">
+                {Number(node.priceRange.minVariantPrice.amount).toFixed(2)}{" "}
+                <span className="text-muted-foreground">{node.priceRange.minVariantPrice.currencyCode}</span>
+              </span>
+            )}
           </span>
         </div>
         {node.productType && (
