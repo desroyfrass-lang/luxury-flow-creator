@@ -77,3 +77,4 @@ Sightline rule: every building in Frass Hill must be visible before it is visite
 - [FRASS-0911 Discovery Before Destination](mem://features/frass-0911-discovery-before-destination) — Movement layer: street life you pass, blended district transitions, living time, town memory, placemaking questions
 - [Content Experience Engine](mem://features/frass-content-experience-engine) — Activity content objects, Activity Player, Draft→Published workflow, Kids World progress celebration
 - [For Us — Community Heart](mem://features/for-us-community-heart) — FRASS-0920/0921: Community Hall in Town Square, finite sections, no endless scroll, permanent nav item, breadcrumb return, context-aware ordering
+- [FRASS-0303 payment pipeline](mem://features/frass-0303-payment-pipeline) — Commerce Payment & Financial Pipeline: 10 steps, configurable Payment Provider Center, ledger fan-out, refunds, Available vs Pending law
