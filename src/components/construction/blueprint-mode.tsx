@@ -497,6 +497,9 @@ export function ConstructionMode() {
                 <p className="mt-2 text-[10px] uppercase tracking-[0.22em] text-muted-foreground">
                   {BLUEPRINT_PRINCIPLE}
                 </p>
+                <p className="mt-1 text-[10px] leading-relaxed text-muted-foreground">
+                  {IMPACT_PRINCIPLE}
+                </p>
               </div>
             )}
 
