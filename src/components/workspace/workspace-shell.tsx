@@ -75,9 +75,11 @@ export function WorkspaceShell({
   milestones,
   tasks,
   panel,
+  focus,
   children,
   composer,
 }: Props) {
+
 
   const [leftOpen, setLeftOpen] = useState(true);
   const [rightOpen, setRightOpen] = useState(true);
