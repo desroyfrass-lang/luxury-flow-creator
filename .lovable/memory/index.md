@@ -18,6 +18,7 @@ Frass Hill has exactly 8 districts (Town Square, Children's Village, Frass Distr
 Sightline rule: every building in Frass Hill must be visible before it is visited — each district shows what you can see from there.
 
 ## Memories
+- [Entrance & Arrival](mem://features/frass-0923-entrance-arrival) — FRASS-0923/0924: `/` is the ceremonial entrance (Frassy's only full welcome); ENTER FRASS HILL journeys through `/arrival` before the Town Plan
 - [One source of truth rule](mem://preferences/one-source-of-truth) — Audit-before-build discipline, consolidation over duplication, Audit Report deliverable
 
 - [Frassy voice engine stop-ship rules](mem://constraints/frassy-voice-engine) — One conversation state machine; never truncate speech; playback completion is truth; feature freeze until 100-turn test passes
