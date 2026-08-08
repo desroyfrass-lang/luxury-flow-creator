@@ -262,6 +262,27 @@ export type ArchitecturalDecision = {
   simulation: string;
   note?: string;
   approvedAt: string;
+  // ── Principle 13 · Constitutional Change Governance ──────────────────────
+  /** Blueprint version this decision was archived as. */
+  version?: string;
+  /** Why this change mattered, in the Founder's own words. Permanent history. */
+  founderIntent?: string;
+  /** The Architectural Impact Report summary at the moment of approval. */
+  impactSummary?: string;
+  /** The credit forecast at the moment of approval. */
+  creditForecast?: string;
+  /** Registry references this decision answers to. */
+  registry?: string[];
+  /** Components modified by this decision. */
+  componentsModified?: string[];
+  approvedBy?: string;
+  // ── Principle 14 · Regression Protection ─────────────────────────────────
+  /** Expected behaviour established by the approved Blueprint. */
+  expected?: string[];
+  /** Behaviours confirmed present after implementation. */
+  verified?: string[];
+  verification?: "pending" | "verified" | "failed";
+  implementationSummary?: string;
 };
 
 const LOG_KEY = "frass.construction.decisions";
@@ -276,13 +297,27 @@ export function loadDecisions(): ArchitecturalDecision[] {
   }
 }
 
-export function recordDecision(entry: Omit<ArchitecturalDecision, "id" | "approvedAt">): ArchitecturalDecision[] {
+export function recordDecision(
+  entry: Omit<ArchitecturalDecision, "id" | "approvedAt">,
+): ArchitecturalDecision {
   const next: ArchitecturalDecision = {
+    approvedBy: "Founder",
+    verification: "pending",
     ...entry,
     id: `${entry.componentId}-${Date.now()}`,
     approvedAt: new Date().toISOString(),
   };
   const all = [next, ...loadDecisions()].slice(0, 200);
+  if (typeof window !== "undefined") window.localStorage.setItem(LOG_KEY, JSON.stringify(all));
+  return next;
+}
+
+/** Principle 14 — verification is written back into the permanent record. */
+export function updateDecision(
+  id: string,
+  patch: Partial<ArchitecturalDecision>,
+): ArchitecturalDecision[] {
+  const all = loadDecisions().map((d) => (d.id === id ? { ...d, ...patch } : d));
   if (typeof window !== "undefined") window.localStorage.setItem(LOG_KEY, JSON.stringify(all));
   return all;
 }
@@ -290,6 +325,7 @@ export function recordDecision(entry: Omit<ArchitecturalDecision, "id" | "approv
 export function decisionsFor(componentId: string): ArchitecturalDecision[] {
   return loadDecisions().filter((d) => d.componentId === componentId);
 }
+
 
 // ── FRASS-0200 Amendment — Blueprint-first constitution ────────────────────
 /** The final constitutional principle of Construction Mode. */
@@ -307,10 +343,13 @@ export const BLUEPRINT_LIFECYCLE = [
   "Simulation",
   "Impact Report",
   "Credit Forecast",
+  "Founder Intent",
   "Founder Approval",
   "Implementation",
   "Verification",
   "Version Archive",
+  "Architectural Memory",
+  "Continuous Integrity Review",
 ] as const;
 
 // ── Relationship mapping ───────────────────────────────────────────────────

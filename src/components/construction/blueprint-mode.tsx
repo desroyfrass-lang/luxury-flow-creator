@@ -28,6 +28,7 @@ import {
   saveVersion,
   setSandbox,
   simulateAction,
+  updateDecision,
   type ArchitecturalDecision,
   type BlueprintVersion,
 } from "@/lib/construction/blueprint-registry";
@@ -42,6 +43,14 @@ import {
   impactSummary,
   type ArchitecturalImpactReport,
 } from "@/lib/construction/impact-forecast";
+import {
+  architecturalMemory,
+  expectedBehaviour,
+  FOUNDER_INTENT_QUESTION,
+  PRINCIPLE_13,
+  PRINCIPLE_14,
+  verificationVerdict,
+} from "@/lib/construction/governance";
 
 export const CONSTRUCTION_EVENT = "frass:construction-mode";
 
@@ -79,6 +88,8 @@ export function ConstructionMode() {
   const [versions, setVersions] = useState<BlueprintVersion[]>([]);
   const [showMap, setShowMap] = useState(false);
   const [impactRead, setImpactRead] = useState(false);
+  // Principle 13 — the record remembers why, not just what.
+  const [intent, setIntent] = useState("");
 
   const component = useMemo(() => getBlueprintComponent(selected), [selected]);
   const simulation = component && action ? simulateAction(component, action) : null;
@@ -88,6 +99,16 @@ export function ConstructionMode() {
   // Principle 12 — Impact Forecast. Nothing is approved before the ripple is understood.
   const impact = useMemo(
     () => (component && action ? impactReport(component, action) : null),
+    [component, action],
+  );
+  // Principle 13 — Architectural Memory. Conflicts are explained before proceeding.
+  const conflicts = useMemo(
+    () => (component && action ? architecturalMemory(component.id, action) : []),
+    [component, action, history],
+  );
+  // Principle 14 — the behaviour this Blueprint promises.
+  const expected = useMemo(
+    () => (component && action ? expectedBehaviour(component, action) : []),
     [component, action],
   );
 
@@ -168,6 +189,7 @@ export function ConstructionMode() {
   useEffect(() => {
     setPreviewing(false);
     setImpactRead(false);
+    setIntent("");
   }, [action]);
 
   const approve = useCallback(() => {
@@ -178,25 +200,62 @@ export function ConstructionMode() {
       });
       return;
     }
+    // Principle 13 — no approval without Founder Intent. The record must remember why.
+    if (intent.trim().length < 8) {
+      toast("Founder Intent", { description: FOUNDER_INTENT_QUESTION });
+      return;
+    }
+    const versionLabel = `${component.label} — ${action}`;
     recordDecision({
       componentId: component.id,
       componentLabel: component.label,
       action,
       simulation: `${simulation}\n\nForecast: ${estimate.tier} · ${estimate.min}–${estimate.max} credits · ${estimate.risk} risk.\n\nImpact: ${impactSummary(impact, { min: estimate.min, max: estimate.max })}`,
       note: note.trim() || undefined,
+      version: versionLabel,
+      founderIntent: intent.trim(),
+      impactSummary: impactSummary(impact, { min: estimate.min, max: estimate.max }),
+      creditForecast: `${estimate.tier} · ${estimate.min}–${estimate.max} credits · ${estimate.risk} risk`,
+      registry: component.registry,
+      componentsModified: impact.componentsAffected,
+      expected,
+      verified: [],
+      verification: "pending",
     });
-    recordSpend(`${component.label} — ${action}`, estimate.max);
-    saveVersion(`${component.label} — ${action}`);
+    recordSpend(versionLabel, estimate.max);
+    saveVersion(versionLabel);
     setVersions(loadVersions());
     setHistory(decisionsFor(component.id));
     setAction(null);
     setNote("");
+    setIntent("");
     setPreviewing(false);
     setImpactRead(false);
     toast("Blueprint approved", {
-      description: `${component.label} — ${action}. Forecast ${estimate.min}–${estimate.max} credits. Recorded, versioned, implementation brief follows.`,
+      description: `${component.label} — ${action}. Forecast ${estimate.min}–${estimate.max} credits. Recorded with your intent, versioned, and awaiting verification.`,
     });
-  }, [component, action, simulation, estimate, note, impact, impactRead]);
+  }, [component, action, simulation, estimate, note, impact, impactRead, intent, expected]);
+
+  // Principle 14 — verification is confirmed behaviour by behaviour.
+  const toggleVerified = useCallback(
+    (decision: ArchitecturalDecision, behaviour: string) => {
+      const checks = decision.expected ?? [];
+      const passed = decision.verified ?? [];
+      const nextPassed = passed.includes(behaviour)
+        ? passed.filter((b) => b !== behaviour)
+        : [...passed, behaviour];
+      const verdict = verificationVerdict(checks, nextPassed);
+      updateDecision(decision.id, { verified: nextPassed, verification: verdict.status });
+      if (selected) setHistory(decisionsFor(selected));
+      if (verdict.status === "verified") {
+        toast("Verification passed", {
+          description: `${decision.componentLabel} matches the approved Blueprint.`,
+        });
+      }
+    },
+    [selected],
+  );
+
 
   if (!isAdmin || !active) return null;
 
@@ -472,10 +531,51 @@ export function ConstructionMode() {
                   )}
                 </div>
 
+                {/* Principle 13 — Architectural Memory */}
+                {conflicts.length > 0 && (
+                  <div className="bp-conflict">
+                    <div className="text-[10px] uppercase tracking-[0.3em]">Architectural memory</div>
+                    {conflicts.map((c) => (
+                      <p key={c.decision.id} className="mt-2 text-[11px] leading-relaxed">
+                        {c.reason}
+                      </p>
+                    ))}
+                  </div>
+                )}
+
+                {/* Principle 14 — expected behaviour established by this Blueprint */}
+                {expected.length > 0 && (
+                  <div className="bp-expected">
+                    <div className="text-[10px] uppercase tracking-[0.3em] text-[color:var(--gold)]">
+                      Expected behaviour after implementation
+                    </div>
+                    <ul className="mt-2 space-y-1 text-[11px] text-muted-foreground">
+                      {expected.map((b) => (
+                        <li key={b}>· {b}</li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+
+                {/* Principle 13 — Founder Intent is required, and it is permanent */}
+                <div className="bp-intent">
+                  <div className="text-[10px] uppercase tracking-[0.3em] text-[color:var(--gold)]">
+                    Founder intent — required
+                  </div>
+                  <p className="mt-1 text-[11px] italic text-muted-foreground">"{FOUNDER_INTENT_QUESTION}"</p>
+                  <textarea
+                    value={intent}
+                    onChange={(e) => setIntent(e.target.value)}
+                    placeholder="The problem we are solving, in your own words. This becomes permanent architectural history."
+                    className="bp-note"
+                    rows={3}
+                  />
+                </div>
+
                 <textarea
                   value={note}
                   onChange={(e) => setNote(e.target.value)}
-                  placeholder="Founder note (optional) — why this change, in your own words."
+                  placeholder="Founder note (optional) — anything else worth remembering."
                   className="bp-note"
                   rows={2}
                 />
@@ -500,29 +600,89 @@ export function ConstructionMode() {
                 <p className="mt-1 text-[10px] leading-relaxed text-muted-foreground">
                   {IMPACT_PRINCIPLE}
                 </p>
+                <p className="mt-1 text-[10px] leading-relaxed text-muted-foreground">{PRINCIPLE_13}</p>
+                <p className="mt-1 text-[10px] leading-relaxed text-muted-foreground">{PRINCIPLE_14}</p>
+
               </div>
             )}
 
             <div className="mt-6 text-[10px] uppercase tracking-[0.3em] text-muted-foreground">
-              Decision history
+              Decision records
             </div>
             {history.length === 0 ? (
               <p className="mt-2 text-xs text-muted-foreground">
-                No approved changes yet. Every approval is remembered here permanently.
+                No approved changes yet. Every approval is remembered here permanently — what
+                changed, and why.
               </p>
             ) : (
               <ul className="mt-2 space-y-2">
-                {history.map((d) => (
-                  <li key={d.id} className="bp-history">
-                    <div className="text-xs font-semibold">{d.action}</div>
-                    <div className="text-[11px] text-muted-foreground">
-                      {new Date(d.approvedAt).toLocaleString()} · Approved by Founder
-                    </div>
-                    {d.note && <div className="mt-1 text-[11px] italic text-muted-foreground">"{d.note}"</div>}
-                  </li>
-                ))}
+                {history.map((d) => {
+                  const checks = d.expected ?? [];
+                  const passed = d.verified ?? [];
+                  const status = d.verification ?? "pending";
+                  return (
+                    <li key={d.id} className="bp-history">
+                      <div className="flex items-baseline justify-between gap-2">
+                        <div className="text-xs font-semibold">{d.action}</div>
+                        <span className={`bp-verify-badge bp-verify-${status}`}>
+                          {status === "verified"
+                            ? "Verified"
+                            : status === "failed"
+                              ? "Verification failed"
+                              : "Awaiting verification"}
+                        </span>
+                      </div>
+                      <div className="text-[11px] text-muted-foreground">
+                        {new Date(d.approvedAt).toLocaleString()} · Approved by {d.approvedBy ?? "Founder"}
+                        {d.version ? ` · ${d.version}` : ""}
+                      </div>
+                      {d.founderIntent && (
+                        <div className="bp-intent-record">
+                          <span className="text-[color:var(--gold)]">Founder intent · </span>
+                          {d.founderIntent}
+                        </div>
+                      )}
+                      {d.registry && d.registry.length > 0 && (
+                        <div className="mt-1 text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
+                          {d.registry.join(" · ")}
+                        </div>
+                      )}
+                      {d.creditForecast && (
+                        <div className="mt-1 text-[11px] text-muted-foreground">{d.creditForecast}</div>
+                      )}
+                      {d.note && <div className="mt-1 text-[11px] italic text-muted-foreground">"{d.note}"</div>}
+
+                      {checks.length > 0 && (
+                        <div className="mt-2">
+                          <div className="text-[10px] uppercase tracking-[0.24em] text-muted-foreground">
+                            Regression protection — {passed.length}/{checks.length} confirmed
+                          </div>
+                          <div className="mt-1 space-y-1">
+                            {checks.map((b) => (
+                              <label key={b} className="bp-verify-line">
+                                <input
+                                  type="checkbox"
+                                  checked={passed.includes(b)}
+                                  onChange={() => toggleVerified(d, b)}
+                                />
+                                <span>{b}</span>
+                              </label>
+                            ))}
+                          </div>
+                          {status === "failed" && (
+                            <p className="bp-verify-fail">
+                              Verification failed — missing:{" "}
+                              {checks.filter((c) => !passed.includes(c)).join("; ")}
+                            </p>
+                          )}
+                        </div>
+                      )}
+                    </li>
+                  );
+                })}
               </ul>
             )}
+
           </div>
         )}
       </aside>

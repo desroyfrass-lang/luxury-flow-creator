@@ -1,10 +1,29 @@
 # Frass Operating System Constitution
 
-## Version 1.0
+## Version 1.1
 
 ### The Foundational Charter of the FrassKicks Ecosystem
 
 ---
+
+## The Five Volumes
+
+The Constitution is organised into five volumes. Each volume answers a different
+question, and every change to the platform must answer to one of them.
+
+| Volume | Title | Question it answers |
+| --- | --- | --- |
+| I | Foundations & Philosophy | Why does Frass OS exist? |
+| II | Architecture & Engineering | How is it built? |
+| III | Experience & Design | How does it feel? |
+| IV | Intelligence & Stewardship | How does it think, and how is it cared for? |
+| V | Governance & Evolution | How does it change, and who decides? |
+
+---
+
+# Volume I — Foundations & Philosophy
+
+*Why Frass OS exists, who it serves, and what it promises.*
 
 ## Purpose
 
@@ -145,6 +164,10 @@ Every future capability shall remain:
 
 ---
 
+# Volume II — Architecture & Engineering
+
+*How Frass OS is built, and the standards every change answers to.*
+
 ## The Engineering Constitution
 
 Engineering exists to preserve Builder trust.
@@ -160,6 +183,10 @@ Every engineering decision should ultimately strengthen the Builder experience.
 
 ---
 
+# Volume III — Experience & Design
+
+*How Frass OS looks, feels, and behaves in a Builder's hands.*
+
 ## Design Constitution
 
 Design exists to help Builders think clearly.
@@ -170,6 +197,10 @@ Design exists to help Builders think clearly.
 - The interface should quietly disappear behind meaningful work.
 
 ---
+
+# Volume IV — Intelligence & Stewardship
+
+*How Frassy reasons, and how the platform is cared for across decades.*
 
 ## AI Constitution
 
@@ -211,6 +242,10 @@ Technology changes.
 Builder continuity remains.
 
 ---
+
+# Volume V — Governance & Evolution
+
+*How Frass OS changes, who authorises it, and what is remembered forever.*
 
 ## Governance
 
@@ -261,3 +296,29 @@ Every future contributor to Frass Operating System should inherit this commitmen
 > We will protect Builder ownership, preserve Builder continuity, and ensure that every advancement in Frass OS strengthens the ability of people to create meaningful work, meaningful organizations, meaningful communities, and meaningful legacies.
 
 This is the enduring purpose of Frass Operating System.
+
+---
+
+## Amendment — Construction Governance (Principles 13–15)
+
+**The Founder never edits production directly. The Founder edits the Blueprint.**
+
+**Principle 13 — Constitutional Change Governance & Architectural Memory.**
+Every approved change records the Founder's intent in their own words, the impact
+report, the credit forecast, and the registry it answers to. When a new proposal
+reverses an earlier established decision, Frassy surfaces the conflict and explains
+it before anything proceeds. Nothing is silently overwritten.
+
+**Principle 14 — Regression Protection & Verification.**
+Every Blueprint establishes expected behaviour before implementation. After
+implementation, each behaviour is confirmed one by one. A change is not complete
+because code shipped; it is complete when the behaviour matches the approved
+Blueprint. Unverified work stays visibly unverified.
+
+**Principle 15 — Continuous Architectural Integrity.**
+The platform reviews its own structure continuously: duplicate purposes, orphaned
+connections, untagged components, unverified decisions, and blueprint coverage gaps.
+Findings are reported, never auto-corrected — the Founder decides.
+
+**Truth Before Beauty.** No indicator reports healthy unless a real signal is
+connected. Unknown is an honest answer; a false green light is not.

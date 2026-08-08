@@ -10,6 +10,7 @@ import { openTheDaily } from "@/components/workspace/daily-gate";
 import { openConstructionMode } from "@/components/construction/blueprint-mode";
 import { DevelopmentCredits } from "@/components/construction/development-credits";
 import { PlatformStatusCenter } from "@/components/founder/platform-status-center";
+import { ArchitecturalHealth } from "@/components/construction/architectural-health";
 
 
 
@@ -197,6 +198,12 @@ function FounderPage() {
         </section>
 
         <PlatformStatusCenter />
+
+        <div className="mt-8">
+          <ArchitecturalHealth />
+        </div>
+
+
 
 
         {/* Phases */}
