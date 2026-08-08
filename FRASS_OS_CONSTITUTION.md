@@ -145,6 +145,10 @@ Every future capability shall remain:
 
 ---
 
+# Volume II — Architecture & Engineering
+
+*How Frass OS is built, and the standards every change answers to.*
+
 ## The Engineering Constitution
 
 Engineering exists to preserve Builder trust.
