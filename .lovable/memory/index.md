@@ -16,6 +16,7 @@ Implementation hold is lifted. The `FINAL_LOVABLE_DIRECTIVE.md` commissioning is
 - [Frassy voice engine stop-ship rules](mem://constraints/frassy-voice-engine) — One conversation state machine; never truncate speech; playback completion is truth; feature freeze until 100-turn test passes
 - [Product Population Phase brief](mem://features/frass-product-population-brief) — Frassy is Curator of the Frass Marketplace: 8–10h catalog population, approved store structure, categorization discipline
 - [Sourcing & Merchandising Directive](mem://features/frass-sourcing-merchandising-directive) — Founder is a first-time dropshipper: teach while building, CJ Dropshipping phase one, mandatory vendor scorecard before supplier approval
+- [Product Population project mode](mem://features/product-population-project-mode) — Merchandising is a pausable/resumable long-running project: session preservation, resume summary, progress tracker, decision log
 - [Luxury House Marketplace](mem://features/luxury-house-marketplace) — Three ownership models (Frass Collection / Marketplace Partner / Curated Luxury Brand); classify before publishing
 - [The Frass Bridal Experience](mem://features/frass-bridal-program) — Bridal as a wedding operating system: nine journeys, registry, vendor marketplace, honeymoon, Vision Maps, cultural inclusion
 - [FRASS Kids World](mem://features/frass-kids-world) — Kids World is a district of Frass Hill with multiple entrances, parent-issued passport, four age worlds; "Enter Kids World" never "Activities"
