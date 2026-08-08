@@ -521,6 +521,8 @@ const SECTION_TAGS: Record<ForUsSectionId, string[]> = {
   learn: ["education", "mentorship"],
   around_the_hill: [],
   celebrations: ["business", "marketplace"],
+  foundation: ["foundation", "volunteer", "community", "family"],
+  behind_the_build: ["history", "platform development"],
 };
 
 export function orderSections(priority: string[]): ForUsSection[] {
