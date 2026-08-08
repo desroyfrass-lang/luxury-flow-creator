@@ -19,7 +19,8 @@ type NavGroup = {
 
 /** Every destination in the World of Frass is reachable from this bar. */
 const NAV: NavGroup[] = [
-  { label: "Frass District", to: "/", match: "/shop-frass" },
+  { label: "The Entrance", to: "/", match: "/gateway" },
+  { label: "Frass District", to: "/frass-district", match: "/frass-district" },
   {
     label: "Frass Kicks",
     to: "/frass-kicks",
@@ -125,7 +126,8 @@ const NAV: NavGroup[] = [
 
 /** Always-visible destinations on the bar itself. */
 const PRIMARY: { label: string; to: string; match: string; editorial?: boolean }[] = [
-  { label: "Frass District", to: "/", match: "/shop-frass" },
+  { label: "The Entrance", to: "/", match: "/gateway" },
+  { label: "Frass District", to: "/frass-district", match: "/frass-district" },
   { label: "Afro Designers", to: "/afro-designers", match: "/afro-designers", editorial: true },
   { label: "Frass Luxury House", to: "/frass-luxury-house", match: "/frass-luxury-house", editorial: true },
   { label: "Frass Plus+", to: "/frass-plus", match: "/frass-plus" },
