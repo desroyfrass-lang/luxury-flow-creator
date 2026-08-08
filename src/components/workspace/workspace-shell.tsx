@@ -2,7 +2,7 @@
 // Persistent Composer. My Workspace is the single canonical workspace; modes
 // change the tools, never the place.
 
-import { type ReactNode, useState } from "react";
+import { type ReactNode, useRef, useState } from "react";
 import { Link } from "@tanstack/react-router";
 import {
   Search,
@@ -14,6 +14,9 @@ import {
   Moon,
   Home,
   Sunrise,
+  FolderOpen,
+  Archive,
+  User,
 } from "lucide-react";
 import symbolAsset from "@/assets/frass-logo-symbol.asset.json";
 import {
@@ -27,6 +30,9 @@ import {
 
 export type IndexEntry = { id: string; label: string; group: string };
 
+/** Role-specific navigation that appears automatically inside My Workspace. */
+export type RoleLink = { to: string; label: string; emoji: string };
+
 type Props = {
   roomName: string;
   roomKind: string;
@@ -38,6 +44,7 @@ type Props = {
   projects: WorkspaceProject[];
   activeProjectId: string;
   onSelectProject: (id: string) => void;
+  roleLinks: RoleLink[];
   index: IndexEntry[];
   onJumpTo: (id: string) => void;
   milestones: Milestone[];
@@ -46,6 +53,7 @@ type Props = {
   children: ReactNode;
   composer: ReactNode;
 };
+
 
 export function WorkspaceShell({
   roomName,
