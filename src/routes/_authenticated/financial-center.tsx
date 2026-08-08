@@ -1,10 +1,9 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { SiteShell } from "@/components/site-shell";
 import { Amount } from "@/components/finance/amount";
 import { useMyRoles } from "@/hooks/use-my-roles";
 import {
-  allocate,
   CREDIT_PROGRAMS,
   CREDIT_USES,
   IMPLEMENTATION_AUDIT,
@@ -20,6 +19,21 @@ import {
   type FinanceViewer,
   type TraceableAmount,
 } from "@/lib/finance/financial-center";
+import {
+  EARNINGS_LEDGER_RULES,
+  earningsLedgers,
+  type EarningsLedger,
+} from "@/lib/finance/earnings-ledgers";
+import {
+  DEFAULT_OWNER_POLICY,
+  FINANCIAL_HIERARCHY,
+  OWNER_EQUITY_NOTE,
+  allocateGift,
+  giftAllocationTotal,
+  loadOwnerPolicy,
+  type OwnerPolicy,
+} from "@/lib/finance/owner-compensation";
+
 
 export const Route = createFileRoute("/_authenticated/financial-center")({
   head: () => ({
