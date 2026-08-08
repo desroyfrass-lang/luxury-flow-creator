@@ -68,7 +68,7 @@ export const HILL_DISTRICTS: HillDistrict[] = [
       { name: "Information Centre", does: "First stop. Directions, orientation, how the town works." },
       { name: "Frassy Kiosk", does: "Ask Frassy anything, right in the middle of the square.", to: "/frassy" },
       { name: "Opportunity Centre", does: "Jobs, gigs, contracts, team formation, partnerships.", to: "/opportunity" },
-      { name: "Community Hall", does: "Meetings, circles, discussions, town business." },
+      { name: "Community Hall", does: "For Us — today's community stories, good news and celebrations.", to: "/for-us" },
       { name: "Marketplace Stalls", does: "Day traders and pop-up vendors under the pavilion roof." },
       { name: "Foundation Office", does: "Family support, grants, emergency assistance." },
       { name: "Volunteer Centre", does: "Sign up for a shift, a drive or a community build." },
