@@ -215,6 +215,33 @@ there, and walk to it. Curiosity, not navigation.
 
 ---
 
+## FRASS-0911 — Discovery Before Destination
+
+**Every destination should first be experienced from a distance, inviting curiosity before
+interaction.**
+
+1. **Movement, not navigation.** Every journey through Frass Hill rewards curiosity. People
+   shouldn't always take the shortest path — sometimes the longer walk is the better
+   experience. On the way you pass someone carving wood, a coffee stand, two builders over a
+   blueprint, children selling lemonade for a Foundation fundraiser, a steel pan musician, a
+   dog asleep under a tree. None of those are destinations. They're life.
+2. **No hard borders.** Districts blend. Leaving Town Square you begin hearing music, then see
+   murals, then people carrying guitars, then recording studios — then you're in the Studio
+   District. The district changes before the sign tells you it changed.
+3. **Living time.** Morning, afternoon, evening, night and rain each feel different, and
+   Christmas, Founder's Day, Emancipation Day and Harvest Festival change the whole town. Same
+   place, different atmosphere.
+4. **The town remembers you.** Frassy may quietly note what you were last working on here, or
+   that the Foundation classroom you helped fund is now complete. Once, quietly, never in the way.
+
+**Placemaking standard.** A district is judged by movement questions, not interface questions:
+can people stop anywhere, are there benches, can someone sit in the café and simply watch, do
+lights come on one at a time at sunset, can you hear dominoes before you see the players. If a
+visitor clicks nothing at all and the place still feels alive, the district passes.
+
+---
+
+
 
 
 # Volume IV — Intelligence & Stewardship
