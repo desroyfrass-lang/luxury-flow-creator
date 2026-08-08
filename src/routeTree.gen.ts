@@ -53,6 +53,7 @@ import { Route as PlusSizeWomenRouteImport } from './routes/plus-size.women'
 import { Route as PlusSizeMenRouteImport } from './routes/plus-size.men'
 import { Route as LookbookStoryRouteImport } from './routes/lookbook.$story'
 import { Route as KidsWorldParentsRouteImport } from './routes/kids-world.parents'
+import { Route as KidsWorldDiscoverRouteImport } from './routes/kids-world.discover'
 import { Route as FrassPlusSalesRouteImport } from './routes/frass-plus.sales'
 import { Route as FrassLuxuryHouseWomenRouteImport } from './routes/frass-luxury-house.women'
 import { Route as FrassLuxuryHouseMenRouteImport } from './routes/frass-luxury-house.men'
@@ -97,6 +98,7 @@ import { Route as BareDripWomenIndexRouteImport } from './routes/bare-drip.women
 import { Route as BareDripMenIndexRouteImport } from './routes/bare-drip.men.index'
 import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated/admin.index'
 import { Route as SocialMediaViralsCategorySubRouteImport } from './routes/social-media-virals.$category.$sub'
+import { Route as KidsWorldActivitySlugRouteImport } from './routes/kids-world.activity.$slug'
 import { Route as KidsWorldAgePlaceRouteImport } from './routes/kids-world.$age.$place'
 import { Route as FrassPlusGenderKicksRouteImport } from './routes/frass-plus.$gender.kicks'
 import { Route as FrassPlusGenderBareRouteImport } from './routes/frass-plus.$gender.bare'
@@ -351,6 +353,11 @@ const KidsWorldParentsRoute = KidsWorldParentsRouteImport.update({
   path: '/parents',
   getParentRoute: () => KidsWorldRoute,
 } as any)
+const KidsWorldDiscoverRoute = KidsWorldDiscoverRouteImport.update({
+  id: '/discover',
+  path: '/discover',
+  getParentRoute: () => KidsWorldRoute,
+} as any)
 const FrassPlusSalesRoute = FrassPlusSalesRouteImport.update({
   id: '/sales',
   path: '/sales',
@@ -577,6 +584,11 @@ const SocialMediaViralsCategorySubRoute =
     path: '/$sub',
     getParentRoute: () => SocialMediaViralsCategoryRoute,
   } as any)
+const KidsWorldActivitySlugRoute = KidsWorldActivitySlugRouteImport.update({
+  id: '/activity/$slug',
+  path: '/activity/$slug',
+  getParentRoute: () => KidsWorldRoute,
+} as any)
 const KidsWorldAgePlaceRoute = KidsWorldAgePlaceRouteImport.update({
   id: '/$age/$place',
   path: '/$age/$place',
@@ -823,6 +835,7 @@ export interface FileRoutesByFullPath {
   '/frass-luxury-house/men': typeof FrassLuxuryHouseMenRoute
   '/frass-luxury-house/women': typeof FrassLuxuryHouseWomenRoute
   '/frass-plus/sales': typeof FrassPlusSalesRoute
+  '/kids-world/discover': typeof KidsWorldDiscoverRoute
   '/kids-world/parents': typeof KidsWorldParentsRoute
   '/lookbook/$story': typeof LookbookStoryRoute
   '/plus-size/men': typeof PlusSizeMenRoute
@@ -873,6 +886,7 @@ export interface FileRoutesByFullPath {
   '/frass-plus/$gender/bare': typeof FrassPlusGenderBareRoute
   '/frass-plus/$gender/kicks': typeof FrassPlusGenderKicksRoute
   '/kids-world/$age/$place': typeof KidsWorldAgePlaceRoute
+  '/kids-world/activity/$slug': typeof KidsWorldActivitySlugRoute
   '/social-media-virals/$category/$sub': typeof SocialMediaViralsCategorySubRouteWithChildren
   '/admin/': typeof AuthenticatedAdminIndexRoute
   '/bare-drip/men/': typeof BareDripMenIndexRoute
@@ -928,6 +942,7 @@ export interface FileRoutesByTo {
   '/frass-luxury-house/men': typeof FrassLuxuryHouseMenRoute
   '/frass-luxury-house/women': typeof FrassLuxuryHouseWomenRoute
   '/frass-plus/sales': typeof FrassPlusSalesRoute
+  '/kids-world/discover': typeof KidsWorldDiscoverRoute
   '/kids-world/parents': typeof KidsWorldParentsRoute
   '/lookbook/$story': typeof LookbookStoryRoute
   '/plus-size/men': typeof PlusSizeMenRoute
@@ -978,6 +993,7 @@ export interface FileRoutesByTo {
   '/frass-plus/$gender/bare': typeof FrassPlusGenderBareRoute
   '/frass-plus/$gender/kicks': typeof FrassPlusGenderKicksRoute
   '/kids-world/$age/$place': typeof KidsWorldAgePlaceRoute
+  '/kids-world/activity/$slug': typeof KidsWorldActivitySlugRoute
   '/social-media-virals/$category/$sub': typeof SocialMediaViralsCategorySubRouteWithChildren
   '/admin': typeof AuthenticatedAdminIndexRoute
   '/bare-drip/men': typeof BareDripMenIndexRoute
@@ -1052,6 +1068,7 @@ export interface FileRoutesById {
   '/frass-luxury-house/men': typeof FrassLuxuryHouseMenRoute
   '/frass-luxury-house/women': typeof FrassLuxuryHouseWomenRoute
   '/frass-plus/sales': typeof FrassPlusSalesRoute
+  '/kids-world/discover': typeof KidsWorldDiscoverRoute
   '/kids-world/parents': typeof KidsWorldParentsRoute
   '/lookbook/$story': typeof LookbookStoryRoute
   '/plus-size/men': typeof PlusSizeMenRoute
@@ -1102,6 +1119,7 @@ export interface FileRoutesById {
   '/frass-plus/$gender/bare': typeof FrassPlusGenderBareRoute
   '/frass-plus/$gender/kicks': typeof FrassPlusGenderKicksRoute
   '/kids-world/$age/$place': typeof KidsWorldAgePlaceRoute
+  '/kids-world/activity/$slug': typeof KidsWorldActivitySlugRoute
   '/social-media-virals/$category/$sub': typeof SocialMediaViralsCategorySubRouteWithChildren
   '/_authenticated/admin/': typeof AuthenticatedAdminIndexRoute
   '/bare-drip/men/': typeof BareDripMenIndexRoute
@@ -1176,6 +1194,7 @@ export interface FileRouteTypes {
     | '/frass-luxury-house/men'
     | '/frass-luxury-house/women'
     | '/frass-plus/sales'
+    | '/kids-world/discover'
     | '/kids-world/parents'
     | '/lookbook/$story'
     | '/plus-size/men'
@@ -1226,6 +1245,7 @@ export interface FileRouteTypes {
     | '/frass-plus/$gender/bare'
     | '/frass-plus/$gender/kicks'
     | '/kids-world/$age/$place'
+    | '/kids-world/activity/$slug'
     | '/social-media-virals/$category/$sub'
     | '/admin/'
     | '/bare-drip/men/'
@@ -1281,6 +1301,7 @@ export interface FileRouteTypes {
     | '/frass-luxury-house/men'
     | '/frass-luxury-house/women'
     | '/frass-plus/sales'
+    | '/kids-world/discover'
     | '/kids-world/parents'
     | '/lookbook/$story'
     | '/plus-size/men'
@@ -1331,6 +1352,7 @@ export interface FileRouteTypes {
     | '/frass-plus/$gender/bare'
     | '/frass-plus/$gender/kicks'
     | '/kids-world/$age/$place'
+    | '/kids-world/activity/$slug'
     | '/social-media-virals/$category/$sub'
     | '/admin'
     | '/bare-drip/men'
@@ -1404,6 +1426,7 @@ export interface FileRouteTypes {
     | '/frass-luxury-house/men'
     | '/frass-luxury-house/women'
     | '/frass-plus/sales'
+    | '/kids-world/discover'
     | '/kids-world/parents'
     | '/lookbook/$story'
     | '/plus-size/men'
@@ -1454,6 +1477,7 @@ export interface FileRouteTypes {
     | '/frass-plus/$gender/bare'
     | '/frass-plus/$gender/kicks'
     | '/kids-world/$age/$place'
+    | '/kids-world/activity/$slug'
     | '/social-media-virals/$category/$sub'
     | '/_authenticated/admin/'
     | '/bare-drip/men/'
@@ -1817,6 +1841,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof KidsWorldParentsRouteImport
       parentRoute: typeof KidsWorldRoute
     }
+    '/kids-world/discover': {
+      id: '/kids-world/discover'
+      path: '/discover'
+      fullPath: '/kids-world/discover'
+      preLoaderRoute: typeof KidsWorldDiscoverRouteImport
+      parentRoute: typeof KidsWorldRoute
+    }
     '/frass-plus/sales': {
       id: '/frass-plus/sales'
       path: '/sales'
@@ -2124,6 +2155,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/social-media-virals/$category/$sub'
       preLoaderRoute: typeof SocialMediaViralsCategorySubRouteImport
       parentRoute: typeof SocialMediaViralsCategoryRoute
+    }
+    '/kids-world/activity/$slug': {
+      id: '/kids-world/activity/$slug'
+      path: '/activity/$slug'
+      fullPath: '/kids-world/activity/$slug'
+      preLoaderRoute: typeof KidsWorldActivitySlugRouteImport
+      parentRoute: typeof KidsWorldRoute
     }
     '/kids-world/$age/$place': {
       id: '/kids-world/$age/$place'
@@ -2676,16 +2714,20 @@ const FrassPlusRouteWithChildren = FrassPlusRoute._addFileChildren(
 )
 
 interface KidsWorldRouteChildren {
+  KidsWorldDiscoverRoute: typeof KidsWorldDiscoverRoute
   KidsWorldParentsRoute: typeof KidsWorldParentsRoute
   KidsWorldIndexRoute: typeof KidsWorldIndexRoute
   KidsWorldAgePlaceRoute: typeof KidsWorldAgePlaceRoute
+  KidsWorldActivitySlugRoute: typeof KidsWorldActivitySlugRoute
   KidsWorldAgeIndexRoute: typeof KidsWorldAgeIndexRoute
 }
 
 const KidsWorldRouteChildren: KidsWorldRouteChildren = {
+  KidsWorldDiscoverRoute: KidsWorldDiscoverRoute,
   KidsWorldParentsRoute: KidsWorldParentsRoute,
   KidsWorldIndexRoute: KidsWorldIndexRoute,
   KidsWorldAgePlaceRoute: KidsWorldAgePlaceRoute,
+  KidsWorldActivitySlugRoute: KidsWorldActivitySlugRoute,
   KidsWorldAgeIndexRoute: KidsWorldAgeIndexRoute,
 }
 

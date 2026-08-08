@@ -1076,6 +1076,185 @@ export type Database = {
         }
         Relationships: []
       }
+      learning_activities: {
+        Row: {
+          age_group: string
+          audio_url: string | null
+          badge: Json
+          category: string | null
+          coloring_pages: Json
+          created_at: string
+          created_by: string | null
+          description: string | null
+          difficulty: string
+          discussion_questions: Json
+          district: string
+          downloads: Json
+          duration_minutes: number
+          extras: Json
+          featured: boolean
+          follow_up_slugs: string[]
+          hero_image: string | null
+          id: string
+          instructions: Json
+          learning_objective: string | null
+          materials: Json
+          parent_guide: string | null
+          place_slug: string | null
+          position: number
+          published_at: string | null
+          quiz: Json
+          reflection_questions: Json
+          related_slugs: string[]
+          reviewed_at: string | null
+          reviewed_by: string | null
+          seasonal_tags: string[]
+          skills: string[]
+          slides: Json
+          slug: string
+          status: Database["public"]["Enums"]["activity_status"]
+          story: string | null
+          teacher_guide: string | null
+          themes: string[]
+          thumbnail: string | null
+          title: string
+          updated_at: string
+          version: number
+          video_url: string | null
+          worksheets: Json
+        }
+        Insert: {
+          age_group: string
+          audio_url?: string | null
+          badge?: Json
+          category?: string | null
+          coloring_pages?: Json
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          difficulty?: string
+          discussion_questions?: Json
+          district?: string
+          downloads?: Json
+          duration_minutes?: number
+          extras?: Json
+          featured?: boolean
+          follow_up_slugs?: string[]
+          hero_image?: string | null
+          id?: string
+          instructions?: Json
+          learning_objective?: string | null
+          materials?: Json
+          parent_guide?: string | null
+          place_slug?: string | null
+          position?: number
+          published_at?: string | null
+          quiz?: Json
+          reflection_questions?: Json
+          related_slugs?: string[]
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          seasonal_tags?: string[]
+          skills?: string[]
+          slides?: Json
+          slug: string
+          status?: Database["public"]["Enums"]["activity_status"]
+          story?: string | null
+          teacher_guide?: string | null
+          themes?: string[]
+          thumbnail?: string | null
+          title: string
+          updated_at?: string
+          version?: number
+          video_url?: string | null
+          worksheets?: Json
+        }
+        Update: {
+          age_group?: string
+          audio_url?: string | null
+          badge?: Json
+          category?: string | null
+          coloring_pages?: Json
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          difficulty?: string
+          discussion_questions?: Json
+          district?: string
+          downloads?: Json
+          duration_minutes?: number
+          extras?: Json
+          featured?: boolean
+          follow_up_slugs?: string[]
+          hero_image?: string | null
+          id?: string
+          instructions?: Json
+          learning_objective?: string | null
+          materials?: Json
+          parent_guide?: string | null
+          place_slug?: string | null
+          position?: number
+          published_at?: string | null
+          quiz?: Json
+          reflection_questions?: Json
+          related_slugs?: string[]
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          seasonal_tags?: string[]
+          skills?: string[]
+          slides?: Json
+          slug?: string
+          status?: Database["public"]["Enums"]["activity_status"]
+          story?: string | null
+          teacher_guide?: string | null
+          themes?: string[]
+          thumbnail?: string | null
+          title?: string
+          updated_at?: string
+          version?: number
+          video_url?: string | null
+          worksheets?: Json
+        }
+        Relationships: []
+      }
+      learning_activity_versions: {
+        Row: {
+          activity_id: string
+          changed_by: string | null
+          created_at: string
+          id: string
+          note: string | null
+          snapshot: Json
+          version: number
+        }
+        Insert: {
+          activity_id: string
+          changed_by?: string | null
+          created_at?: string
+          id?: string
+          note?: string | null
+          snapshot: Json
+          version: number
+        }
+        Update: {
+          activity_id?: string
+          changed_by?: string | null
+          created_at?: string
+          id?: string
+          note?: string | null
+          snapshot?: Json
+          version?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "learning_activity_versions_activity_id_fkey"
+            columns: ["activity_id"]
+            isOneToOne: false
+            referencedRelation: "learning_activities"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       logo_treatments: {
         Row: {
           asset_url: string
@@ -2461,6 +2640,13 @@ export type Database = {
       purge_expired_visual_uploads: { Args: never; Returns: number }
     }
     Enums: {
+      activity_status:
+        | "draft"
+        | "founder_review"
+        | "approved"
+        | "published"
+        | "archived"
+        | "retired"
       app_role:
         | "admin"
         | "super_admin"
@@ -2631,6 +2817,14 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
+      activity_status: [
+        "draft",
+        "founder_review",
+        "approved",
+        "published",
+        "archived",
+        "retired",
+      ],
       app_role: [
         "admin",
         "super_admin",
