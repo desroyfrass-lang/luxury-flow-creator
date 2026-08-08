@@ -147,15 +147,21 @@ export type TransactionInput = {
   otherCost?: number;
   /** Marketplace seller share of the net, 0–100. */
   marketplaceSharePct?: number;
-  /** Founder-configured owner compensation, 0–100 of remaining profit. */
+  /** Founder-configured owner compensation, 0–100 of clean profit (combined). */
   ownerCompensationPct?: number;
+  /** Optional split. When provided these override ownerCompensationPct. */
+  founderCompensationPct?: number;
+  coFounderCompensationPct?: number;
 };
 
 export type TransactionBreakdown = {
   allocation: Allocation;
   costs: number;
   marketplacePayout: number;
+  /** Combined Founder + Co-Founder compensation on this sale. */
   ownerCompensation: number;
+  founderCompensation: number;
+  coFounderCompensation: number;
   businessCash: number;
   entries: LedgerEntry[];
 };
