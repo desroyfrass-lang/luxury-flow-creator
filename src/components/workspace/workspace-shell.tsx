@@ -174,13 +174,48 @@ export function WorkspaceShell({
         {/* Left sidebar — The Daily, modes, projects, index, timeline */}
         {leftOpen && (
           <aside className="ws-side hidden w-64 shrink-0 overflow-y-auto lg:block">
-            <button type="button" className="ws-nav" onClick={onOpenDaily}>
-              <Sunrise className="h-4 w-4" />
-              <span className="flex-1 text-left">The Frass Daily</span>
-            </button>
+            {/* Permanent navigation — always available, adapts to permissions */}
+            <div className="ws-side-title">Navigation</div>
+            <div className="space-y-0.5">
+              <div className="ws-nav ws-nav-active">
+                <Home className="h-4 w-4" />
+                <span className="flex-1 text-left">My Workspace</span>
+              </div>
+              <button type="button" className="ws-nav" onClick={onOpenDaily}>
+                <Sunrise className="h-4 w-4" />
+                <span className="flex-1 text-left">The Daily</span>
+              </button>
+              <button
+                type="button"
+                className="ws-nav"
+                onClick={() => document.getElementById("ws-projects")?.scrollIntoView({ behavior: "smooth" })}
+              >
+                <FolderOpen className="h-4 w-4" />
+                <span className="flex-1 text-left">Projects</span>
+              </button>
+              <Link to="/vault" className="ws-nav">
+                <Archive className="h-4 w-4" />
+                <span className="flex-1 text-left">Vault</span>
+              </Link>
+              <button type="button" className="ws-nav" onClick={() => searchRef.current?.focus()}>
+                <Search className="h-4 w-4" />
+                <span className="flex-1 text-left">Search</span>
+              </button>
+              <Link to="/workspace/profile" className="ws-nav">
+                <User className="h-4 w-4" />
+                <span className="flex-1 text-left">Profile</span>
+              </Link>
+              {roleLinks.map((r) => (
+                <Link key={r.to} to={r.to} className="ws-nav ws-nav-role">
+                  <span>{r.emoji}</span>
+                  <span className="flex-1 truncate text-left">{r.label}</span>
+                </Link>
+              ))}
+            </div>
 
             <div className="ws-side-title mt-5">Mode</div>
             <div className="space-y-0.5">
+
               {modes.map((m) => (
                 <button
                   key={m.id}
