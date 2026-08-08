@@ -1,6 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
-import { WorkspaceShell } from "@/components/workspace/workspace-shell";
 import {
   buildVisualQueue,
   loadVisualReview,
@@ -71,7 +70,7 @@ function VisualReviewPage() {
   const existing = asset ? state.records[asset.id] : undefined;
 
   return (
-    <WorkspaceShell title="Visual Excellence Review">
+    <div className="min-h-screen bg-background text-foreground">
       <div className="mx-auto max-w-[1100px] space-y-6 p-6">
         <header>
           <span className="text-[10px] uppercase tracking-[0.3em] text-[color:var(--hill-gold)]">
@@ -221,7 +220,7 @@ function VisualReviewPage() {
           </div>
         </div>
       </div>
-    </WorkspaceShell>
+    </div>
   );
 }
 
