@@ -411,8 +411,8 @@ export function honestSnapshot(v: FinanceViewer): FinanceSnapshot {
       "gifts",
       "Gift earnings",
       "gifts",
-      "Gifts received, after the constitutional 8% allocation (3% infrastructure, 3% reserve, 2% foundation).",
-      "When someone gifts you, Frass keeps 8 cents of every dollar to run the platform and fund the Foundation. You keep 92 cents.",
+      "Gifts received, after the constitutional 10% gift allocation (3% infrastructure, 3% reserve, 2% Foundation, 1% Founder, 1% Co-Founder — the owner shares are Founder-configured policy).",
+      "When someone gifts you, Frass keeps 10 cents of every dollar: to run the platform, fund the Foundation, and pay the two owners who keep the place standing. You keep 90 cents.",
       { actions: ["withdraw", "export"] },
     ),
     foundation: zero(
