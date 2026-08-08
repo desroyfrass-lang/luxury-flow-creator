@@ -122,16 +122,26 @@ function FounderPage() {
   return (
     <SiteShell>
       <div className="mx-auto max-w-6xl px-6 py-12">
-        <div className="text-[11px] uppercase tracking-[0.3em] text-[color:var(--gold)]">
-          Founder Mode
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <div className="text-[11px] uppercase tracking-[0.3em] text-[color:var(--gold)]">
+            Founder Dashboard · Executive Oversight
+          </div>
+          <Link
+            to="/room"
+            className="text-[11px] uppercase tracking-[0.3em] text-muted-foreground transition hover:text-[color:var(--gold)]"
+          >
+            ← Back to My Workspace
+          </Link>
         </div>
         <h1 className="mt-3 font-display text-4xl leading-tight">
           Commission Frass Operating System
         </h1>
         <p className="mt-3 max-w-2xl text-sm text-muted-foreground">
-          Mission Control. Everything on this page belongs to you alone — Builders never see it.
-          When you're ready to work, one click takes you into My Workspace.
+          Executive oversight only — Commissioning, Launch Readiness, Platform Memory, Governance,
+          Security, Marketplace Health, Foundation and Executive Reports. Work itself happens in
+          My Workspace, and this dashboard is always one click away from it.
         </p>
+
 
         {/* Launch pad — the Control Room is the entry point, not the office */}
         <section className="mt-8 flex flex-wrap items-center gap-3 rounded-sm border border-[color:var(--gold)]/40 bg-background/50 p-6">
