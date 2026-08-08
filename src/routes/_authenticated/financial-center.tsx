@@ -218,7 +218,7 @@ function TabBody({
         <>
           <Grid items={[snap.gifts, snap.pending]} />
           <Heading>How a gift becomes earnings</Heading>
-          <GiftMath />
+          <GiftMath policy={policy} />
           <Note>
             Every gift shows its sender (privacy permitting), date, gross amount, platform
             allocation, net payout and status. Milestone gifts may appear in the For Us feed only
