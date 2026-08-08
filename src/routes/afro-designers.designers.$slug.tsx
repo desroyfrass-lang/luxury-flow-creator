@@ -61,7 +61,7 @@ function DesignerProfile() {
           <img
             src={designer.image}
             alt={designer.name}
-            className="absolute inset-0 h-full w-full object-cover"
+            className="hero-drift absolute inset-0 h-full w-full object-cover"
           />
           <div className="absolute inset-0 bg-gradient-to-b from-transparent via-white/10 to-white" />
         </div>

@@ -56,7 +56,7 @@ function StoryPage() {
         <img
           src={coverSrc}
           alt={s.title}
-          className="absolute inset-0 h-full w-full object-cover"
+          className="hero-drift absolute inset-0 h-full w-full object-cover"
         />
         <div className="absolute inset-0 bg-[linear-gradient(180deg,oklch(0.07_0.005_80_/_0.35)_0%,oklch(0.07_0.005_80_/_0.55)_55%,oklch(0.07_0.005_80_/_0.95)_100%)]" />
         <div className="absolute inset-x-0 bottom-0">

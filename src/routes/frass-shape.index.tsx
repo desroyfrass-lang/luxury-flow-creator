@@ -59,7 +59,7 @@ function ShapeStorefront() {
           <img
             src={storefront}
             alt="The Frass Shape wellness boutique storefront at dusk"
-            className="absolute inset-0 h-full w-full object-cover"
+            className="hero-drift absolute inset-0 h-full w-full object-cover"
             width={1600}
             height={1008}
           />

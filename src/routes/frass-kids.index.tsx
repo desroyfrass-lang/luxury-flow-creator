@@ -32,7 +32,7 @@ function KidsHome() {
           alt="Children playing outside the open-air Frass Kids boutique in the Caribbean"
           width={1920}
           height={1080}
-          className="h-full w-full object-cover"
+          className="hero-drift h-full w-full object-cover"
         />
         <div className="absolute inset-0 bg-[linear-gradient(to_top,oklch(0.09_0.01_60/0.94),oklch(0.09_0.01_60/0.15)_58%,oklch(0.09_0.01_60/0.35))]" />
         <div className="absolute inset-x-0 bottom-0 mx-auto max-w-[1600px] px-6 pb-14 lg:px-12">

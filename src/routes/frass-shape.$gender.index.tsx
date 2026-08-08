@@ -56,7 +56,7 @@ function ShapeWing() {
           <img
             src={hero}
             alt={`Frass Shape for ${label} campaign`}
-            className="absolute inset-0 h-full w-full object-cover"
+            className="hero-drift absolute inset-0 h-full w-full object-cover"
             width={1408}
             height={1008}
           />

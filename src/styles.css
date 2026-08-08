@@ -458,6 +458,17 @@
   will-change: transform;
 }
 
+/* Hero banners breathe: a slow back-and-forth drift across the image */
+@keyframes hero-drift {
+  0%   { transform: scale(1.08) translate3d(-1.4%, 0, 0); }
+  100% { transform: scale(1.08) translate3d(1.4%, 0, 0); }
+}
+
+@utility hero-drift {
+  animation: hero-drift 24s ease-in-out infinite alternate;
+  will-change: transform;
+}
+
 /* Content swells in sync with the arch zoom-out, then holds */
 @keyframes gateway-swell {
   0%   { transform: scale(0.72) translate3d(0, 18px, 0); opacity: 0.15; }
@@ -474,7 +485,7 @@
 
 
 @media (prefers-reduced-motion: reduce) {
-  .gateway-drift, .gateway-rise, .gateway-swell { animation: none !important; }
+  .gateway-drift, .gateway-rise, .gateway-swell, .hero-drift { animation: none !important; }
 }
 
 /* ── FRASS KICKS DISTRICT — living environment motion ─────────── */
