@@ -56,14 +56,20 @@ export function FrassDaily({
   onOpenProject?: (projectId: string) => void;
   onNavigate?: (href: string) => void;
 }) {
-  const model = useMemo(() => dailyFor(audience), [audience]);
+  const [demo, setDemo] = useState(() => demoDataEnabled());
+  const base = useMemo(() => dailyFor(audience), [audience]);
+  const model = useMemo(() => honestDaily(base, demo), [base, demo]);
   const initial = useMemo(() => loadDailyState(), []);
   const [delegated, setDelegated] = useState<string[]>(initial.delegated);
   const [done, setDone] = useState<string[]>(initial.done);
   const [explaining, setExplaining] = useState<string | null>(null);
   const [entered, setEntered] = useState(false);
   const [shrunk, setShrunk] = useState(false);
+  const [ritualOn, setRitualOn] = useState(() => ritualEnabled());
+  const [command, setCommand] = useState("");
+  const [commandNote, setCommandNote] = useState<string | null>(null);
   const reflecting = isReflectionHour();
+  const ritual = useMemo(() => ritualForToday(), []);
 
   useEffect(() => {
     const a = window.setTimeout(() => setEntered(true), 40);
@@ -88,11 +94,40 @@ export function FrassDaily({
     .filter((t) => delegated.includes(t.id))
     .reduce((n, t) => n + t.minutes, 0);
 
+  const day = useMemo(() => myDay(model, done, delegated), [model, done, delegated]);
+
   /** No dead information — every item resolves to the records behind it. */
   const go = (target: DailyTarget) => {
     if (target.href) onNavigate?.(target.href);
     else if (target.projectId) onOpenProject?.(target.projectId);
     onDismiss();
+  };
+
+  /** The Daily is navigable by conversation, not clicks alone. */
+  const runCommand = (e: React.FormEvent) => {
+    e.preventDefault();
+    const said = command.trim();
+    if (!said) return;
+    const result = resolveDailyCommand(said, model);
+    setCommand("");
+    if (!result) {
+      setCommandNote("I didn't catch a destination in that. Try “show me the orders”, “continue yesterday's work”, or “open Marketplace”.");
+      return;
+    }
+    if ("explainMetric" in result) {
+      const key = [...model.briefing, ...model.performance, ...model.executive].find(
+        (m) => m.label === result.explainMetric,
+      );
+      if (key) {
+        const id = model.briefing.includes(key) ? `b-${key.label}` : model.performance.includes(key) ? `p-${key.label}` : `e-${key.label}`;
+        setExplaining(id);
+        setCommandNote(`Opening the breakdown for ${key.label}.`);
+        window.setTimeout(() => document.getElementById(`metric-${key.label}`)?.scrollIntoView({ behavior: "smooth", block: "center" }), 60);
+      }
+      return;
+    }
+    setCommandNote(`Taking you to ${result.label}.`);
+    go(result.target);
   };
 
   return (
@@ -117,13 +152,87 @@ export function FrassDaily({
           </button>
         </header>
 
+        {/* Daily welcome ritual — one short moment, on or off by choice */}
+        {ritualOn && (
+          <div className="daily-ritual">
+            <span className="ws-meta">{ritual.kind}</span>
+            <p className="daily-ritual-text">{ritual.text}</p>
+            <button
+              type="button"
+              className="ws-chip"
+              onClick={() => {
+                setRitualEnabled(false);
+                setRitualOn(false);
+              }}
+            >
+              Turn the daily ritual off
+            </button>
+          </div>
+        )}
+        {!ritualOn && (
+          <button
+            type="button"
+            className="ws-chip daily-ritual-off"
+            onClick={() => {
+              setRitualEnabled(true);
+              setRitualOn(true);
+            }}
+          >
+            Turn the daily ritual back on
+          </button>
+        )}
+
+        {/* My Day — today, at a glance */}
+        <section className="daily-myday" data-blueprint="daily-myday">
+          <div className="daily-myday-head">
+            <h2 className="daily-h2">My Day</h2>
+            <span className="ws-meta">{formatWorkload(day.remainingMinutes)} remaining</span>
+          </div>
+          <div className="daily-bar daily-myday-bar">
+            <span style={{ width: `${day.pct}%` }} />
+          </div>
+          <div className="daily-myday-stats">
+            <span>{day.pct}% complete</span>
+            <span>{day.tasks} tasks</span>
+            <span>{day.delegated} delegated</span>
+            <span>{day.awaitingApproval} waiting approval</span>
+            <span>{day.completed} completed</span>
+          </div>
+        </section>
+
+        {/* Navigate by conversation */}
+        <form className="daily-command" onSubmit={runCommand}>
+          <input
+            value={command}
+            onChange={(e) => setCommand(e.target.value)}
+            placeholder="Tell me what to open — “let's do the second one”, “show me the orders”, “continue yesterday's work”…"
+            aria-label="Tell Frassy what to open"
+          />
+          <button type="submit" className="ws-chip" aria-label="Ask Frassy">
+            <Send className="h-3.5 w-3.5" /> Ask Frassy
+          </button>
+        </form>
+        {commandNote && <p className="ws-meta daily-command-note">{commandNote}</p>}
+
         <div className="daily-legend">
           {(Object.keys(DATA_STATUS) as DataStatus[]).map((s) => (
             <span key={s} className="daily-badge">
               {DATA_STATUS[s].dot} {DATA_STATUS[s].label}
             </span>
           ))}
+          <button
+            type="button"
+            className={`ws-chip ${demo ? "daily-chip-on" : ""}`}
+            onClick={() => {
+              setDemoData(!demo);
+              setDemo(!demo);
+            }}
+          >
+            {demo ? "Showing demonstration data" : "Showing real data only"}
+          </button>
         </div>
+
+        {!demo && <p className="ws-meta daily-note">{HONEST_NOTE}</p>}
 
         {model.alerts.length > 0 && (
           <div className="daily-alert">
@@ -132,6 +241,8 @@ export function FrassDaily({
             ))}
           </div>
         )}
+
+
 
         {/* 1 — Celebrate first */}
         <Section title="Celebrate first" note="Progress before problems.">
