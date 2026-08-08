@@ -84,6 +84,15 @@ function FinancialCenter() {
 
           <p className="mt-3 text-xs text-[oklch(0.66_0.01_80)]">{active.blurb}</p>
 
+          {viewer.founder && (
+            <Link
+              to="/payment-providers"
+              className="mt-4 inline-flex items-center gap-2 rounded-full border border-[color:var(--hill-gold)]/50 px-4 py-1.5 text-[11px] uppercase tracking-[0.2em] text-[color:var(--hill-gold)] transition hover:bg-[color:var(--hill-gold)]/10"
+            >
+              FRASS-0303 · Payment Provider Center &amp; pipeline →
+            </Link>
+          )}
+
           <div className="mt-6">
             <TabBody tab={active} viewer={viewer} snap={snap} />
           </div>
