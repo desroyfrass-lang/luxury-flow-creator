@@ -14,6 +14,7 @@ Implementation hold is lifted. The `FINAL_LOVABLE_DIRECTIVE.md` commissioning is
 One feature, one component, one route, one source of truth — audit for existing implementations before building; never create a second version.
 Frass Hill has exactly 8 districts (Town Square, Children's Village, Frass District, Luxury House, Studio District, Builders Village, Farm District, Founder Hall); every other service is a venue INSIDE one.
 "Frass World" is retired — the entrance is SHOP or ENTER FRASS HILL.
+Sightline rule: every building in Frass Hill must be visible before it is visited — each district shows what you can see from there.
 
 ## Memories
 - [One source of truth rule](mem://preferences/one-source-of-truth) — Audit-before-build discipline, consolidation over duplication, Audit Report deliverable
@@ -70,3 +71,4 @@ Frass Hill has exactly 8 districts (Town Square, Children's Village, Frass Distr
 - [Founder Construction Mode FRASS-0200](mem://features/founder-construction-mode-0200) — Founder-only Blueprint Layer, Architectural Intelligence Panel, live simulation, quality governance, living decision log
 - [FRASS-0210 Daily refinement](mem://features/frass-0210-daily-refinement) — Honest zeros over sample data, money provenance, drill-downs, My Day, welcome ritual, natural-language Daily commands, workspace memory bar, Frassy greets once at the entrance
 - [FRASS-0920 Town Plan](mem://features/frass-0920-town-plan) — The 8 real districts of Frass Hill and the venues inside each; supersedes the FRASS-0910 district list
+- [Frass Hill sightlines](mem://design/frass-hill-sightlines) — Constitutional sightline principle: directions + sensory sights from every district, implemented in HILL_SIGHTLINES

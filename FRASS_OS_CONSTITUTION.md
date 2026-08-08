@@ -196,7 +196,26 @@ Design exists to help Builders think clearly.
 - Consistency builds confidence.
 - The interface should quietly disappear behind meaningful work.
 
+## The Town Plan (FRASS-0920)
+
+Functions are not places. Frass Hill has eight places — Town Square, Children's Village,
+Frass District, Frass Luxury House, Studio District, Builders Village, Farm District and
+Founder Hall — and every office, academy, studio and service has an address inside one of
+them. No feature ever becomes a ninth district.
+
+## The Sightline Principle
+
+**Every building should be visible before it is visited.**
+
+Frass Hill is never a menu. From every district you can see the rest of the town: the lights
+of Frass District down the road, the estate up the hillside, music drifting from the Studio
+District, children in the valley, cranes on the ridge, fields to the horizon, and Founder Hall
+standing quietly above everything. People see a destination from afar, wonder what's over
+there, and walk to it. Curiosity, not navigation.
+
 ---
+
+
 
 # Volume IV — Intelligence & Stewardship
 
