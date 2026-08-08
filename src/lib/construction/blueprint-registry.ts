@@ -209,6 +209,7 @@ export const ARCHITECTURAL_PROTECTION = [
   "Duplicate detection",
   "Dependency analysis",
   "Impact review",
+  "Impact forecast",
   "Recommendation",
   "Specification",
   "Founder approval",
@@ -295,13 +296,21 @@ export function decisionsFor(componentId: string): ArchitecturalDecision[] {
 export const BLUEPRINT_PRINCIPLE =
   "The Founder never edits production directly. The Founder edits the Blueprint.";
 
-/** Vision → Blueprint → Approval → Implementation → Verification. */
+/** Principle 12 — nothing is approved until its ripple effects are understood. */
+export const IMPACT_PRINCIPLE =
+  "Before any Blueprint is approved, Frassy answers one final question: what else changes because of this?";
+
+/** The full disciplined lifecycle of every platform evolution. */
 export const BLUEPRINT_LIFECYCLE = [
   "Vision",
   "Blueprint",
-  "Approval",
+  "Simulation",
+  "Impact Report",
+  "Credit Forecast",
+  "Founder Approval",
   "Implementation",
   "Verification",
+  "Version Archive",
 ] as const;
 
 // ── Relationship mapping ───────────────────────────────────────────────────

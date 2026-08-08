@@ -1007,3 +1007,31 @@ body.blueprint-on [data-blueprint]:hover {
 }
 a.ps-row:hover { border-color: color-mix(in srgb, var(--gold) 60%, transparent); }
 .ps-dot { font-size: 0.75rem; line-height: 1.4; flex: none; }
+
+/* ── Principle 12 — Architectural Impact Report ─────────────────────────── */
+.bp-impact {
+  margin-top: 0.9rem; padding: 0.9rem;
+  border: 1px solid color-mix(in srgb, var(--gold) 30%, transparent);
+  border-radius: 0.3rem;
+  background: color-mix(in srgb, var(--gold) 5%, transparent);
+}
+.bp-impact-line { display: flex; gap: 0.55rem; align-items: flex-start; }
+.bp-impact-dot {
+  width: 6px; height: 6px; border-radius: 999px; margin-top: 0.45rem; flex: none;
+}
+.bp-impact-none { background: #4b5563; }
+.bp-impact-low { background: #22c55e; }
+.bp-impact-moderate { background: #eab308; }
+.bp-impact-high { background: #f97316; }
+.bp-impact-rec {
+  margin-top: 0.75rem; font-size: 11px; line-height: 1.6;
+  border-top: 1px solid color-mix(in srgb, var(--gold) 22%, transparent);
+  padding-top: 0.6rem;
+}
+.bp-impact-ack {
+  display: flex; align-items: center; gap: 0.5rem; margin-top: 0.7rem;
+  font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase;
+  color: color-mix(in srgb, var(--gold) 85%, white);
+  cursor: pointer;
+}
+.bp-impact-ack input { accent-color: var(--gold); }

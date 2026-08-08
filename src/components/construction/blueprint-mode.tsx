@@ -16,6 +16,7 @@ import {
   BLUEPRINT_COMPONENTS,
   BLUEPRINT_LIFECYCLE,
   BLUEPRINT_PRINCIPLE,
+  IMPACT_PRINCIPLE,
   QUALITY_STANDARD,
   decisionsFor,
   getBlueprintComponent,
@@ -36,6 +37,11 @@ import {
   loadBudget,
   recordSpend,
 } from "@/lib/construction/credit-intelligence";
+import {
+  impactReport,
+  impactSummary,
+  type ArchitecturalImpactReport,
+} from "@/lib/construction/impact-forecast";
 
 export const CONSTRUCTION_EVENT = "frass:construction-mode";
 
@@ -72,12 +78,18 @@ export function ConstructionMode() {
   const [sandbox, setSandboxState] = useState(false);
   const [versions, setVersions] = useState<BlueprintVersion[]>([]);
   const [showMap, setShowMap] = useState(false);
+  const [impactRead, setImpactRead] = useState(false);
 
   const component = useMemo(() => getBlueprintComponent(selected), [selected]);
   const simulation = component && action ? simulateAction(component, action) : null;
   const estimate = component && action ? estimateChange(component, action) : null;
   const warning = estimate ? budgetWarning(loadBudget(), estimate.max) : null;
   const relations = useMemo(() => (component ? relationshipMap(component) : null), [component]);
+  // Principle 12 — Impact Forecast. Nothing is approved before the ripple is understood.
+  const impact = useMemo(
+    () => (component && action ? impactReport(component, action) : null),
+    [component, action],
+  );
 
   // Activation — Founder only, no exceptions.
   useEffect(() => {
@@ -155,15 +167,22 @@ export function ConstructionMode() {
 
   useEffect(() => {
     setPreviewing(false);
+    setImpactRead(false);
   }, [action]);
 
   const approve = useCallback(() => {
-    if (!component || !action || !simulation || !estimate) return;
+    if (!component || !action || !simulation || !estimate || !impact) return;
+    if (!impactRead) {
+      toast("Impact Forecast", {
+        description: "Read the Architectural Impact Report first — every approval starts with knowing what else changes.",
+      });
+      return;
+    }
     recordDecision({
       componentId: component.id,
       componentLabel: component.label,
       action,
-      simulation: `${simulation}\n\nForecast: ${estimate.tier} · ${estimate.min}–${estimate.max} credits · ${estimate.risk} risk.`,
+      simulation: `${simulation}\n\nForecast: ${estimate.tier} · ${estimate.min}–${estimate.max} credits · ${estimate.risk} risk.\n\nImpact: ${impactSummary(impact, { min: estimate.min, max: estimate.max })}`,
       note: note.trim() || undefined,
     });
     recordSpend(`${component.label} — ${action}`, estimate.max);
@@ -173,10 +192,11 @@ export function ConstructionMode() {
     setAction(null);
     setNote("");
     setPreviewing(false);
+    setImpactRead(false);
     toast("Blueprint approved", {
       description: `${component.label} — ${action}. Forecast ${estimate.min}–${estimate.max} credits. Recorded, versioned, implementation brief follows.`,
     });
-  }, [component, action, simulation, estimate, note]);
+  }, [component, action, simulation, estimate, note, impact, impactRead]);
 
   if (!isAdmin || !active) return null;
 
@@ -356,7 +376,78 @@ export function ConstructionMode() {
                 </div>
                 <p className="mt-2 text-xs leading-relaxed">{simulation}</p>
 
+                {/* Principle 12 — Architectural Impact Report */}
+                {impact && (
+                  <div className="bp-impact">
+                    <div className="text-[10px] uppercase tracking-[0.3em] text-[color:var(--gold)]">
+                      Architectural Impact Report
+                    </div>
+                    <p className="mt-1 text-[11px] italic text-muted-foreground">
+                      "{impact.question}"
+                    </p>
+                    <div className="mt-3 space-y-2">
+                      {impact.lines.map((l) => (
+                        <div key={l.label} className="bp-impact-line">
+                          <span className={`bp-impact-dot bp-impact-${l.level}`} />
+                          <div className="min-w-0">
+                            <div className="text-[11px] font-semibold uppercase tracking-[0.16em]">
+                              {l.label}
+                            </div>
+                            <div className="text-[11px] leading-relaxed text-muted-foreground">
+                              {l.detail}
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                      {impact.untouched.length > 0 && (
+                        <div className="bp-impact-line">
+                          <span className="bp-impact-dot bp-impact-none" />
+                          <div className="min-w-0">
+                            <div className="text-[11px] font-semibold uppercase tracking-[0.16em]">
+                              Untouched
+                            </div>
+                            <div className="text-[11px] leading-relaxed text-muted-foreground">
+                              {impact.untouched.join(", ")} — no impact.
+                            </div>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+
+                    <div className="mt-3 text-[10px] uppercase tracking-[0.24em] text-muted-foreground">
+                      Testing — {impact.testCount} interaction checks
+                    </div>
+                    <ul className="mt-1.5 space-y-1 text-[11px] text-muted-foreground">
+                      {impact.testing.map((t) => (
+                        <li key={t}>· {t}</li>
+                      ))}
+                    </ul>
+
+                    <div className="mt-3 text-[10px] uppercase tracking-[0.24em] text-muted-foreground">
+                      Future maintenance
+                    </div>
+                    <p className="mt-1 text-[11px] leading-relaxed text-muted-foreground">
+                      {impact.maintenance}
+                    </p>
+
+                    <p className="bp-impact-rec">
+                      <span className="text-[color:var(--gold)]">Recommendation · </span>
+                      {impact.recommendation}
+                    </p>
+
+                    <label className="bp-impact-ack">
+                      <input
+                        type="checkbox"
+                        checked={impactRead}
+                        onChange={(e) => setImpactRead(e.target.checked)}
+                      />
+                      <span>I have read the impact report</span>
+                    </label>
+                  </div>
+                )}
+
                 {/* Estimated development impact — never spend blindly */}
+
                 <div className="bp-cost">
                   <div className="text-[10px] uppercase tracking-[0.3em] text-[color:var(--gold)]">
                     Estimated development impact
@@ -405,6 +496,9 @@ export function ConstructionMode() {
                 </div>
                 <p className="mt-2 text-[10px] uppercase tracking-[0.22em] text-muted-foreground">
                   {BLUEPRINT_PRINCIPLE}
+                </p>
+                <p className="mt-1 text-[10px] leading-relaxed text-muted-foreground">
+                  {IMPACT_PRINCIPLE}
                 </p>
               </div>
             )}
