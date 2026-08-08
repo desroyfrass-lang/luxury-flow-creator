@@ -8,6 +8,7 @@ import { LaunchReadiness } from "@/components/launch-readiness";
 import { FrassyChat } from "@/components/frassy-chat";
 import { openTheDaily } from "@/components/workspace/daily-gate";
 import { openConstructionMode } from "@/components/construction/blueprint-mode";
+import { DevelopmentCredits } from "@/components/construction/development-credits";
 
 
 
@@ -181,8 +182,18 @@ function FounderPage() {
           FRASS-0200 · Construction Mode is reserved for the Founder. Blueprint Mode overlays any
           screen in Frass OS — press ⌘/Ctrl + Shift + B, then select a component to inspect its
           purpose, registry references, connected systems, dependencies and decision history before
-          approving any change.
+          approving any change. The Founder never edits production directly — the Founder edits the
+          Blueprint.
         </p>
+
+        <section className="mt-8 max-w-2xl" data-blueprint="development-credits">
+          <DevelopmentCredits />
+          <p className="mt-3 text-xs text-muted-foreground">
+            Every architectural change is forecast in credits before you approve it, with a lighter
+            alternative whenever one exists. Record your balance and monthly budget so Frassy can
+            warn you before the platform runs low.
+          </p>
+        </section>
 
 
 

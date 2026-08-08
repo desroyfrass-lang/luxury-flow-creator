@@ -933,3 +933,44 @@ body.blueprint-on [data-blueprint]:hover {
 .ws-memorybar button:hover { color: var(--gold); }
 .ws-memorybar-root { color: var(--gold); }
 .ws-memorybar-focus { opacity: 0.7; text-transform: none; letter-spacing: 0.06em; }
+
+/* ── FRASS-0200 Amendment · Blueprint preview, relationships, credits ───── */
+.bp-preview { transition: transform 220ms ease, opacity 220ms ease, filter 220ms ease; }
+.bp-preview-shift-back { transform: translateY(-14px); }
+.bp-preview-shift-fwd { transform: translateY(14px); }
+.bp-preview-small { transform: scale(0.92); transform-origin: top left; }
+.bp-preview-large { transform: scale(1.04); transform-origin: top left; }
+.bp-preview-hidden { opacity: 0.18; }
+.bp-preview-collapse { max-height: 5rem; overflow: hidden; }
+.bp-preview-lighting { filter: brightness(1.12) saturate(1.08); }
+.bp-preview-motion { animation: bp-pulse 1.4s ease-in-out infinite; }
+.bp-preview-generic { outline: 2px solid var(--gold); outline-offset: 4px; }
+@keyframes bp-pulse { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
+
+.bp-sandbox-on { background: color-mix(in oklab, var(--gold) 18%, transparent); color: var(--gold); }
+
+.bp-map { margin-top: 0.75rem; border-top: 1px solid color-mix(in oklab, var(--gold) 25%, transparent); }
+.bp-map-row { padding: 0.6rem 0; border-bottom: 1px solid color-mix(in oklab, var(--foreground) 8%, transparent); }
+.bp-map-chip {
+  border: 1px solid color-mix(in oklab, var(--gold) 45%, transparent);
+  border-radius: 999px; padding: 0.15rem 0.6rem; font-size: 11px;
+}
+
+.bp-cost {
+  margin-top: 0.9rem; border-radius: 6px; padding: 0.85rem;
+  border: 1px solid color-mix(in oklab, var(--gold) 35%, transparent);
+  background: color-mix(in oklab, var(--background) 70%, transparent);
+}
+.bp-warn { margin-top: 0.6rem; font-size: 11px; line-height: 1.5; }
+.bp-warn-notice { color: color-mix(in oklab, currentColor 70%, transparent); }
+.bp-warn-warning { color: var(--gold); }
+.bp-warn-critical { color: #ff8b6b; }
+
+.dev-credits {
+  border: 1px solid color-mix(in oklab, var(--gold) 30%, transparent);
+  border-radius: 6px; padding: 1rem;
+  background: color-mix(in oklab, var(--background) 70%, transparent);
+}
+.dev-credits-warning { border-color: color-mix(in oklab, var(--gold) 70%, transparent); }
+.dev-credits-critical { border-color: #ff8b6b; }
+.dev-credits-compact { padding: 0.75rem; }

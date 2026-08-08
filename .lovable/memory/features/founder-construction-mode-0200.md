@@ -24,3 +24,16 @@ Every tagged component (`data-blueprint="<id>"`) becomes selectable. Selecting o
 - **Living architecture:** every approved decision is recorded (`frass.construction.decisions`) and referenced in future discussions rather than recreated. Nothing is forgotten.
 
 Files: `src/lib/construction/blueprint-registry.ts` (component registry, actions, simulation, decision log), `src/components/construction/blueprint-mode.tsx` (overlay, mounted in `__root.tsx`), Construction Mode governance block in `src/routes/api/chat.ts`.
+
+## Amendment — Blueprint-first & Development Credit Intelligence
+**Final constitutional principle:** *The Founder never edits production directly. The Founder edits the Blueprint.* Lifecycle: Vision → Blueprint → Approval → Implementation → Verification.
+
+- **Preview** — `Preview on screen` applies a temporary visual preview of the selected action to the live component; nothing is saved.
+- **Sandbox** — banner toggle (`frass.construction.sandbox`); exploration without consequence.
+- **Versioning** — every approval saves a restorable Blueprint version (`frass.construction.versions`), restorable from the panel.
+- **Relationship mapping** — Depends on / Depended on by / Shares systems with, derived from the registry.
+- **Credit Intelligence** — `src/lib/construction/credit-intelligence.ts`: complexity tiers (Micro/Small/Medium/Large/Major), conservative credit forecast, risk, drivers, value, and a cheaper alternative for Large/Major. Batch estimation saves ~20%.
+- **Budget** — Founder records balance + monthly budget (`frass.construction.budget`); spend ledger (`frass.construction.spend`). Frassy warns at low balance / over budget and NEVER invents a balance.
+- **Frassy response format** (in `src/routes/api/chat.ts`): "Estimated Development Impact" — Complexity · Forecast · Risk · Why · Value · Lighter alternative → then ask approval.
+
+Files: `src/lib/construction/credit-intelligence.ts`, `src/components/construction/development-credits.tsx`, extended `blueprint-registry.ts` and `blueprint-mode.tsx`, Development Credits panel on `/founder`.
