@@ -202,6 +202,25 @@ function FounderPage() {
           </Link>
         </section>
 
+        <section className="mt-4 flex flex-wrap items-center gap-3 rounded-sm border border-border bg-background/40 p-5">
+          <div className="min-w-0 flex-1">
+            <div className="font-display text-xl">Global Operations</div>
+            <p className="mt-1 text-xs text-muted-foreground">
+              FRASS-0305 / 0306 — Primary Operating Markets (Canada, United Kingdom, United States),
+              regional capability register, campaign origin versus audience reach, and per-market
+              analytics in CAD, GBP and USD.
+            </p>
+          </div>
+          <Link
+            to="/global-operations"
+            className="rounded-sm border border-[color:var(--gold)]/60 px-5 py-2.5 text-[11px] font-bold uppercase tracking-[0.3em] text-[color:var(--gold)] transition hover:bg-[color:var(--gold)]/10"
+          >
+            Open
+          </Link>
+        </section>
+
+
+
 
         <p className="mt-2 text-xs text-muted-foreground">
           FRASS-0200 · Construction Mode is reserved for the Founder. Blueprint Mode overlays any
