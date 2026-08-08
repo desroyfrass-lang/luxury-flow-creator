@@ -5,12 +5,14 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { ChevronDown, ChevronRight, Plus, Send, Volume2, VolumeX, Square } from "lucide-react";
-import { WorkspaceShell, type IndexEntry } from "@/components/workspace/workspace-shell";
+import { WorkspaceShell, type IndexEntry, type RoleLink } from "@/components/workspace/workspace-shell";
 import { UploadTray } from "@/components/workspace/upload-tray";
 import { ReplyBlocks } from "@/components/workspace/reply-blocks";
 import { openTheDaily } from "@/components/workspace/daily-gate";
 import { usePushToTalk } from "@/hooks/use-push-to-talk";
 import { useIsAdminStatus } from "@/hooks/use-is-admin";
+import { useWorkspaceRoles } from "@/hooks/use-workspace-roles";
+
 import {
   FOUNDER_MILESTONES,
   FOUNDER_PROJECTS,
