@@ -150,7 +150,9 @@ export function FrassDaily({
 
         {/* 3 + 4 + 5 — Priorities, workload, delegation */}
         <Section
+          blueprintId="daily-priorities"
           title="Today's priorities"
+
           note={`Estimated work today: ${formatWorkload(remaining)}${
             savedByFrassy ? ` · Frassy is carrying ${formatWorkload(savedByFrassy)}` : ""
           }`}
