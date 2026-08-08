@@ -1,21 +1,41 @@
 // FRASS-0200 — Construction Mode & Blueprint Mode overlay.
 // Founder only. Never rendered for Builders, Partners, Vendors, Members,
 // Affiliates or Administrators without Founder authority.
+//
+// Amendment: the Founder never edits production directly — the Founder edits
+// the Blueprint. Every change is previewed, costed in development credits,
+// approved, versioned, and recorded.
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
 import { useIsAdminStatus } from "@/hooks/use-is-admin";
+import { DevelopmentCredits } from "@/components/construction/development-credits";
 import {
   ARCHITECTURAL_PROTECTION,
   BLUEPRINT_ACTIONS,
   BLUEPRINT_COMPONENTS,
+  BLUEPRINT_LIFECYCLE,
+  BLUEPRINT_PRINCIPLE,
   QUALITY_STANDARD,
   decisionsFor,
   getBlueprintComponent,
+  isSandbox,
+  loadVersions,
   recordDecision,
+  relationshipMap,
+  revertToVersion,
+  saveVersion,
+  setSandbox,
   simulateAction,
   type ArchitecturalDecision,
+  type BlueprintVersion,
 } from "@/lib/construction/blueprint-registry";
+import {
+  budgetWarning,
+  estimateChange,
+  loadBudget,
+  recordSpend,
+} from "@/lib/construction/credit-intelligence";
 
 export const CONSTRUCTION_EVENT = "frass:construction-mode";
 
@@ -27,6 +47,20 @@ export function openConstructionMode() {
 const REFUSAL =
   "Construction Mode is reserved for the Founder. I can help improve your own workspace or projects, but I cannot modify the Frass Operating System.";
 
+/** Preview classes — the Blueprint is shown, production is never edited. */
+function previewClassFor(action: string): string | null {
+  const a = action.toLowerCase();
+  if (a === "move up" || a === "move left") return "bp-preview-shift-back";
+  if (a === "move down" || a === "move right") return "bp-preview-shift-fwd";
+  if (a === "small") return "bp-preview-small";
+  if (a === "large" || a === "full width") return "bp-preview-large";
+  if (a === "hide" || a === "founder only") return "bp-preview-hidden";
+  if (a === "collapse") return "bp-preview-collapse";
+  if (["background", "lighting", "glass", "materials"].includes(a)) return "bp-preview-lighting";
+  if (["animation", "motion"].includes(a)) return "bp-preview-motion";
+  return "bp-preview-generic";
+}
+
 export function ConstructionMode() {
   const { isAdmin, loading } = useIsAdminStatus();
   const [active, setActive] = useState(false);
@@ -34,9 +68,16 @@ export function ConstructionMode() {
   const [action, setAction] = useState<string | null>(null);
   const [note, setNote] = useState("");
   const [history, setHistory] = useState<ArchitecturalDecision[]>([]);
+  const [previewing, setPreviewing] = useState(false);
+  const [sandbox, setSandboxState] = useState(false);
+  const [versions, setVersions] = useState<BlueprintVersion[]>([]);
+  const [showMap, setShowMap] = useState(false);
 
   const component = useMemo(() => getBlueprintComponent(selected), [selected]);
   const simulation = component && action ? simulateAction(component, action) : null;
+  const estimate = component && action ? estimateChange(component, action) : null;
+  const warning = estimate ? budgetWarning(loadBudget(), estimate.max) : null;
+  const relations = useMemo(() => (component ? relationshipMap(component) : null), [component]);
 
   // Activation — Founder only, no exceptions.
   useEffect(() => {
@@ -63,6 +104,13 @@ export function ConstructionMode() {
     };
   }, [isAdmin, loading]);
 
+  useEffect(() => {
+    if (active) {
+      setSandboxState(isSandbox());
+      setVersions(loadVersions());
+    }
+  }, [active]);
+
   // Blueprint layer — every tagged component becomes selectable.
   useEffect(() => {
     if (!active) {
@@ -80,6 +128,7 @@ export function ConstructionMode() {
       setSelected(node.getAttribute("data-blueprint"));
       setAction(null);
       setNote("");
+      setPreviewing(false);
     };
     document.addEventListener("click", onClick, true);
     return () => {
@@ -92,22 +141,42 @@ export function ConstructionMode() {
     if (selected) setHistory(decisionsFor(selected));
   }, [selected, active]);
 
+  // Live preview — the Blueprint is shown on the real screen, nothing is saved.
+  useEffect(() => {
+    if (!previewing || !component || !action) return;
+    const cls = previewClassFor(action);
+    if (!cls) return;
+    const nodes = Array.from(
+      document.querySelectorAll<HTMLElement>(`[data-blueprint="${component.id}"]`),
+    );
+    nodes.forEach((n) => n.classList.add("bp-preview", cls));
+    return () => nodes.forEach((n) => n.classList.remove("bp-preview", cls));
+  }, [previewing, component, action]);
+
+  useEffect(() => {
+    setPreviewing(false);
+  }, [action]);
+
   const approve = useCallback(() => {
-    if (!component || !action || !simulation) return;
+    if (!component || !action || !simulation || !estimate) return;
     recordDecision({
       componentId: component.id,
       componentLabel: component.label,
       action,
-      simulation,
+      simulation: `${simulation}\n\nForecast: ${estimate.tier} · ${estimate.min}–${estimate.max} credits · ${estimate.risk} risk.`,
       note: note.trim() || undefined,
     });
+    recordSpend(`${component.label} — ${action}`, estimate.max);
+    saveVersion(`${component.label} — ${action}`);
+    setVersions(loadVersions());
     setHistory(decisionsFor(component.id));
     setAction(null);
     setNote("");
-    toast("Architectural decision approved", {
-      description: `${component.label} — ${action}. Recorded in the architecture log; implementation brief follows.`,
+    setPreviewing(false);
+    toast("Blueprint approved", {
+      description: `${component.label} — ${action}. Forecast ${estimate.min}–${estimate.max} credits. Recorded, versioned, implementation brief follows.`,
     });
-  }, [component, action, simulation, note]);
+  }, [component, action, simulation, estimate, note]);
 
   if (!isAdmin || !active) return null;
 
@@ -117,12 +186,26 @@ export function ConstructionMode() {
         <span className="bp-dot" />
         <div className="min-w-0 flex-1">
           <div className="text-[11px] font-bold uppercase tracking-[0.32em] text-[color:var(--gold)]">
-            Construction Mode · Blueprint Layer
+            Construction Mode · Blueprint Layer{sandbox ? " · Sandbox" : ""}
           </div>
-          <div className="truncate text-xs text-muted-foreground">
-            Frassy is your Chief Systems Architect. Select any component to inspect and redesign it.
-          </div>
+          <div className="truncate text-xs text-muted-foreground">{BLUEPRINT_PRINCIPLE}</div>
         </div>
+        <button
+          type="button"
+          className={`bp-close${sandbox ? " bp-sandbox-on" : ""}`}
+          onClick={() => {
+            const next = !sandbox;
+            setSandbox(next);
+            setSandboxState(next);
+            toast(next ? "Sandbox on" : "Sandbox off", {
+              description: next
+                ? "Explore freely — nothing here reaches the live platform until you approve a Blueprint."
+                : "Approvals now flow into the implementation queue as normal.",
+            });
+          }}
+        >
+          Sandbox
+        </button>
         <button type="button" className="bp-close" onClick={() => setActive(false)}>
           Exit
         </button>
@@ -136,9 +219,19 @@ export function ConstructionMode() {
             </div>
             <p className="mt-3 text-sm text-muted-foreground">
               Click any highlighted component to open its living blueprint — purpose, registry
-              references, connected systems, dependencies, users affected, and every approved
-              decision in its history.
+              references, connected systems, dependencies, users affected, relationships, credit
+              forecast, and every approved decision in its history.
             </p>
+
+            <div className="mt-5">
+              <DevelopmentCredits />
+            </div>
+
+            <div className="mt-6 text-[10px] uppercase tracking-[0.3em] text-muted-foreground">
+              Blueprint lifecycle
+            </div>
+            <div className="mt-2 text-xs text-muted-foreground">{BLUEPRINT_LIFECYCLE.join(" → ")}</div>
+
             <div className="mt-6 text-[10px] uppercase tracking-[0.3em] text-muted-foreground">
               Selectable components
             </div>
@@ -158,6 +251,35 @@ export function ConstructionMode() {
                 </button>
               ))}
             </div>
+
+            <div className="mt-6 text-[10px] uppercase tracking-[0.3em] text-muted-foreground">
+              Blueprint versions
+            </div>
+            {versions.length === 0 ? (
+              <p className="mt-2 text-xs text-muted-foreground">
+                No versions yet. Every approval saves a restorable version of the architecture.
+              </p>
+            ) : (
+              <ul className="mt-2 space-y-1.5">
+                {versions.slice(0, 8).map((v) => (
+                  <li key={v.id} className="flex items-center gap-2 text-xs">
+                    <span className="flex-1 truncate text-muted-foreground">{v.label}</span>
+                    <button
+                      type="button"
+                      className="bp-action"
+                      onClick={() => {
+                        revertToVersion(v.id);
+                        setVersions(loadVersions());
+                        toast("Blueprint restored", { description: `Architecture log restored to "${v.label}".` });
+                      }}
+                    >
+                      Restore
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            )}
+
             <div className="mt-6 text-[10px] uppercase tracking-[0.3em] text-muted-foreground">
               Architectural protection
             </div>
@@ -192,6 +314,18 @@ export function ConstructionMode() {
               {component.specification}
             </div>
 
+            {/* Relationship mapping */}
+            <button type="button" className="bp-back mt-5 block" onClick={() => setShowMap((v) => !v)}>
+              {showMap ? "− Hide relationships" : "+ Show relationships"}
+            </button>
+            {showMap && relations && (
+              <div className="bp-map">
+                <MapRow label="Depends on" items={relations.upstream.map((c) => c.label)} />
+                <MapRow label="Depended on by" items={relations.downstream.map((c) => c.label)} />
+                <MapRow label="Shares systems with" items={relations.siblings.map((c) => c.label)} />
+              </div>
+            )}
+
             <div className="mt-6 text-[10px] uppercase tracking-[0.3em] text-[color:var(--gold)]">
               Actions
             </div>
@@ -215,12 +349,38 @@ export function ConstructionMode() {
               </div>
             ))}
 
-            {simulation && (
+            {simulation && estimate && (
               <div className="bp-sim">
                 <div className="text-[10px] uppercase tracking-[0.3em] text-[color:var(--gold)]">
                   Live simulation — Frassy
                 </div>
                 <p className="mt-2 text-xs leading-relaxed">{simulation}</p>
+
+                {/* Estimated development impact — never spend blindly */}
+                <div className="bp-cost">
+                  <div className="text-[10px] uppercase tracking-[0.3em] text-[color:var(--gold)]">
+                    Estimated development impact
+                  </div>
+                  <div className="mt-2 font-display text-lg">
+                    {estimate.min}–{estimate.max} credits
+                    <span className="ml-2 text-[11px] uppercase tracking-[0.2em] text-muted-foreground">
+                      {estimate.tier} · {estimate.risk} risk
+                    </span>
+                  </div>
+                  <ul className="mt-2 space-y-1 text-[11px] text-muted-foreground">
+                    {estimate.drivers.map((d) => (
+                      <li key={d}>· {d}</li>
+                    ))}
+                  </ul>
+                  <p className="mt-2 text-[11px] text-muted-foreground">{estimate.value}</p>
+                  {estimate.alternative && (
+                    <p className="mt-2 text-[11px] italic text-muted-foreground">{estimate.alternative}</p>
+                  )}
+                  {warning && warning.level !== "none" && (
+                    <p className={`bp-warn bp-warn-${warning.level}`}>{warning.message}</p>
+                  )}
+                </div>
+
                 <textarea
                   value={note}
                   onChange={(e) => setNote(e.target.value)}
@@ -228,14 +388,24 @@ export function ConstructionMode() {
                   className="bp-note"
                   rows={2}
                 />
-                <div className="mt-3 flex gap-2">
+                <div className="mt-3 flex flex-wrap gap-2">
+                  <button
+                    type="button"
+                    className={`bp-action${previewing ? " bp-action-on" : ""}`}
+                    onClick={() => setPreviewing((v) => !v)}
+                  >
+                    {previewing ? "Stop preview" : "Preview on screen"}
+                  </button>
                   <button type="button" className="bp-approve" onClick={approve}>
-                    Approve & record
+                    Approve blueprint
                   </button>
                   <button type="button" className="bp-decline" onClick={() => setAction(null)}>
                     Not yet
                   </button>
                 </div>
+                <p className="mt-2 text-[10px] uppercase tracking-[0.22em] text-muted-foreground">
+                  {BLUEPRINT_PRINCIPLE}
+                </p>
               </div>
             )}
 
@@ -271,6 +441,25 @@ function Row({ label, value }: { label: string; value: string }) {
     <div className="bp-row">
       <div className="bp-row-label">{label}</div>
       <div className="bp-row-value">{value}</div>
+    </div>
+  );
+}
+
+function MapRow({ label, items }: { label: string; items: string[] }) {
+  return (
+    <div className="bp-map-row">
+      <div className="bp-row-label">{label}</div>
+      <div className="mt-1 flex flex-wrap gap-1.5">
+        {items.length === 0 ? (
+          <span className="text-[11px] text-muted-foreground">None recorded</span>
+        ) : (
+          items.map((i) => (
+            <span key={i} className="bp-map-chip">
+              {i}
+            </span>
+          ))
+        )}
+      </div>
     </div>
   );
 }

@@ -289,3 +289,97 @@ export function recordDecision(entry: Omit<ArchitecturalDecision, "id" | "approv
 export function decisionsFor(componentId: string): ArchitecturalDecision[] {
   return loadDecisions().filter((d) => d.componentId === componentId);
 }
+
+// ── FRASS-0200 Amendment — Blueprint-first constitution ────────────────────
+/** The final constitutional principle of Construction Mode. */
+export const BLUEPRINT_PRINCIPLE =
+  "The Founder never edits production directly. The Founder edits the Blueprint.";
+
+/** Vision → Blueprint → Approval → Implementation → Verification. */
+export const BLUEPRINT_LIFECYCLE = [
+  "Vision",
+  "Blueprint",
+  "Approval",
+  "Implementation",
+  "Verification",
+] as const;
+
+// ── Relationship mapping ───────────────────────────────────────────────────
+export type Relationship = {
+  /** Components this one relies on. */
+  upstream: BlueprintComponent[];
+  /** Components that rely on this one. */
+  downstream: BlueprintComponent[];
+  /** Components that share a dependency or a connected system with this one. */
+  siblings: BlueprintComponent[];
+};
+
+export function relationshipMap(component: BlueprintComponent): Relationship {
+  const others = BLUEPRINT_COMPONENTS.filter((c) => c.id !== component.id);
+  const mentions = (c: BlueprintComponent, label: string) =>
+    c.connectedSystems.some((s) => s.toLowerCase() === label.toLowerCase()) ||
+    c.dependencies.some((s) => s.toLowerCase() === label.toLowerCase());
+
+  const upstream = others.filter((c) => component.dependencies.concat(component.connectedSystems).some((d) => d.toLowerCase() === c.label.toLowerCase()));
+  const downstream = others.filter((c) => mentions(c, component.label));
+  const siblings = others.filter(
+    (c) =>
+      !upstream.includes(c) &&
+      !downstream.includes(c) &&
+      (c.dependencies.some((d) => component.dependencies.includes(d)) ||
+        c.connectedSystems.some((s) => component.connectedSystems.includes(s))),
+  );
+  return { upstream, downstream, siblings };
+}
+
+// ── Blueprint versioning — every approved state can be restored ────────────
+export type BlueprintVersion = {
+  id: string;
+  label: string;
+  createdAt: string;
+  decisions: ArchitecturalDecision[];
+};
+
+const VERSION_KEY = "frass.construction.versions";
+
+export function loadVersions(): BlueprintVersion[] {
+  if (typeof window === "undefined") return [];
+  try {
+    const raw = window.localStorage.getItem(VERSION_KEY);
+    return raw ? (JSON.parse(raw) as BlueprintVersion[]) : [];
+  } catch {
+    return [];
+  }
+}
+
+export function saveVersion(label: string): BlueprintVersion[] {
+  const version: BlueprintVersion = {
+    id: `v-${Date.now()}`,
+    label,
+    createdAt: new Date().toISOString(),
+    decisions: loadDecisions(),
+  };
+  const all = [version, ...loadVersions()].slice(0, 30);
+  if (typeof window !== "undefined") window.localStorage.setItem(VERSION_KEY, JSON.stringify(all));
+  return all;
+}
+
+/** Restore the architecture log to a saved version. Nothing in production is touched. */
+export function revertToVersion(id: string): ArchitecturalDecision[] {
+  const version = loadVersions().find((v) => v.id === id);
+  if (!version) return loadDecisions();
+  if (typeof window !== "undefined") window.localStorage.setItem(LOG_KEY, JSON.stringify(version.decisions));
+  return version.decisions;
+}
+
+// ── Sandbox — try architecture without touching the live platform ──────────
+const SANDBOX_KEY = "frass.construction.sandbox";
+
+export function isSandbox(): boolean {
+  if (typeof window === "undefined") return false;
+  return window.localStorage.getItem(SANDBOX_KEY) === "1";
+}
+
+export function setSandbox(on: boolean) {
+  if (typeof window !== "undefined") window.localStorage.setItem(SANDBOX_KEY, on ? "1" : "0");
+}
