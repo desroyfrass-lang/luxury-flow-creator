@@ -11,8 +11,10 @@
 // ─────────────────────────────────────────────────────────────────────────────
 
 import { useEffect, useMemo, useState } from "react";
-import { X, Check, Sparkles, ArrowRight, HelpCircle, Coins, ListTree, Send } from "lucide-react";
+import { X, Check, Sparkles, ArrowRight, HelpCircle, Coins, ListTree } from "lucide-react";
+import { FrassyComposer } from "@/components/workspace/frassy-composer";
 import frassyAvatar from "@/assets/frassy-gold.png.asset.json";
+
 import {
   dailyFor,
   DATA_STATUS,
