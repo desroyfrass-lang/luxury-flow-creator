@@ -324,6 +324,10 @@ function DistrictCard({
               </div>
             </div>
 
+            <HillSightlines districtId={d.id} onLook={onLook} />
+
+
+
             <p className="border-l-2 border-[color:var(--hill-gold)] pl-3 text-xs italic text-muted-foreground">
               {d.success}
             </p>
