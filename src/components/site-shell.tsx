@@ -11,7 +11,9 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Search, User, Instagram, Music2, Youtube, Facebook, Menu, X, Sparkles, KeyRound, LogOut, Settings } from "lucide-react";
+import { Search, User, Instagram, Music2, Youtube, Facebook, Menu, X, Sparkles, KeyRound, LogOut, Settings, Sun } from "lucide-react";
+import { openTheDaily } from "@/components/workspace/daily-gate";
+
 import { useCartSync } from "@/hooks/use-cart-sync";
 import { useSiteText } from "@/hooks/use-site-text";
 import { useIsAdmin } from "@/hooks/use-is-admin";
