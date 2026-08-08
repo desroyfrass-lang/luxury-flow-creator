@@ -531,3 +531,138 @@
   0%, 100% { transform: scale(1); }
   50% { transform: scale(1.035); }
 }
+
+/* ─────────────────────────────────────────────────────────────────────────
+   Workspace Experience System v1.0 — warm charcoal, ivory panels, gold.
+   The room should feel like a professional office, not a terminal.
+   ───────────────────────────────────────────────────────────────────────── */
+.frass-workspace {
+  --ws-bg: oklch(0.97 0.008 85);
+  --ws-panel: oklch(0.99 0.005 90);
+  --ws-line: oklch(0.88 0.012 85);
+  --ws-ink: oklch(0.24 0.012 60);
+  --ws-soft: oklch(0.52 0.012 70);
+  --ws-gold: oklch(0.72 0.13 78);
+  --ws-accent-bg: oklch(0.95 0.03 85);
+  background: var(--ws-bg);
+  color: var(--ws-ink);
+  font-size: 16px;
+}
+.frass-workspace.ws-dark {
+  --ws-bg: oklch(0.19 0.008 70);
+  --ws-panel: oklch(0.23 0.01 70);
+  --ws-line: oklch(0.32 0.012 70);
+  --ws-ink: oklch(0.95 0.008 85);
+  --ws-soft: oklch(0.72 0.012 80);
+  --ws-accent-bg: oklch(0.28 0.03 78);
+}
+
+.frass-workspace .ws-header {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 0.5rem; padding: 0.6rem 0.9rem;
+  background: var(--ws-panel);
+  border-bottom: 1px solid var(--ws-line);
+}
+.frass-workspace .ws-icon {
+  display: inline-flex; align-items: center; justify-content: center;
+  height: 2.25rem; width: 2.25rem; flex: none;
+  border-radius: 0.6rem; border: 1px solid var(--ws-line);
+  color: var(--ws-soft); background: var(--ws-panel);
+}
+.frass-workspace .ws-icon:hover { color: var(--ws-ink); border-color: var(--ws-gold); }
+.frass-workspace .ws-meta { font-size: 12px; color: var(--ws-soft); letter-spacing: 0.02em; }
+
+.frass-workspace .ws-search {
+  width: 100%; border-radius: 0.7rem; border: 1px solid var(--ws-line);
+  background: var(--ws-bg); color: var(--ws-ink);
+  padding: 0.55rem 0.75rem 0.55rem 2.25rem; font-size: 14px;
+}
+.frass-workspace .ws-search:focus { outline: none; border-color: var(--ws-gold); }
+.frass-workspace .ws-search-pop {
+  position: absolute; z-index: 40; margin-top: 0.35rem; width: 100%;
+  border-radius: 0.7rem; border: 1px solid var(--ws-line);
+  background: var(--ws-panel); padding: 0.25rem; box-shadow: 0 20px 50px -20px rgb(0 0 0 / 0.35);
+}
+.frass-workspace .ws-search-hit {
+  display: flex; gap: 0.6rem; align-items: center; width: 100%;
+  padding: 0.45rem 0.6rem; border-radius: 0.5rem; font-size: 14px;
+}
+.frass-workspace .ws-search-hit:hover { background: var(--ws-accent-bg); }
+
+.frass-workspace .ws-side {
+  background: var(--ws-panel); border-color: var(--ws-line);
+  border-right-width: 1px; border-left-width: 1px; border-style: solid;
+  border-top: 0; border-bottom: 0; padding: 0.85rem 0.6rem;
+}
+.frass-workspace .ws-side-title {
+  font-size: 11px; text-transform: uppercase; letter-spacing: 0.22em;
+  color: var(--ws-gold); padding: 0 0.5rem 0.5rem;
+}
+.frass-workspace .ws-nav {
+  display: flex; align-items: center; gap: 0.5rem; width: 100%;
+  padding: 0.4rem 0.5rem; border-radius: 0.5rem; font-size: 14px; color: var(--ws-ink);
+}
+.frass-workspace .ws-nav:hover { background: var(--ws-accent-bg); }
+.frass-workspace .ws-nav-active { background: var(--ws-accent-bg); font-weight: 600; }
+.frass-workspace .ws-dot { height: 0.5rem; width: 0.5rem; border-radius: 999px; background: var(--ws-gold); flex: none; }
+.frass-workspace .ws-dot-completed { background: oklch(0.66 0.13 150); }
+.frass-workspace .ws-dot-needs-approval { background: oklch(0.66 0.17 30); }
+.frass-workspace .ws-dot-waiting-builder { background: oklch(0.72 0.11 240); }
+.frass-workspace .ws-panel-card {
+  border: 1px solid var(--ws-line); border-radius: 0.7rem;
+  padding: 0.7rem 0.8rem; margin: 0 0.25rem 0.6rem; background: var(--ws-bg);
+}
+
+.frass-workspace .ws-composer {
+  border-top: 1px solid var(--ws-line); background: var(--ws-panel);
+  padding: 0.6rem 0.9rem 0.75rem;
+}
+.frass-workspace .ws-chip {
+  display: inline-flex; align-items: center; gap: 0.35rem;
+  border: 1px solid var(--ws-line); border-radius: 999px;
+  padding: 0.25rem 0.6rem; font-size: 12px; color: var(--ws-soft); background: var(--ws-bg);
+}
+.frass-workspace .ws-chip:hover { color: var(--ws-ink); border-color: var(--ws-gold); }
+.frass-workspace .ws-chip-live { border-color: oklch(0.62 0.2 25); color: oklch(0.62 0.2 25); }
+.frass-workspace .ws-input {
+  flex: 1; min-height: 2.5rem; max-height: 9rem; resize: none;
+  border-radius: 0.8rem; border: 1px solid var(--ws-line);
+  background: var(--ws-bg); color: var(--ws-ink);
+  padding: 0.6rem 0.8rem; font-size: 16px; line-height: 1.5;
+}
+.frass-workspace .ws-input:focus { outline: none; border-color: var(--ws-gold); }
+.frass-workspace .ws-send {
+  display: inline-flex; align-items: center; justify-content: center;
+  height: 2.5rem; width: 2.5rem; flex: none; border-radius: 999px;
+  background: var(--ws-gold); color: oklch(0.16 0.01 70);
+}
+.frass-workspace .ws-send:disabled { opacity: 0.4; }
+.frass-workspace .ws-note { font-size: 13px; color: var(--ws-soft); padding-bottom: 0.4rem; }
+
+.frass-workspace .ws-h1 { font-size: 26px; line-height: 1.25; margin-top: 0.35rem; font-weight: 600; }
+.frass-workspace .ws-section {
+  border: 1px solid var(--ws-line); border-radius: 0.9rem;
+  background: var(--ws-panel); overflow: hidden;
+}
+.frass-workspace .ws-section-head {
+  display: flex; align-items: center; gap: 0.6rem; width: 100%;
+  padding: 0.7rem 0.9rem; font-size: 15px; color: var(--ws-ink);
+}
+.frass-workspace .ws-section-head:hover { background: var(--ws-accent-bg); }
+.frass-workspace .ws-user {
+  margin-left: auto; width: fit-content; max-width: 85%;
+  border-radius: 0.9rem; padding: 0.6rem 0.85rem;
+  background: var(--ws-accent-bg); font-size: 18px; line-height: 1.6;
+}
+.frass-workspace .ws-assistant { font-size: 18px; line-height: 1.65; }
+.frass-workspace .ws-reply-head { font-size: 22px; font-weight: 600; margin-top: 0.6rem; }
+.frass-workspace .ws-reply-p { font-size: 18px; line-height: 1.65; }
+.frass-workspace .ws-bullets { list-style: disc; padding-left: 1.35rem; font-size: 18px; line-height: 1.6; }
+.frass-workspace .ws-decision {
+  border-left: 3px solid var(--ws-gold); background: var(--ws-accent-bg);
+  border-radius: 0.5rem; padding: 0.6rem 0.85rem; font-size: 18px; line-height: 1.6;
+}
+.frass-workspace .ws-error {
+  border: 1px solid oklch(0.66 0.17 28 / 0.4); background: oklch(0.66 0.17 28 / 0.1);
+  border-radius: 0.6rem; padding: 0.6rem 0.8rem; font-size: 14px;
+}
