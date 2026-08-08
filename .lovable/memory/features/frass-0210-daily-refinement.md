@@ -32,3 +32,8 @@ type: feature
 
 ## Frassy greets once
 - The cinematic introduction belongs to the entrance only (`home`, `frass-world`), once per session. Everywhere else Frassy is already present and continues; she never re-introduces herself and no "Welcome back" interruption is shown.
+
+## Workspace Awareness & Platform Status Center
+- **Workspace Awareness** (`src/lib/workspace/awareness.ts`, `src/components/workspace/awareness-rail.tsx`): Frassy tracks real session activity per project (stretch start, last activity, actions; 20-minute idle break ends a stretch) and a daily action/minute count. Nudges: long stretch (75 min / 2 h) offering pause or switch to another project; end-of-day (≥25 actions after 17:00) offering to prepare tomorrow's queue; ≥40 actions offering a summary. Dismissed nudges never return (`frass.workspace.awareness.seen`). Never invents a duration or count.
+- **Platform Status Center** (`src/lib/platform-status.ts`, `src/components/founder/platform-status-center.tsx`, on `/founder`): executive heartbeat — Website, Payments, Product Population, Marketplace, Vendor Review, Foundation, The Daily, Development Credits, Backup, AI Services. Honest lights: green only from a real signal, unverified reads grey (⚪) with the source named. Founder-recorded counters live in `frass.platform.ops` (population done/total, vendors reviewed/total, last backup). AI check is reachability only — no model call, so it costs nothing.
+- Frassy's prompt (`src/routes/api/chat.ts`) now carries both: awareness behaviour and "never invent a green light".
