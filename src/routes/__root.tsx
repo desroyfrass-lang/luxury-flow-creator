@@ -15,7 +15,9 @@ import { Toaster } from "@/components/ui/sonner";
 import { VoiceStateOverlay } from "@/components/voice-state-overlay";
 import { FrassyChat } from "@/components/frassy-chat";
 import { FrassyHost } from "@/components/frassy-host";
+import { DailyGate } from "@/components/workspace/daily-gate";
 import { RewardsRibbon } from "@/components/rewards-ribbon";
+
 
 function NotFoundComponent() {
   return (
