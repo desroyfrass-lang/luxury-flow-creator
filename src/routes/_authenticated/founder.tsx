@@ -196,6 +196,7 @@ function FounderPage() {
           </p>
         </section>
 
+        <PlatformStatusCenter />
 
 
         {/* Phases */}
