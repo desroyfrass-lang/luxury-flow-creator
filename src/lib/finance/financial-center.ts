@@ -437,19 +437,59 @@ export function honestSnapshot(v: FinanceViewer): FinanceSnapshot {
     base.owner = [
       zero(
         "owner-founder",
-        "Founder available earnings",
+        "Founder Compensation · Available",
         "owner-compensation",
-        "Owner compensation allocated after product cost, shipping, processing, taxes, the constitutional allocation, and other obligations.",
-        "This is your personal pay from the business — only what was truly left over after every bill was covered.",
+        "Per-sale owner compensation: a Founder-configured percentage of clean profit, allocated on every completed sale after cost, shipping, processing, taxes, the constitutional allocation and refund reserves.",
+        "This is your paycheck. It's set aside on every single sale, and it's already yours to take out.",
         { settlement: "immediate", actions: ["withdraw", "export"] },
       ),
       zero(
         "owner-cofounder",
-        "Co-Founder available earnings",
+        "Co-Founder Compensation · Available",
         "owner-compensation",
-        "Same ledger as Founder compensation, held as a separate card. Withdrawn together.",
-        "Same money rules as yours, shown on its own card so you can see both at a glance.",
+        "The same per-sale compensation engine, held on its own ledger for the Co-Founder. Never merged with Founder compensation.",
+        "The same paycheck rules, on its own line so you can both see exactly what's yours.",
         { settlement: "immediate", actions: ["withdraw", "export"] },
+      ),
+      zero(
+        "owner-distribution-founder",
+        "Founder Distribution · Available",
+        "owner-distribution",
+        "Capped share of end-of-day distributable surplus, offered only once reserve, operating and expansion requirements are verified.",
+        "This is ownership money, not salary — what the business can safely spare at the end of a good day.",
+        { settlement: "immediate", actions: ["withdraw", "export"] },
+      ),
+      zero(
+        "owner-distribution-cofounder",
+        "Co-Founder Distribution · Available",
+        "owner-distribution",
+        "The Co-Founder's share of the same end-of-day distributable surplus.",
+        "Same ownership money, kept on its own line.",
+        { settlement: "immediate", actions: ["withdraw", "export"] },
+      ),
+      zero(
+        "owner-gift-founder",
+        "Founder Gift Allocation",
+        "gifts",
+        "Founder-configured ownership allocation from eligible community gifts, taken inside the 10% gift allocation and recorded separately from the recipient's earnings.",
+        "A small slice of every gift sent on Frass, because the platform is what made that gift possible.",
+        { settlement: "immediate", actions: ["withdraw", "export"] },
+      ),
+      zero(
+        "owner-gift-cofounder",
+        "Co-Founder Gift Allocation",
+        "gifts",
+        "The Co-Founder's configured ownership allocation from eligible community gifts.",
+        "The same slice, on the Co-Founder's own line.",
+        { settlement: "immediate", actions: ["withdraw", "export"] },
+      ),
+      zero(
+        "owner-equity",
+        "Founder Equity",
+        "owner-equity",
+        "Accumulated ownership value: retained earnings, reinvestment and business growth over time. Not compensation, not business cash, never withdrawable.",
+        "This isn't money you can take out today. It's what you've built — the value of owning Frass.",
+        { actions: ["export"] },
       ),
     ];
     base.business = [
@@ -461,8 +501,8 @@ export function honestSnapshot(v: FinanceViewer): FinanceSnapshot {
       zero("biz-cash", "Business cash position", "business", "Cash on hand after obligations.", "What the business actually has in the bank right now."),
       zero("biz-reserve", "Reserve vault", "business", "The 3% reserve allocation.", "The rainy-day fund."),
       zero("biz-expenses", "Operating expenses", "business", "Costs recorded against operations.", "What it costs to keep the doors open."),
-      zero("biz-profit", "Net profit", "business", "Revenue less every obligation.", "What's genuinely left over."),
-      zero("biz-owner", "Available owner compensation", "owner-compensation", "Allocatable owner compensation after obligations.", "The most you could pay yourselves today without hurting the business."),
+      zero("biz-profit", "Net business profit", "business", "Clean profit less owner compensation. Business money, not personal money.", "What the company keeps after paying you both."),
+      zero("biz-distributable", "Today's distributable surplus", "owner-distribution", "Business cash above reserve, operating and expansion requirements.", "What the business could safely spare today — and nothing more."),
     ];
   }
   return base;
@@ -472,6 +512,7 @@ export function honestSnapshot(v: FinanceViewer): FinanceSnapshot {
 export function dailySnapshot(v: FinanceViewer): TraceableAmount[] {
   const s = honestSnapshot(v);
   const rows = [s.available, s.gifts, s.credits, s.foundation, s.taxes];
-  if (v.founder) rows.splice(3, 0, ...s.owner, s.business[0]!);
+  if (v.founder) rows.splice(3, 0, ...s.owner, s.business[0]!, s.business[5]!, s.business[8]!, s.business[9]!);
   return rows;
 }
+
