@@ -16,6 +16,7 @@ import {
   BLUEPRINT_COMPONENTS,
   BLUEPRINT_LIFECYCLE,
   BLUEPRINT_PRINCIPLE,
+  IMPACT_PRINCIPLE,
   QUALITY_STANDARD,
   decisionsFor,
   getBlueprintComponent,
@@ -36,6 +37,11 @@ import {
   loadBudget,
   recordSpend,
 } from "@/lib/construction/credit-intelligence";
+import {
+  impactReport,
+  impactSummary,
+  type ArchitecturalImpactReport,
+} from "@/lib/construction/impact-forecast";
 
 export const CONSTRUCTION_EVENT = "frass:construction-mode";
 
@@ -72,12 +78,18 @@ export function ConstructionMode() {
   const [sandbox, setSandboxState] = useState(false);
   const [versions, setVersions] = useState<BlueprintVersion[]>([]);
   const [showMap, setShowMap] = useState(false);
+  const [impactRead, setImpactRead] = useState(false);
 
   const component = useMemo(() => getBlueprintComponent(selected), [selected]);
   const simulation = component && action ? simulateAction(component, action) : null;
   const estimate = component && action ? estimateChange(component, action) : null;
   const warning = estimate ? budgetWarning(loadBudget(), estimate.max) : null;
   const relations = useMemo(() => (component ? relationshipMap(component) : null), [component]);
+  // Principle 12 — Impact Forecast. Nothing is approved before the ripple is understood.
+  const impact = useMemo(
+    () => (component && action ? impactReport(component, action) : null),
+    [component, action],
+  );
 
   // Activation — Founder only, no exceptions.
   useEffect(() => {
@@ -155,15 +167,22 @@ export function ConstructionMode() {
 
   useEffect(() => {
     setPreviewing(false);
+    setImpactRead(false);
   }, [action]);
 
   const approve = useCallback(() => {
-    if (!component || !action || !simulation || !estimate) return;
+    if (!component || !action || !simulation || !estimate || !impact) return;
+    if (!impactRead) {
+      toast("Impact Forecast", {
+        description: "Read the Architectural Impact Report first — every approval starts with knowing what else changes.",
+      });
+      return;
+    }
     recordDecision({
       componentId: component.id,
       componentLabel: component.label,
       action,
-      simulation: `${simulation}\n\nForecast: ${estimate.tier} · ${estimate.min}–${estimate.max} credits · ${estimate.risk} risk.`,
+      simulation: `${simulation}\n\nForecast: ${estimate.tier} · ${estimate.min}–${estimate.max} credits · ${estimate.risk} risk.\n\nImpact: ${impactSummary(impact, { min: estimate.min, max: estimate.max })}`,
       note: note.trim() || undefined,
     });
     recordSpend(`${component.label} — ${action}`, estimate.max);
@@ -173,10 +192,11 @@ export function ConstructionMode() {
     setAction(null);
     setNote("");
     setPreviewing(false);
+    setImpactRead(false);
     toast("Blueprint approved", {
       description: `${component.label} — ${action}. Forecast ${estimate.min}–${estimate.max} credits. Recorded, versioned, implementation brief follows.`,
     });
-  }, [component, action, simulation, estimate, note]);
+  }, [component, action, simulation, estimate, note, impact, impactRead]);
 
   if (!isAdmin || !active) return null;
 
