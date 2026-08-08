@@ -119,17 +119,20 @@ function EntrancePage() {
 
   useEffect(() => {
     try {
-      const skip = localStorage.getItem(SKIP_ENTRANCE_KEY) === "1";
-      setSkipNext(skip);
+      const raw = localStorage.getItem(SKIP_ENTRANCE_KEY);
+      const always = raw === "always";
+      setSkipNext(always);
       const forced = new URLSearchParams(window.location.search).has("stay");
-      if (skip && !forced) {
+      const last = raw && raw !== "always" ? Number(raw) : 0;
+      const recent = last > 0 && Date.now() - last < ENTRANCE_TTL_MS;
+      if ((always || recent) && !forced) {
+        // Back-and-forth shopping shouldn't replay the ceremony.
+        if (!always) localStorage.setItem(SKIP_ENTRANCE_KEY, String(Date.now()));
         navigate({ to: "/frass-district", replace: true });
         return;
       }
-      // The entrance is ceremonial: it plays once, then future visits go
-      // straight to the Frass District (use /?stay to see it again).
-      localStorage.setItem(SKIP_ENTRANCE_KEY, "1");
-      setSkipNext(true);
+      // The welcome plays, then renews only after an hour away.
+      if (!always) localStorage.setItem(SKIP_ENTRANCE_KEY, String(Date.now()));
     } catch {
       /* storage blocked — always show the entrance */
     }
@@ -138,8 +141,7 @@ function EntrancePage() {
   const togglePref = (checked: boolean) => {
     setSkipNext(checked);
     try {
-      if (checked) localStorage.setItem(SKIP_ENTRANCE_KEY, "1");
-      else localStorage.removeItem(SKIP_ENTRANCE_KEY);
+      localStorage.setItem(SKIP_ENTRANCE_KEY, checked ? "always" : String(Date.now()));
     } catch {
       /* ignore */
     }
