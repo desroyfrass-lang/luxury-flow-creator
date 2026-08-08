@@ -1,7 +1,9 @@
 import { Link, useRouterState } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { Search, KeyRound, Menu, X, UserRound } from "lucide-react";
+import { Search, KeyRound, Menu, X, UserRound, Sun } from "lucide-react";
 import { useAccountSection } from "@/hooks/use-my-roles";
+import { openTheDaily } from "@/components/workspace/daily-gate";
+
 import { CartDrawer } from "./cart-drawer";
 import { RegionSwitcher } from "./region-switcher";
 import fullLogo from "@/assets/frass-logo-full.asset.json";
