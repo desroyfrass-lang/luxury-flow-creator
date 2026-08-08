@@ -68,13 +68,6 @@ export function FrassyHost() {
     clearTimers();
 
 
-    const dest = resolveDestination(pathname);
-    if (!dest) return;
-    if (handled.current === dest.id) return;
-    handled.current = dest.id;
-
-    clearTimers();
-
     // Only the entrance gets the cinematic welcome — and only once per session.
     if (!ENTRANCE_IDS.has(dest.id) || seenThisSession(dest.id)) return;
 
