@@ -343,10 +343,13 @@ export const BLUEPRINT_LIFECYCLE = [
   "Simulation",
   "Impact Report",
   "Credit Forecast",
+  "Founder Intent",
   "Founder Approval",
   "Implementation",
   "Verification",
   "Version Archive",
+  "Architectural Memory",
+  "Continuous Integrity Review",
 ] as const;
 
 // ── Relationship mapping ───────────────────────────────────────────────────
