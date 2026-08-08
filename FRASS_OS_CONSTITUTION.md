@@ -160,6 +160,10 @@ Every engineering decision should ultimately strengthen the Builder experience.
 
 ---
 
+# Volume III — Experience & Design
+
+*How Frass OS looks, feels, and behaves in a Builder's hands.*
+
 ## Design Constitution
 
 Design exists to help Builders think clearly.
