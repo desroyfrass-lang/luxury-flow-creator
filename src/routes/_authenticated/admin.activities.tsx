@@ -208,7 +208,7 @@ function AdminActivities() {
   }
 
   async function move(a: LearningActivity, status: ActivityStatus) {
-    const patch: Record<string, unknown> = { status };
+    const patch: { status: ActivityStatus; published_at?: string } = { status };
     if (status === "published") patch.published_at = new Date().toISOString();
     const { error } = await supabase.from("learning_activities").update(patch).eq("id", a.id);
     if (error) {
