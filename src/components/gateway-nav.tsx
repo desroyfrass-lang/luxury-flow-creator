@@ -61,6 +61,20 @@ const NAV: NavGroup[] = [
     ],
   },
   {
+    label: "Frass Bridal",
+    to: "/bridal",
+    match: "/bridal",
+    editorial: true,
+    items: [
+      { label: "The Village", to: "/bridal", note: "Beside the Luxury House" },
+      { label: "The Wedding Journey", to: "/bridal/journey" },
+      { label: "The Wedding Vault", to: "/bridal/vault" },
+      { label: "Dress Collaboration", to: "/bridal/collections" },
+      { label: "The Sourcing Desk", to: "/bridal/sourcing" },
+      { label: "Wedding Marketplace", to: "/bridal/marketplace" },
+    ],
+  },
+  {
     label: "Afro Designers",
     to: "/afro-designers",
     match: "/afro-designers",
@@ -130,6 +144,7 @@ const PRIMARY: { label: string; to: string; match: string; editorial?: boolean }
   { label: "Frass District", to: "/frass-district", match: "/frass-district" },
   { label: "Afro Designers", to: "/afro-designers", match: "/afro-designers", editorial: true },
   { label: "Frass Luxury House", to: "/frass-luxury-house", match: "/frass-luxury-house", editorial: true },
+  { label: "Frass Bridal", to: "/bridal", match: "/bridal", editorial: true },
   { label: "Frass Plus+", to: "/frass-plus", match: "/frass-plus" },
   { label: "Frass Kids", to: "/frass-kids", match: "/frass-kids" },
 ];
