@@ -121,7 +121,14 @@ function EntrancePage() {
       const skip = localStorage.getItem(SKIP_ENTRANCE_KEY) === "1";
       setSkipNext(skip);
       const forced = new URLSearchParams(window.location.search).has("stay");
-      if (skip && !forced) navigate({ to: "/frass-district", replace: true });
+      if (skip && !forced) {
+        navigate({ to: "/frass-district", replace: true });
+        return;
+      }
+      // The entrance is ceremonial: it plays once, then future visits go
+      // straight to the Frass District (use /?stay to see it again).
+      localStorage.setItem(SKIP_ENTRANCE_KEY, "1");
+      setSkipNext(true);
     } catch {
       /* storage blocked — always show the entrance */
     }
