@@ -53,8 +53,22 @@ export const Route = createFileRoute("/_authenticated/payment-providers")({
 function PaymentProviderCenter() {
   const isAdmin = useIsAdmin();
   const [config, setConfig] = useState<ProviderConfig>(DEFAULT_PROVIDER_CONFIG);
+  const [policy, setPolicy] = useState<OwnerPolicy>(DEFAULT_OWNER_POLICY);
 
   useEffect(() => setConfig(loadProviderConfig()), []);
+  useEffect(() => setPolicy(loadOwnerPolicy()), []);
+
+  const gift = allocateGift(100, policy);
+  const distribution = ownerDistribution({ businessCash: 0 }, policy);
+
+  function updatePolicy(next: Partial<OwnerPolicy>) {
+    setPolicy((prev) => {
+      const merged = { ...prev, ...next };
+      saveOwnerPolicy(merged);
+      return merged;
+    });
+  }
+
 
   function update(next: Partial<ProviderConfig>) {
     setConfig((prev) => {
