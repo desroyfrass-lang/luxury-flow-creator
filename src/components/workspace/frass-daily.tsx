@@ -266,6 +266,7 @@ export function FrassDaily({
                 open={explaining === `b-${m.label}`}
                 onToggleExplain={() => setExplaining((v) => (v === `b-${m.label}` ? null : `b-${m.label}`))}
                 onOpen={() => go(m)}
+                onRecord={go}
               />
             ))}
           </div>
@@ -389,6 +390,7 @@ export function FrassDaily({
                 open={explaining === `p-${m.label}`}
                 onToggleExplain={() => setExplaining((v) => (v === `p-${m.label}` ? null : `p-${m.label}`))}
                 onOpen={() => go(m)}
+                onRecord={go}
               />
             ))}
           </div>
@@ -405,6 +407,7 @@ export function FrassDaily({
                   open={explaining === `e-${m.label}`}
                   onToggleExplain={() => setExplaining((v) => (v === `e-${m.label}` ? null : `e-${m.label}`))}
                   onOpen={() => go(m)}
+                  onRecord={go}
                 />
               ))}
             </div>
