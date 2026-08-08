@@ -313,6 +313,8 @@ export function WorkspaceRoom({
       activeProjectId={activeProjectId}
       onSelectProject={setActiveProjectId}
       roleLinks={roleLinks}
+      focus={focus}
+
 
 
       index={index}
