@@ -7,6 +7,8 @@ import { PageFeedback } from "@/components/page-feedback";
 import { LaunchReadiness } from "@/components/launch-readiness";
 import { FrassyChat } from "@/components/frassy-chat";
 import { openTheDaily } from "@/components/workspace/daily-gate";
+import { openConstructionMode } from "@/components/construction/blueprint-mode";
+
 
 
 import { useIsAdmin } from "@/hooks/use-is-admin";
