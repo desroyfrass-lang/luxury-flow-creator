@@ -3,6 +3,19 @@ import { useState } from "react";
 import { GatewayNav } from "@/components/gateway-nav";
 import { HillSightlines } from "@/components/hill-sightlines";
 import {
+  HillHourBand,
+  HillHourWash,
+  StreetLife,
+  DistrictBlends,
+  TownMemory,
+} from "@/components/hill-movement";
+import {
+  DISCOVERY_PRINCIPLE,
+  MOVEMENT_PRINCIPLE,
+  TRANSITION_PRINCIPLE,
+  PLACEMAKING_QUESTIONS,
+} from "@/lib/frass-hill-movement";
+import {
   HILL_DISTRICTS,
   TOWN_PLAN_RULE,
   SIGHTLINE_PRINCIPLE,
