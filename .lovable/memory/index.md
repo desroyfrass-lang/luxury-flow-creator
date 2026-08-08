@@ -26,7 +26,7 @@ Sightline rule: every building in Frass Hill must be visible before it is visite
 - [Sourcing & Merchandising Directive](mem://features/frass-sourcing-merchandising-directive) — Founder is a first-time dropshipper: teach while building, CJ Dropshipping phase one, mandatory vendor scorecard before supplier approval
 - [Product Population project mode](mem://features/product-population-project-mode) — Merchandising is a pausable/resumable long-running project: session preservation, resume summary, progress tracker, decision log
 - [Luxury House Marketplace](mem://features/luxury-house-marketplace) — Three ownership models (Frass Collection / Marketplace Partner / Curated Luxury Brand); classify before publishing
-- [The Frass Bridal Experience](mem://features/frass-bridal-program) — Bridal as a wedding operating system: nine journeys, registry, vendor marketplace, honeymoon, Vision Maps, cultural inclusion
+- [The Frass Bridal Experience](mem://features/frass-bridal-program) — FRASS-0930/0931: Bridal as its own Hill district beside Luxury House; vault, journey, dress collaboration, sourcing desk, marketplace, concierge
 - [FRASS Kids World](mem://features/frass-kids-world) — Kids World is a district of Frass Hill with multiple entrances, parent-issued passport, four age worlds; "Enter Kids World" never "Activities"
 
 - [Frass Plus flagship](mem://features/frass-plus) — Extended sizing as a flagship boutique: wings, departments, signature confidence collections; never navigate by size
