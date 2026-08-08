@@ -17,7 +17,7 @@ import { useCartStore } from "@/lib/cart-store";
 import symbolAsset from "@/assets/frass-logo-symbol.asset.json";
 import { useFrassyContext } from "@/hooks/use-frassy-context";
 import { useIsAdminStatus } from "@/hooks/use-is-admin";
-import { ComposerShell } from "@/components/composer-shell";
+import { FrassyComposer } from "@/components/workspace/frassy-composer";
 import { usePushToTalk } from "@/hooks/use-push-to-talk";
 
 type ProductCard = {
@@ -404,20 +404,15 @@ export function FrassyChat({ embedded = false }: { embedded?: boolean } = {}) {
         )}
       </div>
 
-      <ComposerShell
+      <FrassyComposer
         value={input}
         onChange={setInput}
         onSend={() => void send()}
-        disabled={loading}
+        loading={loading}
         placeholder="Ask Frassy anything…"
-        onMicToggle={voice.voiceAvailable ? () => void toggleMic() : undefined}
-        micState={
-          voice.phase === "recording"
-            ? "recording"
-            : voice.phase === "transcribing" || (loading && !error)
-              ? "busy"
-              : "idle"
-        }
+        onMic={voice.voiceAvailable ? () => void toggleMic() : undefined}
+        micAvailable={voice.voiceAvailable}
+        micActive={voice.phase === "recording"}
       />
 
     </div>
