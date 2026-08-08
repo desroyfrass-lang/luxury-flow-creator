@@ -13,6 +13,8 @@ import frassyGold from "@/assets/frassy-gold.png.asset.json";
  */
 
 export const SKIP_ENTRANCE_KEY = "frass-skip-entrance";
+/** The welcome renews after an hour away — not on every in-and-out visit. */
+export const ENTRANCE_TTL_MS = 60 * 60 * 1000;
 
 export const Route = createFileRoute("/")({
   head: () => ({
