@@ -8,16 +8,16 @@ import frassyGold from "@/assets/frassy-gold.png.asset.json";
 export const Route = createFileRoute("/gateway")({
   head: () => ({
     meta: [
-      { title: "Welcome to the World of Frass — Frass OS Gateway" },
+      { title: "Welcome to Frass — Shop Frass or Enter Frass Hill" },
       {
         name: "description",
         content:
-          "Built by people. Powered by community. Driven by execution. Shop Frass or explore the living Frass World ecosystem.",
+          "Built by people. Powered by community. Driven by execution. Shop Frass, or enter Frass Hill — the living town behind the brand.",
       },
-      { property: "og:title", content: "Welcome to the World of Frass" },
+      { property: "og:title", content: "Welcome to Frass" },
       {
         property: "og:description",
-        content: "Choose your way in: fast commercial shopping, or the immersive Frass World ecosystem.",
+        content: "Two ways in: the storefronts of Frass, or the living town of Frass Hill.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -112,12 +112,12 @@ function GatewayPage() {
             tone="light"
           />
           <GatewayCard
-            to="/frass-world"
+            to="/frass-hill"
             delay="320ms"
-            emoji="🌍"
-            title="Explore Frass World"
-            copy="Enter the living ecosystem map — Frass Hill, Luxury House, Kids Valley, and Builder HQ."
-            cta="Enter the world"
+            emoji="⛰️"
+            title="Enter Frass Hill"
+            copy="The living town — Town Square, Children's Village, Frass District, Luxury House, the Studios, the Builders Village, the Farms and Founder Hall."
+            cta="Enter Frass Hill"
             tone="dark"
           />
         </div>
