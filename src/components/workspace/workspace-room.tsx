@@ -272,11 +272,16 @@ export function WorkspaceRoom({
   return (
     <WorkspaceShell
       roomName={roomName}
-      roomKind={roomKind}
+      roomKind={`${roomKind} · ${MODE_BY_ID(modeId).name}`}
       frassyRole={project.frassyRole}
-      projects={projects}
+      modes={WORKSPACE_MODES}
+      activeModeId={modeId}
+      onSelectMode={setModeId}
+      onOpenDaily={openTheDaily}
+      projects={modeProjects}
       activeProjectId={activeProjectId}
       onSelectProject={setActiveProjectId}
+
       index={index}
       onJumpTo={jumpTo}
       milestones={FOUNDER_MILESTONES}
