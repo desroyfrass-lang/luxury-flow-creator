@@ -472,15 +472,19 @@ function MetricCard({
   open,
   onOpen,
   onToggleExplain,
+  onRecord,
 }: {
   metric: DailyMetric;
   open: boolean;
   onOpen: () => void;
   onToggleExplain: () => void;
+  onRecord?: (target: DailyTarget) => void;
 }) {
   const status = DATA_STATUS[metric.status];
+  const [drill, setDrill] = useState(false);
+  const [money, setMoney] = useState(false);
   return (
-    <div className="daily-card daily-metric">
+    <div id={`metric-${metric.label}`} className="daily-card daily-metric">
       <span className="daily-badge" title={status.note}>
         {status.dot} {status.label}
       </span>
@@ -489,13 +493,64 @@ function MetricCard({
         {metric.value} {metric.trend ? <span className="daily-trend">{metric.trend}</span> : null}
       </span>
       <div className="daily-metric-actions">
-        <button type="button" className="ws-chip" onClick={onOpen}>
-          View details <ArrowRight className="h-3.5 w-3.5" />
+        <button type="button" className={`ws-chip ${drill ? "daily-chip-on" : ""}`} onClick={() => setDrill((v) => !v)}>
+          <ListTree className="h-3.5 w-3.5" /> View details
         </button>
+        {metric.sources && (
+          <button type="button" className={`ws-chip ${money ? "daily-chip-on" : ""}`} onClick={() => setMoney((v) => !v)}>
+            <Coins className="h-3.5 w-3.5" /> Where did this come from?
+          </button>
+        )}
         <button type="button" className={`ws-chip ${open ? "daily-chip-on" : ""}`} onClick={onToggleExplain}>
           <HelpCircle className="h-3.5 w-3.5" /> What does this mean?
         </button>
       </div>
+
+      {/* Drill-down — the records behind the number, before you leave the Daily */}
+      {drill && (
+        <div className="daily-drill">
+          {metric.records && metric.records.length > 0 ? (
+            <ul className="daily-drill-list">
+              {metric.records.map((r) => (
+                <li key={r.id}>
+                  <button type="button" onClick={() => onRecord?.(r)}>
+                    <span>{r.label}</span>
+                    {r.meta && <em>{r.meta}</em>}
+                    <ArrowRight className="h-3.5 w-3.5" />
+                  </button>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p className="ws-meta">No records behind this number yet. It will fill in as real activity happens.</p>
+          )}
+          <button type="button" className="ws-chip" onClick={onOpen}>
+            Open in my workspace <ArrowRight className="h-3.5 w-3.5" />
+          </button>
+        </div>
+      )}
+
+      {/* Provenance — money always explains itself */}
+      {money && metric.sources && (
+        <div className="daily-drill">
+          <table className="daily-sources">
+            <tbody>
+              {metric.sources.map((s) => (
+                <tr key={s.label}>
+                  <td>{s.label}</td>
+                  <td>{s.value}</td>
+                  <td>
+                    <span className="daily-badge">
+                      {DATA_STATUS[s.status].dot} {DATA_STATUS[s.status].label}
+                    </span>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+
       {open && (
         <p className="daily-explain">
           {metric.explain} <em>{status.note}</em>
@@ -504,6 +559,7 @@ function MetricCard({
     </div>
   );
 }
+
 
 function Section({
   title,
