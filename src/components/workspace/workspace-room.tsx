@@ -308,6 +308,8 @@ export function WorkspaceRoom({
       projects={modeProjects}
       activeProjectId={activeProjectId}
       onSelectProject={setActiveProjectId}
+      roleLinks={roleLinks}
+
 
       index={index}
       onJumpTo={jumpTo}
