@@ -1,10 +1,29 @@
 # Frass Operating System Constitution
 
-## Version 1.0
+## Version 1.1
 
 ### The Foundational Charter of the FrassKicks Ecosystem
 
 ---
+
+## The Five Volumes
+
+The Constitution is organised into five volumes. Each volume answers a different
+question, and every change to the platform must answer to one of them.
+
+| Volume | Title | Question it answers |
+| --- | --- | --- |
+| I | Foundations & Philosophy | Why does Frass OS exist? |
+| II | Architecture & Engineering | How is it built? |
+| III | Experience & Design | How does it feel? |
+| IV | Intelligence & Stewardship | How does it think, and how is it cared for? |
+| V | Governance & Evolution | How does it change, and who decides? |
+
+---
+
+# Volume I — Foundations & Philosophy
+
+*Why Frass OS exists, who it serves, and what it promises.*
 
 ## Purpose
 
