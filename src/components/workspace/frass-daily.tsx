@@ -11,8 +11,10 @@
 // ─────────────────────────────────────────────────────────────────────────────
 
 import { useEffect, useMemo, useState } from "react";
-import { X, Check, Sparkles, ArrowRight, HelpCircle, Coins, ListTree, Send } from "lucide-react";
+import { X, Check, Sparkles, ArrowRight, HelpCircle, Coins, ListTree } from "lucide-react";
+import { FrassyComposer } from "@/components/workspace/frassy-composer";
 import frassyAvatar from "@/assets/frassy-gold.png.asset.json";
+
 import {
   dailyFor,
   DATA_STATUS,
@@ -107,9 +109,7 @@ export function FrassDaily({
   };
 
   /** The Daily is navigable by conversation, not clicks alone. */
-  const runCommand = (e: React.FormEvent) => {
-    e.preventDefault();
-    const said = command.trim();
+  const runIntent = (said: string) => {
     if (!said) return;
     const result = resolveDailyCommand(said, model);
     setCommand("");
@@ -132,6 +132,7 @@ export function FrassDaily({
     setCommandNote(`Taking you to ${result.label}.`);
     go(result.target);
   };
+
 
   return (
     <div data-blueprint="daily" className={`frass-workspace daily-overlay ${entered ? "is-in" : ""}`} role="dialog" aria-label="The Frass Daily">
@@ -203,18 +204,8 @@ export function FrassDaily({
           </div>
         </section>
 
-        {/* Navigate by conversation */}
-        <form className="daily-command" onSubmit={runCommand}>
-          <input
-            value={command}
-            onChange={(e) => setCommand(e.target.value)}
-            placeholder="Tell me what to open — “let's do the second one”, “show me the orders”, “continue yesterday's work”…"
-            aria-label="Tell Frassy what to open"
-          />
-          <button type="submit" className="ws-chip" aria-label="Ask Frassy">
-            <Send className="h-3.5 w-3.5" /> Ask Frassy
-          </button>
-        </form>
+        {/* Navigate by conversation — handled by the docked Frassy Composer below */}
+
         {commandNote && <p className="ws-meta daily-command-note">{commandNote}</p>}
 
         <div className="daily-legend">
@@ -490,9 +481,22 @@ export function FrassDaily({
           </p>
         </div>
       </div>
+
+      {/* FRASS-0400 — the Frassy Workspace Composer, docked in The Daily */}
+      <div className="daily-dock">
+        {commandNote && <p className="ws-meta daily-command-note">{commandNote}</p>}
+        <FrassyComposer
+          value={command}
+          onChange={setCommand}
+          onSend={(text) => runIntent(text.trim())}
+          placeholder="Talk to Frassy, drop files or folders, capture a photo — “show me the orders”, “continue yesterday's work”…"
+          tools={audience === "founder" ? undefined : ["files", "images", "documents", "camera", "clipboard"]}
+        />
+      </div>
     </div>
   );
 }
+
 
 function MetricCard({
   metric,
