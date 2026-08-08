@@ -94,6 +94,7 @@ function FrassHillPage() {
           height={960}
           className="h-[52vh] w-full object-cover"
         />
+        <HillHourWash />
         <div className="absolute inset-0 bg-gradient-to-t from-background via-background/60 to-transparent" />
         <div className="absolute inset-x-0 bottom-0 mx-auto max-w-[1400px] px-6 pb-8 lg:px-10">
           <span className="text-[10px] uppercase tracking-[0.35em] text-[color:var(--hill-gold)]">
@@ -106,6 +107,7 @@ function FrassHillPage() {
             Frass Hill is not a menu of features. It is a town. Eight places you can walk between —
             and inside each one, the offices, academies, studios and venues that do the work.
           </p>
+          <TownMemory districtId="town_square" className="mt-4" />
         </div>
       </section>
 
@@ -113,17 +115,34 @@ function FrassHillPage() {
         <p className="border-l-2 border-[color:var(--hill-gold)] pl-4 text-sm italic text-muted-foreground">
           {TOWN_PLAN_RULE}
         </p>
-        <div className="rounded-2xl border border-[color:var(--hill-gold)]/25 bg-card/40 p-5">
-          <div className="text-[10px] uppercase tracking-[0.3em] text-[color:var(--hill-gold)]">
-            The sightline rule
+
+        <div className="grid gap-4 lg:grid-cols-2">
+          <div className="rounded-2xl border border-[color:var(--hill-gold)]/25 bg-card/40 p-5">
+            <div className="text-[10px] uppercase tracking-[0.3em] text-[color:var(--hill-gold)]">
+              The sightline rule
+            </div>
+            <p className="mt-2 text-sm text-muted-foreground">{SIGHTLINE_PRINCIPLE}</p>
+            <p className="mt-2 text-sm">{DISCOVERY_PRINCIPLE}</p>
+            <p className="mt-3 text-xs text-muted-foreground">
+              Stand in the square and the whole town is in view. Look around from anywhere:
+            </p>
+            <HillSightlines districtId="town_square" onLook={lookAt} className="mt-4" />
           </div>
-          <p className="mt-2 max-w-3xl text-sm text-muted-foreground">{SIGHTLINE_PRINCIPLE}</p>
-          <p className="mt-3 text-xs text-muted-foreground">
-            Stand in the square and the whole town is in view. Look around from anywhere:
-          </p>
-          <HillSightlines districtId="town_square" onLook={lookAt} className="mt-4" />
+
+          <div className="space-y-4">
+            <HillHourBand />
+            <div className="rounded-2xl border border-border/60 bg-card/40 p-5">
+              <div className="text-[10px] uppercase tracking-[0.3em] text-[color:var(--hill-gold)]">
+                Discovery before destination · FRASS-0911
+              </div>
+              <p className="mt-2 text-sm text-muted-foreground">{MOVEMENT_PRINCIPLE}</p>
+              <p className="mt-2 text-xs italic text-muted-foreground">{TRANSITION_PRINCIPLE}</p>
+              <StreetLife districtId="town_square" className="mt-4" />
+            </div>
+          </div>
         </div>
       </section>
+
 
       <section className="mx-auto max-w-[1400px] px-6 py-10 lg:px-10">
         <div className="grid gap-6 lg:grid-cols-2">
