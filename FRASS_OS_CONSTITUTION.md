@@ -296,3 +296,29 @@ Every future contributor to Frass Operating System should inherit this commitmen
 > We will protect Builder ownership, preserve Builder continuity, and ensure that every advancement in Frass OS strengthens the ability of people to create meaningful work, meaningful organizations, meaningful communities, and meaningful legacies.
 
 This is the enduring purpose of Frass Operating System.
+
+---
+
+## Amendment — Construction Governance (Principles 13–15)
+
+**The Founder never edits production directly. The Founder edits the Blueprint.**
+
+**Principle 13 — Constitutional Change Governance & Architectural Memory.**
+Every approved change records the Founder's intent in their own words, the impact
+report, the credit forecast, and the registry it answers to. When a new proposal
+reverses an earlier established decision, Frassy surfaces the conflict and explains
+it before anything proceeds. Nothing is silently overwritten.
+
+**Principle 14 — Regression Protection & Verification.**
+Every Blueprint establishes expected behaviour before implementation. After
+implementation, each behaviour is confirmed one by one. A change is not complete
+because code shipped; it is complete when the behaviour matches the approved
+Blueprint. Unverified work stays visibly unverified.
+
+**Principle 15 — Continuous Architectural Integrity.**
+The platform reviews its own structure continuously: duplicate purposes, orphaned
+connections, untagged components, unverified decisions, and blueprint coverage gaps.
+Findings are reported, never auto-corrected — the Founder decides.
+
+**Truth Before Beauty.** No indicator reports healthy unless a real signal is
+connected. Unknown is an honest answer; a false green light is not.
