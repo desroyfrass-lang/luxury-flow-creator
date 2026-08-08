@@ -7,16 +7,20 @@ export type Region = {
   currency: string;
 };
 
-/** The two pinned markets always visible in the corner of the bar. */
+/**
+ * The Primary Operating Markets (FRASS-0305 / FRASS-0306) — always pinned in the
+ * corner of the bar. Canada, the United Kingdom and the United States are the
+ * three places Frass runs a business from.
+ */
 export const PINNED_REGIONS: Region[] = [
   { code: "US", name: "United States", flag: "🇺🇸", currency: "USD" },
   { code: "CA", name: "Canada", flag: "🇨🇦", currency: "CAD" },
+  { code: "GB", name: "United Kingdom", flag: "🇬🇧", currency: "GBP" },
 ];
 
 /** Every other market a Builder can choose to shop from. */
 export const OTHER_REGIONS: Region[] = [
   { code: "JM", name: "Jamaica", flag: "🇯🇲", currency: "JMD" },
-  { code: "GB", name: "United Kingdom", flag: "🇬🇧", currency: "GBP" },
   { code: "TT", name: "Trinidad & Tobago", flag: "🇹🇹", currency: "TTD" },
   { code: "BB", name: "Barbados", flag: "🇧🇧", currency: "BBD" },
   { code: "FR", name: "France", flag: "🇫🇷", currency: "EUR" },
@@ -25,6 +29,7 @@ export const OTHER_REGIONS: Region[] = [
   { code: "GH", name: "Ghana", flag: "🇬🇭", currency: "GHS" },
   { code: "AU", name: "Australia", flag: "🇦🇺", currency: "AUD" },
 ];
+
 
 export const ALL_REGIONS: Region[] = [...PINNED_REGIONS, ...OTHER_REGIONS];
 
