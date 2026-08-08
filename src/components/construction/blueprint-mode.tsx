@@ -607,25 +607,82 @@ export function ConstructionMode() {
             )}
 
             <div className="mt-6 text-[10px] uppercase tracking-[0.3em] text-muted-foreground">
-              Decision history
+              Decision records
             </div>
             {history.length === 0 ? (
               <p className="mt-2 text-xs text-muted-foreground">
-                No approved changes yet. Every approval is remembered here permanently.
+                No approved changes yet. Every approval is remembered here permanently — what
+                changed, and why.
               </p>
             ) : (
               <ul className="mt-2 space-y-2">
-                {history.map((d) => (
-                  <li key={d.id} className="bp-history">
-                    <div className="text-xs font-semibold">{d.action}</div>
-                    <div className="text-[11px] text-muted-foreground">
-                      {new Date(d.approvedAt).toLocaleString()} · Approved by Founder
-                    </div>
-                    {d.note && <div className="mt-1 text-[11px] italic text-muted-foreground">"{d.note}"</div>}
-                  </li>
-                ))}
+                {history.map((d) => {
+                  const checks = d.expected ?? [];
+                  const passed = d.verified ?? [];
+                  const status = d.verification ?? "pending";
+                  return (
+                    <li key={d.id} className="bp-history">
+                      <div className="flex items-baseline justify-between gap-2">
+                        <div className="text-xs font-semibold">{d.action}</div>
+                        <span className={`bp-verify-badge bp-verify-${status}`}>
+                          {status === "verified"
+                            ? "Verified"
+                            : status === "failed"
+                              ? "Verification failed"
+                              : "Awaiting verification"}
+                        </span>
+                      </div>
+                      <div className="text-[11px] text-muted-foreground">
+                        {new Date(d.approvedAt).toLocaleString()} · Approved by {d.approvedBy ?? "Founder"}
+                        {d.version ? ` · ${d.version}` : ""}
+                      </div>
+                      {d.founderIntent && (
+                        <div className="bp-intent-record">
+                          <span className="text-[color:var(--gold)]">Founder intent · </span>
+                          {d.founderIntent}
+                        </div>
+                      )}
+                      {d.registry && d.registry.length > 0 && (
+                        <div className="mt-1 text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
+                          {d.registry.join(" · ")}
+                        </div>
+                      )}
+                      {d.creditForecast && (
+                        <div className="mt-1 text-[11px] text-muted-foreground">{d.creditForecast}</div>
+                      )}
+                      {d.note && <div className="mt-1 text-[11px] italic text-muted-foreground">"{d.note}"</div>}
+
+                      {checks.length > 0 && (
+                        <div className="mt-2">
+                          <div className="text-[10px] uppercase tracking-[0.24em] text-muted-foreground">
+                            Regression protection — {passed.length}/{checks.length} confirmed
+                          </div>
+                          <div className="mt-1 space-y-1">
+                            {checks.map((b) => (
+                              <label key={b} className="bp-verify-line">
+                                <input
+                                  type="checkbox"
+                                  checked={passed.includes(b)}
+                                  onChange={() => toggleVerified(d, b)}
+                                />
+                                <span>{b}</span>
+                              </label>
+                            ))}
+                          </div>
+                          {status === "failed" && (
+                            <p className="bp-verify-fail">
+                              Verification failed — missing:{" "}
+                              {checks.filter((c) => !passed.includes(c)).join("; ")}
+                            </p>
+                          )}
+                        </div>
+                      )}
+                    </li>
+                  );
+                })}
               </ul>
             )}
+
           </div>
         )}
       </aside>
