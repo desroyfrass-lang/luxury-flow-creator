@@ -1,6 +1,6 @@
 // Universal Workspace Shell — Header / Left Sidebar / Main / Right Panel /
-// Persistent Composer. Every authenticated room shares this structure; only the
-// tools change.
+// Persistent Composer. My Workspace is the single canonical workspace; modes
+// change the tools, never the place.
 
 import { type ReactNode, useState } from "react";
 import { Link } from "@tanstack/react-router";
@@ -13,11 +13,13 @@ import {
   Sun,
   Moon,
   Home,
+  Sunrise,
 } from "lucide-react";
 import symbolAsset from "@/assets/frass-logo-symbol.asset.json";
 import {
   type Milestone,
   type PanelSection,
+  type WorkspaceMode,
   type WorkspaceProject,
   type WorkspaceTask,
   TASK_LABELS,
@@ -29,6 +31,10 @@ type Props = {
   roomName: string;
   roomKind: string;
   frassyRole: string;
+  modes: WorkspaceMode[];
+  activeModeId: string;
+  onSelectMode: (id: string) => void;
+  onOpenDaily: () => void;
   projects: WorkspaceProject[];
   activeProjectId: string;
   onSelectProject: (id: string) => void;
@@ -45,6 +51,10 @@ export function WorkspaceShell({
   roomName,
   roomKind,
   frassyRole,
+  modes,
+  activeModeId,
+  onSelectMode,
+  onOpenDaily,
   projects,
   activeProjectId,
   onSelectProject,
@@ -56,6 +66,7 @@ export function WorkspaceShell({
   children,
   composer,
 }: Props) {
+
   const [leftOpen, setLeftOpen] = useState(true);
   const [rightOpen, setRightOpen] = useState(true);
   const [bright, setBright] = useState(true);
