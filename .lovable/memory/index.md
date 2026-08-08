@@ -75,3 +75,4 @@ Sightline rule: every building in Frass Hill must be visible before it is visite
 - [Frass Hill sightlines](mem://design/frass-hill-sightlines) — Constitutional sightline principle: directions + sensory sights from every district, implemented in HILL_SIGHTLINES
 - [FRASS-0911 Discovery Before Destination](mem://features/frass-0911-discovery-before-destination) — Movement layer: street life you pass, blended district transitions, living time, town memory, placemaking questions
 - [Content Experience Engine](mem://features/frass-content-experience-engine) — Activity content objects, Activity Player, Draft→Published workflow, Kids World progress celebration
+- [For Us — Community Heart](mem://features/for-us-community-heart) — FRASS-0920/0921: Community Hall in Town Square, finite sections, no endless scroll, permanent nav item, breadcrumb return, context-aware ordering
