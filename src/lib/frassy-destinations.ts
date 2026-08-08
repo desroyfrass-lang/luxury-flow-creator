@@ -47,6 +47,14 @@ const RULES: DestinationRule[] = [
   },
   {
     id: "district",
+    match: "/frass-district",
+    prefix: true,
+    label: "The Frass District",
+    welcome:
+      "Welcome to the Frass District. Every door on this street is its own store, with its own story. Take your time — I think you'll enjoy exploring.",
+  },
+  {
+    id: "district-legacy",
     match: "/shop-frass",
     prefix: true,
     label: "The Frass District",
