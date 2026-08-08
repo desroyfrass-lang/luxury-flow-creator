@@ -175,7 +175,7 @@ export function WorkspaceShell({
         {leftOpen && (
           <aside className="ws-side hidden w-64 shrink-0 overflow-y-auto lg:block">
             {/* Permanent navigation — always available, adapts to permissions */}
-            <div className="ws-side-title">Navigation</div>
+            <div data-blueprint="workspace-navigation" className="ws-side-title">Navigation</div>
             <div className="space-y-0.5">
               <div className="ws-nav ws-nav-active">
                 <Home className="h-4 w-4" />
@@ -213,7 +213,7 @@ export function WorkspaceShell({
               ))}
             </div>
 
-            <div className="ws-side-title mt-5">Mode</div>
+            <div data-blueprint="workspace-modes" className="ws-side-title mt-5">Mode</div>
             <div className="space-y-0.5">
 
               {modes.map((m) => (
@@ -229,7 +229,7 @@ export function WorkspaceShell({
               ))}
             </div>
 
-            <div id="ws-projects" className="ws-side-title mt-6">Projects</div>
+            <div id="ws-projects" data-blueprint="workspace-projects" className="ws-side-title mt-6">Projects</div>
 
             <div className="space-y-0.5">
               {projects.map((p) => (
@@ -280,14 +280,14 @@ export function WorkspaceShell({
 
         {/* Main workspace */}
         <main className="flex min-w-0 flex-1 flex-col">
-          <div className="min-h-0 flex-1 overflow-y-auto">{children}</div>
+          <div data-blueprint="workspace-conversation" className="min-h-0 flex-1 overflow-y-auto">{children}</div>
           {/* Persistent composer — never scrolls away */}
-          <div className="ws-composer">{composer}</div>
+          <div data-blueprint="workspace-composer" className="ws-composer">{composer}</div>
         </main>
 
         {/* Right context panel */}
         {rightOpen && (
-          <aside className="ws-side hidden w-72 shrink-0 overflow-y-auto xl:block">
+          <aside data-blueprint="workspace-panel" className="ws-side hidden w-72 shrink-0 overflow-y-auto xl:block">
             <div className="ws-side-title">Task panel</div>
             {taskStates.map((state) => (
               <div key={state} className="mb-4">
