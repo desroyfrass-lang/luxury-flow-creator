@@ -265,6 +265,27 @@ function DistrictCard({
           </button>
         </div>
 
+        {!open && (
+          <div className="mt-4 flex flex-wrap items-center gap-2">
+            <span className="text-[9px] uppercase tracking-[0.24em] text-muted-foreground">
+              In view
+            </span>
+            {sightlinesFrom(d.id).map((v) => (
+              <button
+                key={v.to}
+                type="button"
+                onClick={() => onLook(v.to)}
+                title={`${v.direction} — ${v.sight}`}
+                className="rounded-full border border-border/50 px-2.5 py-1 text-[11px] text-muted-foreground transition hover:border-[color:var(--hill-gold)]/50 hover:text-foreground"
+              >
+                {v.district.glyph} {v.district.name}
+              </button>
+            ))}
+          </div>
+        )}
+
+
+
         {open && (
           <div className="mt-5 space-y-4">
             <div>
