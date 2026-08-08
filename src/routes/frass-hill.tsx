@@ -57,6 +57,16 @@ export const Route = createFileRoute("/frass-hill")({
 function FrassHillPage() {
   const [openId, setOpenId] = useState<string | null>(null);
 
+  const lookAt = (id: string) => {
+    setOpenId(id);
+    if (typeof document !== "undefined") {
+      document
+        .getElementById(`district-${id}`)
+        ?.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  };
+
+
   return (
     <div className="min-h-screen bg-background">
       <GatewayNav mode="world" />
