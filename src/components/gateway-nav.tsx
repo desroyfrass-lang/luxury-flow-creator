@@ -108,8 +108,8 @@ const NAV: NavGroup[] = [
   { label: "Social Media Virals", to: "/social-media-virals", match: "/social-media-virals" },
   {
     label: "Discover",
-    to: "/frass-world",
-    match: "/frass-world",
+    to: "/frass-hill",
+    match: "/frass-hill",
     items: [
       { label: "The Liquidation Room", to: "/sales-clearance", note: "Sale · Vault · Lucky Spin" },
       { label: "Capsules", to: "/capsules" },
@@ -118,7 +118,7 @@ const NAV: NavGroup[] = [
       { label: "Music & Media", to: "/music-media" },
       { label: "Visual Search", to: "/visual-search" },
       { label: "Rewards", to: "/rewards" },
-      { label: "Frass World Map", to: "/frass-world" },
+      { label: "Frass Hill Town Plan", to: "/frass-hill" },
     ],
   },
 ];
@@ -167,7 +167,7 @@ export function GatewayNav({ mode }: { mode: "shop" | "world" }) {
               🛍️ Shop Frass
             </Link>
             <Link
-              to="/frass-world"
+              to="/frass-hill"
               role="tab"
               aria-selected={mode === "world"}
               className={`rounded-full px-4 py-1.5 text-[10px] font-bold uppercase tracking-[0.22em] transition ${
@@ -176,7 +176,7 @@ export function GatewayNav({ mode }: { mode: "shop" | "world" }) {
                   : "text-muted-foreground hover:text-foreground"
               }`}
             >
-              🌍 Explore Frass World
+              ⛰️ Enter Frass Hill
             </Link>
           </div>
         </div>

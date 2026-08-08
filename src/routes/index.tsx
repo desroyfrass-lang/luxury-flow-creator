@@ -175,10 +175,10 @@ function FrassDistrictHome() {
               Shop Sales and Clearance
             </Link>
             <Link
-              to="/frass-world"
+              to="/frass-hill"
               className="rounded-full border border-white/60 px-6 py-3 text-[10px] font-bold uppercase tracking-[0.28em] text-white transition hover:bg-white/10"
             >
-              🌍 Explore Frass World
+              ⛰️ Enter Frass Hill
             </Link>
           </div>
         </div>
