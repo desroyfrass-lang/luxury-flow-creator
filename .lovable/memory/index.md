@@ -3,6 +3,7 @@
 ## Core
 Brand name is always "Frass" (two s's) — never "Fras". Applies to Frass Hill, Frass Kicks, Frass Drip.
 Stay true to the original Frass Kicks aesthetic.
+Frass Hill: discovery before destination — every destination is experienced from a distance before interaction; movement, not navigation.
 Prefer dark streetwear visuals over bright white luxury styling.
 Use bold block-letter typography and chrome/gold brand cues.
 Use uploaded Frass logo assets when brand moments need the real mark.
@@ -72,3 +73,4 @@ Sightline rule: every building in Frass Hill must be visible before it is visite
 - [FRASS-0210 Daily refinement](mem://features/frass-0210-daily-refinement) — Honest zeros over sample data, money provenance, drill-downs, My Day, welcome ritual, natural-language Daily commands, workspace memory bar, Frassy greets once at the entrance
 - [FRASS-0920 Town Plan](mem://features/frass-0920-town-plan) — The 8 real districts of Frass Hill and the venues inside each; supersedes the FRASS-0910 district list
 - [Frass Hill sightlines](mem://design/frass-hill-sightlines) — Constitutional sightline principle: directions + sensory sights from every district, implemented in HILL_SIGHTLINES
+- [FRASS-0911 Discovery Before Destination](mem://features/frass-0911-discovery-before-destination) — Movement layer: street life you pass, blended district transitions, living time, town memory, placemaking questions
