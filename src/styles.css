@@ -688,9 +688,17 @@
 }
 .daily-overlay.is-in { opacity: 1; }
 .daily-overlay .daily-scroll {
-  height: 100%; overflow-y: auto;
-  padding: 2.25rem 1.25rem 4rem; max-width: 62rem; margin: 0 auto;
+  height: calc(100% - 12.5rem); overflow-y: auto;
+  padding: 2.25rem 1.25rem 2rem; max-width: 62rem; margin: 0 auto;
 }
+.daily-overlay .daily-dock {
+  position: absolute; left: 0; right: 0; bottom: 0; z-index: 96;
+  padding: 0.75rem 1.25rem 1.1rem;
+  max-width: 62rem; margin: 0 auto;
+  background: linear-gradient(to top, var(--ws-bg) 72%, transparent);
+  border-top: 1px solid rgb(212 175 55 / 0.28);
+}
+
 .daily-frassy {
   position: fixed; left: 50%; top: 38%; z-index: 95;
   transform: translate(-50%, -50%);
