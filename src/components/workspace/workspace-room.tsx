@@ -8,7 +8,7 @@ import { ChevronDown, ChevronRight, Plus, Send, Volume2, VolumeX, Square } from 
 import { WorkspaceShell, type IndexEntry, type RoleLink } from "@/components/workspace/workspace-shell";
 import { AwarenessRail } from "@/components/workspace/awareness-rail";
 import { recordActivity } from "@/lib/workspace/awareness";
-import { UploadTray } from "@/components/workspace/upload-tray";
+import { FrassyComposer } from "@/components/workspace/frassy-composer";
 import { ReplyBlocks } from "@/components/workspace/reply-blocks";
 import { openTheDaily } from "@/components/workspace/daily-gate";
 import { usePushToTalk } from "@/hooks/use-push-to-talk";
