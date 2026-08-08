@@ -58,6 +58,20 @@ export type DailyTask = DailyTarget & {
 
 export type DailyWin = { id: string; icon: string; label: string };
 
+/** Where a number physically came from. Money must always explain itself. */
+export type MetricSource = {
+  label: string;
+  value: string;
+  status: DataStatus;
+};
+
+/** An underlying record behind a metric — the Daily shows data, not summaries. */
+export type MetricRecord = DailyTarget & {
+  id: string;
+  label: string;
+  meta?: string;
+};
+
 /** A clickable, badged, explainable number. No dead information. */
 export type DailyMetric = DailyTarget & {
   label: string;
@@ -66,7 +80,12 @@ export type DailyMetric = DailyTarget & {
   status: DataStatus;
   /** Frassy's plain-language explanation — the dashboard teaches while it reports. */
   explain: string;
+  /** Provenance — every part of the number, and where each part came from. */
+  sources?: MetricSource[];
+  /** The records behind the number, expandable inline. */
+  records?: MetricRecord[];
 };
+
 
 export type DailyApproval = DailyTarget & { id: string; kind: string; label: string };
 export type DailyOpportunity = DailyTarget & { id: string; icon: string; label: string; why: string };
@@ -172,6 +191,16 @@ const FOUNDER: DailyModel = {
       projectId: "product-population",
       explain:
         "An order is a completed checkout. Right now these are development placeholders — no real customer has paid. Once payments are connected, this counts paid orders only; pending and cancelled orders are tracked separately and do not count toward revenue. Your action is to fulfil paid orders and chase pending ones.",
+      sources: [
+        { label: "Storefront checkout", value: "0", status: "awaiting" },
+        { label: "Marketplace vendors", value: "0", status: "awaiting" },
+        { label: "Demonstration records", value: "18", status: "sample" },
+      ],
+      records: [
+        { id: "o-1001", label: "Order #1001 · Frass Kicks Casual", meta: "Demonstration · Awaiting fulfilment", href: "/admin/approvals" },
+        { id: "o-1002", label: "Order #1002 · Frass Drip Blazer", meta: "Demonstration · Paid", href: "/admin/approvals" },
+        { id: "o-1003", label: "Order #1003 · Kids School Drip", meta: "Demonstration · Pending payment", href: "/admin/approvals" },
+      ],
     },
     {
       label: "Revenue",
@@ -180,6 +209,22 @@ const FOUNDER: DailyModel = {
       href: "/workspace/affiliate",
       explain:
         "Revenue is money actually collected, before product cost, shipping and fees. It becomes real once the payment processor is connected. What you keep after costs is margin — that is the number that matters for a dropshipping business.",
+      sources: [
+        { label: "Product sales", value: "$0.00", status: "awaiting" },
+        { label: "Marketplace sales", value: "$0.00", status: "awaiting" },
+        { label: "Affiliate-attributed sales", value: "$0.00", status: "awaiting" },
+        { label: "Builder income share", value: "$0.00", status: "awaiting" },
+        { label: "Luxury House", value: "$0.00", status: "awaiting" },
+        { label: "Bridal", value: "$0.00", status: "awaiting" },
+        { label: "Kids", value: "$0.00", status: "awaiting" },
+        { label: "Subscriptions (Frass Plus+)", value: "$0.00", status: "awaiting" },
+        { label: "Foundation contributions", value: "$0.00", status: "awaiting" },
+        { label: "Vault contributions", value: "$0.00", status: "awaiting" },
+        { label: "Fees", value: "-$0.00", status: "awaiting" },
+        { label: "Refunds & returns", value: "-$0.00", status: "awaiting" },
+        { label: "Pending payouts", value: "$0.00", status: "awaiting" },
+        { label: "Available balance", value: "$0.00", status: "awaiting" },
+      ],
     },
     {
       label: "Returns",
@@ -188,7 +233,11 @@ const FOUNDER: DailyModel = {
       href: "/admin/approvals",
       explain:
         "A return is a customer sending a product back. Each one reverses revenue and usually costs shipping. A rising return rate on one supplier is the earliest warning that the supplier's quality is slipping.",
+      records: [
+        { id: "r-4401", label: "Return #4401 · size exchange", meta: "Demonstration · Awaiting inspection", href: "/admin/approvals" },
+      ],
     },
+
     {
       label: "Messages",
       value: "6 unread",

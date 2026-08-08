@@ -151,6 +151,10 @@ export function WorkspaceRoom({
     [sections],
   );
 
+  /** The exact position inside the project — restored on every return. */
+  const focus = visible.length ? visible[visible.length - 1].title : undefined;
+
+
   const openSectionFor = useCallback(
     (text: string) => {
       let id = "";
@@ -309,6 +313,8 @@ export function WorkspaceRoom({
       activeProjectId={activeProjectId}
       onSelectProject={setActiveProjectId}
       roleLinks={roleLinks}
+      focus={focus}
+
 
 
       index={index}

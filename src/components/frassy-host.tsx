@@ -19,6 +19,14 @@ type Phase = "enter" | "speak" | "depart";
 
 const SESSION_PREFIX = "frassy-host:";
 
+/**
+ * FRASS-0210 — the cinematic introduction belongs to the entrance only.
+ * Frassy greets once, at the doors of the World of Frass. Everywhere else she
+ * is already present and simply continues; she never re-introduces herself.
+ */
+const ENTRANCE_IDS = new Set(["home", "frass-world"]);
+
+
 function seenThisSession(id: string) {
   if (typeof window === "undefined") return true;
   try {
@@ -60,17 +68,14 @@ export function FrassyHost() {
     clearTimers();
 
 
-    if (seenThisSession(dest.id)) {
-      // Returning visitor — stay minimized, one quiet line.
-      setWelcomeBack("Welcome back.");
-      timers.current.push(setTimeout(() => setWelcomeBack(null), 4200));
-      return;
-    }
+    // Only the entrance gets the cinematic welcome — and only once per session.
+    if (!ENTRANCE_IDS.has(dest.id) || seenThisSession(dest.id)) return;
 
     markSeen(dest.id);
     setWelcomeBack(null);
     setGreeting(dest);
     setPhase("enter");
+
 
     const reduced =
       typeof window !== "undefined" &&

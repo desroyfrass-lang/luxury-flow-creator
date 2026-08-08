@@ -839,3 +839,97 @@ body.blueprint-on [data-blueprint]:hover {
   border: 1px solid color-mix(in oklab, var(--foreground) 20%, transparent);
 }
 .bp-history { border-left: 2px solid color-mix(in oklab, var(--gold) 60%, transparent); padding-left: 0.65rem; }
+
+/* ── FRASS-0210 · Daily refinement: ritual, My Day, command bar, provenance ── */
+.daily-ritual {
+  margin-top: 1rem;
+  border-left: 2px solid color-mix(in srgb, var(--gold) 70%, transparent);
+  padding: 0.35rem 0 0.35rem 0.9rem;
+}
+.daily-ritual-text {
+  margin-top: 0.35rem;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: color-mix(in srgb, currentColor 82%, transparent);
+}
+.daily-ritual .ws-chip,
+.daily-ritual-off { margin-top: 0.6rem; }
+
+.daily-myday {
+  margin-top: 1.25rem;
+  border: 1px solid color-mix(in srgb, var(--gold) 28%, transparent);
+  border-radius: 0.25rem;
+  padding: 1rem 1.1rem;
+  background: color-mix(in srgb, var(--gold) 5%, transparent);
+}
+.daily-myday-head { display: flex; align-items: baseline; justify-content: space-between; gap: 1rem; }
+.daily-myday-bar { margin-top: 0.75rem; }
+.daily-myday-stats {
+  margin-top: 0.7rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem 1.1rem;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  opacity: 0.75;
+}
+
+.daily-command {
+  margin-top: 1rem;
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+.daily-command input {
+  flex: 1;
+  min-width: 0;
+  background: transparent;
+  border: 1px solid color-mix(in srgb, currentColor 18%, transparent);
+  border-radius: 999px;
+  padding: 0.6rem 1rem;
+  font-size: 0.85rem;
+  color: inherit;
+}
+.daily-command input:focus { outline: none; border-color: color-mix(in srgb, var(--gold) 60%, transparent); }
+.daily-command-note { margin-top: 0.45rem; }
+
+.daily-drill {
+  margin-top: 0.7rem;
+  border-top: 1px solid color-mix(in srgb, currentColor 12%, transparent);
+  padding-top: 0.7rem;
+}
+.daily-drill-list { display: grid; gap: 0.35rem; margin-bottom: 0.6rem; }
+.daily-drill-list button {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  text-align: left;
+  font-size: 0.8rem;
+  padding: 0.45rem 0.55rem;
+  border-radius: 0.2rem;
+}
+.daily-drill-list button:hover { background: color-mix(in srgb, var(--gold) 10%, transparent); }
+.daily-drill-list em { font-style: normal; opacity: 0.6; font-size: 0.72rem; margin-left: auto; }
+
+.daily-sources { width: 100%; font-size: 0.78rem; border-collapse: collapse; }
+.daily-sources td { padding: 0.28rem 0.4rem; border-bottom: 1px solid color-mix(in srgb, currentColor 8%, transparent); }
+.daily-sources td:nth-child(2) { text-align: right; font-variant-numeric: tabular-nums; }
+.daily-sources td:nth-child(3) { text-align: right; white-space: nowrap; }
+
+.ws-memorybar {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  padding: 0.45rem 1rem;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  border-bottom: 1px solid color-mix(in srgb, currentColor 10%, transparent);
+  opacity: 0.85;
+}
+.ws-memorybar button:hover { color: var(--gold); }
+.ws-memorybar-root { color: var(--gold); }
+.ws-memorybar-focus { opacity: 0.7; text-transform: none; letter-spacing: 0.06em; }
