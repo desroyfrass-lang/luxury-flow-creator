@@ -23,7 +23,7 @@ import plusWingMen from "@/assets/plus-wing-men.jpg";
 import plusWingWomen from "@/assets/plus-wing-women.jpg";
 
 
-export const Route = createFileRoute("/")({
+export const Route = createFileRoute("/frass-district")({
   head: () => ({
     meta: [
       { title: "Frass District — Shop Every Frass Store" },

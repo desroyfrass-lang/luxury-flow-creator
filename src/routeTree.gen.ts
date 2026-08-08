@@ -27,6 +27,7 @@ import { Route as FrassKidsRouteImport } from './routes/frass-kids'
 import { Route as FrassKicksRouteImport } from './routes/frass-kicks'
 import { Route as FrassHillRouteImport } from './routes/frass-hill'
 import { Route as FrassDripRouteImport } from './routes/frass-drip'
+import { Route as FrassDistrictRouteImport } from './routes/frass-district'
 import { Route as ForUsRouteImport } from './routes/for-us'
 import { Route as CheckoutRouteImport } from './routes/checkout'
 import { Route as CapsulesRouteImport } from './routes/capsules'
@@ -35,7 +36,6 @@ import { Route as BareDripRouteImport } from './routes/bare-drip'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AfroDesignersRouteImport } from './routes/afro-designers'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
-import { Route as IndexRouteImport } from './routes/index'
 import { Route as SocialMediaViralsIndexRouteImport } from './routes/social-media-virals.index'
 import { Route as LookbookIndexRouteImport } from './routes/lookbook.index'
 import { Route as KidsWorldIndexRouteImport } from './routes/kids-world.index'
@@ -226,6 +226,11 @@ const FrassDripRoute = FrassDripRouteImport.update({
   path: '/frass-drip',
   getParentRoute: () => rootRouteImport,
 } as any)
+const FrassDistrictRoute = FrassDistrictRouteImport.update({
+  id: '/frass-district',
+  path: '/frass-district',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ForUsRoute = ForUsRouteImport.update({
   id: '/for-us',
   path: '/for-us',
@@ -263,11 +268,6 @@ const AfroDesignersRoute = AfroDesignersRouteImport.update({
 } as any)
 const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
   id: '/_authenticated',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const IndexRoute = IndexRouteImport.update({
-  id: '/',
-  path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SocialMediaViralsIndexRoute = SocialMediaViralsIndexRouteImport.update({
@@ -795,7 +795,7 @@ const SocialMediaViralsCategorySubProductRoute =
   } as any)
 
 export interface FileRoutesByFullPath {
-  '/': typeof IndexRoute
+  '/': typeof AuthenticatedRouteRouteWithChildren
   '/afro-designers': typeof AfroDesignersRouteWithChildren
   '/auth': typeof AuthRoute
   '/bare-drip': typeof BareDripRouteWithChildren
@@ -803,6 +803,7 @@ export interface FileRoutesByFullPath {
   '/capsules': typeof CapsulesRouteWithChildren
   '/checkout': typeof CheckoutRoute
   '/for-us': typeof ForUsRoute
+  '/frass-district': typeof FrassDistrictRoute
   '/frass-drip': typeof FrassDripRouteWithChildren
   '/frass-hill': typeof FrassHillRoute
   '/frass-kicks': typeof FrassKicksRouteWithChildren
@@ -922,10 +923,11 @@ export interface FileRoutesByFullPath {
   '/social-media-virals/$category/$sub/$product': typeof SocialMediaViralsCategorySubProductRoute
 }
 export interface FileRoutesByTo {
-  '/': typeof IndexRoute
+  '/': typeof AuthenticatedRouteRouteWithChildren
   '/auth': typeof AuthRoute
   '/checkout': typeof CheckoutRoute
   '/for-us': typeof ForUsRoute
+  '/frass-district': typeof FrassDistrictRoute
   '/frass-hill': typeof FrassHillRoute
   '/frass-world': typeof FrassWorldRoute
   '/gateway': typeof GatewayRoute
@@ -1033,7 +1035,6 @@ export interface FileRoutesByTo {
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
-  '/': typeof IndexRoute
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/afro-designers': typeof AfroDesignersRouteWithChildren
   '/auth': typeof AuthRoute
@@ -1042,6 +1043,7 @@ export interface FileRoutesById {
   '/capsules': typeof CapsulesRouteWithChildren
   '/checkout': typeof CheckoutRoute
   '/for-us': typeof ForUsRoute
+  '/frass-district': typeof FrassDistrictRoute
   '/frass-drip': typeof FrassDripRouteWithChildren
   '/frass-hill': typeof FrassHillRoute
   '/frass-kicks': typeof FrassKicksRouteWithChildren
@@ -1171,6 +1173,7 @@ export interface FileRouteTypes {
     | '/capsules'
     | '/checkout'
     | '/for-us'
+    | '/frass-district'
     | '/frass-drip'
     | '/frass-hill'
     | '/frass-kicks'
@@ -1294,6 +1297,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/checkout'
     | '/for-us'
+    | '/frass-district'
     | '/frass-hill'
     | '/frass-world'
     | '/gateway'
@@ -1400,7 +1404,6 @@ export interface FileRouteTypes {
     | '/social-media-virals/$category/$sub/$product'
   id:
     | '__root__'
-    | '/'
     | '/_authenticated'
     | '/afro-designers'
     | '/auth'
@@ -1409,6 +1412,7 @@ export interface FileRouteTypes {
     | '/capsules'
     | '/checkout'
     | '/for-us'
+    | '/frass-district'
     | '/frass-drip'
     | '/frass-hill'
     | '/frass-kicks'
@@ -1529,7 +1533,6 @@ export interface FileRouteTypes {
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   AfroDesignersRoute: typeof AfroDesignersRouteWithChildren
   AuthRoute: typeof AuthRoute
@@ -1538,6 +1541,7 @@ export interface RootRouteChildren {
   CapsulesRoute: typeof CapsulesRouteWithChildren
   CheckoutRoute: typeof CheckoutRoute
   ForUsRoute: typeof ForUsRoute
+  FrassDistrictRoute: typeof FrassDistrictRoute
   FrassDripRoute: typeof FrassDripRouteWithChildren
   FrassHillRoute: typeof FrassHillRoute
   FrassKicksRoute: typeof FrassKicksRouteWithChildren
@@ -1698,6 +1702,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof FrassDripRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/frass-district': {
+      id: '/frass-district'
+      path: '/frass-district'
+      fullPath: '/frass-district'
+      preLoaderRoute: typeof FrassDistrictRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/for-us': {
       id: '/for-us'
       path: '/for-us'
@@ -1752,13 +1763,6 @@ declare module '@tanstack/react-router' {
       path: ''
       fullPath: '/'
       preLoaderRoute: typeof AuthenticatedRouteRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/social-media-virals/': {
@@ -2857,7 +2861,6 @@ const SocialMediaViralsRouteWithChildren =
   SocialMediaViralsRoute._addFileChildren(SocialMediaViralsRouteChildren)
 
 const rootRouteChildren: RootRouteChildren = {
-  IndexRoute: IndexRoute,
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   AfroDesignersRoute: AfroDesignersRouteWithChildren,
   AuthRoute: AuthRoute,
@@ -2866,6 +2869,7 @@ const rootRouteChildren: RootRouteChildren = {
   CapsulesRoute: CapsulesRouteWithChildren,
   CheckoutRoute: CheckoutRoute,
   ForUsRoute: ForUsRoute,
+  FrassDistrictRoute: FrassDistrictRoute,
   FrassDripRoute: FrassDripRouteWithChildren,
   FrassHillRoute: FrassHillRoute,
   FrassKicksRoute: FrassKicksRouteWithChildren,
