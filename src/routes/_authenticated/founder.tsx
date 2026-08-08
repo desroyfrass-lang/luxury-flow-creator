@@ -199,6 +199,12 @@ function FounderPage() {
 
         <PlatformStatusCenter />
 
+        <div className="mt-8">
+          <ArchitecturalHealth />
+        </div>
+
+
+
 
         {/* Phases */}
         <section className="mt-12">
