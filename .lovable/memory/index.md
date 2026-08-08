@@ -64,3 +64,4 @@ One feature, one component, one route, one source of truth — audit for existin
 - [Frassy is Builder Intelligence](mem://constraints/frassy-builder-intelligence) — Constitutional role, Intelligent Builder Journey onboarding at /onboarding, journey tables
 - [Founder Commissioning](mem://features/founder-commissioning) — Owner track = 5-phase Founder Commissioning Journey; gated Founder Mode at /founder with Launch Readiness board
 - [Affiliate Intelligence Engine](mem://features/affiliate-intelligence-engine) — AI-calculated sustainable commission ranges, Commission Simulator, Founder governance; separate from the fixed 8% Platform Allocation
+- [The Frass Daily & One-Workspace architecture](mem://features/frass-daily-and-one-workspace) — Daily command center (once per day, 11 sections, delegation) + consolidated workspace/modes architecture
