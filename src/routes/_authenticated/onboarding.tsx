@@ -419,20 +419,15 @@ function OnboardingPage() {
               {(voice.voiceError) && (
                 <p className="mb-2 text-xs text-destructive">{voice.voiceError}</p>
               )}
-              <ComposerShell
+              <FrassyComposer
                 value={draft}
                 onChange={setDraft}
                 onSend={() => void send(draft)}
-                disabled={busy}
+                loading={busy}
                 placeholder={`Talk to Frassy about ${stage.title}…`}
-                onMicToggle={voice.voiceAvailable ? () => void toggleMic() : undefined}
-                micState={
-                  voice.phase === "recording"
-                    ? "recording"
-                    : voice.phase === "transcribing" || busy
-                      ? "busy"
-                      : "idle"
-                }
+                onMic={voice.voiceAvailable ? () => void toggleMic() : undefined}
+                micAvailable={voice.voiceAvailable}
+                micActive={voice.phase === "recording"}
               />
             </div>
           </section>
