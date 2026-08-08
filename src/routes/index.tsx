@@ -162,7 +162,7 @@ function EntrancePage() {
           className="gateway-drift absolute inset-0 h-full w-full object-cover object-center"
         />
         <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-black/75" />
-        <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-black/75" />
+      </div>
 
       <EntranceFrassy />
 
@@ -171,7 +171,7 @@ function EntrancePage() {
           className="gateway-rise font-display text-4xl leading-[0.95] text-white drop-shadow-[0_2px_24px_rgba(0,0,0,0.55)] sm:text-6xl lg:text-8xl"
           style={{ animationDelay: "80ms" }}
         >
-          Welcome to Frass.
+          Welcome to frasskicks.com
         </h1>
 
         <p
