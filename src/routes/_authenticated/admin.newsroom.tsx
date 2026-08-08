@@ -89,13 +89,18 @@ function NewsroomPage() {
 
   async function setStatus(story: ForUsStoryRow, status: StoryStatus) {
     const { data: auth } = await supabase.auth.getUser();
-    const patch: Record<string, unknown> = { status };
+    const patch: {
+      status: StoryStatus;
+      published_at?: string;
+      approved_by?: string | null;
+    } = { status };
     if (status === "published") {
       patch.published_at = new Date().toISOString();
       patch.approved_by = auth.user?.id ?? null;
     }
     if (status === "approved") patch.approved_by = auth.user?.id ?? null;
     const { error } = await supabase.from("for_us_stories").update(patch).eq("id", story.id);
+
     if (error) {
       toast.error(error.message);
       return;
