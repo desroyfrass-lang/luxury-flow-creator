@@ -368,9 +368,74 @@ export const FOR_US_SECTIONS: ForUsSection[] = [
       },
     ],
   },
+  {
+    id: "foundation",
+    glyph: "🤝",
+    name: "The Foundation Wall",
+    purpose: "Where the money goes, who it reached, and what it made possible.",
+    stories: [
+      {
+        id: "fo-1",
+        source: "Foundation Office",
+        title: "Three classrooms received new learning resources",
+        body: "Funded by last month's community support. Books, tablets and a repaired roof — receipts posted on the wall, as always.",
+        tags: ["foundation", "education", "children", "community"],
+      },
+      {
+        id: "fo-2",
+        source: "Foundation Office",
+        title: "Volunteer roster is open for the next build weekend",
+        body: "Painting, planting, and a kitchen fit-out. No experience needed; lunch is on the Hill.",
+        to: "/opportunity",
+        cta: "Volunteer",
+        tags: ["foundation", "volunteer", "community"],
+      },
+      {
+        id: "fo-3",
+        source: "Foundation Office",
+        title: "Where this season's podcast revenue went",
+        body: "A share of every episode goes to the Foundation. This season funded two school supply drives and one apprenticeship stipend.",
+        tags: ["foundation", "podcasts", "business", "education"],
+      },
+    ],
+  },
+  {
+    id: "behind_the_build",
+    glyph: "🏗️",
+    name: "Behind the Build",
+    purpose: "The permanent record of how Frass was built, one milestone at a time.",
+    stories: [
+      {
+        id: "bb-1",
+        source: "Founder Hall",
+        title: "The Frass Hill Town Plan was completed",
+        body: "Eight core districts, each with its own venues. The Hill stopped being a metaphor and became a map.",
+        to: "/frass-hill",
+        cta: "Walk the Hill",
+        tags: ["history", "platform development", "community"],
+      },
+      {
+        id: "bb-2",
+        source: "Children's Village",
+        title: "The first learning spaces opened",
+        body: "Four age-safe environments, a parent dashboard, and the first published activities.",
+        to: "/kids-world",
+        cta: "Visit the Village",
+        tags: ["children", "education", "family", "platform development"],
+      },
+      {
+        id: "bb-3",
+        source: "Community Hall",
+        title: "For Us opened its doors",
+        body: "The Community Hall in Town Square became the shared gathering place of Frass — one click from anywhere you work, learn, create or shop.",
+        tags: ["community", "history", "platform development"],
+      },
+    ],
+  },
 ];
 
 /** FRASS-0921 — context-aware ordering. Same page, intelligent priority. */
+
 export type ForUsContext = {
   /** Where the member came from. */
   label: string;
