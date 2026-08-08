@@ -1,7 +1,6 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import archHero from "@/assets/frass-gateway-arch.jpg.asset.json";
-import fullLogo from "@/assets/frass-logo-full.asset.json";
 import frassyGold from "@/assets/frassy-gold.png.asset.json";
 
 /**
@@ -37,7 +36,7 @@ export const Route = createFileRoute("/")({
 });
 
 const WELCOME_LINES = [
-  "Welcome to Frass.",
+  "Welcome to frasskicks.com.",
   "This is more than a fashion destination. It's a community built by people, powered by purpose, and designed to help everyone build something meaningful.",
   "Would you like to begin by shopping, or would you like to explore Frass Hill?",
 ];
@@ -121,7 +120,14 @@ function EntrancePage() {
       const skip = localStorage.getItem(SKIP_ENTRANCE_KEY) === "1";
       setSkipNext(skip);
       const forced = new URLSearchParams(window.location.search).has("stay");
-      if (skip && !forced) navigate({ to: "/frass-district", replace: true });
+      if (skip && !forced) {
+        navigate({ to: "/frass-district", replace: true });
+        return;
+      }
+      // The entrance is ceremonial: it plays once, then future visits go
+      // straight to the Frass District (use /?stay to see it again).
+      localStorage.setItem(SKIP_ENTRANCE_KEY, "1");
+      setSkipNext(true);
     } catch {
       /* storage blocked — always show the entrance */
     }
@@ -155,16 +161,6 @@ function EntrancePage() {
           className="gateway-drift absolute inset-0 h-full w-full object-cover object-center"
         />
         <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-black/75" />
-
-        <img
-          src={fullLogo.url}
-          alt="Frass"
-          className="pointer-events-none absolute left-1/2 top-[3.4%] z-[1] h-[10.5%] w-auto -translate-x-1/2 object-contain"
-          style={{
-            filter:
-              "grayscale(1) brightness(0.95) sepia(1) saturate(6) hue-rotate(-14deg) contrast(1.15) drop-shadow(0 4px 12px rgba(0,0,0,0.8))",
-          }}
-        />
       </div>
 
       <EntranceFrassy />
@@ -174,7 +170,7 @@ function EntrancePage() {
           className="gateway-rise font-display text-4xl leading-[0.95] text-white drop-shadow-[0_2px_24px_rgba(0,0,0,0.55)] sm:text-6xl lg:text-8xl"
           style={{ animationDelay: "80ms" }}
         >
-          Welcome to Frass.
+          Welcome to frasskicks.com
         </h1>
 
         <p

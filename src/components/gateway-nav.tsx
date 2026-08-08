@@ -162,7 +162,7 @@ export function GatewayNav({ mode }: { mode: "shop" | "world" }) {
     <header className="sticky top-0 z-50 border-b border-border/60 bg-background/85 backdrop-blur-xl">
       <div className="mx-auto grid max-w-[1600px] grid-cols-[minmax(0,1fr)_auto] items-center gap-4 px-5 py-3 lg:px-10">
         <div className="flex min-w-0 items-center gap-5">
-          <Link to="/" aria-label="Frass entrance" className="shrink-0">
+          <Link to="/frass-district" aria-label="Frass District" className="shrink-0">
             <img src={fullLogo.url} alt="Frass" className="h-8 w-auto object-contain md:h-10" />
           </Link>
 
