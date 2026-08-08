@@ -51,9 +51,9 @@ const SOCIALS = [
 function BrandMark({ compact = false }: { compact?: boolean }) {
   return (
     <Link
-      to="/"
+      to="/frass-district"
       className={`inline-flex items-center ${compact ? "gap-3" : "gap-4"}`}
-      aria-label="Frass Kicks home"
+      aria-label="Frass District"
     >
       <img
         src={compact ? symbolLogo.url : fullLogo.url}
