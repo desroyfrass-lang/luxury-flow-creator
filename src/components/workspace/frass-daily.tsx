@@ -107,9 +107,7 @@ export function FrassDaily({
   };
 
   /** The Daily is navigable by conversation, not clicks alone. */
-  const runCommand = (e: React.FormEvent) => {
-    e.preventDefault();
-    const said = command.trim();
+  const runIntent = (said: string) => {
     if (!said) return;
     const result = resolveDailyCommand(said, model);
     setCommand("");
@@ -132,6 +130,7 @@ export function FrassDaily({
     setCommandNote(`Taking you to ${result.label}.`);
     go(result.target);
   };
+
 
   return (
     <div data-blueprint="daily" className={`frass-workspace daily-overlay ${entered ? "is-in" : ""}`} role="dialog" aria-label="The Frass Daily">
