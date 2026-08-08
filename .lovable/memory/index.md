@@ -79,3 +79,4 @@ Sightline rule: every building in Frass Hill must be visible before it is visite
 - [For Us — Community Heart](mem://features/for-us-community-heart) — FRASS-0920/0921: Community Hall in Town Square, finite sections, no endless scroll, permanent nav item, breadcrumb return, context-aware ordering
 - [FRASS-0303 payment pipeline](mem://features/frass-0303-payment-pipeline) — Commerce Payment & Financial Pipeline: 10 steps, configurable Payment Provider Center, ledger fan-out, refunds, Available vs Pending law
 - [Global commerce & regional markets](mem://features/global-commerce-regional-markets) — FRASS-0305/0306: Primary Operating Markets CA/GB/US, campaign origin vs audience reach, capability register, /global-operations
+- [Frassy Workspace Composer FRASS-0400](mem://features/frassy-workspace-composer-0400) — Universal AI workstation composer: multimodal intake, Upload Manager queue, one composer for every role
