@@ -94,10 +94,20 @@ function FrassHillPage() {
         </div>
       </section>
 
-      <section className="mx-auto max-w-[1400px] px-6 pt-8 lg:px-10">
+      <section className="mx-auto max-w-[1400px] space-y-4 px-6 pt-8 lg:px-10">
         <p className="border-l-2 border-[color:var(--hill-gold)] pl-4 text-sm italic text-muted-foreground">
           {TOWN_PLAN_RULE}
         </p>
+        <div className="rounded-2xl border border-[color:var(--hill-gold)]/25 bg-card/40 p-5">
+          <div className="text-[10px] uppercase tracking-[0.3em] text-[color:var(--hill-gold)]">
+            The sightline rule
+          </div>
+          <p className="mt-2 max-w-3xl text-sm text-muted-foreground">{SIGHTLINE_PRINCIPLE}</p>
+          <p className="mt-3 text-xs text-muted-foreground">
+            Stand in the square and the whole town is in view. Look around from anywhere:
+          </p>
+          <HillSightlines districtId="town_square" onLook={lookAt} className="mt-4" />
+        </div>
       </section>
 
       <section className="mx-auto max-w-[1400px] px-6 py-10 lg:px-10">
@@ -108,10 +118,12 @@ function FrassHillPage() {
               district={d}
               open={openId === d.id}
               onToggle={() => setOpenId(openId === d.id ? null : d.id)}
+              onLook={lookAt}
             />
           ))}
         </div>
       </section>
+
 
       <section className="mx-auto max-w-[1400px] px-6 pb-10 lg:px-10">
         <h2 className="font-display text-2xl uppercase">Walks through town</h2>
