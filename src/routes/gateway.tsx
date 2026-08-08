@@ -90,7 +90,7 @@ function GatewayPage() {
           className="gateway-rise font-display text-4xl leading-[0.95] text-white drop-shadow-[0_2px_24px_rgba(0,0,0,0.55)] sm:text-6xl lg:text-8xl"
           style={{ animationDelay: "80ms" }}
         >
-          Welcome to the World of Frass.
+          Welcome to Frass.
         </h1>
 
         <p
