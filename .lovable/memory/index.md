@@ -66,3 +66,4 @@ One feature, one component, one route, one source of truth — audit for existin
 - [Affiliate Intelligence Engine](mem://features/affiliate-intelligence-engine) — AI-calculated sustainable commission ranges, Commission Simulator, Founder governance; separate from the fixed 8% Platform Allocation
 - [The Frass Daily & One-Workspace architecture](mem://features/frass-daily-and-one-workspace) — Daily command center (once per day, 11 sections, delegation) + consolidated workspace/modes architecture
 - [Founder Construction Mode FRASS-0200](mem://features/founder-construction-mode-0200) — Founder-only Blueprint Layer, Architectural Intelligence Panel, live simulation, quality governance, living decision log
+- [FRASS-0210 Daily refinement](mem://features/frass-0210-daily-refinement) — Honest zeros over sample data, money provenance, drill-downs, My Day, welcome ritual, natural-language Daily commands, workspace memory bar, Frassy greets once at the entrance
