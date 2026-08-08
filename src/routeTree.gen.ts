@@ -27,12 +27,14 @@ import { Route as FrassKidsRouteImport } from './routes/frass-kids'
 import { Route as FrassKicksRouteImport } from './routes/frass-kicks'
 import { Route as FrassHillRouteImport } from './routes/frass-hill'
 import { Route as FrassDripRouteImport } from './routes/frass-drip'
+import { Route as FrassDistrictRouteImport } from './routes/frass-district'
 import { Route as ForUsRouteImport } from './routes/for-us'
 import { Route as CheckoutRouteImport } from './routes/checkout'
 import { Route as CapsulesRouteImport } from './routes/capsules'
 import { Route as BlogRouteImport } from './routes/blog'
 import { Route as BareDripRouteImport } from './routes/bare-drip'
 import { Route as AuthRouteImport } from './routes/auth'
+import { Route as ArrivalRouteImport } from './routes/arrival'
 import { Route as AfroDesignersRouteImport } from './routes/afro-designers'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
@@ -226,6 +228,11 @@ const FrassDripRoute = FrassDripRouteImport.update({
   path: '/frass-drip',
   getParentRoute: () => rootRouteImport,
 } as any)
+const FrassDistrictRoute = FrassDistrictRouteImport.update({
+  id: '/frass-district',
+  path: '/frass-district',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ForUsRoute = ForUsRouteImport.update({
   id: '/for-us',
   path: '/for-us',
@@ -254,6 +261,11 @@ const BareDripRoute = BareDripRouteImport.update({
 const AuthRoute = AuthRouteImport.update({
   id: '/auth',
   path: '/auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ArrivalRoute = ArrivalRouteImport.update({
+  id: '/arrival',
+  path: '/arrival',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AfroDesignersRoute = AfroDesignersRouteImport.update({
@@ -797,12 +809,14 @@ const SocialMediaViralsCategorySubProductRoute =
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/afro-designers': typeof AfroDesignersRouteWithChildren
+  '/arrival': typeof ArrivalRoute
   '/auth': typeof AuthRoute
   '/bare-drip': typeof BareDripRouteWithChildren
   '/blog': typeof BlogRouteWithChildren
   '/capsules': typeof CapsulesRouteWithChildren
   '/checkout': typeof CheckoutRoute
   '/for-us': typeof ForUsRoute
+  '/frass-district': typeof FrassDistrictRoute
   '/frass-drip': typeof FrassDripRouteWithChildren
   '/frass-hill': typeof FrassHillRoute
   '/frass-kicks': typeof FrassKicksRouteWithChildren
@@ -923,9 +937,11 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/arrival': typeof ArrivalRoute
   '/auth': typeof AuthRoute
   '/checkout': typeof CheckoutRoute
   '/for-us': typeof ForUsRoute
+  '/frass-district': typeof FrassDistrictRoute
   '/frass-hill': typeof FrassHillRoute
   '/frass-world': typeof FrassWorldRoute
   '/gateway': typeof GatewayRoute
@@ -1036,12 +1052,14 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/afro-designers': typeof AfroDesignersRouteWithChildren
+  '/arrival': typeof ArrivalRoute
   '/auth': typeof AuthRoute
   '/bare-drip': typeof BareDripRouteWithChildren
   '/blog': typeof BlogRouteWithChildren
   '/capsules': typeof CapsulesRouteWithChildren
   '/checkout': typeof CheckoutRoute
   '/for-us': typeof ForUsRoute
+  '/frass-district': typeof FrassDistrictRoute
   '/frass-drip': typeof FrassDripRouteWithChildren
   '/frass-hill': typeof FrassHillRoute
   '/frass-kicks': typeof FrassKicksRouteWithChildren
@@ -1165,12 +1183,14 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/afro-designers'
+    | '/arrival'
     | '/auth'
     | '/bare-drip'
     | '/blog'
     | '/capsules'
     | '/checkout'
     | '/for-us'
+    | '/frass-district'
     | '/frass-drip'
     | '/frass-hill'
     | '/frass-kicks'
@@ -1291,9 +1311,11 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/arrival'
     | '/auth'
     | '/checkout'
     | '/for-us'
+    | '/frass-district'
     | '/frass-hill'
     | '/frass-world'
     | '/gateway'
@@ -1403,12 +1425,14 @@ export interface FileRouteTypes {
     | '/'
     | '/_authenticated'
     | '/afro-designers'
+    | '/arrival'
     | '/auth'
     | '/bare-drip'
     | '/blog'
     | '/capsules'
     | '/checkout'
     | '/for-us'
+    | '/frass-district'
     | '/frass-drip'
     | '/frass-hill'
     | '/frass-kicks'
@@ -1532,12 +1556,14 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   AfroDesignersRoute: typeof AfroDesignersRouteWithChildren
+  ArrivalRoute: typeof ArrivalRoute
   AuthRoute: typeof AuthRoute
   BareDripRoute: typeof BareDripRouteWithChildren
   BlogRoute: typeof BlogRouteWithChildren
   CapsulesRoute: typeof CapsulesRouteWithChildren
   CheckoutRoute: typeof CheckoutRoute
   ForUsRoute: typeof ForUsRoute
+  FrassDistrictRoute: typeof FrassDistrictRoute
   FrassDripRoute: typeof FrassDripRouteWithChildren
   FrassHillRoute: typeof FrassHillRoute
   FrassKicksRoute: typeof FrassKicksRouteWithChildren
@@ -1698,6 +1724,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof FrassDripRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/frass-district': {
+      id: '/frass-district'
+      path: '/frass-district'
+      fullPath: '/frass-district'
+      preLoaderRoute: typeof FrassDistrictRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/for-us': {
       id: '/for-us'
       path: '/for-us'
@@ -1738,6 +1771,13 @@ declare module '@tanstack/react-router' {
       path: '/auth'
       fullPath: '/auth'
       preLoaderRoute: typeof AuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/arrival': {
+      id: '/arrival'
+      path: '/arrival'
+      fullPath: '/arrival'
+      preLoaderRoute: typeof ArrivalRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/afro-designers': {
@@ -2860,12 +2900,14 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   AfroDesignersRoute: AfroDesignersRouteWithChildren,
+  ArrivalRoute: ArrivalRoute,
   AuthRoute: AuthRoute,
   BareDripRoute: BareDripRouteWithChildren,
   BlogRoute: BlogRouteWithChildren,
   CapsulesRoute: CapsulesRouteWithChildren,
   CheckoutRoute: CheckoutRoute,
   ForUsRoute: ForUsRoute,
+  FrassDistrictRoute: FrassDistrictRoute,
   FrassDripRoute: FrassDripRouteWithChildren,
   FrassHillRoute: FrassHillRoute,
   FrassKicksRoute: FrassKicksRouteWithChildren,

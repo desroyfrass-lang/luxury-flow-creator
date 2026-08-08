@@ -24,7 +24,9 @@ const SESSION_PREFIX = "frassy-host:";
  * Frassy greets once, at the doors of the World of Frass. Everywhere else she
  * is already present and simply continues; she never re-introduces herself.
  */
-const ENTRANCE_IDS = new Set(["home", "gateway", "frass-hill"]);
+// The entrance page (/) performs Frassy's full welcome itself (FRASS-0923),
+// so the universal host never re-introduces her anywhere.
+const ENTRANCE_IDS = new Set<string>();
 
 
 function seenThisSession(id: string) {

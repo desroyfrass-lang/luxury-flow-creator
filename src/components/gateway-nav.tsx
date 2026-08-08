@@ -19,7 +19,8 @@ type NavGroup = {
 
 /** Every destination in the World of Frass is reachable from this bar. */
 const NAV: NavGroup[] = [
-  { label: "Frass District", to: "/", match: "/shop-frass" },
+  { label: "The Entrance", to: "/", match: "/gateway" },
+  { label: "Frass District", to: "/frass-district", match: "/frass-district" },
   {
     label: "Frass Kicks",
     to: "/frass-kicks",
@@ -125,7 +126,8 @@ const NAV: NavGroup[] = [
 
 /** Always-visible destinations on the bar itself. */
 const PRIMARY: { label: string; to: string; match: string; editorial?: boolean }[] = [
-  { label: "Frass District", to: "/", match: "/shop-frass" },
+  { label: "The Entrance", to: "/", match: "/gateway" },
+  { label: "Frass District", to: "/frass-district", match: "/frass-district" },
   { label: "Afro Designers", to: "/afro-designers", match: "/afro-designers", editorial: true },
   { label: "Frass Luxury House", to: "/frass-luxury-house", match: "/frass-luxury-house", editorial: true },
   { label: "Frass Plus+", to: "/frass-plus", match: "/frass-plus" },
@@ -145,7 +147,7 @@ export function GatewayNav({ mode }: { mode: "shop" | "world" }) {
     <header className="sticky top-0 z-50 border-b border-border/60 bg-background/85 backdrop-blur-xl">
       <div className="mx-auto grid max-w-[1600px] grid-cols-[minmax(0,1fr)_auto] items-center gap-4 px-5 py-3 lg:px-10">
         <div className="flex min-w-0 items-center gap-5">
-          <Link to="/gateway" aria-label="Frass gateway" className="shrink-0">
+          <Link to="/" aria-label="Frass entrance" className="shrink-0">
             <img src={fullLogo.url} alt="Frass" className="h-8 w-auto object-contain md:h-10" />
           </Link>
 
@@ -155,7 +157,7 @@ export function GatewayNav({ mode }: { mode: "shop" | "world" }) {
             className="hidden shrink-0 items-center rounded-full border border-border bg-background/70 p-1 sm:flex"
           >
             <Link
-              to="/"
+              to="/frass-district"
               role="tab"
               aria-selected={mode === "shop"}
               className={`rounded-full px-4 py-1.5 text-[10px] font-bold uppercase tracking-[0.22em] transition ${
