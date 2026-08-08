@@ -36,6 +36,7 @@ import { Route as BareDripRouteImport } from './routes/bare-drip'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AfroDesignersRouteImport } from './routes/afro-designers'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
+import { Route as IndexRouteImport } from './routes/index'
 import { Route as SocialMediaViralsIndexRouteImport } from './routes/social-media-virals.index'
 import { Route as LookbookIndexRouteImport } from './routes/lookbook.index'
 import { Route as KidsWorldIndexRouteImport } from './routes/kids-world.index'
@@ -268,6 +269,11 @@ const AfroDesignersRoute = AfroDesignersRouteImport.update({
 } as any)
 const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
   id: '/_authenticated',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const IndexRoute = IndexRouteImport.update({
+  id: '/',
+  path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SocialMediaViralsIndexRoute = SocialMediaViralsIndexRouteImport.update({
@@ -795,7 +801,7 @@ const SocialMediaViralsCategorySubProductRoute =
   } as any)
 
 export interface FileRoutesByFullPath {
-  '/': typeof AuthenticatedRouteRouteWithChildren
+  '/': typeof IndexRoute
   '/afro-designers': typeof AfroDesignersRouteWithChildren
   '/auth': typeof AuthRoute
   '/bare-drip': typeof BareDripRouteWithChildren
@@ -923,7 +929,7 @@ export interface FileRoutesByFullPath {
   '/social-media-virals/$category/$sub/$product': typeof SocialMediaViralsCategorySubProductRoute
 }
 export interface FileRoutesByTo {
-  '/': typeof AuthenticatedRouteRouteWithChildren
+  '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/checkout': typeof CheckoutRoute
   '/for-us': typeof ForUsRoute
@@ -1035,6 +1041,7 @@ export interface FileRoutesByTo {
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
+  '/': typeof IndexRoute
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/afro-designers': typeof AfroDesignersRouteWithChildren
   '/auth': typeof AuthRoute
@@ -1404,6 +1411,7 @@ export interface FileRouteTypes {
     | '/social-media-virals/$category/$sub/$product'
   id:
     | '__root__'
+    | '/'
     | '/_authenticated'
     | '/afro-designers'
     | '/auth'
@@ -1533,6 +1541,7 @@ export interface FileRouteTypes {
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
+  IndexRoute: typeof IndexRoute
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   AfroDesignersRoute: typeof AfroDesignersRouteWithChildren
   AuthRoute: typeof AuthRoute
@@ -1763,6 +1772,13 @@ declare module '@tanstack/react-router' {
       path: ''
       fullPath: '/'
       preLoaderRoute: typeof AuthenticatedRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/': {
+      id: '/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/social-media-virals/': {
@@ -2861,6 +2877,7 @@ const SocialMediaViralsRouteWithChildren =
   SocialMediaViralsRoute._addFileChildren(SocialMediaViralsRouteChildren)
 
 const rootRouteChildren: RootRouteChildren = {
+  IndexRoute: IndexRoute,
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   AfroDesignersRoute: AfroDesignersRouteWithChildren,
   AuthRoute: AuthRoute,
