@@ -183,9 +183,18 @@ export function buildLedgerEntries(input: TransactionInput): TransactionBreakdow
   const allocation = allocate(input.gross);
   const afterCosts = round(allocation.net - costs - (input.tax ?? 0));
   const marketplacePayout = round((afterCosts * (input.marketplaceSharePct ?? 0)) / 100);
-  const profit = round(afterCosts - marketplacePayout);
-  const ownerCompensation = round((Math.max(profit, 0) * (input.ownerCompensationPct ?? 0)) / 100);
-  const businessCash = round(profit - ownerCompensation);
+  /** The sale is now "clean": every mandatory obligation has been paid. */
+  const cleanProfit = round(afterCosts - marketplacePayout);
+  const hasSplit =
+    input.founderCompensationPct !== undefined || input.coFounderCompensationPct !== undefined;
+  const founderPct = hasSplit
+    ? (input.founderCompensationPct ?? 0)
+    : (input.ownerCompensationPct ?? 0);
+  const coFounderPct = hasSplit ? (input.coFounderCompensationPct ?? 0) : 0;
+  const founderCompensation = round((Math.max(cleanProfit, 0) * founderPct) / 100);
+  const coFounderCompensation = round((Math.max(cleanProfit, 0) * coFounderPct) / 100);
+  const ownerCompensation = round(founderCompensation + coFounderCompensation);
+  const businessCash = round(cleanProfit - ownerCompensation);
 
   const entry = (
     ledger: LedgerId,
