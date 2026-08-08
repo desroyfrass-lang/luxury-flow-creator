@@ -34,6 +34,12 @@ export const Route = createFileRoute("/_authenticated/founder")({
 
 const CONTROLS = [
   {
+    title: "Founder Room (Workspace)",
+    blurb:
+      "The professional workspace: projects, conversation sections, task panel, timeline, persistent composer.",
+    to: "/room",
+  },
+  {
     title: "Commissioning",
     blurb: "Continue the Founder Commissioning Journey with Frassy.",
     to: "/onboarding",
