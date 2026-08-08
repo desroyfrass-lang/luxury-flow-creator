@@ -1093,3 +1093,55 @@ a.ps-row:hover { border-color: color-mix(in srgb, var(--gold) 60%, transparent);
   cursor: pointer;
 }
 .bp-impact-ack input { accent-color: var(--gold); }
+
+/* ── FRASS-0400 — Frassy Workspace Composer ─────────────────────────────── */
+.frass-workspace .ws-composer { position: relative; border-radius: 0.5rem; }
+.frass-workspace .ws-composer-drag {
+  outline: 1px dashed var(--ws-gold);
+  outline-offset: 6px;
+}
+.frass-workspace .ws-composer-menu {
+  position: absolute; bottom: 2.6rem; left: 0; z-index: 60; width: 15rem;
+  max-height: min(60vh, 24rem); overflow-y: auto;
+  border: 1px solid var(--ws-line); border-radius: 0.6rem;
+  background: var(--ws-bg); padding: 0.25rem; box-shadow: 0 20px 45px rgb(0 0 0 / 0.45);
+}
+.frass-workspace .ws-composer-menu-item {
+  display: flex; width: 100%; align-items: center; gap: 0.6rem;
+  padding: 0.5rem 0.6rem; border-radius: 0.4rem;
+  font-size: 12px; color: var(--ws-soft); text-align: left;
+}
+.frass-workspace .ws-composer-menu-item:hover { color: var(--ws-ink); background: color-mix(in srgb, var(--ws-gold) 10%, transparent); }
+
+.frass-workspace .ws-uploads {
+  margin-bottom: 0.5rem; border: 1px solid var(--ws-line); border-radius: 0.5rem;
+  background: color-mix(in srgb, var(--ws-gold) 4%, transparent);
+}
+.frass-workspace .ws-uploads-head {
+  display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center; justify-content: space-between;
+  padding: 0.45rem 0.6rem; font-size: 11px; color: var(--ws-soft);
+  border-bottom: 1px solid var(--ws-line);
+}
+.frass-workspace .ws-uploads-list { max-height: 13rem; overflow-y: auto; }
+.frass-workspace .ws-upload-row {
+  display: flex; align-items: center; gap: 0.6rem; padding: 0.45rem 0.6rem;
+}
+.frass-workspace .ws-upload-kind {
+  display: inline-flex; height: 2rem; width: 2rem; align-items: center; justify-content: center;
+  border-radius: 0.3rem; border: 1px solid var(--ws-line);
+  font-size: 9px; text-transform: uppercase; color: var(--ws-soft);
+}
+.frass-workspace .ws-upload-name {
+  display: block; font-size: 12px; color: var(--ws-ink);
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.frass-workspace .ws-upload-meta {
+  display: flex; align-items: center; gap: 0.35rem; font-size: 10.5px; color: var(--ws-soft);
+}
+.frass-workspace .ws-upload-bar {
+  display: block; margin-top: 0.3rem; height: 3px; border-radius: 999px;
+  background: color-mix(in srgb, var(--ws-ink) 12%, transparent); overflow: hidden;
+}
+.frass-workspace .ws-upload-fill {
+  display: block; height: 100%; background: var(--ws-gold); transition: width 0.2s linear;
+}
