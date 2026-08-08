@@ -148,6 +148,44 @@ function ForUsPage() {
         </div>
       </section>
 
+      {/* Stepping inside — the hall itself, before any story is read */}
+      <section className="mx-auto max-w-[1400px] px-6 pt-10 lg:px-12">
+        <header className="mb-5">
+          <h2 className="text-xl font-bold uppercase tracking-[0.2em] md:text-2xl">
+            Inside the hall
+          </h2>
+          <p className="mt-1 text-xs text-muted-foreground">
+            Screens, boards and exhibits — what the room is showing as you walk in.
+          </p>
+        </header>
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          {exhibits.map((ex) => (
+            <div
+              key={ex.id}
+              className="rounded-2xl border border-border/60 bg-secondary/25 p-5 transition hover:border-[color:var(--gold)]/60"
+            >
+              <span className="text-xl" aria-hidden>
+                {ex.glyph}
+              </span>
+              <p className="mt-2 text-[10px] uppercase tracking-[0.22em] text-[color:var(--gold)]">
+                {ex.name}
+              </p>
+              <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{ex.showing}</p>
+              {ex.to && (
+                <Link
+                  to={ex.to}
+                  className="mt-3 inline-block text-[10px] uppercase tracking-[0.22em] underline-offset-4 hover:text-[color:var(--gold)] hover:underline"
+                >
+                  {ex.cta ?? "Open"} →
+                </Link>
+              )}
+            </div>
+          ))}
+        </div>
+      </section>
+
+
+
       {/* Sections — finite, organised, storytelling-sized */}
       <div className="mx-auto max-w-[1400px] space-y-16 px-6 py-14 lg:px-12">
         {sections.map((section) => {
