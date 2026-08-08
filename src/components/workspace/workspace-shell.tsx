@@ -123,11 +123,14 @@ export function WorkspaceShell({
         <div className="relative mx-4 hidden max-w-md flex-1 md:block">
           <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 opacity-50" />
           <input
+            ref={searchRef}
+            id="ws-global-search"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Search everything — chats, projects, tasks, vendors, milestones…"
             className="ws-search"
           />
+
           {searchHits.length > 0 && (
             <div className="ws-search-pop">
               {searchHits.map((h, i) => (
