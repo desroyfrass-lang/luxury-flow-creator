@@ -336,6 +336,14 @@ export function WorkspaceRoom({
             trayPick("Drag & Drop", e.dataTransfer.files);
           }}
         >
+          <AwarenessRail
+            projectName={project.name}
+            alternateName={modeProjects.find((p) => p.id !== activeProjectId)?.name}
+            alternateId={modeProjects.find((p) => p.id !== activeProjectId)?.id}
+            onSwitchProject={setActiveProjectId}
+            onAsk={(prompt) => void send(prompt)}
+            pulse={awarenessPulse}
+          />
           {note && <p className="ws-note">{note}</p>}
           <UploadTray
             onPick={trayPick}
