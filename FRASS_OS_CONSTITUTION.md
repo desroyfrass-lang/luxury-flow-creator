@@ -212,6 +212,10 @@ Builder continuity remains.
 
 ---
 
+# Volume V — Governance & Evolution
+
+*How Frass OS changes, who authorises it, and what is remembered forever.*
+
 ## Governance
 
 The Constitution changes rarely.
