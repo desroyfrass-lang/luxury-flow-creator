@@ -69,8 +69,14 @@ function ForUsPage() {
   const { from } = Route.useSearch();
   const navigate = useNavigate();
   const context = useMemo(() => resolveForUsContext(from || undefined), [from]);
-  const sections = useMemo(() => orderSections(context.priority), [context.priority]);
+  const { data: published = [] } = usePublishedStories();
+  const sections = useMemo(
+    () => mergePublished(orderSections(context.priority), published),
+    [context.priority, published],
+  );
+  const exhibits = useMemo(() => orderExhibits(context.priority), [context.priority]);
   const [caughtUp, setCaughtUp] = useState(false);
+
 
   const goBack = () => {
     if (from) navigate({ to: from });
