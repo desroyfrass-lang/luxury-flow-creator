@@ -174,6 +174,27 @@ export function WorkspaceShell({
         </div>
       </header>
 
+      {/* ── Workspace memory bar — you always know exactly where you are ── */}
+      <nav className="ws-memorybar" aria-label="Workspace position" data-blueprint="workspace-memory">
+        <span className="ws-memorybar-root">My Workspace</span>
+        <span aria-hidden>→</span>
+        <button type="button" onClick={() => onSelectMode(activeModeId)}>
+          {modes.find((m) => m.id === activeModeId)?.name ?? "Workspace"}
+        </button>
+        <span aria-hidden>→</span>
+        <button type="button" onClick={() => onSelectProject(activeProjectId)}>
+          {projects.find((p) => p.id === activeProjectId)?.name ?? roomName}
+        </button>
+        {focus && (
+          <>
+            <span aria-hidden>→</span>
+            <span className="ws-memorybar-focus">{focus}</span>
+          </>
+        )}
+      </nav>
+
+
+
       {/* ── Body ───────────────────────────────────────────────────── */}
       <div className="flex min-h-0 flex-1">
         {/* Left sidebar — The Daily, modes, projects, index, timeline */}
