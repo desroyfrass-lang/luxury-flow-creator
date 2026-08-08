@@ -27,7 +27,10 @@ export type PanelPreset =
   | "fashion"
   | "photography"
   | "build"
+  | "finance"
+  | "farm"
   | "governance";
+
 
 export type PanelSection = { title: string; items: string[] };
 
