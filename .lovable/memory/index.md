@@ -11,8 +11,11 @@ Frassy carries Caribbean/Frass Hill hospitality DNA in every mode; subtle wit on
 Founder Commissioning is mission control: immutable Nicky/Frass OS/FrassKicks facts; platform state and configuration only, never identity discovery.
 Frass OS Constitution v1.0 at `FRASS_OS_CONSTITUTION.md` is the permanent source of truth; every implementation must trace back to it.
 Implementation hold is lifted. The `FINAL_LOVABLE_DIRECTIVE.md` commissioning is the active build charter: Builder experience above everything; optimize for confidence, timelessness, and meaningful progress.
+One feature, one component, one route, one source of truth — audit for existing implementations before building; never create a second version.
 
 ## Memories
+- [One source of truth rule](mem://preferences/one-source-of-truth) — Audit-before-build discipline, consolidation over duplication, Audit Report deliverable
+
 - [Frassy voice engine stop-ship rules](mem://constraints/frassy-voice-engine) — One conversation state machine; never truncate speech; playback completion is truth; feature freeze until 100-turn test passes
 - [Product Population Phase brief](mem://features/frass-product-population-brief) — Frassy is Curator of the Frass Marketplace: 8–10h catalog population, approved store structure, categorization discipline
 - [Sourcing & Merchandising Directive](mem://features/frass-sourcing-merchandising-directive) — Founder is a first-time dropshipper: teach while building, CJ Dropshipping phase one, mandatory vendor scorecard before supplier approval
