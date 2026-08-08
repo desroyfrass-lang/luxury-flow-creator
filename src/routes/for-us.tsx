@@ -4,13 +4,17 @@ import { SiteShell } from "@/components/site-shell";
 import { PageFeedback } from "@/components/page-feedback";
 import { ArrowLeft, Sparkles, Heart, Compass } from "lucide-react";
 import hallImage from "@/assets/for-us-hall.jpg";
+import { usePublishedStories } from "@/hooks/use-for-us-stories";
 import {
   CAUGHT_UP_ACTIONS,
+  mergePublished,
+  orderExhibits,
   orderSections,
   orderStories,
   resolveForUsContext,
   type ForUsStory,
 } from "@/lib/for-us";
+
 
 export const Route = createFileRoute("/for-us")({
   validateSearch: (search: Record<string, unknown>) => ({
@@ -65,8 +69,14 @@ function ForUsPage() {
   const { from } = Route.useSearch();
   const navigate = useNavigate();
   const context = useMemo(() => resolveForUsContext(from || undefined), [from]);
-  const sections = useMemo(() => orderSections(context.priority), [context.priority]);
+  const { data: published = [] } = usePublishedStories();
+  const sections = useMemo(
+    () => mergePublished(orderSections(context.priority), published),
+    [context.priority, published],
+  );
+  const exhibits = useMemo(() => orderExhibits(context.priority), [context.priority]);
   const [caughtUp, setCaughtUp] = useState(false);
+
 
   const goBack = () => {
     if (from) navigate({ to: from });
@@ -137,6 +147,44 @@ function ForUsPage() {
           </Link>
         </div>
       </section>
+
+      {/* Stepping inside — the hall itself, before any story is read */}
+      <section className="mx-auto max-w-[1400px] px-6 pt-10 lg:px-12">
+        <header className="mb-5">
+          <h2 className="text-xl font-bold uppercase tracking-[0.2em] md:text-2xl">
+            Inside the hall
+          </h2>
+          <p className="mt-1 text-xs text-muted-foreground">
+            Screens, boards and exhibits — what the room is showing as you walk in.
+          </p>
+        </header>
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          {exhibits.map((ex) => (
+            <div
+              key={ex.id}
+              className="rounded-2xl border border-border/60 bg-secondary/25 p-5 transition hover:border-[color:var(--gold)]/60"
+            >
+              <span className="text-xl" aria-hidden>
+                {ex.glyph}
+              </span>
+              <p className="mt-2 text-[10px] uppercase tracking-[0.22em] text-[color:var(--gold)]">
+                {ex.name}
+              </p>
+              <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{ex.showing}</p>
+              {ex.to && (
+                <Link
+                  to={ex.to}
+                  className="mt-3 inline-block text-[10px] uppercase tracking-[0.22em] underline-offset-4 hover:text-[color:var(--gold)] hover:underline"
+                >
+                  {ex.cta ?? "Open"} →
+                </Link>
+              )}
+            </div>
+          ))}
+        </div>
+      </section>
+
+
 
       {/* Sections — finite, organised, storytelling-sized */}
       <div className="mx-auto max-w-[1400px] space-y-16 px-6 py-14 lg:px-12">

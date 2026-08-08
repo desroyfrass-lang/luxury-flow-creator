@@ -15,7 +15,9 @@ export type ForUsSectionId =
   | "music"
   | "learn"
   | "around_the_hill"
-  | "celebrations";
+  | "celebrations"
+  | "foundation"
+  | "behind_the_build";
 
 export type ForUsStory = {
   id: string;
@@ -366,9 +368,74 @@ export const FOR_US_SECTIONS: ForUsSection[] = [
       },
     ],
   },
+  {
+    id: "foundation",
+    glyph: "🤝",
+    name: "The Foundation Wall",
+    purpose: "Where the money goes, who it reached, and what it made possible.",
+    stories: [
+      {
+        id: "fo-1",
+        source: "Foundation Office",
+        title: "Three classrooms received new learning resources",
+        body: "Funded by last month's community support. Books, tablets and a repaired roof — receipts posted on the wall, as always.",
+        tags: ["foundation", "education", "children", "community"],
+      },
+      {
+        id: "fo-2",
+        source: "Foundation Office",
+        title: "Volunteer roster is open for the next build weekend",
+        body: "Painting, planting, and a kitchen fit-out. No experience needed; lunch is on the Hill.",
+        to: "/opportunity",
+        cta: "Volunteer",
+        tags: ["foundation", "volunteer", "community"],
+      },
+      {
+        id: "fo-3",
+        source: "Foundation Office",
+        title: "Where this season's podcast revenue went",
+        body: "A share of every episode goes to the Foundation. This season funded two school supply drives and one apprenticeship stipend.",
+        tags: ["foundation", "podcasts", "business", "education"],
+      },
+    ],
+  },
+  {
+    id: "behind_the_build",
+    glyph: "🏗️",
+    name: "Behind the Build",
+    purpose: "The permanent record of how Frass was built, one milestone at a time.",
+    stories: [
+      {
+        id: "bb-1",
+        source: "Founder Hall",
+        title: "The Frass Hill Town Plan was completed",
+        body: "Eight core districts, each with its own venues. The Hill stopped being a metaphor and became a map.",
+        to: "/frass-hill",
+        cta: "Walk the Hill",
+        tags: ["history", "platform development", "community"],
+      },
+      {
+        id: "bb-2",
+        source: "Children's Village",
+        title: "The first learning spaces opened",
+        body: "Four age-safe environments, a parent dashboard, and the first published activities.",
+        to: "/kids-world",
+        cta: "Visit the Village",
+        tags: ["children", "education", "family", "platform development"],
+      },
+      {
+        id: "bb-3",
+        source: "Community Hall",
+        title: "For Us opened its doors",
+        body: "The Community Hall in Town Square became the shared gathering place of Frass — one click from anywhere you work, learn, create or shop.",
+        tags: ["community", "history", "platform development"],
+      },
+    ],
+  },
 ];
 
 /** FRASS-0921 — context-aware ordering. Same page, intelligent priority. */
+
 export type ForUsContext = {
   /** Where the member came from. */
   label: string;
@@ -454,6 +521,8 @@ const SECTION_TAGS: Record<ForUsSectionId, string[]> = {
   learn: ["education", "mentorship"],
   around_the_hill: [],
   celebrations: ["business", "marketplace"],
+  foundation: ["foundation", "volunteer", "community", "family"],
+  behind_the_build: ["history", "platform development"],
 };
 
 export function orderSections(priority: string[]): ForUsSection[] {
@@ -476,3 +545,193 @@ export const CAUGHT_UP_ACTIONS: { label: string; to: string }[] = [
   { label: "Learn something new", to: "/academy" },
   { label: "Support the Foundation", to: "/opportunity" },
 ];
+
+// ─────────────────────────────────────────────────────────────
+// FRASS-0921 — The Living Community Hall (arrival, before stories)
+// You walk into a civic building, not a feed. These are the fixtures
+// you see when you step through the doors.
+// ─────────────────────────────────────────────────────────────
+
+export type HallExhibit = {
+  id: string;
+  glyph: string;
+  /** What the fixture is called inside the hall. */
+  name: string;
+  /** What it is showing right now. */
+  showing: string;
+  to?: string;
+  cta?: string;
+  tags: string[];
+};
+
+export const HALL_EXHIBITS: HallExhibit[] = [
+  {
+    id: "highlights-screen",
+    glyph: "📺",
+    name: "The Highlights Screen",
+    showing: "Today's community highlights, playing on the big screen above the entrance.",
+    tags: ["community", "events"],
+  },
+  {
+    id: "founder-announcement",
+    glyph: "🎙️",
+    name: "Founder Announcement",
+    showing: "A short message from the Founder, playing quietly in the corner by the coffee.",
+    to: "/founder",
+    cta: "Founder Hall",
+    tags: ["business", "history", "platform development"],
+  },
+  {
+    id: "dj-corner",
+    glyph: "🎧",
+    name: "The Listening Corner",
+    showing: "This week's featured mix from a Studio District DJ, low enough to talk over.",
+    to: "/music-media",
+    cta: "Listen",
+    tags: ["music", "artists", "recording", "podcasts"],
+  },
+  {
+    id: "builder-of-the-month",
+    glyph: "🛠️",
+    name: "Builder of the Month Exhibit",
+    showing: "Photographs, drawings and finished work from one builder, mounted along the east wall.",
+    to: "/builders",
+    cta: "Builders Village",
+    tags: ["projects", "trades", "mentorship", "construction"],
+  },
+  {
+    id: "foundation-wall",
+    glyph: "🤝",
+    name: "The Foundation Wall",
+    showing: "Current community projects, what has been funded, and who it reached.",
+    to: "/opportunity",
+    cta: "Support a project",
+    tags: ["foundation", "volunteer", "community"],
+  },
+  {
+    id: "fashion-display",
+    glyph: "👗",
+    name: "The Frass District Display",
+    showing: "A dressed case from the district promenade, changed every Friday.",
+    to: "/shop-frass",
+    cta: "Frass District",
+    tags: ["fashion", "editorials", "marketplace"],
+  },
+  {
+    id: "events-board",
+    glyph: "📅",
+    name: "Tonight on the Square",
+    showing: "Live music, a market late-open, and a Foundation supper at seven.",
+    to: "/frass-hill",
+    cta: "Town Square",
+    tags: ["events", "community", "music"],
+  },
+  {
+    id: "good-news-board",
+    glyph: "🌟",
+    name: "Good News Around the Hill",
+    showing: "A handwritten board of milestones from every district this week.",
+    tags: ["community", "celebrations", "family"],
+  },
+];
+
+export function orderExhibits(priority: string[]): HallExhibit[] {
+  if (priority.length === 0) return HALL_EXHIBITS;
+  const score = (e: HallExhibit) => (e.tags.some((t) => priority.includes(t)) ? 0 : 1);
+  return HALL_EXHIBITS.map((e, i) => ({ e, i }))
+    .sort((a, b) => score(a.e) - score(b.e) || a.i - b.i)
+    .map((x) => x.e);
+}
+
+// ─────────────────────────────────────────────────────────────
+// FRASS-0922 — Community Storytelling & Feed Intelligence
+// Frassy proposes; the Founder approves; only then is it published.
+// ─────────────────────────────────────────────────────────────
+
+export const FOR_US_CATEGORIES = [
+  "Community",
+  "Walk With Power",
+  "Foundation",
+  "Platform Development",
+  "Founder Updates",
+  "Marketplace",
+  "Builders",
+  "Music",
+  "DJs",
+  "Farm District",
+  "Luxury House",
+  "Frass District",
+  "Children's Village",
+  "University",
+  "Business",
+  "Technology",
+  "AI",
+  "Creators",
+  "Events",
+  "Celebrations",
+  "Milestones",
+  "Behind the Build",
+  "History",
+] as const;
+
+export type ForUsCategory = (typeof FOR_US_CATEGORIES)[number];
+
+export const STORY_STATUSES = ["proposed", "draft", "approved", "published", "archived"] as const;
+export type StoryStatus = (typeof STORY_STATUSES)[number];
+
+export type ForUsStoryRow = {
+  id: string;
+  section_id: string;
+  series: string | null;
+  source_label: string;
+  title: string;
+  summary: string;
+  body: string | null;
+  categories: string[];
+  tags: string[];
+  media_url: string | null;
+  media_kind: "none" | "image" | "video" | "audio";
+  cta_label: string | null;
+  cta_to: string | null;
+  impact_note: string | null;
+  revenue_note: string | null;
+  audience: "everyone" | "members" | "founder";
+  status: StoryStatus;
+  origin: "frassy" | "founder" | "community";
+  occurred_at: string;
+  published_at: string | null;
+  created_at: string;
+};
+
+/** Published rows are rendered exactly like curated stories. */
+export function rowToStory(row: ForUsStoryRow): ForUsStory {
+  const extra = [row.impact_note, row.revenue_note].filter(Boolean).join(" ");
+  return {
+    id: `db-${row.id}`,
+    source: row.source_label,
+    title: row.title,
+    body: extra ? `${row.summary} ${extra}` : row.summary,
+    to: row.cta_to ?? undefined,
+    cta: row.cta_label ?? undefined,
+    tags: row.tags,
+  };
+}
+
+export function isSectionId(value: string): value is ForUsSectionId {
+  return FOR_US_SECTIONS.some((s) => s.id === value);
+}
+
+/** Merge approved-and-published stories into the finite curated sections. */
+export function mergePublished(
+  sections: ForUsSection[],
+  rows: ForUsStoryRow[],
+): ForUsSection[] {
+  if (rows.length === 0) return sections;
+  return sections.map((section) => {
+    const extra = rows
+      .filter((r) => r.section_id === section.id)
+      .sort((a, b) => (b.published_at ?? b.occurred_at).localeCompare(a.published_at ?? a.occurred_at))
+      .map(rowToStory);
+    return extra.length ? { ...section, stories: [...extra, ...section.stories] } : section;
+  });
+}
