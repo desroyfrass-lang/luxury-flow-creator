@@ -195,13 +195,19 @@ function DistrictCard({
   district: d,
   open,
   onToggle,
+  onLook,
 }: {
   district: HillDistrict;
   open: boolean;
   onToggle: () => void;
+  onLook: (id: string) => void;
 }) {
   return (
-    <article className="group overflow-hidden rounded-[1.75rem] border border-border/60 bg-card/40 transition-colors hover:border-[color:var(--hill-gold)]/40">
+    <article
+      id={`district-${d.id}`}
+      className="group scroll-mt-24 overflow-hidden rounded-[1.75rem] border border-border/60 bg-card/40 transition-colors hover:border-[color:var(--hill-gold)]/40"
+    >
+
       <div className="relative h-56 overflow-hidden md:h-64">
         <img
           src={IMAGES[d.image] ?? squareImg}
