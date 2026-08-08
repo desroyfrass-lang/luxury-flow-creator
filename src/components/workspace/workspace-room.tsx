@@ -296,16 +296,6 @@ export function WorkspaceRoom({
     }, 60);
   }
 
-  function trayPick(label: string, files?: FileList | null) {
-    const names = files ? Array.from(files).map((f) => f.name).join(", ") : "";
-    setNote(
-      names
-        ? `${label} attached: ${names} — Frassy will review it with this project.`
-        : `${label} is docked to this room. Frassy will pick it up in this project.`,
-    );
-    window.setTimeout(() => setNote(null), 3200);
-  }
-
   return (
     <WorkspaceShell
       roomName={roomName}
@@ -320,91 +310,55 @@ export function WorkspaceRoom({
       onSelectProject={setActiveProjectId}
       roleLinks={roleLinks}
       focus={focus}
-
-
-
       index={index}
       onJumpTo={jumpTo}
       milestones={FOUNDER_MILESTONES}
       tasks={FOUNDER_TASKS}
       panel={PANEL_PRESETS[project.panel]}
       composer={
-        <div
-          onDragOver={(e) => e.preventDefault()}
-          onDrop={(e) => {
-            e.preventDefault();
-            trayPick("Drag & Drop", e.dataTransfer.files);
+        // FRASS-0400 — the Frassy Workspace Composer. One workstation, every role.
+        <FrassyComposer
+          value={input}
+          onChange={setInput}
+          loading={loading}
+          inputRef={inputRef}
+          placeholder={`Work with Frassy on ${project.name}…`}
+          onSend={(text, intake) =>
+            void send(intake ? `${text}\n\n[Attached for review] ${intake}` : text)
+          }
+          onStop={() => {
+            turnRef.current += 1;
+            abortRef.current?.abort();
+            setLoading(false);
           }}
-        >
-          <AwarenessRail
-            projectName={project.name}
-            alternateName={modeProjects.find((p) => p.id !== activeProjectId)?.name}
-            alternateId={modeProjects.find((p) => p.id !== activeProjectId)?.id}
-            onSwitchProject={setActiveProjectId}
-            onAsk={(prompt) => void send(prompt)}
-            pulse={awarenessPulse}
-          />
-          {note && <p className="ws-note">{note}</p>}
-          <UploadTray
-            onPick={trayPick}
-            onMic={voice.voiceAvailable ? () => void toggleMic() : undefined}
-            micActive={voice.phase === "recording"}
-          />
-          <form
-            className="mt-2 flex items-end gap-2"
-            onSubmit={(e) => {
-              e.preventDefault();
-              void send();
-            }}
-          >
-            <button type="button" className="ws-icon" onClick={newTopic} aria-label="Start a new topic">
-              <Plus className="h-4 w-4" />
-            </button>
-            <textarea
-              ref={inputRef}
-              rows={1}
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === "Enter" && !e.shiftKey) {
-                  e.preventDefault();
-                  void send();
-                }
-              }}
-              placeholder={`Work with Frassy on ${project.name}…`}
-              className="ws-input"
-            />
-            <button
-              type="button"
-              className="ws-icon"
-              aria-label={speakReplies ? "Mute Frassy" : "Let Frassy speak"}
-              onClick={() => {
-                if (speakReplies && voice.phase === "speaking") voice.stopSpeaking();
-                setSpeakReplies((v) => !v);
-              }}
-            >
-              {speakReplies ? <Volume2 className="h-4 w-4" /> : <VolumeX className="h-4 w-4" />}
-            </button>
-            {loading ? (
-              <button
-                type="button"
-                className="ws-send"
-                aria-label="Stop"
-                onClick={() => {
-                  turnRef.current += 1;
-                  abortRef.current?.abort();
-                  setLoading(false);
-                }}
-              >
-                <Square className="h-4 w-4" />
-              </button>
-            ) : (
-              <button type="submit" className="ws-send" aria-label="Send" disabled={!input.trim()}>
-                <Send className="h-4 w-4" />
-              </button>
-            )}
-          </form>
-        </div>
+          onNewTopic={newTopic}
+          onMic={voice.voiceAvailable ? () => void toggleMic() : undefined}
+          micAvailable={voice.voiceAvailable}
+          micActive={voice.phase === "recording"}
+          speaking={speakReplies}
+          onToggleSpeech={() => {
+            if (speakReplies && voice.phase === "speaking") voice.stopSpeaking();
+            setSpeakReplies((v) => !v);
+          }}
+          onIntake={(summary) => {
+            setNote(`${summary} received — filed to ${project.name}.`);
+            window.setTimeout(() => setNote(null), 3600);
+            recordActivity(activeProjectId);
+          }}
+          header={
+            <>
+              <AwarenessRail
+                projectName={project.name}
+                alternateName={modeProjects.find((p) => p.id !== activeProjectId)?.name}
+                alternateId={modeProjects.find((p) => p.id !== activeProjectId)?.id}
+                onSwitchProject={setActiveProjectId}
+                onAsk={(prompt) => void send(prompt)}
+                pulse={awarenessPulse}
+              />
+              {note && <p className="ws-note">{note}</p>}
+            </>
+          }
+        />
       }
     >
       <div ref={scrollRef} className="mx-auto w-full max-w-3xl px-6 py-8">
