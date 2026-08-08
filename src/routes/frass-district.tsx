@@ -117,9 +117,9 @@ const STORES: { title: string; description: string; image: string; to: string; e
     to: "/frass-shape/women",
     eyebrow: "Wellness",
   },
-
-
+  {
     title: "Frass Kids",
+
     description: "The children's flagship — eight age & gender stores, one Frass architecture.",
     image: districtKids,
     to: "/frass-kids",
