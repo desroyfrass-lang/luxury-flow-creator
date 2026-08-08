@@ -77,7 +77,32 @@ export function WorkspaceRoom({
   const [note, setNote] = useState<string | null>(null);
 
   const { isAdmin } = useIsAdminStatus();
+  const businessRoles = useWorkspaceRoles();
+
+  // Role-specific navigation appears automatically; Workspace + Daily are always there.
+  const roleLinks: RoleLink[] = useMemo(() => {
+    const links: RoleLink[] = [];
+    if (isAdmin) {
+      links.push({ to: "/founder", label: "Founder Dashboard", emoji: "🏛" });
+      links.push({ to: "/admin", label: "Admin", emoji: "🛠" });
+      links.push({ to: "/admin/affiliate-policy", label: "Governance", emoji: "⚖️" });
+    }
+    if (businessRoles.includes("partner")) {
+      links.push({ to: "/workspace/merch", label: "Marketplace", emoji: "🏬" });
+      links.push({ to: "/admin/partner-vendors", label: "Vendors", emoji: "📦" });
+    }
+    if (businessRoles.includes("affiliate")) {
+      links.push({ to: "/workspace/affiliate", label: "Affiliate", emoji: "🤝" });
+    }
+    if (businessRoles.includes("designer")) {
+      links.push({ to: "/creation", label: "Creator Studio", emoji: "🎨" });
+    }
+    links.push({ to: "/academy", label: "Academy", emoji: "🎓" });
+    return links;
+  }, [isAdmin, businessRoles]);
+
   const voice = usePushToTalk();
+
   const turnRef = useRef(0);
   const abortRef = useRef<AbortController | null>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
