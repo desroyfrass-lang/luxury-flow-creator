@@ -1046,6 +1046,87 @@ export type Database = {
         }
         Relationships: []
       }
+      for_us_stories: {
+        Row: {
+          approved_by: string | null
+          audience: string
+          body: string | null
+          categories: string[]
+          created_at: string
+          cta_label: string | null
+          cta_to: string | null
+          id: string
+          impact_note: string | null
+          media_kind: string
+          media_url: string | null
+          occurred_at: string
+          origin: string
+          proposed_by: string | null
+          published_at: string | null
+          revenue_note: string | null
+          section_id: string
+          series: string | null
+          source_label: string
+          status: string
+          summary: string
+          tags: string[]
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          approved_by?: string | null
+          audience?: string
+          body?: string | null
+          categories?: string[]
+          created_at?: string
+          cta_label?: string | null
+          cta_to?: string | null
+          id?: string
+          impact_note?: string | null
+          media_kind?: string
+          media_url?: string | null
+          occurred_at?: string
+          origin?: string
+          proposed_by?: string | null
+          published_at?: string | null
+          revenue_note?: string | null
+          section_id?: string
+          series?: string | null
+          source_label?: string
+          status?: string
+          summary: string
+          tags?: string[]
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          approved_by?: string | null
+          audience?: string
+          body?: string | null
+          categories?: string[]
+          created_at?: string
+          cta_label?: string | null
+          cta_to?: string | null
+          id?: string
+          impact_note?: string | null
+          media_kind?: string
+          media_url?: string | null
+          occurred_at?: string
+          origin?: string
+          proposed_by?: string | null
+          published_at?: string | null
+          revenue_note?: string | null
+          section_id?: string
+          series?: string | null
+          source_label?: string
+          status?: string
+          summary?: string
+          tags?: string[]
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       frassy_notes: {
         Row: {
           archived_at: string | null
