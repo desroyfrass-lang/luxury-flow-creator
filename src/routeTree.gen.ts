@@ -96,6 +96,7 @@ import { Route as AuthenticatedPaymentProvidersRouteImport } from './routes/_aut
 import { Route as AuthenticatedOpportunityRouteImport } from './routes/_authenticated/opportunity'
 import { Route as AuthenticatedOnboardingRouteImport } from './routes/_authenticated/onboarding'
 import { Route as AuthenticatedNotificationsRouteImport } from './routes/_authenticated/notifications'
+import { Route as AuthenticatedGlobalOperationsRouteImport } from './routes/_authenticated/global-operations'
 import { Route as AuthenticatedFrassyRouteImport } from './routes/_authenticated/frassy'
 import { Route as AuthenticatedFounderRouteImport } from './routes/_authenticated/founder'
 import { Route as AuthenticatedFinancialCenterRouteImport } from './routes/_authenticated/financial-center'
@@ -590,6 +591,12 @@ const AuthenticatedNotificationsRoute =
     path: '/notifications',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedGlobalOperationsRoute =
+  AuthenticatedGlobalOperationsRouteImport.update({
+    id: '/global-operations',
+    path: '/global-operations',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedFrassyRoute = AuthenticatedFrassyRouteImport.update({
   id: '/frassy',
   path: '/frassy',
@@ -920,6 +927,7 @@ export interface FileRoutesByFullPath {
   '/financial-center': typeof AuthenticatedFinancialCenterRoute
   '/founder': typeof AuthenticatedFounderRoute
   '/frassy': typeof AuthenticatedFrassyRoute
+  '/global-operations': typeof AuthenticatedGlobalOperationsRoute
   '/notifications': typeof AuthenticatedNotificationsRoute
   '/onboarding': typeof AuthenticatedOnboardingRoute
   '/opportunity': typeof AuthenticatedOpportunityRoute
@@ -1047,6 +1055,7 @@ export interface FileRoutesByTo {
   '/financial-center': typeof AuthenticatedFinancialCenterRoute
   '/founder': typeof AuthenticatedFounderRoute
   '/frassy': typeof AuthenticatedFrassyRoute
+  '/global-operations': typeof AuthenticatedGlobalOperationsRoute
   '/notifications': typeof AuthenticatedNotificationsRoute
   '/onboarding': typeof AuthenticatedOnboardingRoute
   '/opportunity': typeof AuthenticatedOpportunityRoute
@@ -1186,6 +1195,7 @@ export interface FileRoutesById {
   '/_authenticated/financial-center': typeof AuthenticatedFinancialCenterRoute
   '/_authenticated/founder': typeof AuthenticatedFounderRoute
   '/_authenticated/frassy': typeof AuthenticatedFrassyRoute
+  '/_authenticated/global-operations': typeof AuthenticatedGlobalOperationsRoute
   '/_authenticated/notifications': typeof AuthenticatedNotificationsRoute
   '/_authenticated/onboarding': typeof AuthenticatedOnboardingRoute
   '/_authenticated/opportunity': typeof AuthenticatedOpportunityRoute
@@ -1329,6 +1339,7 @@ export interface FileRouteTypes {
     | '/financial-center'
     | '/founder'
     | '/frassy'
+    | '/global-operations'
     | '/notifications'
     | '/onboarding'
     | '/opportunity'
@@ -1456,6 +1467,7 @@ export interface FileRouteTypes {
     | '/financial-center'
     | '/founder'
     | '/frassy'
+    | '/global-operations'
     | '/notifications'
     | '/onboarding'
     | '/opportunity'
@@ -1594,6 +1606,7 @@ export interface FileRouteTypes {
     | '/_authenticated/financial-center'
     | '/_authenticated/founder'
     | '/_authenticated/frassy'
+    | '/_authenticated/global-operations'
     | '/_authenticated/notifications'
     | '/_authenticated/onboarding'
     | '/_authenticated/opportunity'
@@ -2354,6 +2367,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedNotificationsRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/global-operations': {
+      id: '/_authenticated/global-operations'
+      path: '/global-operations'
+      fullPath: '/global-operations'
+      preLoaderRoute: typeof AuthenticatedGlobalOperationsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/frassy': {
       id: '/_authenticated/frassy'
       path: '/frassy'
@@ -2799,6 +2819,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedFinancialCenterRoute: typeof AuthenticatedFinancialCenterRoute
   AuthenticatedFounderRoute: typeof AuthenticatedFounderRoute
   AuthenticatedFrassyRoute: typeof AuthenticatedFrassyRoute
+  AuthenticatedGlobalOperationsRoute: typeof AuthenticatedGlobalOperationsRoute
   AuthenticatedNotificationsRoute: typeof AuthenticatedNotificationsRoute
   AuthenticatedOnboardingRoute: typeof AuthenticatedOnboardingRoute
   AuthenticatedOpportunityRoute: typeof AuthenticatedOpportunityRoute
@@ -2818,6 +2839,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedFinancialCenterRoute: AuthenticatedFinancialCenterRoute,
   AuthenticatedFounderRoute: AuthenticatedFounderRoute,
   AuthenticatedFrassyRoute: AuthenticatedFrassyRoute,
+  AuthenticatedGlobalOperationsRoute: AuthenticatedGlobalOperationsRoute,
   AuthenticatedNotificationsRoute: AuthenticatedNotificationsRoute,
   AuthenticatedOnboardingRoute: AuthenticatedOnboardingRoute,
   AuthenticatedOpportunityRoute: AuthenticatedOpportunityRoute,
