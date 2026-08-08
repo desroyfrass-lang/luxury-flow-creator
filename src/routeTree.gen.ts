@@ -31,6 +31,7 @@ import { Route as FrassDistrictRouteImport } from './routes/frass-district'
 import { Route as ForUsRouteImport } from './routes/for-us'
 import { Route as CheckoutRouteImport } from './routes/checkout'
 import { Route as CapsulesRouteImport } from './routes/capsules'
+import { Route as BridalRouteImport } from './routes/bridal'
 import { Route as BlogRouteImport } from './routes/blog'
 import { Route as BareDripRouteImport } from './routes/bare-drip'
 import { Route as AuthRouteImport } from './routes/auth'
@@ -47,6 +48,7 @@ import { Route as FrassKidsIndexRouteImport } from './routes/frass-kids.index'
 import { Route as FrassKicksIndexRouteImport } from './routes/frass-kicks.index'
 import { Route as FrassDripIndexRouteImport } from './routes/frass-drip.index'
 import { Route as CapsulesIndexRouteImport } from './routes/capsules.index'
+import { Route as BridalIndexRouteImport } from './routes/bridal.index'
 import { Route as BlogIndexRouteImport } from './routes/blog.index'
 import { Route as BareDripIndexRouteImport } from './routes/bare-drip.index'
 import { Route as AfroDesignersIndexRouteImport } from './routes/afro-designers.index'
@@ -69,6 +71,11 @@ import { Route as FrassDripMenRouteImport } from './routes/frass-drip.men'
 import { Route as CollectionHandleRouteImport } from './routes/collection.$handle'
 import { Route as CapsulesHandleRouteImport } from './routes/capsules.$handle'
 import { Route as BuilderHandleRouteImport } from './routes/builder.$handle'
+import { Route as BridalVaultRouteImport } from './routes/bridal.vault'
+import { Route as BridalSourcingRouteImport } from './routes/bridal.sourcing'
+import { Route as BridalMarketplaceRouteImport } from './routes/bridal.marketplace'
+import { Route as BridalJourneyRouteImport } from './routes/bridal.journey'
+import { Route as BridalCollectionsRouteImport } from './routes/bridal.collections'
 import { Route as BlogSlugRouteImport } from './routes/blog.$slug'
 import { Route as BareDripWomenRouteImport } from './routes/bare-drip.women'
 import { Route as BareDripMenRouteImport } from './routes/bare-drip.men'
@@ -248,6 +255,11 @@ const CapsulesRoute = CapsulesRouteImport.update({
   path: '/capsules',
   getParentRoute: () => rootRouteImport,
 } as any)
+const BridalRoute = BridalRouteImport.update({
+  id: '/bridal',
+  path: '/bridal',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const BlogRoute = BlogRouteImport.update({
   id: '/blog',
   path: '/blog',
@@ -326,6 +338,11 @@ const CapsulesIndexRoute = CapsulesIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => CapsulesRoute,
+} as any)
+const BridalIndexRoute = BridalIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => BridalRoute,
 } as any)
 const BlogIndexRoute = BlogIndexRouteImport.update({
   id: '/',
@@ -437,6 +454,31 @@ const BuilderHandleRoute = BuilderHandleRouteImport.update({
   id: '/builder/$handle',
   path: '/builder/$handle',
   getParentRoute: () => rootRouteImport,
+} as any)
+const BridalVaultRoute = BridalVaultRouteImport.update({
+  id: '/vault',
+  path: '/vault',
+  getParentRoute: () => BridalRoute,
+} as any)
+const BridalSourcingRoute = BridalSourcingRouteImport.update({
+  id: '/sourcing',
+  path: '/sourcing',
+  getParentRoute: () => BridalRoute,
+} as any)
+const BridalMarketplaceRoute = BridalMarketplaceRouteImport.update({
+  id: '/marketplace',
+  path: '/marketplace',
+  getParentRoute: () => BridalRoute,
+} as any)
+const BridalJourneyRoute = BridalJourneyRouteImport.update({
+  id: '/journey',
+  path: '/journey',
+  getParentRoute: () => BridalRoute,
+} as any)
+const BridalCollectionsRoute = BridalCollectionsRouteImport.update({
+  id: '/collections',
+  path: '/collections',
+  getParentRoute: () => BridalRoute,
 } as any)
 const BlogSlugRoute = BlogSlugRouteImport.update({
   id: '/$slug',
@@ -813,6 +855,7 @@ export interface FileRoutesByFullPath {
   '/auth': typeof AuthRoute
   '/bare-drip': typeof BareDripRouteWithChildren
   '/blog': typeof BlogRouteWithChildren
+  '/bridal': typeof BridalRouteWithChildren
   '/capsules': typeof CapsulesRouteWithChildren
   '/checkout': typeof CheckoutRoute
   '/for-us': typeof ForUsRoute
@@ -858,6 +901,11 @@ export interface FileRoutesByFullPath {
   '/bare-drip/men': typeof BareDripMenRouteWithChildren
   '/bare-drip/women': typeof BareDripWomenRouteWithChildren
   '/blog/$slug': typeof BlogSlugRoute
+  '/bridal/collections': typeof BridalCollectionsRoute
+  '/bridal/journey': typeof BridalJourneyRoute
+  '/bridal/marketplace': typeof BridalMarketplaceRoute
+  '/bridal/sourcing': typeof BridalSourcingRoute
+  '/bridal/vault': typeof BridalVaultRoute
   '/builder/$handle': typeof BuilderHandleRoute
   '/capsules/$handle': typeof CapsulesHandleRoute
   '/collection/$handle': typeof CollectionHandleRoute
@@ -880,6 +928,7 @@ export interface FileRoutesByFullPath {
   '/afro-designers/': typeof AfroDesignersIndexRoute
   '/bare-drip/': typeof BareDripIndexRoute
   '/blog/': typeof BlogIndexRoute
+  '/bridal/': typeof BridalIndexRoute
   '/capsules/': typeof CapsulesIndexRoute
   '/frass-drip/': typeof FrassDripIndexRoute
   '/frass-kicks/': typeof FrassKicksIndexRoute
@@ -972,6 +1021,11 @@ export interface FileRoutesByTo {
   '/api/stt': typeof ApiSttRoute
   '/api/tts': typeof ApiTtsRoute
   '/blog/$slug': typeof BlogSlugRoute
+  '/bridal/collections': typeof BridalCollectionsRoute
+  '/bridal/journey': typeof BridalJourneyRoute
+  '/bridal/marketplace': typeof BridalMarketplaceRoute
+  '/bridal/sourcing': typeof BridalSourcingRoute
+  '/bridal/vault': typeof BridalVaultRoute
   '/builder/$handle': typeof BuilderHandleRoute
   '/capsules/$handle': typeof CapsulesHandleRoute
   '/collection/$handle': typeof CollectionHandleRoute
@@ -992,6 +1046,7 @@ export interface FileRoutesByTo {
   '/afro-designers': typeof AfroDesignersIndexRoute
   '/bare-drip': typeof BareDripIndexRoute
   '/blog': typeof BlogIndexRoute
+  '/bridal': typeof BridalIndexRoute
   '/capsules': typeof CapsulesIndexRoute
   '/frass-drip': typeof FrassDripIndexRoute
   '/frass-kicks': typeof FrassKicksIndexRoute
@@ -1056,6 +1111,7 @@ export interface FileRoutesById {
   '/auth': typeof AuthRoute
   '/bare-drip': typeof BareDripRouteWithChildren
   '/blog': typeof BlogRouteWithChildren
+  '/bridal': typeof BridalRouteWithChildren
   '/capsules': typeof CapsulesRouteWithChildren
   '/checkout': typeof CheckoutRoute
   '/for-us': typeof ForUsRoute
@@ -1101,6 +1157,11 @@ export interface FileRoutesById {
   '/bare-drip/men': typeof BareDripMenRouteWithChildren
   '/bare-drip/women': typeof BareDripWomenRouteWithChildren
   '/blog/$slug': typeof BlogSlugRoute
+  '/bridal/collections': typeof BridalCollectionsRoute
+  '/bridal/journey': typeof BridalJourneyRoute
+  '/bridal/marketplace': typeof BridalMarketplaceRoute
+  '/bridal/sourcing': typeof BridalSourcingRoute
+  '/bridal/vault': typeof BridalVaultRoute
   '/builder/$handle': typeof BuilderHandleRoute
   '/capsules/$handle': typeof CapsulesHandleRoute
   '/collection/$handle': typeof CollectionHandleRoute
@@ -1123,6 +1184,7 @@ export interface FileRoutesById {
   '/afro-designers/': typeof AfroDesignersIndexRoute
   '/bare-drip/': typeof BareDripIndexRoute
   '/blog/': typeof BlogIndexRoute
+  '/bridal/': typeof BridalIndexRoute
   '/capsules/': typeof CapsulesIndexRoute
   '/frass-drip/': typeof FrassDripIndexRoute
   '/frass-kicks/': typeof FrassKicksIndexRoute
@@ -1187,6 +1249,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/bare-drip'
     | '/blog'
+    | '/bridal'
     | '/capsules'
     | '/checkout'
     | '/for-us'
@@ -1232,6 +1295,11 @@ export interface FileRouteTypes {
     | '/bare-drip/men'
     | '/bare-drip/women'
     | '/blog/$slug'
+    | '/bridal/collections'
+    | '/bridal/journey'
+    | '/bridal/marketplace'
+    | '/bridal/sourcing'
+    | '/bridal/vault'
     | '/builder/$handle'
     | '/capsules/$handle'
     | '/collection/$handle'
@@ -1254,6 +1322,7 @@ export interface FileRouteTypes {
     | '/afro-designers/'
     | '/bare-drip/'
     | '/blog/'
+    | '/bridal/'
     | '/capsules/'
     | '/frass-drip/'
     | '/frass-kicks/'
@@ -1346,6 +1415,11 @@ export interface FileRouteTypes {
     | '/api/stt'
     | '/api/tts'
     | '/blog/$slug'
+    | '/bridal/collections'
+    | '/bridal/journey'
+    | '/bridal/marketplace'
+    | '/bridal/sourcing'
+    | '/bridal/vault'
     | '/builder/$handle'
     | '/capsules/$handle'
     | '/collection/$handle'
@@ -1366,6 +1440,7 @@ export interface FileRouteTypes {
     | '/afro-designers'
     | '/bare-drip'
     | '/blog'
+    | '/bridal'
     | '/capsules'
     | '/frass-drip'
     | '/frass-kicks'
@@ -1429,6 +1504,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/bare-drip'
     | '/blog'
+    | '/bridal'
     | '/capsules'
     | '/checkout'
     | '/for-us'
@@ -1474,6 +1550,11 @@ export interface FileRouteTypes {
     | '/bare-drip/men'
     | '/bare-drip/women'
     | '/blog/$slug'
+    | '/bridal/collections'
+    | '/bridal/journey'
+    | '/bridal/marketplace'
+    | '/bridal/sourcing'
+    | '/bridal/vault'
     | '/builder/$handle'
     | '/capsules/$handle'
     | '/collection/$handle'
@@ -1496,6 +1577,7 @@ export interface FileRouteTypes {
     | '/afro-designers/'
     | '/bare-drip/'
     | '/blog/'
+    | '/bridal/'
     | '/capsules/'
     | '/frass-drip/'
     | '/frass-kicks/'
@@ -1560,6 +1642,7 @@ export interface RootRouteChildren {
   AuthRoute: typeof AuthRoute
   BareDripRoute: typeof BareDripRouteWithChildren
   BlogRoute: typeof BlogRouteWithChildren
+  BridalRoute: typeof BridalRouteWithChildren
   CapsulesRoute: typeof CapsulesRouteWithChildren
   CheckoutRoute: typeof CheckoutRoute
   ForUsRoute: typeof ForUsRoute
@@ -1752,6 +1835,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CapsulesRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/bridal': {
+      id: '/bridal'
+      path: '/bridal'
+      fullPath: '/bridal'
+      preLoaderRoute: typeof BridalRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/blog': {
       id: '/blog'
       path: '/blog'
@@ -1863,6 +1953,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/capsules/'
       preLoaderRoute: typeof CapsulesIndexRouteImport
       parentRoute: typeof CapsulesRoute
+    }
+    '/bridal/': {
+      id: '/bridal/'
+      path: '/'
+      fullPath: '/bridal/'
+      preLoaderRoute: typeof BridalIndexRouteImport
+      parentRoute: typeof BridalRoute
     }
     '/blog/': {
       id: '/blog/'
@@ -2017,6 +2114,41 @@ declare module '@tanstack/react-router' {
       fullPath: '/builder/$handle'
       preLoaderRoute: typeof BuilderHandleRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/bridal/vault': {
+      id: '/bridal/vault'
+      path: '/vault'
+      fullPath: '/bridal/vault'
+      preLoaderRoute: typeof BridalVaultRouteImport
+      parentRoute: typeof BridalRoute
+    }
+    '/bridal/sourcing': {
+      id: '/bridal/sourcing'
+      path: '/sourcing'
+      fullPath: '/bridal/sourcing'
+      preLoaderRoute: typeof BridalSourcingRouteImport
+      parentRoute: typeof BridalRoute
+    }
+    '/bridal/marketplace': {
+      id: '/bridal/marketplace'
+      path: '/marketplace'
+      fullPath: '/bridal/marketplace'
+      preLoaderRoute: typeof BridalMarketplaceRouteImport
+      parentRoute: typeof BridalRoute
+    }
+    '/bridal/journey': {
+      id: '/bridal/journey'
+      path: '/journey'
+      fullPath: '/bridal/journey'
+      preLoaderRoute: typeof BridalJourneyRouteImport
+      parentRoute: typeof BridalRoute
+    }
+    '/bridal/collections': {
+      id: '/bridal/collections'
+      path: '/collections'
+      fullPath: '/bridal/collections'
+      preLoaderRoute: typeof BridalCollectionsRouteImport
+      parentRoute: typeof BridalRoute
     }
     '/blog/$slug': {
       id: '/blog/$slug'
@@ -2684,6 +2816,27 @@ const BlogRouteChildren: BlogRouteChildren = {
 
 const BlogRouteWithChildren = BlogRoute._addFileChildren(BlogRouteChildren)
 
+interface BridalRouteChildren {
+  BridalCollectionsRoute: typeof BridalCollectionsRoute
+  BridalJourneyRoute: typeof BridalJourneyRoute
+  BridalMarketplaceRoute: typeof BridalMarketplaceRoute
+  BridalSourcingRoute: typeof BridalSourcingRoute
+  BridalVaultRoute: typeof BridalVaultRoute
+  BridalIndexRoute: typeof BridalIndexRoute
+}
+
+const BridalRouteChildren: BridalRouteChildren = {
+  BridalCollectionsRoute: BridalCollectionsRoute,
+  BridalJourneyRoute: BridalJourneyRoute,
+  BridalMarketplaceRoute: BridalMarketplaceRoute,
+  BridalSourcingRoute: BridalSourcingRoute,
+  BridalVaultRoute: BridalVaultRoute,
+  BridalIndexRoute: BridalIndexRoute,
+}
+
+const BridalRouteWithChildren =
+  BridalRoute._addFileChildren(BridalRouteChildren)
+
 interface CapsulesRouteChildren {
   CapsulesHandleRoute: typeof CapsulesHandleRoute
   CapsulesIndexRoute: typeof CapsulesIndexRoute
@@ -2904,6 +3057,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthRoute: AuthRoute,
   BareDripRoute: BareDripRouteWithChildren,
   BlogRoute: BlogRouteWithChildren,
+  BridalRoute: BridalRouteWithChildren,
   CapsulesRoute: CapsulesRouteWithChildren,
   CheckoutRoute: CheckoutRoute,
   ForUsRoute: ForUsRoute,
