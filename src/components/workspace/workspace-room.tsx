@@ -4,7 +4,7 @@
 // the open project and reopens exactly where work stopped.
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { ChevronDown, ChevronRight, Plus, Send, Volume2, VolumeX, Square } from "lucide-react";
+import { ChevronDown, ChevronRight } from "lucide-react";
 import { WorkspaceShell, type IndexEntry, type RoleLink } from "@/components/workspace/workspace-shell";
 import { AwarenessRail } from "@/components/workspace/awareness-rail";
 import { recordActivity } from "@/lib/workspace/awareness";
