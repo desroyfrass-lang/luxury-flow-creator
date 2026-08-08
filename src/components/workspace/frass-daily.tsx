@@ -202,18 +202,8 @@ export function FrassDaily({
           </div>
         </section>
 
-        {/* Navigate by conversation */}
-        <form className="daily-command" onSubmit={runCommand}>
-          <input
-            value={command}
-            onChange={(e) => setCommand(e.target.value)}
-            placeholder="Tell me what to open — “let's do the second one”, “show me the orders”, “continue yesterday's work”…"
-            aria-label="Tell Frassy what to open"
-          />
-          <button type="submit" className="ws-chip" aria-label="Ask Frassy">
-            <Send className="h-3.5 w-3.5" /> Ask Frassy
-          </button>
-        </form>
+        {/* Navigate by conversation — handled by the docked Frassy Composer below */}
+
         {commandNote && <p className="ws-meta daily-command-note">{commandNote}</p>}
 
         <div className="daily-legend">
