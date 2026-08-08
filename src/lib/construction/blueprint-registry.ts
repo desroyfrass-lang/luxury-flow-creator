@@ -262,6 +262,27 @@ export type ArchitecturalDecision = {
   simulation: string;
   note?: string;
   approvedAt: string;
+  // ── Principle 13 · Constitutional Change Governance ──────────────────────
+  /** Blueprint version this decision was archived as. */
+  version?: string;
+  /** Why this change mattered, in the Founder's own words. Permanent history. */
+  founderIntent?: string;
+  /** The Architectural Impact Report summary at the moment of approval. */
+  impactSummary?: string;
+  /** The credit forecast at the moment of approval. */
+  creditForecast?: string;
+  /** Registry references this decision answers to. */
+  registry?: string[];
+  /** Components modified by this decision. */
+  componentsModified?: string[];
+  approvedBy?: string;
+  // ── Principle 14 · Regression Protection ─────────────────────────────────
+  /** Expected behaviour established by the approved Blueprint. */
+  expected?: string[];
+  /** Behaviours confirmed present after implementation. */
+  verified?: string[];
+  verification?: "pending" | "verified" | "failed";
+  implementationSummary?: string;
 };
 
 const LOG_KEY = "frass.construction.decisions";
