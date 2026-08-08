@@ -140,7 +140,9 @@ function AdminLayout() {
               className="text-muted-foreground hover:text-foreground"
             >
               Journal
+            </Link>
             <Link
+
               to="/admin/newsroom"
               activeProps={{ className: "text-[color:var(--gold)]" }}
               className="text-muted-foreground hover:text-foreground"
