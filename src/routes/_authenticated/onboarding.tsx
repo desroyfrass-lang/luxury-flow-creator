@@ -5,7 +5,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { toast } from "sonner";
 import { SiteShell } from "@/components/site-shell";
 import { PageFeedback } from "@/components/page-feedback";
-import { ComposerShell } from "@/components/composer-shell";
+import { FrassyComposer } from "@/components/workspace/frassy-composer";
 import {
   getBuilderJourney,
   journeyTurn,
