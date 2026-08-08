@@ -966,6 +966,53 @@ body.blueprint-on [data-blueprint]:hover {
 .bp-warn-warning { color: var(--gold); }
 .bp-warn-critical { color: #ff8b6b; }
 
+/* Principles 13–15 — governance, memory, verification */
+.bp-conflict {
+  margin-top: 0.9rem; border-radius: 6px; padding: 0.85rem;
+  border: 1px solid #ff8b6b;
+  background: color-mix(in oklab, #ff8b6b 10%, transparent);
+  color: #ffb9a5;
+}
+.bp-expected, .bp-intent {
+  margin-top: 0.9rem; border-radius: 6px; padding: 0.85rem;
+  border: 1px solid color-mix(in oklab, var(--gold) 30%, transparent);
+  background: color-mix(in oklab, var(--background) 70%, transparent);
+}
+.bp-intent-record {
+  margin-top: 0.4rem; font-size: 11px; line-height: 1.5;
+  color: color-mix(in oklab, currentColor 80%, transparent);
+}
+.bp-verify-badge {
+  font-size: 9px; letter-spacing: 0.18em; text-transform: uppercase;
+  border-radius: 999px; padding: 0.15rem 0.5rem; white-space: nowrap;
+  border: 1px solid currentColor;
+}
+.bp-verify-pending { color: color-mix(in oklab, currentColor 60%, transparent); }
+.bp-verify-verified { color: var(--gold); }
+.bp-verify-failed { color: #ff8b6b; }
+.bp-verify-line {
+  display: flex; gap: 0.45rem; align-items: flex-start;
+  font-size: 11px; line-height: 1.45; cursor: pointer;
+}
+.bp-verify-line input { margin-top: 0.2rem; accent-color: var(--gold); }
+.bp-verify-fail { margin-top: 0.4rem; font-size: 11px; color: #ff8b6b; }
+
+/* Architectural Health panel — Principle 15 */
+.arch-health { display: grid; gap: 0.6rem; }
+.arch-health-row {
+  display: flex; gap: 0.7rem; align-items: flex-start;
+  border: 1px solid color-mix(in oklab, var(--gold) 20%, transparent);
+  border-radius: 6px; padding: 0.7rem 0.85rem;
+  background: color-mix(in oklab, var(--background) 70%, transparent);
+}
+.arch-health-dot { font-size: 10px; line-height: 1.6; }
+.arch-health-green { color: #6fd08c; }
+.arch-health-amber { color: var(--gold); }
+.arch-health-red { color: #ff8b6b; }
+.arch-health-unknown { color: color-mix(in oklab, currentColor 45%, transparent); }
+
+
+
 .dev-credits {
   border: 1px solid color-mix(in oklab, var(--gold) 30%, transparent);
   border-radius: 6px; padding: 1rem;
