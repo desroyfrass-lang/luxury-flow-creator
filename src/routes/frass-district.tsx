@@ -21,6 +21,7 @@ import cardMen from "@/assets/card-men.jpg";
 import cardWomen from "@/assets/card-women.jpg";
 import plusWingMen from "@/assets/plus-wing-men.jpg";
 import plusWingWomen from "@/assets/plus-wing-women.jpg";
+import bridalBoutique from "@/assets/bridal-boutique-storefront.jpg";
 
 
 export const Route = createFileRoute("/frass-district")({
@@ -109,6 +110,13 @@ const STORES: { title: string; description: string; image: string; to: string; e
     image: districtKids,
     to: "/frass-kids",
     eyebrow: "Ages 0–3 to 12+",
+  },
+  {
+    title: "Frass Bridal Boutique",
+    description: "Where the dream begins — then a garden walk to the Bridal Estate.",
+    image: bridalBoutique,
+    to: "/bridal-boutique",
+    eyebrow: "Weddings",
   },
   {
     title: "Frass Luxury House",

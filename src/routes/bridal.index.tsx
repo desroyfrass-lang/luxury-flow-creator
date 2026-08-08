@@ -7,6 +7,9 @@ import {
   CONCIERGE_ROLES,
   CONCIERGE_NOTICES,
   SIZING_EQUITY_RULE,
+  WELCOME_HALL_GREETING,
+  PRIMARY_EXPERIENCES,
+  VISITOR_SEQUENCE,
 } from "@/lib/bridal";
 import village from "@/assets/district-bridal.jpg";
 import gardenPath from "@/assets/bridal-garden-path.jpg";
@@ -70,6 +73,78 @@ function BridalDistrict() {
               >
                 Open the Wedding Vault
               </Link>
+            </div>
+          </div>
+        </section>
+
+        <section className="mx-auto max-w-[1400px] px-6 pt-12 lg:px-10">
+          <div className="rounded-[1.75rem] border border-[color:var(--hill-gold)]/30 bg-white/[0.03] p-7 md:p-10">
+            <span className="text-[10px] uppercase tracking-[0.4em] text-[color:var(--hill-gold)]">
+              The Welcome Hall · Frassy, your Wedding Concierge
+            </span>
+            {WELCOME_HALL_GREETING.map((line, i) => (
+              <p
+                key={line}
+                className={
+                  i === 0
+                    ? "mt-4 font-display text-2xl uppercase leading-tight md:text-4xl"
+                    : "mt-3 max-w-2xl text-sm text-[oklch(0.84_0.01_80)]"
+                }
+              >
+                {line}
+              </p>
+            ))}
+
+            <h2 className="mt-8 text-[10px] uppercase tracking-[0.3em] text-[color:var(--hill-gold)]">
+              Choose your journey
+            </h2>
+            <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+              {PRIMARY_EXPERIENCES.map((e) => {
+                const body = (
+                  <>
+                    <span className="text-lg">{e.icon}</span>
+                    <span className="mt-2 block text-sm font-semibold">{e.label}</span>
+                    <span className="mt-1 block text-xs text-[oklch(0.7_0.01_80)]">{e.note}</span>
+                  </>
+                );
+                return e.to ? (
+                  <Link
+                    key={e.label}
+                    to={e.to}
+                    className="block rounded-xl border border-white/12 bg-black/20 p-4 transition hover:border-[color:var(--hill-gold)]/50 hover:bg-black/30"
+                  >
+                    {body}
+                  </Link>
+                ) : (
+                  <div
+                    key={e.label}
+                    className="rounded-xl border border-white/8 bg-black/10 p-4 opacity-80"
+                  >
+                    {body}
+                    <span className="mt-2 block text-[9px] uppercase tracking-[0.2em] text-[oklch(0.55_0.01_80)]">
+                      Opening soon
+                    </span>
+                  </div>
+                );
+              })}
+            </div>
+
+            <div className="mt-8">
+              <div className="text-[10px] uppercase tracking-[0.28em] text-[color:var(--hill-gold)]">
+                The whole walk, end to end
+              </div>
+              <div className="mt-3 flex flex-wrap items-center gap-2">
+                {VISITOR_SEQUENCE.map((s, i) => (
+                  <span key={s} className="flex items-center gap-2">
+                    <span className="rounded-full border border-white/15 px-3 py-1 text-[11px] text-[oklch(0.8_0.01_80)]">
+                      {s}
+                    </span>
+                    {i < VISITOR_SEQUENCE.length - 1 && (
+                      <span className="text-[color:var(--hill-gold)]">→</span>
+                    )}
+                  </span>
+                ))}
+              </div>
             </div>
           </div>
         </section>
