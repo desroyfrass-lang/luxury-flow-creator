@@ -88,6 +88,7 @@ import { Route as AfroDesignersJoinRouteImport } from './routes/afro-designers.j
 import { Route as AfroDesignersDesignersRouteImport } from './routes/afro-designers.designers'
 import { Route as AuthenticatedWorkspaceRouteImport } from './routes/_authenticated/workspace'
 import { Route as AuthenticatedWelcomeHallRouteImport } from './routes/_authenticated/welcome-hall'
+import { Route as AuthenticatedVisualReviewRouteImport } from './routes/_authenticated/visual-review'
 import { Route as AuthenticatedVaultRouteImport } from './routes/_authenticated/vault'
 import { Route as AuthenticatedTryOnRouteImport } from './routes/_authenticated/try-on'
 import { Route as AuthenticatedRoomRouteImport } from './routes/_authenticated/room'
@@ -543,6 +544,12 @@ const AuthenticatedWelcomeHallRoute =
     path: '/welcome-hall',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedVisualReviewRoute =
+  AuthenticatedVisualReviewRouteImport.update({
+    id: '/visual-review',
+    path: '/visual-review',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedVaultRoute = AuthenticatedVaultRouteImport.update({
   id: '/vault',
   path: '/vault',
@@ -904,6 +911,7 @@ export interface FileRoutesByFullPath {
   '/room': typeof AuthenticatedRoomRoute
   '/try-on': typeof AuthenticatedTryOnRoute
   '/vault': typeof AuthenticatedVaultRoute
+  '/visual-review': typeof AuthenticatedVisualReviewRoute
   '/welcome-hall': typeof AuthenticatedWelcomeHallRoute
   '/workspace': typeof AuthenticatedWorkspaceRouteWithChildren
   '/afro-designers/designers': typeof AfroDesignersDesignersRouteWithChildren
@@ -1028,6 +1036,7 @@ export interface FileRoutesByTo {
   '/room': typeof AuthenticatedRoomRoute
   '/try-on': typeof AuthenticatedTryOnRoute
   '/vault': typeof AuthenticatedVaultRoute
+  '/visual-review': typeof AuthenticatedVisualReviewRoute
   '/welcome-hall': typeof AuthenticatedWelcomeHallRoute
   '/workspace': typeof AuthenticatedWorkspaceRouteWithChildren
   '/afro-designers/designers': typeof AfroDesignersDesignersRouteWithChildren
@@ -1164,6 +1173,7 @@ export interface FileRoutesById {
   '/_authenticated/room': typeof AuthenticatedRoomRoute
   '/_authenticated/try-on': typeof AuthenticatedTryOnRoute
   '/_authenticated/vault': typeof AuthenticatedVaultRoute
+  '/_authenticated/visual-review': typeof AuthenticatedVisualReviewRoute
   '/_authenticated/welcome-hall': typeof AuthenticatedWelcomeHallRoute
   '/_authenticated/workspace': typeof AuthenticatedWorkspaceRouteWithChildren
   '/afro-designers/designers': typeof AfroDesignersDesignersRouteWithChildren
@@ -1304,6 +1314,7 @@ export interface FileRouteTypes {
     | '/room'
     | '/try-on'
     | '/vault'
+    | '/visual-review'
     | '/welcome-hall'
     | '/workspace'
     | '/afro-designers/designers'
@@ -1428,6 +1439,7 @@ export interface FileRouteTypes {
     | '/room'
     | '/try-on'
     | '/vault'
+    | '/visual-review'
     | '/welcome-hall'
     | '/workspace'
     | '/afro-designers/designers'
@@ -1563,6 +1575,7 @@ export interface FileRouteTypes {
     | '/_authenticated/room'
     | '/_authenticated/try-on'
     | '/_authenticated/vault'
+    | '/_authenticated/visual-review'
     | '/_authenticated/welcome-hall'
     | '/_authenticated/workspace'
     | '/afro-designers/designers'
@@ -2259,6 +2272,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedWelcomeHallRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/visual-review': {
+      id: '/_authenticated/visual-review'
+      path: '/visual-review'
+      fullPath: '/visual-review'
+      preLoaderRoute: typeof AuthenticatedVisualReviewRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/vault': {
       id: '/_authenticated/vault'
       path: '/vault'
@@ -2744,6 +2764,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedRoomRoute: typeof AuthenticatedRoomRoute
   AuthenticatedTryOnRoute: typeof AuthenticatedTryOnRoute
   AuthenticatedVaultRoute: typeof AuthenticatedVaultRoute
+  AuthenticatedVisualReviewRoute: typeof AuthenticatedVisualReviewRoute
   AuthenticatedWelcomeHallRoute: typeof AuthenticatedWelcomeHallRoute
   AuthenticatedWorkspaceRoute: typeof AuthenticatedWorkspaceRouteWithChildren
 }
@@ -2760,6 +2781,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedRoomRoute: AuthenticatedRoomRoute,
   AuthenticatedTryOnRoute: AuthenticatedTryOnRoute,
   AuthenticatedVaultRoute: AuthenticatedVaultRoute,
+  AuthenticatedVisualReviewRoute: AuthenticatedVisualReviewRoute,
   AuthenticatedWelcomeHallRoute: AuthenticatedWelcomeHallRoute,
   AuthenticatedWorkspaceRoute: AuthenticatedWorkspaceRouteWithChildren,
 }

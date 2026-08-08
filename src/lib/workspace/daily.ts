@@ -273,6 +273,16 @@ const FOUNDER: DailyModel = {
   alerts: ["A commission band for footwear is waiting on your approval."],
   tasks: [
     {
+      id: "d0",
+      label: "🎨 Continue Visual Excellence Review",
+      detail:
+        "FRASS-0226 · Brand Excellence. One image at a time — approve, enhance, redesign or replace. Progress is saved after every decision.",
+      priority: "important",
+      minutes: 30,
+      delegable: false,
+      href: "/visual-review",
+    },
+    {
       id: "d1",
       label: "Review the next five CJ vendors, one at a time",
       detail: "Product Population continues exactly where we paused — Vendor 4 of 12 · Product 87.",
