@@ -212,7 +212,12 @@ export function WorkspaceShell({
                 <Sunrise className="h-4 w-4" />
                 <span className="flex-1 text-left">The Daily</span>
               </button>
+              <Link to="/financial-center" className="ws-nav">
+                <span aria-hidden>💰</span>
+                <span className="flex-1 text-left">Financial Center</span>
+              </Link>
               <ForUsLink className="ws-nav">
+
                 <span aria-hidden>❤️</span>
                 <span className="flex-1 text-left">For Us</span>
               </ForUsLink>
