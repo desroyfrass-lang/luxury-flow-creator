@@ -11,7 +11,7 @@
 // ─────────────────────────────────────────────────────────────────────────────
 
 import { useEffect, useMemo, useState } from "react";
-import { X, Check, Sparkles, ArrowRight, HelpCircle } from "lucide-react";
+import { X, Check, Sparkles, ArrowRight, HelpCircle, Coins, ListTree, Send } from "lucide-react";
 import frassyAvatar from "@/assets/frassy-gold.png.asset.json";
 import {
   dailyFor,
@@ -28,8 +28,20 @@ import {
   type DailyTarget,
   type DataStatus,
 } from "@/lib/workspace/daily";
+import {
+  demoDataEnabled,
+  honestDaily,
+  HONEST_NOTE,
+  myDay,
+  resolveDailyCommand,
+  ritualEnabled,
+  ritualForToday,
+  setDemoData,
+  setRitualEnabled,
+} from "@/lib/workspace/daily-intel";
 
 const ORDER: DailyPriority[] = ["critical", "important", "optional", "completed"];
+
 
 export function FrassDaily({
   audience,
