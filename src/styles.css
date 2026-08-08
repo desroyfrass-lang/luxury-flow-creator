@@ -741,3 +741,27 @@
   padding: 0.75rem 1.6rem; font-size: 13px; font-weight: 700;
   letter-spacing: 0.18em; text-transform: uppercase;
 }
+
+/* The Daily — data-status badges, explainers, clickable rows */
+.daily-overlay .daily-legend { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 1rem; }
+.daily-overlay .daily-badge {
+  display: inline-flex; align-items: center; gap: 0.3rem;
+  font-size: 11px; letter-spacing: 0.06em; color: var(--ws-soft);
+  border: 1px solid var(--ws-line); border-radius: 999px; padding: 0.12rem 0.55rem;
+  width: fit-content;
+}
+.daily-overlay .daily-metric { gap: 0.4rem; }
+.daily-overlay .daily-metric-actions { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 0.25rem; }
+.daily-overlay .daily-explain {
+  font-size: 13px; line-height: 1.55; color: var(--ws-soft);
+  border-left: 2px solid var(--ws-gold); padding-left: 0.7rem; margin-top: 0.5rem;
+}
+.daily-overlay .daily-explain em { display: block; margin-top: 0.35rem; opacity: 0.85; }
+.daily-overlay .daily-clickable-row {
+  width: 100%; text-align: left; border-radius: 0.6rem; padding: 0.4rem 0.5rem;
+  transition: background 0.15s ease;
+}
+.daily-overlay .daily-clickable-row:hover { background: var(--ws-accent-bg); }
+
+/* Workspace — permanent navigation rail */
+.frass-workspace .ws-nav-role { color: var(--ws-soft); }
