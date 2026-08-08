@@ -44,6 +44,12 @@ function KidsWorldLayout() {
           ))}
           <div className="ml-auto flex items-center gap-3">
             <Link
+              to="/kids-world/discover"
+              className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground hover:text-foreground"
+            >
+              ✨ Discover
+            </Link>
+            <Link
               to="/frass-kids"
               className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground hover:text-foreground"
             >
