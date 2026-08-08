@@ -1,20 +1,25 @@
-// Frassy Workspace Room — the room *is* the workspace.
-// Owns projects, collapsible conversation sections, the smart index, the
-// timeline, and the persistent composer. Frassy adapts to the open project.
+// My Workspace — the single canonical professional workspace of Frass OS.
+// One workspace, many modes. Owns projects, collapsible conversation sections,
+// the smart index, the timeline, and the persistent composer. Frassy adapts to
+// the open project and reopens exactly where work stopped.
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { ChevronDown, ChevronRight, Plus, Send, Volume2, VolumeX, Square } from "lucide-react";
 import { WorkspaceShell, type IndexEntry } from "@/components/workspace/workspace-shell";
 import { UploadTray } from "@/components/workspace/upload-tray";
 import { ReplyBlocks } from "@/components/workspace/reply-blocks";
+import { openTheDaily } from "@/components/workspace/daily-gate";
 import { usePushToTalk } from "@/hooks/use-push-to-talk";
 import { useIsAdminStatus } from "@/hooks/use-is-admin";
 import {
   FOUNDER_MILESTONES,
   FOUNDER_PROJECTS,
   FOUNDER_TASKS,
+  MODE_BY_ID,
   PANEL_PRESETS,
+  PROJECTS_FOR_MODE,
   PROJECT_BY_ID,
+  WORKSPACE_MODES,
   type WorkspaceProject,
 } from "@/lib/workspace/workspace-config";
 
@@ -29,6 +34,8 @@ type Section = {
 };
 
 const STORE_KEY = "frass.workspace.v1";
+const PROJECT_KEY = "frass.workspace.project";
+const MODE_KEY = "frass.workspace.mode";
 let seq = 0;
 const nid = (p: string) => `${p}${++seq}-${Date.now()}`;
 
@@ -42,9 +49,14 @@ function load(): Section[] {
   }
 }
 
+function loadLast(key: string, fallback: string): string {
+  if (typeof window === "undefined") return fallback;
+  return window.localStorage.getItem(key) ?? fallback;
+}
+
 export function WorkspaceRoom({
-  roomName = "Founder Room",
-  roomKind = "Founder workspace",
+  roomName = "My Workspace",
+  roomKind = "Frass OS workspace",
   projects = FOUNDER_PROJECTS,
 }: {
   roomName?: string;
@@ -52,7 +64,10 @@ export function WorkspaceRoom({
   projects?: WorkspaceProject[];
 } = {}) {
   const [sections, setSections] = useState<Section[]>(() => load());
-  const [activeProjectId, setActiveProjectId] = useState(projects[0].id);
+  const [modeId, setModeId] = useState(() => loadLast(MODE_KEY, WORKSPACE_MODES[0].id));
+  const [activeProjectId, setActiveProjectId] = useState(() =>
+    loadLast(PROJECT_KEY, projects[0].id),
+  );
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -66,6 +81,11 @@ export function WorkspaceRoom({
   const scrollRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
 
+  const modeProjects = useMemo(() => {
+    const inMode = PROJECTS_FOR_MODE(modeId).filter((p) => projects.some((x) => x.id === p.id));
+    return inMode.length ? inMode : projects;
+  }, [modeId, projects]);
+
   const project = PROJECT_BY_ID(activeProjectId);
 
   useEffect(() => {
@@ -73,10 +93,26 @@ export function WorkspaceRoom({
       window.localStorage.setItem(STORE_KEY, JSON.stringify(sections));
   }, [sections]);
 
+  // Workspace continuity — reopen exactly where you left off.
+  useEffect(() => {
+    window.localStorage.setItem(PROJECT_KEY, activeProjectId);
+  }, [activeProjectId]);
+  useEffect(() => {
+    window.localStorage.setItem(MODE_KEY, modeId);
+  }, [modeId]);
+
+  // Switching mode never reloads the workspace; it just changes the tools.
+  useEffect(() => {
+    if (!modeProjects.some((p) => p.id === activeProjectId)) {
+      setActiveProjectId(modeProjects[0].id);
+    }
+  }, [modeProjects, activeProjectId]);
+
   useEffect(() => () => abortRef.current?.abort(), []);
   useEffect(() => {
     inputRef.current?.focus();
   }, [activeProjectId]);
+
 
   const visible = useMemo(
     () => sections.filter((s) => s.projectId === activeProjectId),
@@ -236,11 +272,16 @@ export function WorkspaceRoom({
   return (
     <WorkspaceShell
       roomName={roomName}
-      roomKind={roomKind}
+      roomKind={`${roomKind} · ${MODE_BY_ID(modeId).name}`}
       frassyRole={project.frassyRole}
-      projects={projects}
+      modes={WORKSPACE_MODES}
+      activeModeId={modeId}
+      onSelectMode={setModeId}
+      onOpenDaily={openTheDaily}
+      projects={modeProjects}
       activeProjectId={activeProjectId}
       onSelectProject={setActiveProjectId}
+
       index={index}
       onJumpTo={jumpTo}
       milestones={FOUNDER_MILESTONES}

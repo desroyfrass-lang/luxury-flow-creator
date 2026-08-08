@@ -27,7 +27,10 @@ export type PanelPreset =
   | "fashion"
   | "photography"
   | "build"
+  | "finance"
+  | "farm"
   | "governance";
+
 
 export type PanelSection = { title: string; items: string[] };
 
@@ -61,11 +64,20 @@ export const PANEL_PRESETS: Record<PanelPreset, PanelSection[]> = {
     { title: "Projects", items: ["Blueprints", "Materials", "Site photos"] },
     { title: "Progress", items: ["Milestones", "Documentation"] },
   ],
+  finance: [
+    { title: "Money", items: ["Revenue", "Costs", "Protected margin 8%"] },
+    { title: "Planning", items: ["Cash runway", "Payouts", "Pricing decisions"] },
+  ],
+  farm: [
+    { title: "Season", items: ["Planting calendar", "Harvest window", "Weather notes"] },
+    { title: "Yield", items: ["Plots", "Inputs", "Market prices"] },
+  ],
   governance: [
     { title: "Pending decisions", items: ["Needs Founder approval", "Waiting on Builder"] },
     { title: "Policy", items: ["Affiliate policy", "Roles & access", "Registry entries"] },
   ],
 };
+
 
 export const FOUNDER_PROJECTS: WorkspaceProject[] = [
   {
@@ -140,7 +152,92 @@ export const FOUNDER_PROJECTS: WorkspaceProject[] = [
     frassyRole: "Executive advisor",
     opener: "Architecture. Which blueprint are we amending?",
   },
+  {
+    id: "music-studio",
+    name: "Music Studio",
+    emoji: "🎵",
+    panel: "music",
+    frassyRole: "Studio producer",
+    opener: "Studio's open. Writing, recording or releasing?",
+  },
+  {
+    id: "farm-hub",
+    name: "Farm Hub",
+    emoji: "🌾",
+    panel: "farm",
+    frassyRole: "Seasonal planner",
+    opener: "Farm Hub. Season planning or market pricing?",
+  },
+  {
+    id: "finance",
+    name: "Finance",
+    emoji: "💰",
+    panel: "finance",
+    frassyRole: "Financial advisor",
+    opener: "Finance. Revenue, costs, or a pricing decision?",
+  },
+  {
+    id: "bridal",
+    name: "Bridal",
+    emoji: "👰",
+    panel: "fashion",
+    frassyRole: "Bridal director",
+    opener: "Bridal. Which part of the flagship are we shaping?",
+  },
 ];
+
+// ── Workspace Modes ──────────────────────────────────────────────────────────
+// One workspace. Modes change the tools, never the place. A Builder can be a
+// Partner, Artist, Farmer and Seller at once — no second workspace anywhere.
+
+export type WorkspaceMode = {
+  id: string;
+  name: string;
+  emoji: string;
+  /** Projects surfaced while this mode is active. */
+  projectIds: string[];
+};
+
+export const WORKSPACE_MODES: WorkspaceMode[] = [
+  {
+    id: "projects",
+    name: "Projects",
+    emoji: "🗂",
+    projectIds: [
+      "homepage",
+      "product-population",
+      "luxury-house",
+      "kids-world",
+      "bridal",
+      "affiliate",
+      "foundation",
+      "marketplace",
+      "academy",
+      "architecture",
+      "music-studio",
+      "farm-hub",
+      "finance",
+    ],
+  },
+  { id: "fashion", name: "Fashion Studio", emoji: "👗", projectIds: ["luxury-house", "bridal", "kids-world", "homepage"] },
+  { id: "music", name: "Music Studio", emoji: "🎵", projectIds: ["music-studio"] },
+  { id: "marketplace", name: "Marketplace", emoji: "🏬", projectIds: ["marketplace", "product-population", "affiliate"] },
+  { id: "farm", name: "Farm Hub", emoji: "🌾", projectIds: ["farm-hub"] },
+  { id: "foundation", name: "Foundation", emoji: "❤️", projectIds: ["foundation"] },
+  { id: "finance", name: "Finance", emoji: "💰", projectIds: ["finance", "affiliate"] },
+  { id: "academy", name: "Academy", emoji: "🎓", projectIds: ["academy", "architecture"] },
+];
+
+export const MODE_BY_ID = (id: string) =>
+  WORKSPACE_MODES.find((m) => m.id === id) ?? WORKSPACE_MODES[0];
+
+export const PROJECTS_FOR_MODE = (id: string): WorkspaceProject[] => {
+  const ids = MODE_BY_ID(id).projectIds;
+  return ids
+    .map((pid) => FOUNDER_PROJECTS.find((p) => p.id === pid))
+    .filter((p): p is WorkspaceProject => Boolean(p));
+};
+
 
 export type Milestone = {
   id: string;

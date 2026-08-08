@@ -4,18 +4,19 @@ import { WorkspaceRoom } from "@/components/workspace/workspace-room";
 export const Route = createFileRoute("/_authenticated/room")({
   head: () => ({
     meta: [
-      { title: "Founder Room — Frass OS Workspace" },
+      { title: "My Workspace — Frass Operating System" },
       {
         name: "description",
         content:
-          "The Frass OS professional workspace: projects, conversation sections, task panel, workspace timeline and a persistent composer with Frassy.",
+          "My Workspace: one canonical Frass OS workspace with modes, projects, conversation sections, task panel, timeline and a persistent composer with Frassy.",
       },
-      { property: "og:title", content: "Founder Room — Frass OS Workspace" },
+      { property: "og:title", content: "My Workspace — Frass Operating System" },
       {
         property: "og:description",
         content:
-          "A professional AI workspace where Frassy is the operating partner and the room is the office.",
+          "One workspace, many modes. Frassy is the operating partner and the workspace remembers where you left off.",
       },
+
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
       { name: "robots", content: "noindex,nofollow" },

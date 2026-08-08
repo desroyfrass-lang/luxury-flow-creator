@@ -6,6 +6,8 @@ import { SiteShell } from "@/components/site-shell";
 import { PageFeedback } from "@/components/page-feedback";
 import { LaunchReadiness } from "@/components/launch-readiness";
 import { FrassyChat } from "@/components/frassy-chat";
+import { openTheDaily } from "@/components/workspace/daily-gate";
+
 
 import { useIsAdmin } from "@/hooks/use-is-admin";
 import {
@@ -34,11 +36,12 @@ export const Route = createFileRoute("/_authenticated/founder")({
 
 const CONTROLS = [
   {
-    title: "Founder Room (Workspace)",
+    title: "My Workspace",
     blurb:
-      "The professional workspace: projects, conversation sections, task panel, timeline, persistent composer.",
+      "The single professional workspace: modes, projects, conversation sections, task panel, timeline, persistent composer.",
     to: "/room",
   },
+
   {
     title: "Commissioning",
     blurb: "Continue the Founder Commissioning Journey with Frassy.",
@@ -126,9 +129,34 @@ function FounderPage() {
           Commission Frass Operating System
         </h1>
         <p className="mt-3 max-w-2xl text-sm text-muted-foreground">
-          You are not configuring software. You are preparing a place that Builders will enter.
-          Everything on this page belongs to you alone — Builders never see it.
+          Mission Control. Everything on this page belongs to you alone — Builders never see it.
+          When you're ready to work, one click takes you into My Workspace.
         </p>
+
+        {/* Launch pad — the Control Room is the entry point, not the office */}
+        <section className="mt-8 flex flex-wrap items-center gap-3 rounded-sm border border-[color:var(--gold)]/40 bg-background/50 p-6">
+          <div className="min-w-0 flex-1">
+            <div className="font-display text-2xl">My Workspace</div>
+            <p className="mt-1 text-xs text-muted-foreground">
+              One workspace, many modes — Fashion Studio, Music Studio, Marketplace, Farm Hub,
+              Foundation, Finance, Academy and Projects. It reopens exactly where you left off.
+            </p>
+          </div>
+          <Link
+            to="/room"
+            className="lux-press rounded-sm border border-[color:var(--gold)] bg-[color:var(--gold)] px-6 py-3 text-[11px] font-bold uppercase tracking-[0.3em] text-[color:var(--ink)]"
+          >
+            Launch Workspace
+          </Link>
+          <button
+            type="button"
+            onClick={openTheDaily}
+            className="rounded-sm border border-border px-6 py-3 text-[11px] font-bold uppercase tracking-[0.3em] text-muted-foreground transition hover:border-[color:var(--gold)]"
+          >
+            Open The Daily
+          </button>
+        </section>
+
 
         {/* Phases */}
         <section className="mt-12">
