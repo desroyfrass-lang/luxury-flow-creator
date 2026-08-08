@@ -1,20 +1,33 @@
 // ─────────────────────────────────────────────────────────────────────────────
-// Phase 2 — Push-to-talk voice for Frassy.
+// Frassy voice — push-to-talk, driven by the single authoritative conversation
+// state machine (src/lib/voice/conversation-machine.ts).
 //
-// Contract (deliberately narrow):
+// Contract:
 //   press mic → record → press again → transcribe → hand text to the caller.
-//   speak(text) → play ONE mp3 → resolve → stop. Nothing reopens the mic.
+//   speak(text) → chunk the FULL reply → play every chunk in order → resolve
+//   only when real playback completion has been reported. Nothing reopens
+//   the mic on its own.
 //
-// Explicitly NOT here: continuous listening, VAD, auto-reopen, barge-in,
-// background listening, streaming loops. Those are Phase 3 and must stay out.
+// STOP-SHIP RULE: speech is never truncated and a turn never closes on token
+// generation or text rendering — playback completion is the source of truth.
 // ─────────────────────────────────────────────────────────────────────────────
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { startWavRecording, type WavRecorder } from "@/lib/voice/wav-recorder";
+import { chunkForTTS, speakableText } from "@/lib/voice/chunk-text";
+import { conversation } from "@/lib/voice/conversation-machine";
 
 export type VoicePhase = "idle" | "recording" | "transcribing" | "speaking";
 
 const MIN_BLOB_BYTES = 2048;
+
+export function useConversationState() {
+  return useSyncExternalStore(
+    conversation.subscribe,
+    conversation.getSnapshot,
+    conversation.getSnapshot,
+  );
+}
 
 export function usePushToTalk() {
   const [phase, setPhase] = useState<VoicePhase>("idle");
@@ -24,7 +37,8 @@ export function usePushToTalk() {
   const [voiceAvailable, setVoiceAvailable] = useState(true);
   const recorderRef = useRef<WavRecorder | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
-  const urlRef = useRef<string | null>(null);
+  const urlsRef = useRef<string[]>([]);
+  const cancelRef = useRef(false);
 
   const releaseAudio = useCallback(() => {
     const el = audioRef.current;
@@ -33,18 +47,18 @@ export function usePushToTalk() {
       el.src = "";
     }
     audioRef.current = null;
-    if (urlRef.current) {
-      URL.revokeObjectURL(urlRef.current);
-      urlRef.current = null;
-    }
+    for (const url of urlsRef.current) URL.revokeObjectURL(url);
+    urlsRef.current = [];
   }, []);
 
   // Never leave the mic open or audio playing behind an unmount.
   useEffect(
     () => () => {
+      cancelRef.current = true;
       recorderRef.current?.cancel();
       recorderRef.current = null;
       releaseAudio();
+      conversation.reset();
     },
     [releaseAudio],
   );
@@ -55,9 +69,11 @@ export function usePushToTalk() {
     releaseAudio();
     try {
       recorderRef.current = await startWavRecording();
+      conversation.startListening();
       setPhase("recording");
     } catch {
       recorderRef.current = null;
+      conversation.reset();
       setPhase("idle");
       setVoiceError("I couldn't reach your microphone. Check the browser permission and try again.");
     }
@@ -69,11 +85,13 @@ export function usePushToTalk() {
     recorderRef.current = null;
     if (!rec) return "";
 
+    conversation.startTranscribing();
     setPhase("transcribing");
     try {
       const blob = await rec.stop();
       if (blob.size < MIN_BLOB_BYTES) {
         setVoiceError("That recording was too short — hold the mic a moment longer.");
+        conversation.reset();
         setPhase("idle");
         return "";
       }
@@ -83,15 +101,18 @@ export function usePushToTalk() {
       if (!res.ok) {
         const detail = await res.text().catch(() => "");
         setVoiceError(detail.slice(0, 140) || "I couldn't transcribe that. Try again?");
+        conversation.reset();
         setPhase("idle");
         return "";
       }
       const data = (await res.json()) as { text?: string };
       const text = (data.text ?? "").trim();
+      conversation.reset();
       setPhase("idle");
       if (!text) setVoiceError("I didn't catch any words there.");
       return text;
     } catch {
+      conversation.reset();
       setPhase("idle");
       setVoiceError("Something went wrong while transcribing.");
       return "";
@@ -101,61 +122,119 @@ export function usePushToTalk() {
   const cancelRecording = useCallback(() => {
     recorderRef.current?.cancel();
     recorderRef.current = null;
+    conversation.reset();
     setPhase("idle");
   }, []);
 
-  /** Speaks one reply, once. Resolves when playback ends or fails. */
-  const speak = useCallback(
-    async (text: string) => {
-      const input = text.trim().slice(0, 800);
-      if (!input) return;
-      releaseAudio();
-      setPhase("speaking");
-      try {
-        const res = await fetch("/api/tts", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ text: input, voice: "shimmer" }),
-        });
-        if (!res.ok) {
-          setVoiceAvailable(false);
-          setVoiceError("Voice is temporarily unavailable — my reply is above.");
-          setPhase("idle");
-          return;
-        }
-        const blob = await res.blob();
-        const url = URL.createObjectURL(blob);
-        urlRef.current = url;
+  /** Fetches one chunk's audio as an object URL. */
+  const fetchChunk = useCallback(async (text: string): Promise<string> => {
+    const res = await fetch("/api/tts", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ text, voice: "shimmer" }),
+    });
+    if (!res.ok) throw new Error(`tts ${res.status}`);
+    const blob = await res.blob();
+    const url = URL.createObjectURL(blob);
+    urlsRef.current.push(url);
+    return url;
+  }, []);
+
+  /** Plays one clip and resolves only when the element reports completion. */
+  const playClip = useCallback(
+    (url: string, turnId: string) =>
+      new Promise<boolean>((resolve) => {
         const audio = new Audio(url);
         audioRef.current = audio;
         let played = false;
-        await new Promise<void>((resolve) => {
-          audio.onplaying = () => {
-            played = true;
-          };
-          audio.onended = () => resolve();
-          audio.onerror = () => resolve();
-          audio.play().catch(() => resolve());
-        });
-        if (!played) {
-          setVoiceAvailable(false);
-          setVoiceError("Your browser blocked audio playback — my reply is above.");
-        } else {
-          setVoiceAvailable(true);
+        let settled = false;
+        const finish = (ok: boolean) => {
+          if (settled) return;
+          settled = true;
+          audio.onended = null;
+          audio.onerror = null;
+          audio.ontimeupdate = null;
+          resolve(ok);
+        };
+        audio.onplaying = () => {
+          played = true;
+        };
+        audio.ontimeupdate = () => {
+          if (Number.isFinite(audio.duration)) {
+            conversation.bufferSeconds(turnId, Math.max(0, audio.duration - audio.currentTime));
+          }
+        };
+        audio.onended = () => finish(played);
+        audio.onerror = () => finish(false);
+        audio.play().catch(() => finish(false));
+      }),
+    [],
+  );
+
+  /**
+   * Speaks a complete reply. The text is chunked, never truncated, and the
+   * promise resolves only after the last chunk has finished playing.
+   */
+  const speak = useCallback(
+    async (text: string) => {
+      const clean = speakableText(text);
+      if (!clean) return;
+      cancelRef.current = false;
+      releaseAudio();
+
+      const chunks = chunkForTTS(clean);
+      const turnId = conversation.startTurn({ spoken: true });
+      conversation.llmComplete(turnId);
+      conversation.renderComplete(turnId);
+      conversation.speechQueued(turnId, chunks.length);
+      setPhase("speaking");
+
+      try {
+        // Pipeline: fetch chunk n+1 while chunk n is playing.
+        let nextUrl: Promise<string> | null = chunks[0] ? fetchChunk(chunks[0]) : null;
+        let anyPlayed = false;
+
+        for (let i = 0; i < chunks.length; i++) {
+          if (cancelRef.current) break;
+          const url = await nextUrl!;
+          const upcoming = chunks[i + 1];
+          nextUrl = upcoming ? fetchChunk(upcoming) : null;
+          if (cancelRef.current) break;
+
+          const ok = await playClip(url, turnId);
+          if (ok) anyPlayed = true;
+          conversation.chunkSpoken(turnId, i);
+          if (!ok && !anyPlayed) {
+            // Nothing ever played — browser blocked audio. Stop cleanly.
+            setVoiceAvailable(false);
+            setVoiceError("Your browser blocked audio playback — my reply is above.");
+            conversation.playbackFailed(turnId, "browser blocked audio");
+            return;
+          }
         }
-      } catch {
+
+        if (cancelRef.current) {
+          conversation.interrupt("speech stopped by Builder");
+          return;
+        }
+        setVoiceAvailable(true);
+        conversation.playbackComplete(turnId);
+      } catch (err) {
         setVoiceAvailable(false);
         setVoiceError("Voice is temporarily unavailable — my reply is above.");
+        conversation.playbackFailed(turnId, err instanceof Error ? err.message : "tts failed");
       } finally {
         releaseAudio();
         setPhase("idle"); // always returns to waiting — never reopens the mic
       }
     },
-    [releaseAudio],
+    [fetchChunk, playClip, releaseAudio],
   );
 
   const stopSpeaking = useCallback(() => {
+    cancelRef.current = true;
     releaseAudio();
+    conversation.interrupt("speech stopped by Builder");
     setPhase("idle");
   }, [releaseAudio]);
 

@@ -41,7 +41,9 @@ export const Route = createFileRoute("/api/tts")({
 
         const text = typeof body.text === "string" ? body.text.trim() : "";
         if (!text) return new Response("Missing text", { status: 400 });
-        if (text.length > 800) return new Response("Text too long", { status: 400 });
+        // The client chunks long replies (src/lib/voice/chunk-text.ts) and never
+        // truncates. This ceiling is a safety valve, not a content limit.
+        if (text.length > 2400) return new Response("Text too long", { status: 400 });
 
         const voiceRaw = typeof body.voice === "string" ? body.voice : "shimmer";
         const voice = ALLOWED_VOICES.has(voiceRaw) ? voiceRaw : "shimmer";

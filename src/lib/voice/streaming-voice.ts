@@ -58,7 +58,7 @@ export class StreamingGatewayVoice implements VoiceOutput {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        text: text.slice(0, 800),
+        text,
         voice: req.voice,
         instructions: req.instructions,
         speed: req.speed,
