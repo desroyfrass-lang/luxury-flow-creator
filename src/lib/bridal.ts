@@ -227,3 +227,89 @@ export const CONCIERGE_NOTICES = [
 
 export const SIZING_EQUITY_RULE =
   "Every bridal collection passes a sizing-equity review before publication. Frassy helps with garment fit only — she never estimates body size and never comments on appearance.";
+
+/* ── FRASS-0932 · Boutique & District architecture ─────────────────────────
+   Frass Bridal exists in two connected locations. Neither duplicates the
+   other: the boutique introduces the dream, the district fulfils it.        */
+
+export const BOUTIQUE_PRINCIPLE =
+  "Frass Bridal begins as a beautiful discovery inside Frass District and unfolds into a dedicated Bridal District where couples plan not only a wedding, but the life they intend to build together.";
+
+export const BOUTIQUE_VS_DISTRICT = [
+  { boutique: "The boutique introduces the dream", district: "The district fulfils it" },
+  { boutique: "The boutique inspires", district: "The district plans" },
+  { boutique: "The boutique showcases", district: "The district organises" },
+  { boutique: "The boutique sells", district: "The district builds a wedding" },
+] as const;
+
+export const BOUTIQUE_WELCOME = [
+  "Welcome to Frass Bridal.",
+  "Every great wedding begins with a beautiful plan.",
+] as const;
+
+export const PROMISE_ARCH_INSCRIPTION = "Every great marriage begins with a shared vision.";
+
+/** The cinematic walk from the busy promenade to the estate gates. */
+export const GARDEN_WALK = [
+  { id: "leave", title: "Leaving the promenade", note: "The shopfronts thin out. The noise falls away behind you." },
+  { id: "flowers", title: "The flowers begin", note: "Planters, then beds, then whole borders of white and blush." },
+  { id: "gardens", title: "The gardens open", note: "Hedges part. Water moves somewhere just out of sight." },
+  { id: "quiet", title: "The sound softens", note: "Only birds, water, and your own footsteps on stone." },
+  { id: "arch", title: "The Promise Arch", note: PROMISE_ARCH_INSCRIPTION },
+  { id: "estate", title: "The Bridal Estate", note: "The gates open. The Wedding Journey has begun." },
+] as const;
+
+export const WELCOME_HALL_GREETING = [
+  "Welcome to Frass Bridal.",
+  "Whether you're planning your wedding, helping someone you love, or simply gathering inspiration, everything begins here.",
+  "Let's build your wedding journey together.",
+] as const;
+
+export type PrimaryExperience = { icon: string; label: string; note: string; to?: string };
+
+/** The Welcome Hall never opens on a catalog — visitors choose a journey. */
+export const PRIMARY_EXPERIENCES: PrimaryExperience[] = [
+  { icon: "💍", label: "Start Wedding Planning", note: "Date, budget, timeline — Frassy walks you through it.", to: "/bridal/journey" },
+  { icon: "👰", label: "Find My Dress", note: "Save, share, try on virtually, decide together.", to: "/bridal/collections" },
+  { icon: "🤵", label: "Find Formal Wear", note: "Tuxedos, suits, footwear and finishing." },
+  { icon: "👭", label: "Bridesmaids", note: "One party, many bodies, many countries. All fitted." },
+  { icon: "🕴", label: "Groomsmen", note: "Coordinated without looking like uniforms." },
+  { icon: "📋", label: "Wedding Registry", note: "Gifts, funds and thank-yous, kept tidy." },
+  { icon: "🏛", label: "Wedding Vendors", note: "Verified vendors, quotes and appointments.", to: "/bridal/marketplace" },
+  { icon: "📸", label: "Inspiration Gallery", note: "Real weddings, across cultures and continents." },
+  { icon: "💐", label: "Flowers & Décor", note: "Season-aware, climate-aware, budget-aware.", to: "/bridal/marketplace" },
+  { icon: "✈️", label: "Honeymoon", note: "Travel, resort wear and everything after the day." },
+  { icon: "❤️", label: "Family Vision", note: "First home, future family, business together.", to: "/bridal/vault" },
+  { icon: "📖", label: "Wedding Journal", note: "The whole story, saved as you live it.", to: "/bridal/vault" },
+];
+
+/** Every entrance reaches the same ecosystem — nothing is boutique-only. */
+export const UNIFIED_COMMERCE = [
+  "Virtual Try-On",
+  "Dress collaboration",
+  "Vendor sourcing",
+  "Registry",
+  "Wedding Vault",
+  "Marketplace",
+  "Appointments",
+  "Budget planning",
+  "Vendor onboarding",
+  "Wedding timeline",
+  "Family Vision",
+] as const;
+
+export const VISITOR_SEQUENCE = [
+  "Frass District",
+  "Bridal Boutique",
+  "Reception Gallery",
+  "Garden Walk",
+  "The Promise Arch",
+  "Bridal Estate",
+  "Welcome Hall",
+  "Choose Your Wedding Journey",
+  "Wedding Vault",
+  "Planning Experiences",
+  "Marketplace",
+  "Wedding Day",
+  "Family Vision",
+] as const;

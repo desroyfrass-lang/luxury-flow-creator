@@ -31,6 +31,7 @@ import { Route as FrassDistrictRouteImport } from './routes/frass-district'
 import { Route as ForUsRouteImport } from './routes/for-us'
 import { Route as CheckoutRouteImport } from './routes/checkout'
 import { Route as CapsulesRouteImport } from './routes/capsules'
+import { Route as BridalBoutiqueRouteImport } from './routes/bridal-boutique'
 import { Route as BridalRouteImport } from './routes/bridal'
 import { Route as BlogRouteImport } from './routes/blog'
 import { Route as BareDripRouteImport } from './routes/bare-drip'
@@ -71,6 +72,7 @@ import { Route as FrassDripMenRouteImport } from './routes/frass-drip.men'
 import { Route as CollectionHandleRouteImport } from './routes/collection.$handle'
 import { Route as CapsulesHandleRouteImport } from './routes/capsules.$handle'
 import { Route as BuilderHandleRouteImport } from './routes/builder.$handle'
+import { Route as BridalWalkRouteImport } from './routes/bridal.walk'
 import { Route as BridalVaultRouteImport } from './routes/bridal.vault'
 import { Route as BridalSourcingRouteImport } from './routes/bridal.sourcing'
 import { Route as BridalMarketplaceRouteImport } from './routes/bridal.marketplace'
@@ -86,6 +88,7 @@ import { Route as AfroDesignersJoinRouteImport } from './routes/afro-designers.j
 import { Route as AfroDesignersDesignersRouteImport } from './routes/afro-designers.designers'
 import { Route as AuthenticatedWorkspaceRouteImport } from './routes/_authenticated/workspace'
 import { Route as AuthenticatedWelcomeHallRouteImport } from './routes/_authenticated/welcome-hall'
+import { Route as AuthenticatedVisualReviewRouteImport } from './routes/_authenticated/visual-review'
 import { Route as AuthenticatedVaultRouteImport } from './routes/_authenticated/vault'
 import { Route as AuthenticatedTryOnRouteImport } from './routes/_authenticated/try-on'
 import { Route as AuthenticatedRoomRouteImport } from './routes/_authenticated/room'
@@ -253,6 +256,11 @@ const CheckoutRoute = CheckoutRouteImport.update({
 const CapsulesRoute = CapsulesRouteImport.update({
   id: '/capsules',
   path: '/capsules',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BridalBoutiqueRoute = BridalBoutiqueRouteImport.update({
+  id: '/bridal-boutique',
+  path: '/bridal-boutique',
   getParentRoute: () => rootRouteImport,
 } as any)
 const BridalRoute = BridalRouteImport.update({
@@ -455,6 +463,11 @@ const BuilderHandleRoute = BuilderHandleRouteImport.update({
   path: '/builder/$handle',
   getParentRoute: () => rootRouteImport,
 } as any)
+const BridalWalkRoute = BridalWalkRouteImport.update({
+  id: '/walk',
+  path: '/walk',
+  getParentRoute: () => BridalRoute,
+} as any)
 const BridalVaultRoute = BridalVaultRouteImport.update({
   id: '/vault',
   path: '/vault',
@@ -529,6 +542,12 @@ const AuthenticatedWelcomeHallRoute =
   AuthenticatedWelcomeHallRouteImport.update({
     id: '/welcome-hall',
     path: '/welcome-hall',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedVisualReviewRoute =
+  AuthenticatedVisualReviewRouteImport.update({
+    id: '/visual-review',
+    path: '/visual-review',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
 const AuthenticatedVaultRoute = AuthenticatedVaultRouteImport.update({
@@ -856,6 +875,7 @@ export interface FileRoutesByFullPath {
   '/bare-drip': typeof BareDripRouteWithChildren
   '/blog': typeof BlogRouteWithChildren
   '/bridal': typeof BridalRouteWithChildren
+  '/bridal-boutique': typeof BridalBoutiqueRoute
   '/capsules': typeof CapsulesRouteWithChildren
   '/checkout': typeof CheckoutRoute
   '/for-us': typeof ForUsRoute
@@ -891,6 +911,7 @@ export interface FileRoutesByFullPath {
   '/room': typeof AuthenticatedRoomRoute
   '/try-on': typeof AuthenticatedTryOnRoute
   '/vault': typeof AuthenticatedVaultRoute
+  '/visual-review': typeof AuthenticatedVisualReviewRoute
   '/welcome-hall': typeof AuthenticatedWelcomeHallRoute
   '/workspace': typeof AuthenticatedWorkspaceRouteWithChildren
   '/afro-designers/designers': typeof AfroDesignersDesignersRouteWithChildren
@@ -906,6 +927,7 @@ export interface FileRoutesByFullPath {
   '/bridal/marketplace': typeof BridalMarketplaceRoute
   '/bridal/sourcing': typeof BridalSourcingRoute
   '/bridal/vault': typeof BridalVaultRoute
+  '/bridal/walk': typeof BridalWalkRoute
   '/builder/$handle': typeof BuilderHandleRoute
   '/capsules/$handle': typeof CapsulesHandleRoute
   '/collection/$handle': typeof CollectionHandleRoute
@@ -988,6 +1010,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/arrival': typeof ArrivalRoute
   '/auth': typeof AuthRoute
+  '/bridal-boutique': typeof BridalBoutiqueRoute
   '/checkout': typeof CheckoutRoute
   '/for-us': typeof ForUsRoute
   '/frass-district': typeof FrassDistrictRoute
@@ -1013,6 +1036,7 @@ export interface FileRoutesByTo {
   '/room': typeof AuthenticatedRoomRoute
   '/try-on': typeof AuthenticatedTryOnRoute
   '/vault': typeof AuthenticatedVaultRoute
+  '/visual-review': typeof AuthenticatedVisualReviewRoute
   '/welcome-hall': typeof AuthenticatedWelcomeHallRoute
   '/workspace': typeof AuthenticatedWorkspaceRouteWithChildren
   '/afro-designers/designers': typeof AfroDesignersDesignersRouteWithChildren
@@ -1026,6 +1050,7 @@ export interface FileRoutesByTo {
   '/bridal/marketplace': typeof BridalMarketplaceRoute
   '/bridal/sourcing': typeof BridalSourcingRoute
   '/bridal/vault': typeof BridalVaultRoute
+  '/bridal/walk': typeof BridalWalkRoute
   '/builder/$handle': typeof BuilderHandleRoute
   '/capsules/$handle': typeof CapsulesHandleRoute
   '/collection/$handle': typeof CollectionHandleRoute
@@ -1112,6 +1137,7 @@ export interface FileRoutesById {
   '/bare-drip': typeof BareDripRouteWithChildren
   '/blog': typeof BlogRouteWithChildren
   '/bridal': typeof BridalRouteWithChildren
+  '/bridal-boutique': typeof BridalBoutiqueRoute
   '/capsules': typeof CapsulesRouteWithChildren
   '/checkout': typeof CheckoutRoute
   '/for-us': typeof ForUsRoute
@@ -1147,6 +1173,7 @@ export interface FileRoutesById {
   '/_authenticated/room': typeof AuthenticatedRoomRoute
   '/_authenticated/try-on': typeof AuthenticatedTryOnRoute
   '/_authenticated/vault': typeof AuthenticatedVaultRoute
+  '/_authenticated/visual-review': typeof AuthenticatedVisualReviewRoute
   '/_authenticated/welcome-hall': typeof AuthenticatedWelcomeHallRoute
   '/_authenticated/workspace': typeof AuthenticatedWorkspaceRouteWithChildren
   '/afro-designers/designers': typeof AfroDesignersDesignersRouteWithChildren
@@ -1162,6 +1189,7 @@ export interface FileRoutesById {
   '/bridal/marketplace': typeof BridalMarketplaceRoute
   '/bridal/sourcing': typeof BridalSourcingRoute
   '/bridal/vault': typeof BridalVaultRoute
+  '/bridal/walk': typeof BridalWalkRoute
   '/builder/$handle': typeof BuilderHandleRoute
   '/capsules/$handle': typeof CapsulesHandleRoute
   '/collection/$handle': typeof CollectionHandleRoute
@@ -1250,6 +1278,7 @@ export interface FileRouteTypes {
     | '/bare-drip'
     | '/blog'
     | '/bridal'
+    | '/bridal-boutique'
     | '/capsules'
     | '/checkout'
     | '/for-us'
@@ -1285,6 +1314,7 @@ export interface FileRouteTypes {
     | '/room'
     | '/try-on'
     | '/vault'
+    | '/visual-review'
     | '/welcome-hall'
     | '/workspace'
     | '/afro-designers/designers'
@@ -1300,6 +1330,7 @@ export interface FileRouteTypes {
     | '/bridal/marketplace'
     | '/bridal/sourcing'
     | '/bridal/vault'
+    | '/bridal/walk'
     | '/builder/$handle'
     | '/capsules/$handle'
     | '/collection/$handle'
@@ -1382,6 +1413,7 @@ export interface FileRouteTypes {
     | '/'
     | '/arrival'
     | '/auth'
+    | '/bridal-boutique'
     | '/checkout'
     | '/for-us'
     | '/frass-district'
@@ -1407,6 +1439,7 @@ export interface FileRouteTypes {
     | '/room'
     | '/try-on'
     | '/vault'
+    | '/visual-review'
     | '/welcome-hall'
     | '/workspace'
     | '/afro-designers/designers'
@@ -1420,6 +1453,7 @@ export interface FileRouteTypes {
     | '/bridal/marketplace'
     | '/bridal/sourcing'
     | '/bridal/vault'
+    | '/bridal/walk'
     | '/builder/$handle'
     | '/capsules/$handle'
     | '/collection/$handle'
@@ -1505,6 +1539,7 @@ export interface FileRouteTypes {
     | '/bare-drip'
     | '/blog'
     | '/bridal'
+    | '/bridal-boutique'
     | '/capsules'
     | '/checkout'
     | '/for-us'
@@ -1540,6 +1575,7 @@ export interface FileRouteTypes {
     | '/_authenticated/room'
     | '/_authenticated/try-on'
     | '/_authenticated/vault'
+    | '/_authenticated/visual-review'
     | '/_authenticated/welcome-hall'
     | '/_authenticated/workspace'
     | '/afro-designers/designers'
@@ -1555,6 +1591,7 @@ export interface FileRouteTypes {
     | '/bridal/marketplace'
     | '/bridal/sourcing'
     | '/bridal/vault'
+    | '/bridal/walk'
     | '/builder/$handle'
     | '/capsules/$handle'
     | '/collection/$handle'
@@ -1643,6 +1680,7 @@ export interface RootRouteChildren {
   BareDripRoute: typeof BareDripRouteWithChildren
   BlogRoute: typeof BlogRouteWithChildren
   BridalRoute: typeof BridalRouteWithChildren
+  BridalBoutiqueRoute: typeof BridalBoutiqueRoute
   CapsulesRoute: typeof CapsulesRouteWithChildren
   CheckoutRoute: typeof CheckoutRoute
   ForUsRoute: typeof ForUsRoute
@@ -1833,6 +1871,13 @@ declare module '@tanstack/react-router' {
       path: '/capsules'
       fullPath: '/capsules'
       preLoaderRoute: typeof CapsulesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/bridal-boutique': {
+      id: '/bridal-boutique'
+      path: '/bridal-boutique'
+      fullPath: '/bridal-boutique'
+      preLoaderRoute: typeof BridalBoutiqueRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/bridal': {
@@ -2115,6 +2160,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BuilderHandleRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/bridal/walk': {
+      id: '/bridal/walk'
+      path: '/walk'
+      fullPath: '/bridal/walk'
+      preLoaderRoute: typeof BridalWalkRouteImport
+      parentRoute: typeof BridalRoute
+    }
     '/bridal/vault': {
       id: '/bridal/vault'
       path: '/vault'
@@ -2218,6 +2270,13 @@ declare module '@tanstack/react-router' {
       path: '/welcome-hall'
       fullPath: '/welcome-hall'
       preLoaderRoute: typeof AuthenticatedWelcomeHallRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/visual-review': {
+      id: '/_authenticated/visual-review'
+      path: '/visual-review'
+      fullPath: '/visual-review'
+      preLoaderRoute: typeof AuthenticatedVisualReviewRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/vault': {
@@ -2705,6 +2764,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedRoomRoute: typeof AuthenticatedRoomRoute
   AuthenticatedTryOnRoute: typeof AuthenticatedTryOnRoute
   AuthenticatedVaultRoute: typeof AuthenticatedVaultRoute
+  AuthenticatedVisualReviewRoute: typeof AuthenticatedVisualReviewRoute
   AuthenticatedWelcomeHallRoute: typeof AuthenticatedWelcomeHallRoute
   AuthenticatedWorkspaceRoute: typeof AuthenticatedWorkspaceRouteWithChildren
 }
@@ -2721,6 +2781,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedRoomRoute: AuthenticatedRoomRoute,
   AuthenticatedTryOnRoute: AuthenticatedTryOnRoute,
   AuthenticatedVaultRoute: AuthenticatedVaultRoute,
+  AuthenticatedVisualReviewRoute: AuthenticatedVisualReviewRoute,
   AuthenticatedWelcomeHallRoute: AuthenticatedWelcomeHallRoute,
   AuthenticatedWorkspaceRoute: AuthenticatedWorkspaceRouteWithChildren,
 }
@@ -2822,6 +2883,7 @@ interface BridalRouteChildren {
   BridalMarketplaceRoute: typeof BridalMarketplaceRoute
   BridalSourcingRoute: typeof BridalSourcingRoute
   BridalVaultRoute: typeof BridalVaultRoute
+  BridalWalkRoute: typeof BridalWalkRoute
   BridalIndexRoute: typeof BridalIndexRoute
 }
 
@@ -2831,6 +2893,7 @@ const BridalRouteChildren: BridalRouteChildren = {
   BridalMarketplaceRoute: BridalMarketplaceRoute,
   BridalSourcingRoute: BridalSourcingRoute,
   BridalVaultRoute: BridalVaultRoute,
+  BridalWalkRoute: BridalWalkRoute,
   BridalIndexRoute: BridalIndexRoute,
 }
 
@@ -3058,6 +3121,7 @@ const rootRouteChildren: RootRouteChildren = {
   BareDripRoute: BareDripRouteWithChildren,
   BlogRoute: BlogRouteWithChildren,
   BridalRoute: BridalRouteWithChildren,
+  BridalBoutiqueRoute: BridalBoutiqueRoute,
   CapsulesRoute: CapsulesRouteWithChildren,
   CheckoutRoute: CheckoutRoute,
   ForUsRoute: ForUsRoute,
