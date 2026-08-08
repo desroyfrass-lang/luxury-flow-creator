@@ -20,7 +20,7 @@ export function ForUsLink({
   return (
     <Link
       to="/for-us"
-      search={{ from: from.startsWith("/for-us") ? "" : from }}
+      search={{ from: from.startsWith("/for-us") ? "" : from } as never}
       className={className}
       activeProps={activeClassName ? { className: activeClassName } : undefined}
     >

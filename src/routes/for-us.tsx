@@ -205,7 +205,7 @@ function ForUsPage() {
           </p>
         </section>
 
-        <PageFeedback pageSlug="for-us" />
+        <PageFeedback pageTitle="For Us" />
       </div>
     </SiteShell>
   );
