@@ -4,6 +4,7 @@
 
 import { type ReactNode, useRef, useState } from "react";
 import { Link } from "@tanstack/react-router";
+import { ForUsLink } from "@/components/for-us-link";
 import {
   Search,
   PanelLeftClose,
