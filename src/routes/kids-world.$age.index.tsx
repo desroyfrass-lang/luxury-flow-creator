@@ -75,7 +75,7 @@ function AgeWorld() {
         title={world.title}
         description={world.spirit}
         crumbs={[
-          { label: "Frass Hill", to: "/frass-world" },
+          { label: "Frass Hill", to: "/frass-hill" },
           { label: "Kids World", to: "/kids-world" },
           { label: `Ages ${world.ageLabel}` },
         ]}

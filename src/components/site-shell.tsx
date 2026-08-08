@@ -32,7 +32,7 @@ const NAV_ITEMS = [
 
 const MENU_ITEMS = [
   { to: "/gateway", slot: "nav-gateway", fallback: "Frass Gateway" },
-  { to: "/frass-world", slot: "nav-frass-world", fallback: "Explore Frass World" },
+  { to: "/frass-hill", slot: "nav-frass-world", fallback: "Enter Frass Hill" },
   { to: "/lookbook", slot: "nav-lookbook", fallback: "Lookbook" },
   { to: "/music-media", slot: "nav-music-media", fallback: "Music & Media" },
   { to: "/blog", slot: "nav-blog", fallback: "Frass Blog" },

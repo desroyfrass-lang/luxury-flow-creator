@@ -12,6 +12,8 @@ Founder Commissioning is mission control: immutable Nicky/Frass OS/FrassKicks fa
 Frass OS Constitution v1.0 at `FRASS_OS_CONSTITUTION.md` is the permanent source of truth; every implementation must trace back to it.
 Implementation hold is lifted. The `FINAL_LOVABLE_DIRECTIVE.md` commissioning is the active build charter: Builder experience above everything; optimize for confidence, timelessness, and meaningful progress.
 One feature, one component, one route, one source of truth — audit for existing implementations before building; never create a second version.
+Frass Hill has exactly 8 districts (Town Square, Children's Village, Frass District, Luxury House, Studio District, Builders Village, Farm District, Founder Hall); every other service is a venue INSIDE one.
+"Frass World" is retired — the entrance is SHOP or ENTER FRASS HILL.
 
 ## Memories
 - [One source of truth rule](mem://preferences/one-source-of-truth) — Audit-before-build discipline, consolidation over duplication, Audit Report deliverable
@@ -67,3 +69,4 @@ One feature, one component, one route, one source of truth — audit for existin
 - [The Frass Daily & One-Workspace architecture](mem://features/frass-daily-and-one-workspace) — Daily command center (once per day, 11 sections, delegation) + consolidated workspace/modes architecture
 - [Founder Construction Mode FRASS-0200](mem://features/founder-construction-mode-0200) — Founder-only Blueprint Layer, Architectural Intelligence Panel, live simulation, quality governance, living decision log
 - [FRASS-0210 Daily refinement](mem://features/frass-0210-daily-refinement) — Honest zeros over sample data, money provenance, drill-downs, My Day, welcome ritual, natural-language Daily commands, workspace memory bar, Frassy greets once at the entrance
+- [FRASS-0920 Town Plan](mem://features/frass-0920-town-plan) — The 8 real districts of Frass Hill and the venues inside each; supersedes the FRASS-0910 district list

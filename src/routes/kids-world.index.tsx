@@ -172,7 +172,7 @@ function KidsWorldHome() {
               🛍 Shop Kids
             </Link>
             <Link
-              to="/frass-world"
+              to="/frass-hill"
               className="rounded-full border border-border px-7 py-3 text-[11px] font-bold uppercase tracking-[0.26em]"
             >
               🗺 Frass Hill map
