@@ -404,20 +404,15 @@ export function FrassyChat({ embedded = false }: { embedded?: boolean } = {}) {
         )}
       </div>
 
-      <ComposerShell
+      <FrassyComposer
         value={input}
         onChange={setInput}
         onSend={() => void send()}
-        disabled={loading}
+        loading={loading}
         placeholder="Ask Frassy anything…"
-        onMicToggle={voice.voiceAvailable ? () => void toggleMic() : undefined}
-        micState={
-          voice.phase === "recording"
-            ? "recording"
-            : voice.phase === "transcribing" || (loading && !error)
-              ? "busy"
-              : "idle"
-        }
+        onMic={voice.voiceAvailable ? () => void toggleMic() : undefined}
+        micAvailable={voice.voiceAvailable}
+        micActive={voice.phase === "recording"}
       />
 
     </div>
