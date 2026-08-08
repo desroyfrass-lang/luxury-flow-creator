@@ -162,17 +162,7 @@ function EntrancePage() {
           className="gateway-drift absolute inset-0 h-full w-full object-cover object-center"
         />
         <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-black/75" />
-
-        <img
-          src={fullLogo.url}
-          alt="Frass"
-          className="pointer-events-none absolute left-1/2 top-[3.4%] z-[1] h-[10.5%] w-auto -translate-x-1/2 object-contain"
-          style={{
-            filter:
-              "grayscale(1) brightness(0.95) sepia(1) saturate(6) hue-rotate(-14deg) contrast(1.15) drop-shadow(0 4px 12px rgba(0,0,0,0.8))",
-          }}
-        />
-      </div>
+        <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-black/75" />
 
       <EntranceFrassy />
 
