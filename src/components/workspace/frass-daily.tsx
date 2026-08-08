@@ -39,6 +39,9 @@ import {
   setDemoData,
   setRitualEnabled,
 } from "@/lib/workspace/daily-intel";
+import { Amount } from "@/components/finance/amount";
+import { dailySnapshot, viewerFrom } from "@/lib/finance/financial-center";
+
 
 const ORDER: DailyPriority[] = ["critical", "important", "optional", "completed"];
 
