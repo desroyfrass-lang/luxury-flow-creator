@@ -353,10 +353,11 @@ export const Route = createFileRoute("/api/chat")({
 
         const basePrompt =
           body.experienceContext === "founder"
-            ? `${SYSTEM_PROMPT}\n\n${FOUNDER_CONTEXT}\n\n${CURATION_BRIEF}`
+            ? `${SYSTEM_PROMPT}\n\n${FOUNDER_CONTEXT}\n\n${CURATION_BRIEF}\n\n${FOR_US_COMMUNITY}\n\n${STORYTELLING_ENGINE}\n\n${PLAIN_LANGUAGE_PROTOCOL}`
             : body.experienceContext === "builder"
-              ? `${SYSTEM_PROMPT}\n\n${CURATION_BRIEF}`
-              : SYSTEM_PROMPT;
+              ? `${SYSTEM_PROMPT}\n\n${CURATION_BRIEF}\n\n${FOR_US_COMMUNITY}\n\n${PLAIN_LANGUAGE_PROTOCOL}`
+              : `${SYSTEM_PROMPT}\n\n${FOR_US_COMMUNITY}`;
+
         const system = contextBlock ? `${basePrompt}\n\n${contextBlock}` : basePrompt;
 
         // Convert simple {role, content} messages into UI-message shape for the SDK.
