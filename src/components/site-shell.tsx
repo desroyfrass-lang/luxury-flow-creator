@@ -219,7 +219,15 @@ function BuilderAccountMenu({ hasWorkspace, isAdmin }: { hasWorkspace: boolean; 
         </button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-56 rounded-2xl border-border/70 bg-background/95 backdrop-blur-xl">
+        <DropdownMenuItem
+          onClick={() => openTheDaily()}
+          className="rounded-xl cursor-pointer flex items-center gap-2 text-xs uppercase tracking-[0.2em] text-[color:var(--gold)]"
+        >
+          <Sun className="h-4 w-4" />
+          The Frass Daily
+        </DropdownMenuItem>
         <DropdownMenuItem asChild className="rounded-xl cursor-pointer">
+
           <Link to="/welcome-hall" className="flex items-center gap-2 text-xs uppercase tracking-[0.2em]">
             <Sparkles className="h-4 w-4" />
             Welcome Hall
