@@ -103,8 +103,22 @@ const STORES: { title: string; description: string; image: string; to: string; e
     to: "/frass-plus/women",
     eyebrow: "Women",
   },
-
   {
+    title: "Frass Shape — Men",
+    description: "Compression, posture support and suit layers. Support you feel, never see.",
+    image: shapeRoomMen,
+    to: "/frass-shape/men",
+    eyebrow: "Wellness",
+  },
+  {
+    title: "Frass Shape — Women",
+    description: "Sculpt, smooth, bridal, postpartum and active support — shop by goal.",
+    image: shapeRoomWomen,
+    to: "/frass-shape/women",
+    eyebrow: "Wellness",
+  },
+
+
     title: "Frass Kids",
     description: "The children's flagship — eight age & gender stores, one Frass architecture.",
     image: districtKids,
