@@ -479,9 +479,22 @@ export function FrassDaily({
           </p>
         </div>
       </div>
+
+      {/* FRASS-0400 — the Frassy Workspace Composer, docked in The Daily */}
+      <div className="daily-dock">
+        {commandNote && <p className="ws-meta daily-command-note">{commandNote}</p>}
+        <FrassyComposer
+          value={command}
+          onChange={setCommand}
+          onSend={(text) => runIntent(text.trim())}
+          placeholder="Talk to Frassy, drop files or folders, capture a photo — “show me the orders”, “continue yesterday's work”…"
+          tools={audience === "founder" ? undefined : ["files", "images", "documents", "camera", "clipboard"]}
+        />
+      </div>
     </div>
   );
 }
+
 
 function MetricCard({
   metric,
