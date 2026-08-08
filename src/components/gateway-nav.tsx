@@ -1,7 +1,9 @@
 import { Link, useRouterState } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { Search, KeyRound, Menu, X, UserRound } from "lucide-react";
+import { Search, KeyRound, Menu, X, UserRound, Sun } from "lucide-react";
 import { useAccountSection } from "@/hooks/use-my-roles";
+import { openTheDaily } from "@/components/workspace/daily-gate";
+
 import { CartDrawer } from "./cart-drawer";
 import { RegionSwitcher } from "./region-switcher";
 import fullLogo from "@/assets/frass-logo-full.asset.json";
@@ -233,7 +235,9 @@ export function GatewayNav({ mode }: { mode: "shop" | "world" }) {
             </Link>
           );
         })}
+        <DailyNavButton />
         <AccountNavSection />
+
       </nav>
 
 
@@ -285,8 +289,25 @@ export function GatewayNav({ mode }: { mode: "shop" | "world" }) {
   );
 }
 
+/** The Frass Daily — one Daily for every signed-in Builder, admin or member. */
+function DailyNavButton() {
+  const section = useAccountSection();
+  if (!section) return null;
+  return (
+    <button
+      type="button"
+      onClick={() => openTheDaily()}
+      className="inline-flex shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full border border-[color:var(--hill-gold)]/50 px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.22em] text-[color:var(--hill-gold)] transition hover:bg-[color:var(--hill-gold)]/10"
+    >
+      <Sun className="h-3.5 w-3.5" />
+      The Daily
+    </button>
+  );
+}
+
 /** Role-aware account section — last item on the nav bar. */
 function AccountNavSection() {
+
   const section = useAccountSection();
   const [open, setOpen] = useState(false);
   const path = useRouterState({ select: (r) => r.location.pathname });
