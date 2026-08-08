@@ -5,12 +5,14 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { ChevronDown, ChevronRight, Plus, Send, Volume2, VolumeX, Square } from "lucide-react";
-import { WorkspaceShell, type IndexEntry } from "@/components/workspace/workspace-shell";
+import { WorkspaceShell, type IndexEntry, type RoleLink } from "@/components/workspace/workspace-shell";
 import { UploadTray } from "@/components/workspace/upload-tray";
 import { ReplyBlocks } from "@/components/workspace/reply-blocks";
 import { openTheDaily } from "@/components/workspace/daily-gate";
 import { usePushToTalk } from "@/hooks/use-push-to-talk";
 import { useIsAdminStatus } from "@/hooks/use-is-admin";
+import { useWorkspaceRoles } from "@/hooks/use-workspace-roles";
+
 import {
   FOUNDER_MILESTONES,
   FOUNDER_PROJECTS,
@@ -75,7 +77,32 @@ export function WorkspaceRoom({
   const [note, setNote] = useState<string | null>(null);
 
   const { isAdmin } = useIsAdminStatus();
+  const businessRoles = useWorkspaceRoles();
+
+  // Role-specific navigation appears automatically; Workspace + Daily are always there.
+  const roleLinks: RoleLink[] = useMemo(() => {
+    const links: RoleLink[] = [];
+    if (isAdmin) {
+      links.push({ to: "/founder", label: "Founder Dashboard", emoji: "🏛" });
+      links.push({ to: "/admin", label: "Admin", emoji: "🛠" });
+      links.push({ to: "/admin/affiliate-policy", label: "Governance", emoji: "⚖️" });
+    }
+    if (businessRoles.includes("partner")) {
+      links.push({ to: "/workspace/merch", label: "Marketplace", emoji: "🏬" });
+      links.push({ to: "/admin/partner-vendors", label: "Vendors", emoji: "📦" });
+    }
+    if (businessRoles.includes("affiliate")) {
+      links.push({ to: "/workspace/affiliate", label: "Affiliate", emoji: "🤝" });
+    }
+    if (businessRoles.includes("designer")) {
+      links.push({ to: "/creation", label: "Creator Studio", emoji: "🎨" });
+    }
+    links.push({ to: "/academy", label: "Academy", emoji: "🎓" });
+    return links;
+  }, [isAdmin, businessRoles]);
+
   const voice = usePushToTalk();
+
   const turnRef = useRef(0);
   const abortRef = useRef<AbortController | null>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -281,6 +308,8 @@ export function WorkspaceRoom({
       projects={modeProjects}
       activeProjectId={activeProjectId}
       onSelectProject={setActiveProjectId}
+      roleLinks={roleLinks}
+
 
       index={index}
       onJumpTo={jumpTo}

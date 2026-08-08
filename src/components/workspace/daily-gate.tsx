@@ -19,6 +19,7 @@ export function openTheDaily() {
 
 export function DailyGate() {
   const [open, setOpen] = useState(false);
+  const [auto, setAuto] = useState(false);
   const [name, setName] = useState<string | undefined>();
   const [signedIn, setSignedIn] = useState(false);
   const { isAdmin } = useIsAdminStatus();
@@ -34,7 +35,10 @@ export function DailyGate() {
       const meta = user.user_metadata as { full_name?: string; name?: string } | undefined;
       const label = meta?.full_name ?? meta?.name ?? user.email?.split("@")[0];
       setName(label ? label.split(" ")[0] : undefined);
-      if (window.localStorage.getItem(SEEN_KEY) !== dayKey()) setOpen(true);
+      if (window.localStorage.getItem(SEEN_KEY) !== dayKey()) {
+        setAuto(true);
+        setOpen(true);
+      }
     });
     return () => {
       alive = false;
@@ -42,15 +46,22 @@ export function DailyGate() {
   }, []);
 
   useEffect(() => {
-    const reopen = () => setOpen(true);
+    const reopen = () => {
+      setAuto(false);
+      setOpen(true);
+    };
     window.addEventListener(OPEN_DAILY_EVENT, reopen);
     return () => window.removeEventListener(OPEN_DAILY_EVENT, reopen);
   }, []);
 
+  // Login → The Daily (once per day) → My Workspace.
   const dismiss = useCallback(() => {
     window.localStorage.setItem(SEEN_KEY, dayKey());
     setOpen(false);
-  }, []);
+    if (auto && window.location.pathname !== "/room") void navigate({ to: "/room" });
+    setAuto(false);
+  }, [auto, navigate]);
+
 
   if (!signedIn || !open) return null;
 
@@ -59,10 +70,16 @@ export function DailyGate() {
       audience={isAdmin ? "founder" : "builder"}
       name={name}
       onDismiss={dismiss}
+      onNavigate={(href) => {
+        dismiss();
+        void navigate({ to: href });
+      }}
       onOpenProject={(projectId) => {
         window.localStorage.setItem("frass.workspace.project", projectId);
+        dismiss();
         void navigate({ to: "/room" });
       }}
     />
   );
 }
+

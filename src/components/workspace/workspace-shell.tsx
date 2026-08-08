@@ -2,7 +2,7 @@
 // Persistent Composer. My Workspace is the single canonical workspace; modes
 // change the tools, never the place.
 
-import { type ReactNode, useState } from "react";
+import { type ReactNode, useRef, useState } from "react";
 import { Link } from "@tanstack/react-router";
 import {
   Search,
@@ -14,6 +14,9 @@ import {
   Moon,
   Home,
   Sunrise,
+  FolderOpen,
+  Archive,
+  User,
 } from "lucide-react";
 import symbolAsset from "@/assets/frass-logo-symbol.asset.json";
 import {
@@ -27,6 +30,9 @@ import {
 
 export type IndexEntry = { id: string; label: string; group: string };
 
+/** Role-specific navigation that appears automatically inside My Workspace. */
+export type RoleLink = { to: string; label: string; emoji: string };
+
 type Props = {
   roomName: string;
   roomKind: string;
@@ -38,6 +44,7 @@ type Props = {
   projects: WorkspaceProject[];
   activeProjectId: string;
   onSelectProject: (id: string) => void;
+  roleLinks: RoleLink[];
   index: IndexEntry[];
   onJumpTo: (id: string) => void;
   milestones: Milestone[];
@@ -46,6 +53,7 @@ type Props = {
   children: ReactNode;
   composer: ReactNode;
 };
+
 
 export function WorkspaceShell({
   roomName,
@@ -58,6 +66,7 @@ export function WorkspaceShell({
   projects,
   activeProjectId,
   onSelectProject,
+  roleLinks,
   index,
   onJumpTo,
   milestones,
@@ -71,6 +80,8 @@ export function WorkspaceShell({
   const [rightOpen, setRightOpen] = useState(true);
   const [bright, setBright] = useState(true);
   const [query, setQuery] = useState("");
+  const searchRef = useRef<HTMLInputElement>(null);
+
 
   const q = query.trim().toLowerCase();
   const searchHits = q
@@ -112,11 +123,14 @@ export function WorkspaceShell({
         <div className="relative mx-4 hidden max-w-md flex-1 md:block">
           <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 opacity-50" />
           <input
+            ref={searchRef}
+            id="ws-global-search"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Search everything — chats, projects, tasks, vendors, milestones…"
             className="ws-search"
           />
+
           {searchHits.length > 0 && (
             <div className="ws-search-pop">
               {searchHits.map((h, i) => (
@@ -160,13 +174,48 @@ export function WorkspaceShell({
         {/* Left sidebar — The Daily, modes, projects, index, timeline */}
         {leftOpen && (
           <aside className="ws-side hidden w-64 shrink-0 overflow-y-auto lg:block">
-            <button type="button" className="ws-nav" onClick={onOpenDaily}>
-              <Sunrise className="h-4 w-4" />
-              <span className="flex-1 text-left">The Frass Daily</span>
-            </button>
+            {/* Permanent navigation — always available, adapts to permissions */}
+            <div className="ws-side-title">Navigation</div>
+            <div className="space-y-0.5">
+              <div className="ws-nav ws-nav-active">
+                <Home className="h-4 w-4" />
+                <span className="flex-1 text-left">My Workspace</span>
+              </div>
+              <button type="button" className="ws-nav" onClick={onOpenDaily}>
+                <Sunrise className="h-4 w-4" />
+                <span className="flex-1 text-left">The Daily</span>
+              </button>
+              <button
+                type="button"
+                className="ws-nav"
+                onClick={() => document.getElementById("ws-projects")?.scrollIntoView({ behavior: "smooth" })}
+              >
+                <FolderOpen className="h-4 w-4" />
+                <span className="flex-1 text-left">Projects</span>
+              </button>
+              <Link to="/vault" className="ws-nav">
+                <Archive className="h-4 w-4" />
+                <span className="flex-1 text-left">Vault</span>
+              </Link>
+              <button type="button" className="ws-nav" onClick={() => searchRef.current?.focus()}>
+                <Search className="h-4 w-4" />
+                <span className="flex-1 text-left">Search</span>
+              </button>
+              <Link to="/workspace/profile" className="ws-nav">
+                <User className="h-4 w-4" />
+                <span className="flex-1 text-left">Profile</span>
+              </Link>
+              {roleLinks.map((r) => (
+                <Link key={r.to} to={r.to} className="ws-nav ws-nav-role">
+                  <span>{r.emoji}</span>
+                  <span className="flex-1 truncate text-left">{r.label}</span>
+                </Link>
+              ))}
+            </div>
 
             <div className="ws-side-title mt-5">Mode</div>
             <div className="space-y-0.5">
+
               {modes.map((m) => (
                 <button
                   key={m.id}
@@ -180,7 +229,7 @@ export function WorkspaceShell({
               ))}
             </div>
 
-            <div className="ws-side-title mt-6">Projects</div>
+            <div id="ws-projects" className="ws-side-title mt-6">Projects</div>
 
             <div className="space-y-0.5">
               {projects.map((p) => (
