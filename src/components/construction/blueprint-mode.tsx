@@ -88,6 +88,8 @@ export function ConstructionMode() {
   const [versions, setVersions] = useState<BlueprintVersion[]>([]);
   const [showMap, setShowMap] = useState(false);
   const [impactRead, setImpactRead] = useState(false);
+  // Principle 13 — the record remembers why, not just what.
+  const [intent, setIntent] = useState("");
 
   const component = useMemo(() => getBlueprintComponent(selected), [selected]);
   const simulation = component && action ? simulateAction(component, action) : null;
@@ -97,6 +99,16 @@ export function ConstructionMode() {
   // Principle 12 — Impact Forecast. Nothing is approved before the ripple is understood.
   const impact = useMemo(
     () => (component && action ? impactReport(component, action) : null),
+    [component, action],
+  );
+  // Principle 13 — Architectural Memory. Conflicts are explained before proceeding.
+  const conflicts = useMemo(
+    () => (component && action ? architecturalMemory(component.id, action) : []),
+    [component, action, history],
+  );
+  // Principle 14 — the behaviour this Blueprint promises.
+  const expected = useMemo(
+    () => (component && action ? expectedBehaviour(component, action) : []),
     [component, action],
   );
 
