@@ -19,6 +19,14 @@ type Phase = "enter" | "speak" | "depart";
 
 const SESSION_PREFIX = "frassy-host:";
 
+/**
+ * FRASS-0210 — the cinematic introduction belongs to the entrance only.
+ * Frassy greets once, at the doors of the World of Frass. Everywhere else she
+ * is already present and simply continues; she never re-introduces herself.
+ */
+const ENTRANCE_IDS = new Set(["home", "frass-world"]);
+
+
 function seenThisSession(id: string) {
   if (typeof window === "undefined") return true;
   try {
