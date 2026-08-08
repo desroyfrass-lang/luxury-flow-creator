@@ -97,6 +97,7 @@ import { Route as AuthenticatedOnboardingRouteImport } from './routes/_authentic
 import { Route as AuthenticatedNotificationsRouteImport } from './routes/_authenticated/notifications'
 import { Route as AuthenticatedFrassyRouteImport } from './routes/_authenticated/frassy'
 import { Route as AuthenticatedFounderRouteImport } from './routes/_authenticated/founder'
+import { Route as AuthenticatedFinancialCenterRouteImport } from './routes/_authenticated/financial-center'
 import { Route as AuthenticatedCreationRouteImport } from './routes/_authenticated/creation'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
 import { Route as AuthenticatedAcademyRouteImport } from './routes/_authenticated/academy'
@@ -592,6 +593,12 @@ const AuthenticatedFounderRoute = AuthenticatedFounderRouteImport.update({
   path: '/founder',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedFinancialCenterRoute =
+  AuthenticatedFinancialCenterRouteImport.update({
+    id: '/financial-center',
+    path: '/financial-center',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedCreationRoute = AuthenticatedCreationRouteImport.update({
   id: '/creation',
   path: '/creation',
@@ -903,6 +910,7 @@ export interface FileRoutesByFullPath {
   '/academy': typeof AuthenticatedAcademyRoute
   '/admin': typeof AuthenticatedAdminRouteWithChildren
   '/creation': typeof AuthenticatedCreationRoute
+  '/financial-center': typeof AuthenticatedFinancialCenterRoute
   '/founder': typeof AuthenticatedFounderRoute
   '/frassy': typeof AuthenticatedFrassyRoute
   '/notifications': typeof AuthenticatedNotificationsRoute
@@ -1028,6 +1036,7 @@ export interface FileRoutesByTo {
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/academy': typeof AuthenticatedAcademyRoute
   '/creation': typeof AuthenticatedCreationRoute
+  '/financial-center': typeof AuthenticatedFinancialCenterRoute
   '/founder': typeof AuthenticatedFounderRoute
   '/frassy': typeof AuthenticatedFrassyRoute
   '/notifications': typeof AuthenticatedNotificationsRoute
@@ -1165,6 +1174,7 @@ export interface FileRoutesById {
   '/_authenticated/academy': typeof AuthenticatedAcademyRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRouteWithChildren
   '/_authenticated/creation': typeof AuthenticatedCreationRoute
+  '/_authenticated/financial-center': typeof AuthenticatedFinancialCenterRoute
   '/_authenticated/founder': typeof AuthenticatedFounderRoute
   '/_authenticated/frassy': typeof AuthenticatedFrassyRoute
   '/_authenticated/notifications': typeof AuthenticatedNotificationsRoute
@@ -1306,6 +1316,7 @@ export interface FileRouteTypes {
     | '/academy'
     | '/admin'
     | '/creation'
+    | '/financial-center'
     | '/founder'
     | '/frassy'
     | '/notifications'
@@ -1431,6 +1442,7 @@ export interface FileRouteTypes {
     | '/.well-known/oauth-protected-resource'
     | '/academy'
     | '/creation'
+    | '/financial-center'
     | '/founder'
     | '/frassy'
     | '/notifications'
@@ -1567,6 +1579,7 @@ export interface FileRouteTypes {
     | '/_authenticated/academy'
     | '/_authenticated/admin'
     | '/_authenticated/creation'
+    | '/_authenticated/financial-center'
     | '/_authenticated/founder'
     | '/_authenticated/frassy'
     | '/_authenticated/notifications'
@@ -2335,6 +2348,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedFounderRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/financial-center': {
+      id: '/_authenticated/financial-center'
+      path: '/financial-center'
+      fullPath: '/financial-center'
+      preLoaderRoute: typeof AuthenticatedFinancialCenterRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/creation': {
       id: '/_authenticated/creation'
       path: '/creation'
@@ -2756,6 +2776,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedAcademyRoute: typeof AuthenticatedAcademyRoute
   AuthenticatedAdminRoute: typeof AuthenticatedAdminRouteWithChildren
   AuthenticatedCreationRoute: typeof AuthenticatedCreationRoute
+  AuthenticatedFinancialCenterRoute: typeof AuthenticatedFinancialCenterRoute
   AuthenticatedFounderRoute: typeof AuthenticatedFounderRoute
   AuthenticatedFrassyRoute: typeof AuthenticatedFrassyRoute
   AuthenticatedNotificationsRoute: typeof AuthenticatedNotificationsRoute
@@ -2773,6 +2794,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedAcademyRoute: AuthenticatedAcademyRoute,
   AuthenticatedAdminRoute: AuthenticatedAdminRouteWithChildren,
   AuthenticatedCreationRoute: AuthenticatedCreationRoute,
+  AuthenticatedFinancialCenterRoute: AuthenticatedFinancialCenterRoute,
   AuthenticatedFounderRoute: AuthenticatedFounderRoute,
   AuthenticatedFrassyRoute: AuthenticatedFrassyRoute,
   AuthenticatedNotificationsRoute: AuthenticatedNotificationsRoute,
