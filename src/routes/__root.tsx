@@ -133,6 +133,8 @@ function RootComponent() {
       <FrassyChat />
       <FrassyHost />
       <DailyGate />
+      <ConstructionMode />
+
 
       <VoiceStateOverlay />
     </QueryClientProvider>
