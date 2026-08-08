@@ -1,7 +1,6 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import archHero from "@/assets/frass-gateway-arch.jpg.asset.json";
-import fullLogo from "@/assets/frass-logo-full.asset.json";
 import frassyGold from "@/assets/frassy-gold.png.asset.json";
 
 /**
@@ -37,7 +36,7 @@ export const Route = createFileRoute("/")({
 });
 
 const WELCOME_LINES = [
-  "Welcome to Frass.",
+  "Welcome to frasskicks.com.",
   "This is more than a fashion destination. It's a community built by people, powered by purpose, and designed to help everyone build something meaningful.",
   "Would you like to begin by shopping, or would you like to explore Frass Hill?",
 ];
