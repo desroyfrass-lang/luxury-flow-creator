@@ -318,6 +318,9 @@ function DistrictCard({
           </div>
         )}
 
+        <StreetLife districtId={d.id} className="mt-4" />
+
+
 
 
         {open && (
@@ -380,6 +383,9 @@ function DistrictCard({
             </div>
 
             <HillSightlines districtId={d.id} onLook={onLook} />
+
+            <DistrictBlends districtId={d.id} />
+
 
 
 
