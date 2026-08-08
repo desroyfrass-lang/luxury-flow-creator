@@ -58,6 +58,20 @@ export type DailyTask = DailyTarget & {
 
 export type DailyWin = { id: string; icon: string; label: string };
 
+/** Where a number physically came from. Money must always explain itself. */
+export type MetricSource = {
+  label: string;
+  value: string;
+  status: DataStatus;
+};
+
+/** An underlying record behind a metric — the Daily shows data, not summaries. */
+export type MetricRecord = DailyTarget & {
+  id: string;
+  label: string;
+  meta?: string;
+};
+
 /** A clickable, badged, explainable number. No dead information. */
 export type DailyMetric = DailyTarget & {
   label: string;
@@ -66,7 +80,12 @@ export type DailyMetric = DailyTarget & {
   status: DataStatus;
   /** Frassy's plain-language explanation — the dashboard teaches while it reports. */
   explain: string;
+  /** Provenance — every part of the number, and where each part came from. */
+  sources?: MetricSource[];
+  /** The records behind the number, expandable inline. */
+  records?: MetricRecord[];
 };
+
 
 export type DailyApproval = DailyTarget & { id: string; kind: string; label: string };
 export type DailyOpportunity = DailyTarget & { id: string; icon: string; label: string; why: string };
