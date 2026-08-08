@@ -16,6 +16,18 @@ import {
   saveProviderConfig,
   type ProviderConfig,
 } from "@/lib/finance/payment-pipeline";
+import {
+  DEFAULT_OWNER_POLICY,
+  FINANCIAL_HIERARCHY,
+  OWNER_EQUITY_NOTE,
+  allocateGift,
+  distributionOffer,
+  giftAllocationTotal,
+  loadOwnerPolicy,
+  ownerDistribution,
+  saveOwnerPolicy,
+  type OwnerPolicy,
+} from "@/lib/finance/owner-compensation";
 
 export const Route = createFileRoute("/_authenticated/payment-providers")({
   head: () => ({
