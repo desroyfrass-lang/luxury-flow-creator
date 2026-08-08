@@ -380,10 +380,21 @@ function MetricCard({
   );
 }
 
-function Section({ title, note, children }: { title: string; note?: string; children: React.ReactNode }) {
+function Section({
+  title,
+  note,
+  blueprintId,
+  children,
+}: {
+  title: string;
+  note?: string;
+  blueprintId?: string;
+  children: React.ReactNode;
+}) {
   return (
-    <section className="daily-section">
+    <section data-blueprint={blueprintId} className="daily-section">
       <h2 className="daily-h2">{title}</h2>
+
       {note && <p className="ws-meta daily-note">{note}</p>}
       <div className="mt-3">{children}</div>
     </section>
