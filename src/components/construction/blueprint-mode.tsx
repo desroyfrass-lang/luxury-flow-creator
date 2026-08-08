@@ -376,7 +376,78 @@ export function ConstructionMode() {
                 </div>
                 <p className="mt-2 text-xs leading-relaxed">{simulation}</p>
 
+                {/* Principle 12 — Architectural Impact Report */}
+                {impact && (
+                  <div className="bp-impact">
+                    <div className="text-[10px] uppercase tracking-[0.3em] text-[color:var(--gold)]">
+                      Architectural Impact Report
+                    </div>
+                    <p className="mt-1 text-[11px] italic text-muted-foreground">
+                      "{impact.question}"
+                    </p>
+                    <div className="mt-3 space-y-2">
+                      {impact.lines.map((l) => (
+                        <div key={l.label} className="bp-impact-line">
+                          <span className={`bp-impact-dot bp-impact-${l.level}`} />
+                          <div className="min-w-0">
+                            <div className="text-[11px] font-semibold uppercase tracking-[0.16em]">
+                              {l.label}
+                            </div>
+                            <div className="text-[11px] leading-relaxed text-muted-foreground">
+                              {l.detail}
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                      {impact.untouched.length > 0 && (
+                        <div className="bp-impact-line">
+                          <span className="bp-impact-dot bp-impact-none" />
+                          <div className="min-w-0">
+                            <div className="text-[11px] font-semibold uppercase tracking-[0.16em]">
+                              Untouched
+                            </div>
+                            <div className="text-[11px] leading-relaxed text-muted-foreground">
+                              {impact.untouched.join(", ")} — no impact.
+                            </div>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+
+                    <div className="mt-3 text-[10px] uppercase tracking-[0.24em] text-muted-foreground">
+                      Testing — {impact.testCount} interaction checks
+                    </div>
+                    <ul className="mt-1.5 space-y-1 text-[11px] text-muted-foreground">
+                      {impact.testing.map((t) => (
+                        <li key={t}>· {t}</li>
+                      ))}
+                    </ul>
+
+                    <div className="mt-3 text-[10px] uppercase tracking-[0.24em] text-muted-foreground">
+                      Future maintenance
+                    </div>
+                    <p className="mt-1 text-[11px] leading-relaxed text-muted-foreground">
+                      {impact.maintenance}
+                    </p>
+
+                    <p className="bp-impact-rec">
+                      <span className="text-[color:var(--gold)]">Recommendation · </span>
+                      {impact.recommendation}
+                    </p>
+
+                    <label className="bp-impact-ack">
+                      <input
+                        type="checkbox"
+                        checked={impactRead}
+                        onChange={(e) => setImpactRead(e.target.checked)}
+                      />
+                      <span>I have read the impact report</span>
+                    </label>
+                  </div>
+                )}
+
                 {/* Estimated development impact — never spend blindly */}
+
                 <div className="bp-cost">
                   <div className="text-[10px] uppercase tracking-[0.3em] text-[color:var(--gold)]">
                     Estimated development impact
