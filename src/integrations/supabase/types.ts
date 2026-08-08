@@ -2427,6 +2427,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      affiliate_rate_within_policy: {
+        Args: { _rate: number }
+        Returns: boolean
+      }
       get_active_partner_vendor_ids: {
         Args: { _user_id: string }
         Returns: string[]
