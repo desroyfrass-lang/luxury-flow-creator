@@ -294,6 +294,90 @@ export const HILL_DISTRICTS: HillDistrict[] = [
 export const TOWN_PLAN_RULE =
   "Frass Hill has eight places. Everything else — Opportunity Centre, Community Hall, Marketplace Pavilion, Reflection Gardens, Builder Academy, DJ Academy — is a building, venue or service with an address inside one of them.";
 
+/**
+ * Constitutional principle — the sightline rule.
+ * A town is not a menu. It is a place with views.
+ */
+export const SIGHTLINE_PRINCIPLE =
+  "Every building should be visible before it is visited. People see a destination from afar, wonder what's over there, and walk to it. Curiosity, not navigation.";
+
+/** Something you can see, hear or notice from one district, pointing at another. */
+export type HillSightline = {
+  /** District id you are looking at. */
+  to: string;
+  /** Where it sits relative to you: below, up the hill, across the square, on the horizon. */
+  direction: string;
+  /** What you actually notice from here. Sensory, never a menu label. */
+  sight: string;
+};
+
+/**
+ * What you can see from each district. Every district must remind you the rest of
+ * Frass Hill exists — you are never standing in an isolated screen.
+ */
+export const HILL_SIGHTLINES: Record<string, HillSightline[]> = {
+  town_square: [
+    { to: "frass_district", direction: "down the road", sight: "Shopfront lights glowing gold, and shoppers moving along the promenade." },
+    { to: "luxury_house", direction: "up the hillside", sight: "The estate rising above the gardens, windows lit, quiet from here." },
+    { to: "studio_district", direction: "two streets over", sight: "Bass drifting across the square before you ever get there." },
+    { to: "childrens_village", direction: "in the valley below", sight: "Children playing, and a kite somewhere over the trees." },
+    { to: "builders_village", direction: "past the ridge", sight: "Cranes, timber frames and scaffolding catching the afternoon light." },
+    { to: "farm_district", direction: "toward the horizon", sight: "Green fields and terraces stretching out beyond the rooftops." },
+    { to: "founder_hall", direction: "above everything", sight: "The Hall standing quietly over the whole community." },
+  ],
+  childrens_village: [
+    { to: "town_square", direction: "up the path", sight: "Lanterns and the sound of dominoes from the square above." },
+    { to: "frass_district", direction: "across the valley", sight: "The lit promenade where the school shoes come from." },
+    { to: "builders_village", direction: "on the far slope", sight: "Real crews working — the thing the older kids keep pointing at." },
+    { to: "farm_district", direction: "beyond the fields", sight: "Rows of greens and someone walking a crate up the track." },
+  ],
+  frass_district: [
+    { to: "town_square", direction: "at the top of the road", sight: "The square's lanterns where the promenade begins." },
+    { to: "luxury_house", direction: "up the drive", sight: "Gates, gardens and the estate above the street." },
+    { to: "studio_district", direction: "behind the shopfronts", sight: "A photo shoot loading out, music through a side door." },
+    { to: "childrens_village", direction: "down in the valley", sight: "The village where the small sizes are headed." },
+  ],
+  luxury_house: [
+    { to: "frass_district", direction: "below the gardens", sight: "The whole promenade laid out in light, from up here." },
+    { to: "studio_district", direction: "across the ridge", sight: "Studio roofs where the campaigns get shot." },
+    { to: "town_square", direction: "further down", sight: "The square, small and warm, at the centre of it all." },
+    { to: "founder_hall", direction: "on the summit", sight: "The Hall, higher still, marble against the sky." },
+  ],
+  studio_district: [
+    { to: "town_square", direction: "back down the street", sight: "The event stage being set for tonight." },
+    { to: "frass_district", direction: "one block over", sight: "Window displays that started as a shoot in here." },
+    { to: "builders_village", direction: "up the hill", sight: "Sparks off a welder after dark." },
+    { to: "founder_hall", direction: "above the roofline", sight: "Lit columns overlooking the quarter." },
+  ],
+  builders_village: [
+    { to: "town_square", direction: "down the hill", sight: "The square where the quotes and contracts get signed." },
+    { to: "farm_district", direction: "past the yard", sight: "Fields, fences and a barn someone here framed." },
+    { to: "childrens_village", direction: "across the valley", sight: "The village — half the reason the crews build." },
+    { to: "studio_district", direction: "downslope", sight: "Studio lights coming on as the site shuts down." },
+  ],
+  farm_district: [
+    { to: "town_square", direction: "along the market road", sight: "The pavilion where the morning crates end up." },
+    { to: "builders_village", direction: "on the near ridge", sight: "Scaffolding and a roof going on before the rains." },
+    { to: "childrens_village", direction: "down the track", sight: "School groups coming up for the harvest walk." },
+    { to: "founder_hall", direction: "far above", sight: "The Hall on the summit, first thing lit at dusk." },
+  ],
+  founder_hall: [
+    { to: "town_square", direction: "directly below", sight: "The whole square, and every road that leaves it." },
+    { to: "frass_district", direction: "to the south", sight: "The promenade burning gold after sunset." },
+    { to: "builders_village", direction: "to the east", sight: "Cranes turning slowly against the hillside." },
+    { to: "farm_district", direction: "to the horizon", sight: "Fields going green all the way out." },
+    { to: "studio_district", direction: "mid-slope", sight: "Studio roofs, and sound you can almost hear from here." },
+  ],
+};
+
+/** The views out of a given district, resolved to their district records. */
+export function sightlinesFrom(id: string) {
+  return (HILL_SIGHTLINES[id] ?? [])
+    .map((s) => ({ ...s, district: hillDistrict(s.to) }))
+    .filter((s): s is HillSightline & { district: HillDistrict } => Boolean(s.district));
+}
+
+
 /** The eight questions every district must answer before it is considered complete. */
 export const UNIVERSAL_DISTRICT_RULES = [
   { key: "feeling", label: "Emotional Identity", question: "How should people feel?" },
