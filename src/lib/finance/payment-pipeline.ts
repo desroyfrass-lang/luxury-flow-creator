@@ -79,17 +79,17 @@ export const PIPELINE_STEPS: PipelineStep[] = [
     n: 7,
     id: "owner-compensation",
     title: "Owner Compensation Engine",
-    what: "After obligations are satisfied, the Founder-configured compensation percentage moves into the Owner Compensation Ledger and appears in Founder and Co-Founder earnings.",
-    plain: "Once every bill is covered, your personal pay is set aside and it's yours.",
+    what: "Once the sale is clean, the Founder-configured Founder % and Co-Founder % of clean profit move into their own Available Earnings ledgers. This is percentage-based pay, not a bonus, and it never competes with business profit.",
+    plain: "Once every bill is covered, your paycheck is taken as a fixed slice of that sale — and it's yours immediately.",
     writes: ["owner-compensation", "wallet"],
   },
   {
     n: 8,
     id: "business",
-    title: "Business operations",
-    what: "Remaining profit stays in Business Cash for inventory, growth, marketing, payroll, taxes, operations, expansion and emergency reserves — tracked separately from personal money.",
-    plain: "What's left belongs to the company, not to you personally, and it's kept in its own pot.",
-    writes: ["business"],
+    title: "Business profit",
+    what: "Whatever remains after owner compensation is Net Business Profit and stays in Business Cash for inventory, growth, marketing, payroll, taxes, expansion and reserves. End-of-day surplus above every requirement becomes an Owner Distribution offer — a separate, capped decision.",
+    plain: "What's left belongs to the company, not to you personally. At the end of the day, if there's genuinely spare cash, you get offered a slice of that separately.",
+    writes: ["business", "owner-distribution"],
   },
   {
     n: 9,
@@ -147,15 +147,21 @@ export type TransactionInput = {
   otherCost?: number;
   /** Marketplace seller share of the net, 0–100. */
   marketplaceSharePct?: number;
-  /** Founder-configured owner compensation, 0–100 of remaining profit. */
+  /** Founder-configured owner compensation, 0–100 of clean profit (combined). */
   ownerCompensationPct?: number;
+  /** Optional split. When provided these override ownerCompensationPct. */
+  founderCompensationPct?: number;
+  coFounderCompensationPct?: number;
 };
 
 export type TransactionBreakdown = {
   allocation: Allocation;
   costs: number;
   marketplacePayout: number;
+  /** Combined Founder + Co-Founder compensation on this sale. */
   ownerCompensation: number;
+  founderCompensation: number;
+  coFounderCompensation: number;
   businessCash: number;
   entries: LedgerEntry[];
 };
@@ -177,9 +183,18 @@ export function buildLedgerEntries(input: TransactionInput): TransactionBreakdow
   const allocation = allocate(input.gross);
   const afterCosts = round(allocation.net - costs - (input.tax ?? 0));
   const marketplacePayout = round((afterCosts * (input.marketplaceSharePct ?? 0)) / 100);
-  const profit = round(afterCosts - marketplacePayout);
-  const ownerCompensation = round((Math.max(profit, 0) * (input.ownerCompensationPct ?? 0)) / 100);
-  const businessCash = round(profit - ownerCompensation);
+  /** The sale is now "clean": every mandatory obligation has been paid. */
+  const cleanProfit = round(afterCosts - marketplacePayout);
+  const hasSplit =
+    input.founderCompensationPct !== undefined || input.coFounderCompensationPct !== undefined;
+  const founderPct = hasSplit
+    ? (input.founderCompensationPct ?? 0)
+    : (input.ownerCompensationPct ?? 0);
+  const coFounderPct = hasSplit ? (input.coFounderCompensationPct ?? 0) : 0;
+  const founderCompensation = round((Math.max(cleanProfit, 0) * founderPct) / 100);
+  const coFounderCompensation = round((Math.max(cleanProfit, 0) * coFounderPct) / 100);
+  const ownerCompensation = round(founderCompensation + coFounderCompensation);
+  const businessCash = round(cleanProfit - ownerCompensation);
 
   const entry = (
     ledger: LedgerId,
@@ -215,15 +230,30 @@ export function buildLedgerEntries(input: TransactionInput): TransactionBreakdow
       entry("marketplace", "Seller payout", marketplacePayout, "credit", "Held pending until processor settlement completes.", "pending"),
     );
   }
-  if (ownerCompensation > 0) {
+  if (founderCompensation > 0) {
     entries.push(
-      entry("owner-compensation", "Owner compensation", ownerCompensation, "credit", "Allocated only after every obligation was satisfied."),
-      entry("wallet", "Owner compensation to wallet", ownerCompensation, "credit", "Immediately withdrawable — no settlement notice applies."),
+      entry("owner-compensation", "Founder compensation", founderCompensation, "credit", "Percentage of clean profit, allocated only after every obligation was satisfied."),
+      entry("wallet", "Founder compensation to Available Earnings", founderCompensation, "credit", "Immediately withdrawable — no settlement notice applies."),
     );
   }
-  entries.push(entry("business", "Business cash", businessCash, "credit", "Remaining profit retained by the company."));
+  if (coFounderCompensation > 0) {
+    entries.push(
+      entry("owner-compensation", "Co-Founder compensation", coFounderCompensation, "credit", "Same engine, separate ledger line. Never merged with Founder compensation."),
+      entry("wallet", "Co-Founder compensation to Available Earnings", coFounderCompensation, "credit", "Immediately withdrawable — no settlement notice applies."),
+    );
+  }
+  entries.push(entry("business", "Business cash", businessCash, "credit", "Net business profit retained by the company for operations and growth."));
 
-  return { allocation, costs, marketplacePayout, ownerCompensation, businessCash, entries };
+  return {
+    allocation,
+    costs,
+    marketplacePayout,
+    ownerCompensation,
+    founderCompensation,
+    coFounderCompensation,
+    businessCash,
+    entries,
+  };
 }
 
 /* ── Refund engine ───────────────────────────────────────────────────────── */

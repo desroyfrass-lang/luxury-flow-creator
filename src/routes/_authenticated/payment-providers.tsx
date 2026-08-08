@@ -16,6 +16,18 @@ import {
   saveProviderConfig,
   type ProviderConfig,
 } from "@/lib/finance/payment-pipeline";
+import {
+  DEFAULT_OWNER_POLICY,
+  FINANCIAL_HIERARCHY,
+  OWNER_EQUITY_NOTE,
+  allocateGift,
+  distributionOffer,
+  giftAllocationTotal,
+  loadOwnerPolicy,
+  ownerDistribution,
+  saveOwnerPolicy,
+  type OwnerPolicy,
+} from "@/lib/finance/owner-compensation";
 
 export const Route = createFileRoute("/_authenticated/payment-providers")({
   head: () => ({
@@ -41,8 +53,22 @@ export const Route = createFileRoute("/_authenticated/payment-providers")({
 function PaymentProviderCenter() {
   const isAdmin = useIsAdmin();
   const [config, setConfig] = useState<ProviderConfig>(DEFAULT_PROVIDER_CONFIG);
+  const [policy, setPolicy] = useState<OwnerPolicy>(DEFAULT_OWNER_POLICY);
 
   useEffect(() => setConfig(loadProviderConfig()), []);
+  useEffect(() => setPolicy(loadOwnerPolicy()), []);
+
+  const gift = allocateGift(100, policy);
+  const distribution = ownerDistribution({ businessCash: 0 }, policy);
+
+  function updatePolicy(next: Partial<OwnerPolicy>) {
+    setPolicy((prev) => {
+      const merged = { ...prev, ...next };
+      saveOwnerPolicy(merged);
+      return merged;
+    });
+  }
+
 
   function update(next: Partial<ProviderConfig>) {
     setConfig((prev) => {
@@ -191,6 +217,99 @@ function PaymentProviderCenter() {
               </p>
             </div>
           </div>
+        </Section>
+
+        {/* FRASS-0303 Amendment B — owner compensation, gifts and distribution */}
+        <Section
+          title="Owner compensation, gifts &amp; distribution"
+          note="Founder-set policy, not constitutional numbers. Compensation is paid per sale from clean profit; distribution is a separate, capped decision made only from genuine surplus."
+        >
+          <div className="grid gap-4 md:grid-cols-3">
+            <div className="rounded-xl border border-border p-5">
+              <h3 className="text-[11px] uppercase tracking-[0.24em] text-muted-foreground">
+                Per-sale compensation
+              </h3>
+              <NumberField
+                label="Founder % of clean profit"
+                value={policy.founderCompensationPct}
+                onChange={(v) => updatePolicy({ founderCompensationPct: v })}
+              />
+              <NumberField
+                label="Co-Founder % of clean profit"
+                value={policy.coFounderCompensationPct}
+                onChange={(v) => updatePolicy({ coFounderCompensationPct: v })}
+              />
+              <p className="mt-3 text-xs text-muted-foreground">
+                Paid into Available earnings the moment the sale is clean — never into Pending.
+              </p>
+            </div>
+            <div className="rounded-xl border border-border p-5">
+              <h3 className="text-[11px] uppercase tracking-[0.24em] text-muted-foreground">
+                Community gift allocation
+              </h3>
+              <NumberField
+                label="Founder % of each gift"
+                value={policy.founderGiftPct}
+                onChange={(v) => updatePolicy({ founderGiftPct: v })}
+              />
+              <NumberField
+                label="Co-Founder % of each gift"
+                value={policy.coFounderGiftPct}
+                onChange={(v) => updatePolicy({ coFounderGiftPct: v })}
+              />
+              <p className="mt-3 text-xs text-muted-foreground">
+                Total gift allocation {giftAllocationTotal(policy)}% · recipient keeps{" "}
+                {gift.recipientPct}% ({money(gift.recipient)} of every {money(gift.gross)}).
+              </p>
+            </div>
+            <div className="rounded-xl border border-border p-5">
+              <h3 className="text-[11px] uppercase tracking-[0.24em] text-muted-foreground">
+                Distribution gates
+              </h3>
+              <NumberField
+                label="Distribution cap (% of surplus)"
+                value={policy.distributionCapPct}
+                onChange={(v) => updatePolicy({ distributionCapPct: v })}
+              />
+              <NumberField
+                label="Reserve target"
+                value={policy.reserveTarget}
+                onChange={(v) => updatePolicy({ reserveTarget: v })}
+              />
+              <NumberField
+                label="Operating budget"
+                value={policy.operatingBudget}
+                onChange={(v) => updatePolicy({ operatingBudget: v })}
+              />
+              <NumberField
+                label="Expansion budget"
+                value={policy.expansionBudget}
+                onChange={(v) => updatePolicy({ expansionBudget: v })}
+              />
+            </div>
+          </div>
+          <p className="mt-4 rounded-xl border border-[color:var(--gold)]/25 bg-[color:var(--gold)]/5 p-4 text-sm">
+            <span className="text-[color:var(--gold)]">What that means is… </span>
+            {distributionOffer(distribution)}
+          </p>
+          <p className="mt-3 text-xs text-muted-foreground">{OWNER_EQUITY_NOTE}</p>
+          <ol className="mt-4 space-y-2">
+            {FINANCIAL_HIERARCHY.map((s) => (
+              <li key={s.n} className="rounded-xl border border-border p-4">
+                <div className="flex items-baseline gap-3">
+                  <span className="font-display text-lg text-[color:var(--gold)]">
+                    {String(s.n).padStart(2, "0")}
+                  </span>
+                  <h3 className="font-display text-lg">{s.title}</h3>
+                </div>
+                <p className="mt-1.5 text-sm text-muted-foreground">{s.what}</p>
+                <p className="mt-2 text-sm">
+                  <span className="text-[color:var(--gold)]">What that means is… </span>
+                  {s.plain}
+                </p>
+              </li>
+            ))}
+          </ol>
         </Section>
 
         {/* Pipeline */}

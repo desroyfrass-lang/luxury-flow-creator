@@ -91,6 +91,8 @@ export type LedgerId =
   | "marketplace"
   | "affiliate"
   | "owner-compensation"
+  | "owner-distribution"
+  | "owner-equity"
   | "business"
   | "foundation"
   | "tax";
@@ -103,12 +105,21 @@ export const LEDGERS: Record<LedgerId, { label: string; note: string }> = {
   affiliate: { label: "Affiliate Ledger", note: "Commission earned on attributed sales." },
   "owner-compensation": {
     label: "Owner Compensation Ledger",
-    note: "Founder & Co-Founder compensation, allocated only after all obligations are satisfied.",
+    note: "Founder & Co-Founder per-sale compensation, allocated only after all obligations are satisfied.",
+  },
+  "owner-distribution": {
+    label: "Owner Distribution Ledger",
+    note: "Capped share of end-of-day distributable surplus. Ownership, not payroll.",
+  },
+  "owner-equity": {
+    label: "Owner Equity",
+    note: "Accumulated ownership value over time. Never withdrawable, never compensation.",
   },
   business: { label: "Business Operations", note: "Company revenue, expenses, and cash position." },
   foundation: { label: "Foundation", note: "The 2% Foundation allocation and personal giving history." },
   tax: { label: "Tax Records", note: "Estimated obligations and withholding by jurisdiction." },
 };
+
 
 /* ── Viewer & role-aware visibility ──────────────────────────────────────── */
 
@@ -315,8 +326,13 @@ export const IMPLEMENTATION_AUDIT: AuditItem[] = [
   { id: "credit-purchase", label: "Credit purchasing", state: "missing", note: "Requires payment provider." },
   { id: "gift-button", label: "Gift button on creator profiles", state: "missing", note: "For Us profiles need the Support action." },
   { id: "gift-direct", label: "Direct payment gifting", state: "missing", note: "Requires payment provider." },
-  { id: "allocation", label: "Constitutional 8% allocation", state: "built", note: "3% infrastructure · 3% reserve · 2% foundation." },
-  { id: "payout", label: "92% recipient payout", state: "built", note: "Applied by allocate()." },
+  { id: "allocation", label: "Constitutional commerce allocation (8%)", state: "built", note: "3% infrastructure · 3% reserve · 2% Foundation. Commerce only." },
+  { id: "gift-allocation", label: "Gift allocation (10%)", state: "built", note: "3% · 3% · 2% plus Founder-configured owner shares; recipient keeps 90%." },
+  { id: "payout", label: "Recipient payout", state: "built", note: "allocate() for commerce, allocateGift() for community gifts." },
+  { id: "owner-comp", label: "Owner Compensation Engine", state: "structure", note: "Per-sale percentage of clean profit; modelled, awaiting persisted ledgers." },
+  { id: "owner-dist", label: "Owner Distribution Engine", state: "structure", note: "End-of-day surplus check with Founder cap; honest zeros until wired." },
+  { id: "owner-equity", label: "Owner Equity ledger", state: "structure", note: "Visible, never withdrawable; accrues once ledgers persist." },
+  { id: "earnings-ledgers", label: "Universal Earnings Ledger", state: "built", note: "Every income source keeps its own Available / Pending / Lifetime lines." },
   { id: "withdrawal", label: "Withdrawal workflow", state: "missing", note: "Requires payout rails and bank verification." },
   { id: "earnings", label: "Earnings dashboard", state: "structure", note: "Gift and owner cards render honest zeros." },
   { id: "history", label: "Transaction history", state: "structure", note: "Record lists present; awaiting ledger tables." },
@@ -400,8 +416,8 @@ export function honestSnapshot(v: FinanceViewer): FinanceSnapshot {
       "gifts",
       "Gift earnings",
       "gifts",
-      "Gifts received, after the constitutional 8% allocation (3% infrastructure, 3% reserve, 2% foundation).",
-      "When someone gifts you, Frass keeps 8 cents of every dollar to run the platform and fund the Foundation. You keep 92 cents.",
+      "Gifts received, after the constitutional 10% gift allocation (3% infrastructure, 3% reserve, 2% Foundation, 1% Founder, 1% Co-Founder — the owner shares are Founder-configured policy).",
+      "When someone gifts you, Frass keeps 10 cents of every dollar: to run the platform, fund the Foundation, and pay the two owners who keep the place standing. You keep 90 cents.",
       { actions: ["withdraw", "export"] },
     ),
     foundation: zero(
@@ -426,19 +442,59 @@ export function honestSnapshot(v: FinanceViewer): FinanceSnapshot {
     base.owner = [
       zero(
         "owner-founder",
-        "Founder available earnings",
+        "Founder Compensation · Available",
         "owner-compensation",
-        "Owner compensation allocated after product cost, shipping, processing, taxes, the constitutional allocation, and other obligations.",
-        "This is your personal pay from the business — only what was truly left over after every bill was covered.",
+        "Per-sale owner compensation: a Founder-configured percentage of clean profit, allocated on every completed sale after cost, shipping, processing, taxes, the constitutional allocation and refund reserves.",
+        "This is your paycheck. It's set aside on every single sale, and it's already yours to take out.",
         { settlement: "immediate", actions: ["withdraw", "export"] },
       ),
       zero(
         "owner-cofounder",
-        "Co-Founder available earnings",
+        "Co-Founder Compensation · Available",
         "owner-compensation",
-        "Same ledger as Founder compensation, held as a separate card. Withdrawn together.",
-        "Same money rules as yours, shown on its own card so you can see both at a glance.",
+        "The same per-sale compensation engine, held on its own ledger for the Co-Founder. Never merged with Founder compensation.",
+        "The same paycheck rules, on its own line so you can both see exactly what's yours.",
         { settlement: "immediate", actions: ["withdraw", "export"] },
+      ),
+      zero(
+        "owner-distribution-founder",
+        "Founder Distribution · Available",
+        "owner-distribution",
+        "Capped share of end-of-day distributable surplus, offered only once reserve, operating and expansion requirements are verified.",
+        "This is ownership money, not salary — what the business can safely spare at the end of a good day.",
+        { settlement: "immediate", actions: ["withdraw", "export"] },
+      ),
+      zero(
+        "owner-distribution-cofounder",
+        "Co-Founder Distribution · Available",
+        "owner-distribution",
+        "The Co-Founder's share of the same end-of-day distributable surplus.",
+        "Same ownership money, kept on its own line.",
+        { settlement: "immediate", actions: ["withdraw", "export"] },
+      ),
+      zero(
+        "owner-gift-founder",
+        "Founder Gift Allocation",
+        "gifts",
+        "Founder-configured ownership allocation from eligible community gifts, taken inside the 10% gift allocation and recorded separately from the recipient's earnings.",
+        "A small slice of every gift sent on Frass, because the platform is what made that gift possible.",
+        { settlement: "immediate", actions: ["withdraw", "export"] },
+      ),
+      zero(
+        "owner-gift-cofounder",
+        "Co-Founder Gift Allocation",
+        "gifts",
+        "The Co-Founder's configured ownership allocation from eligible community gifts.",
+        "The same slice, on the Co-Founder's own line.",
+        { settlement: "immediate", actions: ["withdraw", "export"] },
+      ),
+      zero(
+        "owner-equity",
+        "Founder Equity",
+        "owner-equity",
+        "Accumulated ownership value: retained earnings, reinvestment and business growth over time. Not compensation, not business cash, never withdrawable.",
+        "This isn't money you can take out today. It's what you've built — the value of owning Frass.",
+        { actions: ["export"] },
       ),
     ];
     base.business = [
@@ -450,8 +506,8 @@ export function honestSnapshot(v: FinanceViewer): FinanceSnapshot {
       zero("biz-cash", "Business cash position", "business", "Cash on hand after obligations.", "What the business actually has in the bank right now."),
       zero("biz-reserve", "Reserve vault", "business", "The 3% reserve allocation.", "The rainy-day fund."),
       zero("biz-expenses", "Operating expenses", "business", "Costs recorded against operations.", "What it costs to keep the doors open."),
-      zero("biz-profit", "Net profit", "business", "Revenue less every obligation.", "What's genuinely left over."),
-      zero("biz-owner", "Available owner compensation", "owner-compensation", "Allocatable owner compensation after obligations.", "The most you could pay yourselves today without hurting the business."),
+      zero("biz-profit", "Net business profit", "business", "Clean profit less owner compensation. Business money, not personal money.", "What the company keeps after paying you both."),
+      zero("biz-distributable", "Today's distributable surplus", "owner-distribution", "Business cash above reserve, operating and expansion requirements.", "What the business could safely spare today — and nothing more."),
     ];
   }
   return base;
@@ -461,6 +517,7 @@ export function honestSnapshot(v: FinanceViewer): FinanceSnapshot {
 export function dailySnapshot(v: FinanceViewer): TraceableAmount[] {
   const s = honestSnapshot(v);
   const rows = [s.available, s.gifts, s.credits, s.foundation, s.taxes];
-  if (v.founder) rows.splice(3, 0, ...s.owner, s.business[0]!);
+  if (v.founder) rows.splice(3, 0, ...s.owner, s.business[0]!, s.business[5]!, s.business[8]!, s.business[9]!);
   return rows;
 }
+

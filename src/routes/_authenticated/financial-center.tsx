@@ -1,10 +1,9 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { SiteShell } from "@/components/site-shell";
 import { Amount } from "@/components/finance/amount";
 import { useMyRoles } from "@/hooks/use-my-roles";
 import {
-  allocate,
   CREDIT_PROGRAMS,
   CREDIT_USES,
   IMPLEMENTATION_AUDIT,
@@ -20,6 +19,21 @@ import {
   type FinanceViewer,
   type TraceableAmount,
 } from "@/lib/finance/financial-center";
+import {
+  EARNINGS_LEDGER_RULES,
+  earningsLedgers,
+  type EarningsLedger,
+} from "@/lib/finance/earnings-ledgers";
+import {
+  DEFAULT_OWNER_POLICY,
+  FINANCIAL_HIERARCHY,
+  OWNER_EQUITY_NOTE,
+  allocateGift,
+  giftAllocationTotal,
+  loadOwnerPolicy,
+  type OwnerPolicy,
+} from "@/lib/finance/owner-compensation";
+
 
 export const Route = createFileRoute("/_authenticated/financial-center")({
   head: () => ({
@@ -49,6 +63,12 @@ function FinancialCenter() {
   const [tab, setTab] = useState<FinanceTabId>("overview");
   const active = tabs.find((t) => t.id === tab) ?? tabs[0]!;
   const snap = honestSnapshot(viewer);
+  const ledgers = earningsLedgers(viewer);
+  const [policy, setPolicy] = useState<OwnerPolicy>(DEFAULT_OWNER_POLICY);
+
+  useEffect(() => setPolicy(loadOwnerPolicy()), []);
+
+
 
   return (
     <SiteShell>
@@ -94,7 +114,7 @@ function FinancialCenter() {
           )}
 
           <div className="mt-6">
-            <TabBody tab={active} viewer={viewer} snap={snap} />
+            <TabBody tab={active} viewer={viewer} snap={snap} ledgers={ledgers} policy={policy} />
           </div>
         </div>
       </div>
@@ -106,22 +126,32 @@ function TabBody({
   tab,
   viewer,
   snap,
+  ledgers,
+  policy,
 }: {
   tab: FinanceTab;
   viewer: FinanceViewer;
   snap: ReturnType<typeof honestSnapshot>;
+  ledgers: EarningsLedger[];
+  policy: OwnerPolicy;
 }) {
   switch (tab.id) {
     case "overview":
       return (
         <>
-          <Grid items={[snap.available, snap.pending, snap.lifetime, snap.gifts, snap.credits, snap.foundation]} />
+          <Heading>Available now — by where it came from</Heading>
+          <AvailableNow ledgers={ledgers} />
+          <Heading>Wallet totals</Heading>
+          <Grid items={[snap.pending, snap.lifetime, snap.credits, snap.foundation]} />
           {viewer.founder && (
             <>
-              <Heading>Founder &amp; Co-Founder earnings</Heading>
+              <Heading>Owner compensation, distribution &amp; equity</Heading>
               <Grid items={snap.owner} />
+              <Note>{OWNER_EQUITY_NOTE}</Note>
               <Heading>Business</Heading>
               <Grid items={snap.business.slice(0, 6)} />
+              <Heading>The Frass Financial Hierarchy</Heading>
+              <Hierarchy />
             </>
           )}
           <Audit />
@@ -130,12 +160,25 @@ function TabBody({
     case "wallet":
       return (
         <>
-          <Grid items={[snap.available, snap.pending, snap.lifetime]} />
+          <Heading>Available now — never merged</Heading>
+          <AvailableNow ledgers={ledgers} />
+          <Heading>Every ledger, in full</Heading>
+          <LedgerTable ledgers={ledgers} />
+          <Heading>Wallet totals</Heading>
+          <Grid items={[snap.pending, snap.lifetime]} />
           <Note>
             Available means available. Nothing in that balance is held, reviewed, or waiting — it can
             leave the platform today. Pending is the only place settlement language belongs, and it
             moves itself into Available the moment it clears.
           </Note>
+          <Heading>Universal Earnings Ledger rules</Heading>
+          <ul className="space-y-2">
+            {EARNINGS_LEDGER_RULES.map((r) => (
+              <li key={r} className="rounded-xl border border-white/12 bg-white/[0.02] p-3 text-sm">
+                {r}
+              </li>
+            ))}
+          </ul>
         </>
       );
     case "credits":
@@ -175,7 +218,7 @@ function TabBody({
         <>
           <Grid items={[snap.gifts, snap.pending]} />
           <Heading>How a gift becomes earnings</Heading>
-          <GiftMath />
+          <GiftMath policy={policy} />
           <Note>
             Every gift shows its sender (privacy permitting), date, gross amount, platform
             allocation, net payout and status. Milestone gifts may appear in the For Us feed only
@@ -242,8 +285,85 @@ function TabBody({
   }
 }
 
-function GiftMath() {
-  const a = allocate(100);
+/** FRASS-0302 Amendment B — one card per income source, never merged. */
+function AvailableNow({ ledgers }: { ledgers: EarningsLedger[] }) {
+  return (
+    <>
+      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+        {ledgers.map((l) => (
+          <div key={l.source.id}>
+            <div className="mb-1 flex items-center gap-2 text-[10px] uppercase tracking-[0.22em] text-[oklch(0.66_0.01_80)]">
+              <span aria-hidden>{l.source.icon}</span>
+              {l.source.label}
+            </div>
+            <Amount item={l.available} compact />
+          </div>
+        ))}
+      </div>
+      <p className="mt-3 text-xs text-[oklch(0.66_0.01_80)]">
+        Earnings are never merged into one total. Knowing which source is growing is the point.
+      </p>
+    </>
+  );
+}
+
+function LedgerTable({ ledgers }: { ledgers: EarningsLedger[] }) {
+  return (
+    <div className="overflow-x-auto rounded-xl border border-white/12 bg-white/[0.02]">
+      <table className="w-full text-left text-sm">
+        <thead className="text-[10px] uppercase tracking-[0.2em] text-[oklch(0.62_0.01_80)]">
+          <tr>
+            <th className="px-4 py-3">Ledger</th>
+            <th className="px-4 py-3 text-right">Available</th>
+            <th className="px-4 py-3 text-right">Pending</th>
+            <th className="px-4 py-3 text-right">Lifetime</th>
+          </tr>
+        </thead>
+        <tbody>
+          {ledgers.map((l) => (
+            <tr key={l.source.id} className="border-t border-white/8">
+              <td className="px-4 py-3">
+                <span aria-hidden className="mr-2">{l.source.icon}</span>
+                {l.source.label}
+                <span className="mt-0.5 block text-[11px] text-[oklch(0.62_0.01_80)]">{l.source.plain}</span>
+              </td>
+              <td className="px-4 py-3 text-right tabular-nums">{money(l.available.amount)}</td>
+              <td className="px-4 py-3 text-right tabular-nums text-amber-200/80">{money(l.pending.amount)}</td>
+              <td className="px-4 py-3 text-right tabular-nums text-[oklch(0.72_0.01_80)]">{money(l.lifetime.amount)}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+}
+
+/** FRASS-0303 Amendment B — the five ordered steps of every completed sale. */
+function Hierarchy() {
+  return (
+    <ol className="space-y-2">
+      {FINANCIAL_HIERARCHY.map((s) => (
+        <li key={s.n} className="rounded-xl border border-white/12 bg-white/[0.02] p-4">
+          <div className="flex items-baseline gap-3">
+            <span className="font-display text-lg text-[color:var(--hill-gold)]">
+              {String(s.n).padStart(2, "0")}
+            </span>
+            <h3 className="font-display text-lg">{s.title}</h3>
+          </div>
+          <p className="mt-1.5 text-sm text-[oklch(0.76_0.01_80)]">{s.what}</p>
+          <p className="mt-2 text-sm">
+            <span className="text-[color:var(--hill-gold)]">What that means is… </span>
+            {s.plain}
+          </p>
+        </li>
+      ))}
+    </ol>
+  );
+}
+
+function GiftMath({ policy }: { policy: OwnerPolicy }) {
+  const a = allocateGift(100, policy);
+  const total = giftAllocationTotal(policy);
   return (
     <div className="rounded-xl border border-white/12 bg-white/[0.02] p-4 text-sm">
       <div className="flex items-center justify-between">
@@ -254,15 +374,19 @@ function GiftMath() {
         <Row label={`Infrastructure (${PLATFORM_ALLOCATION.infrastructure}%)`} value={money(a.infrastructure)} />
         <Row label={`Reserve vault (${PLATFORM_ALLOCATION.reserve}%)`} value={money(a.reserve)} />
         <Row label={`Foundation (${PLATFORM_ALLOCATION.foundation}%)`} value={money(a.foundation)} />
+        <Row label={`Founder allocation (${policy.founderGiftPct}%)`} value={money(a.founder)} />
+        <Row label={`Co-Founder allocation (${policy.coFounderGiftPct}%)`} value={money(a.coFounder)} />
       </div>
       <div className="mt-2 flex items-center justify-between border-t border-white/10 pt-2 text-[color:var(--hill-gold)]">
-        <span>Creator payout (92%)</span>
-        <span className="tabular-nums">{money(a.net)}</span>
+        <span>Recipient payout ({a.recipientPct}%)</span>
+        <span className="tabular-nums">{money(a.recipient)}</span>
       </div>
       <p className="mt-3 text-[13px] text-[oklch(0.8_0.01_80)]">
         <span className="text-[color:var(--hill-gold)]">What that means is… </span>
-        for every $100 someone sends you, $8 keeps the platform running and funds the Foundation,
-        and $92 lands in your earnings as real money you can withdraw.
+        for every $100 someone sends you, {money(a.platformTotal)} ({total}%) keeps the platform
+        running, funds the Foundation and pays the two owners who maintain the place, and{" "}
+        {money(a.recipient)} lands in your Gift Earnings as real money you can withdraw. The owner
+        shares are Founder-set policy, not a fixed constitutional number.
       </p>
     </div>
   );
