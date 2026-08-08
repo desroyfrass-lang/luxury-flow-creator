@@ -9,6 +9,7 @@ import { FrassyChat } from "@/components/frassy-chat";
 import { openTheDaily } from "@/components/workspace/daily-gate";
 import { openConstructionMode } from "@/components/construction/blueprint-mode";
 import { DevelopmentCredits } from "@/components/construction/development-credits";
+import { PlatformStatusCenter } from "@/components/founder/platform-status-center";
 
 
 
@@ -195,6 +196,7 @@ function FounderPage() {
           </p>
         </section>
 
+        <PlatformStatusCenter />
 
 
         {/* Phases */}

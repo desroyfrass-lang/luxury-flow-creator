@@ -6,6 +6,8 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { ChevronDown, ChevronRight, Plus, Send, Volume2, VolumeX, Square } from "lucide-react";
 import { WorkspaceShell, type IndexEntry, type RoleLink } from "@/components/workspace/workspace-shell";
+import { AwarenessRail } from "@/components/workspace/awareness-rail";
+import { recordActivity } from "@/lib/workspace/awareness";
 import { UploadTray } from "@/components/workspace/upload-tray";
 import { ReplyBlocks } from "@/components/workspace/reply-blocks";
 import { openTheDaily } from "@/components/workspace/daily-gate";
@@ -75,6 +77,7 @@ export function WorkspaceRoom({
   const [error, setError] = useState<string | null>(null);
   const [speakReplies, setSpeakReplies] = useState(true);
   const [note, setNote] = useState<string | null>(null);
+  const [awarenessPulse, setAwarenessPulse] = useState(0);
 
   const { isAdmin } = useIsAdminStatus();
   const businessRoles = useWorkspaceRoles();
@@ -235,6 +238,9 @@ export function WorkspaceRoom({
       }
       const reply = data.reply?.trim() || "…";
       push(sectionId, { id: nid("m"), role: "assistant", content: reply });
+      // Workspace Awareness — real work, recorded honestly.
+      recordActivity(activeProjectId);
+      setAwarenessPulse((n) => n + 1);
       if ((spoken || speakReplies) && voice.voiceAvailable) {
         setLoading(false);
         await voice.speak(reply);
@@ -330,6 +336,14 @@ export function WorkspaceRoom({
             trayPick("Drag & Drop", e.dataTransfer.files);
           }}
         >
+          <AwarenessRail
+            projectName={project.name}
+            alternateName={modeProjects.find((p) => p.id !== activeProjectId)?.name}
+            alternateId={modeProjects.find((p) => p.id !== activeProjectId)?.id}
+            onSwitchProject={setActiveProjectId}
+            onAsk={(prompt) => void send(prompt)}
+            pulse={awarenessPulse}
+          />
           {note && <p className="ws-note">{note}</p>}
           <UploadTray
             onPick={trayPick}
