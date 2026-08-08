@@ -4,6 +4,7 @@
 
 import { type ReactNode, useRef, useState } from "react";
 import { Link } from "@tanstack/react-router";
+import { ForUsLink } from "@/components/for-us-link";
 import {
   Search,
   PanelLeftClose,
@@ -211,6 +212,10 @@ export function WorkspaceShell({
                 <Sunrise className="h-4 w-4" />
                 <span className="flex-1 text-left">The Daily</span>
               </button>
+              <ForUsLink className="ws-nav">
+                <span aria-hidden>❤️</span>
+                <span className="flex-1 text-left">For Us</span>
+              </ForUsLink>
               <button
                 type="button"
                 className="ws-nav"
