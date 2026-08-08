@@ -91,6 +91,8 @@ export type LedgerId =
   | "marketplace"
   | "affiliate"
   | "owner-compensation"
+  | "owner-distribution"
+  | "owner-equity"
   | "business"
   | "foundation"
   | "tax";
@@ -103,12 +105,21 @@ export const LEDGERS: Record<LedgerId, { label: string; note: string }> = {
   affiliate: { label: "Affiliate Ledger", note: "Commission earned on attributed sales." },
   "owner-compensation": {
     label: "Owner Compensation Ledger",
-    note: "Founder & Co-Founder compensation, allocated only after all obligations are satisfied.",
+    note: "Founder & Co-Founder per-sale compensation, allocated only after all obligations are satisfied.",
+  },
+  "owner-distribution": {
+    label: "Owner Distribution Ledger",
+    note: "Capped share of end-of-day distributable surplus. Ownership, not payroll.",
+  },
+  "owner-equity": {
+    label: "Owner Equity",
+    note: "Accumulated ownership value over time. Never withdrawable, never compensation.",
   },
   business: { label: "Business Operations", note: "Company revenue, expenses, and cash position." },
   foundation: { label: "Foundation", note: "The 2% Foundation allocation and personal giving history." },
   tax: { label: "Tax Records", note: "Estimated obligations and withholding by jurisdiction." },
 };
+
 
 /* ── Viewer & role-aware visibility ──────────────────────────────────────── */
 
