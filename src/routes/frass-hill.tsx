@@ -203,6 +203,27 @@ function FrassHillPage() {
         </div>
       </section>
 
+      <section className="mx-auto max-w-[1400px] px-6 pb-10 lg:px-10">
+        <h2 className="font-display text-2xl uppercase">Placemaking questions</h2>
+        <p className="mt-2 max-w-3xl text-sm text-muted-foreground">
+          Not interface questions. Movement questions. We are not building pages — we are building
+          a place people will remember visiting.
+        </p>
+        <div className="mt-5 grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
+          {PLACEMAKING_QUESTIONS.map((q) => (
+            <div
+              key={q}
+              className="rounded-xl border border-border/50 bg-card/30 p-4 text-sm text-muted-foreground"
+            >
+              <span className="mr-2 text-[color:var(--hill-gold)]">·</span>
+              {q}
+            </div>
+          ))}
+        </div>
+      </section>
+
+
+
       <section className="mx-auto max-w-[1400px] px-6 pb-20 lg:px-10">
         <h2 className="font-display text-2xl uppercase">One word, two meanings</h2>
         <div className="mt-5 grid gap-3 md:grid-cols-2">
