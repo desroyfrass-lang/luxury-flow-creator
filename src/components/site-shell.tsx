@@ -328,6 +328,14 @@ function MobileAccountLinks({ hasWorkspace, isAdmin }: { hasWorkspace: boolean; 
 
   return (
     <>
+      <button
+        type="button"
+        onClick={() => openTheDaily()}
+        className="nav-glow block w-full rounded-xl px-4 py-3 text-left text-xs uppercase tracking-[0.25em] text-[color:var(--gold)] transition-colors hover:bg-foreground/5"
+      >
+        The Frass Daily
+      </button>
+
       <Link
         to="/welcome-hall"
         className="nav-glow block rounded-xl px-4 py-3 text-xs uppercase tracking-[0.25em] text-muted-foreground transition-colors hover:bg-foreground/5"
