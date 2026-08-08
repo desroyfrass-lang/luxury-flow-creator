@@ -147,6 +147,25 @@ function FounderPage() {
           My Workspace, and this dashboard is always one click away from it.
         </p>
 
+        {/* Frassy — the founder's direct line, first thing in the Control Room */}
+        <section className="mt-8" data-blueprint="founder-frassy">
+          <div className="flex flex-wrap items-baseline justify-between gap-2">
+            <h2 className="font-display text-2xl">Talk to Frassy</h2>
+            <span className="text-[10px] uppercase tracking-[0.28em] text-[color:var(--gold)]">
+              Always at the top
+            </span>
+          </div>
+          <p className="mt-2 max-w-2xl text-sm text-muted-foreground">
+            She knows the districts, the catalog, and where commissioning stands. Type or press
+            the mic — she speaks back unless you mute her.
+          </p>
+          <div className="mt-4 max-w-3xl rounded-sm border border-[color:var(--gold)]/40 bg-background/60 p-3 shadow-[0_18px_40px_-24px_color-mix(in_oklab,var(--gold)_45%,transparent)]">
+            <FrassyChat embedded />
+          </div>
+        </section>
+
+
+
 
         {/* Launch pad — the Control Room is the entry point, not the office */}
         <section className="mt-8 flex flex-wrap items-center gap-3 rounded-sm border border-[color:var(--gold)]/40 bg-background/50 p-6">
