@@ -272,6 +272,27 @@ export function FrassDaily({
           </div>
         </Section>
 
+        {/* 2b — Financial snapshot (FRASS-0302). Every figure is clickable. */}
+        <Section
+          title="Financial snapshot"
+          note="Your Frass Financial Center, one click away. Available money is withdrawable now — settlement timing only applies to pending."
+        >
+          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+            {dailySnapshot(viewerFrom(audience === "founder" ? ["admin"] : [])).map((a) => (
+              <Amount key={a.id} item={a} compact />
+            ))}
+          </div>
+          <button
+            type="button"
+            className="daily-link mt-3"
+            onClick={() => onNavigate?.("/financial-center")}
+          >
+            Open the Financial Center <ArrowRight className="h-3.5 w-3.5" />
+          </button>
+        </Section>
+
+
+
         {/* 3 + 4 + 5 — Priorities, workload, delegation */}
         <Section
           blueprintId="daily-priorities"
