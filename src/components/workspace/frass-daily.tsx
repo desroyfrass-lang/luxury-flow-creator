@@ -2,19 +2,31 @@
 // The Frass Daily — the universal daily command center.
 // One Daily across the whole ecosystem. Opens once per calendar day, adapts to
 // the Builder's role, then collapses into the workspace so the day can begin.
+//
+// The Daily is a navigation hub, not a static report:
+//   • Every number opens the records behind it.
+//   • Every number carries a data-status badge.
+//   • Every business metric can be explained by Frassy.
+//   • Today's answers are remembered when you reopen it later in the day.
 // ─────────────────────────────────────────────────────────────────────────────
 
 import { useEffect, useMemo, useState } from "react";
-import { X, Check, Sparkles, ArrowRight } from "lucide-react";
+import { X, Check, Sparkles, ArrowRight, HelpCircle } from "lucide-react";
 import frassyAvatar from "@/assets/frassy-gold.png.asset.json";
 import {
   dailyFor,
+  DATA_STATUS,
   formatWorkload,
   greetingFor,
   isReflectionHour,
+  loadDailyState,
+  saveDailyState,
   PRIORITY_LABEL,
   type DailyAudience,
+  type DailyMetric,
   type DailyPriority,
+  type DailyTarget,
+  type DataStatus,
 } from "@/lib/workspace/daily";
 
 const ORDER: DailyPriority[] = ["critical", "important", "optional", "completed"];
@@ -24,15 +36,19 @@ export function FrassDaily({
   name,
   onDismiss,
   onOpenProject,
+  onNavigate,
 }: {
   audience: DailyAudience;
   name?: string;
   onDismiss: () => void;
   onOpenProject?: (projectId: string) => void;
+  onNavigate?: (href: string) => void;
 }) {
   const model = useMemo(() => dailyFor(audience), [audience]);
-  const [delegated, setDelegated] = useState<string[]>([]);
-  const [done, setDone] = useState<string[]>([]);
+  const initial = useMemo(() => loadDailyState(), []);
+  const [delegated, setDelegated] = useState<string[]>(initial.delegated);
+  const [done, setDone] = useState<string[]>(initial.done);
+  const [explaining, setExplaining] = useState<string | null>(null);
   const [entered, setEntered] = useState(false);
   const [shrunk, setShrunk] = useState(false);
   const reflecting = isReflectionHour();
@@ -46,6 +62,11 @@ export function FrassDaily({
     };
   }, []);
 
+  // The Daily is resumable — reopening it restores exactly how you left it.
+  useEffect(() => {
+    saveDailyState({ done, delegated });
+  }, [done, delegated]);
+
   const remaining = model.tasks
     .filter((t) => t.priority !== "completed")
     .filter((t) => !delegated.includes(t.id) && !done.includes(t.id))
@@ -55,8 +76,10 @@ export function FrassDaily({
     .filter((t) => delegated.includes(t.id))
     .reduce((n, t) => n + t.minutes, 0);
 
-  const go = (projectId?: string) => {
-    if (projectId) onOpenProject?.(projectId);
+  /** No dead information — every item resolves to the records behind it. */
+  const go = (target: DailyTarget) => {
+    if (target.href) onNavigate?.(target.href);
+    else if (target.projectId) onOpenProject?.(target.projectId);
     onDismiss();
   };
 
@@ -82,6 +105,14 @@ export function FrassDaily({
           </button>
         </header>
 
+        <div className="daily-legend">
+          {(Object.keys(DATA_STATUS) as DataStatus[]).map((s) => (
+            <span key={s} className="daily-badge">
+              {DATA_STATUS[s].dot} {DATA_STATUS[s].label}
+            </span>
+          ))}
+        </div>
+
         {model.alerts.length > 0 && (
           <div className="daily-alert">
             {model.alerts.map((a) => (
@@ -103,14 +134,16 @@ export function FrassDaily({
         </Section>
 
         {/* 2 — Daily briefing */}
-        <Section title="Daily briefing" note="Everything since you were last here.">
-          <div className="daily-lines">
-            {model.briefing.map((l) => (
-              <div key={l.label} className="daily-line">
-                <span className="ws-meta">{l.label}</span>
-                <span>{l.value}</span>
-                {l.trend && <span className="daily-trend">{l.trend}</span>}
-              </div>
+        <Section title="Daily briefing" note="Everything since you were last here. Click any number to see what it is.">
+          <div className="daily-grid">
+            {model.briefing.map((m) => (
+              <MetricCard
+                key={m.label}
+                metric={m}
+                open={explaining === `b-${m.label}`}
+                onToggleExplain={() => setExplaining((v) => (v === `b-${m.label}` ? null : `b-${m.label}`))}
+                onOpen={() => go(m)}
+              />
             ))}
           </div>
         </Section>
@@ -133,7 +166,7 @@ export function FrassDaily({
                   const isDone = done.includes(t.id) || t.priority === "completed";
                   return (
                     <div key={t.id} className={`daily-task ${isDone ? "is-done" : ""}`}>
-                      <button type="button" className="daily-task-main" onClick={() => go(t.projectId)}>
+                      <button type="button" className="daily-task-main" onClick={() => go(t)}>
                         <span className="daily-task-label">{t.label}</span>
                         {t.detail && <span className="ws-meta">{t.detail}</span>}
                         {t.minutes > 0 && <span className="ws-meta">≈ {formatWorkload(t.minutes)}</span>}
@@ -176,9 +209,12 @@ export function FrassDaily({
           <Section title="Pending approvals" note="Everything waiting on you, in one place.">
             <div className="daily-grid">
               {model.approvals.map((a) => (
-                <button key={a.id} type="button" className="daily-card daily-clickable" onClick={() => go(a.projectId)}>
+                <button key={a.id} type="button" className="daily-card daily-clickable" onClick={() => go(a)}>
                   <span className="ws-meta">{a.kind}</span>
                   <span>{a.label}</span>
+                  <span className="daily-go">
+                    Open <ArrowRight className="h-3.5 w-3.5" />
+                  </span>
                 </button>
               ))}
             </div>
@@ -189,11 +225,13 @@ export function FrassDaily({
         <Section title="Opportunities" note="Things I don't want you to miss.">
           <div className="daily-grid">
             {model.opportunities.map((o) => (
-              <div key={o.id} className="daily-card">
-                <span className="daily-emoji">{o.icon}</span>
-                <span className="daily-task-label">{o.label}</span>
+              <button key={o.id} type="button" className="daily-card daily-clickable" onClick={() => go(o)}>
+                <span className="daily-badge">{DATA_STATUS.ai.dot} {DATA_STATUS.ai.label}</span>
+                <span className="daily-task-label">
+                  {o.icon} {o.label}
+                </span>
                 <span className="ws-meta">{o.why}</span>
-              </div>
+              </button>
             ))}
           </div>
         </Section>
@@ -202,15 +240,16 @@ export function FrassDaily({
         <Section title="Goals & Vision Maps" note="How close you are.">
           <div className="daily-lines">
             {model.goals.map((g) => (
-              <div key={g.id} className="daily-goal">
+              <button key={g.id} type="button" className="daily-goal daily-clickable-row" onClick={() => go(g)}>
                 <div className="daily-line">
                   <span>{g.label}</span>
+                  <span className="daily-badge">{DATA_STATUS[g.status].dot} {DATA_STATUS[g.status].label}</span>
                   <span className="ws-meta">{g.note}</span>
                 </div>
                 <div className="daily-bar">
                   <span style={{ width: `${g.pct}%` }} />
                 </div>
-              </div>
+              </button>
             ))}
           </div>
         </Section>
@@ -218,26 +257,30 @@ export function FrassDaily({
         {/* 9 — Daily performance */}
         <Section title="Daily performance" note="One glance tells you how things are going.">
           <div className="daily-grid">
-            {model.performance.map((p) => (
-              <div key={p.label} className="daily-card">
-                <span className="ws-meta">{p.label}</span>
-                <span className="daily-task-label">
-                  {p.value} {p.trend ?? ""}
-                </span>
-              </div>
+            {model.performance.map((m) => (
+              <MetricCard
+                key={m.label}
+                metric={m}
+                open={explaining === `p-${m.label}`}
+                onToggleExplain={() => setExplaining((v) => (v === `p-${m.label}` ? null : `p-${m.label}`))}
+                onOpen={() => go(m)}
+              />
             ))}
           </div>
         </Section>
 
         {/* Founder-only executive panels */}
         {model.executive.length > 0 && (
-          <Section title="Founder command center" note="The executive view.">
+          <Section title="Founder command center" note="The executive view. Everything here opens the Founder Dashboard or the records behind it.">
             <div className="daily-grid">
-              {model.executive.map((e) => (
-                <div key={e.label} className="daily-card">
-                  <span className="ws-meta">{e.label}</span>
-                  <span className="daily-task-label">{e.value}</span>
-                </div>
+              {model.executive.map((m) => (
+                <MetricCard
+                  key={m.label}
+                  metric={m}
+                  open={explaining === `e-${m.label}`}
+                  onToggleExplain={() => setExplaining((v) => (v === `e-${m.label}` ? null : `e-${m.label}`))}
+                  onOpen={() => go(m)}
+                />
               ))}
             </div>
           </Section>
@@ -247,11 +290,11 @@ export function FrassDaily({
         <Section title="Recent activity" note="Since your last session.">
           <div className="daily-lines">
             {model.activity.map((a) => (
-              <div key={a.id} className="daily-line">
+              <button key={a.id} type="button" className="daily-line daily-clickable-row" onClick={() => go(a)}>
                 <span className="daily-emoji">{a.icon}</span>
-                <span className="flex-1">{a.label}</span>
+                <span className="flex-1 text-left">{a.label}</span>
                 <span className="ws-meta">{a.when}</span>
-              </div>
+              </button>
             ))}
           </div>
         </Section>
@@ -275,7 +318,7 @@ export function FrassDaily({
         <Section title="Continue working" note="Exactly where you stopped.">
           <div className="daily-grid">
             {model.resume.map((r) => (
-              <button key={r.id} type="button" className="daily-card daily-clickable" onClick={() => go(r.projectId)}>
+              <button key={r.id} type="button" className="daily-card daily-clickable" onClick={() => go(r)}>
                 <span className="daily-task-label">{r.label}</span>
                 <span className="ws-meta">{r.detail}</span>
                 <span className="daily-go">
@@ -290,9 +333,49 @@ export function FrassDaily({
           <button type="button" className="daily-enter" onClick={onDismiss}>
             Enter my workspace
           </button>
-          <p className="ws-meta">The Daily collapses into your sidebar. Reopen it whenever you like.</p>
+          <p className="ws-meta">
+            The Daily stays in your navigation. Reopen it any time today and it comes back exactly as you left it.
+          </p>
         </div>
       </div>
+    </div>
+  );
+}
+
+function MetricCard({
+  metric,
+  open,
+  onOpen,
+  onToggleExplain,
+}: {
+  metric: DailyMetric;
+  open: boolean;
+  onOpen: () => void;
+  onToggleExplain: () => void;
+}) {
+  const status = DATA_STATUS[metric.status];
+  return (
+    <div className="daily-card daily-metric">
+      <span className="daily-badge" title={status.note}>
+        {status.dot} {status.label}
+      </span>
+      <span className="ws-meta">{metric.label}</span>
+      <span className="daily-task-label">
+        {metric.value} {metric.trend ? <span className="daily-trend">{metric.trend}</span> : null}
+      </span>
+      <div className="daily-metric-actions">
+        <button type="button" className="ws-chip" onClick={onOpen}>
+          View details <ArrowRight className="h-3.5 w-3.5" />
+        </button>
+        <button type="button" className={`ws-chip ${open ? "daily-chip-on" : ""}`} onClick={onToggleExplain}>
+          <HelpCircle className="h-3.5 w-3.5" /> What does this mean?
+        </button>
+      </div>
+      {open && (
+        <p className="daily-explain">
+          {metric.explain} <em>{status.note}</em>
+        </p>
+      )}
     </div>
   );
 }
