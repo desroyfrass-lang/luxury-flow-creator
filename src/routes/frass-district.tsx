@@ -22,6 +22,9 @@ import cardWomen from "@/assets/card-women.jpg";
 import plusWingMen from "@/assets/plus-wing-men.jpg";
 import plusWingWomen from "@/assets/plus-wing-women.jpg";
 import bridalBoutique from "@/assets/bridal-boutique-storefront.jpg";
+import shapeRoomMen from "@/assets/shape-room-men.jpg";
+import shapeRoomWomen from "@/assets/shape-room-women.jpg";
+
 
 
 export const Route = createFileRoute("/frass-district")({
