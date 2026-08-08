@@ -59,10 +59,16 @@ export function DailyGate() {
       audience={isAdmin ? "founder" : "builder"}
       name={name}
       onDismiss={dismiss}
+      onNavigate={(href) => {
+        dismiss();
+        void navigate({ to: href });
+      }}
       onOpenProject={(projectId) => {
         window.localStorage.setItem("frass.workspace.project", projectId);
+        dismiss();
         void navigate({ to: "/room" });
       }}
     />
   );
 }
+
