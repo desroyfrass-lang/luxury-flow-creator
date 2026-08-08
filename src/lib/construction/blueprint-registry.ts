@@ -297,13 +297,27 @@ export function loadDecisions(): ArchitecturalDecision[] {
   }
 }
 
-export function recordDecision(entry: Omit<ArchitecturalDecision, "id" | "approvedAt">): ArchitecturalDecision[] {
+export function recordDecision(
+  entry: Omit<ArchitecturalDecision, "id" | "approvedAt">,
+): ArchitecturalDecision {
   const next: ArchitecturalDecision = {
+    approvedBy: "Founder",
+    verification: "pending",
     ...entry,
     id: `${entry.componentId}-${Date.now()}`,
     approvedAt: new Date().toISOString(),
   };
   const all = [next, ...loadDecisions()].slice(0, 200);
+  if (typeof window !== "undefined") window.localStorage.setItem(LOG_KEY, JSON.stringify(all));
+  return next;
+}
+
+/** Principle 14 — verification is written back into the permanent record. */
+export function updateDecision(
+  id: string,
+  patch: Partial<ArchitecturalDecision>,
+): ArchitecturalDecision[] {
+  const all = loadDecisions().map((d) => (d.id === id ? { ...d, ...patch } : d));
   if (typeof window !== "undefined") window.localStorage.setItem(LOG_KEY, JSON.stringify(all));
   return all;
 }
@@ -311,6 +325,7 @@ export function recordDecision(entry: Omit<ArchitecturalDecision, "id" | "approv
 export function decisionsFor(componentId: string): ArchitecturalDecision[] {
   return loadDecisions().filter((d) => d.componentId === componentId);
 }
+
 
 // ── FRASS-0200 Amendment — Blueprint-first constitution ────────────────────
 /** The final constitutional principle of Construction Mode. */
