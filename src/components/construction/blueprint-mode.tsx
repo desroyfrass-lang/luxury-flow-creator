@@ -189,6 +189,7 @@ export function ConstructionMode() {
   useEffect(() => {
     setPreviewing(false);
     setImpactRead(false);
+    setIntent("");
   }, [action]);
 
   const approve = useCallback(() => {
@@ -199,25 +200,62 @@ export function ConstructionMode() {
       });
       return;
     }
+    // Principle 13 — no approval without Founder Intent. The record must remember why.
+    if (intent.trim().length < 8) {
+      toast("Founder Intent", { description: FOUNDER_INTENT_QUESTION });
+      return;
+    }
+    const versionLabel = `${component.label} — ${action}`;
     recordDecision({
       componentId: component.id,
       componentLabel: component.label,
       action,
       simulation: `${simulation}\n\nForecast: ${estimate.tier} · ${estimate.min}–${estimate.max} credits · ${estimate.risk} risk.\n\nImpact: ${impactSummary(impact, { min: estimate.min, max: estimate.max })}`,
       note: note.trim() || undefined,
+      version: versionLabel,
+      founderIntent: intent.trim(),
+      impactSummary: impactSummary(impact, { min: estimate.min, max: estimate.max }),
+      creditForecast: `${estimate.tier} · ${estimate.min}–${estimate.max} credits · ${estimate.risk} risk`,
+      registry: component.registry,
+      componentsModified: impact.componentsAffected,
+      expected,
+      verified: [],
+      verification: "pending",
     });
-    recordSpend(`${component.label} — ${action}`, estimate.max);
-    saveVersion(`${component.label} — ${action}`);
+    recordSpend(versionLabel, estimate.max);
+    saveVersion(versionLabel);
     setVersions(loadVersions());
     setHistory(decisionsFor(component.id));
     setAction(null);
     setNote("");
+    setIntent("");
     setPreviewing(false);
     setImpactRead(false);
     toast("Blueprint approved", {
-      description: `${component.label} — ${action}. Forecast ${estimate.min}–${estimate.max} credits. Recorded, versioned, implementation brief follows.`,
+      description: `${component.label} — ${action}. Forecast ${estimate.min}–${estimate.max} credits. Recorded with your intent, versioned, and awaiting verification.`,
     });
-  }, [component, action, simulation, estimate, note, impact, impactRead]);
+  }, [component, action, simulation, estimate, note, impact, impactRead, intent, expected]);
+
+  // Principle 14 — verification is confirmed behaviour by behaviour.
+  const toggleVerified = useCallback(
+    (decision: ArchitecturalDecision, behaviour: string) => {
+      const checks = decision.expected ?? [];
+      const passed = decision.verified ?? [];
+      const nextPassed = passed.includes(behaviour)
+        ? passed.filter((b) => b !== behaviour)
+        : [...passed, behaviour];
+      const verdict = verificationVerdict(checks, nextPassed);
+      updateDecision(decision.id, { verified: nextPassed, verification: verdict.status });
+      if (selected) setHistory(decisionsFor(selected));
+      if (verdict.status === "verified") {
+        toast("Verification passed", {
+          description: `${decision.componentLabel} matches the approved Blueprint.`,
+        });
+      }
+    },
+    [selected],
+  );
+
 
   if (!isAdmin || !active) return null;
 
