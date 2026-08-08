@@ -84,7 +84,7 @@ export function FrassDaily({
   };
 
   return (
-    <div className={`frass-workspace daily-overlay ${entered ? "is-in" : ""}`} role="dialog" aria-label="The Frass Daily">
+    <div data-blueprint="daily" className={`frass-workspace daily-overlay ${entered ? "is-in" : ""}`} role="dialog" aria-label="The Frass Daily">
       {/* Frassy greets large, then shrinks into her assistant position */}
       <div className={`daily-frassy ${shrunk ? "is-small" : ""}`}>
         <img src={frassyAvatar.url} alt="" />
