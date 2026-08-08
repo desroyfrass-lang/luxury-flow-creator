@@ -230,15 +230,30 @@ export function buildLedgerEntries(input: TransactionInput): TransactionBreakdow
       entry("marketplace", "Seller payout", marketplacePayout, "credit", "Held pending until processor settlement completes.", "pending"),
     );
   }
-  if (ownerCompensation > 0) {
+  if (founderCompensation > 0) {
     entries.push(
-      entry("owner-compensation", "Owner compensation", ownerCompensation, "credit", "Allocated only after every obligation was satisfied."),
-      entry("wallet", "Owner compensation to wallet", ownerCompensation, "credit", "Immediately withdrawable — no settlement notice applies."),
+      entry("owner-compensation", "Founder compensation", founderCompensation, "credit", "Percentage of clean profit, allocated only after every obligation was satisfied."),
+      entry("wallet", "Founder compensation to Available Earnings", founderCompensation, "credit", "Immediately withdrawable — no settlement notice applies."),
     );
   }
-  entries.push(entry("business", "Business cash", businessCash, "credit", "Remaining profit retained by the company."));
+  if (coFounderCompensation > 0) {
+    entries.push(
+      entry("owner-compensation", "Co-Founder compensation", coFounderCompensation, "credit", "Same engine, separate ledger line. Never merged with Founder compensation."),
+      entry("wallet", "Co-Founder compensation to Available Earnings", coFounderCompensation, "credit", "Immediately withdrawable — no settlement notice applies."),
+    );
+  }
+  entries.push(entry("business", "Business cash", businessCash, "credit", "Net business profit retained by the company for operations and growth."));
 
-  return { allocation, costs, marketplacePayout, ownerCompensation, businessCash, entries };
+  return {
+    allocation,
+    costs,
+    marketplacePayout,
+    ownerCompensation,
+    founderCompensation,
+    coFounderCompensation,
+    businessCash,
+    entries,
+  };
 }
 
 /* ── Refund engine ───────────────────────────────────────────────────────── */
