@@ -110,7 +110,7 @@ function ForUsPage() {
             alt="The Frass Community Hall in Town Square, open windows overlooking the square"
             width={1600}
             height={912}
-            className="h-[46vh] min-h-[320px] w-full object-cover"
+            className="hero-drift h-[46vh] min-h-[320px] w-full object-cover"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-background via-background/70 to-background/10" />
           <div className="absolute inset-x-0 bottom-0 p-8 md:p-12">

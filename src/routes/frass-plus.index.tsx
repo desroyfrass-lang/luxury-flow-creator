@@ -38,7 +38,7 @@ function PlusHome() {
           alt="Confident plus-size men and women in black and gold tailoring outside the Frass Plus flagship boutique"
           width={1920}
           height={1088}
-          className="h-full w-full object-cover"
+          className="hero-drift h-full w-full object-cover"
         />
         <div className="absolute inset-0 bg-[linear-gradient(to_top,oklch(0.09_0.01_60/0.95),oklch(0.09_0.01_60/0.25)_55%,oklch(0.09_0.01_60/0.45))]" />
         <div className="absolute inset-x-0 bottom-0 mx-auto max-w-[1600px] px-6 pb-14 lg:px-12">

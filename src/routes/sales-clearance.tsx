@@ -119,7 +119,7 @@ function LiquidationRoomPage() {
               alt="Frass liquidation floor: men's rack, women's rack and a circular clearance rack"
               width={1920}
               height={768}
-              className="h-[34vw] min-h-[180px] w-full object-cover md:h-auto"
+              className="hero-drift h-[34vw] min-h-[180px] w-full object-cover md:h-auto"
             />
             <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(0,0,0,0.55),transparent_35%,rgba(0,0,0,0.5))]" />
           </div>

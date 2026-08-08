@@ -107,7 +107,7 @@ function CapsuleDetailPage() {
       <section className="relative">
         <div className="relative h-[55vh] min-h-[420px] w-full overflow-hidden">
           {capsule.hero_image ? (
-            <img src={capsule.hero_image} alt={capsule.name} className="absolute inset-0 h-full w-full object-cover" />
+            <img src={capsule.hero_image} alt={capsule.name} className="hero-drift absolute inset-0 h-full w-full object-cover" />
           ) : (
             <div className="absolute inset-0 chrome-surface" />
           )}

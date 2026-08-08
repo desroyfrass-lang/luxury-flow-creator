@@ -56,7 +56,7 @@ function LuxuryHouse() {
             alt="Botanical gardens and stone pathway leading to the Frass Luxury House estate at golden hour"
             width={1920}
             height={1088}
-            className="h-full w-full object-cover"
+            className="hero-drift h-full w-full object-cover"
           />
           <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(12,10,7,0.5)_0%,transparent_35%,rgba(12,10,7,0.86)_100%)]" />
           <div className="absolute inset-x-0 bottom-0 mx-auto max-w-[1400px] px-6 pb-16 lg:px-12">
