@@ -25,6 +25,7 @@ import { Route as FrassPlusRouteImport } from './routes/frass-plus'
 import { Route as FrassLuxuryHouseRouteImport } from './routes/frass-luxury-house'
 import { Route as FrassKidsRouteImport } from './routes/frass-kids'
 import { Route as FrassKicksRouteImport } from './routes/frass-kicks'
+import { Route as FrassHillRouteImport } from './routes/frass-hill'
 import { Route as FrassDripRouteImport } from './routes/frass-drip'
 import { Route as CheckoutRouteImport } from './routes/checkout'
 import { Route as CapsulesRouteImport } from './routes/capsules'
@@ -208,6 +209,11 @@ const FrassKidsRoute = FrassKidsRouteImport.update({
 const FrassKicksRoute = FrassKicksRouteImport.update({
   id: '/frass-kicks',
   path: '/frass-kicks',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FrassHillRoute = FrassHillRouteImport.update({
+  id: '/frass-hill',
+  path: '/frass-hill',
   getParentRoute: () => rootRouteImport,
 } as any)
 const FrassDripRoute = FrassDripRouteImport.update({
@@ -765,6 +771,7 @@ export interface FileRoutesByFullPath {
   '/capsules': typeof CapsulesRouteWithChildren
   '/checkout': typeof CheckoutRoute
   '/frass-drip': typeof FrassDripRouteWithChildren
+  '/frass-hill': typeof FrassHillRoute
   '/frass-kicks': typeof FrassKicksRouteWithChildren
   '/frass-kids': typeof FrassKidsRouteWithChildren
   '/frass-luxury-house': typeof FrassLuxuryHouseRouteWithChildren
@@ -881,6 +888,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/checkout': typeof CheckoutRoute
+  '/frass-hill': typeof FrassHillRoute
   '/frass-world': typeof FrassWorldRoute
   '/gateway': typeof GatewayRoute
   '/kicks-district': typeof KicksDistrictRoute
@@ -992,6 +1000,7 @@ export interface FileRoutesById {
   '/capsules': typeof CapsulesRouteWithChildren
   '/checkout': typeof CheckoutRoute
   '/frass-drip': typeof FrassDripRouteWithChildren
+  '/frass-hill': typeof FrassHillRoute
   '/frass-kicks': typeof FrassKicksRouteWithChildren
   '/frass-kids': typeof FrassKidsRouteWithChildren
   '/frass-luxury-house': typeof FrassLuxuryHouseRouteWithChildren
@@ -1115,6 +1124,7 @@ export interface FileRouteTypes {
     | '/capsules'
     | '/checkout'
     | '/frass-drip'
+    | '/frass-hill'
     | '/frass-kicks'
     | '/frass-kids'
     | '/frass-luxury-house'
@@ -1231,6 +1241,7 @@ export interface FileRouteTypes {
     | '/'
     | '/auth'
     | '/checkout'
+    | '/frass-hill'
     | '/frass-world'
     | '/gateway'
     | '/kicks-district'
@@ -1341,6 +1352,7 @@ export interface FileRouteTypes {
     | '/capsules'
     | '/checkout'
     | '/frass-drip'
+    | '/frass-hill'
     | '/frass-kicks'
     | '/frass-kids'
     | '/frass-luxury-house'
@@ -1464,6 +1476,7 @@ export interface RootRouteChildren {
   CapsulesRoute: typeof CapsulesRouteWithChildren
   CheckoutRoute: typeof CheckoutRoute
   FrassDripRoute: typeof FrassDripRouteWithChildren
+  FrassHillRoute: typeof FrassHillRoute
   FrassKicksRoute: typeof FrassKicksRouteWithChildren
   FrassKidsRoute: typeof FrassKidsRouteWithChildren
   FrassLuxuryHouseRoute: typeof FrassLuxuryHouseRouteWithChildren
@@ -1606,6 +1619,13 @@ declare module '@tanstack/react-router' {
       path: '/frass-kicks'
       fullPath: '/frass-kicks'
       preLoaderRoute: typeof FrassKicksRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/frass-hill': {
+      id: '/frass-hill'
+      path: '/frass-hill'
+      fullPath: '/frass-hill'
+      preLoaderRoute: typeof FrassHillRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/frass-drip': {
@@ -2740,6 +2760,7 @@ const rootRouteChildren: RootRouteChildren = {
   CapsulesRoute: CapsulesRouteWithChildren,
   CheckoutRoute: CheckoutRoute,
   FrassDripRoute: FrassDripRouteWithChildren,
+  FrassHillRoute: FrassHillRoute,
   FrassKicksRoute: FrassKicksRouteWithChildren,
   FrassKidsRoute: FrassKidsRouteWithChildren,
   FrassLuxuryHouseRoute: FrassLuxuryHouseRouteWithChildren,
