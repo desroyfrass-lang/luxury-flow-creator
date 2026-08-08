@@ -138,6 +138,9 @@ export function WorkspaceShell({
         </div>
 
         <div className="flex items-center gap-1">
+          <button type="button" className="ws-icon" onClick={onOpenDaily} aria-label="Open The Frass Daily">
+            <Sunrise className="h-4 w-4" />
+          </button>
           <button type="button" className="ws-icon" onClick={() => setBright((v) => !v)}
             aria-label="Toggle workspace lighting">
             {bright ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
@@ -154,10 +157,31 @@ export function WorkspaceShell({
 
       {/* ── Body ───────────────────────────────────────────────────── */}
       <div className="flex min-h-0 flex-1">
-        {/* Left sidebar — projects, conversation index, timeline */}
+        {/* Left sidebar — The Daily, modes, projects, index, timeline */}
         {leftOpen && (
           <aside className="ws-side hidden w-64 shrink-0 overflow-y-auto lg:block">
-            <div className="ws-side-title">Projects</div>
+            <button type="button" className="ws-nav" onClick={onOpenDaily}>
+              <Sunrise className="h-4 w-4" />
+              <span className="flex-1 text-left">The Frass Daily</span>
+            </button>
+
+            <div className="ws-side-title mt-5">Mode</div>
+            <div className="space-y-0.5">
+              {modes.map((m) => (
+                <button
+                  key={m.id}
+                  type="button"
+                  onClick={() => onSelectMode(m.id)}
+                  className={`ws-nav ${m.id === activeModeId ? "ws-nav-active" : ""}`}
+                >
+                  <span>{m.emoji}</span>
+                  <span className="flex-1 truncate text-left">{m.name}</span>
+                </button>
+              ))}
+            </div>
+
+            <div className="ws-side-title mt-6">Projects</div>
+
             <div className="space-y-0.5">
               {projects.map((p) => (
                 <button
