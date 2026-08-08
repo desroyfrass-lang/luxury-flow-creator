@@ -63,6 +63,12 @@ function FinancialCenter() {
   const [tab, setTab] = useState<FinanceTabId>("overview");
   const active = tabs.find((t) => t.id === tab) ?? tabs[0]!;
   const snap = honestSnapshot(viewer);
+  const ledgers = earningsLedgers(viewer);
+  const [policy, setPolicy] = useState<OwnerPolicy>(DEFAULT_OWNER_POLICY);
+
+  useEffect(() => setPolicy(loadOwnerPolicy()), []);
+
+
 
   return (
     <SiteShell>
