@@ -34,6 +34,7 @@ import { Route as CapsulesRouteImport } from './routes/capsules'
 import { Route as BlogRouteImport } from './routes/blog'
 import { Route as BareDripRouteImport } from './routes/bare-drip'
 import { Route as AuthRouteImport } from './routes/auth'
+import { Route as ArrivalRouteImport } from './routes/arrival'
 import { Route as AfroDesignersRouteImport } from './routes/afro-designers'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
@@ -260,6 +261,11 @@ const BareDripRoute = BareDripRouteImport.update({
 const AuthRoute = AuthRouteImport.update({
   id: '/auth',
   path: '/auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ArrivalRoute = ArrivalRouteImport.update({
+  id: '/arrival',
+  path: '/arrival',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AfroDesignersRoute = AfroDesignersRouteImport.update({
@@ -803,6 +809,7 @@ const SocialMediaViralsCategorySubProductRoute =
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/afro-designers': typeof AfroDesignersRouteWithChildren
+  '/arrival': typeof ArrivalRoute
   '/auth': typeof AuthRoute
   '/bare-drip': typeof BareDripRouteWithChildren
   '/blog': typeof BlogRouteWithChildren
@@ -930,6 +937,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/arrival': typeof ArrivalRoute
   '/auth': typeof AuthRoute
   '/checkout': typeof CheckoutRoute
   '/for-us': typeof ForUsRoute
@@ -1044,6 +1052,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/afro-designers': typeof AfroDesignersRouteWithChildren
+  '/arrival': typeof ArrivalRoute
   '/auth': typeof AuthRoute
   '/bare-drip': typeof BareDripRouteWithChildren
   '/blog': typeof BlogRouteWithChildren
@@ -1174,6 +1183,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/afro-designers'
+    | '/arrival'
     | '/auth'
     | '/bare-drip'
     | '/blog'
@@ -1301,6 +1311,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/arrival'
     | '/auth'
     | '/checkout'
     | '/for-us'
@@ -1414,6 +1425,7 @@ export interface FileRouteTypes {
     | '/'
     | '/_authenticated'
     | '/afro-designers'
+    | '/arrival'
     | '/auth'
     | '/bare-drip'
     | '/blog'
@@ -1544,6 +1556,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   AfroDesignersRoute: typeof AfroDesignersRouteWithChildren
+  ArrivalRoute: typeof ArrivalRoute
   AuthRoute: typeof AuthRoute
   BareDripRoute: typeof BareDripRouteWithChildren
   BlogRoute: typeof BlogRouteWithChildren
@@ -1758,6 +1771,13 @@ declare module '@tanstack/react-router' {
       path: '/auth'
       fullPath: '/auth'
       preLoaderRoute: typeof AuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/arrival': {
+      id: '/arrival'
+      path: '/arrival'
+      fullPath: '/arrival'
+      preLoaderRoute: typeof ArrivalRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/afro-designers': {
@@ -2880,6 +2900,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   AfroDesignersRoute: AfroDesignersRouteWithChildren,
+  ArrivalRoute: ArrivalRoute,
   AuthRoute: AuthRoute,
   BareDripRoute: BareDripRouteWithChildren,
   BlogRoute: BlogRouteWithChildren,
