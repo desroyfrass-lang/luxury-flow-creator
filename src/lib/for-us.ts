@@ -15,7 +15,9 @@ export type ForUsSectionId =
   | "music"
   | "learn"
   | "around_the_hill"
-  | "celebrations";
+  | "celebrations"
+  | "foundation"
+  | "behind_the_build";
 
 export type ForUsStory = {
   id: string;
