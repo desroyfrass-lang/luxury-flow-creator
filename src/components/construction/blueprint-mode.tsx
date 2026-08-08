@@ -531,10 +531,51 @@ export function ConstructionMode() {
                   )}
                 </div>
 
+                {/* Principle 13 — Architectural Memory */}
+                {conflicts.length > 0 && (
+                  <div className="bp-conflict">
+                    <div className="text-[10px] uppercase tracking-[0.3em]">Architectural memory</div>
+                    {conflicts.map((c) => (
+                      <p key={c.decision.id} className="mt-2 text-[11px] leading-relaxed">
+                        {c.reason}
+                      </p>
+                    ))}
+                  </div>
+                )}
+
+                {/* Principle 14 — expected behaviour established by this Blueprint */}
+                {expected.length > 0 && (
+                  <div className="bp-expected">
+                    <div className="text-[10px] uppercase tracking-[0.3em] text-[color:var(--gold)]">
+                      Expected behaviour after implementation
+                    </div>
+                    <ul className="mt-2 space-y-1 text-[11px] text-muted-foreground">
+                      {expected.map((b) => (
+                        <li key={b}>· {b}</li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+
+                {/* Principle 13 — Founder Intent is required, and it is permanent */}
+                <div className="bp-intent">
+                  <div className="text-[10px] uppercase tracking-[0.3em] text-[color:var(--gold)]">
+                    Founder intent — required
+                  </div>
+                  <p className="mt-1 text-[11px] italic text-muted-foreground">"{FOUNDER_INTENT_QUESTION}"</p>
+                  <textarea
+                    value={intent}
+                    onChange={(e) => setIntent(e.target.value)}
+                    placeholder="The problem we are solving, in your own words. This becomes permanent architectural history."
+                    className="bp-note"
+                    rows={3}
+                  />
+                </div>
+
                 <textarea
                   value={note}
                   onChange={(e) => setNote(e.target.value)}
-                  placeholder="Founder note (optional) — why this change, in your own words."
+                  placeholder="Founder note (optional) — anything else worth remembering."
                   className="bp-note"
                   rows={2}
                 />
@@ -559,6 +600,9 @@ export function ConstructionMode() {
                 <p className="mt-1 text-[10px] leading-relaxed text-muted-foreground">
                   {IMPACT_PRINCIPLE}
                 </p>
+                <p className="mt-1 text-[10px] leading-relaxed text-muted-foreground">{PRINCIPLE_13}</p>
+                <p className="mt-1 text-[10px] leading-relaxed text-muted-foreground">{PRINCIPLE_14}</p>
+
               </div>
             )}
 
