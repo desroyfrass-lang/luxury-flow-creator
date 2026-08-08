@@ -66,6 +66,7 @@ export function WorkspaceShell({
   projects,
   activeProjectId,
   onSelectProject,
+  roleLinks,
   index,
   onJumpTo,
   milestones,
@@ -79,6 +80,8 @@ export function WorkspaceShell({
   const [rightOpen, setRightOpen] = useState(true);
   const [bright, setBright] = useState(true);
   const [query, setQuery] = useState("");
+  const searchRef = useRef<HTMLInputElement>(null);
+
 
   const q = query.trim().toLowerCase();
   const searchHits = q
