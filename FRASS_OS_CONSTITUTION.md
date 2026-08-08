@@ -171,6 +171,10 @@ Design exists to help Builders think clearly.
 
 ---
 
+# Volume IV — Intelligence & Stewardship
+
+*How Frassy reasons, and how the platform is cared for across decades.*
+
 ## AI Constitution
 
 AI exists to amplify human potential.
