@@ -84,7 +84,7 @@ export function FrassDaily({
   };
 
   return (
-    <div className={`frass-workspace daily-overlay ${entered ? "is-in" : ""}`} role="dialog" aria-label="The Frass Daily">
+    <div data-blueprint="daily" className={`frass-workspace daily-overlay ${entered ? "is-in" : ""}`} role="dialog" aria-label="The Frass Daily">
       {/* Frassy greets large, then shrinks into her assistant position */}
       <div className={`daily-frassy ${shrunk ? "is-small" : ""}`}>
         <img src={frassyAvatar.url} alt="" />
@@ -150,7 +150,9 @@ export function FrassDaily({
 
         {/* 3 + 4 + 5 — Priorities, workload, delegation */}
         <Section
+          blueprintId="daily-priorities"
           title="Today's priorities"
+
           note={`Estimated work today: ${formatWorkload(remaining)}${
             savedByFrassy ? ` · Frassy is carrying ${formatWorkload(savedByFrassy)}` : ""
           }`}
@@ -380,10 +382,21 @@ function MetricCard({
   );
 }
 
-function Section({ title, note, children }: { title: string; note?: string; children: React.ReactNode }) {
+function Section({
+  title,
+  note,
+  blueprintId,
+  children,
+}: {
+  title: string;
+  note?: string;
+  blueprintId?: string;
+  children: React.ReactNode;
+}) {
   return (
-    <section className="daily-section">
+    <section data-blueprint={blueprintId} className="daily-section">
       <h2 className="daily-h2">{title}</h2>
+
       {note && <p className="ws-meta daily-note">{note}</p>}
       <div className="mt-3">{children}</div>
     </section>

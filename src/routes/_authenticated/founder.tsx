@@ -7,6 +7,8 @@ import { PageFeedback } from "@/components/page-feedback";
 import { LaunchReadiness } from "@/components/launch-readiness";
 import { FrassyChat } from "@/components/frassy-chat";
 import { openTheDaily } from "@/components/workspace/daily-gate";
+import { openConstructionMode } from "@/components/construction/blueprint-mode";
+
 
 
 import { useIsAdmin } from "@/hooks/use-is-admin";
@@ -165,7 +167,23 @@ function FounderPage() {
           >
             Open The Daily
           </button>
+          <button
+            type="button"
+            onClick={openConstructionMode}
+            className="rounded-sm border border-[color:var(--gold)]/60 px-6 py-3 text-[11px] font-bold uppercase tracking-[0.3em] text-[color:var(--gold)] transition hover:bg-[color:var(--gold)]/10"
+            title="Founder only — ⌘/Ctrl + Shift + B anywhere in Frass OS"
+          >
+            Construction Mode
+          </button>
         </section>
+
+        <p className="mt-2 text-xs text-muted-foreground">
+          FRASS-0200 · Construction Mode is reserved for the Founder. Blueprint Mode overlays any
+          screen in Frass OS — press ⌘/Ctrl + Shift + B, then select a component to inspect its
+          purpose, registry references, connected systems, dependencies and decision history before
+          approving any change.
+        </p>
+
 
 
         {/* Phases */}
