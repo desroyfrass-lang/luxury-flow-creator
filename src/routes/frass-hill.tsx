@@ -9,8 +9,10 @@ import {
   UNIVERSAL_DISTRICT_RULES,
   CROSS_DISTRICT_JOURNEYS,
   BUILDER_TERMINOLOGY,
+  sightlinesFrom,
   type HillDistrict,
 } from "@/lib/frass-hill";
+
 
 import squareImg from "@/assets/hill-town-square.jpg";
 import kidsImg from "@/assets/district-kids.jpg";
