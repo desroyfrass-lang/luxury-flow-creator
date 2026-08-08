@@ -149,6 +149,13 @@ function AdminLayout() {
               Virals
             </Link>
             <Link
+              to="/admin/activities"
+              activeProps={{ className: "text-[color:var(--gold)]" }}
+              className="text-muted-foreground hover:text-foreground"
+            >
+              Activities
+            </Link>
+            <Link
               to="/admin/cj-import"
               activeProps={{ className: "text-[color:var(--gold)]" }}
               className="text-muted-foreground hover:text-foreground"

@@ -1,0 +1,1 @@
+REVOKE ALL ON FUNCTION public.snapshot_learning_activity() FROM PUBLIC, anon, authenticated;

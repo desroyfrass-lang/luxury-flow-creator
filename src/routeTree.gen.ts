@@ -53,6 +53,7 @@ import { Route as PlusSizeWomenRouteImport } from './routes/plus-size.women'
 import { Route as PlusSizeMenRouteImport } from './routes/plus-size.men'
 import { Route as LookbookStoryRouteImport } from './routes/lookbook.$story'
 import { Route as KidsWorldParentsRouteImport } from './routes/kids-world.parents'
+import { Route as KidsWorldDiscoverRouteImport } from './routes/kids-world.discover'
 import { Route as FrassPlusSalesRouteImport } from './routes/frass-plus.sales'
 import { Route as FrassLuxuryHouseWomenRouteImport } from './routes/frass-luxury-house.women'
 import { Route as FrassLuxuryHouseMenRouteImport } from './routes/frass-luxury-house.men'
@@ -97,6 +98,7 @@ import { Route as BareDripWomenIndexRouteImport } from './routes/bare-drip.women
 import { Route as BareDripMenIndexRouteImport } from './routes/bare-drip.men.index'
 import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated/admin.index'
 import { Route as SocialMediaViralsCategorySubRouteImport } from './routes/social-media-virals.$category.$sub'
+import { Route as KidsWorldActivitySlugRouteImport } from './routes/kids-world.activity.$slug'
 import { Route as KidsWorldAgePlaceRouteImport } from './routes/kids-world.$age.$place'
 import { Route as FrassPlusGenderKicksRouteImport } from './routes/frass-plus.$gender.kicks'
 import { Route as FrassPlusGenderBareRouteImport } from './routes/frass-plus.$gender.bare'
@@ -127,6 +129,7 @@ import { Route as AuthenticatedAdminCapsulesRouteImport } from './routes/_authen
 import { Route as AuthenticatedAdminBlogRouteImport } from './routes/_authenticated/admin.blog'
 import { Route as AuthenticatedAdminApprovalsRouteImport } from './routes/_authenticated/admin.approvals'
 import { Route as AuthenticatedAdminAffiliatePolicyRouteImport } from './routes/_authenticated/admin.affiliate-policy'
+import { Route as AuthenticatedAdminActivitiesRouteImport } from './routes/_authenticated/admin.activities'
 import { Route as Char91DotmcpChar93InvokeToolToolRouteImport } from './routes/[.mcp]/invoke-tool/$tool'
 import { Route as DotlovableOauthConsentRouteImport } from './routes/[.]lovable.oauth.consent'
 import { Route as SocialMediaViralsCategorySubProductRouteImport } from './routes/social-media-virals.$category.$sub.$product'
@@ -349,6 +352,11 @@ const LookbookStoryRoute = LookbookStoryRouteImport.update({
 const KidsWorldParentsRoute = KidsWorldParentsRouteImport.update({
   id: '/parents',
   path: '/parents',
+  getParentRoute: () => KidsWorldRoute,
+} as any)
+const KidsWorldDiscoverRoute = KidsWorldDiscoverRouteImport.update({
+  id: '/discover',
+  path: '/discover',
   getParentRoute: () => KidsWorldRoute,
 } as any)
 const FrassPlusSalesRoute = FrassPlusSalesRouteImport.update({
@@ -577,6 +585,11 @@ const SocialMediaViralsCategorySubRoute =
     path: '/$sub',
     getParentRoute: () => SocialMediaViralsCategoryRoute,
   } as any)
+const KidsWorldActivitySlugRoute = KidsWorldActivitySlugRouteImport.update({
+  id: '/activity/$slug',
+  path: '/activity/$slug',
+  getParentRoute: () => KidsWorldRoute,
+} as any)
 const KidsWorldAgePlaceRoute = KidsWorldAgePlaceRouteImport.update({
   id: '/$age/$place',
   path: '/$age/$place',
@@ -744,6 +757,12 @@ const AuthenticatedAdminAffiliatePolicyRoute =
     path: '/affiliate-policy',
     getParentRoute: () => AuthenticatedAdminRoute,
   } as any)
+const AuthenticatedAdminActivitiesRoute =
+  AuthenticatedAdminActivitiesRouteImport.update({
+    id: '/activities',
+    path: '/activities',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
 const Char91DotmcpChar93InvokeToolToolRoute =
   Char91DotmcpChar93InvokeToolToolRouteImport.update({
     id: '/.mcp/invoke-tool/$tool',
@@ -823,6 +842,7 @@ export interface FileRoutesByFullPath {
   '/frass-luxury-house/men': typeof FrassLuxuryHouseMenRoute
   '/frass-luxury-house/women': typeof FrassLuxuryHouseWomenRoute
   '/frass-plus/sales': typeof FrassPlusSalesRoute
+  '/kids-world/discover': typeof KidsWorldDiscoverRoute
   '/kids-world/parents': typeof KidsWorldParentsRoute
   '/lookbook/$story': typeof LookbookStoryRoute
   '/plus-size/men': typeof PlusSizeMenRoute
@@ -843,6 +863,7 @@ export interface FileRoutesByFullPath {
   '/social-media-virals/': typeof SocialMediaViralsIndexRoute
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
   '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
+  '/admin/activities': typeof AuthenticatedAdminActivitiesRoute
   '/admin/affiliate-policy': typeof AuthenticatedAdminAffiliatePolicyRoute
   '/admin/approvals': typeof AuthenticatedAdminApprovalsRoute
   '/admin/blog': typeof AuthenticatedAdminBlogRoute
@@ -873,6 +894,7 @@ export interface FileRoutesByFullPath {
   '/frass-plus/$gender/bare': typeof FrassPlusGenderBareRoute
   '/frass-plus/$gender/kicks': typeof FrassPlusGenderKicksRoute
   '/kids-world/$age/$place': typeof KidsWorldAgePlaceRoute
+  '/kids-world/activity/$slug': typeof KidsWorldActivitySlugRoute
   '/social-media-virals/$category/$sub': typeof SocialMediaViralsCategorySubRouteWithChildren
   '/admin/': typeof AuthenticatedAdminIndexRoute
   '/bare-drip/men/': typeof BareDripMenIndexRoute
@@ -928,6 +950,7 @@ export interface FileRoutesByTo {
   '/frass-luxury-house/men': typeof FrassLuxuryHouseMenRoute
   '/frass-luxury-house/women': typeof FrassLuxuryHouseWomenRoute
   '/frass-plus/sales': typeof FrassPlusSalesRoute
+  '/kids-world/discover': typeof KidsWorldDiscoverRoute
   '/kids-world/parents': typeof KidsWorldParentsRoute
   '/lookbook/$story': typeof LookbookStoryRoute
   '/plus-size/men': typeof PlusSizeMenRoute
@@ -948,6 +971,7 @@ export interface FileRoutesByTo {
   '/social-media-virals': typeof SocialMediaViralsIndexRoute
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
   '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
+  '/admin/activities': typeof AuthenticatedAdminActivitiesRoute
   '/admin/affiliate-policy': typeof AuthenticatedAdminAffiliatePolicyRoute
   '/admin/approvals': typeof AuthenticatedAdminApprovalsRoute
   '/admin/blog': typeof AuthenticatedAdminBlogRoute
@@ -978,6 +1002,7 @@ export interface FileRoutesByTo {
   '/frass-plus/$gender/bare': typeof FrassPlusGenderBareRoute
   '/frass-plus/$gender/kicks': typeof FrassPlusGenderKicksRoute
   '/kids-world/$age/$place': typeof KidsWorldAgePlaceRoute
+  '/kids-world/activity/$slug': typeof KidsWorldActivitySlugRoute
   '/social-media-virals/$category/$sub': typeof SocialMediaViralsCategorySubRouteWithChildren
   '/admin': typeof AuthenticatedAdminIndexRoute
   '/bare-drip/men': typeof BareDripMenIndexRoute
@@ -1052,6 +1077,7 @@ export interface FileRoutesById {
   '/frass-luxury-house/men': typeof FrassLuxuryHouseMenRoute
   '/frass-luxury-house/women': typeof FrassLuxuryHouseWomenRoute
   '/frass-plus/sales': typeof FrassPlusSalesRoute
+  '/kids-world/discover': typeof KidsWorldDiscoverRoute
   '/kids-world/parents': typeof KidsWorldParentsRoute
   '/lookbook/$story': typeof LookbookStoryRoute
   '/plus-size/men': typeof PlusSizeMenRoute
@@ -1072,6 +1098,7 @@ export interface FileRoutesById {
   '/social-media-virals/': typeof SocialMediaViralsIndexRoute
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
   '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
+  '/_authenticated/admin/activities': typeof AuthenticatedAdminActivitiesRoute
   '/_authenticated/admin/affiliate-policy': typeof AuthenticatedAdminAffiliatePolicyRoute
   '/_authenticated/admin/approvals': typeof AuthenticatedAdminApprovalsRoute
   '/_authenticated/admin/blog': typeof AuthenticatedAdminBlogRoute
@@ -1102,6 +1129,7 @@ export interface FileRoutesById {
   '/frass-plus/$gender/bare': typeof FrassPlusGenderBareRoute
   '/frass-plus/$gender/kicks': typeof FrassPlusGenderKicksRoute
   '/kids-world/$age/$place': typeof KidsWorldAgePlaceRoute
+  '/kids-world/activity/$slug': typeof KidsWorldActivitySlugRoute
   '/social-media-virals/$category/$sub': typeof SocialMediaViralsCategorySubRouteWithChildren
   '/_authenticated/admin/': typeof AuthenticatedAdminIndexRoute
   '/bare-drip/men/': typeof BareDripMenIndexRoute
@@ -1176,6 +1204,7 @@ export interface FileRouteTypes {
     | '/frass-luxury-house/men'
     | '/frass-luxury-house/women'
     | '/frass-plus/sales'
+    | '/kids-world/discover'
     | '/kids-world/parents'
     | '/lookbook/$story'
     | '/plus-size/men'
@@ -1196,6 +1225,7 @@ export interface FileRouteTypes {
     | '/social-media-virals/'
     | '/.lovable/oauth/consent'
     | '/.mcp/invoke-tool/$tool'
+    | '/admin/activities'
     | '/admin/affiliate-policy'
     | '/admin/approvals'
     | '/admin/blog'
@@ -1226,6 +1256,7 @@ export interface FileRouteTypes {
     | '/frass-plus/$gender/bare'
     | '/frass-plus/$gender/kicks'
     | '/kids-world/$age/$place'
+    | '/kids-world/activity/$slug'
     | '/social-media-virals/$category/$sub'
     | '/admin/'
     | '/bare-drip/men/'
@@ -1281,6 +1312,7 @@ export interface FileRouteTypes {
     | '/frass-luxury-house/men'
     | '/frass-luxury-house/women'
     | '/frass-plus/sales'
+    | '/kids-world/discover'
     | '/kids-world/parents'
     | '/lookbook/$story'
     | '/plus-size/men'
@@ -1301,6 +1333,7 @@ export interface FileRouteTypes {
     | '/social-media-virals'
     | '/.lovable/oauth/consent'
     | '/.mcp/invoke-tool/$tool'
+    | '/admin/activities'
     | '/admin/affiliate-policy'
     | '/admin/approvals'
     | '/admin/blog'
@@ -1331,6 +1364,7 @@ export interface FileRouteTypes {
     | '/frass-plus/$gender/bare'
     | '/frass-plus/$gender/kicks'
     | '/kids-world/$age/$place'
+    | '/kids-world/activity/$slug'
     | '/social-media-virals/$category/$sub'
     | '/admin'
     | '/bare-drip/men'
@@ -1404,6 +1438,7 @@ export interface FileRouteTypes {
     | '/frass-luxury-house/men'
     | '/frass-luxury-house/women'
     | '/frass-plus/sales'
+    | '/kids-world/discover'
     | '/kids-world/parents'
     | '/lookbook/$story'
     | '/plus-size/men'
@@ -1424,6 +1459,7 @@ export interface FileRouteTypes {
     | '/social-media-virals/'
     | '/.lovable/oauth/consent'
     | '/.mcp/invoke-tool/$tool'
+    | '/_authenticated/admin/activities'
     | '/_authenticated/admin/affiliate-policy'
     | '/_authenticated/admin/approvals'
     | '/_authenticated/admin/blog'
@@ -1454,6 +1490,7 @@ export interface FileRouteTypes {
     | '/frass-plus/$gender/bare'
     | '/frass-plus/$gender/kicks'
     | '/kids-world/$age/$place'
+    | '/kids-world/activity/$slug'
     | '/social-media-virals/$category/$sub'
     | '/_authenticated/admin/'
     | '/bare-drip/men/'
@@ -1817,6 +1854,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof KidsWorldParentsRouteImport
       parentRoute: typeof KidsWorldRoute
     }
+    '/kids-world/discover': {
+      id: '/kids-world/discover'
+      path: '/discover'
+      fullPath: '/kids-world/discover'
+      preLoaderRoute: typeof KidsWorldDiscoverRouteImport
+      parentRoute: typeof KidsWorldRoute
+    }
     '/frass-plus/sales': {
       id: '/frass-plus/sales'
       path: '/sales'
@@ -2125,6 +2169,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SocialMediaViralsCategorySubRouteImport
       parentRoute: typeof SocialMediaViralsCategoryRoute
     }
+    '/kids-world/activity/$slug': {
+      id: '/kids-world/activity/$slug'
+      path: '/activity/$slug'
+      fullPath: '/kids-world/activity/$slug'
+      preLoaderRoute: typeof KidsWorldActivitySlugRouteImport
+      parentRoute: typeof KidsWorldRoute
+    }
     '/kids-world/$age/$place': {
       id: '/kids-world/$age/$place'
       path: '/$age/$place'
@@ -2335,6 +2386,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminAffiliatePolicyRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
+    '/_authenticated/admin/activities': {
+      id: '/_authenticated/admin/activities'
+      path: '/activities'
+      fullPath: '/admin/activities'
+      preLoaderRoute: typeof AuthenticatedAdminActivitiesRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
     '/.mcp/invoke-tool/$tool': {
       id: '/.mcp/invoke-tool/$tool'
       path: '/.mcp/invoke-tool/$tool'
@@ -2360,6 +2418,7 @@ declare module '@tanstack/react-router' {
 }
 
 interface AuthenticatedAdminRouteChildren {
+  AuthenticatedAdminActivitiesRoute: typeof AuthenticatedAdminActivitiesRoute
   AuthenticatedAdminAffiliatePolicyRoute: typeof AuthenticatedAdminAffiliatePolicyRoute
   AuthenticatedAdminApprovalsRoute: typeof AuthenticatedAdminApprovalsRoute
   AuthenticatedAdminBlogRoute: typeof AuthenticatedAdminBlogRoute
@@ -2378,6 +2437,7 @@ interface AuthenticatedAdminRouteChildren {
 }
 
 const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
+  AuthenticatedAdminActivitiesRoute: AuthenticatedAdminActivitiesRoute,
   AuthenticatedAdminAffiliatePolicyRoute:
     AuthenticatedAdminAffiliatePolicyRoute,
   AuthenticatedAdminApprovalsRoute: AuthenticatedAdminApprovalsRoute,
@@ -2676,16 +2736,20 @@ const FrassPlusRouteWithChildren = FrassPlusRoute._addFileChildren(
 )
 
 interface KidsWorldRouteChildren {
+  KidsWorldDiscoverRoute: typeof KidsWorldDiscoverRoute
   KidsWorldParentsRoute: typeof KidsWorldParentsRoute
   KidsWorldIndexRoute: typeof KidsWorldIndexRoute
   KidsWorldAgePlaceRoute: typeof KidsWorldAgePlaceRoute
+  KidsWorldActivitySlugRoute: typeof KidsWorldActivitySlugRoute
   KidsWorldAgeIndexRoute: typeof KidsWorldAgeIndexRoute
 }
 
 const KidsWorldRouteChildren: KidsWorldRouteChildren = {
+  KidsWorldDiscoverRoute: KidsWorldDiscoverRoute,
   KidsWorldParentsRoute: KidsWorldParentsRoute,
   KidsWorldIndexRoute: KidsWorldIndexRoute,
   KidsWorldAgePlaceRoute: KidsWorldAgePlaceRoute,
+  KidsWorldActivitySlugRoute: KidsWorldActivitySlugRoute,
   KidsWorldAgeIndexRoute: KidsWorldAgeIndexRoute,
 }
 

@@ -3,6 +3,8 @@ import { PageHeader } from "@/components/page-header";
 import { PageFeedback } from "@/components/page-feedback";
 import { getKidsPlace } from "@/lib/kids-world";
 import { useKidsPassport } from "@/lib/kids-passport";
+import { ActivityCard } from "@/components/content/activity-card";
+import { usePublishedActivities } from "@/hooks/use-activities";
 
 export const Route = createFileRoute("/kids-world/$age/$place")({
   beforeLoad: ({ params }) => {
@@ -85,6 +87,8 @@ function PlacePage() {
         </div>
       </section>
 
+      <ActivitiesHere age={age} place={place} accent={world.accent} />
+
       <section className="mx-auto max-w-[1600px] px-6 pb-24 lg:px-12">
         <div className="rounded-[2rem] border border-[color:var(--gold)]/25 bg-[color-mix(in_oklab,var(--foreground)_4%,transparent)] p-8">
           <p className="text-[10px] uppercase tracking-[0.38em] text-[color:var(--gold)]">
@@ -114,5 +118,39 @@ function PlacePage() {
 
       <PageFeedback pageTitle={`Kids World — ${spot.title}`} />
     </>
+  );
+}
+
+function ActivitiesHere({ age, place, accent }: { age: string; place: string; accent: string }) {
+  const { data: activities = [], isLoading } = usePublishedActivities({
+    district: "kids_world",
+    ageGroup: age,
+    placeSlug: place,
+  });
+
+  if (isLoading || activities.length === 0) return null;
+
+  return (
+    <section className="mx-auto max-w-[1600px] px-6 pb-16 lg:px-12">
+      <header className="mb-6 flex flex-wrap items-end justify-between gap-4">
+        <div>
+          <p className="text-[10px] uppercase tracking-[0.38em]" style={{ color: accent }}>
+            Published here
+          </p>
+          <h2 className="mt-2 font-display text-3xl uppercase md:text-4xl">Activities</h2>
+        </div>
+        <Link
+          to="/kids-world/discover"
+          className="rounded-full border border-border px-6 py-2.5 text-[10px] font-bold uppercase tracking-[0.22em]"
+        >
+          Discover everything
+        </Link>
+      </header>
+      <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+        {activities.map((a) => (
+          <ActivityCard key={a.id} activity={a} accent={accent} />
+        ))}
+      </div>
+    </section>
   );
 }
