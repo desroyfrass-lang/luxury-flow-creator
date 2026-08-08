@@ -180,6 +180,29 @@ function FounderPage() {
           </button>
         </section>
 
+        <section className="mt-4 flex flex-wrap items-center gap-3 rounded-sm border border-border bg-background/40 p-5">
+          <div className="min-w-0 flex-1">
+            <div className="font-display text-xl">Payment Provider Center</div>
+            <p className="mt-1 text-xs text-muted-foreground">
+              FRASS-0303 — configure providers per market, set owner compensation and the margin
+              floor, and trace the ten-step pipeline from checkout into every ledger.
+            </p>
+          </div>
+          <Link
+            to="/payment-providers"
+            className="rounded-sm border border-[color:var(--gold)]/60 px-5 py-2.5 text-[11px] font-bold uppercase tracking-[0.3em] text-[color:var(--gold)] transition hover:bg-[color:var(--gold)]/10"
+          >
+            Open
+          </Link>
+          <Link
+            to="/financial-center"
+            className="rounded-sm border border-border px-5 py-2.5 text-[11px] font-bold uppercase tracking-[0.3em] text-muted-foreground transition hover:border-[color:var(--gold)]"
+          >
+            Financial Center
+          </Link>
+        </section>
+
+
         <p className="mt-2 text-xs text-muted-foreground">
           FRASS-0200 · Construction Mode is reserved for the Founder. Blueprint Mode overlays any
           screen in Frass OS — press ⌘/Ctrl + Shift + B, then select a component to inspect its
