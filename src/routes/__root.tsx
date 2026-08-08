@@ -132,6 +132,8 @@ function RootComponent() {
       <Toaster position="top-center" />
       <FrassyChat />
       <FrassyHost />
+      <DailyGate />
+
       <VoiceStateOverlay />
     </QueryClientProvider>
   );
