@@ -37,3 +37,8 @@ Files: `src/lib/construction/blueprint-registry.ts` (component registry, actions
 - **Frassy response format** (in `src/routes/api/chat.ts`): "Estimated Development Impact" — Complexity · Forecast · Risk · Why · Value · Lighter alternative → then ask approval.
 
 Files: `src/lib/construction/credit-intelligence.ts`, `src/components/construction/development-credits.tsx`, extended `blueprint-registry.ts` and `blueprint-mode.tsx`, Development Credits panel on `/founder`.
+
+## Principle 12 — Impact Forecast (Architectural Impact Report)
+`src/lib/construction/impact-forecast.ts` answers "What else changes because of this?" before any Blueprint approval: components affected (via the relationship map), pages affected (per-component page map), roles affected, plus graded mobile / accessibility / performance lines, an explicit "untouched" list (public shopping, checkout, Kids World, marketplace storefronts) when nothing public is in the ripple, testing recommendations with a count, future-maintenance note, and a sequencing recommendation ("implement together with X to avoid duplicate work").
+- Rendered in `blueprint-mode.tsx` between the live simulation and the credit forecast; **approval is blocked until the Founder ticks "I have read the impact report"**, and `impactSummary()` is written into the recorded decision.
+- Lifecycle constant is now: Vision → Blueprint → Simulation → Impact Report → Credit Forecast → Founder Approval → Implementation → Verification → Version Archive. `IMPACT_PRINCIPLE` added to the registry; Frassy's prompt carries the same duty.
