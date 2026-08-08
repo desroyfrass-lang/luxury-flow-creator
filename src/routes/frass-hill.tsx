@@ -1,14 +1,17 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { GatewayNav } from "@/components/gateway-nav";
+import { HillSightlines } from "@/components/hill-sightlines";
 import {
   HILL_DISTRICTS,
   TOWN_PLAN_RULE,
+  SIGHTLINE_PRINCIPLE,
   UNIVERSAL_DISTRICT_RULES,
   CROSS_DISTRICT_JOURNEYS,
   BUILDER_TERMINOLOGY,
   type HillDistrict,
 } from "@/lib/frass-hill";
+
 import squareImg from "@/assets/hill-town-square.jpg";
 import kidsImg from "@/assets/district-kids.jpg";
 import kicksImg from "@/assets/district-kicks.jpg";
