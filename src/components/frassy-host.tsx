@@ -68,17 +68,21 @@ export function FrassyHost() {
     clearTimers();
 
 
-    if (seenThisSession(dest.id)) {
-      // Returning visitor — stay minimized, one quiet line.
-      setWelcomeBack("Welcome back.");
-      timers.current.push(setTimeout(() => setWelcomeBack(null), 4200));
-      return;
-    }
+    const dest = resolveDestination(pathname);
+    if (!dest) return;
+    if (handled.current === dest.id) return;
+    handled.current = dest.id;
+
+    clearTimers();
+
+    // Only the entrance gets the cinematic welcome — and only once per session.
+    if (!ENTRANCE_IDS.has(dest.id) || seenThisSession(dest.id)) return;
 
     markSeen(dest.id);
     setWelcomeBack(null);
     setGreeting(dest);
     setPhase("enter");
+
 
     const reduced =
       typeof window !== "undefined" &&
