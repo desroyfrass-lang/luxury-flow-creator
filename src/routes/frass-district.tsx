@@ -22,6 +22,9 @@ import cardWomen from "@/assets/card-women.jpg";
 import plusWingMen from "@/assets/plus-wing-men.jpg";
 import plusWingWomen from "@/assets/plus-wing-women.jpg";
 import bridalBoutique from "@/assets/bridal-boutique-storefront.jpg";
+import shapeRoomMen from "@/assets/shape-room-men.jpg";
+import shapeRoomWomen from "@/assets/shape-room-women.jpg";
+
 
 
 export const Route = createFileRoute("/frass-district")({
@@ -103,9 +106,23 @@ const STORES: { title: string; description: string; image: string; to: string; e
     to: "/frass-plus/women",
     eyebrow: "Women",
   },
-
+  {
+    title: "Frass Shape — Men",
+    description: "Compression, posture support and suit layers. Support you feel, never see.",
+    image: shapeRoomMen,
+    to: "/frass-shape/men",
+    eyebrow: "Wellness",
+  },
+  {
+    title: "Frass Shape — Women",
+    description: "Sculpt, smooth, bridal, postpartum and active support — shop by goal.",
+    image: shapeRoomWomen,
+    to: "/frass-shape/women",
+    eyebrow: "Wellness",
+  },
   {
     title: "Frass Kids",
+
     description: "The children's flagship — eight age & gender stores, one Frass architecture.",
     image: districtKids,
     to: "/frass-kids",
