@@ -1,48 +1,91 @@
-// FRASS-0910 — Frass Hill District Functional Architecture
-// Volume X — Experience & Design System Bible
+// FRASS-0920 — Frass Hill Town Plan (supersedes the FRASS-0910 district list)
 //
-// Every district has two identities: how it feels (emotional) and what people
-// accomplish there (functional). This registry is the functional layer.
+// Architectural correction: functions are not districts. Frass Hill is a living
+// town with a handful of real places, and every service, office, venue and
+// academy lives INSIDE one of them — the way a real Caribbean town works.
 //
-// Constitutional terminology (FRASS-0910):
-//  · "Frass Builders"  — anyone building a business, project or opportunity ON the platform.
+// You don't walk to "Opportunity Centre". You walk into the Town Square, and
+// there happens to be an Opportunity Centre.
+//
+// Constitutional terminology:
+//  · "Frass Builders"   — anyone building a business, project or opportunity ON the platform.
 //  · "Skilled Builders" — tradespeople who physically build homes, roads, schools, communities.
-// The bare word "Builder" is no longer used alone anywhere in Frass Hill.
 
 export type HillDistrictStatus = "open" | "building" | "planned";
 
+/** A place inside a district: an office, venue, academy, shop or service. */
+export type HillVenue = {
+  name: string;
+  /** One line: what you do in this building. */
+  does: string;
+  to?: string;
+};
+
 export type HillDistrict = {
   id: string;
+  /** Marker used on the town plan. */
+  glyph: string;
   name: string;
-  /** What happens here — answered in one sentence. If unclear, the district is incomplete. */
+  /** What happens here — answered in one sentence. */
   purpose: string;
-  /** Emotional identity: how should people feel? */
+  /** Emotional identity: how should people feel walking in? */
   feeling: string;
-  /** Who uses this district. */
   audience: string;
   /** Frassy's professional expertise inside this district. Personality stays Frassy. */
   steward: string;
-  /** Why would someone return tomorrow? */
   daily: string;
-  /** How the district changes through the year. */
   seasonal: string;
-  /** How it strengthens Frass. */
   contribution: string;
-  /** The lasting value it creates. */
   legacy: string;
-  functions: string[];
+  /** The buildings, venues and services that live inside this district. */
+  venues: HillVenue[];
+  /** Neighbouring districts you can walk to. */
   connected: string[];
-  /** Success measure. */
   success: string;
   /** Economic engines drive real commerce for the town. */
   engine?: boolean;
   status: HillDistrictStatus;
   to?: string;
+  /** Hero image key resolved by the town plan route. */
+  image: string;
 };
 
 export const HILL_DISTRICTS: HillDistrict[] = [
   {
+    id: "town_square",
+    glyph: "🏛",
+    name: "Frass Town Square",
+    purpose:
+      "The civic and social heart of Frass Hill — where the town gathers, and where every service has a desk.",
+    feeling: "Warm, alive, unmistakably Caribbean — music somewhere, dominoes slapping, people always around.",
+    audience: "Every member of Frass Hill, from first visit onward.",
+    steward: "Host, community organiser and information officer.",
+    daily: "Something is always happening — an announcement, a showcase, a new notice on the opportunity board.",
+    seasonal: "Festivals, carnival, independence, Christmas lights, the New Year address.",
+    contribution: "Turns members into neighbours.",
+    legacy: "A recorded history of every celebration and every notice the town has posted.",
+    venues: [
+      { name: "Information Centre", does: "First stop. Directions, orientation, how the town works." },
+      { name: "Frassy Kiosk", does: "Ask Frassy anything, right in the middle of the square.", to: "/frassy" },
+      { name: "Opportunity Centre", does: "Jobs, gigs, contracts, team formation, partnerships.", to: "/opportunity" },
+      { name: "Community Hall", does: "Meetings, circles, discussions, town business." },
+      { name: "Marketplace Stalls", does: "Day traders and pop-up vendors under the pavilion roof." },
+      { name: "Foundation Office", does: "Family support, grants, emergency assistance." },
+      { name: "Volunteer Centre", does: "Sign up for a shift, a drive or a community build." },
+      { name: "The Café", does: "Where conversations start. Slow down for a minute." },
+      { name: "Domino Yard", does: "The table under the tree. Bragging rights only." },
+      { name: "Music Stage", does: "Live sets, open mic, community showcases." },
+      { name: "Reflection Corner", does: "A quiet bench, a journal, one question worth sitting with." },
+    ],
+    connected: ["Children's Village", "Studio District", "Builders Village", "Farm District", "Founder Hall"],
+    success: "Members return because they feel connected — and because everything they need has an address here.",
+    status: "open",
+    to: "/welcome-hall",
+    image: "square",
+  },
+  {
     id: "childrens_village",
+    glyph: "👶",
     name: "Children's Village",
     purpose:
       "Where children learn, explore, create, and gradually grow into confident young builders.",
@@ -50,357 +93,206 @@ export const HILL_DISTRICTS: HillDistrict[] = [
     audience: "Children 0–12, teens 12+, and the parents who hold the passport.",
     steward: "Educator and child-safety guide.",
     daily: "A new activity, story, challenge or badge waiting on the passport.",
-    seasonal: "Summer camps, back-to-school, harvest crafts, Christmas village.",
-    contribution: "Raises the next generation of Frass builders inside the family.",
+    seasonal: "Summer camps, back-to-school, harvest crafts, the Christmas village.",
+    contribution: "Raises the next generation of Frass Builders inside the family.",
     legacy: "Family Vision Maps and childhood work kept in the Promise Vault for life.",
-    functions: [
-      "Educational activities",
-      "Creative play",
-      "Reading",
-      "STEM",
-      "Art",
-      "Music",
-      "Nature",
-      "Family Vision Maps",
-      "Parent Dashboard",
-      "Child-safe creator tools",
-      "Community challenges",
-      "Mentorship",
-      "Foundation educational support",
+    venues: [
+      { name: "The Gentle Garden", does: "Ages 0–3. Sound, colour, calm.", to: "/kids-world/0-3" },
+      { name: "Story Courtyard", does: "Ages 3–6. Reading, imagination, first making.", to: "/kids-world/3-6" },
+      { name: "Discovery Village", does: "Ages 6–12. STEM, art, music, nature.", to: "/kids-world/6-12" },
+      { name: "Young Builders Quarter", does: "Ages 12+. Real projects, real skills.", to: "/kids-world/12-plus" },
+      { name: "Parent Dashboard", does: "PIN-protected oversight, time and safety controls.", to: "/kids-world/parents" },
+      { name: "Family Vision Maps", does: "What this family is building together." },
+      { name: "Kids Shop", does: "School Drip, kicks and everyday wear for the village.", to: "/frass-kids" },
+      { name: "Youth Foundation Desk", does: "Educational support and sponsorship for families." },
     ],
-    connected: [
-      "Kids Shop",
-      "Family Vision Maps",
-      "Foundation District",
-      "Builder Academy",
-      "Promise Vault",
-      "Community Square",
-    ],
+    connected: ["Town Square", "Frass District", "Builders Village", "Founder Hall"],
     success: "Children leave more curious, more confident, and better prepared for the future.",
     status: "open",
     to: "/kids-world",
+    image: "kids",
   },
   {
-    id: "community_square",
-    name: "Community Square",
-    purpose: "The social heart of Frass Hill.",
-    feeling: "Warm, alive, unmistakably Caribbean — music somewhere, people always around.",
-    audience: "Every member of Frass Hill.",
-    steward: "Host and community organiser.",
-    daily: "Something is always happening — an announcement, a showcase, a tournament.",
-    seasonal: "Festivals, carnival, independence, Christmas lights, New Year address.",
-    contribution: "Turns members into neighbours.",
-    legacy: "A recorded history of every celebration the town has held.",
-    functions: [
-      "Community announcements",
-      "Public events",
-      "Live music",
-      "Domino tournaments",
-      "Local showcases",
-      "Festivals",
-      "Founder broadcasts",
-      "Community celebrations",
-      "Seasonal decorations",
-      "Local discussions",
-      "Volunteer opportunities",
-    ],
-    connected: ["Foundation District", "Marketplace Pavilion", "Music Quarter", "DJ District", "Founder Hall"],
-    success: "Members return because they feel connected.",
-    status: "planned",
-  },
-  {
-    id: "builder_academy",
-    name: "Builder Academy",
-    purpose: "Teach practical skills that create opportunity — free, for everyone.",
-    feeling: "Encouraging campus, never a school you can fail out of.",
-    audience: "Frass Builders and Skilled Builders alike.",
-    steward: "Teacher and coach.",
-    daily: "The next lesson on your Builder Path, and a streak worth keeping.",
-    seasonal: "Term intakes, certification drives, apprenticeship season.",
-    contribution: "Raises the standard of every trade and business in the town.",
-    legacy: "A Skills Passport that follows a member for life.",
-    functions: [
-      "Free learning",
-      "Courses",
-      "Workshops",
-      "Certifications",
-      "AI coaching",
-      "Builder Paths",
-      "Skills Passport",
-      "Portfolio building",
-      "Practice projects",
-      "Business education",
-    ],
-    connected: ["Skills Passport", "Opportunity Centre", "Marketplace Pavilion", "Builders Village", "Vision Maps"],
-    success: "Learning becomes income, confidence, and opportunity.",
-    status: "open",
-    to: "/academy",
-  },
-  {
-    id: "opportunity_centre",
-    name: "Opportunity Centre",
-    purpose: "Connect learning with real opportunities.",
-    feeling: "Modern, confident, optimistic — opportunity, never pressure.",
-    audience: "Anyone ready for their next piece of work.",
-    steward: "Career advisor and business strategist.",
-    daily: "New matches drawn from what you actually did yesterday.",
-    seasonal: "Hiring seasons, grant windows, festival and contract cycles.",
-    contribution: "Keeps money and work circulating inside the community.",
-    legacy: "A documented record of every opportunity a member has earned.",
-    functions: [
-      "Jobs",
-      "Gigs",
-      "Internships",
-      "Marketplace opportunities",
-      "Builder matching",
-      "Team formation",
-      "Business partnerships",
-      "Community projects",
-      "Volunteer work",
-      "Foundation initiatives",
-    ],
-    connected: ["Builder Academy", "Marketplace Pavilion", "Builders Village", "Skills Passport", "Community Square"],
-    success: "Skills become real-world opportunities.",
-    status: "open",
-    to: "/opportunity",
-  },
-  {
-    id: "music_quarter",
-    name: "Music Quarter",
-    purpose: "A home for creators — where music is made, produced, taught and published.",
-    feeling: "Studio warmth, late-night creative focus.",
-    audience: "Artists, producers, songwriters, engineers.",
-    steward: "Producer and creative mentor.",
-    daily: "A session to finish, a collaborator to answer, a release to plan.",
-    seasonal: "Festival submissions, release windows, awards season.",
-    contribution: "Gives Frass its sound.",
-    legacy: "Catalogues, publishing splits and rights that outlive the artist.",
-    functions: [
-      "Recording",
-      "Publishing",
-      "Audio editing",
-      "Copyright education",
-      "Collaboration",
-      "Performance spaces",
-      "Artist profiles",
-      "Music marketplace",
-      "Community showcases",
-      "Creator mentoring",
-    ],
-    connected: ["DJ District", "Marketplace Pavilion", "Community Square", "Foundation District", "Builder Academy"],
-    success: "Creators build sustainable creative careers.",
-    engine: true,
-    status: "planned",
-  },
-  {
-    id: "dj_district",
-    name: "DJ District",
+    id: "frass_district",
+    glyph: "👟",
+    name: "Frass District",
     purpose:
-      "The professional home for DJs, selectors, sound system operators, MCs and promoters — performance, events and live entertainment.",
-    feeling: "Sound system culture — bass, lights, crowd, respect for the selector.",
-    audience: "DJs, selectors, hosts, promoters, venues, event planners.",
-    steward: "Performance coach and booking agent.",
-    daily: "A new mix to post, a booking to confirm, a remix challenge running.",
-    seasonal: "Carnival, summer fete season, festival circuit, New Year's sets.",
-    contribution: "Drives the live entertainment economy of Frass Hill.",
-    legacy: "Preserved sets, sound system history and the culture of live performance.",
-    functions: [
-      "DJ profiles",
-      "Mix showcase",
-      "Live stream events",
-      "Event bookings",
-      "Equipment marketplace",
-      "Music libraries",
-      "Set management",
-      "Playlist curation",
-      "Remix challenges",
-      "DJ Academy",
-      "Performance coaching",
-      "Event calendar",
-      "Promoter network",
-      "Festival opportunities",
-      "Collaboration hub",
-      "Licensing education",
-      "Brand partnerships",
+      "The commercial fashion promenade — the lit street of storefronts you can see glowing from the hill.",
+    feeling: "Department-store energy at night: gold trim, glass doors, a street you walk rather than scroll.",
+    audience: "Everyone who shops, and every Frass Builder who sells.",
+    steward: "Merchandising officer and trade advisor.",
+    daily: "New drops, restocks, a pop-up opening today, a flash drop on the clock.",
+    seasonal: "Drop calendars, holiday trading, seasonal markets, clearance season.",
+    contribution: "Keeps commerce — and the money it makes — inside the community.",
+    legacy: "Businesses that outlive their first season.",
+    venues: [
+      { name: "Frass Kicks", does: "Casual, Classic and Street on one wall, men's and women's.", to: "/frass-kicks" },
+      { name: "Frass Drip", does: "Floor by floor: the Boardroom, the Night Floor, the Lounge.", to: "/frass-drip" },
+      { name: "Bare Drip", does: "Swim on one side, intimates on the other.", to: "/bare-drip" },
+      { name: "Frass Plus+", does: "The full district architecture, mirrored for Plus sizing.", to: "/frass-plus" },
+      { name: "Afro Designers", does: "Independent houses from the continent and the diaspora.", to: "/afro-designers" },
+      { name: "Social Media Virals", does: "Everything trending, in one store.", to: "/social-media-virals" },
+      { name: "The Liquidation Room", does: "Real markdowns, hidden gem, lucky spin.", to: "/sales-clearance" },
+      { name: "Capsules & Lookbooks", does: "Limited stories, styled end to end.", to: "/capsules" },
+      { name: "Vendor Office", does: "Verification, listings, promotions for sellers." },
     ],
-    connected: ["Music Quarter", "Marketplace Pavilion", "Opportunity Centre", "Community Square", "Foundation District"],
-    success:
-      "DJs build sustainable careers, expand audiences, secure bookings, and preserve the culture of live music.",
+    connected: ["Town Square", "Frass Luxury House", "Studio District", "Children's Village"],
+    success: "People come to browse the street, not just to buy a product.",
+    engine: true,
+    status: "open",
+    to: "/shop-frass",
+    image: "kicks",
+  },
+  {
+    id: "luxury_house",
+    glyph: "✨",
+    name: "Frass Luxury House",
+    purpose:
+      "The private estate — bespoke, elevated, and deliberately set apart from the district below.",
+    feeling: "Arrival, not shopping. Gardens, then the drive, then the doors.",
+    audience: "Members seeking bespoke, high-end and made-to-order work.",
+    steward: "Estate host and bespoke advisor.",
+    daily: "A private appointment, a fitting, a new atelier release.",
+    seasonal: "Bridal season, gala season, holiday commissions.",
+    contribution: "Sets the standard the whole town measures itself against.",
+    legacy: "Pieces that get kept, not replaced.",
+    venues: [
+      { name: "Botanical Gardens", does: "The approach. Flowers, sculpture, quiet." },
+      { name: "The Wine Room", does: "Tasting and hosting before the house." },
+      { name: "East Wing — Women", does: "Bespoke apparel, footwear, leather.", to: "/frass-luxury-house/women" },
+      { name: "West Wing — Men", does: "Tailoring, footwear, leather goods.", to: "/frass-luxury-house/men" },
+      { name: "Frass Bridal", does: "The flagship bridal programme, by appointment." },
+      { name: "Atelier", does: "Made-to-order and commissioned work." },
+    ],
+    connected: ["Frass District", "Studio District", "Founder Hall"],
+    success: "The journey to the doors is remembered as clearly as the purchase.",
+    engine: true,
+    status: "open",
+    to: "/frass-luxury-house",
+    image: "luxury",
+  },
+  {
+    id: "studio_district",
+    glyph: "🎵",
+    name: "Studio District",
+    purpose:
+      "The creative production quarter — music, DJs, podcasts, photography and video all share one street.",
+    feeling: "Late-night studio warmth: monitors glowing, bass through the wall, someone tracking a vocal.",
+    audience: "Artists, producers, DJs, selectors, hosts, photographers, filmmakers, promoters.",
+    steward: "Producer, performance coach and booking agent.",
+    daily: "A session to finish, a mix to post, a booking to confirm, an episode to cut.",
+    seasonal: "Carnival, fete season, festival circuit, release windows, awards season.",
+    contribution: "Gives Frass its sound and its picture.",
+    legacy: "Catalogues, publishing splits, preserved sets and the culture of live performance.",
+    venues: [
+      { name: "Recording Studios", does: "Tracking, mixing, mastering." },
+      { name: "DJ Studios & Academy", does: "Decks, sets, mix showcase, performance coaching." },
+      { name: "Podcast Studios", does: "Record, edit and publish the show." },
+      { name: "Photography Studio", does: "Lookbooks, campaigns, artist portraits." },
+      { name: "Video Production", does: "Visuals, live capture, short-form." },
+      { name: "Editing Suites", does: "Post-production for every medium." },
+      { name: "Performance Hall", does: "Live sessions, showcases, ticketed nights." },
+      { name: "Publishing House", does: "Rights, splits, licensing education." },
+      { name: "Music Library", does: "The catalogue, searchable and licensed." },
+      { name: "Artist Development", does: "Career planning, releases, the business of music." },
+      { name: "Music & Media Room", does: "What the town is listening to right now.", to: "/music-media" },
+    ],
+    connected: ["Town Square", "Frass District", "Builders Village", "Founder Hall"],
+    success: "Creators build sustainable careers instead of one-off moments.",
     engine: true,
     status: "planned",
+    image: "studio",
   },
   {
     id: "builders_village",
-    name: "Frass Builders Village",
+    glyph: "🏗",
+    name: "Builders Village",
     purpose:
-      "The professional home of the skilled trades — carpenters, masons, electricians, plumbers, roofers, engineers and contractors who physically build our communities.",
+      "The professional home of the skilled trades — the people who physically build our communities.",
     feeling: "Job-site respect: sawdust, blueprints, craftsmanship, pride in the work.",
-    audience: "Skilled Builders, crews, apprentices, and the clients who hire them.",
+    audience: "Skilled Builders, crews, apprentices, engineers and the clients who hire them.",
     steward: "Master tradesperson and construction business consultant.",
     daily: "A quote to send, a crew to schedule, a project photo to post, an apprentice to answer.",
-    seasonal: "Dry-season builds, hurricane repair, winter interior work, apprenticeship intakes.",
+    seasonal: "Dry-season builds, hurricane repair, interior work, apprenticeship intakes.",
     contribution: "Drives the construction and skilled-trades economy of Frass Hill.",
-    legacy:
-      "The Builder Legacy Library — a master mason's forty-five years of method, story and safety kept teaching after he retires.",
-    functions: [
-      "Contractor Marketplace",
-      "Builder Directory",
-      "Project Showcase — before & after galleries",
-      "Quote requests & project matching",
-      "Crew and team building",
-      "Construction Marketplace — tools, equipment, materials, rentals",
-      "Apprenticeship Hub",
-      "Construction Academy — safety, estimating, blueprint reading, codes, trades",
-      "Certifications",
-      "Builder Business Suite — CRM, estimates, invoicing, scheduling, expenses, contracts",
-      "Client reviews & verification",
-      "Mentorship",
-      "Community build projects with the Foundation",
-      "Builder Legacy Library",
+    legacy: "The Legacy Library — forty-five years of method and safety still teaching after the master retires.",
+    venues: [
+      { name: "Builder Academy", does: "Safety, estimating, blueprint reading, codes, trades, business.", to: "/academy" },
+      { name: "Project Showcase", does: "Before-and-after galleries from real jobs." },
+      { name: "Contractor Directory", does: "Verified crews, reviews, quote requests." },
+      { name: "Equipment Centre", does: "Tools, materials, rentals and equipment sharing." },
+      { name: "Construction Marketplace", does: "Buy and sell what the site actually needs." },
+      { name: "Estimator", does: "Price the job properly, before you bid it." },
+      { name: "Builder CRM & Invoicing", does: "Clients, scheduling, contracts, expenses, getting paid." },
+      { name: "Apprenticeship Hall", does: "Placements, mentorship, the next generation of trades." },
+      { name: "Architecture & Engineering", does: "Drawings, specification, structural review." },
+      { name: "Legacy Library", does: "Method, story and safety, preserved by the masters." },
     ],
-    connected: [
-      "Marketplace Pavilion",
-      "Opportunity Centre",
-      "Builder Academy",
-      "Foundation District",
-      "Skills Passport",
-      "Legacy Registry",
-    ],
+    connected: ["Town Square", "Farm District", "Children's Village", "Studio District"],
     success:
-      "Skilled Builders don't just find work — they build businesses, document expertise, train apprentices, and leave a professional legacy.",
+      "Skilled Builders don't just find work — they build businesses, train apprentices and leave a professional legacy.",
     engine: true,
     status: "planned",
+    image: "builders",
   },
   {
-    id: "farm_hub",
-    name: "Farm Hub",
-    purpose: "Support farmers while preserving agricultural knowledge.",
-    feeling: "Early morning, open land, generational knowledge.",
-    audience: "Farmers, growers, fishers, food producers and their buyers.",
+    id: "farm_district",
+    glyph: "🌿",
+    name: "Farm District",
+    purpose: "The land — growing, selling, teaching and preserving agricultural knowledge.",
+    feeling: "Early morning, open ground, generational knowledge, mist on the hills.",
+    audience: "Farmers, growers, fishers, food producers and the buyers who feed the town.",
     steward: "Agricultural consultant.",
     daily: "Weather, crop stage, market prices, the farm journal entry.",
     seasonal: "Planting, rainy season, harvest, market weeks.",
     contribution: "Feeds the town and keeps food money local.",
     legacy: "Farm journals and methods passed to the next generation.",
-    functions: [
-      "Farm marketplace",
-      "Crop planning",
-      "Educational content",
-      "Equipment sharing",
-      "Seasonal planning",
-      "Farm journals",
-      "Agricultural mentoring",
-      "Community food initiatives",
+    venues: [
+      { name: "The Fields", does: "Plots, terraces, crop planning by season." },
+      { name: "Greenhouses", does: "Propagation, protected growing, trials." },
+      { name: "Farm Market", does: "Produce sold direct, crate by crate." },
+      { name: "Equipment Yard", does: "Machinery, tools, shared and rented." },
+      { name: "Agricultural Training", does: "Soil, pests, water, yield, farm business." },
+      { name: "Farm Journals", does: "What was planted, what worked, and why." },
+      { name: "Food Programme Office", does: "Community food initiatives with the Foundation." },
     ],
-    connected: ["Marketplace Pavilion", "Foundation District", "Builder Academy", "Legacy Registry"],
-    success: "Agricultural knowledge continues across generations.",
+    connected: ["Town Square", "Builders Village", "Children's Village"],
+    success: "Agricultural knowledge continues across generations — and farmers earn properly for it.",
     engine: true,
     status: "planned",
-  },
-  {
-    id: "foundation_district",
-    name: "Foundation District",
-    purpose: "Coordinate community impact.",
-    feeling: "Purposeful and dignified — service, never charity theatre.",
-    audience: "Volunteers, donors, families receiving support, community leaders.",
-    steward: "Programme director and community advocate.",
-    daily: "A campaign to move forward, a volunteer shift, a family to check on.",
-    seasonal: "Back-to-school drives, hurricane response, Christmas giving.",
-    contribution: "Turns the town's success into someone's stability.",
-    legacy: "Documented impact — homes repaired, students supported, communities restored.",
-    functions: [
-      "Family support",
-      "Educational initiatives",
-      "Community grants",
-      "Volunteer matching",
-      "Donation management",
-      "Mentorship",
-      "Emergency assistance",
-      "Community campaigns",
-      "Progress reporting",
-    ],
-    connected: ["Children's Village", "Community Square", "Vision Maps", "Marketplace Pavilion", "Founder Hall"],
-    success: "Communities become stronger over time.",
-    status: "planned",
-  },
-  {
-    id: "marketplace_pavilion",
-    name: "Marketplace Pavilion",
-    purpose: "Support entrepreneurs and community commerce.",
-    feeling: "Market-day energy under a covered pavilion — stalls, colour, trade.",
-    audience: "Frass Builders selling, and everyone buying.",
-    steward: "Merchandising officer and trade advisor.",
-    daily: "Orders, new listings, a pop-up opening today.",
-    seasonal: "Seasonal markets, holiday trading, drop calendars.",
-    contribution: "Keeps commerce inside the community.",
-    legacy: "Businesses that outlive their first season.",
-    functions: [
-      "Vendor marketplace",
-      "Business directory",
-      "Pop-up events",
-      "Seasonal markets",
-      "Marketplace education",
-      "Vendor verification",
-      "Local promotions",
-      "Product discovery",
-    ],
-    connected: ["Frass Kicks", "Frass Luxury House", "Frass Bridal", "Farm Hub", "Builders Village"],
-    success: "Businesses grow through community.",
-    engine: true,
-    status: "planned",
-  },
-  {
-    id: "reflection_gardens",
-    name: "Reflection Gardens",
-    purpose: "A quiet place for reflection, gratitude and personal growth.",
-    feeling: "Still, green, unhurried — the one district that asks nothing of you.",
-    audience: "Every member, especially between seasons of hard work.",
-    steward: "Quiet counsel and reflection guide.",
-    daily: "One question worth sitting with.",
-    seasonal: "Year-in-review, remembrance days, new-year intentions.",
-    contribution: "Protects the people behind the work.",
-    legacy: "A member's own written record of who they were becoming.",
-    functions: [
-      "Personal journals",
-      "Promise Vault reflections",
-      "Goal reviews",
-      "Milestone celebrations",
-      "Guided reflection",
-      "Gratitude exercises",
-      "Founder messages",
-      "Community remembrance",
-    ],
-    connected: ["Promise Vault", "Vision Maps", "Foundation District"],
-    success: "Members remain emotionally connected to their journey.",
-    status: "planned",
+    image: "farm",
   },
   {
     id: "founder_hall",
+    glyph: "🏛",
     name: "Founder Hall",
-    purpose: "The executive centre of Frass Hill.",
-    feeling: "Civic and steady — the town knows where it is going.",
+    purpose: "The constitutional home of Frass — quiet, separate, and where the town's direction is set.",
+    feeling: "Civic and steady. Marble, palms, low light. The town knows where it is going.",
     audience: "Every member; governed by the Founder.",
     steward: "Chief of staff and institutional memory.",
     daily: "The direction of the platform, stated plainly.",
     seasonal: "Annual report, roadmap addresses, constitutional updates.",
     contribution: "Keeps the whole town aligned to one vision.",
     legacy: "The Constitution and the permanent record of every decision.",
-    functions: [
-      "Founder communications",
-      "Major announcements",
-      "Constitutional updates",
-      "Platform roadmap",
-      "Community addresses",
-      "Annual reports",
-      "Governance",
-      "Public platform vision",
+    venues: [
+      { name: "The Chamber", does: "Founder communications and major announcements.", to: "/founder" },
+      { name: "The Constitution", does: "Five volumes. The rules the town is built on." },
+      { name: "Platform History", does: "Every decision, dated, with the reason it was made." },
+      { name: "Roadmap Room", does: "What is being built next, and in what order." },
+      { name: "Hall of Legacy", does: "The members and works the town chooses to remember." },
+      { name: "Blueprint Studio", does: "Founder Construction Mode. The Founder edits the blueprint, never production." },
     ],
-    connected: ["Founder Dashboard", "Platform Memory", "Registry", "Community Square"],
-    success: "Members understand the direction of Frass.",
+    connected: ["Town Square", "Frass Luxury House", "Studio District"],
+    success: "Members understand the direction of Frass without having to ask.",
     status: "open",
     to: "/founder",
+    image: "founder",
   },
 ];
+
+/** The town plan rule: if it isn't one of these, it's a building inside one of these. */
+export const TOWN_PLAN_RULE =
+  "Frass Hill has eight places. Everything else — Opportunity Centre, Community Hall, Marketplace Pavilion, Reflection Gardens, Builder Academy, DJ Academy — is a building, venue or service with an address inside one of them.";
 
 /** The eight questions every district must answer before it is considered complete. */
 export const UNIVERSAL_DISTRICT_RULES = [
@@ -418,23 +310,27 @@ export const UNIVERSAL_DISTRICT_RULES = [
 export const CROSS_DISTRICT_JOURNEYS: { label: string; path: string[] }[] = [
   {
     label: "The growing-up walk",
-    path: ["Children's Village", "Builder Academy", "Opportunity Centre", "Marketplace Pavilion", "Founder Hall"],
+    path: ["Children's Village", "Town Square", "Builders Village", "Frass District"],
   },
   {
     label: "The land-to-table walk",
-    path: ["Farm Hub", "Marketplace Pavilion", "Community Square", "Foundation District"],
+    path: ["Farm District", "Town Square", "Frass District"],
   },
   {
     label: "The trades walk",
-    path: ["Builder Academy", "Frass Builders Village", "Opportunity Centre", "Foundation District"],
+    path: ["Town Square", "Builders Village", "Farm District"],
   },
   {
     label: "The sound walk",
-    path: ["Music Quarter", "DJ District", "Community Square", "Marketplace Pavilion"],
+    path: ["Studio District", "Town Square", "Frass District"],
+  },
+  {
+    label: "The dressed-up walk",
+    path: ["Frass District", "Frass Luxury House", "Studio District"],
   },
 ];
 
-/** FRASS-0910 terminology standard. */
+/** Terminology standard. */
 export const BUILDER_TERMINOLOGY = [
   {
     term: "Frass Builders",
