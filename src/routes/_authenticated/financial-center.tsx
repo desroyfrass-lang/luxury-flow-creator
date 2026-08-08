@@ -114,7 +114,7 @@ function FinancialCenter() {
           )}
 
           <div className="mt-6">
-            <TabBody tab={active} viewer={viewer} snap={snap} />
+            <TabBody tab={active} viewer={viewer} snap={snap} ledgers={ledgers} policy={policy} />
           </div>
         </div>
       </div>
@@ -126,22 +126,32 @@ function TabBody({
   tab,
   viewer,
   snap,
+  ledgers,
+  policy,
 }: {
   tab: FinanceTab;
   viewer: FinanceViewer;
   snap: ReturnType<typeof honestSnapshot>;
+  ledgers: EarningsLedger[];
+  policy: OwnerPolicy;
 }) {
   switch (tab.id) {
     case "overview":
       return (
         <>
-          <Grid items={[snap.available, snap.pending, snap.lifetime, snap.gifts, snap.credits, snap.foundation]} />
+          <Heading>Available now — by where it came from</Heading>
+          <AvailableNow ledgers={ledgers} />
+          <Heading>Wallet totals</Heading>
+          <Grid items={[snap.pending, snap.lifetime, snap.credits, snap.foundation]} />
           {viewer.founder && (
             <>
-              <Heading>Founder &amp; Co-Founder earnings</Heading>
+              <Heading>Owner compensation, distribution &amp; equity</Heading>
               <Grid items={snap.owner} />
+              <Note>{OWNER_EQUITY_NOTE}</Note>
               <Heading>Business</Heading>
               <Grid items={snap.business.slice(0, 6)} />
+              <Heading>The Frass Financial Hierarchy</Heading>
+              <Hierarchy />
             </>
           )}
           <Audit />
@@ -150,12 +160,25 @@ function TabBody({
     case "wallet":
       return (
         <>
-          <Grid items={[snap.available, snap.pending, snap.lifetime]} />
+          <Heading>Available now — never merged</Heading>
+          <AvailableNow ledgers={ledgers} />
+          <Heading>Every ledger, in full</Heading>
+          <LedgerTable ledgers={ledgers} />
+          <Heading>Wallet totals</Heading>
+          <Grid items={[snap.pending, snap.lifetime]} />
           <Note>
             Available means available. Nothing in that balance is held, reviewed, or waiting — it can
             leave the platform today. Pending is the only place settlement language belongs, and it
             moves itself into Available the moment it clears.
           </Note>
+          <Heading>Universal Earnings Ledger rules</Heading>
+          <ul className="space-y-2">
+            {EARNINGS_LEDGER_RULES.map((r) => (
+              <li key={r} className="rounded-xl border border-white/12 bg-white/[0.02] p-3 text-sm">
+                {r}
+              </li>
+            ))}
+          </ul>
         </>
       );
     case "credits":
