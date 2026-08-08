@@ -64,11 +64,20 @@ export const PANEL_PRESETS: Record<PanelPreset, PanelSection[]> = {
     { title: "Projects", items: ["Blueprints", "Materials", "Site photos"] },
     { title: "Progress", items: ["Milestones", "Documentation"] },
   ],
+  finance: [
+    { title: "Money", items: ["Revenue", "Costs", "Protected margin 8%"] },
+    { title: "Planning", items: ["Cash runway", "Payouts", "Pricing decisions"] },
+  ],
+  farm: [
+    { title: "Season", items: ["Planting calendar", "Harvest window", "Weather notes"] },
+    { title: "Yield", items: ["Plots", "Inputs", "Market prices"] },
+  ],
   governance: [
     { title: "Pending decisions", items: ["Needs Founder approval", "Waiting on Builder"] },
     { title: "Policy", items: ["Affiliate policy", "Roles & access", "Registry entries"] },
   ],
 };
+
 
 export const FOUNDER_PROJECTS: WorkspaceProject[] = [
   {
