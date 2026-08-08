@@ -92,6 +92,7 @@ import { Route as AuthenticatedVisualReviewRouteImport } from './routes/_authent
 import { Route as AuthenticatedVaultRouteImport } from './routes/_authenticated/vault'
 import { Route as AuthenticatedTryOnRouteImport } from './routes/_authenticated/try-on'
 import { Route as AuthenticatedRoomRouteImport } from './routes/_authenticated/room'
+import { Route as AuthenticatedPaymentProvidersRouteImport } from './routes/_authenticated/payment-providers'
 import { Route as AuthenticatedOpportunityRouteImport } from './routes/_authenticated/opportunity'
 import { Route as AuthenticatedOnboardingRouteImport } from './routes/_authenticated/onboarding'
 import { Route as AuthenticatedNotificationsRouteImport } from './routes/_authenticated/notifications'
@@ -566,6 +567,12 @@ const AuthenticatedRoomRoute = AuthenticatedRoomRouteImport.update({
   path: '/room',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedPaymentProvidersRoute =
+  AuthenticatedPaymentProvidersRouteImport.update({
+    id: '/payment-providers',
+    path: '/payment-providers',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedOpportunityRoute =
   AuthenticatedOpportunityRouteImport.update({
     id: '/opportunity',
@@ -916,6 +923,7 @@ export interface FileRoutesByFullPath {
   '/notifications': typeof AuthenticatedNotificationsRoute
   '/onboarding': typeof AuthenticatedOnboardingRoute
   '/opportunity': typeof AuthenticatedOpportunityRoute
+  '/payment-providers': typeof AuthenticatedPaymentProvidersRoute
   '/room': typeof AuthenticatedRoomRoute
   '/try-on': typeof AuthenticatedTryOnRoute
   '/vault': typeof AuthenticatedVaultRoute
@@ -1042,6 +1050,7 @@ export interface FileRoutesByTo {
   '/notifications': typeof AuthenticatedNotificationsRoute
   '/onboarding': typeof AuthenticatedOnboardingRoute
   '/opportunity': typeof AuthenticatedOpportunityRoute
+  '/payment-providers': typeof AuthenticatedPaymentProvidersRoute
   '/room': typeof AuthenticatedRoomRoute
   '/try-on': typeof AuthenticatedTryOnRoute
   '/vault': typeof AuthenticatedVaultRoute
@@ -1180,6 +1189,7 @@ export interface FileRoutesById {
   '/_authenticated/notifications': typeof AuthenticatedNotificationsRoute
   '/_authenticated/onboarding': typeof AuthenticatedOnboardingRoute
   '/_authenticated/opportunity': typeof AuthenticatedOpportunityRoute
+  '/_authenticated/payment-providers': typeof AuthenticatedPaymentProvidersRoute
   '/_authenticated/room': typeof AuthenticatedRoomRoute
   '/_authenticated/try-on': typeof AuthenticatedTryOnRoute
   '/_authenticated/vault': typeof AuthenticatedVaultRoute
@@ -1322,6 +1332,7 @@ export interface FileRouteTypes {
     | '/notifications'
     | '/onboarding'
     | '/opportunity'
+    | '/payment-providers'
     | '/room'
     | '/try-on'
     | '/vault'
@@ -1448,6 +1459,7 @@ export interface FileRouteTypes {
     | '/notifications'
     | '/onboarding'
     | '/opportunity'
+    | '/payment-providers'
     | '/room'
     | '/try-on'
     | '/vault'
@@ -1585,6 +1597,7 @@ export interface FileRouteTypes {
     | '/_authenticated/notifications'
     | '/_authenticated/onboarding'
     | '/_authenticated/opportunity'
+    | '/_authenticated/payment-providers'
     | '/_authenticated/room'
     | '/_authenticated/try-on'
     | '/_authenticated/vault'
@@ -2313,6 +2326,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedRoomRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/payment-providers': {
+      id: '/_authenticated/payment-providers'
+      path: '/payment-providers'
+      fullPath: '/payment-providers'
+      preLoaderRoute: typeof AuthenticatedPaymentProvidersRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/opportunity': {
       id: '/_authenticated/opportunity'
       path: '/opportunity'
@@ -2782,6 +2802,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedNotificationsRoute: typeof AuthenticatedNotificationsRoute
   AuthenticatedOnboardingRoute: typeof AuthenticatedOnboardingRoute
   AuthenticatedOpportunityRoute: typeof AuthenticatedOpportunityRoute
+  AuthenticatedPaymentProvidersRoute: typeof AuthenticatedPaymentProvidersRoute
   AuthenticatedRoomRoute: typeof AuthenticatedRoomRoute
   AuthenticatedTryOnRoute: typeof AuthenticatedTryOnRoute
   AuthenticatedVaultRoute: typeof AuthenticatedVaultRoute
@@ -2800,6 +2821,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedNotificationsRoute: AuthenticatedNotificationsRoute,
   AuthenticatedOnboardingRoute: AuthenticatedOnboardingRoute,
   AuthenticatedOpportunityRoute: AuthenticatedOpportunityRoute,
+  AuthenticatedPaymentProvidersRoute: AuthenticatedPaymentProvidersRoute,
   AuthenticatedRoomRoute: AuthenticatedRoomRoute,
   AuthenticatedTryOnRoute: AuthenticatedTryOnRoute,
   AuthenticatedVaultRoute: AuthenticatedVaultRoute,
