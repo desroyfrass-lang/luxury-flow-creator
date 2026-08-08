@@ -545,3 +545,193 @@ export const CAUGHT_UP_ACTIONS: { label: string; to: string }[] = [
   { label: "Learn something new", to: "/academy" },
   { label: "Support the Foundation", to: "/opportunity" },
 ];
+
+// ─────────────────────────────────────────────────────────────
+// FRASS-0921 — The Living Community Hall (arrival, before stories)
+// You walk into a civic building, not a feed. These are the fixtures
+// you see when you step through the doors.
+// ─────────────────────────────────────────────────────────────
+
+export type HallExhibit = {
+  id: string;
+  glyph: string;
+  /** What the fixture is called inside the hall. */
+  name: string;
+  /** What it is showing right now. */
+  showing: string;
+  to?: string;
+  cta?: string;
+  tags: string[];
+};
+
+export const HALL_EXHIBITS: HallExhibit[] = [
+  {
+    id: "highlights-screen",
+    glyph: "📺",
+    name: "The Highlights Screen",
+    showing: "Today's community highlights, playing on the big screen above the entrance.",
+    tags: ["community", "events"],
+  },
+  {
+    id: "founder-announcement",
+    glyph: "🎙️",
+    name: "Founder Announcement",
+    showing: "A short message from the Founder, playing quietly in the corner by the coffee.",
+    to: "/founder",
+    cta: "Founder Hall",
+    tags: ["business", "history", "platform development"],
+  },
+  {
+    id: "dj-corner",
+    glyph: "🎧",
+    name: "The Listening Corner",
+    showing: "This week's featured mix from a Studio District DJ, low enough to talk over.",
+    to: "/music-media",
+    cta: "Listen",
+    tags: ["music", "artists", "recording", "podcasts"],
+  },
+  {
+    id: "builder-of-the-month",
+    glyph: "🛠️",
+    name: "Builder of the Month Exhibit",
+    showing: "Photographs, drawings and finished work from one builder, mounted along the east wall.",
+    to: "/builders",
+    cta: "Builders Village",
+    tags: ["projects", "trades", "mentorship", "construction"],
+  },
+  {
+    id: "foundation-wall",
+    glyph: "🤝",
+    name: "The Foundation Wall",
+    showing: "Current community projects, what has been funded, and who it reached.",
+    to: "/opportunity",
+    cta: "Support a project",
+    tags: ["foundation", "volunteer", "community"],
+  },
+  {
+    id: "fashion-display",
+    glyph: "👗",
+    name: "The Frass District Display",
+    showing: "A dressed case from the district promenade, changed every Friday.",
+    to: "/shop-frass",
+    cta: "Frass District",
+    tags: ["fashion", "editorials", "marketplace"],
+  },
+  {
+    id: "events-board",
+    glyph: "📅",
+    name: "Tonight on the Square",
+    showing: "Live music, a market late-open, and a Foundation supper at seven.",
+    to: "/frass-hill",
+    cta: "Town Square",
+    tags: ["events", "community", "music"],
+  },
+  {
+    id: "good-news-board",
+    glyph: "🌟",
+    name: "Good News Around the Hill",
+    showing: "A handwritten board of milestones from every district this week.",
+    tags: ["community", "celebrations", "family"],
+  },
+];
+
+export function orderExhibits(priority: string[]): HallExhibit[] {
+  if (priority.length === 0) return HALL_EXHIBITS;
+  const score = (e: HallExhibit) => (e.tags.some((t) => priority.includes(t)) ? 0 : 1);
+  return HALL_EXHIBITS.map((e, i) => ({ e, i }))
+    .sort((a, b) => score(a.e) - score(b.e) || a.i - b.i)
+    .map((x) => x.e);
+}
+
+// ─────────────────────────────────────────────────────────────
+// FRASS-0922 — Community Storytelling & Feed Intelligence
+// Frassy proposes; the Founder approves; only then is it published.
+// ─────────────────────────────────────────────────────────────
+
+export const FOR_US_CATEGORIES = [
+  "Community",
+  "Walk With Power",
+  "Foundation",
+  "Platform Development",
+  "Founder Updates",
+  "Marketplace",
+  "Builders",
+  "Music",
+  "DJs",
+  "Farm District",
+  "Luxury House",
+  "Frass District",
+  "Children's Village",
+  "University",
+  "Business",
+  "Technology",
+  "AI",
+  "Creators",
+  "Events",
+  "Celebrations",
+  "Milestones",
+  "Behind the Build",
+  "History",
+] as const;
+
+export type ForUsCategory = (typeof FOR_US_CATEGORIES)[number];
+
+export const STORY_STATUSES = ["proposed", "draft", "approved", "published", "archived"] as const;
+export type StoryStatus = (typeof STORY_STATUSES)[number];
+
+export type ForUsStoryRow = {
+  id: string;
+  section_id: string;
+  series: string | null;
+  source_label: string;
+  title: string;
+  summary: string;
+  body: string | null;
+  categories: string[];
+  tags: string[];
+  media_url: string | null;
+  media_kind: "none" | "image" | "video" | "audio";
+  cta_label: string | null;
+  cta_to: string | null;
+  impact_note: string | null;
+  revenue_note: string | null;
+  audience: "everyone" | "members" | "founder";
+  status: StoryStatus;
+  origin: "frassy" | "founder" | "community";
+  occurred_at: string;
+  published_at: string | null;
+  created_at: string;
+};
+
+/** Published rows are rendered exactly like curated stories. */
+export function rowToStory(row: ForUsStoryRow): ForUsStory {
+  const extra = [row.impact_note, row.revenue_note].filter(Boolean).join(" ");
+  return {
+    id: `db-${row.id}`,
+    source: row.source_label,
+    title: row.title,
+    body: extra ? `${row.summary} ${extra}` : row.summary,
+    to: row.cta_to ?? undefined,
+    cta: row.cta_label ?? undefined,
+    tags: row.tags,
+  };
+}
+
+export function isSectionId(value: string): value is ForUsSectionId {
+  return FOR_US_SECTIONS.some((s) => s.id === value);
+}
+
+/** Merge approved-and-published stories into the finite curated sections. */
+export function mergePublished(
+  sections: ForUsSection[],
+  rows: ForUsStoryRow[],
+): ForUsSection[] {
+  if (rows.length === 0) return sections;
+  return sections.map((section) => {
+    const extra = rows
+      .filter((r) => r.section_id === section.id)
+      .sort((a, b) => (b.published_at ?? b.occurred_at).localeCompare(a.published_at ?? a.occurred_at))
+      .map(rowToStory);
+    return extra.length ? { ...section, stories: [...extra, ...section.stories] } : section;
+  });
+}
