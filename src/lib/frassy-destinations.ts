@@ -30,20 +30,20 @@ const RULES: DestinationRule[] = [
       "Welcome to Frass. Where people, creativity, opportunity, and community come together. Whether you're here to shop or explore the Frass World, I'm here whenever you need me.",
   },
   {
-    id: "frass-world",
-    match: "/frass-world",
-    prefix: true,
-    label: "Frass World",
-    welcome:
-      "Welcome to Frass World. Every district here is a place with its own purpose — commerce, creation, learning and community. Wander wherever you're drawn; I'll be right here.",
-  },
-  {
     id: "frass-hill",
-    match: "/frassy",
+    match: "/frass-hill",
     prefix: true,
     label: "Frass Hill",
     welcome:
-      "Welcome to Frass Hill, the heart of our community. This is where Builders learn, collaborate, and grow together. There's always something new waiting to be discovered.",
+      "Welcome to Frass Hill. This is the whole town — the Square, the Village, the District, the studios, the farms and the Hall. Every service you need already has an address here. Walk wherever you're drawn; I'll be right beside you.",
+  },
+  {
+    id: "frassy-hill-hq",
+    match: "/frassy",
+    prefix: true,
+    label: "Frassy Kiosk",
+    welcome:
+      "You've found my kiosk in the Town Square. Ask me anything — where something lives, what's happening today, or what to build next.",
   },
   {
     id: "district",
