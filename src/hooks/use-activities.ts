@@ -78,7 +78,7 @@ export function useActivityVersions(activityId: string | null) {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("learning_activity_versions")
-        .select("id, version, status, created_at")
+        .select("id, version, note, created_at")
         .eq("activity_id", activityId!)
         .order("version", { ascending: false });
       if (error) throw error;
