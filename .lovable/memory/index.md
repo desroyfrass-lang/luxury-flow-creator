@@ -65,3 +65,4 @@ One feature, one component, one route, one source of truth — audit for existin
 - [Founder Commissioning](mem://features/founder-commissioning) — Owner track = 5-phase Founder Commissioning Journey; gated Founder Mode at /founder with Launch Readiness board
 - [Affiliate Intelligence Engine](mem://features/affiliate-intelligence-engine) — AI-calculated sustainable commission ranges, Commission Simulator, Founder governance; separate from the fixed 8% Platform Allocation
 - [The Frass Daily & One-Workspace architecture](mem://features/frass-daily-and-one-workspace) — Daily command center (once per day, 11 sections, delegation) + consolidated workspace/modes architecture
+- [Founder Construction Mode FRASS-0200](mem://features/founder-construction-mode-0200) — Founder-only Blueprint Layer, Architectural Intelligence Panel, live simulation, quality governance, living decision log
