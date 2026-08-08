@@ -28,6 +28,7 @@ import {
   saveVersion,
   setSandbox,
   simulateAction,
+  updateDecision,
   type ArchitecturalDecision,
   type BlueprintVersion,
 } from "@/lib/construction/blueprint-registry";
@@ -42,6 +43,14 @@ import {
   impactSummary,
   type ArchitecturalImpactReport,
 } from "@/lib/construction/impact-forecast";
+import {
+  architecturalMemory,
+  expectedBehaviour,
+  FOUNDER_INTENT_QUESTION,
+  PRINCIPLE_13,
+  PRINCIPLE_14,
+  verificationVerdict,
+} from "@/lib/construction/governance";
 
 export const CONSTRUCTION_EVENT = "frass:construction-mode";
 
