@@ -50,9 +50,12 @@ type Props = {
   milestones: Milestone[];
   tasks: WorkspaceTask[];
   panel: PanelSection[];
+  /** Exact position inside the project — the last thing worked on. */
+  focus?: string;
   children: ReactNode;
   composer: ReactNode;
 };
+
 
 
 export function WorkspaceShell({
