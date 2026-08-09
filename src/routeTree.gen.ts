@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as WelcomeHallRouteImport } from './routes/welcome-hall'
 import { Route as VisualSearchRouteImport } from './routes/visual-search'
 import { Route as TownSquareRouteImport } from './routes/town-square'
 import { Route as SocialMediaViralsRouteImport } from './routes/social-media-virals'
@@ -21,6 +22,7 @@ import { Route as McpRouteImport } from './routes/mcp'
 import { Route as LookbookRouteImport } from './routes/lookbook'
 import { Route as LiveRouteImport } from './routes/live'
 import { Route as KidsWorldRouteImport } from './routes/kids-world'
+import { Route as KidsValleyRouteImport } from './routes/kids-valley'
 import { Route as KicksDistrictRouteImport } from './routes/kicks-district'
 import { Route as HealthWellnessRouteImport } from './routes/health-wellness'
 import { Route as GatewayRouteImport } from './routes/gateway'
@@ -103,7 +105,6 @@ import { Route as ApiChatRouteImport } from './routes/api/chat'
 import { Route as AfroDesignersJoinRouteImport } from './routes/afro-designers.join'
 import { Route as AfroDesignersDesignersRouteImport } from './routes/afro-designers.designers'
 import { Route as AuthenticatedWorkspaceRouteImport } from './routes/_authenticated/workspace'
-import { Route as AuthenticatedWelcomeHallRouteImport } from './routes/_authenticated/welcome-hall'
 import { Route as AuthenticatedVisualReviewRouteImport } from './routes/_authenticated/visual-review'
 import { Route as AuthenticatedVaultRouteImport } from './routes/_authenticated/vault'
 import { Route as AuthenticatedTryOnRouteImport } from './routes/_authenticated/try-on'
@@ -119,6 +120,7 @@ import { Route as AuthenticatedFounderRouteImport } from './routes/_authenticate
 import { Route as AuthenticatedFinancialCenterRouteImport } from './routes/_authenticated/financial-center'
 import { Route as AuthenticatedCreationRouteImport } from './routes/_authenticated/creation'
 import { Route as AuthenticatedBusinessBuilderRouteImport } from './routes/_authenticated/business-builder'
+import { Route as AuthenticatedBuilderHallRouteImport } from './routes/_authenticated/builder-hall'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
 import { Route as AuthenticatedAcademyRouteImport } from './routes/_authenticated/academy'
 import { Route as Char91DotwellKnownChar93OauthProtectedResourceRouteImport } from './routes/[.well-known]/oauth-protected-resource'
@@ -177,6 +179,11 @@ import { Route as DotlovableOauthConsentRouteImport } from './routes/[.]lovable.
 import { Route as SocialMediaViralsCategorySubProductRouteImport } from './routes/social-media-virals.$category.$sub.$product'
 import { Route as FrassShapeGenderGoalsGoalRouteImport } from './routes/frass-shape.$gender.goals.$goal'
 
+const WelcomeHallRoute = WelcomeHallRouteImport.update({
+  id: '/welcome-hall',
+  path: '/welcome-hall',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const VisualSearchRoute = VisualSearchRouteImport.update({
   id: '/visual-search',
   path: '/visual-search',
@@ -235,6 +242,11 @@ const LiveRoute = LiveRouteImport.update({
 const KidsWorldRoute = KidsWorldRouteImport.update({
   id: '/kids-world',
   path: '/kids-world',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const KidsValleyRoute = KidsValleyRouteImport.update({
+  id: '/kids-valley',
+  path: '/kids-valley',
   getParentRoute: () => rootRouteImport,
 } as any)
 const KicksDistrictRoute = KicksDistrictRouteImport.update({
@@ -647,12 +659,6 @@ const AuthenticatedWorkspaceRoute = AuthenticatedWorkspaceRouteImport.update({
   path: '/workspace',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
-const AuthenticatedWelcomeHallRoute =
-  AuthenticatedWelcomeHallRouteImport.update({
-    id: '/welcome-hall',
-    path: '/welcome-hall',
-    getParentRoute: () => AuthenticatedRouteRoute,
-  } as any)
 const AuthenticatedVisualReviewRoute =
   AuthenticatedVisualReviewRouteImport.update({
     id: '/visual-review',
@@ -733,6 +739,12 @@ const AuthenticatedBusinessBuilderRoute =
   AuthenticatedBusinessBuilderRouteImport.update({
     id: '/business-builder',
     path: '/business-builder',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedBuilderHallRoute =
+  AuthenticatedBuilderHallRouteImport.update({
+    id: '/builder-hall',
+    path: '/builder-hall',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
 const AuthenticatedAdminRoute = AuthenticatedAdminRouteImport.update({
@@ -1081,6 +1093,7 @@ export interface FileRoutesByFullPath {
   '/gateway': typeof GatewayRoute
   '/health-wellness': typeof HealthWellnessRoute
   '/kicks-district': typeof KicksDistrictRoute
+  '/kids-valley': typeof KidsValleyRoute
   '/kids-world': typeof KidsWorldRouteWithChildren
   '/live': typeof LiveRouteWithChildren
   '/lookbook': typeof LookbookRouteWithChildren
@@ -1093,10 +1106,12 @@ export interface FileRoutesByFullPath {
   '/social-media-virals': typeof SocialMediaViralsRouteWithChildren
   '/town-square': typeof TownSquareRoute
   '/visual-search': typeof VisualSearchRoute
+  '/welcome-hall': typeof WelcomeHallRoute
   '/.mcp/list-tools': typeof Char91DotmcpChar93ListToolsRoute
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/academy': typeof AuthenticatedAcademyRoute
   '/admin': typeof AuthenticatedAdminRouteWithChildren
+  '/builder-hall': typeof AuthenticatedBuilderHallRoute
   '/business-builder': typeof AuthenticatedBusinessBuilderRoute
   '/creation': typeof AuthenticatedCreationRoute
   '/financial-center': typeof AuthenticatedFinancialCenterRoute
@@ -1112,7 +1127,6 @@ export interface FileRoutesByFullPath {
   '/try-on': typeof AuthenticatedTryOnRoute
   '/vault': typeof AuthenticatedVaultRoute
   '/visual-review': typeof AuthenticatedVisualReviewRoute
-  '/welcome-hall': typeof AuthenticatedWelcomeHallRoute
   '/workspace': typeof AuthenticatedWorkspaceRouteWithChildren
   '/afro-designers/designers': typeof AfroDesignersDesignersRouteWithChildren
   '/afro-designers/join': typeof AfroDesignersJoinRoute
@@ -1237,6 +1251,7 @@ export interface FileRoutesByTo {
   '/gateway': typeof GatewayRoute
   '/health-wellness': typeof HealthWellnessRoute
   '/kicks-district': typeof KicksDistrictRoute
+  '/kids-valley': typeof KidsValleyRoute
   '/mcp': typeof McpRoute
   '/music-media': typeof MusicMediaRoute
   '/reset-password': typeof ResetPasswordRoute
@@ -1245,9 +1260,11 @@ export interface FileRoutesByTo {
   '/shop-frass': typeof ShopFrassRoute
   '/town-square': typeof TownSquareRoute
   '/visual-search': typeof VisualSearchRoute
+  '/welcome-hall': typeof WelcomeHallRoute
   '/.mcp/list-tools': typeof Char91DotmcpChar93ListToolsRoute
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/academy': typeof AuthenticatedAcademyRoute
+  '/builder-hall': typeof AuthenticatedBuilderHallRoute
   '/business-builder': typeof AuthenticatedBusinessBuilderRoute
   '/creation': typeof AuthenticatedCreationRoute
   '/financial-center': typeof AuthenticatedFinancialCenterRoute
@@ -1263,7 +1280,6 @@ export interface FileRoutesByTo {
   '/try-on': typeof AuthenticatedTryOnRoute
   '/vault': typeof AuthenticatedVaultRoute
   '/visual-review': typeof AuthenticatedVisualReviewRoute
-  '/welcome-hall': typeof AuthenticatedWelcomeHallRoute
   '/workspace': typeof AuthenticatedWorkspaceRouteWithChildren
   '/afro-designers/designers': typeof AfroDesignersDesignersRouteWithChildren
   '/afro-designers/join': typeof AfroDesignersJoinRoute
@@ -1397,6 +1413,7 @@ export interface FileRoutesById {
   '/gateway': typeof GatewayRoute
   '/health-wellness': typeof HealthWellnessRoute
   '/kicks-district': typeof KicksDistrictRoute
+  '/kids-valley': typeof KidsValleyRoute
   '/kids-world': typeof KidsWorldRouteWithChildren
   '/live': typeof LiveRouteWithChildren
   '/lookbook': typeof LookbookRouteWithChildren
@@ -1409,10 +1426,12 @@ export interface FileRoutesById {
   '/social-media-virals': typeof SocialMediaViralsRouteWithChildren
   '/town-square': typeof TownSquareRoute
   '/visual-search': typeof VisualSearchRoute
+  '/welcome-hall': typeof WelcomeHallRoute
   '/.mcp/list-tools': typeof Char91DotmcpChar93ListToolsRoute
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/_authenticated/academy': typeof AuthenticatedAcademyRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRouteWithChildren
+  '/_authenticated/builder-hall': typeof AuthenticatedBuilderHallRoute
   '/_authenticated/business-builder': typeof AuthenticatedBusinessBuilderRoute
   '/_authenticated/creation': typeof AuthenticatedCreationRoute
   '/_authenticated/financial-center': typeof AuthenticatedFinancialCenterRoute
@@ -1428,7 +1447,6 @@ export interface FileRoutesById {
   '/_authenticated/try-on': typeof AuthenticatedTryOnRoute
   '/_authenticated/vault': typeof AuthenticatedVaultRoute
   '/_authenticated/visual-review': typeof AuthenticatedVisualReviewRoute
-  '/_authenticated/welcome-hall': typeof AuthenticatedWelcomeHallRoute
   '/_authenticated/workspace': typeof AuthenticatedWorkspaceRouteWithChildren
   '/afro-designers/designers': typeof AfroDesignersDesignersRouteWithChildren
   '/afro-designers/join': typeof AfroDesignersJoinRoute
@@ -1567,6 +1585,7 @@ export interface FileRouteTypes {
     | '/gateway'
     | '/health-wellness'
     | '/kicks-district'
+    | '/kids-valley'
     | '/kids-world'
     | '/live'
     | '/lookbook'
@@ -1579,10 +1598,12 @@ export interface FileRouteTypes {
     | '/social-media-virals'
     | '/town-square'
     | '/visual-search'
+    | '/welcome-hall'
     | '/.mcp/list-tools'
     | '/.well-known/oauth-protected-resource'
     | '/academy'
     | '/admin'
+    | '/builder-hall'
     | '/business-builder'
     | '/creation'
     | '/financial-center'
@@ -1598,7 +1619,6 @@ export interface FileRouteTypes {
     | '/try-on'
     | '/vault'
     | '/visual-review'
-    | '/welcome-hall'
     | '/workspace'
     | '/afro-designers/designers'
     | '/afro-designers/join'
@@ -1723,6 +1743,7 @@ export interface FileRouteTypes {
     | '/gateway'
     | '/health-wellness'
     | '/kicks-district'
+    | '/kids-valley'
     | '/mcp'
     | '/music-media'
     | '/reset-password'
@@ -1731,9 +1752,11 @@ export interface FileRouteTypes {
     | '/shop-frass'
     | '/town-square'
     | '/visual-search'
+    | '/welcome-hall'
     | '/.mcp/list-tools'
     | '/.well-known/oauth-protected-resource'
     | '/academy'
+    | '/builder-hall'
     | '/business-builder'
     | '/creation'
     | '/financial-center'
@@ -1749,7 +1772,6 @@ export interface FileRouteTypes {
     | '/try-on'
     | '/vault'
     | '/visual-review'
-    | '/welcome-hall'
     | '/workspace'
     | '/afro-designers/designers'
     | '/afro-designers/join'
@@ -1882,6 +1904,7 @@ export interface FileRouteTypes {
     | '/gateway'
     | '/health-wellness'
     | '/kicks-district'
+    | '/kids-valley'
     | '/kids-world'
     | '/live'
     | '/lookbook'
@@ -1894,10 +1917,12 @@ export interface FileRouteTypes {
     | '/social-media-virals'
     | '/town-square'
     | '/visual-search'
+    | '/welcome-hall'
     | '/.mcp/list-tools'
     | '/.well-known/oauth-protected-resource'
     | '/_authenticated/academy'
     | '/_authenticated/admin'
+    | '/_authenticated/builder-hall'
     | '/_authenticated/business-builder'
     | '/_authenticated/creation'
     | '/_authenticated/financial-center'
@@ -1913,7 +1938,6 @@ export interface FileRouteTypes {
     | '/_authenticated/try-on'
     | '/_authenticated/vault'
     | '/_authenticated/visual-review'
-    | '/_authenticated/welcome-hall'
     | '/_authenticated/workspace'
     | '/afro-designers/designers'
     | '/afro-designers/join'
@@ -2052,6 +2076,7 @@ export interface RootRouteChildren {
   GatewayRoute: typeof GatewayRoute
   HealthWellnessRoute: typeof HealthWellnessRoute
   KicksDistrictRoute: typeof KicksDistrictRoute
+  KidsValleyRoute: typeof KidsValleyRoute
   KidsWorldRoute: typeof KidsWorldRouteWithChildren
   LiveRoute: typeof LiveRouteWithChildren
   LookbookRoute: typeof LookbookRouteWithChildren
@@ -2064,6 +2089,7 @@ export interface RootRouteChildren {
   SocialMediaViralsRoute: typeof SocialMediaViralsRouteWithChildren
   TownSquareRoute: typeof TownSquareRoute
   VisualSearchRoute: typeof VisualSearchRoute
+  WelcomeHallRoute: typeof WelcomeHallRoute
   Char91DotmcpChar93ListToolsRoute: typeof Char91DotmcpChar93ListToolsRoute
   Char91DotwellKnownChar93OauthProtectedResourceRoute: typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   ApiChatRoute: typeof ApiChatRoute
@@ -2080,6 +2106,13 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/welcome-hall': {
+      id: '/welcome-hall'
+      path: '/welcome-hall'
+      fullPath: '/welcome-hall'
+      preLoaderRoute: typeof WelcomeHallRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/visual-search': {
       id: '/visual-search'
       path: '/visual-search'
@@ -2162,6 +2195,13 @@ declare module '@tanstack/react-router' {
       path: '/kids-world'
       fullPath: '/kids-world'
       preLoaderRoute: typeof KidsWorldRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/kids-valley': {
+      id: '/kids-valley'
+      path: '/kids-valley'
+      fullPath: '/kids-valley'
+      preLoaderRoute: typeof KidsValleyRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/kicks-district': {
@@ -2738,13 +2778,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedWorkspaceRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
-    '/_authenticated/welcome-hall': {
-      id: '/_authenticated/welcome-hall'
-      path: '/welcome-hall'
-      fullPath: '/welcome-hall'
-      preLoaderRoute: typeof AuthenticatedWelcomeHallRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
     '/_authenticated/visual-review': {
       id: '/_authenticated/visual-review'
       path: '/visual-review'
@@ -2848,6 +2881,13 @@ declare module '@tanstack/react-router' {
       path: '/business-builder'
       fullPath: '/business-builder'
       preLoaderRoute: typeof AuthenticatedBusinessBuilderRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/builder-hall': {
+      id: '/_authenticated/builder-hall'
+      path: '/builder-hall'
+      fullPath: '/builder-hall'
+      preLoaderRoute: typeof AuthenticatedBuilderHallRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/admin': {
@@ -3323,6 +3363,7 @@ const AuthenticatedWorkspaceRouteWithChildren =
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedAcademyRoute: typeof AuthenticatedAcademyRoute
   AuthenticatedAdminRoute: typeof AuthenticatedAdminRouteWithChildren
+  AuthenticatedBuilderHallRoute: typeof AuthenticatedBuilderHallRoute
   AuthenticatedBusinessBuilderRoute: typeof AuthenticatedBusinessBuilderRoute
   AuthenticatedCreationRoute: typeof AuthenticatedCreationRoute
   AuthenticatedFinancialCenterRoute: typeof AuthenticatedFinancialCenterRoute
@@ -3338,13 +3379,13 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedTryOnRoute: typeof AuthenticatedTryOnRoute
   AuthenticatedVaultRoute: typeof AuthenticatedVaultRoute
   AuthenticatedVisualReviewRoute: typeof AuthenticatedVisualReviewRoute
-  AuthenticatedWelcomeHallRoute: typeof AuthenticatedWelcomeHallRoute
   AuthenticatedWorkspaceRoute: typeof AuthenticatedWorkspaceRouteWithChildren
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedAcademyRoute: AuthenticatedAcademyRoute,
   AuthenticatedAdminRoute: AuthenticatedAdminRouteWithChildren,
+  AuthenticatedBuilderHallRoute: AuthenticatedBuilderHallRoute,
   AuthenticatedBusinessBuilderRoute: AuthenticatedBusinessBuilderRoute,
   AuthenticatedCreationRoute: AuthenticatedCreationRoute,
   AuthenticatedFinancialCenterRoute: AuthenticatedFinancialCenterRoute,
@@ -3360,7 +3401,6 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedTryOnRoute: AuthenticatedTryOnRoute,
   AuthenticatedVaultRoute: AuthenticatedVaultRoute,
   AuthenticatedVisualReviewRoute: AuthenticatedVisualReviewRoute,
-  AuthenticatedWelcomeHallRoute: AuthenticatedWelcomeHallRoute,
   AuthenticatedWorkspaceRoute: AuthenticatedWorkspaceRouteWithChildren,
 }
 
@@ -3781,6 +3821,7 @@ const rootRouteChildren: RootRouteChildren = {
   GatewayRoute: GatewayRoute,
   HealthWellnessRoute: HealthWellnessRoute,
   KicksDistrictRoute: KicksDistrictRoute,
+  KidsValleyRoute: KidsValleyRoute,
   KidsWorldRoute: KidsWorldRouteWithChildren,
   LiveRoute: LiveRouteWithChildren,
   LookbookRoute: LookbookRouteWithChildren,
@@ -3793,6 +3834,7 @@ const rootRouteChildren: RootRouteChildren = {
   SocialMediaViralsRoute: SocialMediaViralsRouteWithChildren,
   TownSquareRoute: TownSquareRoute,
   VisualSearchRoute: VisualSearchRoute,
+  WelcomeHallRoute: WelcomeHallRoute,
   Char91DotmcpChar93ListToolsRoute: Char91DotmcpChar93ListToolsRoute,
   Char91DotwellKnownChar93OauthProtectedResourceRoute:
     Char91DotwellKnownChar93OauthProtectedResourceRoute,

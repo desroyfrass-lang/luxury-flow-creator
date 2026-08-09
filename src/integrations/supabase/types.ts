@@ -2509,6 +2509,7 @@ export type Database = {
       }
       profiles: {
         Row: {
+          about: Json
           address_line1: string | null
           address_line2: string | null
           avatar_url: string | null
@@ -2539,6 +2540,7 @@ export type Database = {
           updated_at: string
         }
         Insert: {
+          about?: Json
           address_line1?: string | null
           address_line2?: string | null
           avatar_url?: string | null
@@ -2569,6 +2571,7 @@ export type Database = {
           updated_at?: string
         }
         Update: {
+          about?: Json
           address_line1?: string | null
           address_line2?: string | null
           avatar_url?: string | null

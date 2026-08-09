@@ -5,6 +5,7 @@ import { useServerFn } from "@tanstack/react-start";
 import { ArrowLeft, MessageCircle, PenLine, Play } from "lucide-react";
 import { getMyProfile } from "@/lib/profiles.functions";
 import { resolveForUsWeather } from "@/lib/for-us";
+import { ForMeAbout } from "@/components/for-me-about";
 
 /**
  * FRASS-0421 — FOR ME.
@@ -45,7 +46,7 @@ const SECTIONS: { id: SectionId; label: string; glyph: string; line: string; emp
   { id: "achievements", label: "Achievements", glyph: "🏅", line: "Certificates, streaks and milestones you've earned.", empty: "No achievements yet. Academy paths and Builder milestones fill this in." },
   { id: "journey", label: "Creator Journey", glyph: "🛤", line: "Where you started, where you are, what's next.", empty: "Your journey hasn't been recorded yet. Start it in the Academy or with Frassy." },
   { id: "media", label: "Media", glyph: "🎧", line: "Music, podcasts and broadcasts you've made.", empty: "No media yet. Go live once and the replay lives here forever." },
-  { id: "about", label: "About", glyph: "ℹ️", line: "The facts: where you are, what you do, how to reach you.", empty: "Add your details in your profile settings." },
+  { id: "about", label: "About", glyph: "ℹ️", line: "Your living bio — your story, your business, your links, your photos and videos. Separate from your posts, and always editable.", empty: "Your About page is blank. Write it once, then keep it alive." },
   { id: "message", label: "Message", glyph: "✉️", line: "How people reach you directly.", empty: "Messaging opens from here — your inbox stays yours." },
 ];
 
@@ -213,20 +214,24 @@ function ForMePage() {
           {section.id === "bio" && profile?.bio?.trim() ? (
             <p className="mt-6 max-w-2xl text-base leading-relaxed text-white/90">{profile.bio}</p>
           ) : section.id === "about" ? (
-            <dl className="mt-6 grid max-w-xl gap-3 text-sm">
-              <div className="flex justify-between gap-6 border-b border-white/10 pb-2">
-                <dt className="text-white/60">Name</dt>
-                <dd className="text-white/90">{name}</dd>
-              </div>
-              <div className="flex justify-between gap-6 border-b border-white/10 pb-2">
-                <dt className="text-white/60">Handle</dt>
-                <dd className="text-white/90">{profile?.handle ? `@${profile.handle}` : "Not set"}</dd>
-              </div>
-              <div className="flex justify-between gap-6">
-                <dt className="text-white/60">Home</dt>
-                <dd className="text-white/90">Frass Hill</dd>
-              </div>
-            </dl>
+            <>
+              <dl className="mt-6 grid max-w-xl gap-3 text-sm">
+                <div className="flex justify-between gap-6 border-b border-white/10 pb-2">
+                  <dt className="text-white/60">Name</dt>
+                  <dd className="text-white/90">{name}</dd>
+                </div>
+                <div className="flex justify-between gap-6 border-b border-white/10 pb-2">
+                  <dt className="text-white/60">Handle</dt>
+                  <dd className="text-white/90">{profile?.handle ? `@${profile.handle}` : "Not set"}</dd>
+                </div>
+                <div className="flex justify-between gap-6">
+                  <dt className="text-white/60">Home</dt>
+                  <dd className="text-white/90">Frass Hill</dd>
+                </div>
+              </dl>
+              <ForMeAbout raw={(profile as { about?: unknown } | null)?.about} canEdit={Boolean(profile)} />
+            </>
+
           ) : (
             <p className="mt-6 max-w-xl text-sm leading-relaxed text-white/70">{section.empty}</p>
           )}

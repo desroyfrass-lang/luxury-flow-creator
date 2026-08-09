@@ -13,7 +13,7 @@ export const DISTRICT_LABELS: Record<DistrictLink, string> = {
   creation: "Creation District",
   opportunity: "Opportunity Center",
   marketplace: "Marketplace",
-  "welcome-hall": "Welcome Hall",
+  "welcome-hall": "Builder Hall",
 };
 
 export const DISTRICT_ROUTES: Record<DistrictLink, string> = {
@@ -21,7 +21,7 @@ export const DISTRICT_ROUTES: Record<DistrictLink, string> = {
   creation: "/creation",
   opportunity: "/opportunity",
   marketplace: "/social-media-virals",
-  "welcome-hall": "/welcome-hall",
+  "welcome-hall": "/builder-hall",
 };
 
 export type Lesson = {

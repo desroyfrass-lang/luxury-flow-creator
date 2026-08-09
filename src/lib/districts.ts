@@ -17,11 +17,11 @@ export type District = {
 export const DISTRICTS: District[] = [
   {
     id: "welcome_hall",
-    name: "Welcome Hall",
+    name: "Builder Hall",
     purpose: "Where every Builder arrives, sees their mission, and finds their next step.",
     chapter: "Arrival",
     status: "open",
-    to: "/welcome-hall",
+    to: "/builder-hall",
   },
   {
     id: "vault",

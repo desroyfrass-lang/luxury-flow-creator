@@ -113,10 +113,10 @@ function CreationPage() {
 
         <div className="mt-16 text-center">
           <Link
-            to="/welcome-hall"
+            to="/builder-hall"
             className="text-[11px] uppercase tracking-[0.3em] text-muted-foreground transition hover:text-[color:var(--gold)]"
           >
-            ← Back to Welcome Hall
+            ← Back to Builder Hall
           </Link>
         </div>
 
