@@ -4,6 +4,7 @@ import { useServerFn } from "@tanstack/react-start";
 import { ShoppingBag } from "lucide-react";
 import { kindLabel, money, remaining } from "@/lib/card-commerce";
 import { startCardCheckout } from "@/lib/card-commerce.functions";
+import { SecurityConfirmation } from "@/components/finance/security-confirmation";
 
 export type PublicListing = {
   id: string;
