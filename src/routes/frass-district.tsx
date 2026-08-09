@@ -3,6 +3,7 @@ import { GatewayNav } from "@/components/gateway-nav";
 import { CollectionCard } from "@/components/collection-card";
 import { ProductGrid } from "@/components/product-grid";
 import { StickyProductRail } from "@/components/sticky-product-rail";
+import { StudioEntryCard } from "@/components/studio-entry-card";
 import { ArrowUpRight, Sparkles, Shirt, Camera, Flame, Star } from "lucide-react";
 import { useSiteImages } from "@/hooks/use-site-images";
 import { useSiteText } from "@/hooks/use-site-text";
@@ -514,6 +515,11 @@ function FrassDistrictHome() {
             </div>
           </div>
         </div>
+      </section>
+
+      {/* Frassy Studio portal */}
+      <section className="mx-auto mt-28 max-w-[1600px] px-6 lg:px-12">
+        <StudioEntryCard />
       </section>
 
       {/* Service pledge */}

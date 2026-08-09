@@ -2,6 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { GatewayNav } from "@/components/gateway-nav";
 import { HillSightlines } from "@/components/hill-sightlines";
+import { StudioEntryCard } from "@/components/studio-entry-card";
 import {
   HillHourBand,
   HillHourWash,
@@ -225,6 +226,10 @@ function FrassHillPage() {
       </section>
 
 
+
+      <section className="mx-auto max-w-[1400px] px-6 pb-10 lg:px-10">
+        <StudioEntryCard />
+      </section>
 
       <section className="mx-auto max-w-[1400px] px-6 pb-20 lg:px-10">
         <h2 className="font-display text-2xl uppercase">One word, two meanings</h2>
