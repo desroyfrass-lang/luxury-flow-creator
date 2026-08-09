@@ -2,12 +2,26 @@ import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { SiteShell } from "@/components/site-shell";
 import { PageFeedback } from "@/components/page-feedback";
-import { ArrowLeft, Sparkles, Compass } from "lucide-react";
-import hallImage from "@/assets/for-us-tropical-hall.jpg";
+import { ArrowLeft, ChevronDown, Sparkles, Volume2, VolumeX } from "lucide-react";
+import arrivalImage from "@/assets/for-us-arrival.jpg";
+import sceneShore from "@/assets/for-us-scene-shore.jpg";
+import sceneForest from "@/assets/for-us-scene-forest.jpg";
+import sceneJerk from "@/assets/for-us-scene-jerk.jpg";
+import sceneNight from "@/assets/for-us-scene-night.jpg";
 import { usePublishedStories } from "@/hooks/use-for-us-stories";
 import { GoLiveButton, LiveBadge } from "@/components/live/live-status";
 import { useLiveNow } from "@/hooks/use-live";
 import { liveElapsed, purposeOf } from "@/lib/live";
+import {
+  ambienceEnabled,
+  isMuted,
+  playArrivalSignature,
+  setAmbienceEnabled,
+  setMuted,
+  signatureDue,
+  startAmbience,
+  stopAmbience,
+} from "@/lib/for-us-ambience";
 import {
   CAUGHT_UP_ACTIONS,
   SCENIC_MOMENTS,
@@ -22,9 +36,11 @@ import {
 } from "@/lib/for-us";
 
 /**
- * FRASS-0415 — For Us is designed for discovery.
- * One continuous community stream, scenic rests between groups of posts, and
- * a page that changes with the hour, so it feels like visiting Frass right now.
+ * FRASS-0418 — For Us is a living Caribbean destination, not a dashboard.
+ * The scenery stays behind everything; community stories drift over it. The
+ * interface is deliberately faint so the place, not the software, is what you
+ * notice. In plain English: this page is the holiday of Frass — everywhere else
+ * is where you work.
  */
 
 export const Route = createFileRoute("/for-us")({
@@ -33,16 +49,16 @@ export const Route = createFileRoute("/for-us")({
   }),
   head: () => ({
     meta: [
-      { title: "For Us — The Living Community of Frass Hill" },
+      { title: "For Us — A Living Caribbean Destination" },
       {
         name: "description",
         content:
-          "For Us is the living community of Frass Hill: creators, families, businesses, music, milestones and celebrations, discovered one story at a time.",
+          "For Us is where Frass goes to breathe: a cinematic Caribbean destination of creator stories, music, live moments, foundation work and community celebration.",
       },
-      { property: "og:title", content: "For Us — The Living Community of Frass Hill" },
+      { property: "og:title", content: "For Us — A Living Caribbean Destination" },
       {
         property: "og:description",
-        content: "People before products. Stories before shopping. Discovery before algorithms.",
+        content: "Not a feed to check. A place to arrive. Stories, music and community over the sea.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -51,58 +67,93 @@ export const Route = createFileRoute("/for-us")({
   component: ForUsPage,
 });
 
-const GROUP_SIZE = 6;
+const GROUP_SIZE = 5;
+const SCENES = [sceneShore, sceneForest, sceneNight, sceneJerk];
 
-function StoryCard({ story, feature }: { story: FeedStory; feature?: boolean }) {
-  return (
-    <article
-      className={`group relative overflow-hidden rounded-[2rem] border border-border bg-card p-7 shadow-[0_18px_50px_-38px_rgba(20,60,50,0.7)] transition hover:-translate-y-1 hover:border-[color:var(--gold)]/60 hover:shadow-[0_28px_70px_-40px_rgba(20,80,70,0.55)] ${
-        feature ? "md:col-span-2 md:p-10" : ""
-      }`}
-    >
-      <div className="flex flex-wrap items-center gap-2 text-[10px] uppercase tracking-[0.26em]">
-        <span className="rounded-full bg-secondary px-3 py-1 text-secondary-foreground">
-          <span aria-hidden className="mr-1.5">
-            {story.sectionGlyph}
-          </span>
-          {story.sectionName}
+/** A story becomes a moment: big picture, small type, no card chrome. */
+function Moment({ story, scale, image }: { story: FeedStory; scale: "wide" | "tall" | "quiet"; image?: string }) {
+  const body = (
+    <>
+      <p className="text-[10px] uppercase tracking-[0.3em] text-white/60">
+        <span aria-hidden className="mr-1.5">
+          {story.sectionGlyph}
         </span>
-        <span className="text-[color:var(--gold)]">{story.source}</span>
-      </div>
-      <h3 className={`mt-4 font-semibold leading-snug ${feature ? "text-2xl md:text-4xl" : "text-xl"}`}>
+        {story.sectionName} · {story.source}
+      </p>
+      <h3
+        className={`mt-3 font-semibold leading-[1.1] text-white ${
+          scale === "wide" ? "text-3xl md:text-5xl" : scale === "tall" ? "text-2xl md:text-3xl" : "text-xl md:text-2xl"
+        }`}
+      >
         {story.title}
       </h3>
-      <p className={`mt-3 leading-relaxed text-muted-foreground ${feature ? "text-base" : "text-sm"}`}>
-        {story.body}
-      </p>
+      <p className="mt-3 max-w-2xl text-sm leading-relaxed text-white/75 md:text-base">{story.body}</p>
       {story.to && (
-        <Link
-          to={story.to}
-          className="mt-6 inline-flex items-center gap-2 rounded-full border border-[color:var(--gold)]/60 px-5 py-2 text-[10px] uppercase tracking-[0.25em] text-[color:var(--ink)] transition hover:bg-[color:var(--gold)] hover:text-[color:var(--primary-foreground)]"
-        >
+        <span className="mt-5 inline-flex items-center gap-2 text-[10px] uppercase tracking-[0.28em] text-[color:var(--gold)]">
           {story.cta ?? "Open"}
-          <span aria-hidden className="transition-transform group-hover:translate-x-0.5">
+          <span aria-hidden className="transition-transform group-hover:translate-x-1">
             →
           </span>
-        </Link>
+        </span>
       )}
+    </>
+  );
+
+  const shell = (
+    <article
+      className={`group relative overflow-hidden rounded-[2rem] transition duration-500 ${
+        image ? "min-h-[62vh]" : "bg-black/25 backdrop-blur-[2px]"
+      } ${scale === "quiet" ? "p-7 md:p-9" : "p-8 md:p-14"} ring-1 ring-white/10 hover:ring-[color:var(--gold)]/40`}
+    >
+      {image && (
+        <>
+          <img
+            src={image}
+            alt=""
+            aria-hidden
+            loading="lazy"
+            width={1600}
+            height={912}
+            className="hero-drift absolute inset-0 h-full w-full object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/35 to-black/10" />
+        </>
+      )}
+      <div className={image ? "relative flex min-h-[62vh] flex-col justify-end" : "relative"}>{body}</div>
     </article>
+  );
+
+  if (!story.to) return shell;
+  return (
+    <Link to={story.to} className="block">
+      {shell}
+    </Link>
   );
 }
 
-function ScenicRest({ moment }: { moment: ScenicMoment }) {
+/** A pause in the walk: pure scenery, one line, nothing to click. */
+function ScenicRest({ moment, image }: { moment: ScenicMoment; image: string }) {
   return (
-    <section
-      className={`relative overflow-hidden rounded-[2.5rem] border border-border bg-gradient-to-br ${moment.sky} px-8 py-14 text-center md:py-20`}
-      aria-label="A quiet moment in Frass"
-    >
-      <span className="text-3xl" aria-hidden>
-        {moment.glyph}
-      </span>
-      <p className="mx-auto mt-4 max-w-2xl text-balance text-xl font-semibold leading-snug text-[color:var(--ink)] md:text-2xl">
-        {moment.line}
-      </p>
-      <p className="mx-auto mt-3 max-w-xl text-sm leading-relaxed text-muted-foreground">{moment.detail}</p>
+    <section className="relative overflow-hidden rounded-[2.5rem]" aria-label="A quiet moment in Frass">
+      <img
+        src={image}
+        alt=""
+        aria-hidden
+        loading="lazy"
+        width={1600}
+        height={912}
+        className="hero-drift h-[46vh] min-h-[280px] w-full object-cover"
+      />
+      <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+      <div className="absolute inset-x-0 bottom-0 p-8 md:p-12">
+        <span className="text-2xl" aria-hidden>
+          {moment.glyph}
+        </span>
+        <p className="mt-3 max-w-2xl text-balance text-xl font-semibold leading-snug text-white md:text-3xl">
+          {moment.line}
+        </p>
+        <p className="mt-2 max-w-xl text-sm leading-relaxed text-white/70">{moment.detail}</p>
+      </div>
     </section>
   );
 }
@@ -124,7 +175,6 @@ function ForUsPage() {
 
   const [groups, setGroups] = useState(2);
   const sentinel = useRef<HTMLDivElement | null>(null);
-
   const loadMore = useCallback(() => setGroups((g) => g + 1), []);
 
   useEffect(() => {
@@ -134,217 +184,268 @@ function ForUsPage() {
       (entries) => {
         if (entries.some((e) => e.isIntersecting)) loadMore();
       },
-      { rootMargin: "600px 0px" },
+      { rootMargin: "800px 0px" },
     );
     io.observe(node);
     return () => io.disconnect();
   }, [loadMore]);
 
-  /** The stream never hits an artificial cap: the town keeps coming round again. */
+  /* Audio: a five-second arrival signature, then silence unless asked. */
+  const [muted, setMutedState] = useState(true);
+  const [ambience, setAmbience] = useState(false);
+  const [chimed, setChimed] = useState(false);
+
+  useEffect(() => {
+    setMutedState(isMuted());
+    setAmbience(ambienceEnabled());
+    if (!signatureDue()) return;
+    // Browsers only allow sound after a gesture; the first touch is the door.
+    const greet = () => {
+      if (playArrivalSignature()) {
+        setChimed(true);
+        window.setTimeout(() => setChimed(false), 5200);
+        if (ambienceEnabled()) window.setTimeout(startAmbience, 5000);
+      }
+      window.removeEventListener("pointerdown", greet);
+      window.removeEventListener("keydown", greet);
+      window.removeEventListener("scroll", greet);
+    };
+    if (playArrivalSignature()) {
+      setChimed(true);
+      window.setTimeout(() => setChimed(false), 5200);
+      if (ambienceEnabled()) window.setTimeout(startAmbience, 5000);
+    } else {
+      window.addEventListener("pointerdown", greet, { once: true });
+      window.addEventListener("keydown", greet, { once: true });
+      window.addEventListener("scroll", greet, { once: true });
+    }
+    return () => {
+      window.removeEventListener("pointerdown", greet);
+      window.removeEventListener("keydown", greet);
+      window.removeEventListener("scroll", greet);
+      stopAmbience();
+    };
+  }, []);
+
+  const toggleSound = () => {
+    const next = !muted;
+    setMuted(next);
+    setMutedState(next);
+    if (!next) {
+      setAmbienceEnabled(true);
+      setAmbience(true);
+    } else {
+      setAmbience(false);
+      setAmbienceEnabled(false);
+    }
+  };
+
+  const toggleAmbience = () => {
+    const next = !ambience;
+    if (next) {
+      setMuted(false);
+      setMutedState(false);
+    }
+    setAmbienceEnabled(next);
+    setAmbience(next);
+  };
+
+  const goBack = () => navigate({ to: from || "/frass-hill" });
+
   const visible = useMemo(() => {
     if (feed.length === 0) return [];
-    const out: { key: string; story: FeedStory; feature: boolean }[] = [];
+    const out: { key: string; story: FeedStory; scale: "wide" | "tall" | "quiet"; image?: string }[] = [];
     const total = groups * GROUP_SIZE;
     for (let i = 0; i < total; i += 1) {
       const lap = Math.floor(i / feed.length);
       const story = feed[i % feed.length];
-      out.push({ key: `${story.id}-${lap}`, story, feature: i % GROUP_SIZE === 0 });
+      const slot = i % GROUP_SIZE;
+      const scale = slot === 0 ? "wide" : slot === 2 ? "tall" : "quiet";
+      const image = slot === 0 || slot === 2 ? SCENES[(i + lap) % SCENES.length] : undefined;
+      out.push({ key: `${story.id}-${lap}`, story, scale, image });
     }
     return out;
   }, [feed, groups]);
-
-  const goBack = () => {
-    if (from) navigate({ to: from });
-    else navigate({ to: "/frass-hill" });
-  };
 
   const chunks: (typeof visible)[] = [];
   for (let i = 0; i < visible.length; i += GROUP_SIZE) chunks.push(visible.slice(i, i + GROUP_SIZE));
 
   return (
     <SiteShell>
-      <div className="for-us-tropical" style={{ background: weather.wash }}>
-        {/* Community breadcrumb — where you came from, and the way back */}
-        <div className="border-b border-border bg-card/70 backdrop-blur">
-          <div className="mx-auto flex max-w-[1400px] flex-wrap items-center gap-3 px-6 py-3 lg:px-12">
+      <div className="for-us-tropical relative min-h-screen text-white">
+        {/* The place itself — always there, never in the way */}
+        <div aria-hidden className="fixed inset-0 -z-10">
+          <img
+            src={arrivalImage}
+            alt=""
+            width={1920}
+            height={1088}
+            className="hero-drift h-full w-full object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-b from-black/25 via-black/55 to-black/85" />
+        </div>
+
+        {/* Faint chrome: the way back, the weather, the sound */}
+        <div className="sticky top-0 z-20 bg-gradient-to-b from-black/55 to-transparent">
+          <div className="mx-auto flex max-w-[1200px] flex-wrap items-center gap-4 px-6 py-3 lg:px-10">
             <button
               type="button"
               onClick={goBack}
-              className="inline-flex items-center gap-2 text-[10px] uppercase tracking-[0.25em] text-muted-foreground transition hover:text-foreground"
+              className="inline-flex items-center gap-2 text-[10px] uppercase tracking-[0.25em] text-white/60 transition hover:text-white"
             >
               <ArrowLeft className="h-3.5 w-3.5" />
-              Back
+              {context.label}
             </button>
-            <span className="text-[10px] uppercase tracking-[0.25em] text-muted-foreground">
-              {context.label} <span className="text-[color:var(--gold)]">→</span> For Us
-            </span>
-            <GoLiveButton className="ml-auto" />
-            <span className="text-[10px] uppercase tracking-[0.25em] text-muted-foreground">
+            <span className="text-[10px] uppercase tracking-[0.25em] text-white/45">
               <span aria-hidden className="mr-1.5">
                 {weather.glyph}
               </span>
               {weather.label}
             </span>
+            <div className="ml-auto flex items-center gap-3">
+              <button
+                type="button"
+                onClick={toggleSound}
+                aria-pressed={!muted}
+                className="inline-flex items-center gap-2 rounded-full border border-white/20 px-3 py-1.5 text-[10px] uppercase tracking-[0.22em] text-white/70 transition hover:border-[color:var(--gold)] hover:text-white"
+              >
+                {muted ? <VolumeX className="h-3.5 w-3.5" /> : <Volume2 className="h-3.5 w-3.5" />}
+                {muted ? "Sound off" : "Sound on"}
+              </button>
+              <GoLiveButton />
+            </div>
           </div>
         </div>
 
-        {/* Arrival — open-air, tropical, alive */}
-        <section className="mx-auto max-w-[1400px] px-6 pt-8 lg:px-12">
-          <div className="relative overflow-hidden rounded-[2.5rem] border border-border">
-            <img
-              src={hallImage}
-              alt="The open-air Frass Community Hall above the sea, palms and hillside gardens in the morning light"
-              width={1600}
-              height={912}
-              className="hero-drift h-[52vh] min-h-[340px] w-full object-cover"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-[color:var(--background)] via-[color:var(--background)]/45 to-transparent" />
-            <div className="absolute inset-x-0 bottom-0 p-8 md:p-12">
-              <p className="text-[10px] uppercase tracking-[0.35em] text-[color:var(--gold)]">
-                Town Square · The Living Community
-              </p>
-              <h1 className="mt-3 text-4xl font-black uppercase tracking-[0.12em] text-[color:var(--ink)] md:text-6xl">
-                For Us
-              </h1>
-              <p className="mt-4 max-w-2xl text-sm leading-relaxed text-muted-foreground md:text-base">
-                People before products. Stories before shopping. For Us is designed for discovery — keep
-                walking and there is always another story around the corner. {weather.greeting}
-              </p>
-            </div>
-          </div>
-        </section>
-
-        {/* Frassy, Community Steward */}
-        <section className="mx-auto max-w-[1400px] px-6 pt-8 lg:px-12">
-          <div className="flex flex-col gap-3 rounded-[1.75rem] border border-[color:var(--gold)]/50 bg-card p-6 md:flex-row md:items-center md:justify-between">
-            <div className="flex items-start gap-3">
-              <Sparkles className="mt-0.5 h-5 w-5 shrink-0 text-[color:var(--gold)]" />
-              <p className="text-sm leading-relaxed text-muted-foreground">
-                <span className="text-foreground">Frassy, Community Steward:</span> Good to see you.{" "}
-                {context.priority.length > 0
-                  ? `Since you came from ${context.label}, I put those stories nearer the top.`
-                  : "Here is what the town has been up to."}{" "}
-                Nothing here is ranked to keep you scrolling — it is ranked to keep you connected.
-              </p>
-            </div>
-            <Link
-              to="/frassy"
-              className="shrink-0 rounded-full border border-[color:var(--gold)] px-5 py-2 text-center text-[10px] uppercase tracking-[0.25em] text-[color:var(--gold)] transition hover:bg-[color:var(--gold)] hover:text-[color:var(--primary-foreground)]"
-            >
-              Ask Frassy
-            </Link>
-          </div>
-        </section>
-
-        {/* FRASS-0416 — For Us Live: community broadcasting, right at the top of the hall */}
-        <section className="mx-auto max-w-[1400px] px-6 pt-10 lg:px-12">
-          <header className="mb-5 flex flex-wrap items-center gap-3">
-            <h2 className="text-xl font-bold uppercase tracking-[0.2em] md:text-2xl">
-              🔴 For Us Live
-            </h2>
-            <p className="text-xs text-muted-foreground">
-              Community broadcasting — anyone in Frass can share a moment as it happens.
+        {/* Arrival */}
+        <section className="relative flex min-h-[88vh] items-end px-6 pb-16 lg:px-10">
+          <div className="mx-auto w-full max-w-[1200px]">
+            <p className="text-[10px] uppercase tracking-[0.4em] text-[color:var(--gold)]">
+              Frass Hill · The Community You Can Walk Into
             </p>
-            <Link
-              to="/live"
-              className="ml-auto text-[10px] uppercase tracking-[0.22em] text-red-600 underline-offset-4 hover:underline"
-            >
-              Live Directory →
-            </Link>
-          </header>
-          {liveNow.length === 0 ? (
-            <div className="flex flex-wrap items-center gap-4 rounded-[1.75rem] border border-dashed border-border bg-card/60 p-6">
-              <p className="text-sm text-muted-foreground">
-                Nobody is live in the community right now. The hall is yours if you want it.
-              </p>
-              <GoLiveButton className="ml-auto" />
+            <h1 className="mt-4 text-5xl font-black uppercase tracking-[0.14em] md:text-8xl">For Us</h1>
+            <p className="mt-5 max-w-xl text-base leading-relaxed text-white/75">
+              {weather.greeting} Somewhere below there is music, a jerk pan smoking by the road, boats on the
+              water and people you know. Take your time — nothing here needs finishing.
+            </p>
+            <div className="mt-8 flex flex-wrap items-center gap-4 text-[10px] uppercase tracking-[0.25em] text-white/50">
+              <span className="inline-flex items-center gap-2">
+                <ChevronDown className="h-4 w-4 animate-bounce" />
+                Scroll to walk down
+              </span>
+              <button
+                type="button"
+                onClick={toggleAmbience}
+                className="underline-offset-4 transition hover:text-white hover:underline"
+              >
+                {ambience ? "Turn the sea off" : "Let the sea play"}
+              </button>
             </div>
-          ) : (
-            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          </div>
+          {chimed && (
+            <div className="pointer-events-none fixed bottom-6 left-1/2 z-30 -translate-x-1/2 rounded-full bg-black/60 px-5 py-2 text-[10px] uppercase tracking-[0.25em] text-white/80 backdrop-blur">
+              ♪ Welcome to For Us — this place has sound
+            </div>
+          )}
+        </section>
+
+        {/* Live, woven in rather than announced */}
+        {liveNow.length > 0 && (
+          <section className="mx-auto max-w-[1200px] px-6 pb-4 lg:px-10">
+            <div className="flex flex-wrap items-center gap-4 border-y border-white/10 py-4">
+              <LiveBadge />
+              <span className="text-[10px] uppercase tracking-[0.25em] text-white/55">
+                Happening right now in the community
+              </span>
+              <Link
+                to="/live"
+                className="ml-auto text-[10px] uppercase tracking-[0.22em] text-white/50 underline-offset-4 hover:text-white hover:underline"
+              >
+                All live →
+              </Link>
+            </div>
+            <div className="flex gap-5 overflow-x-auto pb-2 pt-5">
               {liveNow.map((b) => (
                 <Link
                   key={b.id}
                   to="/live/$broadcastId"
                   params={{ broadcastId: b.id }}
-                  className="rounded-2xl border border-red-500/40 bg-card p-5 transition hover:-translate-y-0.5 hover:border-red-500"
+                  className="min-w-[260px] shrink-0 rounded-2xl bg-black/30 p-5 ring-1 ring-white/10 backdrop-blur-[2px] transition hover:-translate-y-0.5 hover:ring-red-500/60"
                 >
-                  <div className="flex items-center gap-2">
-                    <LiveBadge />
-                    <span className="text-[10px] uppercase tracking-[0.22em] text-muted-foreground">
-                      {purposeOf(b.purpose).glyph} {purposeOf(b.purpose).label}
-                    </span>
-                  </div>
-                  <p className="mt-3 text-base font-semibold leading-snug">{b.title}</p>
+                  <span className="text-[10px] uppercase tracking-[0.22em] text-white/55">
+                    {purposeOf(b.purpose).glyph} {purposeOf(b.purpose).label}
+                  </span>
+                  <p className="mt-2 text-base font-semibold leading-snug">{b.title}</p>
                   <p className="mt-1 text-[10px] uppercase tracking-[0.22em] text-[color:var(--gold)]">
                     {b.host_name} · live {liveElapsed(b.started_at)}
                   </p>
                 </Link>
               ))}
             </div>
-          )}
+          </section>
+        )}
+
+        {/* Frassy, only as loud as a friend leaning over */}
+        <section className="mx-auto max-w-[1200px] px-6 pt-8 lg:px-10">
+          <p className="flex flex-wrap items-center gap-2 text-sm leading-relaxed text-white/65">
+            <Sparkles className="h-4 w-4 text-[color:var(--gold)]" />
+            <span className="text-white/85">Frassy:</span>
+            {context.priority.length > 0
+              ? `I moved the ${context.label} stories nearer the front for you.`
+              : "I think you'll enjoy what the community put out this week."}
+            <Link to="/frassy" className="text-[color:var(--gold)] underline-offset-4 hover:underline">
+              Ask me anything
+            </Link>
+          </p>
         </section>
 
-        {/* Stepping inside — what the hall is showing as you walk in */}
-        <section className="mx-auto max-w-[1400px] px-6 pt-10 lg:px-12">
-          <header className="mb-5">
-            <h2 className="text-xl font-bold uppercase tracking-[0.2em] md:text-2xl">Inside the hall</h2>
-            <p className="mt-1 text-xs text-muted-foreground">
-              Screens, boards and exhibits — what the room is showing right now.
-            </p>
-          </header>
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            {exhibits.map((ex) => (
-              <div
-                key={ex.id}
-                className="rounded-2xl border border-border bg-card p-5 transition hover:-translate-y-0.5 hover:border-[color:var(--gold)]/60"
-              >
-                <span className="text-xl" aria-hidden>
-                  {ex.glyph}
-                </span>
-                <p className="mt-2 text-[10px] uppercase tracking-[0.22em] text-[color:var(--gold)]">
-                  {ex.name}
-                </p>
-                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{ex.showing}</p>
-                {ex.to && (
-                  <Link
-                    to={ex.to}
-                    className="mt-3 inline-block text-[10px] uppercase tracking-[0.22em] underline-offset-4 hover:text-[color:var(--gold)] hover:underline"
-                  >
-                    {ex.cta ?? "Open"} →
-                  </Link>
-                )}
-              </div>
-            ))}
-          </div>
-        </section>
-
-        {/* The continuous community stream */}
-        <div className="mx-auto max-w-[1400px] space-y-12 px-6 py-14 lg:px-12">
+        {/* The walk */}
+        <div className="mx-auto max-w-[1200px] space-y-10 px-6 py-12 lg:px-10">
           {chunks.map((chunk, index) => (
-            <div key={`group-${index}`} className="space-y-12">
-              <div className="grid gap-6 md:grid-cols-2">
-                {chunk.map(({ key, story, feature }) => (
-                  <StoryCard key={key} story={story} feature={feature} />
-                ))}
-              </div>
-              <ScenicRest moment={SCENIC_MOMENTS[index % SCENIC_MOMENTS.length]} />
+            <div key={`group-${index}`} className="space-y-10">
+              {chunk.map(({ key, story, scale, image }) => (
+                <Moment key={key} story={story} scale={scale} image={image} />
+              ))}
+              <ScenicRest
+                moment={SCENIC_MOMENTS[index % SCENIC_MOMENTS.length]}
+                image={SCENES[(index + 1) % SCENES.length]}
+              />
             </div>
           ))}
 
           <div ref={sentinel} aria-hidden className="h-px w-full" />
 
-          <section className="rounded-[2rem] border border-border bg-card p-8 text-center md:p-10">
-            <Compass className="mx-auto h-6 w-6 text-[color:var(--gold)]" />
-            <p className="mt-4 text-lg font-semibold">Keep walking, or take a turn somewhere else.</p>
-            <p className="mt-2 text-sm text-muted-foreground">
-              The community keeps going. These doors are open too.
-            </p>
-            <div className="mt-6 flex flex-wrap justify-center gap-3">
+          {/* Also happening — quiet, one line each, no dashboard */}
+          <section className="border-t border-white/10 pt-8">
+            <p className="text-[10px] uppercase tracking-[0.3em] text-white/45">Also happening in town</p>
+            <ul className="mt-4 grid gap-3 sm:grid-cols-2">
+              {exhibits.map((ex) => (
+                <li key={ex.id} className="text-sm leading-relaxed text-white/70">
+                  <span aria-hidden className="mr-2">
+                    {ex.glyph}
+                  </span>
+                  <span className="text-white/90">{ex.name}</span> — {ex.showing}{" "}
+                  {ex.to && (
+                    <Link
+                      to={ex.to}
+                      className="text-[color:var(--gold)] underline-offset-4 hover:underline"
+                    >
+                      {ex.cta ?? "Open"} →
+                    </Link>
+                  )}
+                </li>
+              ))}
+            </ul>
+          </section>
+
+          <section className="pt-4 text-center">
+            <p className="text-lg font-semibold text-white/90">Stay as long as you like.</p>
+            <div className="mt-5 flex flex-wrap justify-center gap-3">
               {CAUGHT_UP_ACTIONS.map((a) => (
                 <Link
                   key={a.to}
                   to={a.to}
-                  className="rounded-full border border-border px-5 py-2.5 text-[10px] uppercase tracking-[0.25em] text-muted-foreground transition hover:border-[color:var(--gold)] hover:text-foreground"
+                  className="rounded-full border border-white/20 px-5 py-2.5 text-[10px] uppercase tracking-[0.25em] text-white/60 transition hover:border-[color:var(--gold)] hover:text-white"
                 >
                   {a.label}
                 </Link>
@@ -354,11 +455,11 @@ function ForUsPage() {
                 onClick={loadMore}
                 className="rounded-full border border-[color:var(--gold)] px-5 py-2.5 text-[10px] uppercase tracking-[0.25em] text-[color:var(--gold)] transition hover:bg-[color:var(--gold)] hover:text-[color:var(--primary-foreground)]"
               >
-                Show me more
+                Keep walking
               </button>
             </div>
-            <p className="mt-6 text-[10px] uppercase tracking-[0.25em] text-muted-foreground">
-              The goal is to make you feel connected — not to consume your day.
+            <p className="mt-6 text-[10px] uppercase tracking-[0.25em] text-white/35">
+              For Us is not here to take your day — only to make it lighter.
             </p>
           </section>
 
