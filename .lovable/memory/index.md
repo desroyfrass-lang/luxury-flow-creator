@@ -99,3 +99,4 @@ For Me is personal, never algorithmic — no "chosen for you".
 - [Wellness Centre & Dual Nav](mem://features/frass-0413-0414-wellness-and-dual-nav) — FRASS-0413 Health & Wellness Centre (free Wellness vs Care Network) + FRASS-0414 split Hill/District navigation; audio-unlock rule for Frassy's voice
 - [Frass Business Builder](mem://features/frass-business-builder) — FRASS-0419/0419A: build businesses not websites, one architecture from FV Studios + Workspace, customer-pays cost constitution
 - [FRASS-0420 Frass Hosting](mem://features/frass-0420-hosting) — Frass sells hosting as its own paid service; free landing page for every member; cloud infrastructure underneath, never named to the customer
+- [FRASS-0423 world realism](mem://features/frass-0423-world-realism) — Welcome Hall = arrival/registration gateway, Town Square = feature inside the Hill, Kids Valley road, photoreal cinematic standard, For Me Living Bio
