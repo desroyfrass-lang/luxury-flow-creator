@@ -1769,3 +1769,35 @@ a.ps-row:hover { border-color: color-mix(in srgb, var(--gold) 60%, transparent);
 
 /* FRASS-0429 — Pay is the universal payment door */
 .card-action.is-pay { border-color: color-mix(in oklab, var(--card-accent, var(--primary)) 60%, transparent); }
+
+/* FRASS-0431 — Trust section, mini-card live signals, relationship timeline */
+.mini-card-signals { display: flex; flex-wrap: wrap; gap: 0.25rem; margin-top: 0.4rem; }
+.mini-card-signal {
+  border-radius: 999px;
+  border: 1px solid color-mix(in oklab, var(--foreground) 18%, transparent);
+  padding: 0.1rem 0.45rem;
+  font-size: 0.62rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.card-trust-list { margin-top: 0.9rem; display: grid; gap: 0.5rem; }
+.card-trust-item {
+  display: flex;
+  gap: 0.6rem;
+  align-items: flex-start;
+  border-radius: 0.85rem;
+  border: 1px solid color-mix(in oklab, var(--card-ink, #fff) 14%, transparent);
+  padding: 0.65rem 0.8rem;
+}
+.card-trust-item strong { display: block; font-size: 0.82rem; }
+.card-trust-item span:last-child { display: block; font-size: 0.74rem; opacity: 0.72; }
+.card-trust-yes { border-color: color-mix(in oklab, var(--card-accent, gold) 45%, transparent); }
+.living-card-fine { margin-top: 0.8rem; font-size: 0.7rem; opacity: 0.62; }
+.relationship-timeline { margin-top: 0.7rem; display: grid; gap: 0.3rem; padding-left: 0.2rem; }
+.relationship-timeline li { display: flex; align-items: center; gap: 0.5rem; font-size: 0.75rem; }
+.relationship-dot {
+  height: 0.45rem; width: 0.45rem; border-radius: 999px;
+  background: color-mix(in oklab, var(--primary) 80%, transparent);
+}
+.relationship-label { flex: 1; }
+.relationship-date { color: var(--muted-foreground); font-variant-numeric: tabular-nums; }
