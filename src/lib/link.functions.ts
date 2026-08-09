@@ -239,6 +239,18 @@ export const getMyLinkDashboard = createServerFn({ method: "GET" })
       .eq("user_id", me)
       .order("created_at", { ascending: false });
 
+    // Bonuses belong on the relationship timeline too.
+    const byReferral = new Map(enriched.map((r) => [r.id, r]));
+    for (const b of bonuses ?? []) {
+      const target = b.referral_id ? byReferral.get(b.referral_id) : null;
+      if (!target) continue;
+      target.events.push({
+        label: `${bonusLabel(b.kind)} · $${Number(b.amount ?? 0).toFixed(2)}`,
+        at: b.created_at,
+      });
+    }
+    for (const r of enriched) r.events.sort((a, b) => a.at.localeCompare(b.at));
+
     // ── Link analytics ────────────────────────────────────────────────────
     const { data: events } = await supabaseAdmin
       .from("business_card_events")
