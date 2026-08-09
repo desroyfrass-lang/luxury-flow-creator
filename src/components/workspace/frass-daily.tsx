@@ -571,9 +571,11 @@ export function FrassDaily({
           value={command}
           onChange={setCommand}
           onSend={(text) => runIntent(text.trim())}
+          voice
           placeholder="Talk to Frassy, drop files or folders, capture a photo — “show me the orders”, “continue yesterday's work”…"
           tools={audience === "founder" ? undefined : ["files", "images", "documents", "camera", "clipboard"]}
         />
+
       </div>
     </div>
   );

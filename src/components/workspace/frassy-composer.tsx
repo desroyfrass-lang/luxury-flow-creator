@@ -15,6 +15,9 @@ import {
   Send,
   Square,
   Mic,
+  Pause,
+  Play,
+  Loader2,
   Volume2,
   VolumeX,
   Camera,
@@ -30,6 +33,9 @@ import {
 } from "lucide-react";
 import { UploadManager } from "@/components/workspace/upload-manager";
 import { describeIntake, useUploadQueue, type UploadQueue } from "@/lib/workspace/upload-queue";
+import { usePushToTalk } from "@/hooks/use-push-to-talk";
+import { FrassyAvatar, type FrassyMood } from "@/components/workspace/frassy-avatar";
+
 
 export type ComposerTool =
   | "files"
@@ -94,6 +100,12 @@ export type FrassyComposerProps = {
   studio?: boolean;
   /** Lets the surrounding workspace observe intake (Vault, Projects, Search). */
   onIntake?: (summary: string, queue: UploadQueue) => void;
+  /**
+   * Built-in voice: a microphone beside the + (dictate straight into the box)
+   * and a pause/play control at the far end for Frassy's speech, plus the
+   * animated Frassy presence. Used by The Daily.
+   */
+  voice?: boolean;
 };
 
 export function FrassyComposer({
@@ -114,12 +126,15 @@ export function FrassyComposer({
   inputRef,
   studio = true,
   onIntake,
+  voice = false,
 }: FrassyComposerProps) {
   const queue = useUploadQueue();
   const [menuOpen, setMenuOpen] = useState(false);
   const [dragging, setDragging] = useState(false);
   const [note, setNote] = useState<string | null>(null);
+  const ptt = usePushToTalk("daily-composer");
   const menuRef = useRef<HTMLDivElement>(null);
+
   const fileRef = useRef<HTMLInputElement>(null);
   const localInput = useRef<HTMLTextAreaElement>(null);
   const textRef = inputRef ?? localInput;
@@ -182,6 +197,27 @@ export function FrassyComposer({
     if (!text || loading) return;
     onSend(text, describeIntake(queue.readyItems));
   };
+
+  // Built-in dictation: press to record, press again to drop the words in.
+  const toggleDictation = async () => {
+    if (ptt.phase === "recording") {
+      const text = await ptt.stopRecording();
+      if (text) onChange(value ? `${value.trim()} ${text}` : text);
+      textRef.current?.focus();
+      return;
+    }
+    if (ptt.phase === "transcribing") return;
+    await ptt.startRecording();
+  };
+
+  const mood: FrassyMood = ptt.isSpeaking
+    ? "speaking"
+    : ptt.phase === "recording"
+      ? "listening"
+      : loading || ptt.phase === "transcribing"
+        ? "thinking"
+        : "idle";
+
 
   return (
     <div
@@ -308,6 +344,23 @@ export function FrassyComposer({
           )}
         </div>
 
+        {voice && (
+          <button
+            type="button"
+            className={`ws-icon frassy-mic ${ptt.phase === "recording" ? "frassy-mic-live" : ""}`}
+            aria-label={ptt.phase === "recording" ? "Stop recording" : "Record audio into the chat"}
+            onClick={toggleDictation}
+          >
+            {ptt.phase === "transcribing" ? (
+              <Loader2 className="h-4 w-4 animate-spin" />
+            ) : (
+              <Mic className="h-4 w-4" />
+            )}
+          </button>
+        )}
+
+        {voice && <FrassyAvatar mood={mood} size={40} />}
+
         <textarea
           ref={textRef}
           rows={1}
@@ -343,7 +396,21 @@ export function FrassyComposer({
             <Send className="h-4 w-4" />
           </button>
         )}
+
+        {/* Far end of the box, away from Send — pause / resume Frassy's voice. */}
+        {voice && (
+          <button
+            type="button"
+            className="ws-icon frassy-pause"
+            aria-label={ptt.isPaused ? "Resume Frassy" : "Pause Frassy"}
+            onClick={ptt.togglePause}
+            disabled={!ptt.isSpeaking && !ptt.isPaused}
+          >
+            {ptt.isPaused ? <Play className="h-4 w-4" /> : <Pause className="h-4 w-4" />}
+          </button>
+        )}
       </form>
+
     </div>
   );
 }
