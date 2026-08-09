@@ -257,8 +257,9 @@ export function FrassyComposer({
       <UploadManager queue={queue} />
       {note && <p className="ws-note">{note}</p>}
 
-      {/* Intake bar — the professional toolset, not a chat attachment clip. */}
-      <div className="flex flex-wrap items-center gap-1.5">
+      {/* Intake bar — one horizontal toolbar. It never wraps; it scrolls. */}
+      <div className="ws-toolbar">
+
         {tools.map((t) => {
           const meta = TOOL_META[t];
           const Icon = meta.icon;
