@@ -122,6 +122,7 @@ import { Route as AuthenticatedFrassyRouteImport } from './routes/_authenticated
 import { Route as AuthenticatedFounderRouteImport } from './routes/_authenticated/founder'
 import { Route as AuthenticatedFinancialCenterRouteImport } from './routes/_authenticated/financial-center'
 import { Route as AuthenticatedCreationRouteImport } from './routes/_authenticated/creation'
+import { Route as AuthenticatedCommerceSimulationRouteImport } from './routes/_authenticated/commerce-simulation'
 import { Route as AuthenticatedBusinessBuilderRouteImport } from './routes/_authenticated/business-builder'
 import { Route as AuthenticatedBuilderHallRouteImport } from './routes/_authenticated/builder-hall'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
@@ -756,6 +757,12 @@ const AuthenticatedCreationRoute = AuthenticatedCreationRouteImport.update({
   path: '/creation',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedCommerceSimulationRoute =
+  AuthenticatedCommerceSimulationRouteImport.update({
+    id: '/commerce-simulation',
+    path: '/commerce-simulation',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedBusinessBuilderRoute =
   AuthenticatedBusinessBuilderRouteImport.update({
     id: '/business-builder',
@@ -1152,6 +1159,7 @@ export interface FileRoutesByFullPath {
   '/admin': typeof AuthenticatedAdminRouteWithChildren
   '/builder-hall': typeof AuthenticatedBuilderHallRoute
   '/business-builder': typeof AuthenticatedBusinessBuilderRoute
+  '/commerce-simulation': typeof AuthenticatedCommerceSimulationRoute
   '/creation': typeof AuthenticatedCreationRoute
   '/financial-center': typeof AuthenticatedFinancialCenterRoute
   '/founder': typeof AuthenticatedFounderRoute
@@ -1311,6 +1319,7 @@ export interface FileRoutesByTo {
   '/academy': typeof AuthenticatedAcademyRoute
   '/builder-hall': typeof AuthenticatedBuilderHallRoute
   '/business-builder': typeof AuthenticatedBusinessBuilderRoute
+  '/commerce-simulation': typeof AuthenticatedCommerceSimulationRoute
   '/creation': typeof AuthenticatedCreationRoute
   '/financial-center': typeof AuthenticatedFinancialCenterRoute
   '/founder': typeof AuthenticatedFounderRoute
@@ -1484,6 +1493,7 @@ export interface FileRoutesById {
   '/_authenticated/admin': typeof AuthenticatedAdminRouteWithChildren
   '/_authenticated/builder-hall': typeof AuthenticatedBuilderHallRoute
   '/_authenticated/business-builder': typeof AuthenticatedBusinessBuilderRoute
+  '/_authenticated/commerce-simulation': typeof AuthenticatedCommerceSimulationRoute
   '/_authenticated/creation': typeof AuthenticatedCreationRoute
   '/_authenticated/financial-center': typeof AuthenticatedFinancialCenterRoute
   '/_authenticated/founder': typeof AuthenticatedFounderRoute
@@ -1662,6 +1672,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/builder-hall'
     | '/business-builder'
+    | '/commerce-simulation'
     | '/creation'
     | '/financial-center'
     | '/founder'
@@ -1821,6 +1832,7 @@ export interface FileRouteTypes {
     | '/academy'
     | '/builder-hall'
     | '/business-builder'
+    | '/commerce-simulation'
     | '/creation'
     | '/financial-center'
     | '/founder'
@@ -1993,6 +2005,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin'
     | '/_authenticated/builder-hall'
     | '/_authenticated/business-builder'
+    | '/_authenticated/commerce-simulation'
     | '/_authenticated/creation'
     | '/_authenticated/financial-center'
     | '/_authenticated/founder'
@@ -2975,6 +2988,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedCreationRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/commerce-simulation': {
+      id: '/_authenticated/commerce-simulation'
+      path: '/commerce-simulation'
+      fullPath: '/commerce-simulation'
+      preLoaderRoute: typeof AuthenticatedCommerceSimulationRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/business-builder': {
       id: '/_authenticated/business-builder'
       path: '/business-builder'
@@ -3491,6 +3511,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedAdminRoute: typeof AuthenticatedAdminRouteWithChildren
   AuthenticatedBuilderHallRoute: typeof AuthenticatedBuilderHallRoute
   AuthenticatedBusinessBuilderRoute: typeof AuthenticatedBusinessBuilderRoute
+  AuthenticatedCommerceSimulationRoute: typeof AuthenticatedCommerceSimulationRoute
   AuthenticatedCreationRoute: typeof AuthenticatedCreationRoute
   AuthenticatedFinancialCenterRoute: typeof AuthenticatedFinancialCenterRoute
   AuthenticatedFounderRoute: typeof AuthenticatedFounderRoute
@@ -3513,6 +3534,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedAdminRoute: AuthenticatedAdminRouteWithChildren,
   AuthenticatedBuilderHallRoute: AuthenticatedBuilderHallRoute,
   AuthenticatedBusinessBuilderRoute: AuthenticatedBusinessBuilderRoute,
+  AuthenticatedCommerceSimulationRoute: AuthenticatedCommerceSimulationRoute,
   AuthenticatedCreationRoute: AuthenticatedCreationRoute,
   AuthenticatedFinancialCenterRoute: AuthenticatedFinancialCenterRoute,
   AuthenticatedFounderRoute: AuthenticatedFounderRoute,
