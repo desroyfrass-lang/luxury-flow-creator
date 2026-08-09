@@ -163,6 +163,7 @@ function WellnessCentre() {
             </Link>
             <Link
               to="/for-us"
+              search={{ from: "health-wellness" }}
               className="rounded-full border border-[oklch(0.95_0.01_120)]/20 px-5 py-2.5 text-[10px] font-bold uppercase tracking-[0.22em] text-[oklch(0.8_0.01_120)] transition hover:bg-white/5"
             >
               For Us — the Community Hall
