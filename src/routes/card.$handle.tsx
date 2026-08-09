@@ -14,6 +14,7 @@ import { getPublicCard, recordCardEvent } from "@/lib/card.functions";
 import { accentValue, themeValue } from "@/lib/card";
 import { ShareCardButton } from "@/components/card/card-share";
 import { CardStorefront, type PublicListing } from "@/components/card/card-storefront";
+import { CardActionBar } from "@/components/card/card-actions";
 
 export const Route = createFileRoute("/card/$handle")({
   loader: async ({ params }) => {
@@ -80,8 +81,9 @@ function PublicCard() {
     void recordCardEvent({ data: { handle, kind: scanned ? "qr_scan" : "view" } }).catch(() => {});
   }, [handle]);
 
-  const track = (kind: "website_click" | "affiliate_click" | "marketplace_click" | "booking") =>
-    void recordCardEvent({ data: { handle, kind } }).catch(() => {});
+  const track = (
+    kind: "website_click" | "affiliate_click" | "marketplace_click" | "booking" | "message",
+  ) => void recordCardEvent({ data: { handle, kind } }).catch(() => {});
 
   return (
     <main
@@ -130,6 +132,16 @@ function PublicCard() {
             )}
             <ShareCardButton handle={handle} name={name} />
           </div>
+
+          {/* FRASS-0429 — every door this member has actually opened. */}
+          <CardActionBar
+            handle={handle}
+            name={name}
+            card={card}
+            commerceEnabled={commerceEnabled}
+            hasListings={(listings ?? []).length > 0}
+            onTrack={track}
+          />
         </div>
       </header>
 

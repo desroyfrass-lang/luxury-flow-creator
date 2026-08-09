@@ -154,6 +154,7 @@ import { Route as BareDripWomenCategoryRouteImport } from './routes/bare-drip.wo
 import { Route as BareDripMenCategoryRouteImport } from './routes/bare-drip.men.$category'
 import { Route as AfroDesignersDesignersSlugRouteImport } from './routes/afro-designers.designers.$slug'
 import { Route as AfroDesignersCollectionsSlugRouteImport } from './routes/afro-designers.collections.$slug'
+import { Route as AuthenticatedWorkspaceWalletRouteImport } from './routes/_authenticated/workspace.wallet'
 import { Route as AuthenticatedWorkspaceProfileRouteImport } from './routes/_authenticated/workspace.profile'
 import { Route as AuthenticatedWorkspaceMerchRouteImport } from './routes/_authenticated/workspace.merch'
 import { Route as AuthenticatedWorkspaceLinkRouteImport } from './routes/_authenticated/workspace.link'
@@ -926,6 +927,12 @@ const AfroDesignersCollectionsSlugRoute =
     path: '/collections/$slug',
     getParentRoute: () => AfroDesignersRoute,
   } as any)
+const AuthenticatedWorkspaceWalletRoute =
+  AuthenticatedWorkspaceWalletRouteImport.update({
+    id: '/wallet',
+    path: '/wallet',
+    getParentRoute: () => AuthenticatedWorkspaceRoute,
+  } as any)
 const AuthenticatedWorkspaceProfileRoute =
   AuthenticatedWorkspaceProfileRouteImport.update({
     id: '/profile',
@@ -1234,6 +1241,7 @@ export interface FileRoutesByFullPath {
   '/workspace/link': typeof AuthenticatedWorkspaceLinkRoute
   '/workspace/merch': typeof AuthenticatedWorkspaceMerchRoute
   '/workspace/profile': typeof AuthenticatedWorkspaceProfileRoute
+  '/workspace/wallet': typeof AuthenticatedWorkspaceWalletRoute
   '/afro-designers/collections/$slug': typeof AfroDesignersCollectionsSlugRoute
   '/afro-designers/designers/$slug': typeof AfroDesignersDesignersSlugRoute
   '/bare-drip/men/$category': typeof BareDripMenCategoryRoute
@@ -1386,6 +1394,7 @@ export interface FileRoutesByTo {
   '/workspace/link': typeof AuthenticatedWorkspaceLinkRoute
   '/workspace/merch': typeof AuthenticatedWorkspaceMerchRoute
   '/workspace/profile': typeof AuthenticatedWorkspaceProfileRoute
+  '/workspace/wallet': typeof AuthenticatedWorkspaceWalletRoute
   '/afro-designers/collections/$slug': typeof AfroDesignersCollectionsSlugRoute
   '/afro-designers/designers/$slug': typeof AfroDesignersDesignersSlugRoute
   '/bare-drip/men/$category': typeof BareDripMenCategoryRoute
@@ -1562,6 +1571,7 @@ export interface FileRoutesById {
   '/_authenticated/workspace/link': typeof AuthenticatedWorkspaceLinkRoute
   '/_authenticated/workspace/merch': typeof AuthenticatedWorkspaceMerchRoute
   '/_authenticated/workspace/profile': typeof AuthenticatedWorkspaceProfileRoute
+  '/_authenticated/workspace/wallet': typeof AuthenticatedWorkspaceWalletRoute
   '/afro-designers/collections/$slug': typeof AfroDesignersCollectionsSlugRoute
   '/afro-designers/designers/$slug': typeof AfroDesignersDesignersSlugRoute
   '/bare-drip/men/$category': typeof BareDripMenCategoryRoute
@@ -1738,6 +1748,7 @@ export interface FileRouteTypes {
     | '/workspace/link'
     | '/workspace/merch'
     | '/workspace/profile'
+    | '/workspace/wallet'
     | '/afro-designers/collections/$slug'
     | '/afro-designers/designers/$slug'
     | '/bare-drip/men/$category'
@@ -1890,6 +1901,7 @@ export interface FileRouteTypes {
     | '/workspace/link'
     | '/workspace/merch'
     | '/workspace/profile'
+    | '/workspace/wallet'
     | '/afro-designers/collections/$slug'
     | '/afro-designers/designers/$slug'
     | '/bare-drip/men/$category'
@@ -2065,6 +2077,7 @@ export interface FileRouteTypes {
     | '/_authenticated/workspace/link'
     | '/_authenticated/workspace/merch'
     | '/_authenticated/workspace/profile'
+    | '/_authenticated/workspace/wallet'
     | '/afro-designers/collections/$slug'
     | '/afro-designers/designers/$slug'
     | '/bare-drip/men/$category'
@@ -3173,6 +3186,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AfroDesignersCollectionsSlugRouteImport
       parentRoute: typeof AfroDesignersRoute
     }
+    '/_authenticated/workspace/wallet': {
+      id: '/_authenticated/workspace/wallet'
+      path: '/wallet'
+      fullPath: '/workspace/wallet'
+      preLoaderRoute: typeof AuthenticatedWorkspaceWalletRouteImport
+      parentRoute: typeof AuthenticatedWorkspaceRoute
+    }
     '/_authenticated/workspace/profile': {
       id: '/_authenticated/workspace/profile'
       path: '/profile'
@@ -3427,6 +3447,7 @@ interface AuthenticatedWorkspaceRouteChildren {
   AuthenticatedWorkspaceLinkRoute: typeof AuthenticatedWorkspaceLinkRoute
   AuthenticatedWorkspaceMerchRoute: typeof AuthenticatedWorkspaceMerchRoute
   AuthenticatedWorkspaceProfileRoute: typeof AuthenticatedWorkspaceProfileRoute
+  AuthenticatedWorkspaceWalletRoute: typeof AuthenticatedWorkspaceWalletRoute
 }
 
 const AuthenticatedWorkspaceRouteChildren: AuthenticatedWorkspaceRouteChildren =
@@ -3437,6 +3458,7 @@ const AuthenticatedWorkspaceRouteChildren: AuthenticatedWorkspaceRouteChildren =
     AuthenticatedWorkspaceLinkRoute: AuthenticatedWorkspaceLinkRoute,
     AuthenticatedWorkspaceMerchRoute: AuthenticatedWorkspaceMerchRoute,
     AuthenticatedWorkspaceProfileRoute: AuthenticatedWorkspaceProfileRoute,
+    AuthenticatedWorkspaceWalletRoute: AuthenticatedWorkspaceWalletRoute,
   }
 
 const AuthenticatedWorkspaceRouteWithChildren =

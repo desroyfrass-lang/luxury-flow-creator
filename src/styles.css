@@ -1695,3 +1695,30 @@ a.ps-row:hover { border-color: color-mix(in srgb, var(--gold) 60%, transparent);
 .member-identity-avatar img { height: 100%; width: 100%; object-fit: cover; }
 .member-identity-name { display: block; font-weight: 700; line-height: 1.15; }
 .member-identity-role { display: block; font-size: 0.72rem; opacity: 0.7; }
+
+/* FRASS-0429 — Frass Card action bar and Wallet */
+.card-action-wrap { position: relative; z-index: 2; margin: 1rem auto 0; width: min(42rem, 100%); }
+.card-action-bar {
+  display: flex; flex-wrap: wrap; gap: 0.5rem; justify-content: center;
+}
+.card-action {
+  display: inline-flex; align-items: center; gap: 0.4rem;
+  border-radius: 999px; padding: 0.5rem 0.9rem;
+  font-size: 0.78rem; font-weight: 600; letter-spacing: 0.02em;
+  color: inherit; cursor: pointer;
+  border: 1px solid color-mix(in srgb, var(--card-accent, currentColor) 40%, transparent);
+  background: color-mix(in srgb, var(--card-ink, #fff) 8%, transparent);
+  transition: transform 140ms ease, background 140ms ease, border-color 140ms ease;
+}
+.card-action:hover { transform: translateY(-1px); background: color-mix(in srgb, var(--card-accent, currentColor) 18%, transparent); }
+.card-action.is-on { background: color-mix(in srgb, var(--card-accent, currentColor) 26%, transparent); border-color: var(--card-accent, currentColor); }
+.card-action-panel {
+  margin-top: 0.9rem; border-radius: 1rem; padding: 1rem;
+  border: 1px solid color-mix(in srgb, var(--card-accent, currentColor) 30%, transparent);
+  background: color-mix(in srgb, var(--card-wash, #000) 82%, transparent);
+  text-align: left;
+}
+.card-action-panel-title { font-size: 0.72rem; letter-spacing: 0.22em; text-transform: uppercase; color: var(--card-accent, currentColor); }
+.card-action-panel-note { margin-top: 0.4rem; font-size: 0.78rem; opacity: 0.8; }
+.card-action-channels { margin-top: 0.7rem; display: flex; flex-wrap: wrap; gap: 0.45rem; }
+.card-action-amounts { margin-top: 0.8rem; display: flex; flex-wrap: wrap; gap: 0.4rem; }

@@ -1,7 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { useQuery } from "@tanstack/react-query";
-import { BarChart3, ExternalLink, IdCard, Pencil } from "lucide-react";
+import { BarChart3, ExternalLink, IdCard, Pencil, Wallet } from "lucide-react";
 import { getMyProfile } from "@/lib/profiles.functions";
 import { getMyCard } from "@/lib/card.functions";
 import { accentValue, cardPath, themeValue } from "@/lib/card";
@@ -65,6 +65,9 @@ export function FrassCardWidget({ context }: { context?: string }) {
         )}
         <Link className="ws-chip" to="/workspace/card">
           <Pencil className="h-3.5 w-3.5" /> Edit
+        </Link>
+        <Link className="ws-chip" to="/workspace/wallet">
+          <Wallet className="h-3.5 w-3.5" /> Wallet
         </Link>
         <Link className="ws-chip" to="/workspace/card" hash="analytics">
           <BarChart3 className="h-3.5 w-3.5" /> Analytics

@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { toast } from "sonner";
-import { Camera, Plus, Store } from "lucide-react";
+import { Camera, Plus, Store, Upload } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -17,6 +17,7 @@ import {
   settle,
   type ListingKind,
 } from "@/lib/card-commerce";
+import { uploadCardPhoto } from "@/lib/card-media";
 import {
   createListing,
   listMyCardOrders,
@@ -46,6 +47,20 @@ export function QuickSellPanel({ provider }: { provider?: string | null }) {
   const [imageUrl, setImageUrl] = useState("");
   const [price, setPrice] = useState("");
   const [quantity, setQuantity] = useState("1");
+  const [uploading, setUploading] = useState(false);
+
+  const onPickPhoto = async (file: File | null) => {
+    if (!file) return;
+    setUploading(true);
+    try {
+      setImageUrl(await uploadCardPhoto(file));
+      toast.success("Photo attached.");
+    } catch (e) {
+      toast.error(e instanceof Error ? e.message : "That photo could not be uploaded.");
+    } finally {
+      setUploading(false);
+    }
+  };
 
   const unlimited = UNLIMITED_KINDS.includes(kind);
   const preview = settle(Number(price) || 0, 1, provider);
@@ -125,8 +140,33 @@ export function QuickSellPanel({ provider }: { provider?: string | null }) {
             <Input value={title} maxLength={120} onChange={(e) => setTitle(e.target.value)} placeholder="Hand-finished chrome tee" />
           </div>
           <div className="space-y-2">
-            <Label className="text-xs">Photo URL</Label>
-            <Input value={imageUrl} onChange={(e) => setImageUrl(e.target.value)} placeholder="https://" />
+            <Label className="text-xs">Photo</Label>
+            <div className="flex flex-wrap items-center gap-2">
+              <label className="ws-chip cursor-pointer text-xs">
+                <Camera className="h-3.5 w-3.5" />
+                {uploading ? "Uploading…" : "Take photo"}
+                <input
+                  type="file"
+                  accept="image/*"
+                  capture="environment"
+                  className="hidden"
+                  onChange={(e) => onPickPhoto(e.target.files?.[0] ?? null)}
+                />
+              </label>
+              <label className="ws-chip cursor-pointer text-xs">
+                <Upload className="h-3.5 w-3.5" /> Choose photo
+                <input
+                  type="file"
+                  accept="image/*"
+                  className="hidden"
+                  onChange={(e) => onPickPhoto(e.target.files?.[0] ?? null)}
+                />
+              </label>
+              {imageUrl && (
+                <img src={imageUrl} alt="" className="h-10 w-10 rounded-md object-cover" />
+              )}
+            </div>
+            <Input value={imageUrl} onChange={(e) => setImageUrl(e.target.value)} placeholder="…or paste a photo link" />
           </div>
           <div className="grid grid-cols-2 gap-3">
             <div className="space-y-2">
