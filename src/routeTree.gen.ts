@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as VisualSearchRouteImport } from './routes/visual-search'
+import { Route as TownSquareRouteImport } from './routes/town-square'
 import { Route as SocialMediaViralsRouteImport } from './routes/social-media-virals'
 import { Route as ShopFrassRouteImport } from './routes/shop-frass'
 import { Route as SalesClearanceRouteImport } from './routes/sales-clearance'
@@ -179,6 +180,11 @@ import { Route as FrassShapeGenderGoalsGoalRouteImport } from './routes/frass-sh
 const VisualSearchRoute = VisualSearchRouteImport.update({
   id: '/visual-search',
   path: '/visual-search',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TownSquareRoute = TownSquareRouteImport.update({
+  id: '/town-square',
+  path: '/town-square',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SocialMediaViralsRoute = SocialMediaViralsRouteImport.update({
@@ -1085,6 +1091,7 @@ export interface FileRoutesByFullPath {
   '/sales-clearance': typeof SalesClearanceRoute
   '/shop-frass': typeof ShopFrassRoute
   '/social-media-virals': typeof SocialMediaViralsRouteWithChildren
+  '/town-square': typeof TownSquareRoute
   '/visual-search': typeof VisualSearchRoute
   '/.mcp/list-tools': typeof Char91DotmcpChar93ListToolsRoute
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
@@ -1236,6 +1243,7 @@ export interface FileRoutesByTo {
   '/rewards': typeof RewardsRoute
   '/sales-clearance': typeof SalesClearanceRoute
   '/shop-frass': typeof ShopFrassRoute
+  '/town-square': typeof TownSquareRoute
   '/visual-search': typeof VisualSearchRoute
   '/.mcp/list-tools': typeof Char91DotmcpChar93ListToolsRoute
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
@@ -1399,6 +1407,7 @@ export interface FileRoutesById {
   '/sales-clearance': typeof SalesClearanceRoute
   '/shop-frass': typeof ShopFrassRoute
   '/social-media-virals': typeof SocialMediaViralsRouteWithChildren
+  '/town-square': typeof TownSquareRoute
   '/visual-search': typeof VisualSearchRoute
   '/.mcp/list-tools': typeof Char91DotmcpChar93ListToolsRoute
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
@@ -1568,6 +1577,7 @@ export interface FileRouteTypes {
     | '/sales-clearance'
     | '/shop-frass'
     | '/social-media-virals'
+    | '/town-square'
     | '/visual-search'
     | '/.mcp/list-tools'
     | '/.well-known/oauth-protected-resource'
@@ -1719,6 +1729,7 @@ export interface FileRouteTypes {
     | '/rewards'
     | '/sales-clearance'
     | '/shop-frass'
+    | '/town-square'
     | '/visual-search'
     | '/.mcp/list-tools'
     | '/.well-known/oauth-protected-resource'
@@ -1881,6 +1892,7 @@ export interface FileRouteTypes {
     | '/sales-clearance'
     | '/shop-frass'
     | '/social-media-virals'
+    | '/town-square'
     | '/visual-search'
     | '/.mcp/list-tools'
     | '/.well-known/oauth-protected-resource'
@@ -2050,6 +2062,7 @@ export interface RootRouteChildren {
   SalesClearanceRoute: typeof SalesClearanceRoute
   ShopFrassRoute: typeof ShopFrassRoute
   SocialMediaViralsRoute: typeof SocialMediaViralsRouteWithChildren
+  TownSquareRoute: typeof TownSquareRoute
   VisualSearchRoute: typeof VisualSearchRoute
   Char91DotmcpChar93ListToolsRoute: typeof Char91DotmcpChar93ListToolsRoute
   Char91DotwellKnownChar93OauthProtectedResourceRoute: typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
@@ -2072,6 +2085,13 @@ declare module '@tanstack/react-router' {
       path: '/visual-search'
       fullPath: '/visual-search'
       preLoaderRoute: typeof VisualSearchRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/town-square': {
+      id: '/town-square'
+      path: '/town-square'
+      fullPath: '/town-square'
+      preLoaderRoute: typeof TownSquareRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/social-media-virals': {
@@ -3771,6 +3791,7 @@ const rootRouteChildren: RootRouteChildren = {
   SalesClearanceRoute: SalesClearanceRoute,
   ShopFrassRoute: ShopFrassRoute,
   SocialMediaViralsRoute: SocialMediaViralsRouteWithChildren,
+  TownSquareRoute: TownSquareRoute,
   VisualSearchRoute: VisualSearchRoute,
   Char91DotmcpChar93ListToolsRoute: Char91DotmcpChar93ListToolsRoute,
   Char91DotwellKnownChar93OauthProtectedResourceRoute:
