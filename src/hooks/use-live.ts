@@ -5,6 +5,26 @@ import type { LiveBroadcast, LiveComment, LiveDestination, LiveGift } from "@/li
 
 /** FRASS-0416 — LIVE is a platform-wide status, so everything reads from one place. */
 
+/**
+ * A livestream is a public place, but the account IDs behind it are not part of
+ * the show. Column privileges hide host_id / author_id / sender_id from
+ * anonymous visitors, so every read asks for the columns it is allowed to have.
+ */
+const BROADCAST_PUBLIC_COLUMNS =
+  "id, host_name, host_handle, destination, purpose, title, summary, status, viewer_count, cover_url, product_links, affiliate_url, scheduled_for, started_at, ended_at, replay_url, repurposed_as, created_at, updated_at";
+
+/** Signed-in members also get host_id, so a host recognises their own stream. */
+const BROADCAST_MEMBER_COLUMNS = `${BROADCAST_PUBLIC_COLUMNS}, host_id`;
+
+const COMMENT_COLUMNS = "id, broadcast_id, author_name, body, created_at";
+const GIFT_COLUMNS =
+  "id, broadcast_id, sender_name, gift_key, credits, amount, currency, note, created_at";
+
+async function broadcastColumns(): Promise<string> {
+  const { data } = await supabase.auth.getSession();
+  return data.session ? BROADCAST_MEMBER_COLUMNS : BROADCAST_PUBLIC_COLUMNS;
+}
+
 function normalise(row: Record<string, unknown>): LiveBroadcast {
   return {
     ...(row as unknown as LiveBroadcast),
@@ -12,6 +32,7 @@ function normalise(row: Record<string, unknown>): LiveBroadcast {
     repurposed_as: Array.isArray(row.repurposed_as) ? (row.repurposed_as as never) : [],
   };
 }
+
 
 /** Every broadcast currently live, across the whole ecosystem. */
 export function useLiveNow(destination?: LiveDestination) {
