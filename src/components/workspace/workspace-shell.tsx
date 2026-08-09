@@ -5,6 +5,7 @@
 import { type ReactNode, useRef, useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { ForUsLink } from "@/components/for-us-link";
+import { VoiceFeedbackButton } from "@/components/feedback/voice-feedback";
 import {
   Search,
   PanelLeftClose,
@@ -251,6 +252,10 @@ export function WorkspaceShell({
                 <User className="h-4 w-4" />
                 <span className="flex-1 text-left">Profile</span>
               </Link>
+              {/* FRASS-0412 — temporary launch feedback program */}
+              <div className="px-2 py-1">
+                <VoiceFeedbackButton source="workspace" label="Voice Feedback" />
+              </div>
               {roleLinks.map((r) => (
                 <Link key={r.to} to={r.to} className="ws-nav ws-nav-role">
                   <span>{r.emoji}</span>
