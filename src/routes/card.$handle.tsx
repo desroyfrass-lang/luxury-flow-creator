@@ -154,7 +154,7 @@ function PublicCard() {
               <Store className="mr-2 inline h-4 w-4" /> Business
             </h2>
             <div className="living-card-products">
-              {products.map((p) => (
+              {(products as Array<{ id: string; title: string; image_url: string | null; price: number | null }>).map((p) => (
                 <a
                   key={p.id}
                   className="living-card-product"
