@@ -65,6 +65,7 @@ export const WALLET_SECTIONS = [
   { id: "history", label: "Payment history", plain: "Every movement, newest first." },
   { id: "sell", label: "Quick Sell", plain: "Photo, price, quantity — live on your card in seconds." },
   { id: "items", label: "My items", plain: "Everything currently for sale from your card." },
+  { id: "request", label: "Request payment", plain: "Send a payment request to the customer's own phone." },
   { id: "invoices", label: "Invoices", plain: "Ask someone for a specific amount." },
   { id: "links", label: "Payment links", plain: "A link that opens your Pay door with the amount ready." },
   { id: "gifts", label: "Gifts", plain: "Gifts received, with their notes." },
