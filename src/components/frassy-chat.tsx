@@ -407,15 +407,16 @@ export function FrassyChat({ embedded = false }: { embedded?: boolean } = {}) {
       </div>
 
       {voice.isSpeaking || voice.isPaused ? (
-        <div className="border-t border-white/10 px-3 py-2">
+        <div className="shrink-0 border-t border-white/10 px-3 py-2">
           <SpeechControls />
         </div>
       ) : null}
 
       {/* FRASS-0412 — temporary launch feedback program */}
-      <div className="border-t border-white/10 px-3 py-2">
+      <div className="shrink-0 border-t border-white/10 px-3 py-2">
         <VoiceFeedbackButton source="chat" />
       </div>
+
 
       <FrassyComposer
         value={input}
