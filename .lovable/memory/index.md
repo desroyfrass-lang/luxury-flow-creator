@@ -3,6 +3,7 @@
 ## Core
 Brand name is always "Frass" (two s's) — never "Fras". Applies to Frass Hill, Frass Kicks, Frass Drip.
 Stay true to the original Frass Kicks aesthetic.
+Frass Hill imagery is photorealistic and cinematic — no cartoon art (except the husband hero, Bob Marley graffiti, and kids sections).
 Creator platform is "Frass Vision Studios" (shorthand "FV Studios") — never "Frassy Studio".
 Frass Hill: discovery before destination — every destination is experienced from a distance before interaction; movement, not navigation.
 Prefer dark streetwear visuals over bright white luxury styling.
