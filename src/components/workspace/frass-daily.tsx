@@ -751,6 +751,9 @@ export function FrassDaily({
                   <button type="button" className="daily-brief-head" onClick={() => setBriefingStep(open ? -1 : i)}>
                     <span className="daily-step-n" aria-hidden="true">{i + 1}</span>
                     <span className="daily-brief-title">{w.title}</span>
+                    <span className={`daily-health is-${healthFor(st).level}`} title={healthFor(st).note}>
+                      {healthFor(st).dot} {healthFor(st).label}
+                    </span>
                     <StatusPills status={st} />
                   </button>
                   {open && (
