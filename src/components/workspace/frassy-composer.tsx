@@ -198,6 +198,27 @@ export function FrassyComposer({
     onSend(text, describeIntake(queue.readyItems));
   };
 
+  // Built-in dictation: press to record, press again to drop the words in.
+  const toggleDictation = async () => {
+    if (ptt.phase === "recording") {
+      const text = await ptt.stopRecording();
+      if (text) onChange(value ? `${value.trim()} ${text}` : text);
+      textRef.current?.focus();
+      return;
+    }
+    if (ptt.phase === "transcribing") return;
+    await ptt.startRecording();
+  };
+
+  const mood: FrassyMood = ptt.isSpeaking
+    ? "speaking"
+    : ptt.phase === "recording"
+      ? "listening"
+      : loading || ptt.phase === "transcribing"
+        ? "thinking"
+        : "idle";
+
+
   return (
     <div
       className={`ws-composer ${dragging ? "ws-composer-drag" : ""}`}
