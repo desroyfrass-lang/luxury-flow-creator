@@ -231,23 +231,21 @@ export function FrassDaily({
           </button>
         )}
 
-        {/* My Day — today, at a glance */}
-        <section className="daily-myday" data-blueprint="daily-myday">
-          <div className="daily-myday-head">
-            <h2 className="daily-h2">My Day</h2>
-            <span className="ws-meta">{formatWorkload(day.remainingMinutes)} remaining</span>
+        {/* Today's Progress — one quiet metre of momentum, at the very top */}
+        <section className="daily-progress" data-blueprint="daily-myday">
+          <div className="daily-progress-head">
+            <h2 className="daily-h2">Today's Progress</h2>
+            <span className="daily-progress-pct">{progress.pct}% Complete</span>
           </div>
-          <div className="daily-bar daily-myday-bar">
-            <span style={{ width: `${day.pct}%` }} />
+          <div className="daily-bar daily-progress-bar">
+            <span className={progress.pct >= 100 ? "is-done" : ""} style={{ width: `${progress.pct}%` }} />
           </div>
-          <div className="daily-myday-stats">
-            <span>{day.pct}% complete</span>
-            <span>{day.tasks} tasks</span>
-            <span>{day.delegated} delegated</span>
-            <span>{day.awaitingApproval} waiting approval</span>
-            <span>{day.completed} completed</span>
-          </div>
+          <p className="ws-meta">
+            {progress.complete} of {progress.total} steps completed · {formatWorkload(day.remainingMinutes)} of work left
+          </p>
+          <p className="daily-next">{nextLine(steps)}</p>
         </section>
+
 
         {/* Navigate by conversation — handled by the docked Frassy Composer below */}
 
