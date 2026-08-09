@@ -67,6 +67,8 @@ import { Route as ProductHandleRouteImport } from './routes/product.$handle'
 import { Route as PlusSizeWomenRouteImport } from './routes/plus-size.women'
 import { Route as PlusSizeMenRouteImport } from './routes/plus-size.men'
 import { Route as LookbookStoryRouteImport } from './routes/lookbook.$story'
+import { Route as LiveGoRouteImport } from './routes/live.go'
+import { Route as LiveBroadcastIdRouteImport } from './routes/live.$broadcastId'
 import { Route as KidsWorldParentsRouteImport } from './routes/kids-world.parents'
 import { Route as KidsWorldDiscoverRouteImport } from './routes/kids-world.discover'
 import { Route as FrassShapeGenderRouteImport } from './routes/frass-shape.$gender'
@@ -459,6 +461,16 @@ const LookbookStoryRoute = LookbookStoryRouteImport.update({
   id: '/$story',
   path: '/$story',
   getParentRoute: () => LookbookRoute,
+} as any)
+const LiveGoRoute = LiveGoRouteImport.update({
+  id: '/go',
+  path: '/go',
+  getParentRoute: () => LiveRoute,
+} as any)
+const LiveBroadcastIdRoute = LiveBroadcastIdRouteImport.update({
+  id: '/$broadcastId',
+  path: '/$broadcastId',
+  getParentRoute: () => LiveRoute,
 } as any)
 const KidsWorldParentsRoute = KidsWorldParentsRouteImport.update({
   id: '/parents',
@@ -1095,6 +1107,8 @@ export interface FileRoutesByFullPath {
   '/frass-shape/$gender': typeof FrassShapeGenderRouteWithChildren
   '/kids-world/discover': typeof KidsWorldDiscoverRoute
   '/kids-world/parents': typeof KidsWorldParentsRoute
+  '/live/$broadcastId': typeof LiveBroadcastIdRoute
+  '/live/go': typeof LiveGoRoute
   '/lookbook/$story': typeof LookbookStoryRoute
   '/plus-size/men': typeof PlusSizeMenRoute
   '/plus-size/women': typeof PlusSizeWomenRoute
@@ -1234,6 +1248,8 @@ export interface FileRoutesByTo {
   '/frass-plus/sales': typeof FrassPlusSalesRoute
   '/kids-world/discover': typeof KidsWorldDiscoverRoute
   '/kids-world/parents': typeof KidsWorldParentsRoute
+  '/live/$broadcastId': typeof LiveBroadcastIdRoute
+  '/live/go': typeof LiveGoRoute
   '/lookbook/$story': typeof LookbookStoryRoute
   '/plus-size/men': typeof PlusSizeMenRoute
   '/plus-size/women': typeof PlusSizeWomenRoute
@@ -1397,6 +1413,8 @@ export interface FileRoutesById {
   '/frass-shape/$gender': typeof FrassShapeGenderRouteWithChildren
   '/kids-world/discover': typeof KidsWorldDiscoverRoute
   '/kids-world/parents': typeof KidsWorldParentsRoute
+  '/live/$broadcastId': typeof LiveBroadcastIdRoute
+  '/live/go': typeof LiveGoRoute
   '/lookbook/$story': typeof LookbookStoryRoute
   '/plus-size/men': typeof PlusSizeMenRoute
   '/plus-size/women': typeof PlusSizeWomenRoute
@@ -1560,6 +1578,8 @@ export interface FileRouteTypes {
     | '/frass-shape/$gender'
     | '/kids-world/discover'
     | '/kids-world/parents'
+    | '/live/$broadcastId'
+    | '/live/go'
     | '/lookbook/$story'
     | '/plus-size/men'
     | '/plus-size/women'
@@ -1699,6 +1719,8 @@ export interface FileRouteTypes {
     | '/frass-plus/sales'
     | '/kids-world/discover'
     | '/kids-world/parents'
+    | '/live/$broadcastId'
+    | '/live/go'
     | '/lookbook/$story'
     | '/plus-size/men'
     | '/plus-size/women'
@@ -1861,6 +1883,8 @@ export interface FileRouteTypes {
     | '/frass-shape/$gender'
     | '/kids-world/discover'
     | '/kids-world/parents'
+    | '/live/$broadcastId'
+    | '/live/go'
     | '/lookbook/$story'
     | '/plus-size/men'
     | '/plus-size/women'
@@ -2396,6 +2420,20 @@ declare module '@tanstack/react-router' {
       fullPath: '/lookbook/$story'
       preLoaderRoute: typeof LookbookStoryRouteImport
       parentRoute: typeof LookbookRoute
+    }
+    '/live/go': {
+      id: '/live/go'
+      path: '/go'
+      fullPath: '/live/go'
+      preLoaderRoute: typeof LiveGoRouteImport
+      parentRoute: typeof LiveRoute
+    }
+    '/live/$broadcastId': {
+      id: '/live/$broadcastId'
+      path: '/$broadcastId'
+      fullPath: '/live/$broadcastId'
+      preLoaderRoute: typeof LiveBroadcastIdRouteImport
+      parentRoute: typeof LiveRoute
     }
     '/kids-world/parents': {
       id: '/kids-world/parents'
@@ -3541,10 +3579,14 @@ const KidsWorldRouteWithChildren = KidsWorldRoute._addFileChildren(
 )
 
 interface LiveRouteChildren {
+  LiveBroadcastIdRoute: typeof LiveBroadcastIdRoute
+  LiveGoRoute: typeof LiveGoRoute
   LiveIndexRoute: typeof LiveIndexRoute
 }
 
 const LiveRouteChildren: LiveRouteChildren = {
+  LiveBroadcastIdRoute: LiveBroadcastIdRoute,
+  LiveGoRoute: LiveGoRoute,
   LiveIndexRoute: LiveIndexRoute,
 }
 
