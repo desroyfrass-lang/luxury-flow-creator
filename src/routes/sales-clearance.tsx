@@ -61,7 +61,7 @@ const COLUMNS: SaleColumn[] = [
 const SIGNS: WallSign[] = [
   { label: "Men's Sale Rack", caption: "Premium styles with today's best offers — before they're gone." },
   { label: "Women's Sale Rack", caption: "Fashion favourites now at special promotional prices." },
-  { label: "Clearance", accent: true, caption: "Hidden treasures. When they're gone, they're gone." },
+  { label: "Final\nClearance", accent: true, caption: "Hidden treasures. When they're gone, they're gone." },
 ];
 
 function LiquidationRoomPage() {

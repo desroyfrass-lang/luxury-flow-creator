@@ -18,6 +18,26 @@ import { FrassyComposer } from "@/components/workspace/frassy-composer";
 import { getWallet } from "@/lib/studio.functions";
 import { usdFor } from "@/lib/studio/credits";
 import frassyAvatar from "@/assets/frassy-gold.png.asset.json";
+import sceneCoast from "@/assets/daily-scene-coast.jpg";
+import sceneWaterfall from "@/assets/daily-scene-waterfall.jpg";
+import sceneMountain from "@/assets/daily-scene-mountain.jpg";
+import sceneVilla from "@/assets/daily-scene-villa.jpg";
+import {
+  BRIEFING_ORDER,
+  dailyProgress,
+  dailySteps,
+  LANE,
+  LANE_ORDER,
+  nextLine,
+  sceneIndexFor,
+  sectionStatuses,
+  type Lane,
+  type SectionStatus,
+} from "@/lib/workspace/daily-os";
+
+const SCENES = [sceneCoast, sceneWaterfall, sceneMountain, sceneVilla];
+
+
 
 
 import {
@@ -107,6 +127,14 @@ export function FrassDaily({
 
   const day = useMemo(() => myDay(model, done, delegated), [model, done, delegated]);
 
+  /** FRASS-0425 — the numbered workday, the progress metre, the section statuses. */
+  const steps = useMemo(() => dailySteps(model, done, delegated), [model, done, delegated]);
+  const progress = useMemo(() => dailyProgress(steps), [steps]);
+  const statuses = useMemo(() => sectionStatuses(model, steps), [model, steps]);
+  const scene = SCENES[sceneIndexFor()];
+  const [briefingStep, setBriefingStep] = useState(0);
+
+
   /** FRASS-0402 — the AI credit balance travels with the Builder, not with a role. */
   const fetchWallet = useServerFn(getWallet);
   const wallet = useQuery({ queryKey: ["studio-wallet"], queryFn: () => fetchWallet(), staleTime: 60_000 });
@@ -122,8 +150,15 @@ export function FrassDaily({
   /** The Daily is navigable by conversation, not clicks alone. */
   const runIntent = (said: string) => {
     if (!said) return;
+    // "Frassy, what's next?" — always answer with the highest-priority open step.
+    if (/what'?s?\s+next|next\s+(thing|task|step)/i.test(said)) {
+      setCommand("");
+      setCommandNote(nextLine(steps));
+      return;
+    }
     const result = resolveDailyCommand(said, model);
     setCommand("");
+
     if (!result) {
       setCommandNote("I didn't catch a destination in that. Try “show me the orders”, “continue yesterday's work”, or “open Marketplace”.");
       return;
@@ -147,10 +182,16 @@ export function FrassDaily({
 
   return (
     <div data-blueprint="daily" className={`frass-workspace daily-overlay ${entered ? "is-in" : ""}`} role="dialog" aria-label="The Frass Daily">
+      {/* Cinematic scenery — quiet Jamaican landscape, rotating by the day */}
+      <div className="daily-scene" aria-hidden="true">
+        <img src={scene} alt="" />
+      </div>
+
       {/* Frassy greets large, then shrinks into her assistant position */}
       <div className={`daily-frassy ${shrunk ? "is-small" : ""}`}>
         <img src={frassyAvatar.url} alt="" />
       </div>
+
 
       <div className="daily-scroll">
         <header className="daily-head">
@@ -197,23 +238,21 @@ export function FrassDaily({
           </button>
         )}
 
-        {/* My Day — today, at a glance */}
-        <section className="daily-myday" data-blueprint="daily-myday">
-          <div className="daily-myday-head">
-            <h2 className="daily-h2">My Day</h2>
-            <span className="ws-meta">{formatWorkload(day.remainingMinutes)} remaining</span>
+        {/* Today's Progress — one quiet metre of momentum, at the very top */}
+        <section className="daily-progress" data-blueprint="daily-myday">
+          <div className="daily-progress-head">
+            <h2 className="daily-h2">Today's Progress</h2>
+            <span className="daily-progress-pct">{progress.pct}% Complete</span>
           </div>
-          <div className="daily-bar daily-myday-bar">
-            <span style={{ width: `${day.pct}%` }} />
+          <div className="daily-bar daily-progress-bar">
+            <span className={progress.pct >= 100 ? "is-done" : ""} style={{ width: `${progress.pct}%` }} />
           </div>
-          <div className="daily-myday-stats">
-            <span>{day.pct}% complete</span>
-            <span>{day.tasks} tasks</span>
-            <span>{day.delegated} delegated</span>
-            <span>{day.awaitingApproval} waiting approval</span>
-            <span>{day.completed} completed</span>
-          </div>
+          <p className="ws-meta">
+            {progress.complete} of {progress.total} steps completed · {formatWorkload(day.remainingMinutes)} of work left
+          </p>
+          <p className="daily-next">{nextLine(steps)}</p>
         </section>
+
 
         {/* Navigate by conversation — handled by the docked Frassy Composer below */}
 
@@ -262,7 +301,7 @@ export function FrassDaily({
         </Section>
 
         {/* 2 — Daily briefing */}
-        <Section title="Daily briefing" note="Everything since you were last here. Click any number to see what it is.">
+        <Section title="Since you were last here" note="Everything that moved while you were away. Click any number to see what it is.">
           <div className="daily-grid">
             {model.briefing.map((m) => (
               <MetricCard
@@ -298,67 +337,74 @@ export function FrassDaily({
 
 
 
-        {/* 3 + 4 + 5 — Priorities, workload, delegation */}
+        {/* 3 — The numbered workday (FRASS-0425) */}
         <Section
           blueprintId="daily-priorities"
-          title="Today's priorities"
-
-          note={`Estimated work today: ${formatWorkload(remaining)}${
+          title="Today's Priorities"
+          status={statuses.priorities}
+          note={`Work through them in order. Estimated work today: ${formatWorkload(remaining)}${
             savedByFrassy ? ` · Frassy is carrying ${formatWorkload(savedByFrassy)}` : ""
           }`}
         >
-          {ORDER.map((p) => {
-            const items = model.tasks.filter((t) => t.priority === p);
-            if (!items.length) return null;
-            return (
-              <div key={p} className="daily-block">
-                <div className="ws-meta daily-block-title">{PRIORITY_LABEL[p]}</div>
-                {items.map((t) => {
-                  const isDelegated = delegated.includes(t.id);
-                  const isDone = done.includes(t.id) || t.priority === "completed";
-                  return (
-                    <div key={t.id} className={`daily-task ${isDone ? "is-done" : ""}`}>
-                      <button type="button" className="daily-task-main" onClick={() => go(t)}>
-                        <span className="daily-task-label">{t.label}</span>
-                        {t.detail && <span className="ws-meta">{t.detail}</span>}
-                        {t.minutes > 0 && <span className="ws-meta">≈ {formatWorkload(t.minutes)}</span>}
-                      </button>
-                      {!isDone && (
-                        <div className="daily-task-actions">
+          <ol className="daily-steps">
+            {steps.map((s) => {
+              const isDone = s.lane === "green";
+              const isDelegated = !!s.taskId && delegated.includes(s.taskId);
+              return (
+                <li key={s.id} className={`daily-step lane-${s.lane}`}>
+                  <span className="daily-step-n" aria-hidden="true">
+                    {s.n}
+                  </span>
+                  <span className={`daily-step-dot lane-dot-${s.lane}`} title={LANE[s.lane].meaning} />
+                  <button type="button" className="daily-step-main" onClick={() => go(s)}>
+                    <span className="daily-step-label">{s.label}</span>
+                    {s.detail && <span className="ws-meta">{s.detail}</span>}
+                  </button>
+                  <div className="daily-step-actions">
+                    <span className="ws-meta daily-step-lane">{LANE[s.lane].label}</span>
+                    {!isDone && s.taskId && (
+                      <>
+                        <button
+                          type="button"
+                          className="ws-chip"
+                          onClick={() => setDone((d) => [...d, s.taskId!])}
+                        >
+                          <Check className="h-3.5 w-3.5" /> Done
+                        </button>
+                        {s.delegable && (
                           <button
                             type="button"
-                            className="ws-chip"
-                            onClick={() => setDone((d) => [...d, t.id])}
+                            className={`ws-chip ${isDelegated ? "daily-chip-on" : ""}`}
+                            onClick={() =>
+                              setDelegated((d) =>
+                                d.includes(s.taskId!) ? d.filter((x) => x !== s.taskId) : [...d, s.taskId!],
+                              )
+                            }
                           >
-                            <Check className="h-3.5 w-3.5" /> I'll do it
+                            <Sparkles className="h-3.5 w-3.5" />
+                            {isDelegated ? "Frassy has it" : "Frassy handles it"}
                           </button>
-                          {t.delegable && (
-                            <button
-                              type="button"
-                              className={`ws-chip ${isDelegated ? "daily-chip-on" : ""}`}
-                              onClick={() =>
-                                setDelegated((d) =>
-                                  d.includes(t.id) ? d.filter((x) => x !== t.id) : [...d, t.id],
-                                )
-                              }
-                            >
-                              <Sparkles className="h-3.5 w-3.5" />
-                              {isDelegated ? "Frassy has it" : "Frassy handles it"}
-                            </button>
-                          )}
-                        </div>
-                      )}
-                    </div>
-                  );
-                })}
-              </div>
-            );
-          })}
+                        )}
+                      </>
+                    )}
+                  </div>
+                </li>
+              );
+            })}
+          </ol>
+          <div className="daily-lane-key">
+            {LANE_ORDER.map((l) => (
+              <span key={l} className="ws-meta">
+                {LANE[l].dot} {LANE[l].label} — {LANE[l].meaning}
+              </span>
+            ))}
+          </div>
         </Section>
+
 
         {/* 6 — Pending approvals */}
         {model.approvals.length > 0 && (
-          <Section title="Pending approvals" note="Everything waiting on you, in one place.">
+          <Section title="Pending Approvals" status={statuses.approvals} note="Everything waiting on you, in one place.">
             <div className="daily-grid">
               {model.approvals.map((a) => (
                 <button key={a.id} type="button" className="daily-card daily-clickable" onClick={() => go(a)}>
@@ -374,7 +420,7 @@ export function FrassDaily({
         )}
 
         {/* 7 — Opportunities */}
-        <Section title="Opportunities" note="Things I don't want you to miss.">
+        <Section title="Opportunities" status={statuses.opportunities} note="Things I don't want you to miss.">
           <div className="daily-grid">
             {model.opportunities.map((o) => (
               <button key={o.id} type="button" className="daily-card daily-clickable" onClick={() => go(o)}>
@@ -389,7 +435,7 @@ export function FrassDaily({
         </Section>
 
         {/* 8 — Goals & Vision Maps */}
-        <Section title="Goals & Vision Maps" note="How close you are.">
+        <Section title="Goals & Vision Map" status={statuses.goals} note="How close you are.">
           <div className="daily-lines">
             {model.goals.map((g) => (
               <button key={g.id} type="button" className="daily-goal daily-clickable-row" onClick={() => go(g)}>
@@ -407,7 +453,7 @@ export function FrassDaily({
         </Section>
 
         {/* 9 — Daily performance */}
-        <Section title="Daily performance" note="One glance tells you how things are going.">
+        <Section title="Daily Performance" status={statuses["daily-performance"]} note="One glance tells you how things are going.">
           <div className="daily-grid">
             {model.performance.map((m) => (
               <MetricCard
@@ -424,7 +470,7 @@ export function FrassDaily({
 
         {/* Founder-only executive panels */}
         {model.executive.length > 0 && (
-          <Section title="Founder command center" note="The executive view. Everything here opens the Founder Dashboard or the records behind it.">
+          <Section title="Founder Command Center" status={statuses["founder-command"]} note="The executive view. Everything here opens the Founder Dashboard or the records behind it.">
             <div className="daily-grid">
               {model.executive.map((m) => (
                 <MetricCard
@@ -539,7 +585,7 @@ export function FrassDaily({
         </Section>
 
         {/* 11 — Continue working */}
-        <Section title="Continue working" note="Exactly where you stopped.">
+        <Section title="Continue Working" status={statuses["continue-working"]} note="Exactly where you stopped.">
 
           <div className="daily-grid">
             {model.resume.map((r) => (
@@ -552,6 +598,61 @@ export function FrassDaily({
               </button>
             ))}
           </div>
+        </Section>
+
+        {/* Phase Two — the Daily Briefing. The same nine workspaces, every day, in order. */}
+        <Section
+          blueprintId="daily-briefing"
+          title="Daily Briefing"
+          note="The closing routine. Frassy walks every workspace with you, in the same order, until the day is closed."
+        >
+          <ol className="daily-brief">
+            {BRIEFING_ORDER.map((w, i) => {
+              const st = statuses[w.id];
+              const open = i === briefingStep;
+              const outstanding = st ? st.red + st.orange + st.blue : 0;
+              return (
+                <li key={w.id} className={`daily-brief-row ${open ? "is-open" : ""}`}>
+                  <button type="button" className="daily-brief-head" onClick={() => setBriefingStep(open ? -1 : i)}>
+                    <span className="daily-step-n" aria-hidden="true">{i + 1}</span>
+                    <span className="daily-brief-title">{w.title}</span>
+                    <StatusPills status={st} />
+                  </button>
+                  {open && (
+                    <div className="daily-brief-body">
+                      <p className="ws-meta">{w.note}</p>
+                      <p className="daily-next">
+                        {outstanding === 0
+                          ? "Nothing outstanding here. This workspace is closed for today."
+                          : `${outstanding} item${outstanding === 1 ? "" : "s"} still open here${
+                              st?.red ? ` — ${st.red} critical` : ""
+                            }. Everything else is settled.`}
+                      </p>
+                      <div className="daily-brief-actions">
+                        {w.href && (
+                          <button type="button" className="ws-chip" onClick={() => go({ href: w.href })}>
+                            Open {w.title} <ArrowRight className="h-3.5 w-3.5" />
+                          </button>
+                        )}
+                        <button
+                          type="button"
+                          className="ws-chip"
+                          onClick={() => setBriefingStep(Math.min(i + 1, BRIEFING_ORDER.length - 1))}
+                        >
+                          Reviewed — next workspace
+                        </button>
+                      </div>
+                    </div>
+                  )}
+                </li>
+              );
+            })}
+          </ol>
+          <p className="daily-next mt-4">
+            {progress.pct >= 100
+              ? "Everything is green. That's a finished day — rest well."
+              : "Finish the numbered list above, then close the day here."}
+          </p>
         </Section>
 
         <div className="daily-footer">
@@ -676,23 +777,43 @@ function MetricCard({
 }
 
 
+function StatusPills({ status }: { status?: SectionStatus }) {
+  if (!status) return null;
+  const shown = LANE_ORDER.filter((l) => status[l] > 0);
+  if (!shown.length) return null;
+  return (
+    <span className="daily-status">
+      {shown.map((l) => (
+        <span key={l} className={`daily-status-pill lane-pill-${l}`} title={LANE[l].meaning}>
+          {LANE[l].dot} {status[l]} {LANE[l].label}
+        </span>
+      ))}
+    </span>
+  );
+}
+
 function Section({
   title,
   note,
   blueprintId,
+  status,
   children,
 }: {
   title: string;
   note?: string;
   blueprintId?: string;
+  status?: SectionStatus;
   children: React.ReactNode;
 }) {
   return (
     <section data-blueprint={blueprintId} className="daily-section">
-      <h2 className="daily-h2">{title}</h2>
-
+      <div className="daily-section-head">
+        <h2 className="daily-h2">{title}</h2>
+        <StatusPills status={status} />
+      </div>
       {note && <p className="ws-meta daily-note">{note}</p>}
-      <div className="mt-3">{children}</div>
+      <div className="mt-4">{children}</div>
     </section>
   );
 }
+

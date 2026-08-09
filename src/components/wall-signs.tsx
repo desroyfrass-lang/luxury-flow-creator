@@ -20,7 +20,7 @@ export function WallSigns({ labels, signs }: { labels?: string[]; signs?: WallSi
             className="row-span-3 grid min-w-0 grid-rows-subgrid text-center"
           >
             <h2
-              className={`flex items-end justify-center font-display uppercase leading-[1.05] tracking-[0.12em] text-[clamp(1.15rem,4.6vw,1.6rem)] md:text-[clamp(2.4rem,3.4vw,3.75rem)] md:tracking-[0.2em] ${
+              className={`flex items-end justify-center whitespace-pre-line font-display uppercase leading-[1.05] tracking-[0.12em] text-[clamp(1.15rem,4.6vw,1.6rem)] md:text-[clamp(2.4rem,3.4vw,3.75rem)] md:tracking-[0.2em] ${
                 sign.accent ? "text-foreground" : "text-[color:var(--gold)]"
               }`}
             >
