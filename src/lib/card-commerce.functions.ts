@@ -207,3 +207,90 @@ export const startCardCheckout = createServerFn({ method: "POST" })
       currency: listing.currency,
     };
   });
+
+/**
+ * FRASS-0429 — Send money, send a gift, leave a tip.
+ *
+ * No listing involved: the visitor names an amount, Frass records the movement
+ * against the member's wallet and hands them to the member's own payment
+ * account. Frass still never holds the money.
+ */
+export const startCardPayment = createServerFn({ method: "POST" })
+  .inputValidator(
+    (d: {
+      handle: string;
+      kind: "money" | "gift" | "tip";
+      amount: number;
+      note?: string;
+      buyer_name?: string;
+      buyer_email?: string;
+    }) =>
+      z
+        .object({
+          handle: z.string().trim().max(40),
+          kind: z.enum(["money", "gift", "tip"]),
+          amount: z.number().min(1).max(100_000),
+          note: z.string().trim().max(240).optional(),
+          buyer_name: z.string().trim().max(120).optional(),
+          buyer_email: z.string().trim().email().max(255).optional(),
+        })
+        .parse(d),
+  )
+  .handler(async ({ data }) => {
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+
+    const handle = data.handle.replace(/^@/, "").toLowerCase();
+    const { data: profile } = await supabaseAdmin
+      .from("profiles")
+      .select("id")
+      .eq("handle", handle)
+      .maybeSingle();
+    if (!profile) return { ok: false as const, reason: "That card could not be found." };
+
+    const { data: card } = await supabaseAdmin
+      .from("business_cards")
+      .select("commerce_enabled, payout_provider, payout_url")
+      .eq("user_id", profile.id)
+      .maybeSingle();
+    if (!card?.commerce_enabled || !card.payout_url) {
+      return { ok: false as const, reason: "This member has not switched on payments yet." };
+    }
+
+    const s = settle(data.amount, 1, card.payout_provider);
+    const reference = `${data.kind}${data.note ? `: ${data.note}` : ""}`.slice(0, 240);
+
+    const { data: order, error } = await supabaseAdmin
+      .from("card_orders")
+      .insert({
+        listing_id: null,
+        seller_id: profile.id,
+        buyer_name: data.buyer_name ?? null,
+        buyer_email: data.buyer_email ?? null,
+        quantity: 1,
+        unit_price: s.gross,
+        subtotal: s.gross,
+        platform_fee: s.platformFee,
+        processing_fee_estimate: s.processingFeeEstimate,
+        net_to_seller: s.netToSeller,
+        currency: "USD",
+        status: "pending",
+        payout_provider: card.payout_provider,
+        reference,
+      })
+      .select()
+      .single();
+    if (error) throw error;
+
+    await supabaseAdmin
+      .from("business_card_events")
+      .insert({ card_user_id: profile.id, kind: "sale", detail: reference.slice(0, 120) });
+
+    return {
+      ok: true as const,
+      order_id: order.id,
+      pay_url: card.payout_url,
+      provider: card.payout_provider,
+      total: s.gross,
+      currency: "USD",
+    };
+  });
