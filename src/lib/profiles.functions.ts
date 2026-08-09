@@ -1,6 +1,7 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
+import { BuilderAboutSchema } from "@/lib/about";
 import type { Database } from "@/integrations/supabase/types";
 
 export type BuilderProfile = Database["public"]["Tables"]["profiles"]["Row"];
@@ -26,6 +27,8 @@ const UpdateProfileSchema = z.object({
   region: z.string().max(120).nullable().optional(),
   postal_code: z.string().max(40).nullable().optional(),
   country: z.string().max(120).nullable().optional(),
+  /** FRASS-0423 — the Living Biography shown on the FOR ME About tab. */
+  about: BuilderAboutSchema.optional(),
 });
 
 /** Returns the authenticated Builder's login email (the account sign-in name). */
@@ -100,7 +103,7 @@ export const updateMyProfile = createServerFn({ method: "POST" })
   .inputValidator((d: z.infer<typeof UpdateProfileSchema>) => UpdateProfileSchema.parse(d))
   .handler(async ({ context, data }) => {
     const update: Database["public"]["Tables"]["profiles"]["Update"] = {
-      ...data,
+      ...(data as Record<string, unknown>),
       updated_at: new Date().toISOString(),
     };
     const { data: profile, error } = await context.supabase
