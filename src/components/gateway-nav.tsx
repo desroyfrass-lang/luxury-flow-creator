@@ -121,6 +121,15 @@ const NAV: NavGroup[] = [
 
   { label: "Social Media Virals", to: "/social-media-virals", match: "/social-media-virals" },
   {
+    label: "Frassy Studio",
+    to: "/studio",
+    match: "/studio",
+    editorial: true,
+    items: [
+      { label: "Enter the Studio", to: "/studio", note: "AI video, audio & motion" },
+    ],
+  },
+  {
     label: "Discover",
     to: "/frass-hill",
     match: "/frass-hill",
