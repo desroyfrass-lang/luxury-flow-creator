@@ -1235,6 +1235,27 @@ export type Database = {
         }
         Relationships: []
       }
+      launch_program_settings: {
+        Row: {
+          enabled: boolean
+          id: string
+          notice: string | null
+          updated_at: string
+        }
+        Insert: {
+          enabled?: boolean
+          id: string
+          notice?: string | null
+          updated_at?: string
+        }
+        Update: {
+          enabled?: boolean
+          id?: string
+          notice?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       learning_activities: {
         Row: {
           age_group: string
@@ -2846,6 +2867,63 @@ export type Database = {
           storage_path?: string
           user_id?: string | null
           width?: number | null
+        }
+        Relationships: []
+      }
+      voice_feedback: {
+        Row: {
+          attachments: Json
+          audio_path: string | null
+          category: string
+          created_at: string
+          duration_seconds: number | null
+          founder_note: string | null
+          id: string
+          implemented_at: string | null
+          sentiment: string | null
+          source: string
+          status: string
+          summary: string | null
+          themes: string[]
+          transcript: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          attachments?: Json
+          audio_path?: string | null
+          category?: string
+          created_at?: string
+          duration_seconds?: number | null
+          founder_note?: string | null
+          id?: string
+          implemented_at?: string | null
+          sentiment?: string | null
+          source?: string
+          status?: string
+          summary?: string | null
+          themes?: string[]
+          transcript?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          attachments?: Json
+          audio_path?: string | null
+          category?: string
+          created_at?: string
+          duration_seconds?: number | null
+          founder_note?: string | null
+          id?: string
+          implemented_at?: string | null
+          sentiment?: string | null
+          source?: string
+          status?: string
+          summary?: string | null
+          themes?: string[]
+          transcript?: string | null
+          updated_at?: string
+          user_id?: string
         }
         Relationships: []
       }

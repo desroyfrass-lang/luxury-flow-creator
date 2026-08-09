@@ -47,6 +47,7 @@ import {
   setRitualEnabled,
 } from "@/lib/workspace/daily-intel";
 import { Amount } from "@/components/finance/amount";
+import { VoiceFeedbackButton } from "@/components/feedback/voice-feedback";
 import { dailySnapshot, viewerFrom } from "@/lib/finance/financial-center";
 
 
@@ -466,6 +467,24 @@ export function FrassDaily({
             </div>
           </Section>
         )}
+
+        {/* FRASS-0412 — temporary launch feedback program */}
+        <Section
+          title="🎤 Launch Feedback"
+          note="Talk to us. Record a voice note about anything — an idea, a bug, or something that felt confusing. Frassy writes it up for the Founder."
+        >
+          <div className="daily-grid">
+            <div className="daily-card">
+              <span className="daily-task-label">Your voice shapes Frass</span>
+              <span className="ws-meta">
+                Voluntary, private, and temporary — nothing is published without your permission.
+              </span>
+              <div className="mt-3">
+                <VoiceFeedbackButton source="daily" />
+              </div>
+            </div>
+          </div>
+        </Section>
 
         {/* FRASS-0401/0402/0407 — Frass Vision Studios, open to every member and partner */}
         <Section

@@ -22,6 +22,8 @@ import {
 } from "lucide-react";
 import { SiteShell } from "@/components/site-shell";
 import { PhoneContentMode } from "@/components/studio/phone-content-mode";
+import { VoiceFeedbackButton } from "@/components/feedback/voice-feedback";
+import { CreationOpportunities } from "@/components/creation/opportunity-panel";
 import { ExportWatermarkPanel } from "@/components/studio/export-watermark";
 import type { QualityReport } from "@/lib/studio/phone-content-mode";
 import { FREE_CAPABILITIES, formatDuration, unitLabel, usdFor } from "@/lib/studio/credits";
@@ -200,12 +202,16 @@ function StudioPage() {
                 want to take the controls.
               </p>
             </div>
-            <CreditMeter
-              balance={w?.balance ?? 0}
-              today={w?.today_used ?? 0}
-              month={w?.month_used ?? 0}
-              projected={projected}
-            />
+            <div className="flex flex-col items-end gap-3">
+              <CreditMeter
+                balance={w?.balance ?? 0}
+                today={w?.today_used ?? 0}
+                month={w?.month_used ?? 0}
+                projected={projected}
+              />
+              {/* FRASS-0412 — temporary launch feedback program */}
+              <VoiceFeedbackButton source="studio" />
+            </div>
           </header>
 
           <div className="grid gap-6 lg:grid-cols-[260px_minmax(0,1fr)_300px]">
@@ -368,6 +374,9 @@ function StudioPage() {
                 onRun={(report) => runPhone.mutate(report)}
               />
 
+
+              {/* FRASS-0411 — every creation has a business */}
+              <CreationOpportunities kind="video" />
 
               {/* Professional timeline */}
               <Panel title="Timeline — manual editing, always free" icon={Scissors}>
