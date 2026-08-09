@@ -412,7 +412,8 @@ function StudioPage() {
 
             {/* Inspector / Effects / Mixer / Export */}
             <aside className="space-y-4">
-              <Panel title="Inspector" icon={SlidersHorizontal}>
+              <ExportWatermarkPanel />
+
                 <ul className="space-y-1.5 text-xs text-white/55">
                   <li>Transform · Scale · Position · Rotation</li>
                   <li>Colour · Exposure · Contrast · Balance</li>
