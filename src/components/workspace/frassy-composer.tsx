@@ -366,7 +366,14 @@ export function FrassyComposer({
           ref={textRef}
           rows={2}
           value={value}
-          onChange={(e) => onChange(e.target.value)}
+          onChange={(e) => {
+            onChange(e.target.value);
+            // Grow with the thought, up to a comfortable ceiling.
+            const el = e.currentTarget;
+            el.style.height = "auto";
+            el.style.height = `${Math.min(el.scrollHeight, 220)}px`;
+          }}
+
           onKeyDown={(e) => {
             if (e.key === "Enter" && !e.shiftKey) {
               e.preventDefault();
