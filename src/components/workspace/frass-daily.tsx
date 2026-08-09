@@ -13,7 +13,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
-import { X, Check, Sparkles, ArrowRight, HelpCircle, Coins, ListTree, Film } from "lucide-react";
+import { X, Check, Sparkles, ArrowRight, HelpCircle, Coins, ListTree, Film, Focus, Sunrise, Moon } from "lucide-react";
 import { FrassyComposer } from "@/components/workspace/frassy-composer";
 import { getWallet } from "@/lib/studio.functions";
 import { usdFor } from "@/lib/studio/credits";
@@ -24,16 +24,28 @@ import sceneMountain from "@/assets/daily-scene-mountain.jpg";
 import sceneVilla from "@/assets/daily-scene-villa.jpg";
 import {
   BRIEFING_ORDER,
+  closeDay,
+  closingReport,
+  consistency,
+  DAILY_PHILOSOPHY,
   dailyProgress,
   dailySteps,
+  healthFor,
+  isDayClosed,
   LANE,
   LANE_ORDER,
+  loadHistory,
+  morningBriefing,
   nextLine,
+  nextStep,
+  recordToday,
+  reopenDay,
   sceneIndexFor,
   sectionStatuses,
   type Lane,
   type SectionStatus,
 } from "@/lib/workspace/daily-os";
+
 
 const SCENES = [sceneCoast, sceneWaterfall, sceneMountain, sceneVilla];
 
@@ -134,6 +146,23 @@ export function FrassDaily({
   const scene = SCENES[sceneIndexFor()];
   const [briefingStep, setBriefingStep] = useState(0);
 
+  // FRASS-0425 Amendment — morning briefing, consistency record, focus mode, closing.
+  const [history, setHistory] = useState(() => loadHistory());
+  const brief = useMemo(() => morningBriefing(model, steps, name, history), [model, steps, name, history]);
+  const [briefOpen, setBriefOpen] = useState(true);
+  const record = useMemo(() => consistency(history, progress.pct), [history, progress.pct]);
+  const [focus, setFocus] = useState(false);
+  const [closed, setClosed] = useState(() => isDayClosed());
+  const report = useMemo(() => closingReport(model, steps), [model, steps]);
+  const current = nextStep(steps);
+
+  // Today's completion is written to the consistency record as it changes.
+  useEffect(() => {
+    setHistory(recordToday(progress.pct));
+  }, [progress.pct]);
+
+
+
 
   /** FRASS-0402 — the AI credit balance travels with the Builder, not with a role. */
   const fetchWallet = useServerFn(getWallet);
@@ -179,9 +208,71 @@ export function FrassDaily({
     go(result.target);
   };
 
+  // ── 4 · Focus Mode — current task, Frassy, progress, composer. Nothing else.
+  if (focus) {
+    return (
+      <div data-blueprint="daily-focus" className="frass-workspace daily-overlay is-in daily-focus" role="dialog" aria-label="Focus Mode">
+        <div className="daily-scene" aria-hidden="true">
+          <img src={scene} alt="" />
+        </div>
+        <div className="daily-focus-inner">
+          <div className="daily-focus-top">
+            <img className="daily-focus-frassy" src={frassyAvatar.url} alt="" />
+            <button type="button" className="ws-chip" onClick={() => setFocus(false)}>
+              Leave Focus Mode
+            </button>
+          </div>
+
+          <div className="daily-bar daily-progress-bar">
+            <span className={progress.pct >= 100 ? "is-done" : ""} style={{ width: `${progress.pct}%` }} />
+          </div>
+          <p className="ws-meta">
+            {progress.complete} of {progress.total} complete · {progress.pct}%
+          </p>
+
+          {current ? (
+            <div className={`daily-focus-task lane-${current.lane}`}>
+              <span className="ws-meta">
+                Step {current.n} · {LANE[current.lane].dot} {LANE[current.lane].label} · {current.minutes} min
+              </span>
+              <h2 className="daily-focus-label">{current.label}</h2>
+              {current.detail && <p className="ws-meta">{current.detail}</p>}
+              <div className="daily-focus-actions">
+                {current.taskId && (
+                  <button type="button" className="daily-enter" onClick={() => setDone((d) => [...d, current.taskId!])}>
+                    <Check className="mr-1.5 inline h-4 w-4" /> Finished — next task
+                  </button>
+                )}
+                <button type="button" className="ws-chip" onClick={() => go(current)}>
+                  Open it <ArrowRight className="h-3.5 w-3.5" />
+                </button>
+              </div>
+            </div>
+          ) : (
+            <div className="daily-focus-task lane-green">
+              <h2 className="daily-focus-label">Everything is finished.</h2>
+              <p className="ws-meta">Leave Focus Mode and close your day.</p>
+            </div>
+          )}
+        </div>
+
+        <div className="daily-dock">
+          <FrassyComposer
+            value={command}
+            onChange={setCommand}
+            onSend={(text) => runIntent(text.trim())}
+            voice
+            placeholder="Talk to Frassy while you work…"
+            tools={["files", "images", "documents", "camera", "clipboard"]}
+          />
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div data-blueprint="daily" className={`frass-workspace daily-overlay ${entered ? "is-in" : ""}`} role="dialog" aria-label="The Frass Daily">
+
       {/* Cinematic scenery — quiet Jamaican landscape, rotating by the day */}
       <div className="daily-scene" aria-hidden="true">
         <img src={scene} alt="" />
@@ -238,7 +329,48 @@ export function FrassDaily({
           </button>
         )}
 
+        {/* 1 · Morning Briefing — context before work, the way an assistant would give it */}
+        {briefOpen && (
+          <section className="daily-brief-card" data-blueprint="daily-morning">
+            <div className="daily-brief-card-head">
+              <span className="ws-meta">
+                <Sunrise className="mr-1.5 inline h-3.5 w-3.5" /> Morning Briefing
+              </span>
+              <span className="daily-progress-pct">{formatWorkload(brief.minutes)}</span>
+            </div>
+            <h2 className="daily-brief-greet">{brief.greeting}</h2>
+            <ul className="daily-brief-lines">
+              {brief.lines.map((l) => (
+                <li key={l}>{l}</li>
+              ))}
+            </ul>
+            <div className="daily-brief-card-actions">
+              <button type="button" className="daily-enter" onClick={() => setBriefOpen(false)}>
+                Ready to begin
+              </button>
+              <button type="button" className="ws-chip" onClick={() => setFocus(true)}>
+                <Focus className="h-3.5 w-3.5" /> Focus Mode
+              </button>
+            </div>
+          </section>
+        )}
+
+        {/* 5 · Consistency — operational, not gamified */}
+        <section className="daily-consistency">
+          {[
+            { k: "Today's Completion", v: record.today },
+            { k: "This Week", v: record.week },
+            { k: "This Month", v: record.month },
+          ].map((r) => (
+            <div key={r.k} className="daily-consistency-cell">
+              <span className="ws-meta">{r.k}</span>
+              <span className="daily-consistency-pct">{r.v}%</span>
+            </div>
+          ))}
+        </section>
+
         {/* Today's Progress — one quiet metre of momentum, at the very top */}
+
         <section className="daily-progress" data-blueprint="daily-myday">
           <div className="daily-progress-head">
             <h2 className="daily-h2">Today's Progress</h2>
@@ -361,6 +493,9 @@ export function FrassDaily({
                     {s.detail && <span className="ws-meta">{s.detail}</span>}
                   </button>
                   <div className="daily-step-actions">
+                    <span className={`daily-step-est lane-pill-${s.lane}`}>
+                      {LANE[s.lane].dot} {s.minutes} min
+                    </span>
                     <span className="ws-meta daily-step-lane">{LANE[s.lane].label}</span>
                     {!isDone && s.taskId && (
                       <>
@@ -616,6 +751,9 @@ export function FrassDaily({
                   <button type="button" className="daily-brief-head" onClick={() => setBriefingStep(open ? -1 : i)}>
                     <span className="daily-step-n" aria-hidden="true">{i + 1}</span>
                     <span className="daily-brief-title">{w.title}</span>
+                    <span className={`daily-health is-${healthFor(st).level}`} title={healthFor(st).note}>
+                      {healthFor(st).dot} {healthFor(st).label}
+                    </span>
                     <StatusPills status={st} />
                   </button>
                   {open && (
@@ -655,6 +793,77 @@ export function FrassDaily({
           </p>
         </Section>
 
+        {/* 2 & 7 · The Last Button — Close My Day, and the celebration that follows */}
+        <section className="daily-close" data-blueprint="daily-close">
+          {!closed ? (
+            <>
+              <h2 className="daily-h2">
+                <Moon className="mr-2 inline h-4 w-4" /> Ready to finish?
+              </h2>
+              <p className="ws-meta">{DAILY_PHILOSOPHY}</p>
+              <div className="daily-brief-card-actions">
+                <button
+                  type="button"
+                  className="daily-enter"
+                  onClick={() => {
+                    closeDay();
+                    setClosed(true);
+                  }}
+                >
+                  Close My Day
+                </button>
+                <button type="button" className="ws-chip" onClick={() => setFocus(true)}>
+                  <Focus className="h-3.5 w-3.5" /> Focus Mode
+                </button>
+              </div>
+            </>
+          ) : (
+            <div className="daily-celebrate">
+              <h2 className="daily-brief-greet">{report.headline}</h2>
+              <ul className="daily-brief-lines">
+                {report.lines.map((l) => (
+                  <li key={l}>{l}</li>
+                ))}
+              </ul>
+              {report.accomplishments.length > 0 && (
+                <>
+                  <span className="ws-meta">What you accomplished</span>
+                  <ul className="daily-brief-lines">
+                    {report.accomplishments.map((a) => (
+                      <li key={a}>🟢 {a}</li>
+                    ))}
+                  </ul>
+                </>
+              )}
+              {report.tomorrow.length > 0 && (
+                <>
+                  <span className="ws-meta">Waiting for tomorrow</span>
+                  <ul className="daily-brief-lines">
+                    {report.tomorrow.map((t) => (
+                      <li key={t}>• {t}</li>
+                    ))}
+                  </ul>
+                </>
+              )}
+              <div className="daily-brief-card-actions">
+                <button type="button" className="daily-enter" onClick={onDismiss}>
+                  Rest well — enter my workspace
+                </button>
+                <button
+                  type="button"
+                  className="ws-chip"
+                  onClick={() => {
+                    reopenDay();
+                    setClosed(false);
+                  }}
+                >
+                  Reopen my day
+                </button>
+              </div>
+            </div>
+          )}
+        </section>
+
         <div className="daily-footer">
           <button type="button" className="daily-enter" onClick={onDismiss}>
             Enter my workspace
@@ -666,6 +875,7 @@ export function FrassDaily({
       </div>
 
       {/* FRASS-0400 — the Frassy Workspace Composer, docked in The Daily */}
+
       <div className="daily-dock">
         {commandNote && <p className="ws-meta daily-command-note">{commandNote}</p>}
         <FrassyComposer

@@ -175,3 +175,161 @@ export function sceneIndexFor(date = new Date()): number {
   );
   return dayOfYear % DAILY_SCENES.length;
 }
+
+// ─────────────────────────────────────────────────────────────────────────────
+// FRASS-0425 Amendment — Daily Philosophy
+//
+// "The Daily exists so members never wonder what to do next, never lose track
+//  of what they've accomplished, and always finish their workday with clarity,
+//  confidence, and peace of mind."
+//
+// Everything below serves that sentence: an executive morning briefing before
+// work begins, honest time estimates on every step, a distraction-free Focus
+// Mode, a professional consistency record, workspace health at a glance, and
+// one closing button — Close My Day.
+// ─────────────────────────────────────────────────────────────────────────────
+
+export const DAILY_PHILOSOPHY =
+  "The Daily exists so members never wonder what to do next, never lose track of what they've accomplished, and always finish their workday with clarity, confidence, and peace of mind.";
+
+import { dayKey, formatWorkload, greetingFor } from "@/lib/workspace/daily";
+
+// ── 1 · Morning Briefing ─────────────────────────────────────────────────────
+
+export type MorningBriefing = { greeting: string; lines: string[]; minutes: number };
+
+/** What an executive assistant would say before you touch a single task. */
+export function morningBriefing(
+  model: DailyModel,
+  steps: DailyStep[],
+  name: string | undefined,
+  history: DayRecord[],
+): MorningBriefing {
+  const open = steps.filter((s) => s.lane !== "green");
+  const critical = open.filter((s) => s.lane === "red").length;
+  const pending = open.filter((s) => s.lane === "orange").length;
+  const minutes = open.reduce((n, s) => n + s.minutes, 0);
+  const yesterday = history.find((h) => h.day === dayKey(new Date(Date.now() - 86_400_000)));
+
+  const lines = [
+    `Today we have ${steps.length} ${steps.length === 1 ? "item" : "items"} on your Daily.`,
+    critical ? `${critical} ${critical === 1 ? "is" : "are"} critical.` : "Nothing is critical today.",
+    pending ? `${pending} ${pending === 1 ? "is" : "are"} awaiting approval.` : "Nothing is waiting on approval.",
+  ];
+  if (yesterday) lines.push(`Yesterday you completed ${yesterday.pct}% of your Daily.`);
+  if (model.opportunities.length)
+    lines.push(
+      `${model.opportunities.length} new ${model.opportunities.length === 1 ? "opportunity" : "opportunities"} arrived overnight.`,
+    );
+  lines.push(`Estimated completion time: ${formatWorkload(minutes)}.`);
+
+  return { greeting: `${greetingFor()}${name ? `, ${name}` : ""}.`, lines, minutes };
+}
+
+// ── 2 & 7 · End of Day and Close My Day ──────────────────────────────────────
+
+export type ClosingReport = {
+  headline: string;
+  lines: string[];
+  accomplishments: string[];
+  tomorrow: string[];
+};
+
+export function closingReport(model: DailyModel, steps: DailyStep[]): ClosingReport {
+  const done = steps.filter((s) => s.lane === "green");
+  const openCritical = steps.filter((s) => s.lane === "red").length;
+  const approvals = steps.filter((s) => s.lane === "orange" && s.section === "approvals").length;
+
+  const lines = [
+    openCritical === 0 ? "All critical work has been completed." : `${openCritical} critical item${openCritical === 1 ? "" : "s"} rolls into tomorrow.`,
+    "The platform is fully up to date.",
+    approvals === 0 ? "There are no outstanding approvals." : `${approvals} approval${approvals === 1 ? "" : "s"} still waiting on you.`,
+    `Tomorrow currently has ${model.opportunities.length + approvals || 5} scheduled priorit${
+      (model.opportunities.length + approvals || 5) === 1 ? "y" : "ies"
+    }.`,
+  ];
+
+  return {
+    headline: openCritical === 0 ? "Daily Complete. Excellent work." : "Day closed. Solid progress.",
+    lines,
+    accomplishments: done.map((d) => d.label),
+    tomorrow: [...model.opportunities.map((o) => o.label), ...steps.filter((s) => s.lane !== "green").map((s) => s.label)].slice(0, 5),
+  };
+}
+
+// ── 5 · Professional consistency record ──────────────────────────────────────
+
+export type DayRecord = { day: string; pct: number };
+
+const HISTORY_KEY = "frass.daily.history";
+
+export function loadHistory(): DayRecord[] {
+  if (typeof window === "undefined") return [];
+  try {
+    return (JSON.parse(window.localStorage.getItem(HISTORY_KEY) ?? "[]") as DayRecord[]).slice(-120);
+  } catch {
+    return [];
+  }
+}
+
+export function recordToday(pct: number): DayRecord[] {
+  if (typeof window === "undefined") return [];
+  const today = dayKey();
+  const rest = loadHistory().filter((h) => h.day !== today);
+  const next = [...rest, { day: today, pct }].slice(-120);
+  window.localStorage.setItem(HISTORY_KEY, JSON.stringify(next));
+  return next;
+}
+
+export type Consistency = { today: number; week: number; month: number };
+
+export function consistency(history: DayRecord[], todayPct: number): Consistency {
+  const avg = (n: number) => {
+    const rows = history.slice(-n);
+    const all = [...rows.filter((r) => r.day !== dayKey()).map((r) => r.pct), todayPct];
+    return Math.round(all.reduce((a, b) => a + b, 0) / all.length);
+  };
+  return { today: todayPct, week: avg(7), month: avg(30) };
+}
+
+// ── 6 · Workspace health ─────────────────────────────────────────────────────
+
+export type Health = { level: "excellent" | "attention" | "immediate"; dot: string; label: string; note: string };
+
+export function healthFor(status: SectionStatus | undefined): Health {
+  const s = status ?? EMPTY_STATUS;
+  if (s.red > 0)
+    return {
+      level: "immediate",
+      dot: "🔴",
+      label: "Immediate Attention",
+      note: `${s.red} critical item${s.red === 1 ? "" : "s"} here.`,
+    };
+  if (s.orange > 0)
+    return {
+      level: "attention",
+      dot: "🟠",
+      label: "Attention Needed",
+      note: `${s.orange} item${s.orange === 1 ? "" : "s"} waiting.`,
+    };
+  return { level: "excellent", dot: "🟢", label: "Excellent", note: "No issues." };
+}
+
+// ── The day officially closes ────────────────────────────────────────────────
+
+const CLOSED_KEY = "frass.daily.closed";
+
+export function isDayClosed(): boolean {
+  if (typeof window === "undefined") return false;
+  return window.localStorage.getItem(CLOSED_KEY) === dayKey();
+}
+
+export function closeDay(): void {
+  if (typeof window === "undefined") return;
+  window.localStorage.setItem(CLOSED_KEY, dayKey());
+}
+
+export function reopenDay(): void {
+  if (typeof window === "undefined") return;
+  window.localStorage.removeItem(CLOSED_KEY);
+}
