@@ -20,6 +20,7 @@ import { Route as LookbookRouteImport } from './routes/lookbook'
 import { Route as KidsWorldRouteImport } from './routes/kids-world'
 import { Route as KicksDistrictRouteImport } from './routes/kicks-district'
 import { Route as GatewayRouteImport } from './routes/gateway'
+import { Route as FvStudiosRouteImport } from './routes/fv-studios'
 import { Route as FrassWorldRouteImport } from './routes/frass-world'
 import { Route as FrassShapeRouteImport } from './routes/frass-shape'
 import { Route as FrassPlusRouteImport } from './routes/frass-plus'
@@ -212,6 +213,11 @@ const KicksDistrictRoute = KicksDistrictRouteImport.update({
 const GatewayRoute = GatewayRouteImport.update({
   id: '/gateway',
   path: '/gateway',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FvStudiosRoute = FvStudiosRouteImport.update({
+  id: '/fv-studios',
+  path: '/fv-studios',
   getParentRoute: () => rootRouteImport,
 } as any)
 const FrassWorldRoute = FrassWorldRouteImport.update({
@@ -960,6 +966,7 @@ export interface FileRoutesByFullPath {
   '/frass-plus': typeof FrassPlusRouteWithChildren
   '/frass-shape': typeof FrassShapeRouteWithChildren
   '/frass-world': typeof FrassWorldRoute
+  '/fv-studios': typeof FvStudiosRoute
   '/gateway': typeof GatewayRoute
   '/kicks-district': typeof KicksDistrictRoute
   '/kids-world': typeof KidsWorldRouteWithChildren
@@ -1099,6 +1106,7 @@ export interface FileRoutesByTo {
   '/frass-district': typeof FrassDistrictRoute
   '/frass-hill': typeof FrassHillRoute
   '/frass-world': typeof FrassWorldRoute
+  '/fv-studios': typeof FvStudiosRoute
   '/gateway': typeof GatewayRoute
   '/kicks-district': typeof KicksDistrictRoute
   '/mcp': typeof McpRoute
@@ -1242,6 +1250,7 @@ export interface FileRoutesById {
   '/frass-plus': typeof FrassPlusRouteWithChildren
   '/frass-shape': typeof FrassShapeRouteWithChildren
   '/frass-world': typeof FrassWorldRoute
+  '/fv-studios': typeof FvStudiosRoute
   '/gateway': typeof GatewayRoute
   '/kicks-district': typeof KicksDistrictRoute
   '/kids-world': typeof KidsWorldRouteWithChildren
@@ -1394,6 +1403,7 @@ export interface FileRouteTypes {
     | '/frass-plus'
     | '/frass-shape'
     | '/frass-world'
+    | '/fv-studios'
     | '/gateway'
     | '/kicks-district'
     | '/kids-world'
@@ -1533,6 +1543,7 @@ export interface FileRouteTypes {
     | '/frass-district'
     | '/frass-hill'
     | '/frass-world'
+    | '/fv-studios'
     | '/gateway'
     | '/kicks-district'
     | '/mcp'
@@ -1675,6 +1686,7 @@ export interface FileRouteTypes {
     | '/frass-plus'
     | '/frass-shape'
     | '/frass-world'
+    | '/fv-studios'
     | '/gateway'
     | '/kicks-district'
     | '/kids-world'
@@ -1827,6 +1839,7 @@ export interface RootRouteChildren {
   FrassPlusRoute: typeof FrassPlusRouteWithChildren
   FrassShapeRoute: typeof FrassShapeRouteWithChildren
   FrassWorldRoute: typeof FrassWorldRoute
+  FvStudiosRoute: typeof FvStudiosRoute
   GatewayRoute: typeof GatewayRoute
   KicksDistrictRoute: typeof KicksDistrictRoute
   KidsWorldRoute: typeof KidsWorldRouteWithChildren
@@ -1929,6 +1942,13 @@ declare module '@tanstack/react-router' {
       path: '/gateway'
       fullPath: '/gateway'
       preLoaderRoute: typeof GatewayRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/fv-studios': {
+      id: '/fv-studios'
+      path: '/fv-studios'
+      fullPath: '/fv-studios'
+      preLoaderRoute: typeof FvStudiosRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/frass-world': {
@@ -3385,6 +3405,7 @@ const rootRouteChildren: RootRouteChildren = {
   FrassPlusRoute: FrassPlusRouteWithChildren,
   FrassShapeRoute: FrassShapeRouteWithChildren,
   FrassWorldRoute: FrassWorldRoute,
+  FvStudiosRoute: FvStudiosRoute,
   GatewayRoute: GatewayRoute,
   KicksDistrictRoute: KicksDistrictRoute,
   KidsWorldRoute: KidsWorldRouteWithChildren,
