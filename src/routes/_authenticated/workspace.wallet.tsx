@@ -15,7 +15,9 @@ import {
   Wallet,
 } from "lucide-react";
 import { PageFeedback } from "@/components/page-feedback";
-import { QuickSellPanel } from "@/components/card/quick-sell";
+import { FinancialTimeline } from "@/components/finance/financial-timeline";
+import { listMyReceipts } from "@/lib/finance/receipts.functions";
+
 import { getMyCard } from "@/lib/card.functions";
 import { getMyProfile } from "@/lib/profiles.functions";
 import { listMyCardOrders } from "@/lib/card-commerce.functions";
