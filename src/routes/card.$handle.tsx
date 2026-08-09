@@ -15,6 +15,7 @@ import { accentValue, themeValue } from "@/lib/card";
 import { ShareCardButton } from "@/components/card/card-share";
 import { CardStorefront, type PublicListing } from "@/components/card/card-storefront";
 import { CardActionBar } from "@/components/card/card-actions";
+import { CardTrustSection } from "@/components/card/card-trust";
 
 export const Route = createFileRoute("/card/$handle")({
   loader: async ({ params }) => {
