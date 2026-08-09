@@ -183,9 +183,32 @@ export function RequestPaymentPanel({ enabled }: { enabled: boolean }) {
             </div>
           </div>
 
+
+          <div>
+            <p className={heading}>How long it stays open</p>
+            <div className="mt-2 flex flex-wrap gap-2">
+              {EXPIRY_OPTIONS.map((o) => (
+                <button
+                  key={o.minutes}
+                  type="button"
+                  className={`ws-chip${expiresIn === o.minutes ? " is-on" : ""}`}
+                  onClick={() => setExpiresIn(o.minutes)}
+                >
+                  {o.label}
+                </button>
+              ))}
+            </div>
+            <p className="mt-2 text-xs text-muted-foreground">
+              After that it expires on its own. Nothing is ever charged on an expired request — you
+              simply send a fresh one.
+            </p>
+          </div>
+
           <p className="text-sm">
             Total requested: <strong>{money(total)}</strong>
           </p>
+          <p className="text-xs text-muted-foreground">{DUPLICATE_PROTECTION_PROMISE}</p>
+
 
           <button
             type="button"
