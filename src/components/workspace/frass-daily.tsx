@@ -330,6 +330,9 @@ export function FrassDaily({
           </button>
         )}
 
+        {/* FRASS-0429 — the Frass Card stays deliberately small in The Daily */}
+        <FrassCardWidget variant="daily" />
+
         {/* FRASS-0428 — the permanent Frass Link, always one tap away */}
         <FrassLinkWidget context="The Daily" />
 
