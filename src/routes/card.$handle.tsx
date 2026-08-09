@@ -13,6 +13,7 @@ import {
 import { getPublicCard, recordCardEvent } from "@/lib/card.functions";
 import { accentValue, themeValue } from "@/lib/card";
 import { ShareCardButton } from "@/components/card/card-share";
+import { CardStorefront, type PublicListing } from "@/components/card/card-storefront";
 
 export const Route = createFileRoute("/card/$handle")({
   loader: async ({ params }) => {
@@ -65,7 +66,8 @@ function Fallback({ title }: { title: string }) {
 }
 
 function PublicCard() {
-  const { profile, card, live, affiliate, products } = Route.useLoaderData();
+  const { profile, card, live, affiliate, products, listings, commerceEnabled } =
+    Route.useLoaderData();
   const handle = profile.handle ?? "";
   const name = profile.display_name ?? "Frass Builder";
   const theme = themeValue(card?.theme ?? "midnight");
@@ -232,8 +234,15 @@ function PublicCard() {
           </dl>
         </section>
 
+        {commerceEnabled && (
+          <CardStorefront
+            listings={(listings ?? []) as PublicListing[]}
+            onSale={() => track("marketplace_click")}
+          />
+        )}
+
         <footer className="living-card-foot">
-          <span>Frass Living Business Card</span>
+          <span>Frass Card — identity and point of sale</span>
           <Link to="/">frasskicks.com</Link>
         </footer>
       </div>

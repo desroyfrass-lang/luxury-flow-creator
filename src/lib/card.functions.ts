@@ -29,6 +29,11 @@ const UpdateCardSchema = z.object({
   section_order: z.array(z.string().max(40)).max(10).optional(),
   is_published: z.boolean().optional(),
   show_contact: z.boolean().optional(),
+  // FRASS-0427 — Frass Card Commerce
+  commerce_enabled: z.boolean().optional(),
+  payout_provider: z.enum(["stripe", "paypal", "square", "other"]).nullable().optional(),
+  payout_url: z.string().max(600).nullable().optional(),
+  payout_display_name: z.string().max(120).nullable().optional(),
 });
 
 /**
@@ -117,6 +122,18 @@ export const getPublicCard = createServerFn({ method: "GET" })
       .eq("user_id", profile.id)
       .limit(4);
 
+    // FRASS-0427 — the card is also a storefront.
+    const { data: listings } = await supabaseAdmin
+      .from("card_listings")
+      .select("id, kind, title, description, image_url, price, currency, quantity, sold, status, is_quick_sell")
+      .eq("user_id", profile.id)
+      .in("status", ["live", "sold_out"])
+      .order("created_at", { ascending: false })
+      .limit(24);
+
+    // The seller's payout URL is never exposed until a checkout is started.
+    const publicCard = card ? { ...(card as BusinessCard), payout_url: null } : null;
+
     return {
       profile: {
         id: profile.id,
@@ -128,10 +145,12 @@ export const getPublicCard = createServerFn({ method: "GET" })
         primary_district: profile.primary_district,
         about: profile.about,
       },
-      card: (card ?? null) as BusinessCard | null,
+      card: publicCard as BusinessCard | null,
       live: live ?? null,
       affiliate: affiliate ?? [],
       products: products ?? [],
+      listings: listings ?? [],
+      commerceEnabled: Boolean(card?.commerce_enabled),
     };
   });
 

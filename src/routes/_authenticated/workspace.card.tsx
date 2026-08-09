@@ -22,17 +22,19 @@ import {
   cardPath,
 } from "@/lib/card";
 import { ShareCardButton } from "@/components/card/card-share";
+import { QuickSellPanel } from "@/components/card/quick-sell";
+import { CARD_COMMERCE_PRINCIPLE, PAYOUT_PROVIDERS } from "@/lib/card-commerce";
 
 export const Route = createFileRoute("/_authenticated/workspace/card")({
   head: () => ({
     meta: [
-      { title: "Living Business Card — Frass OS" },
+      { title: "Frass Card — Identity & Point of Sale" },
       {
         name: "description",
         content:
           "Customise and share your Frass Living Business Card: hero media, theme, links, QR code and performance analytics.",
       },
-      { property: "og:title", content: "Living Business Card — Frass OS" },
+      { property: "og:title", content: "Frass Card — Identity & Point of Sale" },
       {
         property: "og:description",
         content: "Your always-current digital handshake, ready to share anywhere.",
@@ -98,13 +100,17 @@ function CardStudio() {
       section_order: form.section_order ?? CARD_SECTIONS.map((s) => s.id),
       is_published: form.is_published ?? true,
       show_contact: form.show_contact ?? true,
+      commerce_enabled: form.commerce_enabled ?? false,
+      payout_provider: (form.payout_provider as "stripe" | null) ?? null,
+      payout_url: form.payout_url ?? null,
+      payout_display_name: form.payout_display_name ?? null,
     });
 
   return (
     <main className="mx-auto max-w-5xl space-y-8 px-4 py-12">
       <header className="space-y-3">
         <p className={heading}>FRASS-0426 · Universal Digital Identity</p>
-        <h1 className="text-3xl font-black uppercase tracking-tight">Living Business Card</h1>
+        <h1 className="text-3xl font-black uppercase tracking-tight">Frass Card</h1>
         <p className="max-w-2xl text-sm text-muted-foreground">{CARD_PRINCIPLE}</p>
         <p className="max-w-2xl text-sm text-muted-foreground">
           <strong>What this means in plain English:</strong> this is a business card that updates itself.
@@ -218,6 +224,58 @@ function CardStudio() {
         </div>
       </section>
 
+      <section className={panel}>
+        <h2 className={heading}>FRASS-0427 · Payments</h2>
+        <p className="mt-2 text-sm text-muted-foreground">{CARD_COMMERCE_PRINCIPLE}</p>
+        <p className="mt-1 text-sm text-muted-foreground">
+          <strong>What this means in plain English:</strong> your card becomes a till you carry in your
+          pocket. The money lands in your own account — Frass keeps the receipt book so your income,
+          allocation and taxes stay in one place.
+        </p>
+
+        <div className="mt-5 space-y-3">
+          <Toggle
+            label="Selling switched on"
+            hint="Shows your items and a Buy button on your public card."
+            checked={form.commerce_enabled ?? false}
+            onChange={(v) => set("commerce_enabled", v)}
+          />
+        </div>
+
+        <div className="mt-4 grid gap-4 sm:grid-cols-2">
+          <div className="space-y-2">
+            <Label className="text-xs">Payment provider</Label>
+            <select
+              className="h-10 w-full rounded-md border border-border/60 bg-background px-3 text-sm"
+              value={form.payout_provider ?? ""}
+              onChange={(e) => set("payout_provider", e.target.value || null)}
+            >
+              <option value="">Not connected yet</option>
+              {PAYOUT_PROVIDERS.map((p) => (
+                <option key={p.id} value={p.id}>
+                  {p.label} — {p.feeNote}
+                </option>
+              ))}
+            </select>
+          </div>
+          <Field
+            label="Your secure payment link"
+            value={form.payout_url}
+            onChange={(v) => set("payout_url", v)}
+            placeholder="https://"
+          />
+          <Field
+            label="Name buyers will see on their statement"
+            value={form.payout_display_name}
+            onChange={(v) => set("payout_display_name", v)}
+          />
+        </div>
+        <p className="mt-3 text-xs text-muted-foreground">
+          {PAYOUT_PROVIDERS.find((p) => p.id === form.payout_provider)?.hint ??
+            "Connect any payment account you already control. Frass never holds your money."}
+        </p>
+      </section>
+
       <div className="flex gap-3">
         <Button onClick={save} disabled={mutation.isPending}>
           {mutation.isPending ? "Saving…" : "Save card"}
@@ -239,7 +297,9 @@ function CardStudio() {
         </div>
       </section>
 
-      <PageFeedback pageTitle="Living Business Card" />
+      <QuickSellPanel provider={form.payout_provider} />
+
+      <PageFeedback pageTitle="Frass Card" />
     </main>
   );
 }

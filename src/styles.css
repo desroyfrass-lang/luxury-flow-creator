@@ -1597,3 +1597,46 @@ a.ps-row:hover { border-color: color-mix(in srgb, var(--gold) 60%, transparent);
 .living-card-facts { margin-top: 0.9rem; display: grid; gap: 0.55rem; font-size: 0.8rem; }
 .living-card-facts dt { display: flex; gap: 0.35rem; align-items: center; opacity: 0.65; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.15em; }
 .living-card-foot { display: flex; justify-content: space-between; font-size: 0.7rem; opacity: 0.6; padding-top: 0.5rem; }
+
+/* FRASS-0427 — Frass Card Commerce storefront */
+.card-shop-grid {
+  margin-top: 1rem;
+  display: grid;
+  gap: 0.9rem;
+  grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+}
+.card-shop-item {
+  overflow: hidden;
+  border-radius: 1rem;
+  border: 1px solid color-mix(in srgb, var(--card-ink, #fff) 18%, transparent);
+  background: color-mix(in srgb, var(--card-ink, #fff) 6%, transparent);
+}
+.card-shop-item > img { height: 9rem; width: 100%; object-fit: cover; }
+.card-shop-item-body { padding: 0.85rem; }
+.card-shop-kind {
+  font-size: 0.62rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  opacity: 0.7;
+}
+.card-shop-item-body h3 { margin-top: 0.3rem; font-weight: 700; font-size: 0.95rem; }
+.card-shop-item-body p { margin-top: 0.25rem; font-size: 0.78rem; opacity: 0.75; }
+.card-shop-price-row {
+  margin-top: 0.6rem;
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  font-size: 0.8rem;
+}
+.card-shop-price-row strong { font-size: 1.05rem; color: var(--card-accent, currentColor); }
+.card-shop-checkout { margin-top: 0.6rem; display: grid; gap: 0.45rem; font-size: 0.78rem; }
+.card-shop-checkout input {
+  width: 100%;
+  border-radius: 0.6rem;
+  border: 1px solid color-mix(in srgb, var(--card-ink, #fff) 22%, transparent);
+  background: transparent;
+  padding: 0.45rem 0.6rem;
+  color: inherit;
+}
+.card-shop-checkout label { display: grid; gap: 0.25rem; opacity: 0.8; }
+.card-shop-note { margin-top: 0.3rem; font-size: 0.72rem; opacity: 0.8; }

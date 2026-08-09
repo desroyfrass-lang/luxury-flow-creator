@@ -779,6 +779,7 @@ export type Database = {
           business_hours: string | null
           calendar_url: string | null
           certifications: string[]
+          commerce_enabled: boolean
           company: string | null
           created_at: string
           cta_label: string | null
@@ -790,6 +791,9 @@ export type Database = {
           job_title: string | null
           languages: string[]
           location: string | null
+          payout_display_name: string | null
+          payout_provider: string | null
+          payout_url: string | null
           section_order: string[]
           show_contact: boolean
           social_links: Json
@@ -805,6 +809,7 @@ export type Database = {
           business_hours?: string | null
           calendar_url?: string | null
           certifications?: string[]
+          commerce_enabled?: boolean
           company?: string | null
           created_at?: string
           cta_label?: string | null
@@ -816,6 +821,9 @@ export type Database = {
           job_title?: string | null
           languages?: string[]
           location?: string | null
+          payout_display_name?: string | null
+          payout_provider?: string | null
+          payout_url?: string | null
           section_order?: string[]
           show_contact?: boolean
           social_links?: Json
@@ -831,6 +839,7 @@ export type Database = {
           business_hours?: string | null
           calendar_url?: string | null
           certifications?: string[]
+          commerce_enabled?: boolean
           company?: string | null
           created_at?: string
           cta_label?: string | null
@@ -842,6 +851,9 @@ export type Database = {
           job_title?: string | null
           languages?: string[]
           location?: string | null
+          payout_display_name?: string | null
+          payout_provider?: string | null
+          payout_url?: string | null
           section_order?: string[]
           show_contact?: boolean
           social_links?: Json
@@ -957,6 +969,125 @@ export type Database = {
           updated_at?: string
         }
         Relationships: []
+      }
+      card_listings: {
+        Row: {
+          created_at: string
+          currency: string
+          description: string | null
+          id: string
+          image_url: string | null
+          is_quick_sell: boolean
+          kind: string
+          price: number
+          quantity: number | null
+          sold: number
+          status: string
+          title: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          currency?: string
+          description?: string | null
+          id?: string
+          image_url?: string | null
+          is_quick_sell?: boolean
+          kind?: string
+          price?: number
+          quantity?: number | null
+          sold?: number
+          status?: string
+          title: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          currency?: string
+          description?: string | null
+          id?: string
+          image_url?: string | null
+          is_quick_sell?: boolean
+          kind?: string
+          price?: number
+          quantity?: number | null
+          sold?: number
+          status?: string
+          title?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      card_orders: {
+        Row: {
+          buyer_email: string | null
+          buyer_name: string | null
+          created_at: string
+          currency: string
+          id: string
+          listing_id: string | null
+          net_to_seller: number
+          payout_provider: string | null
+          platform_fee: number
+          processing_fee_estimate: number
+          quantity: number
+          reference: string | null
+          seller_id: string
+          status: string
+          subtotal: number
+          unit_price: number
+          updated_at: string
+        }
+        Insert: {
+          buyer_email?: string | null
+          buyer_name?: string | null
+          created_at?: string
+          currency?: string
+          id?: string
+          listing_id?: string | null
+          net_to_seller?: number
+          payout_provider?: string | null
+          platform_fee?: number
+          processing_fee_estimate?: number
+          quantity?: number
+          reference?: string | null
+          seller_id: string
+          status?: string
+          subtotal?: number
+          unit_price?: number
+          updated_at?: string
+        }
+        Update: {
+          buyer_email?: string | null
+          buyer_name?: string | null
+          created_at?: string
+          currency?: string
+          id?: string
+          listing_id?: string | null
+          net_to_seller?: number
+          payout_provider?: string | null
+          platform_fee?: number
+          processing_fee_estimate?: number
+          quantity?: number
+          reference?: string | null
+          seller_id?: string
+          status?: string
+          subtotal?: number
+          unit_price?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "card_orders_listing_id_fkey"
+            columns: ["listing_id"]
+            isOneToOne: false
+            referencedRelation: "card_listings"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       cj_import_queue: {
         Row: {
