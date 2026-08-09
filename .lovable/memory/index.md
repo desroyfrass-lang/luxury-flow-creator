@@ -25,6 +25,7 @@ Town Square (/town-square) is the whole town — people, businesses, artists, br
 For Me is personal, never algorithmic — no "chosen for you".
 
 ## Memories
+- [The Daily philosophy FRASS-0425](mem://features/frass-0425-daily-philosophy) — Daily's constitutional purpose + Morning Briefing, End of Day, time estimates, Focus Mode, consistency, health, Close My Day
 - [FRASS-0421 Town Square & For Me](mem://features/frass-0421-town-square-for-me) — Town Square presence directory, For Me fixed sections, Phase 1 approvals
 - [FRASS-0422 Security by Design](mem://preferences/frass-0422-security-by-design) — five mandatory audits per milestone
 - [Navigation places not features](mem://preferences/navigation-places-not-features) — nav lists districts; services live inside them
