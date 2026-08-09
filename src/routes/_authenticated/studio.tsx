@@ -326,6 +326,14 @@ function StudioPage() {
                 )}
               </Panel>
 
+              {/* FRASS-0406 — Phone Content Mode™ */}
+              <PhoneContentMode
+                balance={w?.balance ?? 0}
+                running={runPhone.isPending}
+                onRun={(report) => runPhone.mutate(report)}
+              />
+
+
               {/* Professional timeline */}
               <Panel title="Timeline — manual editing, always free" icon={Scissors}>
                 <div className="mb-3 flex flex-wrap gap-1.5">
