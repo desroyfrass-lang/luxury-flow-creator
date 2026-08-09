@@ -212,15 +212,16 @@ export function ForMeAbout({ raw, canEdit }: { raw: unknown; canEdit: boolean })
     );
   }
 
-  const empty = aboutIsEmpty(stored);
+  const noLegacy = legacyIsEmpty(stored.legacy);
+  const empty = aboutIsEmpty(stored) && noLegacy;
 
   return (
     <div className="mt-6">
       {empty ? (
         <p className="max-w-xl text-sm leading-relaxed text-white/70">
           Your About page is blank. This is the part of your page that stays true even when you
-          haven't posted in a month — your story, your mission, your business and how people reach
-          you.
+          haven't posted in a month — your story, your mission, your business, your legacy and how
+          people reach you.
         </p>
       ) : (
         <div className="grid gap-8 md:grid-cols-2">
