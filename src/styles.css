@@ -1447,3 +1447,63 @@ a.ps-row:hover { border-color: color-mix(in srgb, var(--gold) 60%, transparent);
 @media (prefers-reduced-motion: reduce) {
   .frassy-avatar, .frassy-avatar * { animation: none !important; }
 }
+
+/* ── FRASS-0425 Amendment — Morning Briefing, Consistency, Focus, Close ────── */
+.daily-brief-card {
+  margin: 1.25rem 0;
+  padding: 1.1rem 1.2rem;
+  border-radius: 1rem;
+  border: 1px solid color-mix(in srgb, var(--gold) 40%, transparent);
+  background: color-mix(in srgb, var(--background) 78%, transparent);
+}
+.daily-brief-card-head { display: flex; align-items: baseline; justify-content: space-between; gap: 1rem; }
+.daily-brief-greet { margin: 0.4rem 0 0.6rem; font-size: 1.35rem; line-height: 1.25; }
+.daily-brief-lines { list-style: none; margin: 0 0 0.9rem; padding: 0; display: grid; gap: 0.35rem; font-size: 0.95rem; }
+.daily-brief-card-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 0.6rem; }
+
+.daily-consistency { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0.6rem; margin-bottom: 1rem; }
+.daily-consistency-cell {
+  display: grid; gap: 0.25rem; padding: 0.7rem 0.85rem; border-radius: 0.8rem;
+  border: 1px solid color-mix(in srgb, var(--foreground) 12%, transparent);
+  background: color-mix(in srgb, var(--background) 70%, transparent);
+}
+.daily-consistency-pct { font-size: 1.25rem; color: var(--gold); }
+
+.daily-step-est {
+  margin-right: 0.5rem; font-size: 0.7rem; letter-spacing: 0.08em;
+  padding: 0.12rem 0.45rem; border-radius: 999px;
+  border: 1px solid color-mix(in srgb, var(--foreground) 16%, transparent);
+  white-space: nowrap;
+}
+
+.daily-health {
+  font-size: 0.68rem; letter-spacing: 0.12em; text-transform: uppercase;
+  padding: 0.15rem 0.5rem; border-radius: 999px; white-space: nowrap;
+  border: 1px solid color-mix(in srgb, var(--foreground) 15%, transparent);
+}
+.daily-health.is-excellent { color: oklch(0.78 0.14 150); }
+.daily-health.is-attention { color: oklch(0.8 0.15 70); }
+.daily-health.is-immediate { color: oklch(0.7 0.19 25); }
+
+.daily-close {
+  margin: 1.5rem 0 1rem; padding: 1.2rem;
+  border-radius: 1rem;
+  border: 1px solid color-mix(in srgb, var(--gold) 45%, transparent);
+  background: color-mix(in srgb, var(--background) 80%, transparent);
+}
+.daily-celebrate { display: grid; gap: 0.6rem; }
+
+.daily-focus .daily-focus-inner {
+  position: relative; z-index: 2; max-width: 46rem; margin: 0 auto;
+  padding: 4rem 1.5rem 1.5rem; display: grid; gap: 1rem;
+}
+.daily-focus-top { display: flex; align-items: center; justify-content: space-between; }
+.daily-focus-frassy { height: 3.5rem; width: auto; }
+.daily-focus-task {
+  padding: 1.5rem; border-radius: 1.1rem;
+  border: 1px solid color-mix(in srgb, var(--gold) 45%, transparent);
+  background: color-mix(in srgb, var(--background) 85%, transparent);
+  display: grid; gap: 0.6rem;
+}
+.daily-focus-label { font-size: 1.6rem; line-height: 1.2; margin: 0; }
+.daily-focus-actions { display: flex; flex-wrap: wrap; gap: 0.6rem; margin-top: 0.4rem; }
