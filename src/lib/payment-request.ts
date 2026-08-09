@@ -88,17 +88,116 @@ export function deliveryLabel(id: string): string {
   return DELIVERY_METHODS.find((d) => d.id === id)?.label ?? "Payment link";
 }
 
-/* ── Status ──────────────────────────────────────────────────────────────── */
+/* ── Status — FRASS-0439 ─────────────────────────────────────────────────── */
+// Constitutional principle: every payment has one — and only one — final
+// outcome. A payment can never be both successful and pending, and it can
+// never be duplicated because someone tapped twice.
+//
+// These eight states are the whole vocabulary. Nothing else is allowed, in the
+// database or in the interface.
 
-export type RequestStatus = "pending" | "paid" | "declined" | "cancelled" | "expired";
+export type RequestStatus =
+  | "preparing"
+  | "awaiting_approval"
+  | "processing"
+  | "successful"
+  | "declined"
+  | "cancelled"
+  | "expired"
+  | "refunded";
 
-export const REQUEST_STATUS: Record<RequestStatus, { label: string; plain: string }> = {
-  pending: { label: "Awaiting the customer", plain: "Sent. Not approved yet." },
-  paid: { label: "Paid", plain: "Approved and recorded." },
-  declined: { label: "Declined", plain: "The customer said no. Nothing was charged." },
-  cancelled: { label: "Cancelled", plain: "You pulled it back." },
-  expired: { label: "Expired", plain: "It ran out of time before it was approved." },
+export const REQUEST_STATUS: Record<RequestStatus, { label: string; plain: string; tone: "open" | "good" | "closed" }> = {
+  preparing: { label: "Preparing", plain: "The seller is still putting this together.", tone: "open" },
+  awaiting_approval: { label: "Awaiting customer approval", plain: "Sent. Not approved yet — nothing has been charged.", tone: "open" },
+  processing: { label: "Processing", plain: "Approved. The payment provider is finishing it right now.", tone: "open" },
+  successful: { label: "Successful", plain: "Paid, recorded, and receipted.", tone: "good" },
+  declined: { label: "Declined", plain: "The customer said no, or the provider refused it. Nothing was charged.", tone: "closed" },
+  cancelled: { label: "Cancelled", plain: "The seller pulled it back before it was paid.", tone: "closed" },
+  expired: { label: "Expired", plain: "It ran out of time before it was approved. Nothing was charged.", tone: "closed" },
+  refunded: { label: "Refunded", plain: "It was paid, then returned in full.", tone: "closed" },
 };
+
+export const PAYMENT_STATES = Object.keys(REQUEST_STATUS) as RequestStatus[];
+
+/** Open states can still change. Terminal states never change again. */
+export const OPEN_STATES: RequestStatus[] = ["preparing", "awaiting_approval", "processing"];
+
+export function isTerminal(status: string): boolean {
+  return !OPEN_STATES.includes(status as RequestStatus);
+}
+
+export function statusLabel(status: string): string {
+  return REQUEST_STATUS[status as RequestStatus]?.label ?? status;
+}
+
+export function statusPlain(status: string): string {
+  return REQUEST_STATUS[status as RequestStatus]?.plain ?? "This request is closed.";
+}
+
+/* ── Duplicate protection ────────────────────────────────────────────────── */
+// If a customer taps Pay twice, Frass recognises it is the same request: the
+// second tap is ignored, and only one transaction, one receipt and one
+// inventory adjustment ever exist.
+
+export const DUPLICATE_PROTECTION_PROMISE =
+  "One payment request can only ever produce one transaction, one receipt and one inventory adjustment. Tapping Pay twice does not charge you twice.";
+
+/** A seller-side key so a double tap on "Request payment" makes one request. */
+export function newIdempotencyKey(): string {
+  return crypto.randomUUID();
+}
+
+/* ── Lost connection recovery ────────────────────────────────────────────── */
+// If the internet drops mid-payment, the customer never has to guess. When
+// they come back, Frass re-checks the one true state and tells them plainly.
+
+export const RECOVERY_PROMISE =
+  "If your connection drops, Frass re-checks this payment the moment you are back online and tells you exactly what happened — completed, declined, or nothing processed at all.";
+
+export function recoveryMessage(status: string): string {
+  switch (status as RequestStatus) {
+    case "successful":
+      return "Good news — your payment went through. Your receipt is in your Financial Center.";
+    case "refunded":
+      return "This payment went through and has since been refunded in full.";
+    case "declined":
+      return "This payment was declined. You were not charged.";
+    case "cancelled":
+      return "The seller cancelled this request. You were not charged.";
+    case "expired":
+      return "This request expired before it was approved. You were not charged.";
+    case "processing":
+      return "Your approval is still being finished by the payment provider. Stay on this screen — nothing will be charged twice.";
+    default:
+      return "Nothing was processed. This request is still waiting for your approval.";
+  }
+}
+
+/* ── Expiry ──────────────────────────────────────────────────────────────── */
+// Payment requests should not live forever. If a request is not completed
+// inside the window, it expires by itself and the seller can send a new one.
+
+export const DEFAULT_EXPIRY_MINUTES = 30;
+
+export const EXPIRY_OPTIONS = [
+  { minutes: 15, label: "15 minutes" },
+  { minutes: 30, label: "30 minutes" },
+  { minutes: 60, label: "1 hour" },
+  { minutes: 1440, label: "24 hours" },
+  { minutes: 10080, label: "7 days" },
+] as const;
+
+/* ── Customer reassurance ────────────────────────────────────────────────── */
+// Shown after every successful payment. Trust, reinforced every single time.
+
+export const PAYMENT_SUCCESS_REASSURANCE = [
+  "Payment successful.",
+  "Receipt available in your Financial Center.",
+  "Inventory updated.",
+  "Seller notified.",
+  "Your banking information remained private.",
+] as const;
+
 
 /* ── The link the customer opens ─────────────────────────────────────────── */
 
