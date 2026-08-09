@@ -130,6 +130,16 @@ function PublicCard() {
             )}
             <ShareCardButton handle={handle} name={name} />
           </div>
+
+          {/* FRASS-0429 — every door this member has actually opened. */}
+          <CardActionBar
+            handle={handle}
+            name={name}
+            card={card}
+            commerceEnabled={commerceEnabled}
+            hasListings={(listings ?? []).length > 0}
+            onTrack={track}
+          />
         </div>
       </header>
 
