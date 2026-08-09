@@ -45,7 +45,7 @@ export function useLiveNow(destination?: LiveDestination) {
       if (destination) q = q.eq("destination", destination);
       const { data, error } = await q.order("started_at", { ascending: false }).limit(60);
       if (error) throw error;
-      return (data ?? []).map(normalise);
+      return ((data ?? []) as unknown as Record<string, unknown>[]).map(normalise);
     },
     staleTime: 20_000,
   });
@@ -77,7 +77,7 @@ export function useLiveArchive(destination?: LiveDestination) {
       if (destination) q = q.eq("destination", destination);
       const { data, error } = await q.order("ended_at", { ascending: false }).limit(24);
       if (error) throw error;
-      return (data ?? []).map(normalise);
+      return ((data ?? []) as unknown as Record<string, unknown>[]).map(normalise);
     },
     staleTime: 60_000,
   });
@@ -95,7 +95,7 @@ export function useBroadcast(id: string) {
         .eq("id", id)
         .maybeSingle();
       if (error) throw error;
-      return data ? normalise(data) : null;
+      return data ? normalise(data as unknown as Record<string, unknown>) : null;
     },
   });
 
