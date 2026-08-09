@@ -3,7 +3,14 @@ import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import type { Database } from "@/integrations/supabase/types";
 import { settle } from "@/lib/card-commerce";
-import { DELIVERY_IDS, REQUEST_KIND_IDS, isExpired, newRequestToken } from "@/lib/payment-request";
+import {
+  DEFAULT_EXPIRY_MINUTES,
+  DELIVERY_IDS,
+  REQUEST_KIND_IDS,
+  isExpired,
+  newRequestToken,
+  recoveryMessage,
+} from "@/lib/payment-request";
 
 export type PaymentRequestRow = Database["public"]["Tables"]["payment_requests"]["Row"];
 
@@ -28,6 +35,7 @@ export const createPaymentRequest = createServerFn({ method: "POST" })
       buyer_phone?: string;
       delivery?: string;
       expires_in_minutes?: number | null;
+      idempotency_key?: string;
     }) =>
       z
         .object({
@@ -43,13 +51,26 @@ export const createPaymentRequest = createServerFn({ method: "POST" })
           buyer_phone: z.string().trim().max(40).optional(),
           delivery: z.enum(DELIVERY_IDS).default("qr"),
           expires_in_minutes: z.number().int().min(5).max(20_160).nullable().optional(),
+          idempotency_key: z.string().trim().min(8).max(64).optional(),
         })
         .parse(d),
   )
   .handler(async ({ context, data }) => {
-    const expires_at = data.expires_in_minutes
-      ? new Date(Date.now() + data.expires_in_minutes * 60_000).toISOString()
-      : null;
+    // FRASS-0439 — requests do not live forever.
+    const minutes = data.expires_in_minutes ?? DEFAULT_EXPIRY_MINUTES;
+    const expires_at = new Date(Date.now() + minutes * 60_000).toISOString();
+
+    // FRASS-0439 — duplicate protection. A double tap on "Request payment"
+    // returns the request that already exists instead of creating a second one.
+    if (data.idempotency_key) {
+      const { data: existing } = await context.supabase
+        .from("payment_requests")
+        .select("*")
+        .eq("seller_id", context.userId)
+        .eq("idempotency_key", data.idempotency_key)
+        .maybeSingle();
+      if (existing) return existing as PaymentRequestRow;
+    }
 
     const { data: row, error } = await context.supabase
       .from("payment_requests")
@@ -68,7 +89,8 @@ export const createPaymentRequest = createServerFn({ method: "POST" })
         buyer_phone: data.buyer_phone ?? null,
         delivery: data.delivery,
         expires_at,
-        status: "pending",
+        idempotency_key: data.idempotency_key ?? null,
+        status: "awaiting_approval",
       })
       .select()
       .single();
@@ -95,10 +117,10 @@ export const cancelPaymentRequest = createServerFn({ method: "POST" })
   .handler(async ({ context, data }) => {
     const { error } = await context.supabase
       .from("payment_requests")
-      .update({ status: "cancelled" })
+      .update({ status: "cancelled", cancelled_at: new Date().toISOString() })
       .eq("id", data.id)
       .eq("seller_id", context.userId)
-      .eq("status", "pending");
+      .in("status", ["preparing", "awaiting_approval"]);
     if (error) throw error;
     return { ok: true as const };
   });
@@ -120,6 +142,7 @@ export type PublicPaymentRequest = {
   seller_avatar: string | null;
   payments_enabled: boolean;
   provider: string | null;
+  order_id: string | null;
 };
 
 /**
@@ -140,9 +163,18 @@ export const getPaymentRequest = createServerFn({ method: "GET" })
       .maybeSingle();
     if (!req) return { ok: false as const, reason: "This payment request could not be found." };
 
-    const expired = req.status === "pending" && isExpired(req.expires_at);
+    const expired =
+      ["preparing", "awaiting_approval"].includes(req.status) && isExpired(req.expires_at);
     if (expired) {
-      await supabaseAdmin.from("payment_requests").update({ status: "expired" }).eq("id", req.id);
+      await supabaseAdmin
+        .from("payment_requests")
+        .update({ status: "expired", expired_at: new Date().toISOString() })
+        .eq("id", req.id);
+    } else if (!req.first_viewed_at) {
+      await supabaseAdmin
+        .from("payment_requests")
+        .update({ first_viewed_at: new Date().toISOString() })
+        .eq("id", req.id);
     }
 
     const [{ data: profile }, { data: card }] = await Promise.all([
@@ -169,6 +201,7 @@ export const getPaymentRequest = createServerFn({ method: "GET" })
       seller_avatar: profile?.avatar_url ?? null,
       payments_enabled: Boolean(card?.commerce_enabled && card?.payout_url),
       provider: card?.payout_provider ?? null,
+      order_id: req.order_id,
     };
     return { ok: true as const, request: payload };
   });
@@ -283,8 +316,8 @@ export const declinePaymentRequest = createServerFn({ method: "POST" })
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     await supabaseAdmin
       .from("payment_requests")
-      .update({ status: "declined" })
+      .update({ status: "declined", declined_at: new Date().toISOString() })
       .eq("token", data.token)
-      .eq("status", "pending");
+      .in("status", ["preparing", "awaiting_approval"]);
     return { ok: true as const };
   });
