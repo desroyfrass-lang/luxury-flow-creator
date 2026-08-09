@@ -593,6 +593,61 @@ export function FrassDaily({
           </div>
         </Section>
 
+        {/* Phase Two — the Daily Briefing. The same nine workspaces, every day, in order. */}
+        <Section
+          blueprintId="daily-briefing"
+          title="Daily Briefing"
+          note="The closing routine. Frassy walks every workspace with you, in the same order, until the day is closed."
+        >
+          <ol className="daily-brief">
+            {BRIEFING_ORDER.map((w, i) => {
+              const st = statuses[w.id];
+              const open = i === briefingStep;
+              const outstanding = st ? st.red + st.orange + st.blue : 0;
+              return (
+                <li key={w.id} className={`daily-brief-row ${open ? "is-open" : ""}`}>
+                  <button type="button" className="daily-brief-head" onClick={() => setBriefingStep(open ? -1 : i)}>
+                    <span className="daily-step-n" aria-hidden="true">{i + 1}</span>
+                    <span className="daily-brief-title">{w.title}</span>
+                    <StatusPills status={st} />
+                  </button>
+                  {open && (
+                    <div className="daily-brief-body">
+                      <p className="ws-meta">{w.note}</p>
+                      <p className="daily-next">
+                        {outstanding === 0
+                          ? "Nothing outstanding here. This workspace is closed for today."
+                          : `${outstanding} item${outstanding === 1 ? "" : "s"} still open here${
+                              st?.red ? ` — ${st.red} critical` : ""
+                            }. Everything else is settled.`}
+                      </p>
+                      <div className="daily-brief-actions">
+                        {w.href && (
+                          <button type="button" className="ws-chip" onClick={() => go({ href: w.href })}>
+                            Open {w.title} <ArrowRight className="h-3.5 w-3.5" />
+                          </button>
+                        )}
+                        <button
+                          type="button"
+                          className="ws-chip"
+                          onClick={() => setBriefingStep(Math.min(i + 1, BRIEFING_ORDER.length - 1))}
+                        >
+                          Reviewed — next workspace
+                        </button>
+                      </div>
+                    </div>
+                  )}
+                </li>
+              );
+            })}
+          </ol>
+          <p className="daily-next mt-4">
+            {progress.pct >= 100
+              ? "Everything is green. That's a finished day — rest well."
+              : "Finish the numbered list above, then close the day here."}
+          </p>
+        </Section>
+
         <div className="daily-footer">
           <button type="button" className="daily-enter" onClick={onDismiss}>
             Enter my workspace
