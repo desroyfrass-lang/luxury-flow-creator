@@ -35,7 +35,7 @@ function BroadcastRoom() {
   const { data: b, isLoading } = useBroadcast(broadcastId);
   const { data: comments = [] } = useLiveComments(broadcastId);
   const { data: gifts = [] } = useLiveGifts(broadcastId);
-  const { userId, name } = useLiveIdentity();
+  const { userId, name, handle } = useLiveIdentity();
   const post = usePostComment();
   const send = useSendGift();
   const end = useEndBroadcast();
@@ -246,6 +246,7 @@ function BroadcastRoom() {
                       broadcastId,
                       senderId: userId,
                       senderName: name,
+                      senderHandle: handle,
                       giftKey: g.key,
                       credits: g.credits,
                       amount: g.amount,
@@ -267,7 +268,7 @@ function BroadcastRoom() {
               <ul className="mt-4 space-y-1 border-t border-border pt-3">
                 {gifts.slice(0, 6).map((g) => (
                   <li key={g.id} className="text-xs text-muted-foreground">
-                    {g.sender_name} sent {g.gift_key.replace("_", " ")}
+                    <MemberName handle={g.sender_handle} name={g.sender_name} className="hover:underline" /> sent {g.gift_key.replace("_", " ")}
                   </li>
                 ))}
               </ul>

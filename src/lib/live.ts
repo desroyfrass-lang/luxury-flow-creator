@@ -48,6 +48,8 @@ export type LiveComment = {
   id: string;
   broadcast_id: string;
   author_name: string;
+  /** FRASS-0428A — links the commenter to their Frass Card. */
+  author_handle: string | null;
   body: string;
   created_at: string;
 };
@@ -56,6 +58,7 @@ export type LiveGift = {
   id: string;
   broadcast_id: string;
   sender_name: string;
+  sender_handle: string | null;
   gift_key: string;
   credits: number;
   amount: number;

@@ -16,9 +16,9 @@ const BROADCAST_PUBLIC_COLUMNS =
 /** Signed-in members also get host_id, so a host recognises their own stream. */
 const BROADCAST_MEMBER_COLUMNS = `${BROADCAST_PUBLIC_COLUMNS}, host_id`;
 
-const COMMENT_COLUMNS = "id, broadcast_id, author_name, body, created_at";
+const COMMENT_COLUMNS = "id, broadcast_id, author_name, author_handle, body, created_at";
 const GIFT_COLUMNS =
-  "id, broadcast_id, sender_name, gift_key, credits, amount, currency, note, created_at";
+  "id, broadcast_id, sender_name, sender_handle, gift_key, credits, amount, currency, note, created_at";
 
 async function broadcastColumns(): Promise<string> {
   const { data } = await supabase.auth.getSession();
@@ -186,9 +186,15 @@ export function useLiveGifts(broadcastId: string) {
 
 /** The signed-in member, with the name their broadcast should carry. */
 export function useLiveIdentity() {
-  const [state, setState] = useState<{ userId: string | null; name: string; ready: boolean }>({
+  const [state, setState] = useState<{
+    userId: string | null;
+    name: string;
+    handle: string | null;
+    ready: boolean;
+  }>({
     userId: null,
     name: "Frass Builder",
+    handle: null,
     ready: false,
   });
 
@@ -196,18 +202,19 @@ export function useLiveIdentity() {
     let active = true;
     const load = async (userId: string | null) => {
       if (!userId) {
-        if (active) setState({ userId: null, name: "Frass Builder", ready: true });
+        if (active) setState({ userId: null, name: "Frass Builder", handle: null, ready: true });
         return;
       }
       const { data } = await supabase
         .from("profiles")
-        .select("display_name, full_name")
+        .select("display_name, full_name, handle")
         .eq("id", userId)
         .maybeSingle();
       if (!active) return;
       setState({
         userId,
         name: data?.display_name || data?.full_name || "Frass Builder",
+        handle: data?.handle ?? null,
         ready: true,
       });
     };
@@ -273,11 +280,18 @@ export function useEndBroadcast() {
 
 export function usePostComment() {
   return useMutation({
-    mutationFn: async (input: { broadcastId: string; authorId: string; authorName: string; body: string }) => {
+    mutationFn: async (input: {
+      broadcastId: string;
+      authorId: string;
+      authorName: string;
+      authorHandle?: string | null;
+      body: string;
+    }) => {
       const { error } = await supabase.from("live_comments").insert({
         broadcast_id: input.broadcastId,
         author_id: input.authorId,
         author_name: input.authorName,
+        author_handle: input.authorHandle ?? null,
         body: input.body,
       });
       if (error) throw error;
@@ -291,6 +305,7 @@ export function useSendGift() {
       broadcastId: string;
       senderId: string;
       senderName: string;
+      senderHandle?: string | null;
       giftKey: string;
       credits: number;
       amount: number;
@@ -299,6 +314,7 @@ export function useSendGift() {
         broadcast_id: input.broadcastId,
         sender_id: input.senderId,
         sender_name: input.senderName,
+        sender_handle: input.senderHandle ?? null,
         gift_key: input.giftKey,
         credits: input.credits,
         amount: input.amount,
