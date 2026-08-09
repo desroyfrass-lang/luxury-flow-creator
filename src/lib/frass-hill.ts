@@ -80,7 +80,7 @@ export const HILL_DISTRICTS: HillDistrict[] = [
     connected: ["Children's Village", "Studio District", "Builders Village", "Farm District", "Founder Hall"],
     success: "Members return because they feel connected — and because everything they need has an address here.",
     status: "open",
-    to: "/welcome-hall",
+    to: "/town-square",
     image: "square",
   },
   {
