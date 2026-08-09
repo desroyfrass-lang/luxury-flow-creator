@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { Copy, QrCode, Share2, X } from "lucide-react";
-import { SHARE_TARGETS, cardUrl } from "@/lib/card";
+import { SHARE_TARGETS } from "@/lib/card";
+import { linkUrl } from "@/lib/frass-link";
 import { recordCardEvent } from "@/lib/card.functions";
 
 /**
@@ -18,7 +19,8 @@ export function CardShareSheet({
   name: string;
   onClose: () => void;
 }) {
-  const url = cardUrl(handle);
+  // FRASS-0428 — sharing the card always shares the permanent Frass Link.
+  const url = linkUrl(handle);
   const text = `${name} on Frass — my Living Business Card.`;
   const [qr, setQr] = useState<string | null>(null);
 
