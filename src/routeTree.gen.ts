@@ -151,6 +151,7 @@ import { Route as AuthenticatedAdminCjImportRouteImport } from './routes/_authen
 import { Route as AuthenticatedAdminCapsulesRouteImport } from './routes/_authenticated/admin.capsules'
 import { Route as AuthenticatedAdminBlogRouteImport } from './routes/_authenticated/admin.blog'
 import { Route as AuthenticatedAdminApprovalsRouteImport } from './routes/_authenticated/admin.approvals'
+import { Route as AuthenticatedAdminAiCreditsRouteImport } from './routes/_authenticated/admin.ai-credits'
 import { Route as AuthenticatedAdminAffiliatePolicyRouteImport } from './routes/_authenticated/admin.affiliate-policy'
 import { Route as AuthenticatedAdminActivitiesRouteImport } from './routes/_authenticated/admin.activities'
 import { Route as Char91DotmcpChar93InvokeToolToolRouteImport } from './routes/[.mcp]/invoke-tool/$tool'
@@ -896,6 +897,12 @@ const AuthenticatedAdminApprovalsRoute =
     path: '/approvals',
     getParentRoute: () => AuthenticatedAdminRoute,
   } as any)
+const AuthenticatedAdminAiCreditsRoute =
+  AuthenticatedAdminAiCreditsRouteImport.update({
+    id: '/ai-credits',
+    path: '/ai-credits',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
 const AuthenticatedAdminAffiliatePolicyRoute =
   AuthenticatedAdminAffiliatePolicyRouteImport.update({
     id: '/affiliate-policy',
@@ -1036,6 +1043,7 @@ export interface FileRoutesByFullPath {
   '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
   '/admin/activities': typeof AuthenticatedAdminActivitiesRoute
   '/admin/affiliate-policy': typeof AuthenticatedAdminAffiliatePolicyRoute
+  '/admin/ai-credits': typeof AuthenticatedAdminAiCreditsRoute
   '/admin/approvals': typeof AuthenticatedAdminApprovalsRoute
   '/admin/blog': typeof AuthenticatedAdminBlogRoute
   '/admin/capsules': typeof AuthenticatedAdminCapsulesRoute
@@ -1165,6 +1173,7 @@ export interface FileRoutesByTo {
   '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
   '/admin/activities': typeof AuthenticatedAdminActivitiesRoute
   '/admin/affiliate-policy': typeof AuthenticatedAdminAffiliatePolicyRoute
+  '/admin/ai-credits': typeof AuthenticatedAdminAiCreditsRoute
   '/admin/approvals': typeof AuthenticatedAdminApprovalsRoute
   '/admin/blog': typeof AuthenticatedAdminBlogRoute
   '/admin/capsules': typeof AuthenticatedAdminCapsulesRoute
@@ -1316,6 +1325,7 @@ export interface FileRoutesById {
   '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
   '/_authenticated/admin/activities': typeof AuthenticatedAdminActivitiesRoute
   '/_authenticated/admin/affiliate-policy': typeof AuthenticatedAdminAffiliatePolicyRoute
+  '/_authenticated/admin/ai-credits': typeof AuthenticatedAdminAiCreditsRoute
   '/_authenticated/admin/approvals': typeof AuthenticatedAdminApprovalsRoute
   '/_authenticated/admin/blog': typeof AuthenticatedAdminBlogRoute
   '/_authenticated/admin/capsules': typeof AuthenticatedAdminCapsulesRoute
@@ -1467,6 +1477,7 @@ export interface FileRouteTypes {
     | '/.mcp/invoke-tool/$tool'
     | '/admin/activities'
     | '/admin/affiliate-policy'
+    | '/admin/ai-credits'
     | '/admin/approvals'
     | '/admin/blog'
     | '/admin/capsules'
@@ -1596,6 +1607,7 @@ export interface FileRouteTypes {
     | '/.mcp/invoke-tool/$tool'
     | '/admin/activities'
     | '/admin/affiliate-policy'
+    | '/admin/ai-credits'
     | '/admin/approvals'
     | '/admin/blog'
     | '/admin/capsules'
@@ -1746,6 +1758,7 @@ export interface FileRouteTypes {
     | '/.mcp/invoke-tool/$tool'
     | '/_authenticated/admin/activities'
     | '/_authenticated/admin/affiliate-policy'
+    | '/_authenticated/admin/ai-credits'
     | '/_authenticated/admin/approvals'
     | '/_authenticated/admin/blog'
     | '/_authenticated/admin/capsules'
@@ -2835,6 +2848,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminApprovalsRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
+    '/_authenticated/admin/ai-credits': {
+      id: '/_authenticated/admin/ai-credits'
+      path: '/ai-credits'
+      fullPath: '/admin/ai-credits'
+      preLoaderRoute: typeof AuthenticatedAdminAiCreditsRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
     '/_authenticated/admin/affiliate-policy': {
       id: '/_authenticated/admin/affiliate-policy'
       path: '/affiliate-policy'
@@ -2883,6 +2903,7 @@ declare module '@tanstack/react-router' {
 interface AuthenticatedAdminRouteChildren {
   AuthenticatedAdminActivitiesRoute: typeof AuthenticatedAdminActivitiesRoute
   AuthenticatedAdminAffiliatePolicyRoute: typeof AuthenticatedAdminAffiliatePolicyRoute
+  AuthenticatedAdminAiCreditsRoute: typeof AuthenticatedAdminAiCreditsRoute
   AuthenticatedAdminApprovalsRoute: typeof AuthenticatedAdminApprovalsRoute
   AuthenticatedAdminBlogRoute: typeof AuthenticatedAdminBlogRoute
   AuthenticatedAdminCapsulesRoute: typeof AuthenticatedAdminCapsulesRoute
@@ -2904,6 +2925,7 @@ const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
   AuthenticatedAdminActivitiesRoute: AuthenticatedAdminActivitiesRoute,
   AuthenticatedAdminAffiliatePolicyRoute:
     AuthenticatedAdminAffiliatePolicyRoute,
+  AuthenticatedAdminAiCreditsRoute: AuthenticatedAdminAiCreditsRoute,
   AuthenticatedAdminApprovalsRoute: AuthenticatedAdminApprovalsRoute,
   AuthenticatedAdminBlogRoute: AuthenticatedAdminBlogRoute,
   AuthenticatedAdminCapsulesRoute: AuthenticatedAdminCapsulesRoute,
