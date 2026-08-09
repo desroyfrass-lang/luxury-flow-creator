@@ -1158,3 +1158,38 @@ a.ps-row:hover { border-color: color-mix(in srgb, var(--gold) 60%, transparent);
   0%, 100% { transform: scaleY(0.35); }
   50% { transform: scaleY(1); }
 }
+
+/* FRASS-0415 — For Us tropical daylight scope.
+   A bright Caribbean skin over the same semantic tokens, so every component
+   inside For Us stays theme-driven while the page feels like Jamaica. */
+.for-us-tropical {
+  --background: oklch(0.985 0.008 95);
+  --foreground: oklch(0.24 0.02 160);
+
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.24 0.02 160);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.24 0.02 160);
+
+  --primary: oklch(0.48 0.09 170);
+  --primary-foreground: oklch(0.99 0.005 95);
+
+  --secondary: oklch(0.95 0.02 170);
+  --secondary-foreground: oklch(0.28 0.03 170);
+
+  --muted: oklch(0.94 0.015 95);
+  --muted-foreground: oklch(0.46 0.02 165);
+
+  --accent: oklch(0.72 0.13 60);
+  --accent-foreground: oklch(0.22 0.02 160);
+
+  --border: oklch(0.32 0.03 165 / 0.16);
+  --input: oklch(0.32 0.03 165 / 0.2);
+  --ring: oklch(0.65 0.11 200);
+
+  --gold: oklch(0.62 0.12 62);
+  --gold-soft: oklch(0.78 0.10 70);
+  --ink: oklch(0.20 0.02 160);
+
+  color: var(--foreground);
+}
