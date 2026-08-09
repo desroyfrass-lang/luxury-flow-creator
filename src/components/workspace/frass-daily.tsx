@@ -146,6 +146,23 @@ export function FrassDaily({
   const scene = SCENES[sceneIndexFor()];
   const [briefingStep, setBriefingStep] = useState(0);
 
+  // FRASS-0425 Amendment — morning briefing, consistency record, focus mode, closing.
+  const [history, setHistory] = useState(() => loadHistory());
+  const brief = useMemo(() => morningBriefing(model, steps, name, history), [model, steps, name, history]);
+  const [briefOpen, setBriefOpen] = useState(true);
+  const record = useMemo(() => consistency(history, progress.pct), [history, progress.pct]);
+  const [focus, setFocus] = useState(false);
+  const [closed, setClosed] = useState(() => isDayClosed());
+  const report = useMemo(() => closingReport(model, steps), [model, steps]);
+  const current = nextStep(steps);
+
+  // Today's completion is written to the consistency record as it changes.
+  useEffect(() => {
+    setHistory(recordToday(progress.pct));
+  }, [progress.pct]);
+
+
+
 
   /** FRASS-0402 — the AI credit balance travels with the Builder, not with a role. */
   const fetchWallet = useServerFn(getWallet);
