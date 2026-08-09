@@ -16,7 +16,9 @@ import {
   Sparkles,
 } from "lucide-react";
 import { SiteShell } from "@/components/site-shell";
+import { CinematicMediaHero } from "@/components/cinematic-media-hero";
 import fvMonogram from "@/assets/fv-monogram.png.asset.json";
+import founderHero from "@/assets/frass-founder-studios-hero.jpg.asset.json";
 import {
   AGREEMENT_MODULES,
   DIVISIONS,
@@ -58,49 +60,23 @@ function FvStudiosPage() {
   return (
     <SiteShell>
       <div className="min-h-screen bg-black text-white">
-        {/* Hero */}
-        <header className="relative overflow-hidden border-b border-white/10">
-          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(252,211,77,0.14),transparent_60%)]" />
-          <div className="relative mx-auto max-w-6xl px-4 py-20 sm:px-6 sm:py-28">
-            <p className="text-[11px] uppercase tracking-[0.5em] text-amber-300/70">FRASS-0410</p>
-            <img
-              src={fvMonogram.url}
-              alt="Frass Vision Studios monogram"
-              width={1024}
-              height={1024}
-              className="mt-6 h-20 w-20 object-contain sm:h-24 sm:w-24"
-            />
-            <h1 className="mt-4 text-4xl font-light uppercase tracking-[0.18em] sm:text-6xl">
-              Frass Vision
-              <span className="block text-amber-300">Studios</span>
-            </h1>
-            <p className="mt-6 max-w-2xl text-base leading-relaxed text-white/70">
-              A record label, a film studio, a publishing house and a production company — built
-              inside Frass, running on our own software.
-            </p>
-            <p className="mt-3 max-w-2xl text-sm text-white/45">
-              <strong className="text-white/70">What this means in plain English:</strong> it is one
-              company with two ways of saying its name. Like Kentucky Fried Chicken and KFC. On the
-              poster it says Frass Vision Studios. In the workshop we say FV Studios.
-            </p>
-            <div className="mt-8 flex flex-wrap gap-3">
-              <Link
-                to="/studio"
-                className="rounded-full bg-amber-300/90 px-6 py-3 text-xs font-medium uppercase tracking-[0.25em] text-black"
-              >
-                Enter FV Studios
-              </Link>
-              <a
-                href="#network"
-                className="rounded-full border border-white/20 px-6 py-3 text-xs uppercase tracking-[0.25em] text-white/70 hover:border-amber-300/50"
-              >
-                How we both get paid
-              </a>
-            </div>
-          </div>
-        </header>
+        <CinematicMediaHero
+          image={founderHero.url}
+          alt="Frass founder tipping his moonlit hat on a rain-lit Caribbean street"
+          eyebrow="Frass Vision Studios · The Creator Company"
+          title="Where vision becomes a body of work"
+          subtitle="A record label, film studio, publishing house and production company — built inside Frass and carried by our own creative network."
+          focus="founder"
+        >
+          <Link to="/studio" className="rounded-full bg-gold px-6 py-3 text-xs font-medium uppercase tracking-[0.25em] text-primary-foreground">
+            Enter FV Studios
+          </Link>
+          <a href="#network" className="rounded-full border border-foreground/25 px-6 py-3 text-xs uppercase tracking-[0.25em] text-foreground/75 hover:border-gold/60">
+            How we both get paid
+          </a>
+        </CinematicMediaHero>
 
-        <div className="mx-auto max-w-6xl space-y-20 px-4 py-16 sm:px-6">
+        <div className="media-page-overlap relative z-10 mx-auto max-w-6xl space-y-20 bg-black px-4 py-16 sm:px-6">
           {/* Two expressions, one house */}
           <Section
             eyebrow="One company"

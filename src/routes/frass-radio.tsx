@@ -3,6 +3,8 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { Radio, Play, Sparkles, Wallet, Headphones, Info } from "lucide-react";
 import { SiteShell } from "@/components/site-shell";
+import { CinematicMediaHero } from "@/components/cinematic-media-hero";
+import radioMural from "@/assets/frass-radio-blue-mural.jpg.asset.json";
 import { LiveBadge } from "@/components/live/live-status";
 import { useLiveNow } from "@/hooks/use-live";
 import {
@@ -47,27 +49,16 @@ function FrassRadioPage() {
   return (
     <SiteShell>
       <div className="min-h-screen bg-black text-white">
-        <header className="relative overflow-hidden border-b border-white/10">
-          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_left,rgba(252,211,77,0.16),transparent_60%)]" />
-          <div className="relative mx-auto max-w-6xl px-4 py-20 sm:px-6 sm:py-24">
-            <p className="text-[11px] uppercase tracking-[0.5em] text-amber-300/70">FRASS-0408</p>
-            <h1 className="mt-4 text-4xl font-light uppercase tracking-[0.18em] sm:text-6xl">
-              Frass
-              <span className="block text-amber-300">Radio</span>
-            </h1>
-            <p className="mt-6 max-w-2xl text-base leading-relaxed text-white/70">
-              The audio home of Frass. Music, podcasts, audio courses, community news, Foundation
-              stories, live sessions and interviews — one place for everything people want to hear.
-            </p>
-            <p className="mt-3 max-w-2xl text-sm text-white/45">
-              <strong className="text-white/70">What this means in plain English:</strong> it is our
-              own radio station and listening app in one. Like turning on the radio in the car, except
-              everything playing was made by people in Frass — and they get paid when you listen.
-            </p>
-          </div>
-        </header>
+        <CinematicMediaHero
+          image={radioMural.url}
+          alt="Blue, chrome and gold Jamaica music mural for Frass Radio"
+          eyebrow="Frass Hill · Always in rotation"
+          title="Frass Radio"
+          subtitle="Music, podcasts, live sessions, community news and stories from the Foundation — one audio home, rooted in Jamaica and heard everywhere."
+          focus="mural"
+        />
 
-        <div className="mx-auto max-w-6xl space-y-16 px-4 py-14 sm:px-6">
+        <div className="media-page-overlap relative z-10 mx-auto max-w-6xl space-y-16 bg-black px-4 py-14 sm:px-6">
           {/* FRASS-0416 — the two kinds of live, kept distinct */}
           <section className="rounded-3xl border border-white/10 bg-white/[0.03] p-6">
             <h2 className="text-[11px] uppercase tracking-[0.32em] text-amber-300/70">
