@@ -158,6 +158,7 @@ const PRIMARY: { label: string; to: string; match: string; editorial?: boolean }
   { label: "Frass Bridal", to: "/bridal", match: "/bridal", editorial: true },
   { label: "Frass Plus+", to: "/frass-plus", match: "/frass-plus" },
   { label: "Frass Kids", to: "/frass-kids", match: "/frass-kids" },
+  { label: "Frass Radio", to: "/frass-radio", match: "/frass-radio", editorial: true },
 ];
 
 
