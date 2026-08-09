@@ -164,8 +164,9 @@ function ForUsPage() {
   const context = useMemo(() => resolveForUsContext(from || undefined), [from]);
   // Local time differs between server render and the visitor's device, so the
   // weather only settles after hydration — otherwise React sees two skies.
-  const [weather, setWeather] = useState(() => resolveForUsWeather(new Date(0)));
-  useEffect(() => setWeather(resolveForUsWeather()), []);
+  const [now, setNow] = useState<Date | null>(null);
+  useEffect(() => setNow(new Date()), []);
+  const weather = useMemo(() => resolveForUsWeather(now ?? new Date(2026, 0, 1, 13)), [now]);
   const { data: published = [] } = usePublishedStories();
   const { data: liveNow = [] } = useLiveNow("for_us");
 
