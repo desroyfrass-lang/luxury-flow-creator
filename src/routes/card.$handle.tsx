@@ -254,6 +254,11 @@ function PublicCard() {
           />
         )}
 
+        {/* FRASS-0431 — verified information, before anyone buys, books or pays. */}
+        <CardTrustSection handle={handle} name={name} />
+
+
+
         <footer className="living-card-foot">
           <span>Frass Card — identity and point of sale</span>
           <Link to="/">frasskicks.com</Link>
