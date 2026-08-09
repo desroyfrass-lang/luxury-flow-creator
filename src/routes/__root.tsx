@@ -21,6 +21,7 @@ import { DailyGate } from "@/components/workspace/daily-gate";
 import { ConstructionMode } from "@/components/construction/blueprint-mode";
 
 import { RewardsRibbon } from "@/components/rewards-ribbon";
+import { FrassTrail } from "@/components/frass-trail";
 
 
 function NotFoundComponent() {
