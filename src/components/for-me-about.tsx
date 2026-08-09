@@ -166,6 +166,25 @@ export function ForMeAbout({ raw, canEdit }: { raw: unknown; canEdit: boolean })
           rows={2}
         />
 
+        <div className="rounded-2xl border border-white/15 bg-black/25 p-5">
+          <h3 className="text-[10px] uppercase tracking-[0.3em] text-white/70">My Legacy</h3>
+          <p className="mt-2 max-w-xl text-xs leading-relaxed text-white/60">
+            The permanent part of your story. Not what happened today — what you'd want remembered.
+          </p>
+          <div className="mt-5 grid gap-5">
+            {LEGACY_FIELDS.map((f) => (
+              <Field
+                key={f.key}
+                label={f.label}
+                hint={f.hint}
+                value={draft.legacy[f.key] ?? ""}
+                onChange={(v) => setDraft({ ...draft, legacy: { ...draft.legacy, [f.key]: v } })}
+                rows={f.key === "lifeLessons" ? 5 : 3}
+              />
+            ))}
+          </div>
+        </div>
+
         {error && <p className="text-xs text-white/80">{error}</p>}
 
         <div className="flex flex-wrap gap-3">
