@@ -167,7 +167,14 @@ export const getMyLinkDashboard = createServerFn({ method: "GET" })
       .eq("user_id", me);
     const held = new Set((existingBonuses ?? []).map((b) => `${b.referral_id}:${b.kind}`));
 
-    const toAward = [] as Array<Record<string, unknown>>;
+    const toAward: Array<{
+      user_id: string;
+      referral_id: string;
+      kind: string;
+      amount: number;
+      status: string;
+      note: string;
+    }> = [];
     for (const r of enriched) {
       for (const rule of BONUS_RULES) {
         if (stageRank(r.stage) < stageRank(rule.stage)) continue;
