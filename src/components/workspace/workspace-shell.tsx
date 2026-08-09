@@ -214,7 +214,7 @@ export function WorkspaceShell({
               </button>
               <Link to="/studio" className="ws-nav">
                 <span aria-hidden>🎬</span>
-                <span className="flex-1 text-left">FV Studio</span>
+                <span className="flex-1 text-left">FV Studios</span>
               </Link>
               <Link to="/financial-center" className="ws-nav">
                 <span aria-hidden>💰</span>

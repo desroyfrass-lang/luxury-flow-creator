@@ -1,5 +1,5 @@
 // ─────────────────────────────────────────────────────────────────────────────
-// FRASS-0401 — Frass Vision Studios (FV Studio) AI Director.
+// FRASS-0401 — Frass Vision Studios (FV Studios) AI Director.
 //
 // The Director is the primary editing interface: the creator says what they
 // want, Frassy translates it into concrete operations, forecasts the cost, and

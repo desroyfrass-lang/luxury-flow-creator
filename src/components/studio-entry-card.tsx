@@ -4,7 +4,7 @@ import { ArrowUpRight } from "lucide-react";
 import studioEntry from "@/assets/studio-entry.jpg";
 
 /**
- * Frass Vision Studios (FV Studio) portal card — same block-letter / chrome-gold
+ * Frass Vision Studios (FV Studios) portal card — same block-letter / chrome-gold
  * Frass Kicks language used across the district entries. Reused on the home page
  * and on Frass Hill.
  */
@@ -38,7 +38,7 @@ export function StudioEntryCard({ className = "" }: { className?: string }) {
           Frass Vision Studios
         </h2>
         <p className="mt-2 text-[11px] uppercase tracking-[0.35em] text-muted-foreground">
-          Known throughout Frass as FV Studio
+          Known throughout Frass as FV Studios
         </p>
         <p className="mt-4 max-w-lg text-sm text-muted-foreground md:text-base">
           The flagship production house of Frass. Films, documentaries, commercials, music
@@ -46,7 +46,7 @@ export function StudioEntryCard({ className = "" }: { className?: string }) {
           with credits forecast before anything runs.
         </p>
         <div className="mt-6 inline-flex items-center gap-2 rounded-full border border-[color:var(--gold)]/50 px-5 py-2 text-xs uppercase tracking-[0.3em] text-foreground transition group-hover:bg-[color:var(--gold)]/10 group-hover:text-[color:var(--gold)]">
-          Enter FV Studio <ArrowUpRight className="h-4 w-4" />
+          Enter FV Studios <ArrowUpRight className="h-4 w-4" />
         </div>
 
       </div>
