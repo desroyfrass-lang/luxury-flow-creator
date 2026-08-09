@@ -90,7 +90,7 @@ export type FrassyComposerProps = {
   /** Rendered above the intake bar — awareness rail, notes, project context. */
   header?: ReactNode;
   inputRef?: React.RefObject<HTMLTextAreaElement | null>;
-  /** Shows the 🎬 entry that opens Frassy Studio without losing this conversation. */
+  /** Shows the 🎬 entry that opens Frass Vision Studios (FV Studio) without losing this conversation. */
   studio?: boolean;
   /** Lets the surrounding workspace observe intake (Vault, Projects, Search). */
   onIntake?: (summary: string, queue: UploadQueue) => void;
@@ -236,7 +236,7 @@ export function FrassyComposer({
         {studio && (
           <Link to="/studio" className="ws-chip">
             <Clapperboard className="h-3.5 w-3.5" />
-            <span className="hidden sm:inline">Frassy Studio</span>
+            <span className="hidden sm:inline">FV Studio</span>
           </Link>
         )}
         {onMic && (

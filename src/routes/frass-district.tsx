@@ -517,7 +517,7 @@ function FrassDistrictHome() {
         </div>
       </section>
 
-      {/* Frassy Studio portal */}
+      {/* Frass Vision Studios portal */}
       <section className="mx-auto mt-28 max-w-[1600px] px-6 lg:px-12">
         <StudioEntryCard />
       </section>

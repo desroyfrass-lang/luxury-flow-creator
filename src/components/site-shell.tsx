@@ -244,7 +244,7 @@ function BuilderAccountMenu({ hasWorkspace, isAdmin }: { hasWorkspace: boolean; 
         <DropdownMenuItem asChild className="rounded-xl cursor-pointer">
           <Link to="/studio" className="flex items-center gap-2 text-xs uppercase tracking-[0.2em]">
             <span aria-hidden>🎬</span>
-            Frassy Studio
+            FV Studio
           </Link>
         </DropdownMenuItem>
         <DropdownMenuItem asChild className="rounded-xl cursor-pointer">
@@ -361,7 +361,7 @@ function MobileAccountLinks({ hasWorkspace, isAdmin }: { hasWorkspace: boolean; 
         className="nav-glow block rounded-xl px-4 py-3 text-xs uppercase tracking-[0.25em] text-muted-foreground transition-colors hover:bg-foreground/5"
         activeProps={{ className: "text-foreground bg-foreground/5" }}
       >
-        🎬 Frassy Studio
+        🎬 FV Studio
       </Link>
 
 

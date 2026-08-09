@@ -467,10 +467,10 @@ export function FrassDaily({
           </Section>
         )}
 
-        {/* FRASS-0401/0402 — Frassy Studio, open to every member and partner */}
+        {/* FRASS-0401/0402/0407 — Frass Vision Studios, open to every member and partner */}
         <Section
-          title="Frassy Studio"
-          note="Frassy creates. You direct. Manual editing is always free — AI work is forecast before it runs."
+          title="🎬 Frass Vision Studios"
+          note="Continue your latest creative project in FV Studio. Manual editing is always free — AI work is forecast before it runs."
         >
           <div className="daily-grid">
             <button

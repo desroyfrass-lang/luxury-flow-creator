@@ -1,5 +1,5 @@
 // ─────────────────────────────────────────────────────────────────────────────
-// FRASS-0406 — Phone Content Mode™ panel inside Frassy Studio.
+// FRASS-0406 — Phone Content Mode™ panel inside Frass Vision Studios (FV Studio).
 // Detect → offer → preset → Quality Report → approve → Learning Mode.
 // ─────────────────────────────────────────────────────────────────────────────
 
