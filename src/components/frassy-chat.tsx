@@ -232,13 +232,13 @@ export function FrassyChat({ embedded = false }: { embedded?: boolean } = {}) {
     <div
       className={
         embedded
-          ? "flex h-[min(460px,60vh)] w-full flex-col overflow-hidden rounded-lg border border-white/10 bg-[#0b0c0e]"
+          ? "flex h-[min(640px,78vh)] min-h-[420px] w-full flex-col overflow-hidden rounded-lg border border-white/10 bg-[#0b0c0e]"
           : "fixed bottom-5 right-5 z-50 flex h-[min(620px,80vh)] w-[min(400px,calc(100vw-2.5rem))] flex-col overflow-hidden rounded-lg border border-white/10 bg-[#0b0c0e] shadow-2xl"
       }
     >
 
-      <header className="flex items-center justify-between border-b border-white/10 px-4 py-3">
-        <div className="flex items-center gap-3">
+      <header className="flex shrink-0 flex-wrap items-center justify-between gap-y-2 border-b border-white/10 px-4 py-3">
+        <div className="flex min-w-0 items-center gap-3">
           <img src={symbolAsset.url} alt="" className="h-6 w-6 object-contain" />
           <div>
             <div className="text-sm text-white">Frassy</div>
@@ -255,7 +255,7 @@ export function FrassyChat({ embedded = false }: { embedded?: boolean } = {}) {
             </div>
           </div>
         </div>
-        <div className="flex items-center gap-1">
+        <div className="flex shrink-0 items-center gap-1">
           {/* Voice: tap to let Frassy speak her replies aloud, or mute her. */}
           <button
             type="button"
@@ -317,7 +317,7 @@ export function FrassyChat({ embedded = false }: { embedded?: boolean } = {}) {
         </div>
       </header>
 
-      <div ref={scrollRef} className="flex-1 space-y-4 overflow-y-auto px-4 py-4">
+      <div ref={scrollRef} className="min-h-0 flex-1 space-y-4 overflow-y-auto px-4 py-4">
         {messages.map((m) => (
           <div key={m.id}>
             <div
@@ -407,26 +407,30 @@ export function FrassyChat({ embedded = false }: { embedded?: boolean } = {}) {
       </div>
 
       {voice.isSpeaking || voice.isPaused ? (
-        <div className="border-t border-white/10 px-3 py-2">
+        <div className="shrink-0 border-t border-white/10 px-3 py-2">
           <SpeechControls />
         </div>
       ) : null}
 
       {/* FRASS-0412 — temporary launch feedback program */}
-      <div className="border-t border-white/10 px-3 py-2">
+      <div className="shrink-0 border-t border-white/10 px-3 py-2">
         <VoiceFeedbackButton source="chat" />
       </div>
 
-      <FrassyComposer
-        value={input}
-        onChange={setInput}
-        onSend={() => void send()}
-        loading={loading}
-        placeholder="Ask Frassy anything…"
-        onMic={voice.voiceAvailable ? () => void toggleMic() : undefined}
-        micAvailable={voice.voiceAvailable}
-        micActive={voice.phase === "recording"}
-      />
+
+      <div className="shrink-0">
+        <FrassyComposer
+          value={input}
+          onChange={setInput}
+          onSend={() => void send()}
+          loading={loading}
+          placeholder="Ask Frassy anything…"
+          onMic={voice.voiceAvailable ? () => void toggleMic() : undefined}
+          micAvailable={voice.voiceAvailable}
+          micActive={voice.phase === "recording"}
+        />
+      </div>
+
 
     </div>
   );
