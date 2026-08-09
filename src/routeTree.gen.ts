@@ -75,6 +75,7 @@ import { Route as PlusSizeMenRouteImport } from './routes/plus-size.men'
 import { Route as LookbookStoryRouteImport } from './routes/lookbook.$story'
 import { Route as LiveGoRouteImport } from './routes/live.go'
 import { Route as LiveBroadcastIdRouteImport } from './routes/live.$broadcastId'
+import { Route as LinkHandleRouteImport } from './routes/link.$handle'
 import { Route as KidsWorldParentsRouteImport } from './routes/kids-world.parents'
 import { Route as KidsWorldDiscoverRouteImport } from './routes/kids-world.discover'
 import { Route as FrassShapeGenderRouteImport } from './routes/frass-shape.$gender'
@@ -510,6 +511,11 @@ const LiveBroadcastIdRoute = LiveBroadcastIdRouteImport.update({
   id: '/$broadcastId',
   path: '/$broadcastId',
   getParentRoute: () => LiveRoute,
+} as any)
+const LinkHandleRoute = LinkHandleRouteImport.update({
+  id: '/link/$handle',
+  path: '/link/$handle',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const KidsWorldParentsRoute = KidsWorldParentsRouteImport.update({
   id: '/parents',
@@ -1171,6 +1177,7 @@ export interface FileRoutesByFullPath {
   '/frass-shape/$gender': typeof FrassShapeGenderRouteWithChildren
   '/kids-world/discover': typeof KidsWorldDiscoverRoute
   '/kids-world/parents': typeof KidsWorldParentsRoute
+  '/link/$handle': typeof LinkHandleRoute
   '/live/$broadcastId': typeof LiveBroadcastIdRoute
   '/live/go': typeof LiveGoRoute
   '/lookbook/$story': typeof LookbookStoryRoute
@@ -1321,6 +1328,7 @@ export interface FileRoutesByTo {
   '/frass-plus/sales': typeof FrassPlusSalesRoute
   '/kids-world/discover': typeof KidsWorldDiscoverRoute
   '/kids-world/parents': typeof KidsWorldParentsRoute
+  '/link/$handle': typeof LinkHandleRoute
   '/live/$broadcastId': typeof LiveBroadcastIdRoute
   '/live/go': typeof LiveGoRoute
   '/lookbook/$story': typeof LookbookStoryRoute
@@ -1495,6 +1503,7 @@ export interface FileRoutesById {
   '/frass-shape/$gender': typeof FrassShapeGenderRouteWithChildren
   '/kids-world/discover': typeof KidsWorldDiscoverRoute
   '/kids-world/parents': typeof KidsWorldParentsRoute
+  '/link/$handle': typeof LinkHandleRoute
   '/live/$broadcastId': typeof LiveBroadcastIdRoute
   '/live/go': typeof LiveGoRoute
   '/lookbook/$story': typeof LookbookStoryRoute
@@ -1669,6 +1678,7 @@ export interface FileRouteTypes {
     | '/frass-shape/$gender'
     | '/kids-world/discover'
     | '/kids-world/parents'
+    | '/link/$handle'
     | '/live/$broadcastId'
     | '/live/go'
     | '/lookbook/$story'
@@ -1819,6 +1829,7 @@ export interface FileRouteTypes {
     | '/frass-plus/sales'
     | '/kids-world/discover'
     | '/kids-world/parents'
+    | '/link/$handle'
     | '/live/$broadcastId'
     | '/live/go'
     | '/lookbook/$story'
@@ -1992,6 +2003,7 @@ export interface FileRouteTypes {
     | '/frass-shape/$gender'
     | '/kids-world/discover'
     | '/kids-world/parents'
+    | '/link/$handle'
     | '/live/$broadcastId'
     | '/live/go'
     | '/lookbook/$story'
@@ -2123,6 +2135,7 @@ export interface RootRouteChildren {
   BuilderHandleRoute: typeof BuilderHandleRoute
   CardHandleRoute: typeof CardHandleRoute
   CollectionHandleRoute: typeof CollectionHandleRoute
+  LinkHandleRoute: typeof LinkHandleRoute
   PlusSizeMenRoute: typeof PlusSizeMenRoute
   PlusSizeWomenRoute: typeof PlusSizeWomenRoute
   ProductHandleRoute: typeof ProductHandleRoute
@@ -2593,6 +2606,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/live/$broadcastId'
       preLoaderRoute: typeof LiveBroadcastIdRouteImport
       parentRoute: typeof LiveRoute
+    }
+    '/link/$handle': {
+      id: '/link/$handle'
+      path: '/link/$handle'
+      fullPath: '/link/$handle'
+      preLoaderRoute: typeof LinkHandleRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/kids-world/parents': {
       id: '/kids-world/parents'
@@ -3886,6 +3906,7 @@ const rootRouteChildren: RootRouteChildren = {
   BuilderHandleRoute: BuilderHandleRoute,
   CardHandleRoute: CardHandleRoute,
   CollectionHandleRoute: CollectionHandleRoute,
+  LinkHandleRoute: LinkHandleRoute,
   PlusSizeMenRoute: PlusSizeMenRoute,
   PlusSizeWomenRoute: PlusSizeWomenRoute,
   ProductHandleRoute: ProductHandleRoute,
