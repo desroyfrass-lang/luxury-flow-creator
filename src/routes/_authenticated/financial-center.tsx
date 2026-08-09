@@ -273,7 +273,27 @@ function TabBody({
       );
     case "statements":
       return <Empty label="Statements & reports" note="Monthly, annual, CSV, PDF and audit exports generate once ledgers hold transactions." />;
+    case "audit":
+      return (
+        <>
+          <Heading>The Financial Integrity Constitution</Heading>
+          <ul className="grid gap-2 sm:grid-cols-2">
+            {AUDIT_PRINCIPLES.map((p) => (
+              <li key={p.id} className="rounded-xl border border-white/12 bg-white/[0.02] p-3">
+                <p className="text-sm">{p.title}</p>
+                <p className="mt-1 text-xs text-[oklch(0.72_0.01_80)]">{p.explain}</p>
+                <p className="mt-1 text-xs text-[oklch(0.62_0.01_80)]">
+                  <strong>In plain English:</strong> {p.plain}
+                </p>
+              </li>
+            ))}
+          </ul>
+          <Heading>Your financial timeline</Heading>
+          <AuditTimeline />
+        </>
+      );
     case "trust":
+
       return (
         <>
           <Heading>Trust Center</Heading>
