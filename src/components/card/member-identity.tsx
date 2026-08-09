@@ -1,6 +1,9 @@
 import { Link } from "@tanstack/react-router";
 import { useState, type ReactNode } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { useServerFn } from "@tanstack/react-start";
 import { CreditCard, Heart, IdCard, MessageCircle } from "lucide-react";
+import { getMemberStatus } from "@/lib/trust.functions";
 
 /**
  * FRASS-0428A — Universal Frass Card.
