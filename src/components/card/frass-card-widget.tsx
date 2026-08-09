@@ -1,7 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { useQuery } from "@tanstack/react-query";
-import { BarChart3, ExternalLink, IdCard, Pencil } from "lucide-react";
+import { BarChart3, ExternalLink, IdCard, Pencil, Wallet } from "lucide-react";
 import { getMyProfile } from "@/lib/profiles.functions";
 import { getMyCard } from "@/lib/card.functions";
 import { accentValue, cardPath, themeValue } from "@/lib/card";
