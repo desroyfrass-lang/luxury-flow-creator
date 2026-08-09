@@ -214,6 +214,24 @@ function StudioPage() {
             </div>
           </header>
 
+          {/* FRASS-0419 — Business Builder: the same architecture, opened from the Studio door. */}
+          <Link
+            to="/business-builder"
+            className="group flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-amber-300/30 bg-gradient-to-r from-amber-300/10 via-transparent to-transparent p-6 transition hover:border-amber-300/70"
+          >
+            <div>
+              <p className="text-[11px] uppercase tracking-[0.4em] text-amber-300/70">FRASS-0419</p>
+              <h2 className="mt-2 text-2xl font-light tracking-wide">🌐 Business Builder</h2>
+              <p className="mt-1 max-w-2xl text-sm text-white/60">
+                Create your website, your business, and your digital home. Free to build and
+                preview — you only pay when you choose to publish, and every cost is shown first.
+              </p>
+            </div>
+            <span className="rounded-full border border-amber-300/50 px-5 py-2.5 text-[10px] font-bold uppercase tracking-[0.24em] text-amber-200 transition group-hover:bg-amber-300 group-hover:text-black">
+              Start a business
+            </span>
+          </Link>
+
           <div className="grid gap-6 lg:grid-cols-[260px_minmax(0,1fr)_300px]">
             {/* Media Library */}
             <aside className="space-y-4">

@@ -114,6 +114,7 @@ import { Route as AuthenticatedFrassyRouteImport } from './routes/_authenticated
 import { Route as AuthenticatedFounderRouteImport } from './routes/_authenticated/founder'
 import { Route as AuthenticatedFinancialCenterRouteImport } from './routes/_authenticated/financial-center'
 import { Route as AuthenticatedCreationRouteImport } from './routes/_authenticated/creation'
+import { Route as AuthenticatedBusinessBuilderRouteImport } from './routes/_authenticated/business-builder'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
 import { Route as AuthenticatedAcademyRouteImport } from './routes/_authenticated/academy'
 import { Route as Char91DotwellKnownChar93OauthProtectedResourceRouteImport } from './routes/[.well-known]/oauth-protected-resource'
@@ -704,6 +705,12 @@ const AuthenticatedCreationRoute = AuthenticatedCreationRouteImport.update({
   path: '/creation',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedBusinessBuilderRoute =
+  AuthenticatedBusinessBuilderRouteImport.update({
+    id: '/business-builder',
+    path: '/business-builder',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedAdminRoute = AuthenticatedAdminRouteImport.update({
   id: '/admin',
   path: '/admin',
@@ -1062,6 +1069,7 @@ export interface FileRoutesByFullPath {
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/academy': typeof AuthenticatedAcademyRoute
   '/admin': typeof AuthenticatedAdminRouteWithChildren
+  '/business-builder': typeof AuthenticatedBusinessBuilderRoute
   '/creation': typeof AuthenticatedCreationRoute
   '/financial-center': typeof AuthenticatedFinancialCenterRoute
   '/founder': typeof AuthenticatedFounderRoute
@@ -1208,6 +1216,7 @@ export interface FileRoutesByTo {
   '/.mcp/list-tools': typeof Char91DotmcpChar93ListToolsRoute
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/academy': typeof AuthenticatedAcademyRoute
+  '/business-builder': typeof AuthenticatedBusinessBuilderRoute
   '/creation': typeof AuthenticatedCreationRoute
   '/financial-center': typeof AuthenticatedFinancialCenterRoute
   '/founder': typeof AuthenticatedFounderRoute
@@ -1368,6 +1377,7 @@ export interface FileRoutesById {
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/_authenticated/academy': typeof AuthenticatedAcademyRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRouteWithChildren
+  '/_authenticated/business-builder': typeof AuthenticatedBusinessBuilderRoute
   '/_authenticated/creation': typeof AuthenticatedCreationRoute
   '/_authenticated/financial-center': typeof AuthenticatedFinancialCenterRoute
   '/_authenticated/founder': typeof AuthenticatedFounderRoute
@@ -1533,6 +1543,7 @@ export interface FileRouteTypes {
     | '/.well-known/oauth-protected-resource'
     | '/academy'
     | '/admin'
+    | '/business-builder'
     | '/creation'
     | '/financial-center'
     | '/founder'
@@ -1679,6 +1690,7 @@ export interface FileRouteTypes {
     | '/.mcp/list-tools'
     | '/.well-known/oauth-protected-resource'
     | '/academy'
+    | '/business-builder'
     | '/creation'
     | '/financial-center'
     | '/founder'
@@ -1838,6 +1850,7 @@ export interface FileRouteTypes {
     | '/.well-known/oauth-protected-resource'
     | '/_authenticated/academy'
     | '/_authenticated/admin'
+    | '/_authenticated/business-builder'
     | '/_authenticated/creation'
     | '/_authenticated/financial-center'
     | '/_authenticated/founder'
@@ -2750,6 +2763,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedCreationRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/business-builder': {
+      id: '/_authenticated/business-builder'
+      path: '/business-builder'
+      fullPath: '/business-builder'
+      preLoaderRoute: typeof AuthenticatedBusinessBuilderRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/admin': {
       id: '/_authenticated/admin'
       path: '/admin'
@@ -3223,6 +3243,7 @@ const AuthenticatedWorkspaceRouteWithChildren =
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedAcademyRoute: typeof AuthenticatedAcademyRoute
   AuthenticatedAdminRoute: typeof AuthenticatedAdminRouteWithChildren
+  AuthenticatedBusinessBuilderRoute: typeof AuthenticatedBusinessBuilderRoute
   AuthenticatedCreationRoute: typeof AuthenticatedCreationRoute
   AuthenticatedFinancialCenterRoute: typeof AuthenticatedFinancialCenterRoute
   AuthenticatedFounderRoute: typeof AuthenticatedFounderRoute
@@ -3244,6 +3265,7 @@ interface AuthenticatedRouteRouteChildren {
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedAcademyRoute: AuthenticatedAcademyRoute,
   AuthenticatedAdminRoute: AuthenticatedAdminRouteWithChildren,
+  AuthenticatedBusinessBuilderRoute: AuthenticatedBusinessBuilderRoute,
   AuthenticatedCreationRoute: AuthenticatedCreationRoute,
   AuthenticatedFinancialCenterRoute: AuthenticatedFinancialCenterRoute,
   AuthenticatedFounderRoute: AuthenticatedFounderRoute,

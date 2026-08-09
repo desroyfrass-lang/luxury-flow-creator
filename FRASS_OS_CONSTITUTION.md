@@ -368,3 +368,29 @@ Findings are reported, never auto-corrected — the Founder decides.
 
 **Truth Before Beauty.** No indicator reports healthy unless a real signal is
 connected. Unknown is an honest answer; a false green light is not.
+
+---
+
+## FRASS-0419 — Frass Business Builder (Powered by Frass Vision Studios)
+
+Other builders ask *"what website do you want?"*. Frassy asks **"what business are you trying to build?"** — and then constructs the whole operating business: website, marketplace, booking, payments, For Us page, affiliate program, brand kit, logo, social assets, email marketing, analytics, CRM, AI assistant, SEO, product catalog and Financial Center.
+
+- **Two build paths.** Build inside Frass (auto-wired to Marketplace, Wallet, Affiliate, Brand Partnerships, FV Studios, Frass Radio, The Daily, Financial Center, Projects, Search), or build an independent website for a custom domain or export.
+- **Many build modes.** Prompt, conversation, visual, manual code, screenshot, PDF, Figma and existing-site import.
+- **Business types, not templates.** Restaurant, fashion brand, record label, film studio, church, charity, coach, clinic, therapist, law firm, contractor, wedding planner, hotel, creator, musician, photographer, DJ, farm, marketplace, school, course platform, membership community, portfolio.
+- **Everything modular.** Capabilities can be added or removed across the whole life of the business.
+- **Business Intelligence review before launch.** Brand, mobile, accessibility, SEO, performance, speed, analytics, conversion, security, legal pages, cookies, privacy, terms — each explained in plain language.
+- **One architecture, two doors.** FV Studios and My Workspace open the same Business Builder.
+
+**Constitutional principle.** Every member should be able to create a world-class digital business without becoming a web developer.
+
+## FRASS-0419A — Hosting & Cost Constitution (applies to all Frass products)
+
+**Frass never silently absorbs third-party operating costs that belong to an optional customer service.**
+
+- Building, previewing and planning are always free. Cost begins only at publish.
+- Hosting, domains, premium AI rendering, cloud storage, SMS, email delivery, streaming, CDN, external APIs and distribution are paid by the customer, at provider cost, shown before confirmation.
+- Frass adds only a modest, transparent platform service fee — enough to cover administration, maintenance and continued development.
+- Before any paid action Frassy states: what the service is, why there is a cost, who receives the payment, the Frass fee, recurring charges, and lower-cost alternatives.
+- No hidden charges. No surprise invoices. No silent subsidies.
+- Pricing stays fair, transparent, competitive and sustainable — value creation over cost absorption.
