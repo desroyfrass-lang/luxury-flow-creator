@@ -1197,18 +1197,78 @@ a.ps-row:hover { border-color: color-mix(in srgb, var(--gold) 60%, transparent);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
+  /* FRASS-0421 Part 1 — Manrope reads cleanly over scenery; the condensed
+     display face was merging letters ("hundredth" looked like one blob). */
+  font-family: "Manrope", "Archivo", system-ui, sans-serif;
 }
 
-/* Keep type crisp over cinematic scenery: a tight shadow instead of blur haze */
+.for-us-tropical h1,
+.for-us-tropical h2,
+.for-us-tropical h3,
+.for-us-tropical h4 {
+  font-family: "Manrope", "Archivo", system-ui, sans-serif;
+  letter-spacing: -0.012em;
+  word-spacing: 0.06em;
+  text-wrap: balance;
+}
+
+.for-us-tropical p,
+.for-us-tropical li {
+  word-spacing: 0.04em;
+  letter-spacing: 0.004em;
+}
+
+/* FRASS-0421 — no haze. One tight shadow only, and never on headings that
+   already sit on a scrim. Blur-heavy shadows were what made type look swollen. */
 .for-us-tropical h1,
 .for-us-tropical h2,
 .for-us-tropical h3,
 .for-us-tropical p,
 .for-us-tropical span,
 .for-us-tropical a,
-.for-us-tropical button {
-  text-shadow: 0 1px 2px oklch(0.12 0.02 190 / 0.75), 0 6px 24px oklch(0.1 0.02 190 / 0.45);
+.for-us-tropical button,
+.for-us-tropical li {
+  text-shadow: 0 1px 2px oklch(0.12 0.02 190 / 0.6);
 }
+
+/* FRASS-0421 — subtle chrome glow on hover. Not gold, not neon. */
+@utility chrome-glow {
+  transition:
+    box-shadow 420ms ease,
+    transform 420ms ease;
+  &:hover {
+    box-shadow:
+      0 0 0 1px oklch(0.95 0.005 240 / 0.35),
+      0 0 28px -4px oklch(0.9 0.01 240 / 0.4),
+      0 18px 60px -30px oklch(0.98 0 0 / 0.55);
+    transform: translateY(-2px);
+  }
+}
+
+/* FRASS-0421 Part 4 — Frassy quietly reminds you she is there. */
+@keyframes frassy-beacon {
+  0%,
+  86%,
+  100% {
+    box-shadow: 0 0 0 0 color-mix(in oklab, var(--gold) 0%, transparent);
+  }
+  92% {
+    box-shadow:
+      0 0 0 6px color-mix(in oklab, var(--gold) 22%, transparent),
+      0 0 34px 6px color-mix(in oklab, var(--gold) 38%, transparent);
+  }
+}
+
+@utility frassy-beacon {
+  animation: frassy-beacon 9s ease-in-out infinite;
+  &:hover {
+    box-shadow:
+      0 0 0 4px color-mix(in oklab, var(--gold) 28%, transparent),
+      0 0 40px 8px color-mix(in oklab, var(--gold) 45%, transparent);
+    animation: none;
+  }
+}
+
 
 
 
