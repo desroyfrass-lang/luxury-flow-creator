@@ -1,5 +1,5 @@
 // ─────────────────────────────────────────────────────────────────────────────
-// FRASS-0401 — Frassy Studio. Frassy creates, the creator directs.
+// FRASS-0401/0407 — Frass Vision Studios (FV Studio). Frassy creates, the creator directs.
 // Manual editing is always free; AI work is forecast, approved, then billed.
 // ─────────────────────────────────────────────────────────────────────────────
 
@@ -37,16 +37,16 @@ import {
 export const Route = createFileRoute("/_authenticated/studio")({
   head: () => ({
     meta: [
-      { title: "Frassy Studio — AI Video Production Suite" },
+      { title: "Frass Vision Studios (FV Studio) — Frass Hill" },
       {
         name: "description",
         content:
-          "Frassy Studio: describe the edit and Frassy builds it, with a full professional timeline underneath whenever you want to take the controls.",
+          "Frass Vision Studios, known throughout Frass as FV Studio: describe the edit and Frassy builds it, with a full professional timeline underneath whenever you want to take the controls.",
       },
-      { property: "og:title", content: "Frassy Studio — AI Video Production Suite" },
+      { property: "og:title", content: "Frass Vision Studios (FV Studio) — Frass Hill" },
       {
         property: "og:description",
-        content: "Frassy creates. You direct. A complete AI production studio inside Frass Hill.",
+        content: "Frassy creates. You direct. The flagship creative production environment of Frass Hill.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -191,11 +191,12 @@ function StudioPage() {
             <div>
               <p className="text-[11px] uppercase tracking-[0.4em] text-amber-300/70">FRASS-0401</p>
               <h1 className="mt-2 flex items-center gap-3 text-3xl font-light tracking-wide sm:text-4xl">
-                <Film className="h-7 w-7 text-amber-300" /> Frassy Studio
+                <Film className="h-7 w-7 text-amber-300" /> Frass Vision Studios
               </h1>
               <p className="mt-2 max-w-2xl text-sm text-white/60">
-                Frassy creates. You direct. Describe the edit and she builds it — the full
-                professional timeline is underneath whenever you want to take the controls.
+                Known throughout Frass as FV Studio. Frassy creates. You direct. Describe the edit
+                and she builds it — the full professional timeline is underneath whenever you
+                want to take the controls.
               </p>
             </div>
             <CreditMeter

@@ -206,7 +206,7 @@ export const HILL_DISTRICTS: HillDistrict[] = [
     glyph: "🎵",
     name: "Studio District",
     purpose:
-      "The creative production quarter — music, DJs, podcasts, photography and video all share one street.",
+      "Home of Frass Vision Studios (FV Studio) — the creative production quarter where music, DJs, podcasts, photography and video all share one street.",
     feeling: "Late-night studio warmth: monitors glowing, bass through the wall, someone tracking a vocal.",
     audience: "Artists, producers, DJs, selectors, hosts, photographers, filmmakers, promoters.",
     steward: "Producer, performance coach and booking agent.",
@@ -215,6 +215,7 @@ export const HILL_DISTRICTS: HillDistrict[] = [
     contribution: "Gives Frass its sound and its picture.",
     legacy: "Catalogues, publishing splits, preserved sets and the culture of live performance.",
     venues: [
+      { name: "Frass Vision Studios", does: "The flagship production house — FV Studio. Film, documentary, commercials, music video, podcast and campaign production.", to: "/studio" },
       { name: "Recording Studios", does: "Tracking, mixing, mastering." },
       { name: "DJ Studios & Academy", does: "Decks, sets, mix showcase, performance coaching." },
       { name: "Podcast Studios", does: "Record, edit and publish the show." },
