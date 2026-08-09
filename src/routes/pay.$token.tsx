@@ -1,20 +1,29 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
-import { useState } from "react";
-import { CheckCircle2, Lock, ShieldCheck } from "lucide-react";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { CheckCircle2, Lock, ShieldCheck, WifiOff } from "lucide-react";
 import { money, providerLabel } from "@/lib/card-commerce";
 import { SecurityConfirmation } from "@/components/finance/security-confirmation";
 import { SELLER_NEVER_PROMISE } from "@/lib/zero-friction";
 import {
   CUSTOMER_CONTROL_PRINCIPLE,
-  REQUEST_STATUS,
+  DUPLICATE_PROTECTION_PROMISE,
+  PAYMENT_SUCCESS_REASSURANCE,
+  RECOVERY_PROMISE,
   SECURE_CHECKOUT_ASSURANCES,
   requestHeadline,
   requestKindLabel,
+  statusLabel,
+  statusPlain,
   type RequestStatus,
 } from "@/lib/payment-request";
-import { approvePaymentRequest, declinePaymentRequest, getPaymentRequest } from "@/lib/payment-request.functions";
+import {
+  approvePaymentRequest,
+  checkPaymentOutcome,
+  declinePaymentRequest,
+  getPaymentRequest,
+} from "@/lib/payment-request.functions";
 
 export const Route = createFileRoute("/pay/$token")({
   head: () => ({
@@ -41,11 +50,21 @@ export const Route = createFileRoute("/pay/$token")({
 const shell = "mx-auto w-full max-w-md px-5 py-10";
 const card = "rounded-3xl border border-border/60 bg-background/70 p-6 backdrop-blur";
 
+type Approved = {
+  order_id: string;
+  pay_url: string | null;
+  provider: string | null;
+  total: number;
+  currency: string;
+  duplicate: boolean;
+};
+
 function PaymentRequestScreen() {
   const { token } = Route.useParams();
   const getFn = useServerFn(getPaymentRequest);
   const approveFn = useServerFn(approvePaymentRequest);
   const declineFn = useServerFn(declinePaymentRequest);
+  const outcomeFn = useServerFn(checkPaymentOutcome);
 
   const { data, isLoading, refetch } = useQuery({
     queryKey: ["payment-request", token],
@@ -56,7 +75,50 @@ function PaymentRequestScreen() {
   const [email, setEmail] = useState("");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [done, setDone] = useState<{ order_id: string; pay_url: string; provider: string | null; total: number; currency: string } | null>(null);
+  const [done, setDone] = useState<Approved | null>(null);
+  const [recovery, setRecovery] = useState<string | null>(null);
+  const [offline, setOffline] = useState(false);
+  /** FRASS-0439 — one tap, one payment. The ref survives re-renders. */
+  const submitting = useRef(false);
+
+  /** Ask the one true question: what actually happened to this payment? */
+  const recheck = useCallback(async () => {
+    try {
+      const res = await outcomeFn({ data: { token } });
+      if (!res.found) return;
+      setRecovery(res.message);
+      if (res.charged && res.order_id) {
+        setDone({
+          order_id: res.order_id,
+          pay_url: null,
+          provider: null,
+          total: res.total,
+          currency: res.currency,
+          duplicate: true,
+        });
+      }
+      void refetch();
+    } catch {
+      /* still offline — the listener will fire again */
+    }
+  }, [outcomeFn, refetch, token]);
+
+  // Lost connection recovery: when the device comes back, Frass checks for you.
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    setOffline(!navigator.onLine);
+    const goOffline = () => setOffline(true);
+    const goOnline = () => {
+      setOffline(false);
+      void recheck();
+    };
+    window.addEventListener("offline", goOffline);
+    window.addEventListener("online", goOnline);
+    return () => {
+      window.removeEventListener("offline", goOffline);
+      window.removeEventListener("online", goOnline);
+    };
+  }, [recheck]);
 
   if (isLoading) {
     return (
@@ -84,6 +146,9 @@ function PaymentRequestScreen() {
   const status = r.status as RequestStatus;
 
   const approve = async () => {
+    // Duplicate protection starts on the device and is enforced on the server.
+    if (submitting.current) return;
+    submitting.current = true;
     setBusy(true);
     setError(null);
     try {
@@ -96,13 +161,26 @@ function PaymentRequestScreen() {
       });
       if (!res.ok) {
         setError(res.reason);
+        submitting.current = false;
         void refetch();
         return;
       }
-      setDone(res);
-      window.location.href = res.pay_url;
+      setDone({
+        order_id: res.order_id,
+        pay_url: res.pay_url,
+        provider: res.provider,
+        total: res.total,
+        currency: res.currency,
+        duplicate: Boolean(res.duplicate),
+      });
+      if (res.pay_url) window.location.href = res.pay_url;
     } catch {
-      setError("That did not go through. Nothing was charged — please try again.");
+      // The connection may have dropped mid-approval — never guess, go and look.
+      await recheck();
+      submitting.current = false;
+      setError(
+        "We lost the connection while approving. Frass has re-checked this payment for you — see the status above.",
+      );
     } finally {
       setBusy(false);
     }
@@ -113,16 +191,28 @@ function PaymentRequestScreen() {
       <main className={shell}>
         <div className={card}>
           <h1 className="text-2xl font-black uppercase tracking-tight">
-            <CheckCircle2 className="mr-2 inline h-5 w-5" /> Approved
+            <CheckCircle2 className="mr-2 inline h-5 w-5" />
+            {done.duplicate ? "Already paid" : "Approved"}
           </h1>
           <p className="mt-2 text-sm text-muted-foreground">
-            You are being handed to {providerLabel(done.provider)} to finish paying{" "}
-            {money(done.total, done.currency)}. Your card details stay between you and them.
+            {done.duplicate
+              ? `This request was already completed for ${money(done.total, done.currency)}. You have not been charged twice.`
+              : `You are being handed to ${providerLabel(done.provider)} to finish paying ${money(done.total, done.currency)}. Your card details stay between you and them.`}
           </p>
-          <a className="daily-enter mt-5 inline-flex w-full justify-center" href={done.pay_url}>
-            Continue to secure payment
-          </a>
+          {done.pay_url && (
+            <a className="daily-enter mt-5 inline-flex w-full justify-center" href={done.pay_url}>
+              Continue to secure payment
+            </a>
+          )}
           <p className="mt-3 text-xs text-muted-foreground">Order {done.order_id.slice(0, 8).toUpperCase()}</p>
+
+          {/* FRASS-0439 — customer reassurance, every single time. */}
+          <ul className="mt-4 space-y-1 text-sm text-muted-foreground">
+            {PAYMENT_SUCCESS_REASSURANCE.map((line) => (
+              <li key={line}>✓ {line}</li>
+            ))}
+          </ul>
+          <p className="mt-3 text-xs text-muted-foreground">{DUPLICATE_PROTECTION_PROMISE}</p>
         </div>
         {/* FRASS-0438 — Security Confirmation, every completed payment. */}
         <SecurityConfirmation className="mt-5" reference={done.order_id} />
@@ -138,6 +228,21 @@ function PaymentRequestScreen() {
         </p>
         <h1 className="mt-2 text-xl font-black uppercase tracking-tight">Payment request</h1>
       </header>
+
+      {offline && (
+        <p className="mb-4 flex items-start gap-2 rounded-2xl border border-amber-500/40 bg-amber-500/5 p-3 text-sm">
+          <WifiOff className="mt-0.5 h-4 w-4 shrink-0" aria-hidden />
+          <span>
+            You are offline. Nothing has been charged. When you reconnect, Frass will check this
+            payment for you automatically.
+          </span>
+        </p>
+      )}
+      {recovery && (
+        <p className="mb-4 rounded-2xl border border-border/60 bg-background/50 p-3 text-sm text-muted-foreground">
+          {recovery}
+        </p>
+      )}
 
       <div className={card}>
         <div className="flex items-center gap-3">
@@ -169,10 +274,15 @@ function PaymentRequestScreen() {
 
         <p className="mt-4 text-sm text-muted-foreground">{requestHeadline(r.seller_name, total, r.title, r.currency)}</p>
 
-        {status !== "pending" ? (
-          <p className="mt-5 rounded-xl border border-border/60 p-3 text-sm text-muted-foreground">
-            {REQUEST_STATUS[status]?.label ?? status} — {REQUEST_STATUS[status]?.plain ?? "Nothing is owed here."}
-          </p>
+        {status !== "awaiting_approval" ? (
+          <div className="mt-5 rounded-xl border border-border/60 p-3 text-sm text-muted-foreground">
+            <p>
+              {statusLabel(status)} — {statusPlain(status)}
+            </p>
+            <button type="button" className="ws-chip mt-3" onClick={() => void recheck()}>
+              Check this payment again
+            </button>
+          </div>
         ) : !r.payments_enabled ? (
           <p className="mt-5 rounded-xl border border-border/60 p-3 text-sm text-muted-foreground">
             This seller has not switched on payments yet, so this request cannot be approved.
@@ -198,7 +308,7 @@ function PaymentRequestScreen() {
             <button
               type="button"
               className="daily-enter mt-4 w-full"
-              disabled={busy}
+              disabled={busy || offline}
               onClick={() => void approve()}
             >
               {busy ? "Approving…" : `Approve payment · ${money(total, r.currency)}`}
@@ -215,7 +325,15 @@ function PaymentRequestScreen() {
               Decline
             </button>
             {error && <p className="mt-3 text-sm text-destructive">{error}</p>}
+            <p className="mt-3 text-xs text-muted-foreground">{DUPLICATE_PROTECTION_PROMISE}</p>
           </>
+        )}
+
+        {r.expires_at && status === "awaiting_approval" && (
+          <p className="mt-3 text-xs text-muted-foreground">
+            This request expires {new Date(r.expires_at).toLocaleString()}. If it runs out, the
+            seller can simply send a new one.
+          </p>
         )}
       </div>
 
@@ -230,9 +348,11 @@ function PaymentRequestScreen() {
         </ul>
         <p className="mt-3 text-xs text-muted-foreground">{CUSTOMER_CONTROL_PRINCIPLE}</p>
         <p className="mt-1 text-xs text-muted-foreground">{SELLER_NEVER_PROMISE}</p>
+        <p className="mt-1 text-xs text-muted-foreground">{RECOVERY_PROMISE}</p>
         <p className="mt-1 text-xs text-muted-foreground">
           <strong>What this means in plain English:</strong> you are approving a bill on your own
-          phone. Your card never leaves your hands, and the seller only ever hears "paid".
+          phone. Your card never leaves your hands, the seller only ever hears "paid", and if your
+          signal drops we go and find out what happened instead of asking you to guess.
         </p>
       </section>
     </main>
