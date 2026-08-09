@@ -78,6 +78,53 @@ function LinkDashboard() {
         </p>
       </section>
 
+      {/* FRASS-0429 — the recruitment desk: a CRM for the people you introduced */}
+      <section className={panel}>
+        <h2 className={heading}>
+          <Users className="mr-2 inline h-3.5 w-3.5" /> Recruitment desk
+        </h2>
+        <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+          <Metric label="Active referrals" value={desk.active} />
+          <Metric label="Pending activations" value={desk.pending} />
+          <Metric label="Qualified members" value={desk.members} />
+          <Metric label="Qualified partners" value={desk.partners} />
+          <Metric label="Lifetime recruitment earnings" value={`$${desk.lifetime.toFixed(2)}`} />
+          <Metric label="Current campaign bonuses" value={`$${desk.campaign.toFixed(2)}`} />
+          <Metric
+            label="Next bonus milestone"
+            value={desk.next ? `${desk.next.label} · $${desk.next.amount.toFixed(2)}` : "All earned"}
+          />
+          <Metric label="People introduced" value={t?.introduced ?? 0} />
+        </div>
+
+        <h3 className="mt-6 text-xs uppercase tracking-[0.2em] text-muted-foreground">
+          Team growth timeline
+        </h3>
+        {desk.timeline.length === 0 ? (
+          <p className="mt-2 text-sm text-muted-foreground">
+            Nothing to chart yet. The first introduction starts the timeline.
+          </p>
+        ) : (
+          <div className="mt-3 flex items-end gap-3">
+            {desk.timeline.map((m) => (
+              <div key={m.month} className="flex flex-1 flex-col items-center gap-1">
+                <span className="text-xs font-semibold">{m.count}</span>
+                <div
+                  className="w-full rounded-t bg-primary/70"
+                  style={{ height: `${8 + m.count * 18}px` }}
+                  aria-hidden="true"
+                />
+                <span className="text-[10px] uppercase text-muted-foreground">{m.month}</span>
+              </div>
+            ))}
+          </div>
+        )}
+        <p className="mt-3 text-xs text-muted-foreground">
+          <strong>What this means in plain English:</strong> this is a guest book for the people you
+          brought through the door — who arrived, who settled in, and what that earned you once.
+        </p>
+      </section>
+
       <section className={panel}>
         <h2 className={heading}>
           <Users className="mr-2 inline h-3.5 w-3.5" /> Recruitment progress
