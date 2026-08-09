@@ -735,3 +735,154 @@ export function mergePublished(
     return extra.length ? { ...section, stories: [...extra, ...section.stories] } : section;
   });
 }
+
+// ─────────────────────────────────────────────────────────────
+// FRASS-0415 — For Us Experience Amendment
+// "For Us is designed for discovery." The finite-day rule is retired:
+// the feed is continuous, and the page feels like Jamaica at this hour.
+// ─────────────────────────────────────────────────────────────
+
+export type FeedStory = ForUsStory & {
+  sectionId: ForUsSectionId;
+  sectionName: string;
+  sectionGlyph: string;
+};
+
+/**
+ * One continuous discovery stream. Stories are interleaved across sections so
+ * every few cards feels like turning another corner in the town, and stories
+ * matching where the member came from surface first.
+ */
+export function buildDiscoveryFeed(
+  sections: ForUsSection[],
+  priority: string[],
+): FeedStory[] {
+  const columns = sections.map((section) =>
+    orderStories(section.stories, priority).map((story) => ({
+      ...story,
+      sectionId: section.id,
+      sectionName: section.name,
+      sectionGlyph: section.glyph,
+    })),
+  );
+  const woven: FeedStory[] = [];
+  const depth = Math.max(0, ...columns.map((c) => c.length));
+  for (let i = 0; i < depth; i += 1) {
+    for (const column of columns) if (column[i]) woven.push(column[i]);
+  }
+  if (priority.length === 0) return woven;
+  const relevant = (s: FeedStory) => (s.tags.some((t) => priority.includes(t)) ? 0 : 1);
+  return woven
+    .map((s, i) => ({ s, i }))
+    .sort((a, b) => relevant(a.s) - relevant(b.s) || a.i - b.i)
+    .map((x) => x.s);
+}
+
+export type ScenicMoment = {
+  id: string;
+  glyph: string;
+  line: string;
+  detail: string;
+  /** Tailwind gradient classes for the moment's sky. */
+  sky: string;
+};
+
+/** Quiet visual rests between groups of posts — rhythm, not content. */
+export const SCENIC_MOMENTS: ScenicMoment[] = [
+  {
+    id: "sunrise",
+    glyph: "🌅",
+    line: "Sunrise over the hill",
+    detail: "The market carts are moving, the sea is flat, and the day hasn't decided anything yet.",
+    sky: "from-amber-100 via-orange-50 to-sky-100",
+  },
+  {
+    id: "overlook",
+    glyph: "⛰️",
+    line: "The overlook",
+    detail: "From up here you can see every district at once — and every one of them is somebody's work.",
+    sky: "from-emerald-100 via-lime-50 to-sky-100",
+  },
+  {
+    id: "garden",
+    glyph: "🌺",
+    line: "The garden walk",
+    detail: "Hibiscus along the path to the Community Hall. Somebody plants these. Nobody is asked to.",
+    sky: "from-rose-100 via-amber-50 to-emerald-50",
+  },
+  {
+    id: "waves",
+    glyph: "🌊",
+    line: "Ocean side",
+    detail: "Turquoise, shallow, loud. The best meetings in Frass have happened on this beach.",
+    sky: "from-cyan-100 via-sky-50 to-teal-100",
+  },
+  {
+    id: "founder",
+    glyph: "🕊️",
+    line: "\u201cWe are not building a store. We are building a place people belong to.\u201d",
+    detail: "Founder, Frass Hill",
+    sky: "from-stone-100 via-amber-50 to-stone-50",
+  },
+  {
+    id: "village",
+    glyph: "🏘️",
+    line: "Village street, late afternoon",
+    detail: "Shopfronts open, children on bicycles, a speaker box somewhere down the road.",
+    sky: "from-orange-100 via-amber-50 to-rose-50",
+  },
+  {
+    id: "evening",
+    glyph: "🎶",
+    line: "Music drifting across the square",
+    detail: "Lanterns on, café tables full, somebody testing a mic on the Square stage.",
+    sky: "from-indigo-100 via-violet-50 to-amber-50",
+  },
+];
+
+export type ForUsHour = "morning" | "afternoon" | "sunset" | "evening";
+
+export type ForUsWeather = {
+  hour: ForUsHour;
+  glyph: string;
+  label: string;
+  greeting: string;
+  /** Full-page atmospheric wash. */
+  wash: string;
+};
+
+/** The Weather Principle — For Us feels like visiting Frass at this moment. */
+export function resolveForUsWeather(date = new Date()): ForUsWeather {
+  const h = date.getHours();
+  if (h < 11)
+    return {
+      hour: "morning",
+      glyph: "🌅",
+      label: "Morning on the hill",
+      greeting: "The town is just opening up.",
+      wash: "linear-gradient(180deg, #fff6e8 0%, #f4fbff 45%, #f7fdf6 100%)",
+    };
+  if (h < 16)
+    return {
+      hour: "afternoon",
+      glyph: "☀️",
+      label: "Afternoon in Frass",
+      greeting: "Everything is open and everybody is out.",
+      wash: "linear-gradient(180deg, #eaf7ff 0%, #f6fff7 50%, #fffdf2 100%)",
+    };
+  if (h < 19)
+    return {
+      hour: "sunset",
+      glyph: "🌇",
+      label: "Golden hour",
+      greeting: "The light is going soft over the water.",
+      wash: "linear-gradient(180deg, #fff1de 0%, #ffe9d6 45%, #fdf6ec 100%)",
+    };
+  return {
+    hour: "evening",
+    glyph: "🌙",
+    label: "Evening on the square",
+    greeting: "Lanterns are lit and the music has started.",
+    wash: "linear-gradient(180deg, #fbf3e8 0%, #f6efe6 50%, #f2f6f4 100%)",
+  };
+}
