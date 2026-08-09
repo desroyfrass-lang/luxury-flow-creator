@@ -22,9 +22,16 @@ export function FrassCardWidget({
 }) {
   const profileFn = useServerFn(getMyProfile);
   const cardFn = useServerFn(getMyCard);
+  const statsFn = useServerFn(getMyCardAnalytics);
 
   const { data: profile } = useQuery({ queryKey: ["my-profile"], queryFn: () => profileFn() });
   const { data: card } = useQuery({ queryKey: ["my-business-card"], queryFn: () => cardFn() });
+  const { data: stats } = useQuery({
+    queryKey: ["my-card-analytics"],
+    queryFn: () => statsFn(),
+    enabled: variant === "daily",
+  });
+  const today = stats?.today;
 
   const handle = profile?.handle ?? null;
   const name = profile?.display_name ?? profile?.full_name ?? "Your card";
