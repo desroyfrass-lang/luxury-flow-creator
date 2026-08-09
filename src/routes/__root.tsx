@@ -21,6 +21,7 @@ import { DailyGate } from "@/components/workspace/daily-gate";
 import { ConstructionMode } from "@/components/construction/blueprint-mode";
 
 import { RewardsRibbon } from "@/components/rewards-ribbon";
+import { FrassTrail } from "@/components/frass-trail";
 
 
 function NotFoundComponent() {
@@ -132,6 +133,7 @@ function RootComponent() {
   return (
     <QueryClientProvider client={queryClient}>
       <RewardsRibbon />
+      <FrassTrail />
       <Outlet />
       <WelcomeLinkClaim />
       <Toaster position="top-center" />

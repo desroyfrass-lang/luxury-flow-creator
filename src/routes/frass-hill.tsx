@@ -112,7 +112,19 @@ function FrassHillPage() {
             Frass Hill is not a menu of features. It is a town. Eight places you can walk between —
             and inside each one, the offices, academies, studios and venues that do the work.
           </p>
+          <div className="mt-5 flex flex-wrap items-center gap-3">
+            <Link
+              to="/frass-hill-journey"
+              className="rounded-full bg-[color:var(--hill-gold)] px-6 py-3 text-[10px] font-bold uppercase tracking-[0.28em] text-black transition hover:scale-[1.02]"
+            >
+              Take the walk
+            </Link>
+            <span className="text-[10px] uppercase tracking-[0.22em] text-muted-foreground">
+              Or keep reading the plan below
+            </span>
+          </div>
           <TownMemory districtId="town_square" className="mt-4" />
+
         </div>
       </section>
 

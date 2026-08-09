@@ -4,7 +4,7 @@ type CinematicMediaHeroProps = {
   eyebrow: string;
   title: string;
   subtitle: string;
-  focus?: "founder" | "mural";
+  focus?: "founder" | "mural" | "wide";
   children?: React.ReactNode;
 };
 
@@ -19,15 +19,15 @@ export function CinematicMediaHero({
   children,
 }: CinematicMediaHeroProps) {
   return (
-    <section className="media-hero-stage" aria-labelledby="media-hero-title">
-      <div className="media-hero-sticky">
+    <section className={`media-hero-stage${focus === "wide" ? " media-hero-stage-wide" : ""}`} aria-labelledby="media-hero-title">
+      <div className={`media-hero-sticky${focus === "wide" ? " media-hero-sticky-wide" : ""}`}>
         <img
           src={image}
           alt={alt}
           width={1600}
           height={900}
           fetchPriority="high"
-          className={`media-hero-image ${focus === "founder" ? "media-founder-focus" : "media-mural-focus"}`}
+          className={`media-hero-image media-${focus}-focus`}
         />
         <div className="media-hero-fade" aria-hidden="true" />
         <div className="media-hero-copy">

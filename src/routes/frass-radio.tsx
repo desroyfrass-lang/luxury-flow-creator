@@ -4,7 +4,7 @@ import { useState } from "react";
 import { Radio, Play, Sparkles, Wallet, Headphones, Info } from "lucide-react";
 import { SiteShell } from "@/components/site-shell";
 import { CinematicMediaHero } from "@/components/cinematic-media-hero";
-import radioMural from "@/assets/frass-radio-blue-mural.jpg.asset.json";
+import radioMural from "@/assets/frass-radio-blue-mural-wide.jpg.asset.json";
 import { LiveBadge } from "@/components/live/live-status";
 import { useLiveNow } from "@/hooks/use-live";
 import {
@@ -55,7 +55,7 @@ function FrassRadioPage() {
           eyebrow="Frass Hill · Always in rotation"
           title="Frass Radio"
           subtitle="Music, podcasts, live sessions, community news and stories from the Foundation — one audio home, rooted in Jamaica and heard everywhere."
-          focus="mural"
+          focus="wide"
         />
 
         <div className="media-page-overlap relative z-10 mx-auto max-w-6xl space-y-16 bg-black px-4 py-14 sm:px-6">
