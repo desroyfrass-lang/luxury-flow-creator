@@ -7,7 +7,7 @@ import { rememberRef, linkLabel, type LinkSource } from "@/lib/frass-link";
  * FRASS-0428 — the permanent Frass Link.
  * Arriving here does two things at once: it remembers who introduced you (the
  * Human Link) and how you arrived (the Digital Link), then opens the member's
- * Living Business Card.
+ * Frass Card.
  */
 export const Route = createFileRoute("/link/$handle")({
   loader: async ({ params }) => {

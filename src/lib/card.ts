@@ -1,5 +1,5 @@
 // ─────────────────────────────────────────────────────────────────────────────
-// FRASS-0426 — The Frass Living Business Card.
+// FRASS-0426 — The Frass Card.
 //
 // Constitutional principle:
 //   "Every Frass member should always have a professional way to introduce
@@ -12,7 +12,7 @@
 // ─────────────────────────────────────────────────────────────────────────────
 
 export const CARD_PRINCIPLE =
-  "The Living Business Card is the member's digital handshake. Always current, always professional, always ready to share.";
+  "The Frass Card is the member's digital handshake. Always current, always professional, always ready to share.";
 
 /** Permanent Frass URL for a member's card. */
 export function cardPath(handle: string): string {

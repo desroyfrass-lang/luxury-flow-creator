@@ -1508,8 +1508,8 @@ a.ps-row:hover { border-color: color-mix(in srgb, var(--gold) 60%, transparent);
 .daily-focus-label { font-size: 1.6rem; line-height: 1.2; margin: 0; }
 .daily-focus-actions { display: flex; flex-wrap: wrap; gap: 0.6rem; margin-top: 0.4rem; }
 
-/* ── FRASS-0426 Living Business Card ─────────────────────────────────────── */
-.living-card-widget {
+/* ── FRASS-0426 Frass Card ─────────────────────────────────────── */
+.frass-card-widget {
   border-radius: 1rem;
   border: 1px solid color-mix(in oklab, var(--card-accent) 35%, transparent);
   background: linear-gradient(140deg, var(--card-wash), color-mix(in oklab, var(--card-wash) 70%, black));

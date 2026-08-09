@@ -23,11 +23,11 @@ export const Route = createFileRoute("/card/$handle")({
   },
   head: ({ loaderData }) => {
     const name = loaderData?.profile.display_name ?? "A Frass Builder";
-    const title = `${name} — Frass Living Business Card`;
+    const title = `${name} — Frass Card`;
     const description =
       loaderData?.card?.headline ??
       loaderData?.profile.bio ??
-      `${name}'s living business card on Frass: story, business, work and every way to connect.`;
+      `${name}'s Frass Card on Frass: story, business, work and every way to connect.`;
     const image = loaderData?.card?.hero_media_url ?? loaderData?.profile.avatar_url ?? null;
     return {
       meta: [

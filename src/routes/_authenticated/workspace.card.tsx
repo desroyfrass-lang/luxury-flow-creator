@@ -32,7 +32,7 @@ export const Route = createFileRoute("/_authenticated/workspace/card")({
       {
         name: "description",
         content:
-          "Customise and share your Frass Living Business Card: hero media, theme, links, QR code and performance analytics.",
+          "Customise and share your Frass Card: hero media, theme, links, QR code and performance analytics.",
       },
       { property: "og:title", content: "Frass Card — Identity & Point of Sale" },
       {
