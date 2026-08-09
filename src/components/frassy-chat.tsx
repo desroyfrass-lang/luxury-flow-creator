@@ -237,8 +237,8 @@ export function FrassyChat({ embedded = false }: { embedded?: boolean } = {}) {
       }
     >
 
-      <header className="flex items-center justify-between border-b border-white/10 px-4 py-3">
-        <div className="flex items-center gap-3">
+      <header className="flex shrink-0 flex-wrap items-center justify-between gap-y-2 border-b border-white/10 px-4 py-3">
+        <div className="flex min-w-0 items-center gap-3">
           <img src={symbolAsset.url} alt="" className="h-6 w-6 object-contain" />
           <div>
             <div className="text-sm text-white">Frassy</div>
