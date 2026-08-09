@@ -1667,3 +1667,31 @@ a.ps-row:hover { border-color: color-mix(in srgb, var(--gold) 60%, transparent);
 }
 .frass-link-stats dt { font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.14em; opacity: 0.65; }
 .frass-link-stats dd { margin-top: 0.15rem; font-size: 1.25rem; font-weight: 800; }
+
+/* FRASS-0428A — Universal Frass Card identity chip */
+.member-identity {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  min-width: 0;
+  text-decoration: none;
+  color: inherit;
+}
+.member-identity-link { border-radius: 999px; transition: opacity 160ms ease, transform 160ms ease; }
+.member-identity-link:hover { opacity: 0.85; transform: translateY(-1px); }
+.member-identity-link:hover .member-identity-name { text-decoration: underline; text-underline-offset: 3px; }
+.member-identity-avatar {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border-radius: 999px;
+  border: 1px solid color-mix(in srgb, var(--gold, currentColor) 40%, transparent);
+  background: color-mix(in srgb, currentColor 10%, transparent);
+  font-size: 0.75rem;
+  font-weight: 800;
+}
+.member-identity-avatar img { height: 100%; width: 100%; object-fit: cover; }
+.member-identity-name { display: block; font-weight: 700; line-height: 1.15; }
+.member-identity-role { display: block; font-size: 0.72rem; opacity: 0.7; }
