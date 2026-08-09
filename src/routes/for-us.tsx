@@ -74,7 +74,7 @@ const SCENES = [sceneShore, sceneForest, sceneNight, sceneJerk];
 function Moment({ story, scale, image }: { story: FeedStory; scale: "wide" | "tall" | "quiet"; image?: string }) {
   const body = (
     <>
-      <p className="text-[10px] uppercase tracking-[0.3em] text-white/60">
+      <p className="text-[10px] uppercase tracking-[0.3em] text-white/85">
         <span aria-hidden className="mr-1.5">
           {story.sectionGlyph}
         </span>
@@ -87,7 +87,7 @@ function Moment({ story, scale, image }: { story: FeedStory; scale: "wide" | "ta
       >
         {story.title}
       </h3>
-      <p className="mt-3 max-w-2xl text-sm leading-relaxed text-white/75 md:text-base">{story.body}</p>
+      <p className="mt-3 max-w-2xl text-sm leading-relaxed text-white/85 md:text-base">{story.body}</p>
       {story.to && (
         <span className="mt-5 inline-flex items-center gap-2 text-[10px] uppercase tracking-[0.28em] text-[color:var(--gold)]">
           {story.cta ?? "Open"}
@@ -102,7 +102,7 @@ function Moment({ story, scale, image }: { story: FeedStory; scale: "wide" | "ta
   const shell = (
     <article
       className={`group relative overflow-hidden rounded-[2rem] transition duration-500 ${
-        image ? "min-h-[62vh]" : "bg-black/25 backdrop-blur-[2px]"
+        image ? "min-h-[62vh]" : "bg-black/45"
       } ${scale === "quiet" ? "p-7 md:p-9" : "p-8 md:p-14"} ring-1 ring-white/10 hover:ring-[color:var(--gold)]/40`}
     >
       {image && (
@@ -116,7 +116,7 @@ function Moment({ story, scale, image }: { story: FeedStory; scale: "wide" | "ta
             height={912}
             className="hero-drift absolute inset-0 h-full w-full object-cover"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/35 to-black/10" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/55 to-black/20" />
         </>
       )}
       <div className={image ? "relative flex min-h-[62vh] flex-col justify-end" : "relative"}>{body}</div>
@@ -291,12 +291,12 @@ function ForUsPage() {
             <button
               type="button"
               onClick={goBack}
-              className="inline-flex items-center gap-2 text-[10px] uppercase tracking-[0.25em] text-white/60 transition hover:text-white"
+              className="inline-flex items-center gap-2 text-[10px] uppercase tracking-[0.25em] text-white/85 transition hover:text-white"
             >
               <ArrowLeft className="h-3.5 w-3.5" />
               {context.label}
             </button>
-            <span className="text-[10px] uppercase tracking-[0.25em] text-white/45">
+            <span className="text-[10px] uppercase tracking-[0.25em] text-white/80">
               <span aria-hidden className="mr-1.5">
                 {weather.glyph}
               </span>
@@ -324,11 +324,11 @@ function ForUsPage() {
               Frass Hill · The Community You Can Walk Into
             </p>
             <h1 className="mt-4 text-5xl font-black uppercase tracking-[0.14em] md:text-8xl">For Us</h1>
-            <p className="mt-5 max-w-xl text-base leading-relaxed text-white/75">
+            <p className="mt-5 max-w-xl text-base leading-relaxed text-white/85">
               {weather.greeting} Somewhere below there is music, a jerk pan smoking by the road, boats on the
               water and people you know. Take your time — nothing here needs finishing.
             </p>
-            <div className="mt-8 flex flex-wrap items-center gap-4 text-[10px] uppercase tracking-[0.25em] text-white/50">
+            <div className="mt-8 flex flex-wrap items-center gap-4 text-[10px] uppercase tracking-[0.25em] text-white/70">
               <span className="inline-flex items-center gap-2">
                 <ChevronDown className="h-4 w-4 animate-bounce" />
                 Scroll to walk down
@@ -354,12 +354,12 @@ function ForUsPage() {
           <section className="mx-auto max-w-[1200px] px-6 pb-4 lg:px-10">
             <div className="flex flex-wrap items-center gap-4 border-y border-white/10 py-4">
               <LiveBadge />
-              <span className="text-[10px] uppercase tracking-[0.25em] text-white/55">
+              <span className="text-[10px] uppercase tracking-[0.25em] text-white/70">
                 Happening right now in the community
               </span>
               <Link
                 to="/live"
-                className="ml-auto text-[10px] uppercase tracking-[0.22em] text-white/50 underline-offset-4 hover:text-white hover:underline"
+                className="ml-auto text-[10px] uppercase tracking-[0.22em] text-white/70 underline-offset-4 hover:text-white hover:underline"
               >
                 All live →
               </Link>
@@ -370,9 +370,9 @@ function ForUsPage() {
                   key={b.id}
                   to="/live/$broadcastId"
                   params={{ broadcastId: b.id }}
-                  className="min-w-[260px] shrink-0 rounded-2xl bg-black/30 p-5 ring-1 ring-white/10 backdrop-blur-[2px] transition hover:-translate-y-0.5 hover:ring-red-500/60"
+                  className="min-w-[260px] shrink-0 rounded-2xl bg-black/50 p-5 ring-1 ring-white/10 transition hover:-translate-y-0.5 hover:ring-red-500/60"
                 >
-                  <span className="text-[10px] uppercase tracking-[0.22em] text-white/55">
+                  <span className="text-[10px] uppercase tracking-[0.22em] text-white/70">
                     {purposeOf(b.purpose).glyph} {purposeOf(b.purpose).label}
                   </span>
                   <p className="mt-2 text-base font-semibold leading-snug">{b.title}</p>
@@ -387,7 +387,7 @@ function ForUsPage() {
 
         {/* Frassy, only as loud as a friend leaning over */}
         <section className="mx-auto max-w-[1200px] px-6 pt-8 lg:px-10">
-          <p className="flex flex-wrap items-center gap-2 text-sm leading-relaxed text-white/65">
+          <p className="flex flex-wrap items-center gap-2 text-sm leading-relaxed text-white/80">
             <Sparkles className="h-4 w-4 text-[color:var(--gold)]" />
             <span className="text-white/85">Frassy:</span>
             {context.priority.length > 0
@@ -417,7 +417,7 @@ function ForUsPage() {
 
           {/* Also happening — quiet, one line each, no dashboard */}
           <section className="border-t border-white/10 pt-8">
-            <p className="text-[10px] uppercase tracking-[0.3em] text-white/45">Also happening in town</p>
+            <p className="text-[10px] uppercase tracking-[0.3em] text-white/80">Also happening in town</p>
             <ul className="mt-4 grid gap-3 sm:grid-cols-2">
               {exhibits.map((ex) => (
                 <li key={ex.id} className="text-sm leading-relaxed text-white/70">
@@ -445,7 +445,7 @@ function ForUsPage() {
                 <Link
                   key={a.to}
                   to={a.to}
-                  className="rounded-full border border-white/20 px-5 py-2.5 text-[10px] uppercase tracking-[0.25em] text-white/60 transition hover:border-[color:var(--gold)] hover:text-white"
+                  className="rounded-full border border-white/20 px-5 py-2.5 text-[10px] uppercase tracking-[0.25em] text-white/85 transition hover:border-[color:var(--gold)] hover:text-white"
                 >
                   {a.label}
                 </Link>
