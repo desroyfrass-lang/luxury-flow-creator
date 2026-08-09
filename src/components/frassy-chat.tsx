@@ -232,7 +232,7 @@ export function FrassyChat({ embedded = false }: { embedded?: boolean } = {}) {
     <div
       className={
         embedded
-          ? "flex h-[min(460px,60vh)] w-full flex-col overflow-hidden rounded-lg border border-white/10 bg-[#0b0c0e]"
+          ? "flex h-[min(640px,78vh)] min-h-[420px] w-full flex-col overflow-hidden rounded-lg border border-white/10 bg-[#0b0c0e]"
           : "fixed bottom-5 right-5 z-50 flex h-[min(620px,80vh)] w-[min(400px,calc(100vw-2.5rem))] flex-col overflow-hidden rounded-lg border border-white/10 bg-[#0b0c0e] shadow-2xl"
       }
     >
