@@ -45,9 +45,9 @@ export function FrassCardWidget({
           <span className="mini-widget-status">{handle ? "Active" : "Not set up"}</span>
         </div>
         <div className="mini-widget-stats">
-          <MiniStat label="Views today" value={card?.views_today ?? 0} />
-          <MiniStat label="Shares today" value={card?.shares_today ?? 0} />
-          <MiniStat label="Sales today" value={card?.sales_today ?? 0} />
+          <MiniStat label="Views today" value={today?.["view"] ?? 0} />
+          <MiniStat label="Shares today" value={today?.["share"] ?? 0} />
+          <MiniStat label="Sales today" value={today?.["sale"] ?? 0} />
         </div>
         <div className="living-card-actions">
           {handle && <ShareCardButton handle={handle} name={name} />}
