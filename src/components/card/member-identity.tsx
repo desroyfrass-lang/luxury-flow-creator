@@ -1,6 +1,9 @@
 import { Link } from "@tanstack/react-router";
 import { useState, type ReactNode } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { useServerFn } from "@tanstack/react-start";
 import { CreditCard, Heart, IdCard, MessageCircle } from "lucide-react";
+import { getMemberStatus } from "@/lib/trust.functions";
 
 /**
  * FRASS-0428A — Universal Frass Card.
@@ -31,8 +34,24 @@ function normalise(handle?: string | null) {
   return h.length > 0 ? h : null;
 }
 
-/** The hover preview — a mini Frass Card, not a profile popup. */
+/**
+ * The hover preview — a mini Frass Card, not a profile popup.
+ * FRASS-0431: it also shows what the member is doing right now, when they have
+ * chosen to make it public — live, on the radio, in the studio, or selling.
+ */
 function MiniCard({ handle, name, avatarUrl, role }: MemberRef & { handle: string }) {
+  const statusFn = useServerFn(getMemberStatus);
+  const { data: status } = useQuery({
+    queryKey: ["member-status", handle],
+    queryFn: () => statusFn({ data: { handle } }),
+    staleTime: 30_000,
+  });
+
+  const signals: string[] = [];
+  if (status?.live) signals.push(status.radio ? "🎵 On Frass Radio" : "🔴 Live now");
+  if (status?.studio) signals.push("🎬 In FV Studios");
+  if (status?.selling) signals.push("🛍 Selling now");
+
   return (
     <div className="mini-card" role="dialog" aria-label={`${name}'s Frass Card preview`}>
       <div className="mini-card-hero" aria-hidden="true">
@@ -41,6 +60,15 @@ function MiniCard({ handle, name, avatarUrl, role }: MemberRef & { handle: strin
       <div className="mini-card-body">
         <p className="mini-card-name">{name}</p>
         {role && <p className="mini-card-role">{role}</p>}
+        {signals.length > 0 && (
+          <div className="mini-card-signals">
+            {signals.map((s) => (
+              <span key={s} className="mini-card-signal">
+                {s}
+              </span>
+            ))}
+          </div>
+        )}
         <code className="mini-card-handle">@{handle}</code>
         <div className="mini-card-actions">
           <Link className="ws-chip text-xs" to="/card/$handle" params={{ handle }} hash="message">

@@ -15,6 +15,7 @@ import { accentValue, themeValue } from "@/lib/card";
 import { ShareCardButton } from "@/components/card/card-share";
 import { CardStorefront, type PublicListing } from "@/components/card/card-storefront";
 import { CardActionBar } from "@/components/card/card-actions";
+import { CardTrustSection } from "@/components/card/card-trust";
 
 export const Route = createFileRoute("/card/$handle")({
   loader: async ({ params }) => {
@@ -252,6 +253,11 @@ function PublicCard() {
             onSale={() => track("marketplace_click")}
           />
         )}
+
+        {/* FRASS-0431 — verified information, before anyone buys, books or pays. */}
+        <CardTrustSection handle={handle} name={name} />
+
+
 
         <footer className="living-card-foot">
           <span>Frass Card — identity and point of sale</span>

@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { SiteShell } from "@/components/site-shell";
+import { TrustCenter } from "@/components/trust/trust-center";
 import { Amount } from "@/components/finance/amount";
 import { useMyRoles } from "@/hooks/use-my-roles";
 import {
@@ -272,6 +273,13 @@ function TabBody({
       );
     case "statements":
       return <Empty label="Statements & reports" note="Monthly, annual, CSV, PDF and audit exports generate once ledgers hold transactions." />;
+    case "trust":
+      return (
+        <>
+          <Heading>Trust Center</Heading>
+          <TrustCenter />
+        </>
+      );
     case "settings":
       return (
         <>

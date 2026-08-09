@@ -1471,6 +1471,48 @@ export type Database = {
         }
         Relationships: []
       }
+      fraud_reports: {
+        Row: {
+          created_at: string
+          details: string
+          id: string
+          kind: string
+          order_reference: string | null
+          reporter_id: string
+          resolution: string | null
+          status: string
+          subject_handle: string | null
+          subject_user_id: string | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          details: string
+          id?: string
+          kind: string
+          order_reference?: string | null
+          reporter_id: string
+          resolution?: string | null
+          status?: string
+          subject_handle?: string | null
+          subject_user_id?: string | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          details?: string
+          id?: string
+          kind?: string
+          order_reference?: string | null
+          reporter_id?: string
+          resolution?: string | null
+          status?: string
+          subject_handle?: string | null
+          subject_user_id?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       launch_program_settings: {
         Row: {
           enabled: boolean
@@ -3150,6 +3192,36 @@ export type Database = {
           status?: string
           timeline?: Json
           title?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      trust_verifications: {
+        Row: {
+          badge: string
+          created_at: string
+          granted_by: string | null
+          id: string
+          note: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          badge: string
+          created_at?: string
+          granted_by?: string | null
+          id?: string
+          note?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          badge?: string
+          created_at?: string
+          granted_by?: string | null
+          id?: string
+          note?: string | null
           updated_at?: string
           user_id?: string
         }

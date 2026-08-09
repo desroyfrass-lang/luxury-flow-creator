@@ -174,6 +174,7 @@ export type FinanceTabId =
   | "withdrawals"
   | "business"
   | "statements"
+  | "trust"
   | "settings";
 
 export type FinanceTab = {
@@ -277,6 +278,21 @@ export const FINANCE_TABS: FinanceTab[] = [
     icon: "📄",
     blurb: "Monthly and annual statements, exports, audit reports.",
     sections: ["Monthly reports", "Annual reports", "Transaction history", "CSV export", "PDF export", "Audit reports"],
+    visible: always,
+  },
+  {
+    id: "trust",
+    label: "Trust Center",
+    icon: "🛡",
+    blurb: "FRASS-0431 — security shown, not hidden: protection status, payments, records and fraud reports.",
+    sections: [
+      "Security status",
+      "Connected payment accounts",
+      "Recent transactions",
+      "Reported fraud",
+      "Verification status",
+      "Privacy settings",
+    ],
     visible: always,
   },
   {
