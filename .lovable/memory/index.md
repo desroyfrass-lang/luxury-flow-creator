@@ -3,6 +3,7 @@
 ## Core
 Brand name is always "Frass" (two s's) — never "Fras". Applies to Frass Hill, Frass Kicks, Frass Drip.
 Stay true to the original Frass Kicks aesthetic.
+Creator platform is "Frass Vision Studios" (shorthand "FV Studio") — never "Frassy Studio".
 Frass Hill: discovery before destination — every destination is experienced from a distance before interaction; movement, not navigation.
 Prefer dark streetwear visuals over bright white luxury styling.
 Use bold block-letter typography and chrome/gold brand cues.
@@ -37,6 +38,7 @@ Sightline rule: every building in Frass Hill must be visible before it is visite
 - [FINAL LOVABLE DIRECTIVE](FINAL_LOVABLE_DIRECTIVE.md) — Active commissioning charter: stop designing, start building; Builder experience is the north star; decision filter is "which choice creates the best Builder experience?"
 - [Frass OS Constitution v1.0](FRASS_OS_CONSTITUTION.md) — Foundational charter: mission, vision, Builder principles, district definitions, and constitutional oaths for every future contributor
 - [Original Frass visual direction](mem://design/original-frass-visual-direction) — Dark streetwear direction, block letters, chrome/gold brand cues, real uploaded logo assets
+- [Frass Vision Studios](mem://features/frass-vision-studios) — FRASS-0407 rebrand: full name vs FV Studio shorthand, usage rules, Studio District home
 - [Frass spelling](mem://constraints/frass-spelling) — Brand is always "Frass" (two s's), never "Fras"
 - [Frassy Caribbean hospitality DNA](mem://design/frassy-caribbean-hospitality) — Frassy = digital Caribbean hospitality; subtle wit; anti-fraud posture; enforced in api/chat.ts SYSTEM_PROMPT
 - [Frassy Core Intelligence Engine O-22](mem://features/frassy-core-intelligence-o22) — COMPLETE: Frassy as the unified Builder companion, intelligence orchestration, and lifelong memory steward
