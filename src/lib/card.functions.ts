@@ -29,6 +29,11 @@ const UpdateCardSchema = z.object({
   section_order: z.array(z.string().max(40)).max(10).optional(),
   is_published: z.boolean().optional(),
   show_contact: z.boolean().optional(),
+  // FRASS-0427 — Frass Card Commerce
+  commerce_enabled: z.boolean().optional(),
+  payout_provider: z.enum(["stripe", "paypal", "square", "other"]).nullable().optional(),
+  payout_url: z.string().max(600).nullable().optional(),
+  payout_display_name: z.string().max(120).nullable().optional(),
 });
 
 /**
