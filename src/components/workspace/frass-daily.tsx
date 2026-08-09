@@ -462,8 +462,61 @@ export function FrassDaily({
           </Section>
         )}
 
+        {/* FRASS-0401/0402 — Frassy Studio, open to every member and partner */}
+        <Section
+          title="Frassy Studio"
+          note="Frassy creates. You direct. Manual editing is always free — AI work is forecast before it runs."
+        >
+          <div className="daily-grid">
+            <button
+              type="button"
+              className="daily-card daily-clickable"
+              onClick={() => {
+                onNavigate?.("/studio");
+                onDismiss();
+              }}
+            >
+              <span className="daily-task-label">
+                <Film className="mr-1.5 inline h-3.5 w-3.5" />
+                Open the Studio
+              </span>
+              <span className="ws-meta">
+                Describe the edit in plain words and Frassy builds it — video, b-roll, voice, captions, motion.
+              </span>
+              <span className="daily-go">
+                Enter <ArrowRight className="h-3.5 w-3.5" />
+              </span>
+            </button>
+
+            <button
+              type="button"
+              className="daily-card daily-clickable"
+              onClick={() => {
+                onNavigate?.("/studio");
+                onDismiss();
+              }}
+            >
+              <span className="daily-task-label">
+                <Coins className="mr-1.5 inline h-3.5 w-3.5" />
+                {wallet.isLoading
+                  ? "Loading your AI credits…"
+                  : `${(wallet.data?.balance ?? 0).toLocaleString()} Frass AI Credits`}
+              </span>
+              <span className="ws-meta">
+                {wallet.data
+                  ? `About ${usdFor(wallet.data.balance)} of AI compute. Used today: ${(wallet.data.used_today ?? 0).toLocaleString()}.`
+                  : "Your credit balance for AI work across the whole platform."}
+              </span>
+              <span className="daily-go">
+                See receipts <ArrowRight className="h-3.5 w-3.5" />
+              </span>
+            </button>
+          </div>
+        </Section>
+
         {/* 11 — Continue working */}
         <Section title="Continue working" note="Exactly where you stopped.">
+
           <div className="daily-grid">
             {model.resume.map((r) => (
               <button key={r.id} type="button" className="daily-card daily-clickable" onClick={() => go(r)}>
