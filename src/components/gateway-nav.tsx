@@ -114,7 +114,7 @@ const SHOP_NAV: NavGroup[] = [
     ],
   },
 
-  { label: "Social Media Virals", to: "/social-media-virals", match: "/social-media-virals" },
+  { label: "Viral", to: "/social-media-virals", match: "/social-media-virals" },
   {
     label: "Shopping Extras",
     to: "/sales-clearance",
@@ -139,6 +139,7 @@ const HILL_NAV: NavGroup[] = [
       { label: "Frass Hill", to: "/frass-hill", note: "Every district, in view" },
       { label: "Town Square", to: "/welcome-hall", note: "The civic heart" },
       { label: "For Us", to: "/for-us", note: "The Community Hall" },
+      { label: "For Me", to: "/for-me", note: "Your own corner of the Hill" },
       { label: "Builder Vault", to: "/vault" },
     ],
   },
@@ -187,12 +188,14 @@ const HILL_NAV: NavGroup[] = [
     match: "/for-us",
     items: [
       { label: "For Us", to: "/for-us", note: "Today's community stories" },
+      { label: "For Me", to: "/for-me", note: "Your own corner of the Hill" },
       { label: "🔴 Live Directory", to: "/live", note: "For Us Live & Frass Radio Live" },
       { label: "🔴 Go Live", to: "/live/go", note: "Share your story with the community" },
       { label: "Opportunity Centre", to: "/opportunity" },
       { label: "Academy", to: "/academy" },
       { label: "Brand Journal", to: "/blog" },
       { label: "Music & Media", to: "/music-media" },
+      { label: "Viral", to: "/social-media-virals", note: "What the Hill is watching" },
     ],
   },
 ];
@@ -205,7 +208,6 @@ const SHOP_PRIMARY: { label: string; to: string; match: string; editorial?: bool
   { label: "Frass Bridal", to: "/bridal", match: "/bridal", editorial: true },
   { label: "Frass Plus+", to: "/frass-plus", match: "/frass-plus" },
   { label: "Frass Kids", to: "/frass-kids", match: "/frass-kids" },
-  { label: "The Liquidation Room", to: "/sales-clearance", match: "/sales-clearance" },
 ];
 
 /** Always-visible destinations on the bar — Frass Hill side. */
