@@ -421,3 +421,62 @@ export const declinePaymentRequest = createServerFn({ method: "POST" })
       .in("status", ["preparing", "awaiting_approval"]);
     return { ok: true as const };
   });
+
+/**
+ * FRASS-0439 — Founder Commerce Health.
+ * Not vanity metrics: the question is whether the payment system is serving
+ * Builders well right now, and if not, where it is failing them.
+ */
+export const getCommerceHealth = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d: { days?: number } | undefined) =>
+    z.object({ days: z.number().int().min(1).max(90).default(7) }).parse(d ?? {}),
+  )
+  .handler(async ({ data, context }) => {
+    const { data: isAdmin } = await context.supabase.rpc("has_role", {
+      _user_id: context.userId,
+      _role: "admin",
+    });
+    const { data: isSuper } = await context.supabase.rpc("has_role", {
+      _user_id: context.userId,
+      _role: "super_admin",
+    });
+    if (!isAdmin && !isSuper) throw new Error("Forbidden");
+
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const since = new Date(Date.now() - data.days * 86_400_000).toISOString();
+    const { data: rows, error } = await supabaseAdmin
+      .from("payment_requests")
+      .select("status, amount, quantity, currency, attempts, created_at, paid_at, expires_at")
+      .gte("created_at", since);
+    if (error) throw error;
+
+    const list = rows ?? [];
+    const count = (s: string) => list.filter((r) => r.status === s).length;
+    const successful = count("successful");
+    const declined = count("declined");
+    const expired = count("expired");
+    const cancelled = count("cancelled");
+    const refunded = count("refunded");
+    const open = list.filter((r) => ["preparing", "awaiting_approval", "processing"].includes(r.status)).length;
+    const settled = successful + declined + expired + cancelled + refunded;
+    const paidValue = list
+      .filter((r) => r.status === "successful")
+      .reduce((t, r) => t + Number(r.amount) * r.quantity, 0);
+    const retried = list.filter((r) => (r.attempts ?? 0) > 1).length;
+
+    return {
+      days: data.days,
+      total: list.length,
+      open,
+      successful,
+      declined,
+      expired,
+      cancelled,
+      refunded,
+      retried,
+      successRate: settled ? Math.round((successful / settled) * 1000) / 10 : null,
+      paidValue: Math.round(paidValue * 100) / 100,
+      currency: list[0]?.currency ?? "USD",
+    };
+  });
