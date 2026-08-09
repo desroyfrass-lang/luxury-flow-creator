@@ -16,7 +16,7 @@ export function StudioEntryCard({ className = "" }: { className?: string }) {
     >
       <img
         src={studioEntry}
-        alt="The lit entrance to Frassy Studio at night — cameras, monitors and gold light"
+        alt="The lit entrance to Frass Vision Studios at night — cameras, monitors and gold light"
         width={1600}
         height={1008}
         loading="lazy"
@@ -32,18 +32,23 @@ export function StudioEntryCard({ className = "" }: { className?: string }) {
 
       <div className="absolute inset-x-0 bottom-0 p-8 md:p-12">
         <div className="text-[11px] uppercase tracking-[0.35em] text-[color:var(--gold)]">
-          Now open · Frass Hill
+          Now open · Studio District · Frass Hill
         </div>
         <h2 className="mt-3 font-display text-4xl uppercase leading-[0.9] md:text-6xl">
-          Frassy Studio
+          Frass Vision Studios
         </h2>
+        <p className="mt-2 text-[11px] uppercase tracking-[0.35em] text-muted-foreground">
+          Known throughout Frass as FV Studio
+        </p>
         <p className="mt-4 max-w-lg text-sm text-muted-foreground md:text-base">
-          The AI production suite of Frass. Shoot on your phone, walk in here, and leave with
-          campaign-grade video, audio and motion — with credits forecast before anything runs.
+          The flagship production house of Frass. Films, documentaries, commercials, music
+          videos, podcasts and campaigns — shot on your phone, finished to broadcast standard,
+          with credits forecast before anything runs.
         </p>
         <div className="mt-6 inline-flex items-center gap-2 rounded-full border border-[color:var(--gold)]/50 px-5 py-2 text-xs uppercase tracking-[0.3em] text-foreground transition group-hover:bg-[color:var(--gold)]/10 group-hover:text-[color:var(--gold)]">
-          Enter the Studio <ArrowUpRight className="h-4 w-4" />
+          Enter FV Studio <ArrowUpRight className="h-4 w-4" />
         </div>
+
       </div>
     </Link>
   );
