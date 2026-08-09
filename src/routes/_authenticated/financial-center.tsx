@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { SiteShell } from "@/components/site-shell";
+import { TrustCenter } from "@/components/trust/trust-center";
 import { Amount } from "@/components/finance/amount";
 import { useMyRoles } from "@/hooks/use-my-roles";
 import {
