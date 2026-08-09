@@ -497,7 +497,7 @@ function FreeTryOnFab() {
   return (
     <Link
       to="/capsules"
-      className="fixed bottom-5 right-5 md:bottom-8 md:right-8 z-40 inline-flex items-center gap-2 rounded-full border border-[color:var(--gold)] bg-[color:var(--gold)] px-5 py-3 text-[11px] font-bold uppercase tracking-[0.28em] text-[color:var(--ink)] shadow-[0_10px_40px_-10px_oklch(0.92_0.12_85_/_0.7)] transition hover:scale-[1.03] hover:bg-[color:var(--gold-soft,#f0d78c)]"
+      className="fixed bottom-5 left-5 md:bottom-8 md:left-8 z-40 inline-flex items-center gap-2 rounded-full border border-[color:var(--gold)] bg-[color:var(--gold)] px-5 py-3 text-[11px] font-bold uppercase tracking-[0.28em] text-[color:var(--ink)] shadow-[0_10px_40px_-10px_oklch(0.92_0.12_85_/_0.7)] transition hover:scale-[1.03] hover:bg-[color:var(--gold-soft,#f0d78c)]"
       aria-label="Free virtual try on"
     >
       <Sparkles className="h-4 w-4" />
