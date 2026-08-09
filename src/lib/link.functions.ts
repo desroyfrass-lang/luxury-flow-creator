@@ -1,7 +1,7 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
-import { BONUS_RULES, stageRank, type ReferralStage } from "@/lib/frass-link";
+import { BONUS_RULES, bonusLabel, stageRank, type ReferralStage } from "@/lib/frass-link";
 
 /**
  * FRASS-0428 — the Welcome Link.
