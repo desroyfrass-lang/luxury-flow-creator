@@ -106,6 +106,11 @@ export function FrassDaily({
 
   const day = useMemo(() => myDay(model, done, delegated), [model, done, delegated]);
 
+  /** FRASS-0402 — the AI credit balance travels with the Builder, not with a role. */
+  const fetchWallet = useServerFn(getWallet);
+  const wallet = useQuery({ queryKey: ["studio-wallet"], queryFn: () => fetchWallet(), staleTime: 60_000 });
+
+
   /** No dead information — every item resolves to the records behind it. */
   const go = (target: DailyTarget) => {
     if (target.href) onNavigate?.(target.href);
