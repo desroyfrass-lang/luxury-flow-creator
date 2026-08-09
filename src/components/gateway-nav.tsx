@@ -4,6 +4,7 @@ import { Search, KeyRound, Menu, X, UserRound, Sun } from "lucide-react";
 import { useAccountSection } from "@/hooks/use-my-roles";
 import { openTheDaily } from "@/components/workspace/daily-gate";
 
+import { GoLiveButton } from "./live/live-status";
 import { CartDrawer } from "./cart-drawer";
 import { RegionSwitcher } from "./region-switcher";
 import fullLogo from "@/assets/frass-logo-full.asset.json";
@@ -183,6 +184,8 @@ const HILL_NAV: NavGroup[] = [
     match: "/for-us",
     items: [
       { label: "For Us", to: "/for-us", note: "Today's community stories" },
+      { label: "🔴 Live Directory", to: "/live", note: "For Us Live & Frass Radio Live" },
+      { label: "🔴 Go Live", to: "/live/go", note: "Share your story with the community" },
       { label: "Opportunity Centre", to: "/opportunity" },
       { label: "Academy", to: "/academy" },
       { label: "Brand Journal", to: "/blog" },
@@ -207,6 +210,7 @@ const HILL_PRIMARY: { label: string; to: string; match: string; editorial?: bool
   { label: "Frass Hill", to: "/frass-hill", match: "/frass-hill" },
   { label: "Town Square", to: "/welcome-hall", match: "/welcome-hall" },
   { label: "For Us", to: "/for-us", match: "/for-us" },
+  { label: "🔴 Live", to: "/live", match: "/live" },
   { label: "Health & Wellness", to: "/health-wellness", match: "/health-wellness", editorial: true },
   { label: "Kids World", to: "/kids-world", match: "/kids-world" },
   { label: "FV Studios", to: "/studio", match: "/studio", editorial: true },
@@ -320,6 +324,7 @@ export function GatewayNav({ mode }: { mode: "shop" | "world" }) {
             </Link>
           );
         })}
+        <GoLiveButton className="ml-1 shrink-0 whitespace-nowrap" />
         <DailyNavButton />
         <AccountNavSection />
 
