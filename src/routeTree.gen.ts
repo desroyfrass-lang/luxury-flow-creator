@@ -19,6 +19,7 @@ import { Route as McpRouteImport } from './routes/mcp'
 import { Route as LookbookRouteImport } from './routes/lookbook'
 import { Route as KidsWorldRouteImport } from './routes/kids-world'
 import { Route as KicksDistrictRouteImport } from './routes/kicks-district'
+import { Route as HealthWellnessRouteImport } from './routes/health-wellness'
 import { Route as GatewayRouteImport } from './routes/gateway'
 import { Route as FvStudiosRouteImport } from './routes/fv-studios'
 import { Route as FrassWorldRouteImport } from './routes/frass-world'
@@ -215,6 +216,11 @@ const KidsWorldRoute = KidsWorldRouteImport.update({
 const KicksDistrictRoute = KicksDistrictRouteImport.update({
   id: '/kicks-district',
   path: '/kicks-district',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const HealthWellnessRoute = HealthWellnessRouteImport.update({
+  id: '/health-wellness',
+  path: '/health-wellness',
   getParentRoute: () => rootRouteImport,
 } as any)
 const GatewayRoute = GatewayRouteImport.update({
@@ -1016,6 +1022,7 @@ export interface FileRoutesByFullPath {
   '/frass-world': typeof FrassWorldRoute
   '/fv-studios': typeof FvStudiosRoute
   '/gateway': typeof GatewayRoute
+  '/health-wellness': typeof HealthWellnessRoute
   '/kicks-district': typeof KicksDistrictRoute
   '/kids-world': typeof KidsWorldRouteWithChildren
   '/lookbook': typeof LookbookRouteWithChildren
@@ -1162,6 +1169,7 @@ export interface FileRoutesByTo {
   '/frass-world': typeof FrassWorldRoute
   '/fv-studios': typeof FvStudiosRoute
   '/gateway': typeof GatewayRoute
+  '/health-wellness': typeof HealthWellnessRoute
   '/kicks-district': typeof KicksDistrictRoute
   '/mcp': typeof McpRoute
   '/music-media': typeof MusicMediaRoute
@@ -1313,6 +1321,7 @@ export interface FileRoutesById {
   '/frass-world': typeof FrassWorldRoute
   '/fv-studios': typeof FvStudiosRoute
   '/gateway': typeof GatewayRoute
+  '/health-wellness': typeof HealthWellnessRoute
   '/kicks-district': typeof KicksDistrictRoute
   '/kids-world': typeof KidsWorldRouteWithChildren
   '/lookbook': typeof LookbookRouteWithChildren
@@ -1473,6 +1482,7 @@ export interface FileRouteTypes {
     | '/frass-world'
     | '/fv-studios'
     | '/gateway'
+    | '/health-wellness'
     | '/kicks-district'
     | '/kids-world'
     | '/lookbook'
@@ -1619,6 +1629,7 @@ export interface FileRouteTypes {
     | '/frass-world'
     | '/fv-studios'
     | '/gateway'
+    | '/health-wellness'
     | '/kicks-district'
     | '/mcp'
     | '/music-media'
@@ -1769,6 +1780,7 @@ export interface FileRouteTypes {
     | '/frass-world'
     | '/fv-studios'
     | '/gateway'
+    | '/health-wellness'
     | '/kicks-district'
     | '/kids-world'
     | '/lookbook'
@@ -1929,6 +1941,7 @@ export interface RootRouteChildren {
   FrassWorldRoute: typeof FrassWorldRoute
   FvStudiosRoute: typeof FvStudiosRoute
   GatewayRoute: typeof GatewayRoute
+  HealthWellnessRoute: typeof HealthWellnessRoute
   KicksDistrictRoute: typeof KicksDistrictRoute
   KidsWorldRoute: typeof KidsWorldRouteWithChildren
   LookbookRoute: typeof LookbookRouteWithChildren
@@ -2023,6 +2036,13 @@ declare module '@tanstack/react-router' {
       path: '/kicks-district'
       fullPath: '/kicks-district'
       preLoaderRoute: typeof KicksDistrictRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/health-wellness': {
+      id: '/health-wellness'
+      path: '/health-wellness'
+      fullPath: '/health-wellness'
+      preLoaderRoute: typeof HealthWellnessRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/gateway': {
@@ -3566,6 +3586,7 @@ const rootRouteChildren: RootRouteChildren = {
   FrassWorldRoute: FrassWorldRoute,
   FvStudiosRoute: FvStudiosRoute,
   GatewayRoute: GatewayRoute,
+  HealthWellnessRoute: HealthWellnessRoute,
   KicksDistrictRoute: KicksDistrictRoute,
   KidsWorldRoute: KidsWorldRouteWithChildren,
   LookbookRoute: LookbookRouteWithChildren,
