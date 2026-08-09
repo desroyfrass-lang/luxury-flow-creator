@@ -22,6 +22,7 @@ import {
 } from "lucide-react";
 import { SiteShell } from "@/components/site-shell";
 import { PhoneContentMode } from "@/components/studio/phone-content-mode";
+import { ExportWatermarkPanel } from "@/components/studio/export-watermark";
 import type { QualityReport } from "@/lib/studio/phone-content-mode";
 import { FREE_CAPABILITIES, formatDuration, unitLabel, usdFor } from "@/lib/studio/credits";
 
@@ -413,6 +414,8 @@ function StudioPage() {
             {/* Inspector / Effects / Mixer / Export */}
             <aside className="space-y-4">
               <ExportWatermarkPanel />
+              <Panel title="Inspector" icon={SlidersHorizontal}>
+
 
                 <ul className="space-y-1.5 text-xs text-white/55">
                   <li>Transform · Scale · Position · Rotation</li>
