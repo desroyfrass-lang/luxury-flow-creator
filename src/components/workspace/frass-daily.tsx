@@ -793,8 +793,6 @@ export function FrassDaily({
           </p>
         </Section>
 
-        <div className="daily-footer">
-          <button type="button" className="daily-enter" onClick={onDismiss}>
         {/* 2 & 7 · The Last Button — Close My Day, and the celebration that follows */}
         <section className="daily-close" data-blueprint="daily-close">
           {!closed ? (
