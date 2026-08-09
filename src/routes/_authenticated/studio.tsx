@@ -23,6 +23,7 @@ import {
 import { SiteShell } from "@/components/site-shell";
 import { PhoneContentMode } from "@/components/studio/phone-content-mode";
 import { VoiceFeedbackButton } from "@/components/feedback/voice-feedback";
+import { CreationOpportunities } from "@/components/creation/opportunity-panel";
 import { ExportWatermarkPanel } from "@/components/studio/export-watermark";
 import type { QualityReport } from "@/lib/studio/phone-content-mode";
 import { FREE_CAPABILITIES, formatDuration, unitLabel, usdFor } from "@/lib/studio/credits";
@@ -373,6 +374,9 @@ function StudioPage() {
                 onRun={(report) => runPhone.mutate(report)}
               />
 
+
+              {/* FRASS-0411 — every creation has a business */}
+              <CreationOpportunities kind="video" />
 
               {/* Professional timeline */}
               <Panel title="Timeline — manual editing, always free" icon={Scissors}>
