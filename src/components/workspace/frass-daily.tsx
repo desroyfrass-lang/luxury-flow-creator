@@ -509,7 +509,7 @@ export function FrassDaily({
               </span>
               <span className="ws-meta">
                 {wallet.data
-                  ? `About ${usdFor(wallet.data.balance)} of AI compute. Used today: ${(wallet.data.used_today ?? 0).toLocaleString()}.`
+                  ? `About ${usdFor(wallet.data.balance)} of AI compute. Used today: ${(wallet.data.today_used ?? 0).toLocaleString()}.`
                   : "Your credit balance for AI work across the whole platform."}
               </span>
               <span className="daily-go">
