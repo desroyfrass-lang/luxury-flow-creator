@@ -1671,6 +1671,51 @@ export type Database = {
           },
         ]
       }
+      link_referrals: {
+        Row: {
+          business_launched_at: string | null
+          created_at: string
+          id: string
+          invited_user_id: string | null
+          landing_path: string | null
+          qualified_affiliate_at: string | null
+          qualified_member_at: string | null
+          qualified_partner_at: string | null
+          referrer_id: string
+          source: string
+          stage: string
+          updated_at: string
+        }
+        Insert: {
+          business_launched_at?: string | null
+          created_at?: string
+          id?: string
+          invited_user_id?: string | null
+          landing_path?: string | null
+          qualified_affiliate_at?: string | null
+          qualified_member_at?: string | null
+          qualified_partner_at?: string | null
+          referrer_id: string
+          source?: string
+          stage?: string
+          updated_at?: string
+        }
+        Update: {
+          business_launched_at?: string | null
+          created_at?: string
+          id?: string
+          invited_user_id?: string | null
+          landing_path?: string | null
+          qualified_affiliate_at?: string | null
+          qualified_member_at?: string | null
+          qualified_partner_at?: string | null
+          referrer_id?: string
+          source?: string
+          stage?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       live_broadcasts: {
         Row: {
           affiliate_url: string | null
@@ -2770,6 +2815,8 @@ export type Database = {
           postal_code: string | null
           preferences: Json
           primary_district: string | null
+          referred_by: string | null
+          referred_via: string | null
           region: string | null
           social_followed: boolean
           style_preferences: string[] | null
@@ -2801,6 +2848,8 @@ export type Database = {
           postal_code?: string | null
           preferences?: Json
           primary_district?: string | null
+          referred_by?: string | null
+          referred_via?: string | null
           region?: string | null
           social_followed?: boolean
           style_preferences?: string[] | null
@@ -2832,12 +2881,61 @@ export type Database = {
           postal_code?: string | null
           preferences?: Json
           primary_district?: string | null
+          referred_by?: string | null
+          referred_via?: string | null
           region?: string | null
           social_followed?: boolean
           style_preferences?: string[] | null
           updated_at?: string
         }
         Relationships: []
+      }
+      recruitment_bonuses: {
+        Row: {
+          amount: number
+          created_at: string
+          currency: string
+          id: string
+          kind: string
+          note: string | null
+          referral_id: string | null
+          status: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          amount?: number
+          created_at?: string
+          currency?: string
+          id?: string
+          kind: string
+          note?: string | null
+          referral_id?: string | null
+          status?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          amount?: number
+          created_at?: string
+          currency?: string
+          id?: string
+          kind?: string
+          note?: string | null
+          referral_id?: string | null
+          status?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "recruitment_bonuses_referral_id_fkey"
+            columns: ["referral_id"]
+            isOneToOne: false
+            referencedRelation: "link_referrals"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       reward_coupons: {
         Row: {
