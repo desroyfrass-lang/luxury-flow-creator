@@ -101,9 +101,9 @@ function Moment({ story, scale, image }: { story: FeedStory; scale: "wide" | "ta
 
   const shell = (
     <article
-      className={`group relative overflow-hidden rounded-[2rem] transition duration-500 ${
+      className={`chrome-glow group relative overflow-hidden rounded-[2rem] ${
         image ? "min-h-[62vh]" : "bg-black/45"
-      } ${scale === "quiet" ? "p-7 md:p-9" : "p-8 md:p-14"} ring-1 ring-white/10 hover:ring-[color:var(--gold)]/40`}
+      } ${scale === "quiet" ? "p-7 md:p-9" : "p-8 md:p-14"} ring-1 ring-white/10`}
     >
       {image && (
         <>
@@ -307,6 +307,18 @@ function ForUsPage() {
               {weather.label}
             </span>
             <div className="ml-auto flex items-center gap-3">
+              <Link
+                to="/for-me"
+                className="rounded-full border border-white/20 px-3 py-1.5 text-[10px] uppercase tracking-[0.22em] text-white/80 transition hover:border-[color:var(--gold)] hover:text-white"
+              >
+                For Me
+              </Link>
+              <Link
+                to="/workspace/profile"
+                className="rounded-full border border-white/20 px-3 py-1.5 text-[10px] uppercase tracking-[0.22em] text-white/80 transition hover:border-[color:var(--gold)] hover:text-white"
+              >
+                My Story
+              </Link>
               <button
                 type="button"
                 onClick={toggleSound}
@@ -318,6 +330,7 @@ function ForUsPage() {
               </button>
               <GoLiveButton />
             </div>
+
           </div>
         </div>
 

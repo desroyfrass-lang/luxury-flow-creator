@@ -36,6 +36,7 @@ import { Route as FrassHillRouteImport } from './routes/frass-hill'
 import { Route as FrassDripRouteImport } from './routes/frass-drip'
 import { Route as FrassDistrictRouteImport } from './routes/frass-district'
 import { Route as ForUsRouteImport } from './routes/for-us'
+import { Route as ForMeRouteImport } from './routes/for-me'
 import { Route as CheckoutRouteImport } from './routes/checkout'
 import { Route as CapsulesRouteImport } from './routes/capsules'
 import { Route as BridalBoutiqueRouteImport } from './routes/bridal-boutique'
@@ -308,6 +309,11 @@ const FrassDistrictRoute = FrassDistrictRouteImport.update({
 const ForUsRoute = ForUsRouteImport.update({
   id: '/for-us',
   path: '/for-us',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ForMeRoute = ForMeRouteImport.update({
+  id: '/for-me',
+  path: '/for-me',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CheckoutRoute = CheckoutRouteImport.update({
@@ -1052,6 +1058,7 @@ export interface FileRoutesByFullPath {
   '/bridal-boutique': typeof BridalBoutiqueRoute
   '/capsules': typeof CapsulesRouteWithChildren
   '/checkout': typeof CheckoutRoute
+  '/for-me': typeof ForMeRoute
   '/for-us': typeof ForUsRoute
   '/frass-district': typeof FrassDistrictRoute
   '/frass-drip': typeof FrassDripRouteWithChildren
@@ -1212,6 +1219,7 @@ export interface FileRoutesByTo {
   '/auth': typeof AuthRoute
   '/bridal-boutique': typeof BridalBoutiqueRoute
   '/checkout': typeof CheckoutRoute
+  '/for-me': typeof ForMeRoute
   '/for-us': typeof ForUsRoute
   '/frass-district': typeof FrassDistrictRoute
   '/frass-hill': typeof FrassHillRoute
@@ -1364,6 +1372,7 @@ export interface FileRoutesById {
   '/bridal-boutique': typeof BridalBoutiqueRoute
   '/capsules': typeof CapsulesRouteWithChildren
   '/checkout': typeof CheckoutRoute
+  '/for-me': typeof ForMeRoute
   '/for-us': typeof ForUsRoute
   '/frass-district': typeof FrassDistrictRoute
   '/frass-drip': typeof FrassDripRouteWithChildren
@@ -1532,6 +1541,7 @@ export interface FileRouteTypes {
     | '/bridal-boutique'
     | '/capsules'
     | '/checkout'
+    | '/for-me'
     | '/for-us'
     | '/frass-district'
     | '/frass-drip'
@@ -1692,6 +1702,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/bridal-boutique'
     | '/checkout'
+    | '/for-me'
     | '/for-us'
     | '/frass-district'
     | '/frass-hill'
@@ -1843,6 +1854,7 @@ export interface FileRouteTypes {
     | '/bridal-boutique'
     | '/capsules'
     | '/checkout'
+    | '/for-me'
     | '/for-us'
     | '/frass-district'
     | '/frass-drip'
@@ -2011,6 +2023,7 @@ export interface RootRouteChildren {
   BridalBoutiqueRoute: typeof BridalBoutiqueRoute
   CapsulesRoute: typeof CapsulesRouteWithChildren
   CheckoutRoute: typeof CheckoutRoute
+  ForMeRoute: typeof ForMeRoute
   ForUsRoute: typeof ForUsRoute
   FrassDistrictRoute: typeof FrassDistrictRoute
   FrassDripRoute: typeof FrassDripRouteWithChildren
@@ -2241,6 +2254,13 @@ declare module '@tanstack/react-router' {
       path: '/for-us'
       fullPath: '/for-us'
       preLoaderRoute: typeof ForUsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/for-me': {
+      id: '/for-me'
+      path: '/for-me'
+      fullPath: '/for-me'
+      preLoaderRoute: typeof ForMeRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/checkout': {
@@ -3724,6 +3744,7 @@ const rootRouteChildren: RootRouteChildren = {
   BridalBoutiqueRoute: BridalBoutiqueRoute,
   CapsulesRoute: CapsulesRouteWithChildren,
   CheckoutRoute: CheckoutRoute,
+  ForMeRoute: ForMeRoute,
   ForUsRoute: ForUsRoute,
   FrassDistrictRoute: FrassDistrictRoute,
   FrassDripRoute: FrassDripRouteWithChildren,
