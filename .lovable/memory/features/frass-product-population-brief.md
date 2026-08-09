@@ -37,7 +37,7 @@ opportunities, collection improvements — always in service of clarity and the
 customer experience.
 
 ## Affiliate gate
-The 8% Platform Allocation stays fixed and separate from the Affiliate Engine.
+The 10% Platform Allocation stays fixed and separate from the Affiliate Engine.
 No product shows an affiliate option before profitability analysis. Never
 recommend a commission that compromises a healthy margin.
 
