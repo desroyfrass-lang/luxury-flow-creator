@@ -11,9 +11,14 @@
 // ─────────────────────────────────────────────────────────────────────────────
 
 import { useEffect, useMemo, useState } from "react";
-import { X, Check, Sparkles, ArrowRight, HelpCircle, Coins, ListTree } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
+import { useServerFn } from "@tanstack/react-start";
+import { X, Check, Sparkles, ArrowRight, HelpCircle, Coins, ListTree, Film } from "lucide-react";
 import { FrassyComposer } from "@/components/workspace/frassy-composer";
+import { getWallet } from "@/lib/studio.functions";
+import { usdFor } from "@/lib/studio/credits";
 import frassyAvatar from "@/assets/frassy-gold.png.asset.json";
+
 
 import {
   dailyFor,
@@ -100,6 +105,11 @@ export function FrassDaily({
     .reduce((n, t) => n + t.minutes, 0);
 
   const day = useMemo(() => myDay(model, done, delegated), [model, done, delegated]);
+
+  /** FRASS-0402 — the AI credit balance travels with the Builder, not with a role. */
+  const fetchWallet = useServerFn(getWallet);
+  const wallet = useQuery({ queryKey: ["studio-wallet"], queryFn: () => fetchWallet(), staleTime: 60_000 });
+
 
   /** No dead information — every item resolves to the records behind it. */
   const go = (target: DailyTarget) => {
@@ -457,8 +467,61 @@ export function FrassDaily({
           </Section>
         )}
 
+        {/* FRASS-0401/0402 — Frassy Studio, open to every member and partner */}
+        <Section
+          title="Frassy Studio"
+          note="Frassy creates. You direct. Manual editing is always free — AI work is forecast before it runs."
+        >
+          <div className="daily-grid">
+            <button
+              type="button"
+              className="daily-card daily-clickable"
+              onClick={() => {
+                onNavigate?.("/studio");
+                onDismiss();
+              }}
+            >
+              <span className="daily-task-label">
+                <Film className="mr-1.5 inline h-3.5 w-3.5" />
+                Open the Studio
+              </span>
+              <span className="ws-meta">
+                Describe the edit in plain words and Frassy builds it — video, b-roll, voice, captions, motion.
+              </span>
+              <span className="daily-go">
+                Enter <ArrowRight className="h-3.5 w-3.5" />
+              </span>
+            </button>
+
+            <button
+              type="button"
+              className="daily-card daily-clickable"
+              onClick={() => {
+                onNavigate?.("/studio");
+                onDismiss();
+              }}
+            >
+              <span className="daily-task-label">
+                <Coins className="mr-1.5 inline h-3.5 w-3.5" />
+                {wallet.isLoading
+                  ? "Loading your AI credits…"
+                  : `${(wallet.data?.balance ?? 0).toLocaleString()} Frass AI Credits`}
+              </span>
+              <span className="ws-meta">
+                {wallet.data
+                  ? `About ${usdFor(wallet.data.balance)} of AI compute. Used today: ${(wallet.data.today_used ?? 0).toLocaleString()}.`
+                  : "Your credit balance for AI work across the whole platform."}
+              </span>
+              <span className="daily-go">
+                See receipts <ArrowRight className="h-3.5 w-3.5" />
+              </span>
+            </button>
+          </div>
+        </Section>
+
         {/* 11 — Continue working */}
         <Section title="Continue working" note="Exactly where you stopped.">
+
           <div className="daily-grid">
             {model.resume.map((r) => (
               <button key={r.id} type="button" className="daily-card daily-clickable" onClick={() => go(r)}>

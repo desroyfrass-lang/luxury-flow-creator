@@ -242,6 +242,13 @@ function BuilderAccountMenu({ hasWorkspace, isAdmin }: { hasWorkspace: boolean; 
           The Frass Daily
         </DropdownMenuItem>
         <DropdownMenuItem asChild className="rounded-xl cursor-pointer">
+          <Link to="/studio" className="flex items-center gap-2 text-xs uppercase tracking-[0.2em]">
+            <span aria-hidden>🎬</span>
+            Frassy Studio
+          </Link>
+        </DropdownMenuItem>
+        <DropdownMenuItem asChild className="rounded-xl cursor-pointer">
+
 
           <Link to="/welcome-hall" className="flex items-center gap-2 text-xs uppercase tracking-[0.2em]">
             <Sparkles className="h-4 w-4" />
@@ -348,6 +355,16 @@ function MobileAccountLinks({ hasWorkspace, isAdmin }: { hasWorkspace: boolean; 
       >
         The Frass Daily
       </button>
+
+      <Link
+        to="/studio"
+        className="nav-glow block rounded-xl px-4 py-3 text-xs uppercase tracking-[0.25em] text-muted-foreground transition-colors hover:bg-foreground/5"
+        activeProps={{ className: "text-foreground bg-foreground/5" }}
+      >
+        🎬 Frassy Studio
+      </Link>
+
+
 
       <Link
         to="/welcome-hall"
