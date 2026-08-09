@@ -30,8 +30,10 @@ export function useLiveNow(destination?: LiveDestination) {
   });
 
   useEffect(() => {
+    // Unique channel per subscriber: two components can watch LIVE at once
+    // without Supabase rejecting a second listener on a shared channel.
     const channel = supabase
-      .channel("live-broadcasts-status")
+      .channel(`live-broadcasts-status-${Math.random().toString(36).slice(2)}`)
       .on("postgres_changes", { event: "*", schema: "public", table: "live_broadcasts" }, () => {
         qc.invalidateQueries({ queryKey: ["live-now"] });
       })
@@ -40,6 +42,7 @@ export function useLiveNow(destination?: LiveDestination) {
       supabase.removeChannel(channel);
     };
   }, [qc]);
+
 
   return query;
 }
