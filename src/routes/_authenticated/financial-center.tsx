@@ -1,8 +1,13 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { useServerFn } from "@tanstack/react-start";
 import { SiteShell } from "@/components/site-shell";
 import { TrustCenter } from "@/components/trust/trust-center";
 import { Amount } from "@/components/finance/amount";
+import { FinancialTimeline } from "@/components/finance/financial-timeline";
+import { AUDIT_PRINCIPLES } from "@/lib/finance/receipts";
+import { listMyReceipts } from "@/lib/finance/receipts.functions";
 import { useMyRoles } from "@/hooks/use-my-roles";
 import {
   CREDIT_PROGRAMS,
@@ -120,6 +125,17 @@ function FinancialCenter() {
         </div>
       </div>
     </SiteShell>
+  );
+}
+
+function AuditTimeline() {
+  const receiptsFn = useServerFn(listMyReceipts);
+  const { data, isLoading } = useQuery({ queryKey: ["financial-receipts"], queryFn: () => receiptsFn() });
+  if (isLoading) return <p className="text-sm text-[oklch(0.7_0.01_80)]">Gathering your receipts…</p>;
+  return (
+    <div className="rounded-2xl border border-white/12 bg-white/[0.02] p-4">
+      <FinancialTimeline receipts={data ?? []} />
+    </div>
   );
 }
 
