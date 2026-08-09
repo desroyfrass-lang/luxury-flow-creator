@@ -36,10 +36,11 @@ export function CardStorefront({
   return (
     <section className="living-card-block" id="card-shop">
       <h2 className="living-card-block-title">
-        <ShoppingBag className="mr-2 inline h-4 w-4" /> Buy from me
+        <ShoppingBag className="mr-2 inline h-4 w-4" /> Shop
       </h2>
       <p className="living-card-prose text-sm">
-        Payments are handled by this member's own payment account. Frass records the sale.
+        One item or five hundred — same shop. Payments are handled by this member's own payment
+        account. Frass records the sale.
       </p>
       <div className="card-shop-grid">
         {live.map((l) => (

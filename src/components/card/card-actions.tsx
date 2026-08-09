@@ -58,7 +58,9 @@ export function CardActionBar({
   onTrack: (kind: "website_click" | "booking" | "message" | "marketplace_click") => void;
 }) {
   const [following, setFollowing] = useState<boolean>(() => readFollowing().includes(handle));
-  const [pay, setPay] = useState<DirectPaymentKind | null>(null);
+  const prefill = typeof window !== "undefined" ? new URLSearchParams(window.location.search) : null;
+  const prefillAmount = prefill?.get("pay");
+  const [pay, setPay] = useState<DirectPaymentKind | null>(prefillAmount ? "money" : null);
   const [contactOpen, setContactOpen] = useState(false);
 
   const contacts = contactChannels(card?.social_links);
@@ -115,7 +117,7 @@ export function CardActionBar({
         {commerceEnabled && hasListings && (
           <a className="card-action" href="#card-shop" onClick={() => onTrack("marketplace_click")}>
             <ShoppingBag className="h-4 w-4" />
-            <span>Buy</span>
+            <span>Shop</span>
           </a>
         )}
 
@@ -134,13 +136,13 @@ export function CardActionBar({
 
         {commerceEnabled && (
           <>
-            <button type="button" className="card-action" onClick={() => setPay("money")}>
+            <button type="button" className="card-action is-pay" onClick={() => setPay("money")}>
               <Send className="h-4 w-4" />
-              <span>Send money</span>
+              <span>Pay</span>
             </button>
             <button type="button" className="card-action" onClick={() => setPay("gift")}>
               <Gift className="h-4 w-4" />
-              <span>Send gift</span>
+              <span>Gift</span>
             </button>
             <button type="button" className="card-action" onClick={() => setPay("tip")}>
               <Heart className="h-4 w-4" />
@@ -193,6 +195,8 @@ export function CardActionBar({
           handle={handle}
           name={name}
           kind={pay}
+          initialAmount={prefillAmount ?? undefined}
+          initialNote={prefill?.get("for") ?? undefined}
           onClose={() => setPay(null)}
         />
       )}
@@ -204,16 +208,20 @@ function SendMoneyPanel({
   handle,
   name,
   kind,
+  initialAmount,
+  initialNote,
   onClose,
 }: {
   handle: string;
   name: string;
   kind: DirectPaymentKind;
+  initialAmount?: string;
+  initialNote?: string;
   onClose: () => void;
 }) {
   const payFn = useServerFn(startCardPayment);
-  const [amount, setAmount] = useState<string>("10");
-  const [note, setNote] = useState("");
+  const [amount, setAmount] = useState<string>(initialAmount || "10");
+  const [note, setNote] = useState(initialNote || "");
   const [from, setFrom] = useState("");
   const [message, setMessage] = useState<string | null>(null);
 

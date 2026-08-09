@@ -202,6 +202,12 @@ export const getMyCardAnalytics = createServerFn({ method: "GET" })
     if (error) throw error;
 
     const totals: Record<string, number> = {};
-    for (const row of data ?? []) totals[row.kind] = (totals[row.kind] ?? 0) + 1;
-    return { totals, sampled: (data ?? []).length };
+    const today: Record<string, number> = {};
+    const dayStart = new Date();
+    dayStart.setHours(0, 0, 0, 0);
+    for (const row of data ?? []) {
+      totals[row.kind] = (totals[row.kind] ?? 0) + 1;
+      if (new Date(row.created_at) >= dayStart) today[row.kind] = (today[row.kind] ?? 0) + 1;
+    }
+    return { totals, today, sampled: (data ?? []).length };
   });
