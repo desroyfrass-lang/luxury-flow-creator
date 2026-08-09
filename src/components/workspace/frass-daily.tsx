@@ -11,9 +11,14 @@
 // ─────────────────────────────────────────────────────────────────────────────
 
 import { useEffect, useMemo, useState } from "react";
-import { X, Check, Sparkles, ArrowRight, HelpCircle, Coins, ListTree } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
+import { useServerFn } from "@tanstack/react-start";
+import { X, Check, Sparkles, ArrowRight, HelpCircle, Coins, ListTree, Film } from "lucide-react";
 import { FrassyComposer } from "@/components/workspace/frassy-composer";
+import { getWallet } from "@/lib/studio.functions";
+import { usdFor } from "@/lib/studio/credits";
 import frassyAvatar from "@/assets/frassy-gold.png.asset.json";
+
 
 import {
   dailyFor,
