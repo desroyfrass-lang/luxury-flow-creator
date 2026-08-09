@@ -111,16 +111,40 @@ export const getMyLinkDashboard = createServerFn({ method: "GET" })
         ).data ?? []
       : [];
     const roles = invitedIds.length
-      ? (await supabaseAdmin.from("user_roles").select("user_id, role").in("user_id", invitedIds)).data ?? []
+      ? (
+          await supabaseAdmin
+            .from("user_roles")
+            .select("user_id, role, created_at")
+            .in("user_id", invitedIds)
+        ).data ?? []
       : [];
     const products = invitedIds.length
       ? (await supabaseAdmin.from("builder_products").select("user_id").in("user_id", invitedIds)).data ?? []
       : [];
+    // FRASS-0429 — the relationship timeline needs the first real sale, if any.
+    const salesRows = invitedIds.length
+      ? (
+          await supabaseAdmin
+            .from("card_orders")
+            .select("seller_id, created_at")
+            .in("seller_id", invitedIds)
+            .order("created_at", { ascending: true })
+        ).data ?? []
+      : [];
 
     const profileById = new Map(profiles.map((p) => [p.id, p]));
     const rolesByUser = new Map<string, string[]>();
-    for (const r of roles) rolesByUser.set(r.user_id, [...(rolesByUser.get(r.user_id) ?? []), r.role]);
+    const roleDate = new Map<string, string>();
+    for (const r of roles) {
+      rolesByUser.set(r.user_id, [...(rolesByUser.get(r.user_id) ?? []), r.role]);
+      const key = `${r.user_id}:${r.role}`;
+      if (!roleDate.has(key)) roleDate.set(key, r.created_at);
+    }
     const hasBusiness = new Set(products.map((p) => p.user_id));
+    const firstSale = new Map<string, string>();
+    for (const s of salesRows) if (!firstSale.has(s.seller_id)) firstSale.set(s.seller_id, s.created_at);
+
+    type TimelineEvent = { label: string; at: string };
 
     const enriched = [] as Array<{
       id: string;
@@ -130,6 +154,7 @@ export const getMyLinkDashboard = createServerFn({ method: "GET" })
       display_name: string;
       handle: string | null;
       avatar_url: string | null;
+      events: TimelineEvent[];
     }>;
 
     for (const row of rows) {
@@ -149,6 +174,19 @@ export const getMyLinkDashboard = createServerFn({ method: "GET" })
         await supabaseAdmin.from("link_referrals").update({ stage }).eq("id", row.id);
       }
 
+      // A relationship, not a statistic — only moments that actually happened.
+      const events: TimelineEvent[] = [{ label: "Joined through your link", at: row.created_at }];
+      if (p?.onboarding_completed_at) events.push({ label: "Activated", at: p.onboarding_completed_at });
+      const uid = row.invited_user_id;
+      if (uid) {
+        const affiliateAt = roleDate.get(`${uid}:affiliate`);
+        if (affiliateAt) events.push({ label: "Became an affiliate", at: affiliateAt });
+        const partnerAt = roleDate.get(`${uid}:partner`) ?? roleDate.get(`${uid}:ambassador`);
+        if (partnerAt) events.push({ label: "Became a partner", at: partnerAt });
+        const saleAt = firstSale.get(uid);
+        if (saleAt) events.push({ label: "First sale", at: saleAt });
+      }
+
       enriched.push({
         id: row.id,
         stage,
@@ -157,8 +195,10 @@ export const getMyLinkDashboard = createServerFn({ method: "GET" })
         display_name: p?.display_name ?? "A new member",
         handle: p?.handle ?? null,
         avatar_url: p?.avatar_url ?? null,
+        events,
       });
     }
+
 
     // ── Award milestone bonuses (each one earned exactly once) ────────────
     const { data: existingBonuses } = await supabaseAdmin
