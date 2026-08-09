@@ -10,8 +10,12 @@ import {
   DELIVERY_METHODS,
   PAYMENT_REQUEST_PRINCIPLE,
   REQUEST_KINDS,
+  DEFAULT_EXPIRY_MINUTES,
+  DUPLICATE_PROTECTION_PROMISE,
+  EXPIRY_OPTIONS,
   REQUEST_STATUS,
   SELLER_NEVER_SEES,
+  newIdempotencyKey,
   deliveryLabel,
   paymentRequestUrl,
   requestKindLabel,
@@ -50,6 +54,9 @@ export function RequestPaymentPanel({ enabled }: { enabled: boolean }) {
   const [quantity, setQuantity] = useState("1");
   const [note, setNote] = useState("");
   const [delivery, setDelivery] = useState<DeliveryId>("qr");
+  const [expiresIn, setExpiresIn] = useState<number>(DEFAULT_EXPIRY_MINUTES);
+  /** FRASS-0439 — one key per draft, so a double tap makes one request. */
+  const [idemKey, setIdemKey] = useState<string>(() => newIdempotencyKey());
   const [live, setLive] = useState<PaymentRequestRow | null>(null);
   const [qr, setQr] = useState<string | null>(null);
 
@@ -67,6 +74,8 @@ export function RequestPaymentPanel({ enabled }: { enabled: boolean }) {
           quantity: qty,
           note: note.trim() || undefined,
           delivery,
+          expires_in_minutes: expiresIn,
+          idempotency_key: idemKey,
         },
       }),
     onSuccess: async (row) => {
@@ -82,6 +91,7 @@ export function RequestPaymentPanel({ enabled }: { enabled: boolean }) {
       setAmount("");
       setQuantity("1");
       setNote("");
+      setIdemKey(newIdempotencyKey());
       void qc.invalidateQueries({ queryKey: ["payment-requests"] });
       toast.success("Payment request ready. Hand them their own screen.");
     },
@@ -94,7 +104,7 @@ export function RequestPaymentPanel({ enabled }: { enabled: boolean }) {
   });
 
   const url = live ? paymentRequestUrl(live.token) : "";
-  const open = useMemo(() => (requests ?? []).filter((r) => r.status === "pending"), [requests]);
+  const open = useMemo(() => (requests ?? []).filter((r) => ["preparing", "awaiting_approval", "processing"].includes(r.status)), [requests]);
 
   return (
     <div className="space-y-6">
