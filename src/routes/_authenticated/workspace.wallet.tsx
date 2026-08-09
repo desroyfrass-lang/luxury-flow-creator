@@ -150,12 +150,18 @@ function WalletHub() {
       )}
 
       {section === "history" && (
-        <MovementList
-          title="Payment history"
-          rows={rows}
-          empty="No movements yet. Zeros stay honest."
-        />
+        <section className={panel}>
+          <h2 className={heading}>
+            <Receipt className="mr-2 inline h-3.5 w-3.5" /> Financial timeline
+          </h2>
+          <p className="mt-2 mb-5 text-sm text-muted-foreground">
+            FRASS-0433 — every movement carries a receipt. Click any line to see where the money came
+            from, what was deducted and why.
+          </p>
+          <FinancialTimeline receipts={receipts ?? []} />
+        </section>
       )}
+
 
       {section === "gifts" && (
         <MovementList
