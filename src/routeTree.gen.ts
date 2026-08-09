@@ -94,6 +94,7 @@ import { Route as AuthenticatedWelcomeHallRouteImport } from './routes/_authenti
 import { Route as AuthenticatedVisualReviewRouteImport } from './routes/_authenticated/visual-review'
 import { Route as AuthenticatedVaultRouteImport } from './routes/_authenticated/vault'
 import { Route as AuthenticatedTryOnRouteImport } from './routes/_authenticated/try-on'
+import { Route as AuthenticatedStudioRouteImport } from './routes/_authenticated/studio'
 import { Route as AuthenticatedRoomRouteImport } from './routes/_authenticated/room'
 import { Route as AuthenticatedPaymentProvidersRouteImport } from './routes/_authenticated/payment-providers'
 import { Route as AuthenticatedOpportunityRouteImport } from './routes/_authenticated/opportunity'
@@ -150,6 +151,7 @@ import { Route as AuthenticatedAdminCjImportRouteImport } from './routes/_authen
 import { Route as AuthenticatedAdminCapsulesRouteImport } from './routes/_authenticated/admin.capsules'
 import { Route as AuthenticatedAdminBlogRouteImport } from './routes/_authenticated/admin.blog'
 import { Route as AuthenticatedAdminApprovalsRouteImport } from './routes/_authenticated/admin.approvals'
+import { Route as AuthenticatedAdminAiCreditsRouteImport } from './routes/_authenticated/admin.ai-credits'
 import { Route as AuthenticatedAdminAffiliatePolicyRouteImport } from './routes/_authenticated/admin.affiliate-policy'
 import { Route as AuthenticatedAdminActivitiesRouteImport } from './routes/_authenticated/admin.activities'
 import { Route as Char91DotmcpChar93InvokeToolToolRouteImport } from './routes/[.mcp]/invoke-tool/$tool'
@@ -584,6 +586,11 @@ const AuthenticatedTryOnRoute = AuthenticatedTryOnRouteImport.update({
   path: '/try-on',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedStudioRoute = AuthenticatedStudioRouteImport.update({
+  id: '/studio',
+  path: '/studio',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedRoomRoute = AuthenticatedRoomRouteImport.update({
   id: '/room',
   path: '/room',
@@ -890,6 +897,12 @@ const AuthenticatedAdminApprovalsRoute =
     path: '/approvals',
     getParentRoute: () => AuthenticatedAdminRoute,
   } as any)
+const AuthenticatedAdminAiCreditsRoute =
+  AuthenticatedAdminAiCreditsRouteImport.update({
+    id: '/ai-credits',
+    path: '/ai-credits',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
 const AuthenticatedAdminAffiliatePolicyRoute =
   AuthenticatedAdminAffiliatePolicyRouteImport.update({
     id: '/affiliate-policy',
@@ -972,6 +985,7 @@ export interface FileRoutesByFullPath {
   '/opportunity': typeof AuthenticatedOpportunityRoute
   '/payment-providers': typeof AuthenticatedPaymentProvidersRoute
   '/room': typeof AuthenticatedRoomRoute
+  '/studio': typeof AuthenticatedStudioRoute
   '/try-on': typeof AuthenticatedTryOnRoute
   '/vault': typeof AuthenticatedVaultRoute
   '/visual-review': typeof AuthenticatedVisualReviewRoute
@@ -1029,6 +1043,7 @@ export interface FileRoutesByFullPath {
   '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
   '/admin/activities': typeof AuthenticatedAdminActivitiesRoute
   '/admin/affiliate-policy': typeof AuthenticatedAdminAffiliatePolicyRoute
+  '/admin/ai-credits': typeof AuthenticatedAdminAiCreditsRoute
   '/admin/approvals': typeof AuthenticatedAdminApprovalsRoute
   '/admin/blog': typeof AuthenticatedAdminBlogRoute
   '/admin/capsules': typeof AuthenticatedAdminCapsulesRoute
@@ -1105,6 +1120,7 @@ export interface FileRoutesByTo {
   '/opportunity': typeof AuthenticatedOpportunityRoute
   '/payment-providers': typeof AuthenticatedPaymentProvidersRoute
   '/room': typeof AuthenticatedRoomRoute
+  '/studio': typeof AuthenticatedStudioRoute
   '/try-on': typeof AuthenticatedTryOnRoute
   '/vault': typeof AuthenticatedVaultRoute
   '/visual-review': typeof AuthenticatedVisualReviewRoute
@@ -1157,6 +1173,7 @@ export interface FileRoutesByTo {
   '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
   '/admin/activities': typeof AuthenticatedAdminActivitiesRoute
   '/admin/affiliate-policy': typeof AuthenticatedAdminAffiliatePolicyRoute
+  '/admin/ai-credits': typeof AuthenticatedAdminAiCreditsRoute
   '/admin/approvals': typeof AuthenticatedAdminApprovalsRoute
   '/admin/blog': typeof AuthenticatedAdminBlogRoute
   '/admin/capsules': typeof AuthenticatedAdminCapsulesRoute
@@ -1250,6 +1267,7 @@ export interface FileRoutesById {
   '/_authenticated/opportunity': typeof AuthenticatedOpportunityRoute
   '/_authenticated/payment-providers': typeof AuthenticatedPaymentProvidersRoute
   '/_authenticated/room': typeof AuthenticatedRoomRoute
+  '/_authenticated/studio': typeof AuthenticatedStudioRoute
   '/_authenticated/try-on': typeof AuthenticatedTryOnRoute
   '/_authenticated/vault': typeof AuthenticatedVaultRoute
   '/_authenticated/visual-review': typeof AuthenticatedVisualReviewRoute
@@ -1307,6 +1325,7 @@ export interface FileRoutesById {
   '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
   '/_authenticated/admin/activities': typeof AuthenticatedAdminActivitiesRoute
   '/_authenticated/admin/affiliate-policy': typeof AuthenticatedAdminAffiliatePolicyRoute
+  '/_authenticated/admin/ai-credits': typeof AuthenticatedAdminAiCreditsRoute
   '/_authenticated/admin/approvals': typeof AuthenticatedAdminApprovalsRoute
   '/_authenticated/admin/blog': typeof AuthenticatedAdminBlogRoute
   '/_authenticated/admin/capsules': typeof AuthenticatedAdminCapsulesRoute
@@ -1400,6 +1419,7 @@ export interface FileRouteTypes {
     | '/opportunity'
     | '/payment-providers'
     | '/room'
+    | '/studio'
     | '/try-on'
     | '/vault'
     | '/visual-review'
@@ -1457,6 +1477,7 @@ export interface FileRouteTypes {
     | '/.mcp/invoke-tool/$tool'
     | '/admin/activities'
     | '/admin/affiliate-policy'
+    | '/admin/ai-credits'
     | '/admin/approvals'
     | '/admin/blog'
     | '/admin/capsules'
@@ -1533,6 +1554,7 @@ export interface FileRouteTypes {
     | '/opportunity'
     | '/payment-providers'
     | '/room'
+    | '/studio'
     | '/try-on'
     | '/vault'
     | '/visual-review'
@@ -1585,6 +1607,7 @@ export interface FileRouteTypes {
     | '/.mcp/invoke-tool/$tool'
     | '/admin/activities'
     | '/admin/affiliate-policy'
+    | '/admin/ai-credits'
     | '/admin/approvals'
     | '/admin/blog'
     | '/admin/capsules'
@@ -1677,6 +1700,7 @@ export interface FileRouteTypes {
     | '/_authenticated/opportunity'
     | '/_authenticated/payment-providers'
     | '/_authenticated/room'
+    | '/_authenticated/studio'
     | '/_authenticated/try-on'
     | '/_authenticated/vault'
     | '/_authenticated/visual-review'
@@ -1734,6 +1758,7 @@ export interface FileRouteTypes {
     | '/.mcp/invoke-tool/$tool'
     | '/_authenticated/admin/activities'
     | '/_authenticated/admin/affiliate-policy'
+    | '/_authenticated/admin/ai-credits'
     | '/_authenticated/admin/approvals'
     | '/_authenticated/admin/blog'
     | '/_authenticated/admin/capsules'
@@ -2424,6 +2449,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedTryOnRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/studio': {
+      id: '/_authenticated/studio'
+      path: '/studio'
+      fullPath: '/studio'
+      preLoaderRoute: typeof AuthenticatedStudioRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/room': {
       id: '/_authenticated/room'
       path: '/room'
@@ -2816,6 +2848,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminApprovalsRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
+    '/_authenticated/admin/ai-credits': {
+      id: '/_authenticated/admin/ai-credits'
+      path: '/ai-credits'
+      fullPath: '/admin/ai-credits'
+      preLoaderRoute: typeof AuthenticatedAdminAiCreditsRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
     '/_authenticated/admin/affiliate-policy': {
       id: '/_authenticated/admin/affiliate-policy'
       path: '/affiliate-policy'
@@ -2864,6 +2903,7 @@ declare module '@tanstack/react-router' {
 interface AuthenticatedAdminRouteChildren {
   AuthenticatedAdminActivitiesRoute: typeof AuthenticatedAdminActivitiesRoute
   AuthenticatedAdminAffiliatePolicyRoute: typeof AuthenticatedAdminAffiliatePolicyRoute
+  AuthenticatedAdminAiCreditsRoute: typeof AuthenticatedAdminAiCreditsRoute
   AuthenticatedAdminApprovalsRoute: typeof AuthenticatedAdminApprovalsRoute
   AuthenticatedAdminBlogRoute: typeof AuthenticatedAdminBlogRoute
   AuthenticatedAdminCapsulesRoute: typeof AuthenticatedAdminCapsulesRoute
@@ -2885,6 +2925,7 @@ const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
   AuthenticatedAdminActivitiesRoute: AuthenticatedAdminActivitiesRoute,
   AuthenticatedAdminAffiliatePolicyRoute:
     AuthenticatedAdminAffiliatePolicyRoute,
+  AuthenticatedAdminAiCreditsRoute: AuthenticatedAdminAiCreditsRoute,
   AuthenticatedAdminApprovalsRoute: AuthenticatedAdminApprovalsRoute,
   AuthenticatedAdminBlogRoute: AuthenticatedAdminBlogRoute,
   AuthenticatedAdminCapsulesRoute: AuthenticatedAdminCapsulesRoute,
@@ -2938,6 +2979,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedOpportunityRoute: typeof AuthenticatedOpportunityRoute
   AuthenticatedPaymentProvidersRoute: typeof AuthenticatedPaymentProvidersRoute
   AuthenticatedRoomRoute: typeof AuthenticatedRoomRoute
+  AuthenticatedStudioRoute: typeof AuthenticatedStudioRoute
   AuthenticatedTryOnRoute: typeof AuthenticatedTryOnRoute
   AuthenticatedVaultRoute: typeof AuthenticatedVaultRoute
   AuthenticatedVisualReviewRoute: typeof AuthenticatedVisualReviewRoute
@@ -2958,6 +3000,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedOpportunityRoute: AuthenticatedOpportunityRoute,
   AuthenticatedPaymentProvidersRoute: AuthenticatedPaymentProvidersRoute,
   AuthenticatedRoomRoute: AuthenticatedRoomRoute,
+  AuthenticatedStudioRoute: AuthenticatedStudioRoute,
   AuthenticatedTryOnRoute: AuthenticatedTryOnRoute,
   AuthenticatedVaultRoute: AuthenticatedVaultRoute,
   AuthenticatedVisualReviewRoute: AuthenticatedVisualReviewRoute,
