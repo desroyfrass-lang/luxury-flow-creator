@@ -38,7 +38,7 @@ export const PANEL_PRESETS: Record<PanelPreset, PanelSection[]> = {
   merchandising: [
     { title: "Current vendor", items: ["No vendor in review", "Open vendor scorecard"] },
     { title: "Products reviewed", items: ["Reviewed 0", "Approved 0", "Held 0"] },
-    { title: "Margins", items: ["Platform allocation 8%", "Protected floor active"] },
+    { title: "Margins", items: ["Platform allocation 10%", "Protected floor active"] },
     { title: "Affiliate recommendation", items: ["Run Commission Simulator"] },
   ],
   design: [
@@ -65,7 +65,7 @@ export const PANEL_PRESETS: Record<PanelPreset, PanelSection[]> = {
     { title: "Progress", items: ["Milestones", "Documentation"] },
   ],
   finance: [
-    { title: "Money", items: ["Revenue", "Costs", "Protected margin 8%"] },
+    { title: "Money", items: ["Revenue", "Costs", "Protected margin 10%"] },
     { title: "Planning", items: ["Cash runway", "Payouts", "Pricing decisions"] },
   ],
   farm: [

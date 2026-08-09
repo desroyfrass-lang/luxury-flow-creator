@@ -260,7 +260,7 @@ const FOUNDER: DailyModel = {
       status: "sample",
       href: "/workspace/affiliate",
       explain:
-        "Affiliates promote your products for a commission. Every commission comes out of your margin, which is why the platform allocation of 8% is protected before any commission is offered.",
+        "Affiliates promote your products for a commission. Every commission comes out of your margin, which is why the platform allocation of 10% is protected before any commission is offered.",
     },
     {
       label: "Community",
@@ -294,7 +294,7 @@ const FOUNDER: DailyModel = {
     {
       id: "d2",
       label: "Approve the footwear commission band",
-      detail: "Platform allocation stays protected at 8%.",
+      detail: "Platform allocation stays protected at 10%.",
       priority: "critical",
       minutes: 10,
       delegable: false,

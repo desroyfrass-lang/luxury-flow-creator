@@ -356,7 +356,7 @@ export const IMPLEMENTATION_AUDIT: AuditItem[] = [
   { id: "credit-purchase", label: "Credit purchasing", state: "missing", note: "Requires payment provider." },
   { id: "gift-button", label: "Gift button on creator profiles", state: "missing", note: "For Us profiles need the Support action." },
   { id: "gift-direct", label: "Direct payment gifting", state: "missing", note: "Requires payment provider." },
-  { id: "allocation", label: "Constitutional commerce allocation (8%)", state: "built", note: "3% infrastructure · 3% reserve · 2% Foundation. Commerce only." },
+  { id: "allocation", label: "Constitutional commerce allocation (10%)", state: "built", note: "90% creator / 10% ecosystem: 3% infrastructure · 3% reserve · 2% Foundation · 1% Founder · 1% Co-Founder." },
   { id: "gift-allocation", label: "Gift allocation (10%)", state: "built", note: "3% · 3% · 2% plus Founder-configured owner shares; recipient keeps 90%." },
   { id: "payout", label: "Recipient payout", state: "built", note: "allocate() for commerce, allocateGift() for community gifts." },
   { id: "owner-comp", label: "Owner Compensation Engine", state: "structure", note: "Per-sale percentage of clean profit; modelled, awaiting persisted ledgers." },
