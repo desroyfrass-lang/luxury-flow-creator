@@ -174,6 +174,7 @@ export type FinanceTabId =
   | "withdrawals"
   | "business"
   | "statements"
+  | "trust"
   | "settings";
 
 export type FinanceTab = {
