@@ -23,6 +23,7 @@ import { Route as GatewayRouteImport } from './routes/gateway'
 import { Route as FvStudiosRouteImport } from './routes/fv-studios'
 import { Route as FrassWorldRouteImport } from './routes/frass-world'
 import { Route as FrassShapeRouteImport } from './routes/frass-shape'
+import { Route as FrassRadioRouteImport } from './routes/frass-radio'
 import { Route as FrassPlusRouteImport } from './routes/frass-plus'
 import { Route as FrassLuxuryHouseRouteImport } from './routes/frass-luxury-house'
 import { Route as FrassKidsRouteImport } from './routes/frass-kids'
@@ -35,6 +36,7 @@ import { Route as CheckoutRouteImport } from './routes/checkout'
 import { Route as CapsulesRouteImport } from './routes/capsules'
 import { Route as BridalBoutiqueRouteImport } from './routes/bridal-boutique'
 import { Route as BridalRouteImport } from './routes/bridal'
+import { Route as BrandPartnershipsRouteImport } from './routes/brand-partnerships'
 import { Route as BlogRouteImport } from './routes/blog'
 import { Route as BareDripRouteImport } from './routes/bare-drip'
 import { Route as AuthRouteImport } from './routes/auth'
@@ -230,6 +232,11 @@ const FrassShapeRoute = FrassShapeRouteImport.update({
   path: '/frass-shape',
   getParentRoute: () => rootRouteImport,
 } as any)
+const FrassRadioRoute = FrassRadioRouteImport.update({
+  id: '/frass-radio',
+  path: '/frass-radio',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const FrassPlusRoute = FrassPlusRouteImport.update({
   id: '/frass-plus',
   path: '/frass-plus',
@@ -288,6 +295,11 @@ const BridalBoutiqueRoute = BridalBoutiqueRouteImport.update({
 const BridalRoute = BridalRouteImport.update({
   id: '/bridal',
   path: '/bridal',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BrandPartnershipsRoute = BrandPartnershipsRouteImport.update({
+  id: '/brand-partnerships',
+  path: '/brand-partnerships',
   getParentRoute: () => rootRouteImport,
 } as any)
 const BlogRoute = BlogRouteImport.update({
@@ -952,6 +964,7 @@ export interface FileRoutesByFullPath {
   '/auth': typeof AuthRoute
   '/bare-drip': typeof BareDripRouteWithChildren
   '/blog': typeof BlogRouteWithChildren
+  '/brand-partnerships': typeof BrandPartnershipsRoute
   '/bridal': typeof BridalRouteWithChildren
   '/bridal-boutique': typeof BridalBoutiqueRoute
   '/capsules': typeof CapsulesRouteWithChildren
@@ -964,6 +977,7 @@ export interface FileRoutesByFullPath {
   '/frass-kids': typeof FrassKidsRouteWithChildren
   '/frass-luxury-house': typeof FrassLuxuryHouseRouteWithChildren
   '/frass-plus': typeof FrassPlusRouteWithChildren
+  '/frass-radio': typeof FrassRadioRoute
   '/frass-shape': typeof FrassShapeRouteWithChildren
   '/frass-world': typeof FrassWorldRoute
   '/fv-studios': typeof FvStudiosRoute
@@ -1100,11 +1114,13 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/arrival': typeof ArrivalRoute
   '/auth': typeof AuthRoute
+  '/brand-partnerships': typeof BrandPartnershipsRoute
   '/bridal-boutique': typeof BridalBoutiqueRoute
   '/checkout': typeof CheckoutRoute
   '/for-us': typeof ForUsRoute
   '/frass-district': typeof FrassDistrictRoute
   '/frass-hill': typeof FrassHillRoute
+  '/frass-radio': typeof FrassRadioRoute
   '/frass-world': typeof FrassWorldRoute
   '/fv-studios': typeof FvStudiosRoute
   '/gateway': typeof GatewayRoute
@@ -1236,6 +1252,7 @@ export interface FileRoutesById {
   '/auth': typeof AuthRoute
   '/bare-drip': typeof BareDripRouteWithChildren
   '/blog': typeof BlogRouteWithChildren
+  '/brand-partnerships': typeof BrandPartnershipsRoute
   '/bridal': typeof BridalRouteWithChildren
   '/bridal-boutique': typeof BridalBoutiqueRoute
   '/capsules': typeof CapsulesRouteWithChildren
@@ -1248,6 +1265,7 @@ export interface FileRoutesById {
   '/frass-kids': typeof FrassKidsRouteWithChildren
   '/frass-luxury-house': typeof FrassLuxuryHouseRouteWithChildren
   '/frass-plus': typeof FrassPlusRouteWithChildren
+  '/frass-radio': typeof FrassRadioRoute
   '/frass-shape': typeof FrassShapeRouteWithChildren
   '/frass-world': typeof FrassWorldRoute
   '/fv-studios': typeof FvStudiosRoute
@@ -1389,6 +1407,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/bare-drip'
     | '/blog'
+    | '/brand-partnerships'
     | '/bridal'
     | '/bridal-boutique'
     | '/capsules'
@@ -1401,6 +1420,7 @@ export interface FileRouteTypes {
     | '/frass-kids'
     | '/frass-luxury-house'
     | '/frass-plus'
+    | '/frass-radio'
     | '/frass-shape'
     | '/frass-world'
     | '/fv-studios'
@@ -1537,11 +1557,13 @@ export interface FileRouteTypes {
     | '/'
     | '/arrival'
     | '/auth'
+    | '/brand-partnerships'
     | '/bridal-boutique'
     | '/checkout'
     | '/for-us'
     | '/frass-district'
     | '/frass-hill'
+    | '/frass-radio'
     | '/frass-world'
     | '/fv-studios'
     | '/gateway'
@@ -1672,6 +1694,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/bare-drip'
     | '/blog'
+    | '/brand-partnerships'
     | '/bridal'
     | '/bridal-boutique'
     | '/capsules'
@@ -1684,6 +1707,7 @@ export interface FileRouteTypes {
     | '/frass-kids'
     | '/frass-luxury-house'
     | '/frass-plus'
+    | '/frass-radio'
     | '/frass-shape'
     | '/frass-world'
     | '/fv-studios'
@@ -1825,6 +1849,7 @@ export interface RootRouteChildren {
   AuthRoute: typeof AuthRoute
   BareDripRoute: typeof BareDripRouteWithChildren
   BlogRoute: typeof BlogRouteWithChildren
+  BrandPartnershipsRoute: typeof BrandPartnershipsRoute
   BridalRoute: typeof BridalRouteWithChildren
   BridalBoutiqueRoute: typeof BridalBoutiqueRoute
   CapsulesRoute: typeof CapsulesRouteWithChildren
@@ -1837,6 +1862,7 @@ export interface RootRouteChildren {
   FrassKidsRoute: typeof FrassKidsRouteWithChildren
   FrassLuxuryHouseRoute: typeof FrassLuxuryHouseRouteWithChildren
   FrassPlusRoute: typeof FrassPlusRouteWithChildren
+  FrassRadioRoute: typeof FrassRadioRoute
   FrassShapeRoute: typeof FrassShapeRouteWithChildren
   FrassWorldRoute: typeof FrassWorldRoute
   FvStudiosRoute: typeof FvStudiosRoute
@@ -1965,6 +1991,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof FrassShapeRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/frass-radio': {
+      id: '/frass-radio'
+      path: '/frass-radio'
+      fullPath: '/frass-radio'
+      preLoaderRoute: typeof FrassRadioRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/frass-plus': {
       id: '/frass-plus'
       path: '/frass-plus'
@@ -2047,6 +2080,13 @@ declare module '@tanstack/react-router' {
       path: '/bridal'
       fullPath: '/bridal'
       preLoaderRoute: typeof BridalRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/brand-partnerships': {
+      id: '/brand-partnerships'
+      path: '/brand-partnerships'
+      fullPath: '/brand-partnerships'
+      preLoaderRoute: typeof BrandPartnershipsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/blog': {
@@ -3391,6 +3431,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthRoute: AuthRoute,
   BareDripRoute: BareDripRouteWithChildren,
   BlogRoute: BlogRouteWithChildren,
+  BrandPartnershipsRoute: BrandPartnershipsRoute,
   BridalRoute: BridalRouteWithChildren,
   BridalBoutiqueRoute: BridalBoutiqueRoute,
   CapsulesRoute: CapsulesRouteWithChildren,
@@ -3403,6 +3444,7 @@ const rootRouteChildren: RootRouteChildren = {
   FrassKidsRoute: FrassKidsRouteWithChildren,
   FrassLuxuryHouseRoute: FrassLuxuryHouseRouteWithChildren,
   FrassPlusRoute: FrassPlusRouteWithChildren,
+  FrassRadioRoute: FrassRadioRoute,
   FrassShapeRoute: FrassShapeRouteWithChildren,
   FrassWorldRoute: FrassWorldRoute,
   FvStudiosRoute: FvStudiosRoute,
