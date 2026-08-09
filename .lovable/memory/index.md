@@ -85,3 +85,4 @@ Sightline rule: every building in Frass Hill must be visible before it is visite
 - [Global commerce & regional markets](mem://features/global-commerce-regional-markets) — FRASS-0305/0306: Primary Operating Markets CA/GB/US, campaign origin vs audience reach, capability register, /global-operations
 - [Frassy Workspace Composer FRASS-0400](mem://features/frassy-workspace-composer-0400) — Universal AI workstation composer: multimodal intake, Upload Manager queue, one composer for every role
 - [Frassy Studio & AI Credits FRASS-0401/0402](mem://features/frassy-studio-ai-credits-0401) — AI production suite (Frassy creates, user directs) + forecast/approve/receipt credit economy
+- [FRASS-0408/0409 Vision Network expansion](mem://features/frass-0408-vision-network-expansion) — Optional incentivised watermarks, Brand Partnership Marketplace (faceless-first), Frass Radio + FVS Originals, official FV gold monogram
