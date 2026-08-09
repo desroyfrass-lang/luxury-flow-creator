@@ -493,6 +493,9 @@ export function FrassDaily({
                     {s.detail && <span className="ws-meta">{s.detail}</span>}
                   </button>
                   <div className="daily-step-actions">
+                    <span className={`daily-step-est lane-pill-${s.lane}`}>
+                      {LANE[s.lane].dot} {s.minutes} min
+                    </span>
                     <span className="ws-meta daily-step-lane">{LANE[s.lane].label}</span>
                     {!isDone && s.taskId && (
                       <>
