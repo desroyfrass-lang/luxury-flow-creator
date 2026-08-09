@@ -394,3 +394,17 @@ Other builders ask *"what website do you want?"*. Frassy asks **"what business a
 - Before any paid action Frassy states: what the service is, why there is a cost, who receives the payment, the Frass fee, recurring charges, and lower-cost alternatives.
 - No hidden charges. No surprise invoices. No silent subsidies.
 - Pricing stays fair, transparent, competitive and sustainable — value creation over cost absorption.
+
+## FRASS-0420 — Frass Hosting & Infrastructure Philosophy (amends FRASS-0419A)
+
+**Frass may provide hosting as a paid platform service.** The cost of hosting is covered by the customer purchasing the hosting plan. Frass prices its hosting sustainably so that infrastructure costs are covered and the platform earns a reasonable operating margin.
+
+*What that means is…* yes, Frass offers hosting; no, Frass does not give it away or quietly absorb the ongoing cost. Customers who choose Frass Hosting pay Frass. Frass manages the service, covers the infrastructure from that revenue, and keeps a reasonable margin to operate and improve the platform.
+
+- **Frass is the hosting provider from the customer's point of view.** The underlying cloud provider is never named in customer-facing copy or quotes. When you buy Shopify you do not ask who Shopify's cloud provider is.
+- **Publish always offers three doors:** 🏝 Host with Frass (recommended), 🌍 Connect your own hosting, 📦 Export the website. No lock-in, ever.
+- **Every member keeps a free Frass landing page, forever** — profile, portfolio, links, contact, For Us, Marketplace, Wallet, Live and FV Studios.
+- **Paid plans buy a business, not a page** — custom domain, unlimited pages, blog, store, bookings, memberships, CRM, email marketing, analytics, AI chatbot, SEO, inventory and invoicing.
+- **Optional third-party services outside the hosting plan remain governed by FRASS-0419A** and are still itemised at provider cost before being switched on.
+- **Infrastructure Philosophy.** Frass builds experiences, not commodity infrastructure. Where mature, secure and scalable infrastructure already exists, Frass may use it so the team can focus on creating exceptional products. Infrastructure must never become a distraction from innovation. Phase 1: use established cloud. Phase 2: optimise and negotiate at scale. Phase 3: own more only when the mathematics demands it.
+- **Operate properly.** No special hosting licence is required, but Frass must maintain a registered entity, Terms of Service, Privacy Policy, Acceptable Use Policy, copyright/DMCA policy, data-protection compliance (GDPR, PIPEDA), tax registration, payment-provider compliance, business insurance, and stated uptime and backup commitments.

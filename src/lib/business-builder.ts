@@ -10,7 +10,10 @@
 // and approved by the customer before anything is published.
 // ─────────────────────────────────────────────────────────────────────────────
 
+import { FRASS_HOSTING_PLANS } from "@/lib/hosting";
+
 export type BuildPathId = "inside" | "independent";
+
 
 export type BuildPath = {
   id: BuildPathId;
@@ -191,7 +194,12 @@ export const PRE_LAUNCH_REVIEW: ReviewItem[] = [
   { id: "terms", label: "Terms of Service", plain: "The rules of doing business with you." },
 ];
 
-// ── FRASS-0419A — hosting, domains and honest costs ─────────────────────────
+// ── FRASS-0419A / FRASS-0420 — hosting, domains and honest costs ────────────
+//
+// FRASS-0420 amendment: hosting is a Frass product. When a customer chooses
+// "Host with Frass" they buy one plan from Frass — no infrastructure provider
+// is named, because Frass is the provider from the customer's point of view.
+// Optional third-party services outside the plan are still itemised at cost.
 
 export type CostLine = {
   label: string;
@@ -203,51 +211,50 @@ export type CostLine = {
   payee: string;
   period: "month" | "year" | "once";
   note?: string;
+  /** true when this is a Frass platform service billed as one price. */
+  frassService?: boolean;
 };
 
 export type HostingPlan = {
   id: string;
   label: string;
   who: string;
-  providerCost: number;
-  frassFee: number;
+  /** One price the customer pays. */
+  price: number;
+  /** true when Frass is the seller of the service. */
+  frassService: boolean;
   includes: string[];
   limits: string;
+  recommended?: boolean;
 };
 
 /**
- * Building is free. Publishing has a real bill, and the customer pays it —
- * with Frass taking only enough to cover administration and keep improving.
+ * Building and previewing are free. Publishing to a Frass-hosted business
+ * website is a paid plan sold by Frass — Frass covers the infrastructure out
+ * of that plan and keeps a reasonable operating margin (FRASS-0420).
  */
 export const HOSTING_PLANS: HostingPlan[] = [
-  {
-    id: "frass-starter",
-    label: "Frass hosting — Starter",
-    who: "Frass-managed",
-    providerCost: 3,
-    frassFee: 1,
-    includes: ["One published site", "Frass subdomain", "SSL certificate", "Daily backups"],
-    limits: "Generous for a new business: roughly 25k visits and 10 GB transfer a month.",
-  },
-  {
-    id: "frass-business",
-    label: "Frass hosting — Business",
-    who: "Frass-managed",
-    providerCost: 9,
-    frassFee: 3,
-    includes: ["Custom domain", "CDN", "Staging preview", "Priority rebuilds", "Marketplace & wallet wiring"],
-    limits: "Roughly 250k visits and 100 GB transfer a month; scales with usage at cost.",
-  },
+  ...FRASS_HOSTING_PLANS.map((p) => ({
+    id: p.id,
+    label: p.label,
+    who: "Frass",
+    price: p.price,
+    frassService: true,
+    includes: p.includes,
+    limits: p.limits,
+    ...(p.recommended ? { recommended: true } : {}),
+  })),
   {
     id: "external",
-    label: "Your own hosting provider",
+    label: "Connect your own hosting",
     who: "Your provider",
-    providerCost: 0,
-    frassFee: 0,
+    price: 0,
+    frassService: false,
     includes: ["Full export of the project", "Deployment guide", "Frassy assists with setup"],
     limits: "You pay your provider directly. Frass charges nothing for this route.",
   },
 ];
+
 
 export const DOMAIN_COST: CostLine = {
   label: "Custom domain registration",
@@ -279,19 +286,21 @@ export type Quote = {
 
 const round = (n: number) => Math.round(n * 100) / 100;
 
-/** Transparent publishing quote: provider cost, Frass fee, totals, alternative. */
+/** Transparent publishing quote: what you pay Frass, what outside services cost. */
 export function quotePublish(planId: string, opts: { customDomain: boolean; modules: string[] }): Quote {
   const plan = HOSTING_PLANS.find((p) => p.id === planId) ?? HOSTING_PLANS[0]!;
   const lines: CostLine[] = [
     {
       label: plan.label,
-      providerCost: plan.providerCost,
-      frassFee: plan.frassFee,
+      providerCost: 0,
+      frassFee: plan.price,
       payee: plan.who,
       period: "month",
       note: plan.limits,
+      frassService: plan.frassService,
     },
   ];
+
 
   if (opts.customDomain) lines.push(DOMAIN_COST);
 

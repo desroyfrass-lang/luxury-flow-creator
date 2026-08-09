@@ -22,7 +22,10 @@ import {
   moduleById,
   quotePublish,
   type BuildPathId,
+
 } from "@/lib/business-builder";
+import { PUBLISH_OPTIONS, type PublishOptionId } from "@/lib/hosting";
+
 
 export const Route = createFileRoute("/_authenticated/business-builder")({
   head: () => ({
@@ -54,6 +57,8 @@ function BusinessBuilderPage() {
   const [path, setPath] = useState<BuildPathId>("inside");
   const [modules, setModules] = useState<string[]>([]);
   const [planId, setPlanId] = useState("frass-starter");
+  const [publishOption, setPublishOption] = useState<PublishOptionId>("frass");
+
   const [customDomain, setCustomDomain] = useState(false);
   const [approved, setApproved] = useState(false);
 
@@ -308,41 +313,87 @@ function BusinessBuilderPage() {
                   </ul>
                 </div>
 
+                {/* FRASS-0420 — what happens when you click Publish */}
                 <div className="mt-5 grid gap-3 md:grid-cols-3">
-                  {HOSTING_PLANS.map((p) => (
+                  {PUBLISH_OPTIONS.map((o) => (
                     <button
-                      key={p.id}
+                      key={o.id}
                       type="button"
                       onClick={() => {
-                        setPlanId(p.id);
+                        setPublishOption(o.id);
+                        setPlanId(o.id === "frass" ? "frass-starter" : "external");
                         setApproved(false);
                       }}
                       className={`rounded-2xl border p-4 text-left transition ${
-                        planId === p.id
+                        publishOption === o.id
                           ? "border-[color:var(--gold)] bg-[color:var(--gold)]/10"
                           : "border-white/12 bg-white/[0.02] hover:border-[color:var(--gold)]/40"
                       }`}
                     >
-                      <div className="font-display text-sm uppercase tracking-[0.06em]">{p.label}</div>
-                      <div className="mt-1 text-lg">
-                        {p.providerCost + p.frassFee === 0
-                          ? "You pay your provider"
-                          : `$${(p.providerCost + p.frassFee).toFixed(2)} / month`}
+                      <div className="font-display text-sm uppercase tracking-[0.06em]">
+                        {o.emoji} {o.label}
+                        {o.recommended && (
+                          <span className="ml-2 rounded-full border border-[color:var(--gold)]/50 px-2 py-0.5 text-[9px] tracking-[0.16em] text-[color:var(--gold)]">
+                            Recommended
+                          </span>
+                        )}
                       </div>
-                      <p className="mt-1 text-[11px] text-[oklch(0.62_0.01_80)]">
-                        {p.providerCost > 0
-                          ? `$${p.providerCost.toFixed(2)} provider cost · $${p.frassFee.toFixed(2)} Frass service fee`
-                          : "Frass charges nothing for this route"}
-                      </p>
-                      <ul className="mt-2 space-y-0.5 text-xs text-[oklch(0.76_0.01_80)]">
-                        {p.includes.map((i) => (
+                      <p className="mt-1 text-xs text-[oklch(0.78_0.01_80)]">{o.tagline}</p>
+                      <ul className="mt-2 space-y-0.5 text-xs text-[oklch(0.72_0.01_80)]">
+                        {o.includes.map((i) => (
                           <li key={i}>· {i}</li>
                         ))}
                       </ul>
-                      <p className="mt-2 text-[11px] text-[oklch(0.6_0.01_80)]">{p.limits}</p>
+                      <p className="mt-2 text-[11px] text-[oklch(0.6_0.01_80)]">{o.plain}</p>
                     </button>
                   ))}
                 </div>
+
+                {publishOption === "frass" ? (
+                  <div className="mt-5 grid gap-3 md:grid-cols-2 xl:grid-cols-4">
+                    {HOSTING_PLANS.filter((p) => p.frassService).map((p) => (
+                      <button
+                        key={p.id}
+                        type="button"
+                        onClick={() => {
+                          setPlanId(p.id);
+                          setApproved(false);
+                        }}
+                        className={`rounded-2xl border p-4 text-left transition ${
+                          planId === p.id
+                            ? "border-[color:var(--gold)] bg-[color:var(--gold)]/10"
+                            : "border-white/12 bg-white/[0.02] hover:border-[color:var(--gold)]/40"
+                        }`}
+                      >
+                        <div className="font-display text-sm uppercase tracking-[0.06em]">{p.label}</div>
+                        <div className="mt-1 text-lg">
+                          {p.price === 0 ? "Free, always" : `$${p.price.toFixed(2)} / month`}
+                        </div>
+                        <p className="mt-1 text-[11px] text-[oklch(0.62_0.01_80)]">
+                          {p.price === 0
+                            ? "Every Frass member keeps a landing page at no cost."
+                            : "One price, paid to Frass. Frass runs the service and covers the infrastructure."}
+                        </p>
+                        <ul className="mt-2 space-y-0.5 text-xs text-[oklch(0.76_0.01_80)]">
+                          {p.includes.map((i) => (
+                            <li key={i}>· {i}</li>
+                          ))}
+                        </ul>
+                        <p className="mt-2 text-[11px] text-[oklch(0.6_0.01_80)]">{p.limits}</p>
+                      </button>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="mt-5 rounded-2xl border border-white/12 bg-white/[0.02] p-4 text-sm text-[oklch(0.76_0.01_80)]">
+                    Frass charges nothing for this route. You either point the site at hosting you
+                    already pay for, or export everything and run it yourself — no lock-in.{" "}
+                    <Link to="/frass-hosting" className="text-[color:var(--gold)] underline">
+                      Compare with Frass Hosting
+                    </Link>
+                    .
+                  </div>
+                )}
+
 
                 <label className="mt-4 flex items-center gap-2 text-sm">
                   <input
@@ -376,10 +427,13 @@ function BusinessBuilderPage() {
                             {" "}
                             /{l.period === "once" ? "one-off" : l.period}
                           </span>
-                          <div className="text-[11px] text-[oklch(0.62_0.01_80)]">
-                            ${l.providerCost.toFixed(2)} provider + ${l.frassFee.toFixed(2)} Frass fee
-                          </div>
+                          {!l.frassService && (
+                            <div className="text-[11px] text-[oklch(0.62_0.01_80)]">
+                              ${l.providerCost.toFixed(2)} provider + ${l.frassFee.toFixed(2)} Frass fee
+                            </div>
+                          )}
                         </div>
+
                       </div>
                     ))}
                   </div>
