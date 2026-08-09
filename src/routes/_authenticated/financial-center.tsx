@@ -272,6 +272,13 @@ function TabBody({
       );
     case "statements":
       return <Empty label="Statements & reports" note="Monthly, annual, CSV, PDF and audit exports generate once ledgers hold transactions." />;
+    case "trust":
+      return (
+        <>
+          <Heading>Trust Center</Heading>
+          <TrustCenter />
+        </>
+      );
     case "settings":
       return (
         <>
