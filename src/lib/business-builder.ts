@@ -10,7 +10,10 @@
 // and approved by the customer before anything is published.
 // ─────────────────────────────────────────────────────────────────────────────
 
+import { FRASS_HOSTING_PLANS } from "@/lib/hosting";
+
 export type BuildPathId = "inside" | "independent";
+
 
 export type BuildPath = {
   id: BuildPathId;
