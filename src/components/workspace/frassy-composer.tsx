@@ -15,6 +15,9 @@ import {
   Send,
   Square,
   Mic,
+  Pause,
+  Play,
+  Loader2,
   Volume2,
   VolumeX,
   Camera,
@@ -30,6 +33,9 @@ import {
 } from "lucide-react";
 import { UploadManager } from "@/components/workspace/upload-manager";
 import { describeIntake, useUploadQueue, type UploadQueue } from "@/lib/workspace/upload-queue";
+import { usePushToTalk } from "@/hooks/use-push-to-talk";
+import { FrassyAvatar, type FrassyMood } from "@/components/workspace/frassy-avatar";
+
 
 export type ComposerTool =
   | "files"
