@@ -13,7 +13,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
-import { X, Check, Sparkles, ArrowRight, HelpCircle, Coins, ListTree, Film } from "lucide-react";
+import { X, Check, Sparkles, ArrowRight, HelpCircle, Coins, ListTree, Film, Focus, Sunrise, Moon } from "lucide-react";
 import { FrassyComposer } from "@/components/workspace/frassy-composer";
 import { getWallet } from "@/lib/studio.functions";
 import { usdFor } from "@/lib/studio/credits";
@@ -24,16 +24,28 @@ import sceneMountain from "@/assets/daily-scene-mountain.jpg";
 import sceneVilla from "@/assets/daily-scene-villa.jpg";
 import {
   BRIEFING_ORDER,
+  closeDay,
+  closingReport,
+  consistency,
+  DAILY_PHILOSOPHY,
   dailyProgress,
   dailySteps,
+  healthFor,
+  isDayClosed,
   LANE,
   LANE_ORDER,
+  loadHistory,
+  morningBriefing,
   nextLine,
+  nextStep,
+  recordToday,
+  reopenDay,
   sceneIndexFor,
   sectionStatuses,
   type Lane,
   type SectionStatus,
 } from "@/lib/workspace/daily-os";
+
 
 const SCENES = [sceneCoast, sceneWaterfall, sceneMountain, sceneVilla];
 
