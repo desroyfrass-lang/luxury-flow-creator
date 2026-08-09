@@ -1435,6 +1435,157 @@ export type Database = {
           },
         ]
       }
+      live_broadcasts: {
+        Row: {
+          affiliate_url: string | null
+          cover_url: string | null
+          created_at: string
+          destination: string
+          ended_at: string | null
+          host_handle: string | null
+          host_id: string
+          host_name: string
+          id: string
+          product_links: Json
+          purpose: string
+          replay_url: string | null
+          repurposed_as: Json
+          scheduled_for: string | null
+          started_at: string
+          status: string
+          summary: string | null
+          title: string
+          updated_at: string
+          viewer_count: number
+        }
+        Insert: {
+          affiliate_url?: string | null
+          cover_url?: string | null
+          created_at?: string
+          destination?: string
+          ended_at?: string | null
+          host_handle?: string | null
+          host_id: string
+          host_name?: string
+          id?: string
+          product_links?: Json
+          purpose?: string
+          replay_url?: string | null
+          repurposed_as?: Json
+          scheduled_for?: string | null
+          started_at?: string
+          status?: string
+          summary?: string | null
+          title: string
+          updated_at?: string
+          viewer_count?: number
+        }
+        Update: {
+          affiliate_url?: string | null
+          cover_url?: string | null
+          created_at?: string
+          destination?: string
+          ended_at?: string | null
+          host_handle?: string | null
+          host_id?: string
+          host_name?: string
+          id?: string
+          product_links?: Json
+          purpose?: string
+          replay_url?: string | null
+          repurposed_as?: Json
+          scheduled_for?: string | null
+          started_at?: string
+          status?: string
+          summary?: string | null
+          title?: string
+          updated_at?: string
+          viewer_count?: number
+        }
+        Relationships: []
+      }
+      live_comments: {
+        Row: {
+          author_id: string
+          author_name: string
+          body: string
+          broadcast_id: string
+          created_at: string
+          id: string
+        }
+        Insert: {
+          author_id: string
+          author_name?: string
+          body: string
+          broadcast_id: string
+          created_at?: string
+          id?: string
+        }
+        Update: {
+          author_id?: string
+          author_name?: string
+          body?: string
+          broadcast_id?: string
+          created_at?: string
+          id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "live_comments_broadcast_id_fkey"
+            columns: ["broadcast_id"]
+            isOneToOne: false
+            referencedRelation: "live_broadcasts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      live_gifts: {
+        Row: {
+          amount: number
+          broadcast_id: string
+          created_at: string
+          credits: number
+          currency: string
+          gift_key: string
+          id: string
+          note: string | null
+          sender_id: string
+          sender_name: string
+        }
+        Insert: {
+          amount?: number
+          broadcast_id: string
+          created_at?: string
+          credits?: number
+          currency?: string
+          gift_key: string
+          id?: string
+          note?: string | null
+          sender_id: string
+          sender_name?: string
+        }
+        Update: {
+          amount?: number
+          broadcast_id?: string
+          created_at?: string
+          credits?: number
+          currency?: string
+          gift_key?: string
+          id?: string
+          note?: string | null
+          sender_id?: string
+          sender_name?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "live_gifts_broadcast_id_fkey"
+            columns: ["broadcast_id"]
+            isOneToOne: false
+            referencedRelation: "live_broadcasts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       logo_treatments: {
         Row: {
           asset_url: string

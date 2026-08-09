@@ -17,6 +17,7 @@ import { Route as RewardsRouteImport } from './routes/rewards'
 import { Route as MusicMediaRouteImport } from './routes/music-media'
 import { Route as McpRouteImport } from './routes/mcp'
 import { Route as LookbookRouteImport } from './routes/lookbook'
+import { Route as LiveRouteImport } from './routes/live'
 import { Route as KidsWorldRouteImport } from './routes/kids-world'
 import { Route as KicksDistrictRouteImport } from './routes/kicks-district'
 import { Route as HealthWellnessRouteImport } from './routes/health-wellness'
@@ -47,6 +48,7 @@ import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as SocialMediaViralsIndexRouteImport } from './routes/social-media-virals.index'
 import { Route as LookbookIndexRouteImport } from './routes/lookbook.index'
+import { Route as LiveIndexRouteImport } from './routes/live.index'
 import { Route as KidsWorldIndexRouteImport } from './routes/kids-world.index'
 import { Route as FrassShapeIndexRouteImport } from './routes/frass-shape.index'
 import { Route as FrassPlusIndexRouteImport } from './routes/frass-plus.index'
@@ -65,6 +67,8 @@ import { Route as ProductHandleRouteImport } from './routes/product.$handle'
 import { Route as PlusSizeWomenRouteImport } from './routes/plus-size.women'
 import { Route as PlusSizeMenRouteImport } from './routes/plus-size.men'
 import { Route as LookbookStoryRouteImport } from './routes/lookbook.$story'
+import { Route as LiveGoRouteImport } from './routes/live.go'
+import { Route as LiveBroadcastIdRouteImport } from './routes/live.$broadcastId'
 import { Route as KidsWorldParentsRouteImport } from './routes/kids-world.parents'
 import { Route as KidsWorldDiscoverRouteImport } from './routes/kids-world.discover'
 import { Route as FrassShapeGenderRouteImport } from './routes/frass-shape.$gender'
@@ -206,6 +210,11 @@ const McpRoute = McpRouteImport.update({
 const LookbookRoute = LookbookRouteImport.update({
   id: '/lookbook',
   path: '/lookbook',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LiveRoute = LiveRouteImport.update({
+  id: '/live',
+  path: '/live',
   getParentRoute: () => rootRouteImport,
 } as any)
 const KidsWorldRoute = KidsWorldRouteImport.update({
@@ -357,6 +366,11 @@ const LookbookIndexRoute = LookbookIndexRouteImport.update({
   path: '/',
   getParentRoute: () => LookbookRoute,
 } as any)
+const LiveIndexRoute = LiveIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => LiveRoute,
+} as any)
 const KidsWorldIndexRoute = KidsWorldIndexRouteImport.update({
   id: '/',
   path: '/',
@@ -447,6 +461,16 @@ const LookbookStoryRoute = LookbookStoryRouteImport.update({
   id: '/$story',
   path: '/$story',
   getParentRoute: () => LookbookRoute,
+} as any)
+const LiveGoRoute = LiveGoRouteImport.update({
+  id: '/go',
+  path: '/go',
+  getParentRoute: () => LiveRoute,
+} as any)
+const LiveBroadcastIdRoute = LiveBroadcastIdRouteImport.update({
+  id: '/$broadcastId',
+  path: '/$broadcastId',
+  getParentRoute: () => LiveRoute,
 } as any)
 const KidsWorldParentsRoute = KidsWorldParentsRouteImport.update({
   id: '/parents',
@@ -1025,6 +1049,7 @@ export interface FileRoutesByFullPath {
   '/health-wellness': typeof HealthWellnessRoute
   '/kicks-district': typeof KicksDistrictRoute
   '/kids-world': typeof KidsWorldRouteWithChildren
+  '/live': typeof LiveRouteWithChildren
   '/lookbook': typeof LookbookRouteWithChildren
   '/mcp': typeof McpRoute
   '/music-media': typeof MusicMediaRoute
@@ -1082,6 +1107,8 @@ export interface FileRoutesByFullPath {
   '/frass-shape/$gender': typeof FrassShapeGenderRouteWithChildren
   '/kids-world/discover': typeof KidsWorldDiscoverRoute
   '/kids-world/parents': typeof KidsWorldParentsRoute
+  '/live/$broadcastId': typeof LiveBroadcastIdRoute
+  '/live/go': typeof LiveGoRoute
   '/lookbook/$story': typeof LookbookStoryRoute
   '/plus-size/men': typeof PlusSizeMenRoute
   '/plus-size/women': typeof PlusSizeWomenRoute
@@ -1100,6 +1127,7 @@ export interface FileRoutesByFullPath {
   '/frass-plus/': typeof FrassPlusIndexRoute
   '/frass-shape/': typeof FrassShapeIndexRoute
   '/kids-world/': typeof KidsWorldIndexRoute
+  '/live/': typeof LiveIndexRoute
   '/lookbook/': typeof LookbookIndexRoute
   '/social-media-virals/': typeof SocialMediaViralsIndexRoute
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
@@ -1220,6 +1248,8 @@ export interface FileRoutesByTo {
   '/frass-plus/sales': typeof FrassPlusSalesRoute
   '/kids-world/discover': typeof KidsWorldDiscoverRoute
   '/kids-world/parents': typeof KidsWorldParentsRoute
+  '/live/$broadcastId': typeof LiveBroadcastIdRoute
+  '/live/go': typeof LiveGoRoute
   '/lookbook/$story': typeof LookbookStoryRoute
   '/plus-size/men': typeof PlusSizeMenRoute
   '/plus-size/women': typeof PlusSizeWomenRoute
@@ -1238,6 +1268,7 @@ export interface FileRoutesByTo {
   '/frass-plus': typeof FrassPlusIndexRoute
   '/frass-shape': typeof FrassShapeIndexRoute
   '/kids-world': typeof KidsWorldIndexRoute
+  '/live': typeof LiveIndexRoute
   '/lookbook': typeof LookbookIndexRoute
   '/social-media-virals': typeof SocialMediaViralsIndexRoute
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
@@ -1324,6 +1355,7 @@ export interface FileRoutesById {
   '/health-wellness': typeof HealthWellnessRoute
   '/kicks-district': typeof KicksDistrictRoute
   '/kids-world': typeof KidsWorldRouteWithChildren
+  '/live': typeof LiveRouteWithChildren
   '/lookbook': typeof LookbookRouteWithChildren
   '/mcp': typeof McpRoute
   '/music-media': typeof MusicMediaRoute
@@ -1381,6 +1413,8 @@ export interface FileRoutesById {
   '/frass-shape/$gender': typeof FrassShapeGenderRouteWithChildren
   '/kids-world/discover': typeof KidsWorldDiscoverRoute
   '/kids-world/parents': typeof KidsWorldParentsRoute
+  '/live/$broadcastId': typeof LiveBroadcastIdRoute
+  '/live/go': typeof LiveGoRoute
   '/lookbook/$story': typeof LookbookStoryRoute
   '/plus-size/men': typeof PlusSizeMenRoute
   '/plus-size/women': typeof PlusSizeWomenRoute
@@ -1399,6 +1433,7 @@ export interface FileRoutesById {
   '/frass-plus/': typeof FrassPlusIndexRoute
   '/frass-shape/': typeof FrassShapeIndexRoute
   '/kids-world/': typeof KidsWorldIndexRoute
+  '/live/': typeof LiveIndexRoute
   '/lookbook/': typeof LookbookIndexRoute
   '/social-media-virals/': typeof SocialMediaViralsIndexRoute
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
@@ -1485,6 +1520,7 @@ export interface FileRouteTypes {
     | '/health-wellness'
     | '/kicks-district'
     | '/kids-world'
+    | '/live'
     | '/lookbook'
     | '/mcp'
     | '/music-media'
@@ -1542,6 +1578,8 @@ export interface FileRouteTypes {
     | '/frass-shape/$gender'
     | '/kids-world/discover'
     | '/kids-world/parents'
+    | '/live/$broadcastId'
+    | '/live/go'
     | '/lookbook/$story'
     | '/plus-size/men'
     | '/plus-size/women'
@@ -1560,6 +1598,7 @@ export interface FileRouteTypes {
     | '/frass-plus/'
     | '/frass-shape/'
     | '/kids-world/'
+    | '/live/'
     | '/lookbook/'
     | '/social-media-virals/'
     | '/.lovable/oauth/consent'
@@ -1680,6 +1719,8 @@ export interface FileRouteTypes {
     | '/frass-plus/sales'
     | '/kids-world/discover'
     | '/kids-world/parents'
+    | '/live/$broadcastId'
+    | '/live/go'
     | '/lookbook/$story'
     | '/plus-size/men'
     | '/plus-size/women'
@@ -1698,6 +1739,7 @@ export interface FileRouteTypes {
     | '/frass-plus'
     | '/frass-shape'
     | '/kids-world'
+    | '/live'
     | '/lookbook'
     | '/social-media-virals'
     | '/.lovable/oauth/consent'
@@ -1783,6 +1825,7 @@ export interface FileRouteTypes {
     | '/health-wellness'
     | '/kicks-district'
     | '/kids-world'
+    | '/live'
     | '/lookbook'
     | '/mcp'
     | '/music-media'
@@ -1840,6 +1883,8 @@ export interface FileRouteTypes {
     | '/frass-shape/$gender'
     | '/kids-world/discover'
     | '/kids-world/parents'
+    | '/live/$broadcastId'
+    | '/live/go'
     | '/lookbook/$story'
     | '/plus-size/men'
     | '/plus-size/women'
@@ -1858,6 +1903,7 @@ export interface FileRouteTypes {
     | '/frass-plus/'
     | '/frass-shape/'
     | '/kids-world/'
+    | '/live/'
     | '/lookbook/'
     | '/social-media-virals/'
     | '/.lovable/oauth/consent'
@@ -1944,6 +1990,7 @@ export interface RootRouteChildren {
   HealthWellnessRoute: typeof HealthWellnessRoute
   KicksDistrictRoute: typeof KicksDistrictRoute
   KidsWorldRoute: typeof KidsWorldRouteWithChildren
+  LiveRoute: typeof LiveRouteWithChildren
   LookbookRoute: typeof LookbookRouteWithChildren
   McpRoute: typeof McpRoute
   MusicMediaRoute: typeof MusicMediaRoute
@@ -2022,6 +2069,13 @@ declare module '@tanstack/react-router' {
       path: '/lookbook'
       fullPath: '/lookbook'
       preLoaderRoute: typeof LookbookRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/live': {
+      id: '/live'
+      path: '/live'
+      fullPath: '/live'
+      preLoaderRoute: typeof LiveRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/kids-world': {
@@ -2234,6 +2288,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LookbookIndexRouteImport
       parentRoute: typeof LookbookRoute
     }
+    '/live/': {
+      id: '/live/'
+      path: '/'
+      fullPath: '/live/'
+      preLoaderRoute: typeof LiveIndexRouteImport
+      parentRoute: typeof LiveRoute
+    }
     '/kids-world/': {
       id: '/kids-world/'
       path: '/'
@@ -2359,6 +2420,20 @@ declare module '@tanstack/react-router' {
       fullPath: '/lookbook/$story'
       preLoaderRoute: typeof LookbookStoryRouteImport
       parentRoute: typeof LookbookRoute
+    }
+    '/live/go': {
+      id: '/live/go'
+      path: '/go'
+      fullPath: '/live/go'
+      preLoaderRoute: typeof LiveGoRouteImport
+      parentRoute: typeof LiveRoute
+    }
+    '/live/$broadcastId': {
+      id: '/live/$broadcastId'
+      path: '/$broadcastId'
+      fullPath: '/live/$broadcastId'
+      preLoaderRoute: typeof LiveBroadcastIdRouteImport
+      parentRoute: typeof LiveRoute
     }
     '/kids-world/parents': {
       id: '/kids-world/parents'
@@ -3503,6 +3578,20 @@ const KidsWorldRouteWithChildren = KidsWorldRoute._addFileChildren(
   KidsWorldRouteChildren,
 )
 
+interface LiveRouteChildren {
+  LiveBroadcastIdRoute: typeof LiveBroadcastIdRoute
+  LiveGoRoute: typeof LiveGoRoute
+  LiveIndexRoute: typeof LiveIndexRoute
+}
+
+const LiveRouteChildren: LiveRouteChildren = {
+  LiveBroadcastIdRoute: LiveBroadcastIdRoute,
+  LiveGoRoute: LiveGoRoute,
+  LiveIndexRoute: LiveIndexRoute,
+}
+
+const LiveRouteWithChildren = LiveRoute._addFileChildren(LiveRouteChildren)
+
 interface LookbookRouteChildren {
   LookbookStoryRoute: typeof LookbookStoryRoute
   LookbookIndexRoute: typeof LookbookIndexRoute
@@ -3589,6 +3678,7 @@ const rootRouteChildren: RootRouteChildren = {
   HealthWellnessRoute: HealthWellnessRoute,
   KicksDistrictRoute: KicksDistrictRoute,
   KidsWorldRoute: KidsWorldRouteWithChildren,
+  LiveRoute: LiveRouteWithChildren,
   LookbookRoute: LookbookRouteWithChildren,
   McpRoute: McpRoute,
   MusicMediaRoute: MusicMediaRoute,

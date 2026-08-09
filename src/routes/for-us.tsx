@@ -5,6 +5,9 @@ import { PageFeedback } from "@/components/page-feedback";
 import { ArrowLeft, Sparkles, Compass } from "lucide-react";
 import hallImage from "@/assets/for-us-tropical-hall.jpg";
 import { usePublishedStories } from "@/hooks/use-for-us-stories";
+import { GoLiveButton, LiveBadge } from "@/components/live/live-status";
+import { useLiveNow } from "@/hooks/use-live";
+import { liveElapsed, purposeOf } from "@/lib/live";
 import {
   CAUGHT_UP_ACTIONS,
   SCENIC_MOMENTS,
@@ -110,6 +113,7 @@ function ForUsPage() {
   const context = useMemo(() => resolveForUsContext(from || undefined), [from]);
   const weather = useMemo(() => resolveForUsWeather(), []);
   const { data: published = [] } = usePublishedStories();
+  const { data: liveNow = [] } = useLiveNow("for_us");
 
   const sections = useMemo(
     () => mergePublished(orderSections(context.priority), published),
@@ -174,7 +178,8 @@ function ForUsPage() {
             <span className="text-[10px] uppercase tracking-[0.25em] text-muted-foreground">
               {context.label} <span className="text-[color:var(--gold)]">→</span> For Us
             </span>
-            <span className="ml-auto text-[10px] uppercase tracking-[0.25em] text-muted-foreground">
+            <GoLiveButton className="ml-auto" />
+            <span className="text-[10px] uppercase tracking-[0.25em] text-muted-foreground">
               <span aria-hidden className="mr-1.5">
                 {weather.glyph}
               </span>
@@ -229,6 +234,54 @@ function ForUsPage() {
               Ask Frassy
             </Link>
           </div>
+        </section>
+
+        {/* FRASS-0416 — For Us Live: community broadcasting, right at the top of the hall */}
+        <section className="mx-auto max-w-[1400px] px-6 pt-10 lg:px-12">
+          <header className="mb-5 flex flex-wrap items-center gap-3">
+            <h2 className="text-xl font-bold uppercase tracking-[0.2em] md:text-2xl">
+              🔴 For Us Live
+            </h2>
+            <p className="text-xs text-muted-foreground">
+              Community broadcasting — anyone in Frass can share a moment as it happens.
+            </p>
+            <Link
+              to="/live"
+              className="ml-auto text-[10px] uppercase tracking-[0.22em] text-red-600 underline-offset-4 hover:underline"
+            >
+              Live Directory →
+            </Link>
+          </header>
+          {liveNow.length === 0 ? (
+            <div className="flex flex-wrap items-center gap-4 rounded-[1.75rem] border border-dashed border-border bg-card/60 p-6">
+              <p className="text-sm text-muted-foreground">
+                Nobody is live in the community right now. The hall is yours if you want it.
+              </p>
+              <GoLiveButton className="ml-auto" />
+            </div>
+          ) : (
+            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              {liveNow.map((b) => (
+                <Link
+                  key={b.id}
+                  to="/live/$broadcastId"
+                  params={{ broadcastId: b.id }}
+                  className="rounded-2xl border border-red-500/40 bg-card p-5 transition hover:-translate-y-0.5 hover:border-red-500"
+                >
+                  <div className="flex items-center gap-2">
+                    <LiveBadge />
+                    <span className="text-[10px] uppercase tracking-[0.22em] text-muted-foreground">
+                      {purposeOf(b.purpose).glyph} {purposeOf(b.purpose).label}
+                    </span>
+                  </div>
+                  <p className="mt-3 text-base font-semibold leading-snug">{b.title}</p>
+                  <p className="mt-1 text-[10px] uppercase tracking-[0.22em] text-[color:var(--gold)]">
+                    {b.host_name} · live {liveElapsed(b.started_at)}
+                  </p>
+                </Link>
+              ))}
+            </div>
+          )}
         </section>
 
         {/* Stepping inside — what the hall is showing as you walk in */}
