@@ -190,6 +190,3 @@ export function usePushToTalk(owner = "frassy") {
     releaseAudio,
   };
 }
-
-  };
-}
