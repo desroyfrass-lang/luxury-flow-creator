@@ -1194,5 +1194,20 @@ a.ps-row:hover { border-color: color-mix(in srgb, var(--gold) 60%, transparent);
   --ink: oklch(0.98 0.006 95);
 
   color: var(--foreground);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
 }
+
+/* Keep type crisp over cinematic scenery: a tight shadow instead of blur haze */
+.for-us-tropical h1,
+.for-us-tropical h2,
+.for-us-tropical h3,
+.for-us-tropical p,
+.for-us-tropical span,
+.for-us-tropical a,
+.for-us-tropical button {
+  text-shadow: 0 1px 2px oklch(0.12 0.02 190 / 0.75), 0 6px 24px oklch(0.1 0.02 190 / 0.45);
+}
+
 
