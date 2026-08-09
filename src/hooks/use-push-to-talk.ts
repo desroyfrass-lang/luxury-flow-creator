@@ -14,8 +14,17 @@
 
 import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { startWavRecording, type WavRecorder } from "@/lib/voice/wav-recorder";
-import { chunkForTTS, speakableText } from "@/lib/voice/chunk-text";
 import { conversation } from "@/lib/voice/conversation-machine";
+import {
+  getSpeechSnapshot,
+  pauseSpeech,
+  resumeSpeech,
+  speakText,
+  stopSpeech,
+  subscribeSpeech,
+  toggleSpeechPause,
+  type SpeechSnapshot,
+} from "@/lib/voice/speech-manager";
 
 export type VoicePhase = "idle" | "recording" | "transcribing" | "speaking";
 
@@ -29,39 +38,42 @@ export function useConversationState() {
   );
 }
 
-export function usePushToTalk() {
+/** Global speech playback state — shared by every surface. */
+export function useSpeechState(): SpeechSnapshot {
+  return useSyncExternalStore(subscribeSpeech, getSpeechSnapshot, getSpeechSnapshot);
+}
+
+export function usePushToTalk(owner = "frassy") {
   const [phase, setPhase] = useState<VoicePhase>("idle");
   const [voiceError, setVoiceError] = useState<string | null>(null);
   // Voice Engine truth: the UI may only advertise speech when playback actually
   // worked. Any TTS failure or blocked playback flips this off immediately.
   const [voiceAvailable, setVoiceAvailable] = useState(true);
   const recorderRef = useRef<WavRecorder | null>(null);
-  const audioRef = useRef<HTMLAudioElement | null>(null);
-  const urlsRef = useRef<string[]>([]);
-  const cancelRef = useRef(false);
+  const speakingRef = useRef(false);
+  const speech = useSpeechState();
 
   const releaseAudio = useCallback(() => {
-    const el = audioRef.current;
-    if (el) {
-      el.pause();
-      el.src = "";
+    // Only this surface's own speech may be torn down here — playback is global.
+    if (speakingRef.current) {
+      speakingRef.current = false;
+      stopSpeech();
     }
-    audioRef.current = null;
-    for (const url of urlsRef.current) URL.revokeObjectURL(url);
-    urlsRef.current = [];
   }, []);
 
-  // Never leave the mic open or audio playing behind an unmount.
+  // Never leave the mic open or our own audio playing behind an unmount.
   useEffect(
     () => () => {
-      cancelRef.current = true;
       recorderRef.current?.cancel();
       recorderRef.current = null;
-      releaseAudio();
-      conversation.reset();
+      if (speakingRef.current) {
+        speakingRef.current = false;
+        stopSpeech("surface closed");
+      }
     },
-    [releaseAudio],
+    [],
   );
+
 
   const startRecording = useCallback(async () => {
     if (recorderRef.current) return;
