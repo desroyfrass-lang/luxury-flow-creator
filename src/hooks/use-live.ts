@@ -41,7 +41,7 @@ export function useLiveNow(destination?: LiveDestination) {
   const query = useQuery({
     queryKey: ["live-now", destination ?? "all"],
     queryFn: async (): Promise<LiveBroadcast[]> => {
-      let q = supabase.from("live_broadcasts").select("*").eq("status", "live");
+      let q = supabase.from("live_broadcasts").select(await broadcastColumns()).eq("status", "live");
       if (destination) q = q.eq("destination", destination);
       const { data, error } = await q.order("started_at", { ascending: false }).limit(60);
       if (error) throw error;
@@ -73,7 +73,7 @@ export function useLiveArchive(destination?: LiveDestination) {
   return useQuery({
     queryKey: ["live-archive", destination ?? "all"],
     queryFn: async (): Promise<LiveBroadcast[]> => {
-      let q = supabase.from("live_broadcasts").select("*").eq("status", "ended");
+      let q = supabase.from("live_broadcasts").select(await broadcastColumns()).eq("status", "ended");
       if (destination) q = q.eq("destination", destination);
       const { data, error } = await q.order("ended_at", { ascending: false }).limit(24);
       if (error) throw error;
@@ -89,7 +89,11 @@ export function useBroadcast(id: string) {
   const query = useQuery({
     queryKey: ["live-broadcast", id],
     queryFn: async (): Promise<LiveBroadcast | null> => {
-      const { data, error } = await supabase.from("live_broadcasts").select("*").eq("id", id).maybeSingle();
+      const { data, error } = await supabase
+        .from("live_broadcasts")
+        .select(await broadcastColumns())
+        .eq("id", id)
+        .maybeSingle();
       if (error) throw error;
       return data ? normalise(data) : null;
     },
@@ -120,7 +124,7 @@ export function useLiveComments(broadcastId: string) {
     queryFn: async (): Promise<LiveComment[]> => {
       const { data, error } = await supabase
         .from("live_comments")
-        .select("*")
+        .select(COMMENT_COLUMNS)
         .eq("broadcast_id", broadcastId)
         .order("created_at", { ascending: true })
         .limit(200);
@@ -154,7 +158,7 @@ export function useLiveGifts(broadcastId: string) {
     queryFn: async (): Promise<LiveGift[]> => {
       const { data, error } = await supabase
         .from("live_gifts")
-        .select("*")
+        .select(GIFT_COLUMNS)
         .eq("broadcast_id", broadcastId)
         .order("created_at", { ascending: false })
         .limit(100);
