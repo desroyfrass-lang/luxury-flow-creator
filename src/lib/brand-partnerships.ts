@@ -199,7 +199,7 @@ export const BRANDS: Brand[] = [
   {
     slug: "harbour-travel",
     name: "Harbour Travel",
-    industries: ["travel" as Industry, "tourism", "hotels"],
+    industries: ["tourism", "hotels"],
     about: "Boutique island stays and guided north-coast itineraries.",
     countries: ["GB", "US", "EU"],
     verified: false,
