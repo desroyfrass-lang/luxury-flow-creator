@@ -177,7 +177,7 @@ function PublicCard() {
               Every share can become a business opportunity — these links credit {name} when you buy.
             </p>
             <div className="living-card-links">
-              {affiliate.map((a) => (
+              {(affiliate as Array<{ token: string; destination_type: string | null; destination_handle: string | null }>).map((a) => (
                 <a key={a.token} href={`/r/${a.token}`} className="ws-chip" onClick={() => track("affiliate_click")}>
                   {a.destination_handle || a.destination_type || "Frass"}
                 </a>
