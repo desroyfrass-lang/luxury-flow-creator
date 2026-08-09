@@ -7,6 +7,7 @@ import { getMyProfile } from "@/lib/profiles.functions";
 import { resolveForUsWeather } from "@/lib/for-us";
 import { ForMeAbout } from "@/components/for-me-about";
 import { LivingCardWidget } from "@/components/card/living-card-widget";
+import { FrassLinkWidget } from "@/components/link/frass-link-widget";
 
 /**
  * FRASS-0421 — FOR ME.
@@ -114,7 +115,8 @@ function ForMePage() {
 
       <main className="mx-auto max-w-[1100px] px-6 pb-24 lg:px-10">
         {/* FRASS-0426 — the card is always one click away */}
-        <div className="mb-8">
+        <div className="mb-8 space-y-4">
+          <FrassLinkWidget context="FOR ME" />
           <LivingCardWidget context="FOR ME" />
         </div>
         {/* Hero — your face and your welcome video */}

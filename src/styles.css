@@ -1640,3 +1640,30 @@ a.ps-row:hover { border-color: color-mix(in srgb, var(--gold) 60%, transparent);
 }
 .card-shop-checkout label { display: grid; gap: 0.25rem; opacity: 0.8; }
 .card-shop-note { margin-top: 0.3rem; font-size: 0.72rem; opacity: 0.8; }
+
+/* FRASS-0428 — the permanent Frass Link widget */
+.frass-link-widget {
+  border-radius: 1.25rem;
+  border: 1px solid color-mix(in srgb, var(--foreground) 12%, transparent);
+  background: color-mix(in srgb, var(--card) 88%, transparent);
+  padding: 1.1rem 1.2rem;
+  backdrop-filter: blur(8px);
+}
+.frass-link-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.6rem; justify-content: space-between; }
+.frass-link-url {
+  border-radius: 0.5rem;
+  border: 1px solid color-mix(in srgb, var(--foreground) 14%, transparent);
+  padding: 0.15rem 0.45rem;
+  font-size: 0.72rem;
+}
+.frass-link-principle { margin-top: 0.6rem; font-size: 0.8rem; opacity: 0.72; }
+.frass-link-actions { margin-top: 0.85rem; display: flex; flex-wrap: wrap; gap: 0.5rem; }
+.frass-link-qr { margin-top: 0.9rem; border-radius: 0.75rem; }
+.frass-link-stats {
+  margin-top: 1rem;
+  display: grid;
+  gap: 0.6rem;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+}
+.frass-link-stats dt { font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.14em; opacity: 0.65; }
+.frass-link-stats dd { margin-top: 0.15rem; font-size: 1.25rem; font-weight: 800; }
