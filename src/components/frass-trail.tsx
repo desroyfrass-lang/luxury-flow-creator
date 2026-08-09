@@ -118,7 +118,7 @@ export function FrassTrail() {
     if (typeof window !== "undefined" && window.history.length > 1) {
       router.history.back();
     } else {
-      router.navigate({ to: parentHref });
+      router.navigate({ to: parentHref as never });
     }
   };
 
@@ -156,7 +156,7 @@ export function FrassTrail() {
               </span>
             ) : (
               <Link
-                to={crumb.href}
+                to={crumb.href as never}
                 className="rounded-full px-2 py-1 transition hover:text-[color:var(--gold)]"
               >
                 {crumb.label}
