@@ -715,23 +715,43 @@ function MetricCard({
 }
 
 
+function StatusPills({ status }: { status?: SectionStatus }) {
+  if (!status) return null;
+  const shown = LANE_ORDER.filter((l) => status[l] > 0);
+  if (!shown.length) return null;
+  return (
+    <span className="daily-status">
+      {shown.map((l) => (
+        <span key={l} className={`daily-status-pill lane-pill-${l}`} title={LANE[l].meaning}>
+          {LANE[l].dot} {status[l]} {LANE[l].label}
+        </span>
+      ))}
+    </span>
+  );
+}
+
 function Section({
   title,
   note,
   blueprintId,
+  status,
   children,
 }: {
   title: string;
   note?: string;
   blueprintId?: string;
+  status?: SectionStatus;
   children: React.ReactNode;
 }) {
   return (
     <section data-blueprint={blueprintId} className="daily-section">
-      <h2 className="daily-h2">{title}</h2>
-
+      <div className="daily-section-head">
+        <h2 className="daily-h2">{title}</h2>
+        <StatusPills status={status} />
+      </div>
       {note && <p className="ws-meta daily-note">{note}</p>}
-      <div className="mt-3">{children}</div>
+      <div className="mt-4">{children}</div>
     </section>
   );
 }
+
