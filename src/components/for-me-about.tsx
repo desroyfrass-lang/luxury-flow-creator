@@ -282,6 +282,21 @@ export function ForMeAbout({ raw, canEdit }: { raw: unknown; canEdit: boolean })
         </div>
       )}
 
+      {!noLegacy && (
+        <section className="mt-10 rounded-2xl border border-[color:var(--hill-gold)]/35 bg-black/25 p-6">
+          <h2 className="font-display text-2xl uppercase leading-none text-white">My Legacy</h2>
+          <p className="mt-2 max-w-xl text-xs leading-relaxed text-white/60">
+            Not what happened today. What stays.
+          </p>
+          <div className="mt-6 grid gap-8 md:grid-cols-2">
+            {LEGACY_FIELDS.map((f) => (
+              <Prose key={f.key} title={f.label} body={stored.legacy[f.key] ?? ""} />
+            ))}
+          </div>
+        </section>
+      )}
+
+
       {canEdit && (
         <button
           type="button"
