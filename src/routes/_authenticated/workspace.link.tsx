@@ -45,6 +45,8 @@ function LinkDashboard() {
   const { data: introducer } = useQuery({ queryKey: ["my-introducer"], queryFn: () => introFn() });
 
   const t = dash?.totals;
+  const desk = recruitmentDesk(dash?.referrals ?? [], dash?.bonuses ?? []);
+
 
   return (
     <main className="mx-auto max-w-5xl space-y-8 px-4 py-12">
