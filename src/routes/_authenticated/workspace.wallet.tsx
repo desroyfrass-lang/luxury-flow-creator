@@ -198,7 +198,7 @@ function WalletHub() {
         </section>
       )}
 
-      <PageFeedback pageKey="workspace-wallet" />
+      <PageFeedback pageTitle="Frass Card Wallet" />
     </main>
   );
 }
