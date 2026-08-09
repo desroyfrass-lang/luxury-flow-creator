@@ -92,9 +92,19 @@ export const getMyProfile = createServerFn({ method: "GET" })
       .from("profiles")
       .select("*")
       .eq("id", context.userId)
-      .single();
+      .maybeSingle();
     if (error) throw error;
-    return data as BuilderProfile;
+    if (data) return data as BuilderProfile;
+
+    // No profile row yet (e.g. account created before the profiles trigger).
+    // Create it on first read so the workspace never lands on a blank screen.
+    const { data: created, error: createError } = await context.supabase
+      .from("profiles")
+      .insert({ id: context.userId })
+      .select()
+      .maybeSingle();
+    if (createError) throw createError;
+    return (created ?? null) as BuilderProfile | null;
   });
 
 /** Updates the authenticated Builder's profile. Enforces handle uniqueness via the database constraint. */
