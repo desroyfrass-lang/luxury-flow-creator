@@ -299,7 +299,21 @@ function CardStudio() {
         </div>
       </section>
 
-      <QuickSellPanel provider={form.payout_provider} />
+      {/* FRASS-0429 — Quick Sell now lives behind the counter, in the Wallet. */}
+      <section className={panel}>
+        <h2 className={heading}>Quick Sell &amp; money</h2>
+        <p className="mt-2 text-sm text-muted-foreground">
+          Selling, sales, gifts, tips, payouts and statements have moved into one place: your Frass
+          Card Wallet.
+        </p>
+        <p className="mt-1 text-xs text-muted-foreground">
+          <strong>What this means in plain English:</strong> this page is the shopfront window. The
+          Wallet is the counter behind it.
+        </p>
+        <Link className="ws-chip mt-4 inline-flex" to="/workspace/wallet">
+          Open my Wallet
+        </Link>
+      </section>
 
       <PageFeedback pageTitle="Frass Card" />
     </main>
