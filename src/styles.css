@@ -548,6 +548,24 @@
    The room should feel like a professional office, not a terminal.
    ───────────────────────────────────────────────────────────────────────── */
 .frass-workspace {
+  /* FRASS-0440 — the workspace is a LIGHT room. Re-map the global (dark)
+     tokens here so any shared component dropped into The Daily inherits paper
+     instead of punching a black slab through the ivory surface. */
+  --background: oklch(0.97 0.008 85);
+  --foreground: oklch(0.24 0.012 60);
+  --card: oklch(0.99 0.005 90);
+  --card-foreground: oklch(0.24 0.012 60);
+  --popover: oklch(0.99 0.005 90);
+  --popover-foreground: oklch(0.24 0.012 60);
+  --secondary: oklch(0.94 0.008 85);
+  --secondary-foreground: oklch(0.24 0.012 60);
+  --muted: oklch(0.94 0.008 85);
+  --muted-foreground: oklch(0.52 0.012 70);
+  --border: oklch(0.24 0.012 60 / 0.14);
+  --input: oklch(0.24 0.012 60 / 0.18);
+  --primary: oklch(0.24 0.012 60);
+  --primary-foreground: oklch(0.99 0.005 90);
+
   --ws-bg: oklch(0.97 0.008 85);
   --ws-panel: oklch(0.99 0.005 90);
   --ws-line: oklch(0.88 0.012 85);
