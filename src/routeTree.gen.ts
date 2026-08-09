@@ -94,6 +94,7 @@ import { Route as AuthenticatedWelcomeHallRouteImport } from './routes/_authenti
 import { Route as AuthenticatedVisualReviewRouteImport } from './routes/_authenticated/visual-review'
 import { Route as AuthenticatedVaultRouteImport } from './routes/_authenticated/vault'
 import { Route as AuthenticatedTryOnRouteImport } from './routes/_authenticated/try-on'
+import { Route as AuthenticatedStudioRouteImport } from './routes/_authenticated/studio'
 import { Route as AuthenticatedRoomRouteImport } from './routes/_authenticated/room'
 import { Route as AuthenticatedPaymentProvidersRouteImport } from './routes/_authenticated/payment-providers'
 import { Route as AuthenticatedOpportunityRouteImport } from './routes/_authenticated/opportunity'
@@ -584,6 +585,11 @@ const AuthenticatedTryOnRoute = AuthenticatedTryOnRouteImport.update({
   path: '/try-on',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedStudioRoute = AuthenticatedStudioRouteImport.update({
+  id: '/studio',
+  path: '/studio',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedRoomRoute = AuthenticatedRoomRouteImport.update({
   id: '/room',
   path: '/room',
@@ -972,6 +978,7 @@ export interface FileRoutesByFullPath {
   '/opportunity': typeof AuthenticatedOpportunityRoute
   '/payment-providers': typeof AuthenticatedPaymentProvidersRoute
   '/room': typeof AuthenticatedRoomRoute
+  '/studio': typeof AuthenticatedStudioRoute
   '/try-on': typeof AuthenticatedTryOnRoute
   '/vault': typeof AuthenticatedVaultRoute
   '/visual-review': typeof AuthenticatedVisualReviewRoute
@@ -1105,6 +1112,7 @@ export interface FileRoutesByTo {
   '/opportunity': typeof AuthenticatedOpportunityRoute
   '/payment-providers': typeof AuthenticatedPaymentProvidersRoute
   '/room': typeof AuthenticatedRoomRoute
+  '/studio': typeof AuthenticatedStudioRoute
   '/try-on': typeof AuthenticatedTryOnRoute
   '/vault': typeof AuthenticatedVaultRoute
   '/visual-review': typeof AuthenticatedVisualReviewRoute
@@ -1250,6 +1258,7 @@ export interface FileRoutesById {
   '/_authenticated/opportunity': typeof AuthenticatedOpportunityRoute
   '/_authenticated/payment-providers': typeof AuthenticatedPaymentProvidersRoute
   '/_authenticated/room': typeof AuthenticatedRoomRoute
+  '/_authenticated/studio': typeof AuthenticatedStudioRoute
   '/_authenticated/try-on': typeof AuthenticatedTryOnRoute
   '/_authenticated/vault': typeof AuthenticatedVaultRoute
   '/_authenticated/visual-review': typeof AuthenticatedVisualReviewRoute
@@ -1400,6 +1409,7 @@ export interface FileRouteTypes {
     | '/opportunity'
     | '/payment-providers'
     | '/room'
+    | '/studio'
     | '/try-on'
     | '/vault'
     | '/visual-review'
@@ -1533,6 +1543,7 @@ export interface FileRouteTypes {
     | '/opportunity'
     | '/payment-providers'
     | '/room'
+    | '/studio'
     | '/try-on'
     | '/vault'
     | '/visual-review'
@@ -1677,6 +1688,7 @@ export interface FileRouteTypes {
     | '/_authenticated/opportunity'
     | '/_authenticated/payment-providers'
     | '/_authenticated/room'
+    | '/_authenticated/studio'
     | '/_authenticated/try-on'
     | '/_authenticated/vault'
     | '/_authenticated/visual-review'
@@ -2424,6 +2436,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedTryOnRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/studio': {
+      id: '/_authenticated/studio'
+      path: '/studio'
+      fullPath: '/studio'
+      preLoaderRoute: typeof AuthenticatedStudioRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/room': {
       id: '/_authenticated/room'
       path: '/room'
@@ -2938,6 +2957,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedOpportunityRoute: typeof AuthenticatedOpportunityRoute
   AuthenticatedPaymentProvidersRoute: typeof AuthenticatedPaymentProvidersRoute
   AuthenticatedRoomRoute: typeof AuthenticatedRoomRoute
+  AuthenticatedStudioRoute: typeof AuthenticatedStudioRoute
   AuthenticatedTryOnRoute: typeof AuthenticatedTryOnRoute
   AuthenticatedVaultRoute: typeof AuthenticatedVaultRoute
   AuthenticatedVisualReviewRoute: typeof AuthenticatedVisualReviewRoute
@@ -2958,6 +2978,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedOpportunityRoute: AuthenticatedOpportunityRoute,
   AuthenticatedPaymentProvidersRoute: AuthenticatedPaymentProvidersRoute,
   AuthenticatedRoomRoute: AuthenticatedRoomRoute,
+  AuthenticatedStudioRoute: AuthenticatedStudioRoute,
   AuthenticatedTryOnRoute: AuthenticatedTryOnRoute,
   AuthenticatedVaultRoute: AuthenticatedVaultRoute,
   AuthenticatedVisualReviewRoute: AuthenticatedVisualReviewRoute,
