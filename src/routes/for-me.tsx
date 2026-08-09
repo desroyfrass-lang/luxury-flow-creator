@@ -213,20 +213,24 @@ function ForMePage() {
           {section.id === "bio" && profile?.bio?.trim() ? (
             <p className="mt-6 max-w-2xl text-base leading-relaxed text-white/90">{profile.bio}</p>
           ) : section.id === "about" ? (
-            <dl className="mt-6 grid max-w-xl gap-3 text-sm">
-              <div className="flex justify-between gap-6 border-b border-white/10 pb-2">
-                <dt className="text-white/60">Name</dt>
-                <dd className="text-white/90">{name}</dd>
-              </div>
-              <div className="flex justify-between gap-6 border-b border-white/10 pb-2">
-                <dt className="text-white/60">Handle</dt>
-                <dd className="text-white/90">{profile?.handle ? `@${profile.handle}` : "Not set"}</dd>
-              </div>
-              <div className="flex justify-between gap-6">
-                <dt className="text-white/60">Home</dt>
-                <dd className="text-white/90">Frass Hill</dd>
-              </div>
-            </dl>
+            <>
+              <dl className="mt-6 grid max-w-xl gap-3 text-sm">
+                <div className="flex justify-between gap-6 border-b border-white/10 pb-2">
+                  <dt className="text-white/60">Name</dt>
+                  <dd className="text-white/90">{name}</dd>
+                </div>
+                <div className="flex justify-between gap-6 border-b border-white/10 pb-2">
+                  <dt className="text-white/60">Handle</dt>
+                  <dd className="text-white/90">{profile?.handle ? `@${profile.handle}` : "Not set"}</dd>
+                </div>
+                <div className="flex justify-between gap-6">
+                  <dt className="text-white/60">Home</dt>
+                  <dd className="text-white/90">Frass Hill</dd>
+                </div>
+              </dl>
+              <ForMeAbout raw={(profile as { about?: unknown } | null)?.about} canEdit={Boolean(profile)} />
+            </>
+
           ) : (
             <p className="mt-6 max-w-xl text-sm leading-relaxed text-white/70">{section.empty}</p>
           )}
