@@ -7,11 +7,9 @@ import {
   SQUARE_QUARTERS,
   presencesFor,
   squareMood,
-  SQUARE_QUARTERS,
   type PresenceKind,
 } from "@/lib/town-square";
 import { useLiveNow } from "@/hooks/use-live";
-import squareHero from "@/assets/town-square-hero.jpg";
 import squareHero from "@/assets/town-square-hero.jpg";
 
 /**
