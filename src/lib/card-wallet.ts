@@ -26,9 +26,9 @@ export const WALLET_PRINCIPLE =
 export const CARD_ACTIONS = [
   { id: "follow", label: "Follow", plain: "Keep this card on your device." },
   { id: "message", label: "Message", plain: "Reach them directly." },
-  { id: "buy", label: "Buy", plain: "See what they are selling right now." },
+  { id: "shop", label: "Shop", plain: "Their shop — one item or five hundred, same door." },
   { id: "book", label: "Book", plain: "Take a time in their calendar." },
-  { id: "money", label: "Send money", plain: "Pay them straight into their own account." },
+  { id: "pay", label: "Pay", plain: "The universal payment door — pay them straight into their own account." },
   { id: "gift", label: "Send gift", plain: "A gift with a note attached." },
   { id: "tip", label: "Tip", plain: "A thank-you for their work." },
   { id: "listen", label: "Listen", plain: "Their music, radio or media." },
@@ -43,9 +43,9 @@ export function actionPlain(id: string): string {
   return CARD_ACTIONS.find((a) => a.id === id)?.plain ?? "";
 }
 
-/** Money that is sent, not bought: a transfer, a gift or a tip. */
+/** Money that is sent, not bought: a payment, a gift or a tip. */
 export const DIRECT_PAYMENT_KINDS = [
-  { id: "money", label: "Send money", note: "A straight transfer." },
+  { id: "money", label: "Pay", note: "A straight payment." },
   { id: "gift", label: "Send a gift", note: "A gift with a note." },
   { id: "tip", label: "Leave a tip", note: "A thank-you for their work." },
 ] as const;
@@ -55,14 +55,23 @@ export type DirectPaymentKind = (typeof DIRECT_PAYMENT_KINDS)[number]["id"];
 export const SUGGESTED_AMOUNTS = [5, 10, 25, 50, 100];
 
 /* ── Wallet hub sections ─────────────────────────────────────────────────── */
+// FRASS-0429: everything financial lives in the Wallet. Quick Sell moved here
+// from the Card Studio — the card is identity, the Wallet is money.
 
 export const WALLET_SECTIONS = [
-  { id: "balance", label: "Balance", plain: "What has come in, and what is still owed to you." },
+  { id: "balance", label: "Available balance", plain: "What has come in, and what is still owed to you." },
+  { id: "withdraw", label: "Withdraw", plain: "How money reaches your bank." },
+  { id: "deposit", label: "Deposit", plain: "How money arrives into your account." },
+  { id: "history", label: "Payment history", plain: "Every movement, newest first." },
   { id: "sell", label: "Quick Sell", plain: "Photo, price, quantity — live on your card in seconds." },
   { id: "items", label: "My items", plain: "Everything currently for sale from your card." },
-  { id: "activity", label: "Money in", plain: "Every sale, gift and tip, newest first." },
-  { id: "payouts", label: "Payment account", plain: "Where the money actually lands." },
+  { id: "invoices", label: "Invoices", plain: "Ask someone for a specific amount." },
+  { id: "links", label: "Payment links", plain: "A link that opens your Pay door with the amount ready." },
+  { id: "gifts", label: "Gifts", plain: "Gifts received, with their notes." },
+  { id: "tips", label: "Tips", plain: "Thank-yous for your work." },
+  { id: "taxes", label: "Taxes", plain: "The numbers your accountant will ask for." },
   { id: "statements", label: "Statements", plain: "Download the record for your books." },
+  { id: "payouts", label: "Payment account", plain: "Where the money actually lands." },
 ] as const;
 
 export type WalletSectionId = (typeof WALLET_SECTIONS)[number]["id"];
@@ -84,7 +93,7 @@ export type WalletSummary = {
 
 const round = (n: number) => Math.round(n * 100) / 100;
 
-function referenceKind(reference: string | null): "gift" | "tip" | "money" | "sale" {
+export function referenceKind(reference: string | null): "gift" | "tip" | "money" | "sale" {
   if (!reference) return "sale";
   if (reference.startsWith("gift")) return "gift";
   if (reference.startsWith("tip")) return "tip";

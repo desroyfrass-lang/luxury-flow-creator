@@ -45,6 +45,8 @@ function LinkDashboard() {
   const { data: introducer } = useQuery({ queryKey: ["my-introducer"], queryFn: () => introFn() });
 
   const t = dash?.totals;
+  const desk = recruitmentDesk(dash?.referrals ?? [], dash?.bonuses ?? []);
+
 
   return (
     <main className="mx-auto max-w-5xl space-y-8 px-4 py-12">
@@ -75,6 +77,53 @@ function LinkDashboard() {
         </div>
         <p className="mt-3 text-xs text-muted-foreground">
           Zeros stay honest — nothing here is estimated or invented.
+        </p>
+      </section>
+
+      {/* FRASS-0429 — the recruitment desk: a CRM for the people you introduced */}
+      <section className={panel}>
+        <h2 className={heading}>
+          <Users className="mr-2 inline h-3.5 w-3.5" /> Recruitment desk
+        </h2>
+        <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+          <Metric label="Active referrals" value={desk.active} />
+          <Metric label="Pending activations" value={desk.pending} />
+          <Metric label="Qualified members" value={desk.members} />
+          <Metric label="Qualified partners" value={desk.partners} />
+          <Metric label="Lifetime recruitment earnings" value={`$${desk.lifetime.toFixed(2)}`} />
+          <Metric label="Current campaign bonuses" value={`$${desk.campaign.toFixed(2)}`} />
+          <Metric
+            label="Next bonus milestone"
+            value={desk.next ? `${desk.next.label} · $${desk.next.amount.toFixed(2)}` : "All earned"}
+          />
+          <Metric label="People introduced" value={t?.introduced ?? 0} />
+        </div>
+
+        <h3 className="mt-6 text-xs uppercase tracking-[0.2em] text-muted-foreground">
+          Team growth timeline
+        </h3>
+        {desk.timeline.length === 0 ? (
+          <p className="mt-2 text-sm text-muted-foreground">
+            Nothing to chart yet. The first introduction starts the timeline.
+          </p>
+        ) : (
+          <div className="mt-3 flex items-end gap-3">
+            {desk.timeline.map((m) => (
+              <div key={m.month} className="flex flex-1 flex-col items-center gap-1">
+                <span className="text-xs font-semibold">{m.count}</span>
+                <div
+                  className="w-full rounded-t bg-primary/70"
+                  style={{ height: `${8 + m.count * 18}px` }}
+                  aria-hidden="true"
+                />
+                <span className="text-[10px] uppercase text-muted-foreground">{m.month}</span>
+              </div>
+            ))}
+          </div>
+        )}
+        <p className="mt-3 text-xs text-muted-foreground">
+          <strong>What this means in plain English:</strong> this is a guest book for the people you
+          brought through the door — who arrived, who settled in, and what that earned you once.
         </p>
       </section>
 
@@ -202,4 +251,38 @@ function Metric({ label, value }: { label: string; value: number | string }) {
       <p className="mt-1 text-xs text-muted-foreground">{label}</p>
     </div>
   );
+}
+
+/** FRASS-0429 — recruitment desk maths. Counts only, never estimates. */
+function recruitmentDesk(
+  referrals: Array<{ stage: string; created_at: string }>,
+  bonuses: Array<{ kind: string; amount: number | string; status: string }>,
+) {
+  const rank = (s: string) => REFERRAL_STAGES.findIndex((r) => r.id === s);
+  const active = referrals.filter((r) => rank(r.stage) >= 1).length;
+  const pending = referrals.filter((r) => rank(r.stage) <= 0).length;
+  const members = referrals.filter((r) => r.stage === "qualified_member").length;
+  const partners = referrals.filter((r) => rank(r.stage) >= 3).length;
+
+  const lifetime = bonuses.reduce((n, b) => n + Number(b.amount ?? 0), 0);
+  const campaign = bonuses
+    .filter((b) => b.status !== "paid")
+    .reduce((n, b) => n + Number(b.amount ?? 0), 0);
+
+  const earnedKinds = new Set(bonuses.map((b) => b.kind));
+  const next = BONUS_RULES.find((r) => !earnedKinds.has(r.kind)) ?? null;
+
+  const months: Array<{ month: string; count: number }> = [];
+  const now = new Date();
+  for (let i = 5; i >= 0; i -= 1) {
+    const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
+    const count = referrals.filter((r) => {
+      const c = new Date(r.created_at);
+      return c.getFullYear() === d.getFullYear() && c.getMonth() === d.getMonth();
+    }).length;
+    months.push({ month: d.toLocaleString(undefined, { month: "short" }), count });
+  }
+  const timeline = referrals.length === 0 ? [] : months;
+
+  return { active, pending, members, partners, lifetime, campaign, next, timeline };
 }
