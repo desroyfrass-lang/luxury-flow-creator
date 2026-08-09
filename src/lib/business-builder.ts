@@ -286,19 +286,21 @@ export type Quote = {
 
 const round = (n: number) => Math.round(n * 100) / 100;
 
-/** Transparent publishing quote: provider cost, Frass fee, totals, alternative. */
+/** Transparent publishing quote: what you pay Frass, what outside services cost. */
 export function quotePublish(planId: string, opts: { customDomain: boolean; modules: string[] }): Quote {
   const plan = HOSTING_PLANS.find((p) => p.id === planId) ?? HOSTING_PLANS[0]!;
   const lines: CostLine[] = [
     {
       label: plan.label,
-      providerCost: plan.providerCost,
-      frassFee: plan.frassFee,
+      providerCost: 0,
+      frassFee: plan.price,
       payee: plan.who,
       period: "month",
       note: plan.limits,
+      frassService: plan.frassService,
     },
   ];
+
 
   if (opts.customDomain) lines.push(DOMAIN_COST);
 
