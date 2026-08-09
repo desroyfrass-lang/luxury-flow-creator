@@ -36,7 +36,7 @@ function Waveform({ active }: { active: boolean }) {
   );
 }
 
-/** Inline控 controls for a chat composer / toolbar. Renders nothing when silent. */
+/** Inline controls for a chat composer / toolbar. Renders nothing when silent. */
 export function SpeechControls({ className = "" }: { className?: string }) {
   const speech = useSpeechPlayback();
   if (speech.status === "idle") return null;
