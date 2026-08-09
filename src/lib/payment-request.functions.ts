@@ -278,12 +278,21 @@ export const approvePaymentRequest = createServerFn({ method: "POST" })
 
 
 
+    /** If anything below fails, the request goes back to the customer intact. */
+    const release = async (reason: string) => {
+      await supabaseAdmin
+        .from("payment_requests")
+        .update({ status: "awaiting_approval", processing_started_at: null, failure_reason: reason })
+        .eq("id", req.id);
+    };
+
     const { data: card } = await supabaseAdmin
       .from("business_cards")
       .select("commerce_enabled, payout_provider, payout_url")
       .eq("user_id", req.seller_id)
       .maybeSingle();
     if (!card?.commerce_enabled || !card.payout_url) {
+      await release("Seller payments are not switched on.");
       return { ok: false as const, reason: "This seller has not switched on payments yet." };
     }
 
@@ -310,9 +319,13 @@ export const approvePaymentRequest = createServerFn({ method: "POST" })
       })
       .select()
       .single();
-    if (error) throw error;
+    if (error) {
+      await release("The order could not be recorded.");
+      throw error;
+    }
 
     // Inventory follows the sale automatically when a listing is attached.
+    // It runs once, because only one approval can ever reach this line.
     if (req.listing_id) {
       const { data: listing } = await supabaseAdmin
         .from("card_listings")
@@ -331,7 +344,12 @@ export const approvePaymentRequest = createServerFn({ method: "POST" })
 
     await supabaseAdmin
       .from("payment_requests")
-      .update({ status: "paid", paid_at: new Date().toISOString(), order_id: order.id })
+      .update({
+        status: "successful",
+        paid_at: new Date().toISOString(),
+        order_id: order.id,
+        failure_reason: null,
+      })
       .eq("id", req.id);
 
     await supabaseAdmin
@@ -340,13 +358,55 @@ export const approvePaymentRequest = createServerFn({ method: "POST" })
 
     return {
       ok: true as const,
+      duplicate: false as const,
       order_id: order.id,
-      pay_url: card.payout_url,
-      provider: card.payout_provider,
+      pay_url: card.payout_url as string | null,
+      provider: card.payout_provider as string | null,
       total: s.gross,
       currency: req.currency,
     };
   });
+
+/**
+ * FRASS-0439 — lost connection recovery.
+ * The customer's device asks one question when it comes back online: what
+ * actually happened? There is one answer, and it is never a guess.
+ */
+export const checkPaymentOutcome = createServerFn({ method: "GET" })
+  .inputValidator((d: { token: string }) =>
+    z.object({ token: z.string().trim().min(6).max(64) }).parse(d),
+  )
+  .handler(async ({ data }) => {
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { data: req } = await supabaseAdmin
+      .from("payment_requests")
+      .select("status, order_id, paid_at, expires_at, currency, amount, quantity")
+      .eq("token", data.token)
+      .maybeSingle();
+    if (!req) return { found: false as const };
+
+    let status = req.status;
+    if (["preparing", "awaiting_approval"].includes(status) && isExpired(req.expires_at)) {
+      status = "expired";
+      await supabaseAdmin
+        .from("payment_requests")
+        .update({ status, expired_at: new Date().toISOString() })
+        .eq("token", data.token);
+    }
+
+    return {
+      found: true as const,
+      status,
+      settled: !["preparing", "awaiting_approval", "processing"].includes(status),
+      charged: status === "successful",
+      order_id: req.order_id,
+      paid_at: req.paid_at,
+      total: Math.round(Number(req.amount) * req.quantity * 100) / 100,
+      currency: req.currency,
+      message: recoveryMessage(status),
+    };
+  });
+
 
 export const declinePaymentRequest = createServerFn({ method: "POST" })
   .inputValidator((d: { token: string }) =>
