@@ -1,0 +1,290 @@
+import { createServerFn } from "@tanstack/react-start";
+import { z } from "zod";
+import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
+import type { Database } from "@/integrations/supabase/types";
+import { settle } from "@/lib/card-commerce";
+import { DELIVERY_IDS, REQUEST_KIND_IDS, isExpired, newRequestToken } from "@/lib/payment-request";
+
+export type PaymentRequestRow = Database["public"]["Tables"]["payment_requests"]["Row"];
+
+/**
+ * FRASS-0436 — the seller creates the sale, never the payment.
+ * Nothing here ever touches a card number: Frass records the request and the
+ * customer authorises it on their own device with their own provider.
+ */
+export const createPaymentRequest = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator(
+    (d: {
+      kind: string;
+      title: string;
+      amount: number;
+      quantity?: number;
+      note?: string;
+      currency?: string;
+      listing_id?: string | null;
+      buyer_name?: string;
+      buyer_email?: string;
+      buyer_phone?: string;
+      delivery?: string;
+      expires_in_minutes?: number | null;
+    }) =>
+      z
+        .object({
+          kind: z.enum(REQUEST_KIND_IDS),
+          title: z.string().trim().min(1).max(120),
+          amount: z.number().min(0.5).max(1_000_000),
+          quantity: z.number().int().min(1).max(100_000).default(1),
+          note: z.string().trim().max(240).optional(),
+          currency: z.string().trim().length(3).default("USD"),
+          listing_id: z.string().uuid().nullable().optional(),
+          buyer_name: z.string().trim().max(120).optional(),
+          buyer_email: z.string().trim().email().max(255).optional(),
+          buyer_phone: z.string().trim().max(40).optional(),
+          delivery: z.enum(DELIVERY_IDS).default("qr"),
+          expires_in_minutes: z.number().int().min(5).max(20_160).nullable().optional(),
+        })
+        .parse(d),
+  )
+  .handler(async ({ context, data }) => {
+    const expires_at = data.expires_in_minutes
+      ? new Date(Date.now() + data.expires_in_minutes * 60_000).toISOString()
+      : null;
+
+    const { data: row, error } = await context.supabase
+      .from("payment_requests")
+      .insert({
+        token: newRequestToken(),
+        seller_id: context.userId,
+        listing_id: data.listing_id ?? null,
+        kind: data.kind,
+        title: data.title,
+        note: data.note ?? null,
+        amount: data.amount,
+        quantity: data.quantity,
+        currency: data.currency.toUpperCase(),
+        buyer_name: data.buyer_name ?? null,
+        buyer_email: data.buyer_email ?? null,
+        buyer_phone: data.buyer_phone ?? null,
+        delivery: data.delivery,
+        expires_at,
+        status: "pending",
+      })
+      .select()
+      .single();
+    if (error) throw error;
+    return row as PaymentRequestRow;
+  });
+
+export const listMyPaymentRequests = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }) => {
+    const { data, error } = await context.supabase
+      .from("payment_requests")
+      .select("*")
+      .eq("seller_id", context.userId)
+      .order("created_at", { ascending: false })
+      .limit(100);
+    if (error) throw error;
+    return (data ?? []) as PaymentRequestRow[];
+  });
+
+export const cancelPaymentRequest = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d: { id: string }) => z.object({ id: z.string().uuid() }).parse(d))
+  .handler(async ({ context, data }) => {
+    const { error } = await context.supabase
+      .from("payment_requests")
+      .update({ status: "cancelled" })
+      .eq("id", data.id)
+      .eq("seller_id", context.userId)
+      .eq("status", "pending");
+    if (error) throw error;
+    return { ok: true as const };
+  });
+
+/* ── The customer's own device ───────────────────────────────────────────── */
+
+export type PublicPaymentRequest = {
+  token: string;
+  kind: string;
+  title: string;
+  note: string | null;
+  amount: number;
+  quantity: number;
+  currency: string;
+  status: string;
+  expires_at: string | null;
+  seller_name: string;
+  seller_handle: string | null;
+  seller_avatar: string | null;
+  payments_enabled: boolean;
+  provider: string | null;
+};
+
+/**
+ * Served with the admin client so the public page never needs table access.
+ * Seller identifiers and buyer contact details are stripped before returning.
+ */
+export const getPaymentRequest = createServerFn({ method: "GET" })
+  .inputValidator((d: { token: string }) =>
+    z.object({ token: z.string().trim().min(6).max(64) }).parse(d),
+  )
+  .handler(async ({ data }) => {
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+
+    const { data: req } = await supabaseAdmin
+      .from("payment_requests")
+      .select("*")
+      .eq("token", data.token)
+      .maybeSingle();
+    if (!req) return { ok: false as const, reason: "This payment request could not be found." };
+
+    const expired = req.status === "pending" && isExpired(req.expires_at);
+    if (expired) {
+      await supabaseAdmin.from("payment_requests").update({ status: "expired" }).eq("id", req.id);
+    }
+
+    const [{ data: profile }, { data: card }] = await Promise.all([
+      supabaseAdmin.from("profiles").select("display_name, handle, avatar_url").eq("id", req.seller_id).maybeSingle(),
+      supabaseAdmin
+        .from("business_cards")
+        .select("commerce_enabled, payout_provider, payout_url")
+        .eq("user_id", req.seller_id)
+        .maybeSingle(),
+    ]);
+
+    const payload: PublicPaymentRequest = {
+      token: req.token,
+      kind: req.kind,
+      title: req.title,
+      note: req.note,
+      amount: Number(req.amount),
+      quantity: req.quantity,
+      currency: req.currency,
+      status: expired ? "expired" : req.status,
+      expires_at: req.expires_at,
+      seller_name: profile?.display_name || profile?.handle || "A Frass member",
+      seller_handle: profile?.handle ?? null,
+      seller_avatar: profile?.avatar_url ?? null,
+      payments_enabled: Boolean(card?.commerce_enabled && card?.payout_url),
+      provider: card?.payout_provider ?? null,
+    };
+    return { ok: true as const, request: payload };
+  });
+
+/**
+ * The customer approves on their own device. Frass records the sale, the
+ * constitutional allocation and the audit trail, then hands the customer to
+ * the seller's own secure payment provider. Frass never sees the credentials.
+ */
+export const approvePaymentRequest = createServerFn({ method: "POST" })
+  .inputValidator((d: { token: string; buyer_name?: string; buyer_email?: string }) =>
+    z
+      .object({
+        token: z.string().trim().min(6).max(64),
+        buyer_name: z.string().trim().max(120).optional(),
+        buyer_email: z.string().trim().email().max(255).optional(),
+      })
+      .parse(d),
+  )
+  .handler(async ({ data }) => {
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+
+    const { data: req } = await supabaseAdmin
+      .from("payment_requests")
+      .select("*")
+      .eq("token", data.token)
+      .maybeSingle();
+    if (!req) return { ok: false as const, reason: "This payment request could not be found." };
+    if (req.status !== "pending") {
+      return { ok: false as const, reason: "This payment request is no longer open." };
+    }
+    if (isExpired(req.expires_at)) {
+      await supabaseAdmin.from("payment_requests").update({ status: "expired" }).eq("id", req.id);
+      return { ok: false as const, reason: "This payment request has expired." };
+    }
+
+    const { data: card } = await supabaseAdmin
+      .from("business_cards")
+      .select("commerce_enabled, payout_provider, payout_url")
+      .eq("user_id", req.seller_id)
+      .maybeSingle();
+    if (!card?.commerce_enabled || !card.payout_url) {
+      return { ok: false as const, reason: "This seller has not switched on payments yet." };
+    }
+
+    const unit = Number(req.amount);
+    const s = settle(unit, req.quantity, card.payout_provider);
+
+    const { data: order, error } = await supabaseAdmin
+      .from("card_orders")
+      .insert({
+        listing_id: req.listing_id,
+        seller_id: req.seller_id,
+        buyer_name: data.buyer_name ?? req.buyer_name ?? null,
+        buyer_email: data.buyer_email ?? req.buyer_email ?? null,
+        quantity: req.quantity,
+        unit_price: unit,
+        subtotal: s.gross,
+        platform_fee: s.platformFee,
+        processing_fee_estimate: s.processingFeeEstimate,
+        net_to_seller: s.netToSeller,
+        currency: req.currency,
+        status: "pending",
+        payout_provider: card.payout_provider,
+        reference: `${req.kind}: ${req.title}`.slice(0, 240),
+      })
+      .select()
+      .single();
+    if (error) throw error;
+
+    // Inventory follows the sale automatically when a listing is attached.
+    if (req.listing_id) {
+      const { data: listing } = await supabaseAdmin
+        .from("card_listings")
+        .select("quantity, sold")
+        .eq("id", req.listing_id)
+        .maybeSingle();
+      if (listing) {
+        const sold = (listing.sold ?? 0) + req.quantity;
+        const soldOut = listing.quantity != null && sold >= listing.quantity;
+        await supabaseAdmin
+          .from("card_listings")
+          .update({ sold, status: soldOut ? "sold_out" : "live" })
+          .eq("id", req.listing_id);
+      }
+    }
+
+    await supabaseAdmin
+      .from("payment_requests")
+      .update({ status: "paid", paid_at: new Date().toISOString(), order_id: order.id })
+      .eq("id", req.id);
+
+    await supabaseAdmin
+      .from("business_card_events")
+      .insert({ card_user_id: req.seller_id, kind: "sale", detail: req.title.slice(0, 120) });
+
+    return {
+      ok: true as const,
+      order_id: order.id,
+      pay_url: card.payout_url,
+      provider: card.payout_provider,
+      total: s.gross,
+      currency: req.currency,
+    };
+  });
+
+export const declinePaymentRequest = createServerFn({ method: "POST" })
+  .inputValidator((d: { token: string }) =>
+    z.object({ token: z.string().trim().min(6).max(64) }).parse(d),
+  )
+  .handler(async ({ data }) => {
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    await supabaseAdmin
+      .from("payment_requests")
+      .update({ status: "declined" })
+      .eq("token", data.token)
+      .eq("status", "pending");
+    return { ok: true as const };
+  });
