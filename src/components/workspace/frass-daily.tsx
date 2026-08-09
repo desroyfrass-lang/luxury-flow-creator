@@ -150,8 +150,15 @@ export function FrassDaily({
   /** The Daily is navigable by conversation, not clicks alone. */
   const runIntent = (said: string) => {
     if (!said) return;
+    // "Frassy, what's next?" — always answer with the highest-priority open step.
+    if (/what'?s?\s+next|next\s+(thing|task|step)/i.test(said)) {
+      setCommand("");
+      setCommandNote(nextLine(steps));
+      return;
+    }
     const result = resolveDailyCommand(said, model);
     setCommand("");
+
     if (!result) {
       setCommandNote("I didn't catch a destination in that. Try “show me the orders”, “continue yesterday's work”, or “open Marketplace”.");
       return;
