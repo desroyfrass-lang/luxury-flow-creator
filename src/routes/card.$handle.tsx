@@ -65,7 +65,8 @@ function Fallback({ title }: { title: string }) {
 }
 
 function PublicCard() {
-  const { profile, card, live, affiliate, products } = Route.useLoaderData();
+  const { profile, card, live, affiliate, products, listings, commerceEnabled } =
+    Route.useLoaderData();
   const handle = profile.handle ?? "";
   const name = profile.display_name ?? "Frass Builder";
   const theme = themeValue(card?.theme ?? "midnight");
