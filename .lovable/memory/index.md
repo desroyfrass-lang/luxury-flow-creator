@@ -39,6 +39,8 @@ Sightline rule: every building in Frass Hill must be visible before it is visite
 - [Frass OS Constitution v1.0](FRASS_OS_CONSTITUTION.md) — Foundational charter: mission, vision, Builder principles, district definitions, and constitutional oaths for every future contributor
 - [Original Frass visual direction](mem://design/original-frass-visual-direction) — Dark streetwear direction, block letters, chrome/gold brand cues, real uploaded logo assets
 - [Frass Vision Studios](mem://features/frass-vision-studios) — FRASS-0407 rebrand: full name vs FV Studios shorthand, usage rules, Studio District home
+- [Frass Vision Studios Network](mem://features/frass-vision-studios-network) — FRASS-0410: label/film/publishing company, royalty participation only on works published through the Network, Vision Partners, one modular Creator Agreement
+
 - [Frass spelling](mem://constraints/frass-spelling) — Brand is always "Frass" (two s's), never "Fras"
 - [Frassy Caribbean hospitality DNA](mem://design/frassy-caribbean-hospitality) — Frassy = digital Caribbean hospitality; subtle wit; anti-fraud posture; enforced in api/chat.ts SYSTEM_PROMPT
 - [Frassy Core Intelligence Engine O-22](mem://features/frassy-core-intelligence-o22) — COMPLETE: Frassy as the unified Builder companion, intelligence orchestration, and lifelong memory steward
