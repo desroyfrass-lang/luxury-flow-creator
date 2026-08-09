@@ -137,7 +137,7 @@ const HILL_NAV: NavGroup[] = [
     match: "/frass-hill",
     items: [
       { label: "Frass Hill", to: "/frass-hill", note: "Every district, in view" },
-      { label: "Town Square", to: "/welcome-hall", note: "The civic heart" },
+      { label: "Town Square", to: "/town-square", note: "The civic heart — people, businesses, stores, live" },
       { label: "For Us", to: "/for-us", note: "The Community Hall" },
       { label: "For Me", to: "/for-me", note: "Your own corner of the Hill" },
       { label: "Builder Vault", to: "/vault" },
