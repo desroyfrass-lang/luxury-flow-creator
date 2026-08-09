@@ -344,6 +344,23 @@ export function FrassyComposer({
           )}
         </div>
 
+        {voice && (
+          <button
+            type="button"
+            className={`ws-icon frassy-mic ${ptt.phase === "recording" ? "frassy-mic-live" : ""}`}
+            aria-label={ptt.phase === "recording" ? "Stop recording" : "Record audio into the chat"}
+            onClick={toggleDictation}
+          >
+            {ptt.phase === "transcribing" ? (
+              <Loader2 className="h-4 w-4 animate-spin" />
+            ) : (
+              <Mic className="h-4 w-4" />
+            )}
+          </button>
+        )}
+
+        {voice && <FrassyAvatar mood={mood} size={40} />}
+
         <textarea
           ref={textRef}
           rows={1}
@@ -379,7 +396,21 @@ export function FrassyComposer({
             <Send className="h-4 w-4" />
           </button>
         )}
+
+        {/* Far end of the box, away from Send — pause / resume Frassy's voice. */}
+        {voice && (
+          <button
+            type="button"
+            className="ws-icon frassy-pause"
+            aria-label={ptt.isPaused ? "Resume Frassy" : "Pause Frassy"}
+            onClick={ptt.togglePause}
+            disabled={!ptt.isSpeaking && !ptt.isPaused}
+          >
+            {ptt.isPaused ? <Play className="h-4 w-4" /> : <Pause className="h-4 w-4" />}
+          </button>
+        )}
       </form>
+
     </div>
   );
 }
