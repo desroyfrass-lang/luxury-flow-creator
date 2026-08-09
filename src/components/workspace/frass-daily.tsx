@@ -795,6 +795,79 @@ export function FrassDaily({
 
         <div className="daily-footer">
           <button type="button" className="daily-enter" onClick={onDismiss}>
+        {/* 2 & 7 · The Last Button — Close My Day, and the celebration that follows */}
+        <section className="daily-close" data-blueprint="daily-close">
+          {!closed ? (
+            <>
+              <h2 className="daily-h2">
+                <Moon className="mr-2 inline h-4 w-4" /> Ready to finish?
+              </h2>
+              <p className="ws-meta">{DAILY_PHILOSOPHY}</p>
+              <div className="daily-brief-card-actions">
+                <button
+                  type="button"
+                  className="daily-enter"
+                  onClick={() => {
+                    closeDay();
+                    setClosed(true);
+                  }}
+                >
+                  Close My Day
+                </button>
+                <button type="button" className="ws-chip" onClick={() => setFocus(true)}>
+                  <Focus className="h-3.5 w-3.5" /> Focus Mode
+                </button>
+              </div>
+            </>
+          ) : (
+            <div className="daily-celebrate">
+              <h2 className="daily-brief-greet">{report.headline}</h2>
+              <ul className="daily-brief-lines">
+                {report.lines.map((l) => (
+                  <li key={l}>{l}</li>
+                ))}
+              </ul>
+              {report.accomplishments.length > 0 && (
+                <>
+                  <span className="ws-meta">What you accomplished</span>
+                  <ul className="daily-brief-lines">
+                    {report.accomplishments.map((a) => (
+                      <li key={a}>🟢 {a}</li>
+                    ))}
+                  </ul>
+                </>
+              )}
+              {report.tomorrow.length > 0 && (
+                <>
+                  <span className="ws-meta">Waiting for tomorrow</span>
+                  <ul className="daily-brief-lines">
+                    {report.tomorrow.map((t) => (
+                      <li key={t}>• {t}</li>
+                    ))}
+                  </ul>
+                </>
+              )}
+              <div className="daily-brief-card-actions">
+                <button type="button" className="daily-enter" onClick={onDismiss}>
+                  Rest well — enter my workspace
+                </button>
+                <button
+                  type="button"
+                  className="ws-chip"
+                  onClick={() => {
+                    reopenDay();
+                    setClosed(false);
+                  }}
+                >
+                  Reopen my day
+                </button>
+              </div>
+            </div>
+          )}
+        </section>
+
+        <div className="daily-footer">
+          <button type="button" className="daily-enter" onClick={onDismiss}>
             Enter my workspace
           </button>
           <p className="ws-meta">
@@ -804,6 +877,7 @@ export function FrassDaily({
       </div>
 
       {/* FRASS-0400 — the Frassy Workspace Composer, docked in The Daily */}
+
       <div className="daily-dock">
         {commandNote && <p className="ws-meta daily-command-note">{commandNote}</p>}
         <FrassyComposer
