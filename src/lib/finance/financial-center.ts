@@ -174,6 +174,7 @@ export type FinanceTabId =
   | "withdrawals"
   | "business"
   | "statements"
+  | "audit"
   | "trust"
   | "settings";
 
@@ -278,6 +279,20 @@ export const FINANCE_TABS: FinanceTab[] = [
     icon: "📄",
     blurb: "Monthly and annual statements, exports, audit reports.",
     sections: ["Monthly reports", "Annual reports", "Transaction history", "CSV export", "PDF export", "Audit reports"],
+    visible: always,
+  },
+  {
+    id: "audit",
+    label: "Receipts & Audit",
+    icon: "🧾",
+    blurb: "FRASS-0433 — every dollar in and out, with a receipt and a plain-English explanation.",
+    sections: [
+      "Financial timeline",
+      "Receipt detail",
+      "Reconciliation",
+      "Adjustments",
+      "Frassy financial assistant",
+    ],
     visible: always,
   },
   {
