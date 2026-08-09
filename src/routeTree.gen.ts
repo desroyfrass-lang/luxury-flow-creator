@@ -55,6 +55,7 @@ import { Route as FrassKicksIndexRouteImport } from './routes/frass-kicks.index'
 import { Route as FrassDripIndexRouteImport } from './routes/frass-drip.index'
 import { Route as CapsulesIndexRouteImport } from './routes/capsules.index'
 import { Route as BridalIndexRouteImport } from './routes/bridal.index'
+import { Route as BrandPartnershipsIndexRouteImport } from './routes/brand-partnerships.index'
 import { Route as BlogIndexRouteImport } from './routes/blog.index'
 import { Route as BareDripIndexRouteImport } from './routes/bare-drip.index'
 import { Route as AfroDesignersIndexRouteImport } from './routes/afro-designers.index'
@@ -132,6 +133,9 @@ import { Route as FrassKidsSegmentKicksRouteImport } from './routes/frass-kids.$
 import { Route as FrassKidsSegmentCollectionRouteImport } from './routes/frass-kids.$segment.$collection'
 import { Route as FrassDripWomenCategoryRouteImport } from './routes/frass-drip.women.$category'
 import { Route as FrassDripMenCategoryRouteImport } from './routes/frass-drip.men.$category'
+import { Route as BrandPartnershipsCreatorsCreatorRouteImport } from './routes/brand-partnerships.creators.$creator'
+import { Route as BrandPartnershipsCampaignsCampaignRouteImport } from './routes/brand-partnerships.campaigns.$campaign'
+import { Route as BrandPartnershipsBrandsBrandRouteImport } from './routes/brand-partnerships.brands.$brand'
 import { Route as BareDripWomenCategoryRouteImport } from './routes/bare-drip.women.$category'
 import { Route as BareDripMenCategoryRouteImport } from './routes/bare-drip.men.$category'
 import { Route as AfroDesignersDesignersSlugRouteImport } from './routes/afro-designers.designers.$slug'
@@ -390,6 +394,11 @@ const BridalIndexRoute = BridalIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => BridalRoute,
+} as any)
+const BrandPartnershipsIndexRoute = BrandPartnershipsIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => BrandPartnershipsRoute,
 } as any)
 const BlogIndexRoute = BlogIndexRouteImport.update({
   id: '/',
@@ -789,6 +798,24 @@ const FrassDripMenCategoryRoute = FrassDripMenCategoryRouteImport.update({
   path: '/$category',
   getParentRoute: () => FrassDripMenRoute,
 } as any)
+const BrandPartnershipsCreatorsCreatorRoute =
+  BrandPartnershipsCreatorsCreatorRouteImport.update({
+    id: '/creators/$creator',
+    path: '/creators/$creator',
+    getParentRoute: () => BrandPartnershipsRoute,
+  } as any)
+const BrandPartnershipsCampaignsCampaignRoute =
+  BrandPartnershipsCampaignsCampaignRouteImport.update({
+    id: '/campaigns/$campaign',
+    path: '/campaigns/$campaign',
+    getParentRoute: () => BrandPartnershipsRoute,
+  } as any)
+const BrandPartnershipsBrandsBrandRoute =
+  BrandPartnershipsBrandsBrandRouteImport.update({
+    id: '/brands/$brand',
+    path: '/brands/$brand',
+    getParentRoute: () => BrandPartnershipsRoute,
+  } as any)
 const BareDripWomenCategoryRoute = BareDripWomenCategoryRouteImport.update({
   id: '/$category',
   path: '/$category',
@@ -964,7 +991,7 @@ export interface FileRoutesByFullPath {
   '/auth': typeof AuthRoute
   '/bare-drip': typeof BareDripRouteWithChildren
   '/blog': typeof BlogRouteWithChildren
-  '/brand-partnerships': typeof BrandPartnershipsRoute
+  '/brand-partnerships': typeof BrandPartnershipsRouteWithChildren
   '/bridal': typeof BridalRouteWithChildren
   '/bridal-boutique': typeof BridalBoutiqueRoute
   '/capsules': typeof CapsulesRouteWithChildren
@@ -1049,6 +1076,7 @@ export interface FileRoutesByFullPath {
   '/afro-designers/': typeof AfroDesignersIndexRoute
   '/bare-drip/': typeof BareDripIndexRoute
   '/blog/': typeof BlogIndexRoute
+  '/brand-partnerships/': typeof BrandPartnershipsIndexRoute
   '/bridal/': typeof BridalIndexRoute
   '/capsules/': typeof CapsulesIndexRoute
   '/frass-drip/': typeof FrassDripIndexRoute
@@ -1087,6 +1115,9 @@ export interface FileRoutesByFullPath {
   '/afro-designers/designers/$slug': typeof AfroDesignersDesignersSlugRoute
   '/bare-drip/men/$category': typeof BareDripMenCategoryRoute
   '/bare-drip/women/$category': typeof BareDripWomenCategoryRoute
+  '/brand-partnerships/brands/$brand': typeof BrandPartnershipsBrandsBrandRoute
+  '/brand-partnerships/campaigns/$campaign': typeof BrandPartnershipsCampaignsCampaignRoute
+  '/brand-partnerships/creators/$creator': typeof BrandPartnershipsCreatorsCreatorRoute
   '/frass-drip/men/$category': typeof FrassDripMenCategoryRoute
   '/frass-drip/women/$category': typeof FrassDripWomenCategoryRoute
   '/frass-kids/$segment/$collection': typeof FrassKidsSegmentCollectionRoute
@@ -1114,7 +1145,6 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/arrival': typeof ArrivalRoute
   '/auth': typeof AuthRoute
-  '/brand-partnerships': typeof BrandPartnershipsRoute
   '/bridal-boutique': typeof BridalBoutiqueRoute
   '/checkout': typeof CheckoutRoute
   '/for-us': typeof ForUsRoute
@@ -1182,6 +1212,7 @@ export interface FileRoutesByTo {
   '/afro-designers': typeof AfroDesignersIndexRoute
   '/bare-drip': typeof BareDripIndexRoute
   '/blog': typeof BlogIndexRoute
+  '/brand-partnerships': typeof BrandPartnershipsIndexRoute
   '/bridal': typeof BridalIndexRoute
   '/capsules': typeof CapsulesIndexRoute
   '/frass-drip': typeof FrassDripIndexRoute
@@ -1220,6 +1251,9 @@ export interface FileRoutesByTo {
   '/afro-designers/designers/$slug': typeof AfroDesignersDesignersSlugRoute
   '/bare-drip/men/$category': typeof BareDripMenCategoryRoute
   '/bare-drip/women/$category': typeof BareDripWomenCategoryRoute
+  '/brand-partnerships/brands/$brand': typeof BrandPartnershipsBrandsBrandRoute
+  '/brand-partnerships/campaigns/$campaign': typeof BrandPartnershipsCampaignsCampaignRoute
+  '/brand-partnerships/creators/$creator': typeof BrandPartnershipsCreatorsCreatorRoute
   '/frass-drip/men/$category': typeof FrassDripMenCategoryRoute
   '/frass-drip/women/$category': typeof FrassDripWomenCategoryRoute
   '/frass-kids/$segment/$collection': typeof FrassKidsSegmentCollectionRoute
@@ -1252,7 +1286,7 @@ export interface FileRoutesById {
   '/auth': typeof AuthRoute
   '/bare-drip': typeof BareDripRouteWithChildren
   '/blog': typeof BlogRouteWithChildren
-  '/brand-partnerships': typeof BrandPartnershipsRoute
+  '/brand-partnerships': typeof BrandPartnershipsRouteWithChildren
   '/bridal': typeof BridalRouteWithChildren
   '/bridal-boutique': typeof BridalBoutiqueRoute
   '/capsules': typeof CapsulesRouteWithChildren
@@ -1337,6 +1371,7 @@ export interface FileRoutesById {
   '/afro-designers/': typeof AfroDesignersIndexRoute
   '/bare-drip/': typeof BareDripIndexRoute
   '/blog/': typeof BlogIndexRoute
+  '/brand-partnerships/': typeof BrandPartnershipsIndexRoute
   '/bridal/': typeof BridalIndexRoute
   '/capsules/': typeof CapsulesIndexRoute
   '/frass-drip/': typeof FrassDripIndexRoute
@@ -1375,6 +1410,9 @@ export interface FileRoutesById {
   '/afro-designers/designers/$slug': typeof AfroDesignersDesignersSlugRoute
   '/bare-drip/men/$category': typeof BareDripMenCategoryRoute
   '/bare-drip/women/$category': typeof BareDripWomenCategoryRoute
+  '/brand-partnerships/brands/$brand': typeof BrandPartnershipsBrandsBrandRoute
+  '/brand-partnerships/campaigns/$campaign': typeof BrandPartnershipsCampaignsCampaignRoute
+  '/brand-partnerships/creators/$creator': typeof BrandPartnershipsCreatorsCreatorRoute
   '/frass-drip/men/$category': typeof FrassDripMenCategoryRoute
   '/frass-drip/women/$category': typeof FrassDripWomenCategoryRoute
   '/frass-kids/$segment/$collection': typeof FrassKidsSegmentCollectionRoute
@@ -1492,6 +1530,7 @@ export interface FileRouteTypes {
     | '/afro-designers/'
     | '/bare-drip/'
     | '/blog/'
+    | '/brand-partnerships/'
     | '/bridal/'
     | '/capsules/'
     | '/frass-drip/'
@@ -1530,6 +1569,9 @@ export interface FileRouteTypes {
     | '/afro-designers/designers/$slug'
     | '/bare-drip/men/$category'
     | '/bare-drip/women/$category'
+    | '/brand-partnerships/brands/$brand'
+    | '/brand-partnerships/campaigns/$campaign'
+    | '/brand-partnerships/creators/$creator'
     | '/frass-drip/men/$category'
     | '/frass-drip/women/$category'
     | '/frass-kids/$segment/$collection'
@@ -1557,7 +1599,6 @@ export interface FileRouteTypes {
     | '/'
     | '/arrival'
     | '/auth'
-    | '/brand-partnerships'
     | '/bridal-boutique'
     | '/checkout'
     | '/for-us'
@@ -1625,6 +1666,7 @@ export interface FileRouteTypes {
     | '/afro-designers'
     | '/bare-drip'
     | '/blog'
+    | '/brand-partnerships'
     | '/bridal'
     | '/capsules'
     | '/frass-drip'
@@ -1663,6 +1705,9 @@ export interface FileRouteTypes {
     | '/afro-designers/designers/$slug'
     | '/bare-drip/men/$category'
     | '/bare-drip/women/$category'
+    | '/brand-partnerships/brands/$brand'
+    | '/brand-partnerships/campaigns/$campaign'
+    | '/brand-partnerships/creators/$creator'
     | '/frass-drip/men/$category'
     | '/frass-drip/women/$category'
     | '/frass-kids/$segment/$collection'
@@ -1779,6 +1824,7 @@ export interface FileRouteTypes {
     | '/afro-designers/'
     | '/bare-drip/'
     | '/blog/'
+    | '/brand-partnerships/'
     | '/bridal/'
     | '/capsules/'
     | '/frass-drip/'
@@ -1817,6 +1863,9 @@ export interface FileRouteTypes {
     | '/afro-designers/designers/$slug'
     | '/bare-drip/men/$category'
     | '/bare-drip/women/$category'
+    | '/brand-partnerships/brands/$brand'
+    | '/brand-partnerships/campaigns/$campaign'
+    | '/brand-partnerships/creators/$creator'
     | '/frass-drip/men/$category'
     | '/frass-drip/women/$category'
     | '/frass-kids/$segment/$collection'
@@ -1849,7 +1898,7 @@ export interface RootRouteChildren {
   AuthRoute: typeof AuthRoute
   BareDripRoute: typeof BareDripRouteWithChildren
   BlogRoute: typeof BlogRouteWithChildren
-  BrandPartnershipsRoute: typeof BrandPartnershipsRoute
+  BrandPartnershipsRoute: typeof BrandPartnershipsRouteWithChildren
   BridalRoute: typeof BridalRouteWithChildren
   BridalBoutiqueRoute: typeof BridalBoutiqueRoute
   CapsulesRoute: typeof CapsulesRouteWithChildren
@@ -2214,6 +2263,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/bridal/'
       preLoaderRoute: typeof BridalIndexRouteImport
       parentRoute: typeof BridalRoute
+    }
+    '/brand-partnerships/': {
+      id: '/brand-partnerships/'
+      path: '/'
+      fullPath: '/brand-partnerships/'
+      preLoaderRoute: typeof BrandPartnershipsIndexRouteImport
+      parentRoute: typeof BrandPartnershipsRoute
     }
     '/blog/': {
       id: '/blog/'
@@ -2754,6 +2810,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof FrassDripMenCategoryRouteImport
       parentRoute: typeof FrassDripMenRoute
     }
+    '/brand-partnerships/creators/$creator': {
+      id: '/brand-partnerships/creators/$creator'
+      path: '/creators/$creator'
+      fullPath: '/brand-partnerships/creators/$creator'
+      preLoaderRoute: typeof BrandPartnershipsCreatorsCreatorRouteImport
+      parentRoute: typeof BrandPartnershipsRoute
+    }
+    '/brand-partnerships/campaigns/$campaign': {
+      id: '/brand-partnerships/campaigns/$campaign'
+      path: '/campaigns/$campaign'
+      fullPath: '/brand-partnerships/campaigns/$campaign'
+      preLoaderRoute: typeof BrandPartnershipsCampaignsCampaignRouteImport
+      parentRoute: typeof BrandPartnershipsRoute
+    }
+    '/brand-partnerships/brands/$brand': {
+      id: '/brand-partnerships/brands/$brand'
+      path: '/brands/$brand'
+      fullPath: '/brand-partnerships/brands/$brand'
+      preLoaderRoute: typeof BrandPartnershipsBrandsBrandRouteImport
+      parentRoute: typeof BrandPartnershipsRoute
+    }
     '/bare-drip/women/$category': {
       id: '/bare-drip/women/$category'
       path: '/$category'
@@ -3159,6 +3236,24 @@ const BlogRouteChildren: BlogRouteChildren = {
 
 const BlogRouteWithChildren = BlogRoute._addFileChildren(BlogRouteChildren)
 
+interface BrandPartnershipsRouteChildren {
+  BrandPartnershipsIndexRoute: typeof BrandPartnershipsIndexRoute
+  BrandPartnershipsBrandsBrandRoute: typeof BrandPartnershipsBrandsBrandRoute
+  BrandPartnershipsCampaignsCampaignRoute: typeof BrandPartnershipsCampaignsCampaignRoute
+  BrandPartnershipsCreatorsCreatorRoute: typeof BrandPartnershipsCreatorsCreatorRoute
+}
+
+const BrandPartnershipsRouteChildren: BrandPartnershipsRouteChildren = {
+  BrandPartnershipsIndexRoute: BrandPartnershipsIndexRoute,
+  BrandPartnershipsBrandsBrandRoute: BrandPartnershipsBrandsBrandRoute,
+  BrandPartnershipsCampaignsCampaignRoute:
+    BrandPartnershipsCampaignsCampaignRoute,
+  BrandPartnershipsCreatorsCreatorRoute: BrandPartnershipsCreatorsCreatorRoute,
+}
+
+const BrandPartnershipsRouteWithChildren =
+  BrandPartnershipsRoute._addFileChildren(BrandPartnershipsRouteChildren)
+
 interface BridalRouteChildren {
   BridalCollectionsRoute: typeof BridalCollectionsRoute
   BridalJourneyRoute: typeof BridalJourneyRoute
@@ -3431,7 +3526,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthRoute: AuthRoute,
   BareDripRoute: BareDripRouteWithChildren,
   BlogRoute: BlogRouteWithChildren,
-  BrandPartnershipsRoute: BrandPartnershipsRoute,
+  BrandPartnershipsRoute: BrandPartnershipsRouteWithChildren,
   BridalRoute: BridalRouteWithChildren,
   BridalBoutiqueRoute: BridalBoutiqueRoute,
   CapsulesRoute: CapsulesRouteWithChildren,
