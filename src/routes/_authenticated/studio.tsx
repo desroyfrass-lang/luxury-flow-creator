@@ -200,12 +200,16 @@ function StudioPage() {
                 want to take the controls.
               </p>
             </div>
-            <CreditMeter
-              balance={w?.balance ?? 0}
-              today={w?.today_used ?? 0}
-              month={w?.month_used ?? 0}
-              projected={projected}
-            />
+            <div className="flex flex-col items-end gap-3">
+              <CreditMeter
+                balance={w?.balance ?? 0}
+                today={w?.today_used ?? 0}
+                month={w?.month_used ?? 0}
+                projected={projected}
+              />
+              {/* FRASS-0412 — temporary launch feedback program */}
+              <VoiceFeedbackButton source="studio" />
+            </div>
           </header>
 
           <div className="grid gap-6 lg:grid-cols-[260px_minmax(0,1fr)_300px]">
