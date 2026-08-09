@@ -20,6 +20,7 @@ import { useIsAdminStatus } from "@/hooks/use-is-admin";
 import { FrassyComposer } from "@/components/workspace/frassy-composer";
 import { usePushToTalk } from "@/hooks/use-push-to-talk";
 import { SpeechControls } from "@/components/voice/speech-controls";
+import { VoiceFeedbackButton } from "@/components/feedback/voice-feedback";
 
 type ProductCard = {
   handle: string;
@@ -410,6 +411,11 @@ export function FrassyChat({ embedded = false }: { embedded?: boolean } = {}) {
           <SpeechControls />
         </div>
       ) : null}
+
+      {/* FRASS-0412 — temporary launch feedback program */}
+      <div className="border-t border-white/10 px-3 py-2">
+        <VoiceFeedbackButton source="chat" />
+      </div>
 
       <FrassyComposer
         value={input}

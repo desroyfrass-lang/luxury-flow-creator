@@ -22,6 +22,7 @@ import {
 } from "lucide-react";
 import { SiteShell } from "@/components/site-shell";
 import { PhoneContentMode } from "@/components/studio/phone-content-mode";
+import { VoiceFeedbackButton } from "@/components/feedback/voice-feedback";
 import { ExportWatermarkPanel } from "@/components/studio/export-watermark";
 import type { QualityReport } from "@/lib/studio/phone-content-mode";
 import { FREE_CAPABILITIES, formatDuration, unitLabel, usdFor } from "@/lib/studio/credits";
