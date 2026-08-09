@@ -152,10 +152,10 @@ function ForMePage() {
                 className="chrome-glow overflow-hidden rounded-2xl bg-black/40 p-6 ring-1 ring-white/10"
               >
                 <span className="text-[10px] uppercase tracking-[0.28em] text-[color:var(--gold)]">
-                  {story.source ?? "Frass Hill"}
+                  {story.source}
                 </span>
                 <h3 className="mt-3 text-lg font-bold">{story.title}</h3>
-                <p className="mt-2 text-sm leading-relaxed text-white/80">{story.summary}</p>
+                <p className="mt-2 text-sm leading-relaxed text-white/80">{story.body}</p>
               </article>
             ))}
 
