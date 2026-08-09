@@ -255,7 +255,7 @@ export function FrassyChat({ embedded = false }: { embedded?: boolean } = {}) {
             </div>
           </div>
         </div>
-        <div className="flex items-center gap-1">
+        <div className="flex shrink-0 items-center gap-1">
           {/* Voice: tap to let Frassy speak her replies aloud, or mute her. */}
           <button
             type="button"
