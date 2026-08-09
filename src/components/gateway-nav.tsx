@@ -112,6 +112,46 @@ const SHOP_NAV: NavGroup[] = [
       { label: "Parent Dashboard", to: "/kids-world/parents" },
     ],
   },
+
+  { label: "Social Media Virals", to: "/social-media-virals", match: "/social-media-virals" },
+  {
+    label: "Shopping Extras",
+    to: "/sales-clearance",
+    match: "/sales-clearance",
+    items: [
+      { label: "The Liquidation Room", to: "/sales-clearance", note: "Sale · Vault · Lucky Spin" },
+      { label: "Capsules", to: "/capsules" },
+      { label: "Lookbook", to: "/lookbook" },
+      { label: "Visual Search", to: "/visual-search" },
+      { label: "Rewards", to: "/rewards" },
+    ],
+  },
+];
+
+/** Frass Hill — the town. Community, learning, studios, land and wellbeing. */
+const HILL_NAV: NavGroup[] = [
+  {
+    label: "The Town Plan",
+    to: "/frass-hill",
+    match: "/frass-hill",
+    items: [
+      { label: "Frass Hill", to: "/frass-hill", note: "Every district, in view" },
+      { label: "Town Square", to: "/welcome-hall", note: "The civic heart" },
+      { label: "For Us", to: "/for-us", note: "The Community Hall" },
+      { label: "Builder Vault", to: "/vault" },
+    ],
+  },
+  {
+    label: "Health & Wellness",
+    to: "/health-wellness",
+    match: "/health-wellness",
+    editorial: true,
+    items: [
+      { label: "The Centre", to: "/health-wellness", note: "The mountain sanctuary" },
+      { label: "🌿 Frass Wellness", to: "/health-wellness", note: "Everyday care — free" },
+      { label: "🩺 Frass Care Network", to: "/health-wellness", note: "Verified professionals" },
+    ],
+  },
   {
     label: "Kids World",
     to: "/kids-world",
@@ -125,8 +165,6 @@ const SHOP_NAV: NavGroup[] = [
       { label: "Parent Dashboard", to: "/kids-world/parents" },
     ],
   },
-
-  { label: "Social Media Virals", to: "/social-media-virals", match: "/social-media-virals" },
   {
     label: "FV Studios",
     to: "/studio",
@@ -139,34 +177,42 @@ const SHOP_NAV: NavGroup[] = [
       { label: "Brand Partnerships", to: "/brand-partnerships", note: "Paid campaigns — faceless friendly" },
     ],
   },
-
   {
-    label: "Discover",
-    to: "/frass-hill",
-    match: "/frass-hill",
+    label: "Community",
+    to: "/for-us",
+    match: "/for-us",
     items: [
-      { label: "The Liquidation Room", to: "/sales-clearance", note: "Sale · Vault · Lucky Spin" },
-      { label: "Capsules", to: "/capsules" },
-      { label: "Lookbook", to: "/lookbook" },
+      { label: "For Us", to: "/for-us", note: "Today's community stories" },
+      { label: "Opportunity Centre", to: "/opportunity" },
+      { label: "Academy", to: "/academy" },
       { label: "Brand Journal", to: "/blog" },
       { label: "Music & Media", to: "/music-media" },
-      { label: "Visual Search", to: "/visual-search" },
-      { label: "Rewards", to: "/rewards" },
-      { label: "Frass Hill Town Plan", to: "/frass-hill" },
     ],
   },
 ];
 
-/** Always-visible destinations on the bar itself. */
-const PRIMARY: { label: string; to: string; match: string; editorial?: boolean }[] = [
+/** Always-visible destinations on the bar — commerce side. */
+const SHOP_PRIMARY: { label: string; to: string; match: string; editorial?: boolean }[] = [
   { label: "Frass District", to: "/frass-district", match: "/frass-district" },
   { label: "Afro Designers", to: "/afro-designers", match: "/afro-designers", editorial: true },
   { label: "Frass Luxury House", to: "/frass-luxury-house", match: "/frass-luxury-house", editorial: true },
   { label: "Frass Bridal", to: "/bridal", match: "/bridal", editorial: true },
   { label: "Frass Plus+", to: "/frass-plus", match: "/frass-plus" },
   { label: "Frass Kids", to: "/frass-kids", match: "/frass-kids" },
+  { label: "The Liquidation Room", to: "/sales-clearance", match: "/sales-clearance" },
+];
+
+/** Always-visible destinations on the bar — Frass Hill side. */
+const HILL_PRIMARY: { label: string; to: string; match: string; editorial?: boolean }[] = [
+  { label: "Frass Hill", to: "/frass-hill", match: "/frass-hill" },
+  { label: "Town Square", to: "/welcome-hall", match: "/welcome-hall" },
+  { label: "For Us", to: "/for-us", match: "/for-us" },
+  { label: "Health & Wellness", to: "/health-wellness", match: "/health-wellness", editorial: true },
+  { label: "Kids World", to: "/kids-world", match: "/kids-world" },
+  { label: "FV Studios", to: "/studio", match: "/studio", editorial: true },
   { label: "Frass Radio", to: "/frass-radio", match: "/frass-radio", editorial: true },
 ];
+
 
 
 export function GatewayNav({ mode }: { mode: "shop" | "world" }) {
