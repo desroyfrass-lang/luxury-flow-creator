@@ -17,6 +17,7 @@ import {
   settle,
   type ListingKind,
 } from "@/lib/card-commerce";
+import { uploadCardPhoto } from "@/lib/card-media";
 import {
   createListing,
   listMyCardOrders,
