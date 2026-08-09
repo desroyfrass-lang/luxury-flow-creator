@@ -218,6 +218,9 @@ const HILL_PRIMARY: { label: string; to: string; match: string; editorial?: bool
 export function GatewayNav({ mode }: { mode: "shop" | "world" }) {
   const path = useRouterState({ select: (r) => r.location.pathname });
   const [mobileOpen, setMobileOpen] = useState(false);
+  // FRASS-0414: the bar shows the navigation of the place you are standing in.
+  const PRIMARY = mode === "world" ? HILL_PRIMARY : SHOP_PRIMARY;
+  const NAV = mode === "world" ? HILL_NAV : SHOP_NAV;
 
   useEffect(() => {
     setMobileOpen(false);
