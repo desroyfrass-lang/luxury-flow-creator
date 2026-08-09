@@ -236,6 +236,30 @@
   transform: scale(1.42);
 }
 
+.media-hero-stage-wide {
+  height: 92vh;
+  min-height: 520px;
+}
+
+.media-hero-sticky-wide {
+  height: min(58vh, 620px);
+  min-height: 300px;
+}
+
+/* The Radio banner shows the mural end to end — nothing cropped off the sides. */
+.media-wide-focus {
+  object-fit: cover;
+  object-position: center;
+  transform: none;
+}
+
+@media (min-width: 1024px) {
+  .media-wide-focus {
+    object-fit: contain;
+    background: oklch(0.07 0.01 260);
+  }
+}
+
 .media-mural-focus {
   object-position: center;
   transform: scale(1.04);
