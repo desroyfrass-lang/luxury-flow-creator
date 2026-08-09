@@ -252,9 +252,10 @@ export function WorkspaceShell({
                 <Search className="h-4 w-4" />
                 <span className="flex-1 text-left">Search</span>
               </button>
-              <Link to="/workspace/profile" className="ws-nav">
+              {/* FRASS-0428A — there is no "profile" on Frass. It is your Frass Card. */}
+              <Link to="/workspace/card" className="ws-nav">
                 <User className="h-4 w-4" />
-                <span className="flex-1 text-left">Profile</span>
+                <span className="flex-1 text-left">My Frass Card</span>
               </Link>
               {/* FRASS-0412 — temporary launch feedback program */}
               <div className="px-2 py-1">
