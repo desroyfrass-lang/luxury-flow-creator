@@ -548,6 +548,24 @@
    The room should feel like a professional office, not a terminal.
    ───────────────────────────────────────────────────────────────────────── */
 .frass-workspace {
+  /* FRASS-0440 — the workspace is a LIGHT room. Re-map the global (dark)
+     tokens here so any shared component dropped into The Daily inherits paper
+     instead of punching a black slab through the ivory surface. */
+  --background: oklch(0.97 0.008 85);
+  --foreground: oklch(0.24 0.012 60);
+  --card: oklch(0.99 0.005 90);
+  --card-foreground: oklch(0.24 0.012 60);
+  --popover: oklch(0.99 0.005 90);
+  --popover-foreground: oklch(0.24 0.012 60);
+  --secondary: oklch(0.94 0.008 85);
+  --secondary-foreground: oklch(0.24 0.012 60);
+  --muted: oklch(0.94 0.008 85);
+  --muted-foreground: oklch(0.52 0.012 70);
+  --border: oklch(0.24 0.012 60 / 0.14);
+  --input: oklch(0.24 0.012 60 / 0.18);
+  --primary: oklch(0.24 0.012 60);
+  --primary-foreground: oklch(0.99 0.005 90);
+
   --ws-bg: oklch(0.97 0.008 85);
   --ws-panel: oklch(0.99 0.005 90);
   --ws-line: oklch(0.88 0.012 85);
@@ -560,6 +578,21 @@
   font-size: 16px;
 }
 .frass-workspace.ws-dark {
+  --background: oklch(0.19 0.008 70);
+  --foreground: oklch(0.95 0.008 85);
+  --card: oklch(0.23 0.01 70);
+  --card-foreground: oklch(0.95 0.008 85);
+  --popover: oklch(0.23 0.01 70);
+  --popover-foreground: oklch(0.95 0.008 85);
+  --secondary: oklch(0.26 0.01 70);
+  --secondary-foreground: oklch(0.95 0.008 85);
+  --muted: oklch(0.26 0.01 70);
+  --muted-foreground: oklch(0.72 0.012 80);
+  --border: oklch(1 0 0 / 0.12);
+  --input: oklch(1 0 0 / 0.14);
+  --primary: oklch(0.95 0.008 85);
+  --primary-foreground: oklch(0.19 0.008 70);
+
   --ws-bg: oklch(0.19 0.008 70);
   --ws-panel: oklch(0.23 0.01 70);
   --ws-line: oklch(0.32 0.012 70);
@@ -688,8 +721,14 @@
 }
 .daily-overlay.is-in { opacity: 1; }
 .daily-overlay .daily-scroll {
+  /* FRASS-0440 — must sit ABOVE the fixed scenery layer, or the Daily reads
+     as a black screen with only the composer visible. */
+  position: relative; z-index: 2;
   height: calc(100% - 12.5rem); overflow-y: auto;
   padding: 2.25rem 1.25rem 2rem; max-width: 62rem; margin: 0 auto;
+}
+@media (max-width: 780px) {
+  .daily-overlay .daily-scroll { height: calc(100% - 9.5rem); padding: 1.4rem 1rem 1.5rem; }
 }
 .daily-overlay .daily-dock {
   position: absolute; left: 0; right: 0; bottom: 0; z-index: 96;
@@ -906,10 +945,12 @@ body.blueprint-on [data-blueprint]:hover {
   animation: hero-drift 60s ease-in-out infinite alternate;
 }
 .daily-overlay .daily-scene::after {
+  /* FRASS-0440 — tint with the WORKSPACE paper token, never the global site
+     --background (which is near-black and blacked the whole Daily out). */
   content: ""; position: absolute; inset: 0;
   background: linear-gradient(180deg,
-    color-mix(in srgb, var(--background) 88%, transparent),
-    color-mix(in srgb, var(--background) 94%, transparent));
+    color-mix(in srgb, var(--ws-bg) 84%, transparent),
+    color-mix(in srgb, var(--ws-bg) 92%, transparent));
 }
 
 /* Today's Progress */
@@ -1766,6 +1807,25 @@ a.ps-row:hover { border-color: color-mix(in srgb, var(--gold) 60%, transparent);
 .mini-widget-stat { display: flex; flex-direction: column; }
 .mini-widget-value { font-size: 1.25rem; font-weight: 900; line-height: 1; }
 .mini-widget-label { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.12em; color: var(--muted-foreground); }
+
+/* FRASS-0440 — inside the workspace / The Daily the card must sit on paper,
+   not punch a black slab through the ivory surface. */
+.frass-workspace .frass-card-widget {
+  background: var(--ws-panel);
+  border-color: var(--ws-line);
+  color: var(--ws-ink);
+  box-shadow: 0 1px 2px oklch(0 0 0 / 0.05);
+}
+.frass-workspace .frass-card-widget .mini-widget-status,
+.frass-workspace .frass-card-widget .mini-widget-label,
+.frass-workspace .frass-card-widget .living-card-role { color: var(--ws-soft); }
+.frass-workspace .frass-link-widget {
+  background: var(--ws-panel);
+  border-color: var(--ws-line);
+  color: var(--ws-ink);
+}
+.frass-workspace .frass-link-widget .frass-link-url { border-color: var(--ws-line); }
+
 
 /* FRASS-0429 — Pay is the universal payment door */
 .card-action.is-pay { border-color: color-mix(in oklab, var(--card-accent, var(--primary)) 60%, transparent); }
