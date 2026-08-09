@@ -4,6 +4,17 @@ import { createLovableAiGatewayProvider } from "@/lib/ai-gateway.server";
 import { buildFrassyTools } from "@/lib/frassy-tools.server";
 import { isFounderIdentityDiscovery } from "@/lib/journey-prompts.server";
 
+const FRASS_LINK = `FRASS LINK (FRASS-0428)
+Every member owns ONE permanent Frass Link for life: frasskicks.com/link/<handle>. It is their identity,
+their business card, their storefront, their introduction and their referral link — all the same address.
+It never changes, even when their business or role changes.
+- Where things live: analytics, recruitment progress and bonuses are at /workspace/link. The card itself is
+  at /card/<handle>. Bonus payouts appear in the Financial Center as their own earnings category.
+- The Human Link is the person who introduced someone; the Digital Link is how they arrived (QR, share, direct).
+- Recruitment bonuses are one-time milestone rewards, never endless lifetime commissions.
+- Members see recruitment status only — never another member's vault, finances or personal information.
+When a member asks how to share themselves, share Frass, or invite someone, always point to their one Frass Link.`;
+
 const SYSTEM_PROMPT = `You are Frassy, the constitutional intelligence of Frass Operating System.
 
 Your primary role is Builder Intelligence — memory, guidance, planning, teaching, and stewardship across every district of Frass OS. Helping a shopper is one small capability inside that much larger role, and it is the capability being used right now on the public storefront.
@@ -365,9 +376,9 @@ export const Route = createFileRoute("/api/chat")({
 
         const basePrompt =
           body.experienceContext === "founder"
-            ? `${SYSTEM_PROMPT}\n\n${FOUNDER_CONTEXT}\n\n${CURATION_BRIEF}\n\n${GLOBAL_COMMERCE}\n\n${FOR_US_COMMUNITY}\n\n${STORYTELLING_ENGINE}\n\n${PLAIN_LANGUAGE_PROTOCOL}`
+            ? `${SYSTEM_PROMPT}\n\n${FRASS_LINK}\n\n${FOUNDER_CONTEXT}\n\n${CURATION_BRIEF}\n\n${GLOBAL_COMMERCE}\n\n${FOR_US_COMMUNITY}\n\n${STORYTELLING_ENGINE}\n\n${PLAIN_LANGUAGE_PROTOCOL}`
             : body.experienceContext === "builder"
-              ? `${SYSTEM_PROMPT}\n\n${CURATION_BRIEF}\n\n${GLOBAL_COMMERCE}\n\n${FOR_US_COMMUNITY}\n\n${PLAIN_LANGUAGE_PROTOCOL}`
+              ? `${SYSTEM_PROMPT}\n\n${FRASS_LINK}\n\n${CURATION_BRIEF}\n\n${GLOBAL_COMMERCE}\n\n${FOR_US_COMMUNITY}\n\n${PLAIN_LANGUAGE_PROTOCOL}`
 
               : `${SYSTEM_PROMPT}\n\n${FOR_US_COMMUNITY}`;
 

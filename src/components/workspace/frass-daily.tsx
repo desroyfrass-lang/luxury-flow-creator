@@ -15,6 +15,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { X, Check, Sparkles, ArrowRight, HelpCircle, Coins, ListTree, Film, Focus, Sunrise, Moon } from "lucide-react";
 import { FrassyComposer } from "@/components/workspace/frassy-composer";
+import { FrassLinkWidget } from "@/components/link/frass-link-widget";
 import { getWallet } from "@/lib/studio.functions";
 import { usdFor } from "@/lib/studio/credits";
 import frassyAvatar from "@/assets/frassy-gold.png.asset.json";
@@ -328,6 +329,9 @@ export function FrassDaily({
             Turn the daily ritual back on
           </button>
         )}
+
+        {/* FRASS-0428 — the permanent Frass Link, always one tap away */}
+        <FrassLinkWidget context="The Daily" />
 
         {/* 1 · Morning Briefing — context before work, the way an assistant would give it */}
         {briefOpen && (

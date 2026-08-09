@@ -12,6 +12,7 @@ import { useEffect, type ReactNode } from "react";
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { Toaster } from "@/components/ui/sonner";
+import { WelcomeLinkClaim } from "@/components/link/welcome-link-claim";
 import { VoiceStateOverlay } from "@/components/voice-state-overlay";
 import { GlobalSpeechBar } from "@/components/voice/speech-controls";
 import { FrassyChat } from "@/components/frassy-chat";
@@ -132,6 +133,7 @@ function RootComponent() {
     <QueryClientProvider client={queryClient}>
       <RewardsRibbon />
       <Outlet />
+      <WelcomeLinkClaim />
       <Toaster position="top-center" />
       <FrassyChat />
       <FrassyHost />

@@ -58,6 +58,8 @@ function loadLast(key: string, fallback: string): string {
   return window.localStorage.getItem(key) ?? fallback;
 }
 
+import { FrassLinkWidget } from "@/components/link/frass-link-widget";
+
 export function WorkspaceRoom({
   roomName = "My Workspace",
   roomKind = "Frass OS workspace",
@@ -371,6 +373,10 @@ export function WorkspaceRoom({
             {` ${project.name}`}.
           </p>
         )}
+
+        <div className="mt-6">
+          <FrassLinkWidget context="My Workspace" />
+        </div>
 
         <div className="mt-6 space-y-4">
           {visible.map((s) => (
