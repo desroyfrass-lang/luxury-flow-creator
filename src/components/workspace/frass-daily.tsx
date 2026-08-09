@@ -127,6 +127,14 @@ export function FrassDaily({
 
   const day = useMemo(() => myDay(model, done, delegated), [model, done, delegated]);
 
+  /** FRASS-0425 — the numbered workday, the progress metre, the section statuses. */
+  const steps = useMemo(() => dailySteps(model, done, delegated), [model, done, delegated]);
+  const progress = useMemo(() => dailyProgress(steps), [steps]);
+  const statuses = useMemo(() => sectionStatuses(model, steps), [model, steps]);
+  const scene = SCENES[sceneIndexFor()];
+  const [briefingStep, setBriefingStep] = useState(0);
+
+
   /** FRASS-0402 — the AI credit balance travels with the Builder, not with a role. */
   const fetchWallet = useServerFn(getWallet);
   const wallet = useQuery({ queryKey: ["studio-wallet"], queryFn: () => fetchWallet(), staleTime: 60_000 });
