@@ -21,8 +21,9 @@ import {
   PRE_LAUNCH_REVIEW,
   moduleById,
   quotePublish,
-  type BuildPathId,
 } from "@/lib/business-builder";
+import { PUBLISH_OPTIONS, type PublishOptionId } from "@/lib/hosting";
+
 
 export const Route = createFileRoute("/_authenticated/business-builder")({
   head: () => ({
