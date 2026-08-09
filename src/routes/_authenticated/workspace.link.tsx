@@ -252,3 +252,37 @@ function Metric({ label, value }: { label: string; value: number | string }) {
     </div>
   );
 }
+
+/** FRASS-0429 — recruitment desk maths. Counts only, never estimates. */
+function recruitmentDesk(
+  referrals: Array<{ stage: string; created_at: string }>,
+  bonuses: Array<{ kind: string; amount: number | string; status: string }>,
+) {
+  const rank = (s: string) => REFERRAL_STAGES.findIndex((r) => r.id === s);
+  const active = referrals.filter((r) => rank(r.stage) >= 1).length;
+  const pending = referrals.filter((r) => rank(r.stage) <= 0).length;
+  const members = referrals.filter((r) => r.stage === "qualified_member").length;
+  const partners = referrals.filter((r) => rank(r.stage) >= 3).length;
+
+  const lifetime = bonuses.reduce((n, b) => n + Number(b.amount ?? 0), 0);
+  const campaign = bonuses
+    .filter((b) => b.status !== "paid")
+    .reduce((n, b) => n + Number(b.amount ?? 0), 0);
+
+  const earnedKinds = new Set(bonuses.map((b) => b.kind));
+  const next = BONUS_RULES.find((r) => !earnedKinds.has(r.kind)) ?? null;
+
+  const months: Array<{ month: string; count: number }> = [];
+  const now = new Date();
+  for (let i = 5; i >= 0; i -= 1) {
+    const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
+    const count = referrals.filter((r) => {
+      const c = new Date(r.created_at);
+      return c.getFullYear() === d.getFullYear() && c.getMonth() === d.getMonth();
+    }).length;
+    months.push({ month: d.toLocaleString(undefined, { month: "short" }), count });
+  }
+  const timeline = referrals.length === 0 ? [] : months;
+
+  return { active, pending, members, partners, lifetime, campaign, next, timeline };
+}
