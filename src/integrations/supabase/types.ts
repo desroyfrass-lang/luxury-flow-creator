@@ -2568,20 +2568,29 @@ export type Database = {
       payment_requests: {
         Row: {
           amount: number
+          attempts: number
           buyer_email: string | null
           buyer_name: string | null
           buyer_phone: string | null
+          cancelled_at: string | null
           created_at: string
           currency: string
+          declined_at: string | null
           delivery: string
+          expired_at: string | null
           expires_at: string | null
+          failure_reason: string | null
+          first_viewed_at: string | null
           id: string
+          idempotency_key: string | null
           kind: string
           listing_id: string | null
           note: string | null
           order_id: string | null
           paid_at: string | null
+          processing_started_at: string | null
           quantity: number
+          refunded_at: string | null
           seller_id: string
           status: string
           title: string
@@ -2590,20 +2599,29 @@ export type Database = {
         }
         Insert: {
           amount: number
+          attempts?: number
           buyer_email?: string | null
           buyer_name?: string | null
           buyer_phone?: string | null
+          cancelled_at?: string | null
           created_at?: string
           currency?: string
+          declined_at?: string | null
           delivery?: string
+          expired_at?: string | null
           expires_at?: string | null
+          failure_reason?: string | null
+          first_viewed_at?: string | null
           id?: string
+          idempotency_key?: string | null
           kind?: string
           listing_id?: string | null
           note?: string | null
           order_id?: string | null
           paid_at?: string | null
+          processing_started_at?: string | null
           quantity?: number
+          refunded_at?: string | null
           seller_id: string
           status?: string
           title: string
@@ -2612,20 +2630,29 @@ export type Database = {
         }
         Update: {
           amount?: number
+          attempts?: number
           buyer_email?: string | null
           buyer_name?: string | null
           buyer_phone?: string | null
+          cancelled_at?: string | null
           created_at?: string
           currency?: string
+          declined_at?: string | null
           delivery?: string
+          expired_at?: string | null
           expires_at?: string | null
+          failure_reason?: string | null
+          first_viewed_at?: string | null
           id?: string
+          idempotency_key?: string | null
           kind?: string
           listing_id?: string | null
           note?: string | null
           order_id?: string | null
           paid_at?: string | null
+          processing_started_at?: string | null
           quantity?: number
+          refunded_at?: string | null
           seller_id?: string
           status?: string
           title?: string
@@ -3725,6 +3752,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      expire_stale_payment_requests: { Args: never; Returns: number }
       get_active_partner_vendor_ids: {
         Args: { _user_id: string }
         Returns: string[]
