@@ -148,24 +148,42 @@ function LinkDashboard() {
         ) : (
           <div className="mt-4 space-y-2">
             {(dash?.referrals ?? []).map((r) => (
-              <div
-                key={r.id}
-                className="flex items-center justify-between gap-3 rounded-xl border border-border/60 p-3 text-sm"
-              >
-                <MemberIdentity
-                  handle={r.handle}
-                  name={r.display_name}
-                  avatarUrl={r.avatar_url}
-                  role={`${stageLabel(r.stage)} · arrived by ${r.source}`}
-                />
-                {r.handle && (
-                  <Link className="ws-chip text-xs" to="/card/$handle" params={{ handle: r.handle }}>
-                    Their Frass Card
-                  </Link>
+              <div key={r.id} className="rounded-xl border border-border/60 p-3 text-sm">
+                <div className="flex items-center justify-between gap-3">
+                  <MemberIdentity
+                    handle={r.handle}
+                    name={r.display_name}
+                    avatarUrl={r.avatar_url}
+                    role={`${stageLabel(r.stage)} · arrived by ${r.source}`}
+                  />
+                  {r.handle && (
+                    <Link className="ws-chip text-xs" to="/card/$handle" params={{ handle: r.handle }}>
+                      Their Frass Card
+                    </Link>
+                  )}
+                </div>
+
+                {/* The relationship timeline — alive, not statistical. */}
+                {(r.events ?? []).length > 0 && (
+                  <ol className="relationship-timeline">
+                    {r.events.map((e, i) => (
+                      <li key={`${e.label}-${i}`}>
+                        <span className="relationship-dot" aria-hidden />
+                        <span className="relationship-label">{e.label}</span>
+                        <time className="relationship-date" dateTime={e.at}>
+                          {new Date(e.at).toLocaleDateString(undefined, {
+                            month: "short",
+                            day: "numeric",
+                          })}
+                        </time>
+                      </li>
+                    ))}
+                  </ol>
                 )}
               </div>
             ))}
           </div>
+
         )}
         <p className="mt-3 text-xs text-muted-foreground">
           Privacy: you see recruitment status and bonus progress only. Never another member's vault,
