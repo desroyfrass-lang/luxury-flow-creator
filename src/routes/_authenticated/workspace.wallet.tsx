@@ -16,6 +16,7 @@ import {
 } from "lucide-react";
 import { PageFeedback } from "@/components/page-feedback";
 import { QuickSellPanel } from "@/components/card/quick-sell";
+import { RequestPaymentPanel } from "@/components/card/request-payment";
 import { FinancialTimeline } from "@/components/finance/financial-timeline";
 import { listMyReceipts } from "@/lib/finance/receipts.functions";
 
