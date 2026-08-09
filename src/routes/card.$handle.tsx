@@ -81,8 +81,9 @@ function PublicCard() {
     void recordCardEvent({ data: { handle, kind: scanned ? "qr_scan" : "view" } }).catch(() => {});
   }, [handle]);
 
-  const track = (kind: "website_click" | "affiliate_click" | "marketplace_click" | "booking") =>
-    void recordCardEvent({ data: { handle, kind } }).catch(() => {});
+  const track = (
+    kind: "website_click" | "affiliate_click" | "marketplace_click" | "booking" | "message",
+  ) => void recordCardEvent({ data: { handle, kind } }).catch(() => {});
 
   return (
     <main
