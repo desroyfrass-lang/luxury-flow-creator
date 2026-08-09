@@ -14,6 +14,8 @@ export const Route = createFileRoute("/music-media")({
       { name: "description", content: "Frass Hill music, mixes, visuals and media." },
       { property: "og:title", content: "Music & Media — Frass Hill" },
       { property: "og:description", content: "Latest drops, mixes, visuals and stories from the Frass Hill universe." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
   component: MusicMedia,

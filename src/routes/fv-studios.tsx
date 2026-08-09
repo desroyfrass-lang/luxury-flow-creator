@@ -17,7 +17,6 @@ import {
 } from "lucide-react";
 import { SiteShell } from "@/components/site-shell";
 import { CinematicMediaHero } from "@/components/cinematic-media-hero";
-import fvMonogram from "@/assets/fv-monogram.png.asset.json";
 import founderHero from "@/assets/frass-founder-studios-hero.jpg.asset.json";
 import {
   AGREEMENT_MODULES,

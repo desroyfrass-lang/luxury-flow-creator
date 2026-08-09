@@ -41,7 +41,7 @@ export function StudioEntryCard({ className = "" }: { className?: string }) {
             alt="Green and gold Jamaica music mural displayed in Frass Vision Studios"
             width={1376}
             height={768}
-            loading="lazy"
+            loading="eager"
             className="aspect-video w-full object-cover"
           />
           <div className="h-1 bg-gold" aria-hidden="true" />
