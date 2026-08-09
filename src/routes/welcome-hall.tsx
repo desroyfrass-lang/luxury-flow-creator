@@ -1,7 +1,9 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ArrowRight } from "lucide-react";
+import { useEffect, useState } from "react";
+import { ArrowRight, Volume2, VolumeX } from "lucide-react";
 import gateway from "@/assets/welcome-hall-gateway.jpg";
 import valley from "@/assets/kids-valley.jpg";
+import { ambienceEnabled, setAmbienceEnabled, startAmbience, stopAmbience } from "@/lib/for-us-ambience";
 
 /**
  * FRASS-0423 — Welcome Hall.
