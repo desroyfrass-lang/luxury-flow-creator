@@ -1,8 +1,9 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import heroImage from "@/assets/music-media-hero.png.asset.json";
+import founderHero from "@/assets/frass-founder-studios-hero.jpg.asset.json";
 import { useMemo, useRef, useState } from "react";
 import { SiteShell } from "@/components/site-shell";
 import { PageFeedback } from "@/components/page-feedback";
+import { CinematicMediaHero } from "@/components/cinematic-media-hero";
 import { Play, Pause, Headphones, Radio, Mic2 } from "lucide-react";
 import { useMediaItems, type MediaItem } from "@/hooks/use-media-items";
 
@@ -13,6 +14,8 @@ export const Route = createFileRoute("/music-media")({
       { name: "description", content: "Frass Hill music, mixes, visuals and media." },
       { property: "og:title", content: "Music & Media — Frass Hill" },
       { property: "og:description", content: "Latest drops, mixes, visuals and stories from the Frass Hill universe." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
   component: MusicMedia,
@@ -42,45 +45,24 @@ function MusicMedia() {
 
   return (
     <SiteShell>
-      <section className="mx-auto max-w-[1600px] px-6 lg:px-12 pt-16">
-        <div className="relative min-h-[58vh] overflow-hidden rounded-[2rem] border border-border/60">
-          <img
-            src={heroImage.url}
-            alt="A night in the Frass Hill town square — full moon, painted shopfronts and the band playing"
-            width={1600}
-            height={900}
-            className="hero-drift absolute inset-0 h-full w-full object-cover"
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-background via-background/70 to-background/25" />
-          <div className="relative flex min-h-[58vh] items-end p-10 md:p-16">
-            <div>
-              <div className="text-[11px] uppercase tracking-[0.35em] text-[color:var(--gold)]">Frass Hill Audio</div>
-              <h1 className="mt-4 font-display text-6xl md:text-8xl leading-[0.9]">Music &amp; Media.</h1>
-              <p className="mt-5 max-w-xl text-sm md:text-base text-muted-foreground">
-                The soundtrack of the town square. Tracks, mixes, films and visuals straight from the
-                Frass Hill camp — and every song licensed before it plays.
-              </p>
-              <div className="mt-8 flex flex-wrap gap-3">
-                <Link
-                  to="/frass-radio"
-                  className="rounded-full bg-[color:var(--gold)] px-6 py-3 text-[10px] font-bold uppercase tracking-[0.28em] text-black transition hover:scale-[1.03]"
-                >
-                  Frass Radio
-                </Link>
-                <Link
-                  to="/live"
-                  className="rounded-full border border-white/50 px-6 py-3 text-[10px] font-bold uppercase tracking-[0.28em] transition hover:bg-foreground/10"
-                >
-                  🔴 Live now
-                </Link>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+      <CinematicMediaHero
+        image={founderHero.url}
+        alt="Frass founder tipping his moonlit hat on a rain-lit Caribbean street"
+        eyebrow="Frass Hill · Music, film and culture"
+        title="Music & Media"
+        subtitle="The soundtrack and moving image of Frass Hill — made with purpose, licensed with respect and carried by the culture."
+        focus="founder"
+      >
+        <Link to="/frass-radio" className="rounded-full bg-gold px-6 py-3 text-[10px] font-bold uppercase tracking-[0.28em] text-primary-foreground transition hover:scale-[1.03]">
+          Frass Radio
+        </Link>
+        <Link to="/live" className="rounded-full border border-foreground/50 px-6 py-3 text-[10px] font-bold uppercase tracking-[0.28em] text-foreground transition hover:bg-foreground/10">
+          🔴 Live now
+        </Link>
+      </CinematicMediaHero>
 
-
-      <section className="mx-auto max-w-[1600px] px-6 lg:px-12 mt-20">
+      <div className="media-page-overlap relative z-10 bg-background pb-1 pt-20">
+      <section className="mx-auto max-w-[1600px] px-6 lg:px-12">
         <div className="flex items-end justify-between gap-6 mb-8">
           <div>
             <div className="mb-3 inline-flex items-center gap-3 text-[11px] uppercase tracking-[0.3em] text-muted-foreground">
@@ -139,6 +121,7 @@ function MusicMedia() {
         </div>
       </section>
       <PageFeedback pageTitle="Music & Media" />
+      </div>
     </SiteShell>
   );
 }

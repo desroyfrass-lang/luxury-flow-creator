@@ -2,6 +2,7 @@ import { Link } from "@tanstack/react-router";
 import { ArrowUpRight } from "lucide-react";
 
 import studioEntry from "@/assets/studio-entry.jpg";
+import greenMural from "@/assets/frass-green-studio-mural.jpg.asset.json";
 
 /**
  * Frass Vision Studios (FV Studios) portal card — same block-letter / chrome-gold
@@ -14,14 +15,38 @@ export function StudioEntryCard({ className = "" }: { className?: string }) {
       to="/studio"
       className={`group relative block overflow-hidden rounded-[2rem] border border-[color:var(--gold)]/30 bg-background transition hover:border-[color:var(--gold)] ${className}`}
     >
-      <img
-        src={studioEntry}
-        alt="The lit entrance to Frass Vision Studios at night — cameras, monitors and gold light"
-        width={1600}
-        height={1008}
-        loading="lazy"
-        className="h-[420px] w-full object-cover transition-transform duration-[1200ms] ease-out group-hover:scale-[1.06] md:h-[520px]"
-      />
+      <div className="relative h-[520px] overflow-hidden md:h-[600px]">
+        <img
+          src={studioEntry}
+          alt="Inside Frass Vision Studios with a wall of records and a green Jamaica mural"
+          width={1600}
+          height={1008}
+          loading="lazy"
+          className="absolute inset-0 h-full w-full object-cover transition-transform duration-[1200ms] ease-out group-hover:scale-[1.04]"
+        />
+
+        {/* Record wall — the first thing visible on the left side of the studio. */}
+        <div className="absolute bottom-28 left-4 top-5 w-[32%] border border-gold/35 bg-background/65 p-3 shadow-2xl backdrop-blur-sm md:bottom-16 md:left-8 md:top-8 md:w-[28%] md:p-5">
+          <div className="grid h-full grid-cols-2 content-center gap-3 md:grid-cols-3 md:gap-4" aria-label="Gold and black records on the studio wall">
+            {Array.from({ length: 12 }).map((_, index) => (
+              <span key={index} className="studio-record" aria-hidden="true" />
+            ))}
+          </div>
+        </div>
+
+        {/* Green Bob Marley/Jamaica artwork hangs as the framed studio mural. */}
+        <div className="absolute right-4 top-5 w-[48%] border-[5px] border-chrome bg-card p-1 shadow-2xl md:right-8 md:top-8 md:w-[45%] md:border-[9px]">
+          <img
+            src={greenMural.url}
+            alt="Green and gold Jamaica music mural displayed in Frass Vision Studios"
+            width={1376}
+            height={768}
+            loading="eager"
+            className="aspect-video w-full object-cover"
+          />
+          <div className="h-1 bg-gold" aria-hidden="true" />
+        </div>
+      </div>
 
       {/* Doorway light + darkening for legibility */}
       <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-background via-background/55 to-transparent" />
