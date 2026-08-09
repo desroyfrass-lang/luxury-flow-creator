@@ -195,37 +195,37 @@ function ForUsPage() {
   const [ambience, setAmbience] = useState(false);
   const [chimed, setChimed] = useState(false);
 
+  const greeted = useRef(false);
+
   useEffect(() => {
     setMutedState(isMuted());
     setAmbience(ambienceEnabled());
     if (!signatureDue()) return;
     // Browsers only allow sound after a gesture; the first touch is the door.
     const greet = () => {
+      if (greeted.current || !signatureDue()) return;
+      greeted.current = true;
       if (playArrivalSignature()) {
         setChimed(true);
         window.setTimeout(() => setChimed(false), 5200);
         if (ambienceEnabled()) window.setTimeout(startAmbience, 5000);
       }
+      detach();
+    };
+    const detach = () => {
       window.removeEventListener("pointerdown", greet);
       window.removeEventListener("keydown", greet);
       window.removeEventListener("scroll", greet);
     };
-    if (playArrivalSignature()) {
-      setChimed(true);
-      window.setTimeout(() => setChimed(false), 5200);
-      if (ambienceEnabled()) window.setTimeout(startAmbience, 5000);
-    } else {
-      window.addEventListener("pointerdown", greet, { once: true });
-      window.addEventListener("keydown", greet, { once: true });
-      window.addEventListener("scroll", greet, { once: true });
-    }
+    window.addEventListener("pointerdown", greet);
+    window.addEventListener("keydown", greet);
+    window.addEventListener("scroll", greet);
     return () => {
-      window.removeEventListener("pointerdown", greet);
-      window.removeEventListener("keydown", greet);
-      window.removeEventListener("scroll", greet);
+      detach();
       stopAmbience();
     };
   }, []);
+
 
   const toggleSound = () => {
     const next = !muted;
