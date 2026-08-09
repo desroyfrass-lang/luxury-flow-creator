@@ -1,6 +1,6 @@
 ---
 name: FRASS-0427 Frass Card Commerce
-description: Every Frass Card is identity plus mobile point of sale — Quick Sell listings, member-owned payout accounts, recorded orders, 8% constitutional allocation
+description: Every Frass Card is identity plus mobile point of sale — Quick Sell listings, member-owned payout accounts, recorded orders, 10% constitutional allocation (90% creator / 10% Frass ecosystem, founders' 1% + 1% included)
 type: feature
 ---
 
@@ -12,7 +12,7 @@ commerce platform.** Every card is capable of becoming a secure point of sale.
   (Stripe, PayPal, Square, or any secure page they control). Frass never takes
   custody of Frass Card money — it is the market stall and the receipt book, not
   the till.
-- Every card sale still writes a record: income, the 8% constitutional allocation
+- Every card sale still writes a record: income, the 10% constitutional allocation (90% creator / 10% Frass ecosystem, founders' 1% + 1% included)
   (3% infrastructure / 3% reserve / 2% Foundation), an estimated processing fee
   and the net to the seller. Estimates are always labelled as estimates.
 - **Quick Sell** is the whole flow: photo → price → quantity → live. When the last

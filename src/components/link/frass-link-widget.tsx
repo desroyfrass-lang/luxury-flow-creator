@@ -91,7 +91,7 @@ export function FrassLinkWidget({ context }: { context?: string }) {
             <QrCode className="h-3.5 w-3.5" /> QR code
           </button>
           <Link className="ws-chip" to="/card/$handle" params={{ handle }}>
-            Business Card
+            Frass Card
           </Link>
           <Link className="ws-chip" to="/workspace/link">
             <BarChart3 className="h-3.5 w-3.5" /> Link analytics

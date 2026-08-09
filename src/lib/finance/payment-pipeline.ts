@@ -442,7 +442,7 @@ export const PIPELINE_AUDIT: PipelineAuditItem[] = [
   { id: "owner-ledger", label: "Owner Compensation Ledger", state: "structure", note: "Modelled and surfaced; balances stay at honest zero until wired." },
   { id: "business-ledger", label: "Business Ledger", state: "structure", note: "Revenue, costs, reserve and cash entries modelled." },
   { id: "marketplace-ledger", label: "Marketplace Ledger", state: "structure", note: "Pending → available → withdrawal path modelled." },
-  { id: "gift-ledger", label: "Gift Ledger", state: "structure", note: "8% allocation applied; direct gifting needs a provider." },
+  { id: "gift-ledger", label: "Gift Ledger", state: "structure", note: "10% allocation applied; direct gifting needs a provider." },
   { id: "foundation-ledger", label: "Foundation Ledger", state: "structure", note: "2% allocation recorded per transaction." },
   { id: "profit-protection", label: "Profit Protection Engine", state: "structure", note: "Minimum margin enforced at pricing time via the affiliate intelligence engine." },
   { id: "refunds", label: "Refund engine", state: "structure", note: "Reversal rules defined; execution needs live ledgers." },

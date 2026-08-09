@@ -16,12 +16,20 @@
 import type { AppRole } from "@/lib/roles";
 
 /* ── Constitutional platform allocation ──────────────────────────────────── */
+//
+// FRASS-0427 Amendment (Frass Financial Constitution):
+//   Creator / recipient keeps 90%. The Frass ecosystem keeps 10%.
+//   The 10% INCLUDES the Founder 1% and Co-Founder 1% allocation — owners are
+//   never paid twice for the same dollar.
 
 export const PLATFORM_ALLOCATION = {
-  total: 8,
+  total: 10,
+  creator: 90,
   infrastructure: 3,
   reserve: 3,
   foundation: 2,
+  founder: 1,
+  coFounder: 1,
 } as const;
 
 export type Allocation = {
@@ -29,19 +37,41 @@ export type Allocation = {
   infrastructure: number;
   reserve: number;
   foundation: number;
+  founder: number;
+  coFounder: number;
   platformTotal: number;
   net: number;
 };
 
-/** Apply the constitutional 8% allocation. Recipient always keeps 92%. */
+/** Apply the constitutional 10% allocation. The creator always keeps 90%. */
 export function allocate(gross: number): Allocation {
   const round = (n: number) => Math.round(n * 100) / 100;
-  const infrastructure = round((gross * PLATFORM_ALLOCATION.infrastructure) / 100);
-  const reserve = round((gross * PLATFORM_ALLOCATION.reserve) / 100);
-  const foundation = round((gross * PLATFORM_ALLOCATION.foundation) / 100);
-  const platformTotal = round(infrastructure + reserve + foundation);
-  return { gross: round(gross), infrastructure, reserve, foundation, platformTotal, net: round(gross - platformTotal) };
+  const pct = (p: number) => round((gross * p) / 100);
+  const infrastructure = pct(PLATFORM_ALLOCATION.infrastructure);
+  const reserve = pct(PLATFORM_ALLOCATION.reserve);
+  const foundation = pct(PLATFORM_ALLOCATION.foundation);
+  const founder = pct(PLATFORM_ALLOCATION.founder);
+  const coFounder = pct(PLATFORM_ALLOCATION.coFounder);
+  const platformTotal = round(infrastructure + reserve + foundation + founder + coFounder);
+  return {
+    gross: round(gross),
+    infrastructure,
+    reserve,
+    foundation,
+    founder,
+    coFounder,
+    platformTotal,
+    net: round(gross - platformTotal),
+  };
 }
+
+/** Plain-English statement of the constitutional split, used everywhere. */
+export const CONSTITUTIONAL_SPLIT_NOTE =
+  `${PLATFORM_ALLOCATION.creator}% creator · ${PLATFORM_ALLOCATION.total}% Frass ecosystem ` +
+  `(${PLATFORM_ALLOCATION.infrastructure}% infrastructure · ${PLATFORM_ALLOCATION.reserve}% reserve · ` +
+  `${PLATFORM_ALLOCATION.foundation}% Foundation · ${PLATFORM_ALLOCATION.founder}% Founder · ` +
+  `${PLATFORM_ALLOCATION.coFounder}% Co-Founder) — the Frass Financial Constitution.`;
+
 
 /**
  * Credits are a payment mechanism only — they never reduce the payout.
@@ -326,7 +356,7 @@ export const IMPLEMENTATION_AUDIT: AuditItem[] = [
   { id: "credit-purchase", label: "Credit purchasing", state: "missing", note: "Requires payment provider." },
   { id: "gift-button", label: "Gift button on creator profiles", state: "missing", note: "For Us profiles need the Support action." },
   { id: "gift-direct", label: "Direct payment gifting", state: "missing", note: "Requires payment provider." },
-  { id: "allocation", label: "Constitutional commerce allocation (8%)", state: "built", note: "3% infrastructure · 3% reserve · 2% Foundation. Commerce only." },
+  { id: "allocation", label: "Constitutional commerce allocation (10%)", state: "built", note: "90% creator / 10% ecosystem: 3% infrastructure · 3% reserve · 2% Foundation · 1% Founder · 1% Co-Founder." },
   { id: "gift-allocation", label: "Gift allocation (10%)", state: "built", note: "3% · 3% · 2% plus Founder-configured owner shares; recipient keeps 90%." },
   { id: "payout", label: "Recipient payout", state: "built", note: "allocate() for commerce, allocateGift() for community gifts." },
   { id: "owner-comp", label: "Owner Compensation Engine", state: "structure", note: "Per-sale percentage of clean profit; modelled, awaiting persisted ledgers." },

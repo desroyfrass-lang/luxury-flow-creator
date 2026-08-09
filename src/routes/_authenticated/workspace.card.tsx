@@ -32,7 +32,7 @@ export const Route = createFileRoute("/_authenticated/workspace/card")({
       {
         name: "description",
         content:
-          "Customise and share your Frass Living Business Card: hero media, theme, links, QR code and performance analytics.",
+          "Customise and share your Frass Card: hero media, theme, links, QR code and performance analytics.",
       },
       { property: "og:title", content: "Frass Card — Identity & Point of Sale" },
       {
@@ -114,6 +114,8 @@ function CardStudio() {
         <p className="max-w-2xl text-sm text-muted-foreground">{CARD_PRINCIPLE}</p>
         <p className="max-w-2xl text-sm text-muted-foreground">
           <strong>What this means in plain English:</strong> this is a business card that updates itself.
+          Everyone has a Frass Card, and it now stands in for the old idea of a "profile" — anywhere
+          someone taps your name or picture on Frass, this is the page that opens.
           Print the QR on a box today, change your phone number next year, and the box still works — like a
           house number that stays put while you redecorate inside.
         </p>

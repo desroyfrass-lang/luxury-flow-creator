@@ -37,7 +37,7 @@ const UpdateCardSchema = z.object({
 });
 
 /**
- * FRASS-0426 — every member automatically has a Living Business Card.
+ * FRASS-0426 — every member automatically has a Frass Card.
  * There is no "create card" step: the first read provisions it.
  */
 export const getMyCard = createServerFn({ method: "GET" })
@@ -76,7 +76,7 @@ export const updateMyCard = createServerFn({ method: "POST" })
   });
 
 /**
- * Public read for a Living Business Card. Served with an explicit safe-column
+ * Public read for a Frass Card. Served with an explicit safe-column
  * projection — visitors never touch the profiles or cards tables directly.
  */
 export const getPublicCard = createServerFn({ method: "GET" })

@@ -1,6 +1,6 @@
 ---
 name: Affiliate Intelligence Engine & Profit Protection System
-description: Constitutional affiliate architecture — AI-calculated sustainable commission ranges, Commission Simulator, Founder governance framework, separate from the fixed 8% Platform Allocation
+description: Constitutional affiliate architecture — AI-calculated sustainable commission ranges, Commission Simulator, Founder governance framework, separate from the fixed 10% Platform Allocation
 type: feature
 ---
 
@@ -11,7 +11,7 @@ pick arbitrary percentages.
 **Constitutional principle:** Growth should never come at the expense of sustainability.
 
 **Financial separation (never merge):**
-- System One — Platform Allocation Engine: mandatory, constitutional, fixed 8%, governance controlled.
+- System One — Platform Allocation Engine: mandatory, constitutional, fixed 10%, governance controlled.
 - System Two — Affiliate Intelligence Engine: marketing tool, product specific, Builder configurable, AI protected.
 
 **Coverage:** every sellable product across the ecosystem (Kicks, Luxury House, Kids,
@@ -20,7 +20,7 @@ Participation is optional.
 
 **Engine outputs per product:** minimum meaningful, recommended, and maximum sustainable
 commission, derived from price, discount, cost of goods, packaging, shipping, other costs,
-payment + marketplace fees, tax, the 8% allocation, and the Builder's target margin.
+payment + marketplace fees, tax, the 10% allocation, and the Builder's target margin.
 If headroom is negative → "No affiliate program for this item" / raise price first.
 
 **Frassy behaviour:** explains, never merely rejects. Business advisor, not validator.

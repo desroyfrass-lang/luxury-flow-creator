@@ -26,7 +26,7 @@ export type OwnerPolicy = {
   /** % of clean profit on every completed sale — the Founder "paycheck". */
   founderCompensationPct: number;
   coFounderCompensationPct: number;
-  /** % of every eligible community gift, paid from the 10% gift allocation. */
+  /** % of every eligible community gift, paid from INSIDE the 10% allocation. */
   founderGiftPct: number;
   coFounderGiftPct: number;
   /** Ceiling on how much of the daily distributable surplus may be withdrawn. */
@@ -72,10 +72,10 @@ export function saveOwnerPolicy(policy: OwnerPolicy) {
 
 /* ── Community gifts: 10% constitutional allocation ──────────────────────── */
 //
-// Gifts are voluntary support, not commerce. The platform created the
-// environment in which the gift happened, so owner allocation is taken here —
-// and commerce sales therefore keep the 8% allocation plus a separate Owner
-// Compensation Engine. Owners are never paid twice for the same dollar.
+// Gifts are voluntary support, not commerce. Both gifts and commerce now carry
+// the same constitutional split: 90% recipient / 10% Frass ecosystem, and the
+// Founder 1% + Co-Founder 1% come from INSIDE that 10% — never on top of it.
+// Owners are never paid twice for the same dollar.
 
 export type GiftAllocation = {
   gross: number;
@@ -92,7 +92,13 @@ export type GiftAllocation = {
 
 export function allocateGift(gross: number, policy: OwnerPolicy = DEFAULT_OWNER_POLICY): GiftAllocation {
   const pct = (p: number) => round((gross * p) / 100);
-  const infrastructure = pct(PLATFORM_ALLOCATION.infrastructure);
+  // The owners' share is carved out of the constitutional 10%, never added to
+  // it. Infrastructure absorbs whatever the Founder has not allocated.
+  const ownerPct = Math.min(policy.founderGiftPct + policy.coFounderGiftPct, PLATFORM_ALLOCATION.total);
+  const infraPct = round(
+    PLATFORM_ALLOCATION.total - PLATFORM_ALLOCATION.reserve - PLATFORM_ALLOCATION.foundation - ownerPct,
+  );
+  const infrastructure = pct(Math.max(infraPct, 0));
   const reserve = pct(PLATFORM_ALLOCATION.reserve);
   const foundation = pct(PLATFORM_ALLOCATION.foundation);
   const founder = pct(policy.founderGiftPct);
@@ -107,12 +113,12 @@ export function allocateGift(gross: number, policy: OwnerPolicy = DEFAULT_OWNER_
     coFounder,
     platformTotal,
     recipient: round(gross - platformTotal),
-    recipientPct: round(100 - (PLATFORM_ALLOCATION.total + policy.founderGiftPct + policy.coFounderGiftPct)),
+    recipientPct: round(100 - PLATFORM_ALLOCATION.total),
   };
 }
 
-export function giftAllocationTotal(policy: OwnerPolicy = DEFAULT_OWNER_POLICY): number {
-  return round(PLATFORM_ALLOCATION.total + policy.founderGiftPct + policy.coFounderGiftPct);
+export function giftAllocationTotal(_policy: OwnerPolicy = DEFAULT_OWNER_POLICY): number {
+  return PLATFORM_ALLOCATION.total;
 }
 
 /* ── Per-sale owner compensation ─────────────────────────────────────────── */

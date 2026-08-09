@@ -21,7 +21,7 @@ export function CardShareSheet({
 }) {
   // FRASS-0428 — sharing the card always shares the permanent Frass Link.
   const url = linkUrl(handle);
-  const text = `${name} on Frass — my Living Business Card.`;
+  const text = `${name} on Frass — my Frass Card.`;
   const [qr, setQr] = useState<string | null>(null);
 
   useEffect(() => {
@@ -64,10 +64,10 @@ export function CardShareSheet({
   };
 
   return (
-    <div className="card-share-scrim" role="dialog" aria-label="Share my business card">
+    <div className="card-share-scrim" role="dialog" aria-label="Share my Frass Card">
       <div className="card-share-sheet">
         <div className="card-share-head">
-          <span className="ws-meta">Share my business card</span>
+          <span className="ws-meta">Share my Frass Card</span>
           <button type="button" className="ws-icon" onClick={onClose} aria-label="Close">
             <X className="h-4 w-4" />
           </button>
@@ -97,7 +97,7 @@ export function CardShareSheet({
         </div>
 
         <div className="card-share-qr">
-          {qr ? <img src={qr} alt={`QR code linking to ${name}'s Frass business card`} /> : <div className="card-share-qr-wait" />}
+          {qr ? <img src={qr} alt={`QR code linking to ${name}'s Frass Card`} /> : <div className="card-share-qr-wait" />}
           <div>
             <span className="ws-meta">
               <QrCode className="mr-1.5 inline h-3.5 w-3.5" /> Branded QR code
@@ -124,7 +124,7 @@ export function ShareCardButton({ handle, name }: { handle: string; name: string
   return (
     <>
       <button type="button" className="daily-enter" onClick={() => setOpen(true)}>
-        <Share2 className="mr-1.5 inline h-4 w-4" /> Share My Business Card
+        <Share2 className="mr-1.5 inline h-4 w-4" /> Share My Frass Card
       </button>
       {open && <CardShareSheet handle={handle} name={name} onClose={() => setOpen(false)} />}
     </>

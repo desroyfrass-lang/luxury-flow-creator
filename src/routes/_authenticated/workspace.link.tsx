@@ -4,6 +4,7 @@ import { useServerFn } from "@tanstack/react-start";
 import { Users } from "lucide-react";
 import { PageFeedback } from "@/components/page-feedback";
 import { FrassLinkWidget } from "@/components/link/frass-link-widget";
+import { MemberIdentity } from "@/components/card/member-identity";
 import { getMyIntroducer, getMyLinkDashboard } from "@/lib/link.functions";
 import {
   BONUS_RULES,
@@ -102,24 +103,15 @@ function LinkDashboard() {
                 key={r.id}
                 className="flex items-center justify-between gap-3 rounded-xl border border-border/60 p-3 text-sm"
               >
-                <div className="flex min-w-0 items-center gap-3">
-                  {r.avatar_url ? (
-                    <img src={r.avatar_url} alt="" className="h-8 w-8 rounded-full object-cover" />
-                  ) : (
-                    <span className="flex h-8 w-8 items-center justify-center rounded-full border border-border/60 text-xs">
-                      {r.display_name.charAt(0)}
-                    </span>
-                  )}
-                  <div className="min-w-0">
-                    <p className="truncate font-medium">{r.display_name}</p>
-                    <p className="text-xs text-muted-foreground">
-                      {stageLabel(r.stage)} · arrived by {r.source}
-                    </p>
-                  </div>
-                </div>
+                <MemberIdentity
+                  handle={r.handle}
+                  name={r.display_name}
+                  avatarUrl={r.avatar_url}
+                  role={`${stageLabel(r.stage)} · arrived by ${r.source}`}
+                />
                 {r.handle && (
                   <Link className="ws-chip text-xs" to="/card/$handle" params={{ handle: r.handle }}>
-                    Their card
+                    Their Frass Card
                   </Link>
                 )}
               </div>
@@ -178,6 +170,14 @@ function LinkDashboard() {
       {introducer && (
         <section className={panel}>
           <h2 className={heading}>My Human Link</h2>
+          <div className="mt-2">
+            <MemberIdentity
+              handle={introducer.handle}
+              name={introducer.display_name}
+              avatarUrl={introducer.avatar_url}
+              size="md"
+            />
+          </div>
           <p className="mt-2 text-sm">
             {introducer.display_name} introduced you to Frass — arrived by {introducer.source}. That
             connection is permanent.

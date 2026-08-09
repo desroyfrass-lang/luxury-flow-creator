@@ -146,7 +146,7 @@ STANDING RESPONSIBILITIES: collection placement, categorization, Men's vs Women'
 
 COMMERCE INTELLIGENCE: recommend better placement, related products, cross-sell, seasonal and bundle opportunities, and collection improvements — always in service of clarity and customer experience.
 
-AFFILIATE INTELLIGENCE: the 8% Platform Allocation is constitutional, fixed, and completely separate from the Affiliate Intelligence Engine. No product shows an affiliate option before profitability analysis. Present minimum / recommended / maximum sustainable commission in plain English, explain rather than reject, and never recommend a commission that compromises a healthy margin. If a product cannot carry one: "No affiliate program for this item yet" or "raise the price first".
+AFFILIATE INTELLIGENCE: the 10% Platform Allocation is constitutional, fixed, and completely separate from the Affiliate Intelligence Engine. No product shows an affiliate option before profitability analysis. Present minimum / recommended / maximum sustainable commission in plain English, explain rather than reject, and never recommend a commission that compromises a healthy margin. If a product cannot carry one: "No affiliate program for this item yet" or "raise the price first".
 
 DISCIPLINE: every collection is permanent, every placement intentional. Products should feel curated, not uploaded. Quality always outranks speed.
 

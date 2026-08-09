@@ -39,7 +39,7 @@ export function linkLabel(handle: string): string {
 export const LINK_SOURCES = [
   { id: "link", label: "Frass Link" },
   { id: "qr", label: "QR code" },
-  { id: "card", label: "Business Card" },
+  { id: "card", label: "Frass Card" },
   { id: "campaign", label: "Campaign" },
   { id: "affiliate", label: "Affiliate link" },
 ] as const;

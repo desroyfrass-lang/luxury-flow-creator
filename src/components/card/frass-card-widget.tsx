@@ -8,11 +8,11 @@ import { accentValue, cardPath, themeValue } from "@/lib/card";
 import { ShareCardButton } from "@/components/card/card-share";
 
 /**
- * FRASS-0426 — the compact Living Business Card widget.
+ * FRASS-0426 — the compact Frass Card widget.
  * Permanently available from The Daily, My Workspace, FOR ME and the Financial
  * Center. Always one click from view, copy, share, analytics and edit.
  */
-export function LivingCardWidget({ context }: { context?: string }) {
+export function FrassCardWidget({ context }: { context?: string }) {
   const profileFn = useServerFn(getMyProfile);
   const cardFn = useServerFn(getMyCard);
 
@@ -26,10 +26,10 @@ export function LivingCardWidget({ context }: { context?: string }) {
 
   return (
     <section
-      className="living-card-widget"
+      className="frass-card-widget"
       data-blueprint="living-business-card"
       style={{ ["--card-wash" as string]: theme.wash, ["--card-accent" as string]: accent }}
-      aria-label="My Living Business Card"
+      aria-label="My Frass Card"
     >
       <div className="living-card-strip">
         <div className="living-card-avatar">
@@ -41,7 +41,7 @@ export function LivingCardWidget({ context }: { context?: string }) {
         </div>
         <div className="living-card-id">
           <span className="ws-meta">
-            <IdCard className="mr-1.5 inline h-3.5 w-3.5" /> Living Business Card
+            <IdCard className="mr-1.5 inline h-3.5 w-3.5" /> Frass Card
             {context ? ` · ${context}` : ""}
           </span>
           <h3 className="living-card-name">{name}</h3>

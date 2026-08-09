@@ -100,7 +100,7 @@ export function settle(unitPrice: number, quantity: number, provider?: string | 
   };
 }
 
-export const ALLOCATION_NOTE = `${PLATFORM_ALLOCATION.infrastructure}% infrastructure · ${PLATFORM_ALLOCATION.reserve}% reserve · ${PLATFORM_ALLOCATION.foundation}% Foundation — the same ${PLATFORM_ALLOCATION.total}% constitutional allocation as every other Frass sale.`;
+export const ALLOCATION_NOTE = `${PLATFORM_ALLOCATION.creator}% creator · ${PLATFORM_ALLOCATION.total}% Frass ecosystem (${PLATFORM_ALLOCATION.infrastructure}% infrastructure · ${PLATFORM_ALLOCATION.reserve}% reserve · ${PLATFORM_ALLOCATION.foundation}% Foundation · ${PLATFORM_ALLOCATION.founder}% Founder · ${PLATFORM_ALLOCATION.coFounder}% Co-Founder) — the same ${PLATFORM_ALLOCATION.total}% constitutional allocation under the Frass Financial Constitution as every other Frass sale.`;
 
 export function money(amount: number, currency = "USD"): string {
   try {

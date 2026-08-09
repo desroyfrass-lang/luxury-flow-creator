@@ -1,6 +1,6 @@
 // Frass Affiliate Intelligence Engine — pure, client-safe profitability math.
 //
-// Constitutional rule: the Platform Allocation Engine (8%) and the Affiliate
+// Constitutional rule: the Platform Allocation Engine (10%) and the Affiliate
 // Intelligence Engine are separate systems. Allocation is read as an input
 // here; it is never altered by an affiliate decision.
 

@@ -1,4 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { MemberName } from "@/components/card/member-identity";
 import { useState } from "react";
 import { SiteShell } from "@/components/site-shell";
 import { Users, Gift, Send, Square, Sparkles } from "lucide-react";
@@ -34,7 +35,7 @@ function BroadcastRoom() {
   const { data: b, isLoading } = useBroadcast(broadcastId);
   const { data: comments = [] } = useLiveComments(broadcastId);
   const { data: gifts = [] } = useLiveGifts(broadcastId);
-  const { userId, name } = useLiveIdentity();
+  const { userId, name, handle } = useLiveIdentity();
   const post = usePostComment();
   const send = useSendGift();
   const end = useEndBroadcast();
@@ -99,7 +100,7 @@ function BroadcastRoom() {
               {!ended && <LiveBadge />}
             </div>
             <p className="mt-2 text-[11px] uppercase tracking-[0.22em] text-[color:var(--gold)]">
-              {b.host_name} · {purpose.glyph} {purpose.label}
+              <MemberName handle={b.host_handle} name={b.host_name} className="underline-offset-4 hover:underline" />{" · "}{purpose.glyph} {purpose.label}
             </p>
             {b.summary && <p className="mt-3 text-sm leading-relaxed text-muted-foreground">{b.summary}</p>}
             <div className="mt-4 flex flex-wrap items-center gap-4 text-[10px] uppercase tracking-[0.22em] text-muted-foreground">
@@ -181,7 +182,11 @@ function BroadcastRoom() {
               )}
               {comments.map((c) => (
                 <p key={c.id} className="text-sm leading-relaxed">
-                  <span className="font-semibold text-[color:var(--gold)]">{c.author_name}</span>{" "}
+                  <MemberName
+                    handle={c.author_handle}
+                    name={c.author_name}
+                    className="font-semibold text-[color:var(--gold)] hover:underline"
+                  />{" "}
                   <span className="text-muted-foreground">{c.body}</span>
                 </p>
               ))}
@@ -192,7 +197,7 @@ function BroadcastRoom() {
                 onSubmit={(e) => {
                   e.preventDefault();
                   if (!draft.trim()) return;
-                  post.mutate({ broadcastId, authorId: userId, authorName: name, body: draft.trim() });
+                  post.mutate({ broadcastId, authorId: userId, authorName: name, authorHandle: handle, body: draft.trim() });
                   setDraft("");
                 }}
               >
@@ -241,6 +246,7 @@ function BroadcastRoom() {
                       broadcastId,
                       senderId: userId,
                       senderName: name,
+                      senderHandle: handle,
                       giftKey: g.key,
                       credits: g.credits,
                       amount: g.amount,
@@ -262,7 +268,7 @@ function BroadcastRoom() {
               <ul className="mt-4 space-y-1 border-t border-border pt-3">
                 {gifts.slice(0, 6).map((g) => (
                   <li key={g.id} className="text-xs text-muted-foreground">
-                    {g.sender_name} sent {g.gift_key.replace("_", " ")}
+                    <MemberName handle={g.sender_handle} name={g.sender_name} className="hover:underline" /> sent {g.gift_key.replace("_", " ")}
                   </li>
                 ))}
               </ul>
