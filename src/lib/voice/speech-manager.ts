@@ -239,6 +239,11 @@ export async function speakText(
   const clean = speakableText(text);
   if (!clean) return "complete";
 
+  // Prime the autoplay gate synchronously — speak() is usually reached from a
+  // click/keypress, and this must run before the first await to count as one.
+  if (!isAudioUnlocked()) unlockAudio();
+  void getSharedAudioContext();
+
   // One stream at a time, always.
   runCounter += 1;
   const runId = runCounter;
