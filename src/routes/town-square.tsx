@@ -4,11 +4,13 @@ import { ArrowRight, Radio } from "lucide-react";
 import {
   PRESENCE_LENSES,
   SQUARE_ANNOUNCEMENTS,
+  SQUARE_QUARTERS,
   presencesFor,
   squareMood,
   type PresenceKind,
 } from "@/lib/town-square";
 import { useLiveNow } from "@/hooks/use-live";
+import squareHero from "@/assets/town-square-hero.jpg";
 
 /**
  * FRASS-0421 Phase 2 — Town Square.
@@ -50,9 +52,17 @@ function TownSquarePage() {
 
   return (
     <div className="min-h-screen bg-background text-foreground">
-      {/* The square itself */}
+      {/* The square itself — a real Caribbean town square, photographed, not drawn */}
       <header className="relative overflow-hidden border-b border-border/60">
-        <div className="mx-auto max-w-[1400px] px-6 py-14 lg:px-10 lg:py-20">
+        <img
+          src={squareHero}
+          alt="A real Jamaican town square at golden hour: market stalls, pastel colonial shopfronts and people walking and talking"
+          width={1600}
+          height={912}
+          className="hero-drift absolute inset-0 h-full w-full object-cover"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-background via-background/80 to-background/40" />
+        <div className="relative mx-auto max-w-[1400px] px-6 py-14 lg:px-10 lg:py-24">
           <p className="text-[10px] uppercase tracking-[0.4em] text-muted-foreground">
             <span aria-hidden className="mr-2">
               {mood.glyph}
@@ -131,6 +141,41 @@ function TownSquarePage() {
               ))}
             </div>
           )}
+        </section>
+
+        {/* The corners of the square — where each group naturally stands */}
+        <section className="mt-14">
+          <h2 className="text-xl font-black uppercase tracking-tight md:text-2xl">
+            Walk the square
+          </h2>
+          <p className="mt-3 max-w-2xl text-sm text-muted-foreground">
+            A real square has corners. Performers over there, business row along the side, farmers
+            with their crates, the wedding expo under the trees, builders in the yard. Children are
+            not here — they come down through{" "}
+            <Link to="/kids-valley" className="underline">
+              Kids Valley
+            </Link>{" "}
+            into their own village.
+          </p>
+          <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            {SQUARE_QUARTERS.map((q) => (
+              <button
+                key={q.id}
+                type="button"
+                onClick={() => setLens(q.lens)}
+                className="chrome-glow group rounded-2xl border border-border/70 bg-card/50 p-5 text-left transition hover:scale-[1.01]"
+              >
+                <span aria-hidden className="text-2xl">
+                  {q.glyph}
+                </span>
+                <h3 className="mt-4 text-base font-bold">{q.name}</h3>
+                <p className="mt-1.5 text-sm leading-relaxed text-muted-foreground">{q.scene}</p>
+                <span className="mt-4 inline-flex items-center gap-1.5 text-[10px] uppercase tracking-[0.25em] text-muted-foreground transition group-hover:text-foreground">
+                  Stand here <ArrowRight className="h-3 w-3" />
+                </span>
+              </button>
+            ))}
+          </div>
         </section>
 
         {/* Lenses — who you are looking for in the square */}

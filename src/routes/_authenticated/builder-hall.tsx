@@ -9,7 +9,7 @@ import { DISTRICTS, HALL_SECTIONS } from "@/lib/districts";
 import { JOURNEY_STAGES, stageById, stageIndex } from "@/lib/journey";
 import symbolLogo from "@/assets/frass-logo-symbol.asset.json";
 
-export const Route = createFileRoute("/_authenticated/welcome-hall")({
+export const Route = createFileRoute("/_authenticated/builder-hall")({
   head: () => ({
     meta: [
       { title: "Welcome Hall — Frass Operating System" },

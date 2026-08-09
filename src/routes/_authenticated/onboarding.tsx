@@ -273,10 +273,10 @@ function OnboardingPage() {
 
           {finished && (
             <Link
-              to="/welcome-hall"
+              to="/builder-hall"
               className="mt-8 block rounded-sm border border-[color:var(--gold)] px-4 py-3 text-center text-[11px] font-bold uppercase tracking-[0.28em] text-[color:var(--gold)]"
             >
-              Enter the Welcome Hall
+              Enter the Builder Hall
             </Link>
           )}
         </aside>

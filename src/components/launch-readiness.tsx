@@ -99,7 +99,7 @@ export function LaunchReadiness({
       {ready && (
         <div className="border-t border-border px-6 py-5">
           <Link
-            to="/welcome-hall"
+            to="/builder-hall"
             className="inline-block rounded-sm border border-[color:var(--gold)] px-5 py-2.5 text-[11px] font-bold uppercase tracking-[0.28em] text-[color:var(--gold)]"
           >
             Open the doors

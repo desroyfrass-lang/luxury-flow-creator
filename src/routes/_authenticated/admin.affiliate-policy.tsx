@@ -75,7 +75,7 @@ function AffiliatePolicyPage() {
   }, [data]);
 
   useEffect(() => {
-    if (isAdmin === false) void navigate({ to: "/welcome-hall", replace: true });
+    if (isAdmin === false) void navigate({ to: "/builder-hall", replace: true });
   }, [isAdmin, navigate]);
 
   if (!isAdmin) {

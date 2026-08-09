@@ -74,7 +74,7 @@ export const SQUARE_PRESENCES: SquarePresence[] = [
   // Districts — the town itself
   { id: "d-frass", kind: "districts", name: "Frass District", line: "The retail heart: Kicks, Drip, Bare, Shape, Plus and Kids.", to: "/frass-district", glyph: "🏙", status: "Open" },
   { id: "d-luxury", kind: "districts", name: "Frass Luxury House", line: "The private estate — ateliers, gardens and the two wings.", to: "/frass-luxury-house", glyph: "🕊", status: "Open" },
-  { id: "d-kids", kind: "districts", name: "Children's Village", line: "Kids World and the Frass Kids shop, kept safe by design.", to: "/kids-world", glyph: "🎠", status: "Open" },
+  { id: "d-kids", kind: "districts", name: "Kids Valley", line: "Children take their own road — the valley down into Children's Village.", to: "/kids-valley", glyph: "🌿", status: "Separate road" },
   { id: "d-studio", kind: "districts", name: "Studio District", line: "FV Studios: video, audio, motion and the label.", to: "/studio", glyph: "🎬", status: "Open" },
   { id: "d-wellness", kind: "districts", name: "Health & Wellness Centre", line: "Wellness, Care Network, Herbal Garden, Meditation, Nutrition.", to: "/health-wellness", glyph: "🌿", status: "Open" },
   { id: "d-farm", kind: "districts", name: "Farm District", line: "Growers, fishers and the food money that stays local.", to: "/frass-hill", glyph: "🌾", status: "Open" },
@@ -119,7 +119,7 @@ export const SQUARE_PRESENCES: SquarePresence[] = [
   // Community
   { id: "co-forus", kind: "community", name: "For Us", line: "The Community Hall — today's stories from the Hill.", to: "/for-us", glyph: "🌅", status: "Updated today" },
   { id: "co-forme", kind: "community", name: "For Me", line: "Your own page. Everything about you, in one place.", to: "/for-me", glyph: "🪪", status: "Yours" },
-  { id: "co-welcome", kind: "community", name: "Welcome Hall", line: "First stop for new arrivals — orientation and introductions.", to: "/welcome-hall", glyph: "🚪", status: "Open" },
+  { id: "co-welcome", kind: "community", name: "Welcome Hall", line: "The gates: registration and arrival into Frass Hill.", to: "/welcome-hall", glyph: "🚪", status: "The gates" },
   { id: "co-blog", kind: "community", name: "Brand Journal", line: "Longer writing from the Hill.", to: "/blog", glyph: "📰", status: "Weekly" },
 
   // Foundation
@@ -167,6 +167,34 @@ export const SQUARE_ANNOUNCEMENTS: SquareAnnouncement[] = [
     from: "Health & Wellness Centre",
     to: "/health-wellness",
   },
+];
+
+/**
+ * FRASS-0423 — the quarters of the square.
+ *
+ * A real Caribbean square is not one crowd; it is corners. This is where each
+ * group naturally stands. Children are deliberately absent: they arrive
+ * through Kids Valley, never through the square.
+ */
+export type SquareQuarter = {
+  id: string;
+  name: string;
+  glyph: string;
+  /** What you'd see standing in this corner. */
+  scene: string;
+  to: string;
+  lens: PresenceKind;
+};
+
+export const SQUARE_QUARTERS: SquareQuarter[] = [
+  { id: "q-stage", name: "The Performance Corner", glyph: "🎤", scene: "Somebody always has a mic. Live sessions, sound systems, open verses.", to: "/live", lens: "live" },
+  { id: "q-trade", name: "The Business Row", glyph: "🏪", scene: "Shopfronts, signage, people trading and talking prices in the open.", to: "/business-builder", lens: "businesses" },
+  { id: "q-market", name: "The Farmers' Corner", glyph: "🧺", scene: "Crates of produce, preserves, and the growers standing behind them.", to: "/frass-hill", lens: "farmers" },
+  { id: "q-wedding", name: "The Wedding Expo", glyph: "💍", scene: "Pavilions, dressmakers and couples planning under the trees.", to: "/bridal", lens: "events" },
+  { id: "q-builders", name: "The Builders' Yard", glyph: "🛠", scene: "Work in progress, shown in public, critiqued out loud.", to: "/academy", lens: "builders" },
+  { id: "q-foundation", name: "The Foundation Steps", glyph: "💚", scene: "Service, collections and the impact the Hill can point to.", to: "/frass-hill", lens: "foundation" },
+  { id: "q-artists", name: "The Artists' Arcade", glyph: "🎨", scene: "Painters, writers, photographers and the label crew.", to: "/fv-studios", lens: "artists" },
+  { id: "q-notice", name: "The Notice Wall", glyph: "📣", scene: "Announcements posted by the town, read standing up.", to: "/for-us", lens: "announcements" },
 ];
 
 export function presencesFor(kind: PresenceKind | "all"): SquarePresence[] {
