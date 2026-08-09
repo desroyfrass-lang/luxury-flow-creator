@@ -16,7 +16,8 @@ export type LiveStatus = "live" | "ended" | "scheduled";
 
 export type LiveBroadcast = {
   id: string;
-  host_id: string;
+  /** Only readable by signed-in members; hidden from anonymous viewers. */
+  host_id?: string;
   host_name: string;
   host_handle: string | null;
   destination: LiveDestination;
@@ -46,7 +47,6 @@ export type LiveProductLink = {
 export type LiveComment = {
   id: string;
   broadcast_id: string;
-  author_id: string;
   author_name: string;
   body: string;
   created_at: string;
@@ -55,7 +55,6 @@ export type LiveComment = {
 export type LiveGift = {
   id: string;
   broadcast_id: string;
-  sender_id: string;
   sender_name: string;
   gift_key: string;
   credits: number;
