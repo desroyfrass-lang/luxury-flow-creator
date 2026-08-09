@@ -95,7 +95,7 @@ function ResetPasswordPage() {
         </form>
 
         <div className="mt-6 text-center text-[11px] uppercase tracking-[0.25em] text-muted-foreground">
-          <Link to="/auth" className="hover:text-foreground">
+          <Link to="/auth" search={{ redirect: "" }} className="hover:text-foreground">
             ← Back to sign in
           </Link>
         </div>
