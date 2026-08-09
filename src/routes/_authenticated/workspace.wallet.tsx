@@ -64,10 +64,13 @@ function WalletHub() {
   const cardFn = useServerFn(getMyCard);
   const ordersFn = useServerFn(listMyCardOrders);
   const profileFn = useServerFn(getMyProfile);
+  const receiptsFn = useServerFn(listMyReceipts);
 
   const { data: card } = useQuery({ queryKey: ["my-business-card"], queryFn: () => cardFn() });
   const { data: orders } = useQuery({ queryKey: ["card-orders"], queryFn: () => ordersFn() });
   const { data: profile } = useQuery({ queryKey: ["my-profile"], queryFn: () => profileFn() });
+  const { data: receipts } = useQuery({ queryKey: ["financial-receipts"], queryFn: () => receiptsFn() });
+
 
   const [section, setSection] = useState<WalletSectionId>("balance");
   const rows = useMemo(() => orders ?? [], [orders]);
