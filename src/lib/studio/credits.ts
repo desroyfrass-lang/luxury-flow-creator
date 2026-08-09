@@ -289,7 +289,81 @@ export const STUDIO_OPERATIONS: StudioOperation[] = [
     defaultQty: 1,
     secondsPerUnit: 20,
   },
+
+  // FRASS-0406 — Phone Content Mode™ restoration passes. Priced low on purpose:
+  // rescuing a phone recording must never cost more than the shoot did.
+  {
+    key: "phone-stabilise",
+    label: "AI stabilisation",
+    what: "Handheld shake removed and camera movement smoothed.",
+    group: "editing",
+    unit: "minute",
+    rate: 20,
+    defaultQty: 1,
+    secondsPerUnit: 12,
+  },
+  {
+    key: "phone-exposure",
+    label: "Exposure & dynamic range",
+    what: "Brightness evened out where the phone re-metered mid-shot.",
+    group: "editing",
+    unit: "minute",
+    rate: 10,
+    defaultQty: 1,
+    secondsPerUnit: 6,
+  },
+  {
+    key: "phone-lowlight",
+    label: "Low-light & video denoise",
+    what: "Dark footage lifted and sensor grain cleaned.",
+    group: "editing",
+    unit: "minute",
+    rate: 26,
+    defaultQty: 1,
+    secondsPerUnit: 14,
+  },
+  {
+    key: "phone-detail",
+    label: "Detail recovery",
+    what: "Edge detail rebuilt after in-camera compression.",
+    group: "editing",
+    unit: "minute",
+    rate: 16,
+    defaultQty: 1,
+    secondsPerUnit: 9,
+  },
+  {
+    key: "phone-optics",
+    label: "Lens & rolling-shutter correction",
+    what: "Edge distortion straightened and pan wobble removed.",
+    group: "editing",
+    unit: "minute",
+    rate: 22,
+    defaultQty: 1,
+    secondsPerUnit: 12,
+  },
+  {
+    key: "phone-noise",
+    label: "Environment noise removal",
+    what: "Wind, traffic, hum, and room echo taken off the recording.",
+    group: "audio",
+    unit: "minute",
+    rate: 18,
+    defaultQty: 1,
+    secondsPerUnit: 8,
+  },
+  {
+    key: "phone-stems",
+    label: "Vocal & instrument separation",
+    what: "The recording split into vocal and backing stems.",
+    group: "audio",
+    unit: "minute",
+    rate: 45,
+    defaultQty: 1,
+    secondsPerUnit: 20,
+  },
 ];
+
 
 export const OPERATION_BY_KEY = new Map(STUDIO_OPERATIONS.map((o) => [o.key, o]));
 

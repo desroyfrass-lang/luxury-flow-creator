@@ -21,7 +21,10 @@ import {
   Info,
 } from "lucide-react";
 import { SiteShell } from "@/components/site-shell";
+import { PhoneContentMode } from "@/components/studio/phone-content-mode";
+import type { QualityReport } from "@/lib/studio/phone-content-mode";
 import { FREE_CAPABILITIES, formatDuration, unitLabel, usdFor } from "@/lib/studio/credits";
+
 import { DIRECTOR_EXAMPLES, planFromDirection, type DirectorPlan } from "@/lib/studio/director";
 import {
   createStudioProject,
@@ -146,6 +149,36 @@ function StudioPage() {
     },
     onError: (e: Error) => toast.error(e.message),
   });
+
+  // FRASS-0406 — Phone Content Mode™ runs through the same credit pipeline.
+  const runPhone = useMutation({
+    mutationFn: (report: QualityReport) =>
+      runOp({
+        data: {
+          projectId: active?.id,
+          request: `Phone Content Mode™ — ${report.preset.label} (${report.minutes} min)`,
+          label: `Phone Content Mode™ · ${report.preset.label}`,
+          lines: report.forecast.lines.map((l) => ({
+            key: l.key,
+            label: l.label,
+            credits: l.credits,
+            qty: l.qty,
+          })),
+          total: report.forecast.total,
+          seconds: report.forecast.seconds,
+        },
+      }),
+    onSuccess: (r) => {
+      toast.success(
+        `Enhanced — ${r.charged.toLocaleString()} AI Credits used. ${r.balance.toLocaleString()} remaining.`,
+      );
+      void qc.invalidateQueries({ queryKey: ["ai-wallet"] });
+      void qc.invalidateQueries({ queryKey: ["ai-ledger"] });
+    },
+    onError: (e: Error) => toast.error(e.message),
+  });
+
+
 
   const w = walletQ.data;
   const projected = w ? Math.round((w.month_used / new Date().getDate()) * 30) : 0;
@@ -325,6 +358,14 @@ function StudioPage() {
                   />
                 )}
               </Panel>
+
+              {/* FRASS-0406 — Phone Content Mode™ */}
+              <PhoneContentMode
+                balance={w?.balance ?? 0}
+                running={runPhone.isPending}
+                onRun={(report) => runPhone.mutate(report)}
+              />
+
 
               {/* Professional timeline */}
               <Panel title="Timeline — manual editing, always free" icon={Scissors}>
