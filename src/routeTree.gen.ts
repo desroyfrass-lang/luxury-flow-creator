@@ -88,6 +88,7 @@ import { Route as FrassKicksMenRouteImport } from './routes/frass-kicks.men'
 import { Route as FrassDripWomenRouteImport } from './routes/frass-drip.women'
 import { Route as FrassDripMenRouteImport } from './routes/frass-drip.men'
 import { Route as CollectionHandleRouteImport } from './routes/collection.$handle'
+import { Route as CardHandleRouteImport } from './routes/card.$handle'
 import { Route as CapsulesHandleRouteImport } from './routes/capsules.$handle'
 import { Route as BuilderHandleRouteImport } from './routes/builder.$handle'
 import { Route as BridalWalkRouteImport } from './routes/bridal.walk'
@@ -155,6 +156,7 @@ import { Route as AfroDesignersCollectionsSlugRouteImport } from './routes/afro-
 import { Route as AuthenticatedWorkspaceProfileRouteImport } from './routes/_authenticated/workspace.profile'
 import { Route as AuthenticatedWorkspaceMerchRouteImport } from './routes/_authenticated/workspace.merch'
 import { Route as AuthenticatedWorkspaceInsightsRouteImport } from './routes/_authenticated/workspace.insights'
+import { Route as AuthenticatedWorkspaceCardRouteImport } from './routes/_authenticated/workspace.card'
 import { Route as AuthenticatedWorkspaceAffiliateRouteImport } from './routes/_authenticated/workspace.affiliate'
 import { Route as AuthenticatedAdminVisualIndexRouteImport } from './routes/_authenticated/admin.visual-index'
 import { Route as AuthenticatedAdminViralsRouteImport } from './routes/_authenticated/admin.virals'
@@ -574,6 +576,11 @@ const CollectionHandleRoute = CollectionHandleRouteImport.update({
   path: '/collection/$handle',
   getParentRoute: () => rootRouteImport,
 } as any)
+const CardHandleRoute = CardHandleRouteImport.update({
+  id: '/card/$handle',
+  path: '/card/$handle',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const CapsulesHandleRoute = CapsulesHandleRouteImport.update({
   id: '/$handle',
   path: '/$handle',
@@ -930,6 +937,12 @@ const AuthenticatedWorkspaceInsightsRoute =
     path: '/insights',
     getParentRoute: () => AuthenticatedWorkspaceRoute,
   } as any)
+const AuthenticatedWorkspaceCardRoute =
+  AuthenticatedWorkspaceCardRouteImport.update({
+    id: '/card',
+    path: '/card',
+    getParentRoute: () => AuthenticatedWorkspaceRoute,
+  } as any)
 const AuthenticatedWorkspaceAffiliateRoute =
   AuthenticatedWorkspaceAffiliateRouteImport.update({
     id: '/affiliate',
@@ -1144,6 +1157,7 @@ export interface FileRoutesByFullPath {
   '/bridal/walk': typeof BridalWalkRoute
   '/builder/$handle': typeof BuilderHandleRoute
   '/capsules/$handle': typeof CapsulesHandleRoute
+  '/card/$handle': typeof CardHandleRoute
   '/collection/$handle': typeof CollectionHandleRoute
   '/frass-drip/men': typeof FrassDripMenRouteWithChildren
   '/frass-drip/women': typeof FrassDripWomenRouteWithChildren
@@ -1201,6 +1215,7 @@ export interface FileRoutesByFullPath {
   '/admin/virals': typeof AuthenticatedAdminViralsRoute
   '/admin/visual-index': typeof AuthenticatedAdminVisualIndexRoute
   '/workspace/affiliate': typeof AuthenticatedWorkspaceAffiliateRoute
+  '/workspace/card': typeof AuthenticatedWorkspaceCardRoute
   '/workspace/insights': typeof AuthenticatedWorkspaceInsightsRoute
   '/workspace/merch': typeof AuthenticatedWorkspaceMerchRoute
   '/workspace/profile': typeof AuthenticatedWorkspaceProfileRoute
@@ -1295,6 +1310,7 @@ export interface FileRoutesByTo {
   '/bridal/walk': typeof BridalWalkRoute
   '/builder/$handle': typeof BuilderHandleRoute
   '/capsules/$handle': typeof CapsulesHandleRoute
+  '/card/$handle': typeof CardHandleRoute
   '/collection/$handle': typeof CollectionHandleRoute
   '/frass-kicks/men': typeof FrassKicksMenRoute
   '/frass-kicks/women': typeof FrassKicksWomenRoute
@@ -1349,6 +1365,7 @@ export interface FileRoutesByTo {
   '/admin/virals': typeof AuthenticatedAdminViralsRoute
   '/admin/visual-index': typeof AuthenticatedAdminVisualIndexRoute
   '/workspace/affiliate': typeof AuthenticatedWorkspaceAffiliateRoute
+  '/workspace/card': typeof AuthenticatedWorkspaceCardRoute
   '/workspace/insights': typeof AuthenticatedWorkspaceInsightsRoute
   '/workspace/merch': typeof AuthenticatedWorkspaceMerchRoute
   '/workspace/profile': typeof AuthenticatedWorkspaceProfileRoute
@@ -1464,6 +1481,7 @@ export interface FileRoutesById {
   '/bridal/walk': typeof BridalWalkRoute
   '/builder/$handle': typeof BuilderHandleRoute
   '/capsules/$handle': typeof CapsulesHandleRoute
+  '/card/$handle': typeof CardHandleRoute
   '/collection/$handle': typeof CollectionHandleRoute
   '/frass-drip/men': typeof FrassDripMenRouteWithChildren
   '/frass-drip/women': typeof FrassDripWomenRouteWithChildren
@@ -1521,6 +1539,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/virals': typeof AuthenticatedAdminViralsRoute
   '/_authenticated/admin/visual-index': typeof AuthenticatedAdminVisualIndexRoute
   '/_authenticated/workspace/affiliate': typeof AuthenticatedWorkspaceAffiliateRoute
+  '/_authenticated/workspace/card': typeof AuthenticatedWorkspaceCardRoute
   '/_authenticated/workspace/insights': typeof AuthenticatedWorkspaceInsightsRoute
   '/_authenticated/workspace/merch': typeof AuthenticatedWorkspaceMerchRoute
   '/_authenticated/workspace/profile': typeof AuthenticatedWorkspaceProfileRoute
@@ -1636,6 +1655,7 @@ export interface FileRouteTypes {
     | '/bridal/walk'
     | '/builder/$handle'
     | '/capsules/$handle'
+    | '/card/$handle'
     | '/collection/$handle'
     | '/frass-drip/men'
     | '/frass-drip/women'
@@ -1693,6 +1713,7 @@ export interface FileRouteTypes {
     | '/admin/virals'
     | '/admin/visual-index'
     | '/workspace/affiliate'
+    | '/workspace/card'
     | '/workspace/insights'
     | '/workspace/merch'
     | '/workspace/profile'
@@ -1787,6 +1808,7 @@ export interface FileRouteTypes {
     | '/bridal/walk'
     | '/builder/$handle'
     | '/capsules/$handle'
+    | '/card/$handle'
     | '/collection/$handle'
     | '/frass-kicks/men'
     | '/frass-kicks/women'
@@ -1841,6 +1863,7 @@ export interface FileRouteTypes {
     | '/admin/virals'
     | '/admin/visual-index'
     | '/workspace/affiliate'
+    | '/workspace/card'
     | '/workspace/insights'
     | '/workspace/merch'
     | '/workspace/profile'
@@ -1955,6 +1978,7 @@ export interface FileRouteTypes {
     | '/bridal/walk'
     | '/builder/$handle'
     | '/capsules/$handle'
+    | '/card/$handle'
     | '/collection/$handle'
     | '/frass-drip/men'
     | '/frass-drip/women'
@@ -2012,6 +2036,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/virals'
     | '/_authenticated/admin/visual-index'
     | '/_authenticated/workspace/affiliate'
+    | '/_authenticated/workspace/card'
     | '/_authenticated/workspace/insights'
     | '/_authenticated/workspace/merch'
     | '/_authenticated/workspace/profile'
@@ -2096,6 +2121,7 @@ export interface RootRouteChildren {
   ApiSttRoute: typeof ApiSttRoute
   ApiTtsRoute: typeof ApiTtsRoute
   BuilderHandleRoute: typeof BuilderHandleRoute
+  CardHandleRoute: typeof CardHandleRoute
   CollectionHandleRoute: typeof CollectionHandleRoute
   PlusSizeMenRoute: typeof PlusSizeMenRoute
   PlusSizeWomenRoute: typeof PlusSizeWomenRoute
@@ -2659,6 +2685,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CollectionHandleRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/card/$handle': {
+      id: '/card/$handle'
+      path: '/card/$handle'
+      fullPath: '/card/$handle'
+      preLoaderRoute: typeof CardHandleRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/capsules/$handle': {
       id: '/capsules/$handle'
       path: '/$handle'
@@ -3128,6 +3161,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedWorkspaceInsightsRouteImport
       parentRoute: typeof AuthenticatedWorkspaceRoute
     }
+    '/_authenticated/workspace/card': {
+      id: '/_authenticated/workspace/card'
+      path: '/card'
+      fullPath: '/workspace/card'
+      preLoaderRoute: typeof AuthenticatedWorkspaceCardRouteImport
+      parentRoute: typeof AuthenticatedWorkspaceRoute
+    }
     '/_authenticated/workspace/affiliate': {
       id: '/_authenticated/workspace/affiliate'
       path: '/affiliate'
@@ -3342,6 +3382,7 @@ const AuthenticatedAdminRouteWithChildren =
 
 interface AuthenticatedWorkspaceRouteChildren {
   AuthenticatedWorkspaceAffiliateRoute: typeof AuthenticatedWorkspaceAffiliateRoute
+  AuthenticatedWorkspaceCardRoute: typeof AuthenticatedWorkspaceCardRoute
   AuthenticatedWorkspaceInsightsRoute: typeof AuthenticatedWorkspaceInsightsRoute
   AuthenticatedWorkspaceMerchRoute: typeof AuthenticatedWorkspaceMerchRoute
   AuthenticatedWorkspaceProfileRoute: typeof AuthenticatedWorkspaceProfileRoute
@@ -3350,6 +3391,7 @@ interface AuthenticatedWorkspaceRouteChildren {
 const AuthenticatedWorkspaceRouteChildren: AuthenticatedWorkspaceRouteChildren =
   {
     AuthenticatedWorkspaceAffiliateRoute: AuthenticatedWorkspaceAffiliateRoute,
+    AuthenticatedWorkspaceCardRoute: AuthenticatedWorkspaceCardRoute,
     AuthenticatedWorkspaceInsightsRoute: AuthenticatedWorkspaceInsightsRoute,
     AuthenticatedWorkspaceMerchRoute: AuthenticatedWorkspaceMerchRoute,
     AuthenticatedWorkspaceProfileRoute: AuthenticatedWorkspaceProfileRoute,
@@ -3842,6 +3884,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiSttRoute: ApiSttRoute,
   ApiTtsRoute: ApiTtsRoute,
   BuilderHandleRoute: BuilderHandleRoute,
+  CardHandleRoute: CardHandleRoute,
   CollectionHandleRoute: CollectionHandleRoute,
   PlusSizeMenRoute: PlusSizeMenRoute,
   PlusSizeWomenRoute: PlusSizeWomenRoute,
