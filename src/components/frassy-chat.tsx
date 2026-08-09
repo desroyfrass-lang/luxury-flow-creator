@@ -418,16 +418,19 @@ export function FrassyChat({ embedded = false }: { embedded?: boolean } = {}) {
       </div>
 
 
-      <FrassyComposer
-        value={input}
-        onChange={setInput}
-        onSend={() => void send()}
-        loading={loading}
-        placeholder="Ask Frassy anything…"
-        onMic={voice.voiceAvailable ? () => void toggleMic() : undefined}
-        micAvailable={voice.voiceAvailable}
-        micActive={voice.phase === "recording"}
-      />
+      <div className="shrink-0">
+        <FrassyComposer
+          value={input}
+          onChange={setInput}
+          onSend={() => void send()}
+          loading={loading}
+          placeholder="Ask Frassy anything…"
+          onMic={voice.voiceAvailable ? () => void toggleMic() : undefined}
+          micAvailable={voice.voiceAvailable}
+          micActive={voice.phase === "recording"}
+        />
+      </div>
+
 
     </div>
   );
