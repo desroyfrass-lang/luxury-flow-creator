@@ -162,7 +162,10 @@ function ForUsPage() {
   const { from } = Route.useSearch();
   const navigate = useNavigate();
   const context = useMemo(() => resolveForUsContext(from || undefined), [from]);
-  const weather = useMemo(() => resolveForUsWeather(), []);
+  // Local time differs between server render and the visitor's device, so the
+  // weather only settles after hydration — otherwise React sees two skies.
+  const [weather, setWeather] = useState(() => resolveForUsWeather(new Date(0)));
+  useEffect(() => setWeather(resolveForUsWeather()), []);
   const { data: published = [] } = usePublishedStories();
   const { data: liveNow = [] } = useLiveNow("for_us");
 
