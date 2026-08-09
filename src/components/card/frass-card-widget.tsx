@@ -125,3 +125,12 @@ export function FrassCardWidget({
     </section>
   );
 }
+
+function MiniStat({ label, value }: { label: string; value: number }) {
+  return (
+    <div className="mini-widget-stat">
+      <span className="mini-widget-value">{value}</span>
+      <span className="mini-widget-label">{label}</span>
+    </div>
+  );
+}
