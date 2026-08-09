@@ -49,7 +49,7 @@ export const LEGACY_FIELDS: { key: keyof BuilderLegacy; label: string; hint: str
 ];
 
 export const BuilderAboutSchema = z.object({
-  legacy: LegacySchema.optional().default({}),
+  legacy: LegacySchema.optional().default(() => LegacySchema.parse({})),
   biography: z.string().max(4000).optional().default(""),
   story: z.string().max(6000).optional().default(""),
   mission: z.string().max(1000).optional().default(""),
