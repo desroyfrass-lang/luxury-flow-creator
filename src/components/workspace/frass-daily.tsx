@@ -208,9 +208,71 @@ export function FrassDaily({
     go(result.target);
   };
 
+  // ── 4 · Focus Mode — current task, Frassy, progress, composer. Nothing else.
+  if (focus) {
+    return (
+      <div data-blueprint="daily-focus" className="frass-workspace daily-overlay is-in daily-focus" role="dialog" aria-label="Focus Mode">
+        <div className="daily-scene" aria-hidden="true">
+          <img src={scene} alt="" />
+        </div>
+        <div className="daily-focus-inner">
+          <div className="daily-focus-top">
+            <img className="daily-focus-frassy" src={frassyAvatar.url} alt="" />
+            <button type="button" className="ws-chip" onClick={() => setFocus(false)}>
+              Leave Focus Mode
+            </button>
+          </div>
+
+          <div className="daily-bar daily-progress-bar">
+            <span className={progress.pct >= 100 ? "is-done" : ""} style={{ width: `${progress.pct}%` }} />
+          </div>
+          <p className="ws-meta">
+            {progress.complete} of {progress.total} complete · {progress.pct}%
+          </p>
+
+          {current ? (
+            <div className={`daily-focus-task lane-${current.lane}`}>
+              <span className="ws-meta">
+                Step {current.n} · {LANE[current.lane].dot} {LANE[current.lane].label} · {current.minutes} min
+              </span>
+              <h2 className="daily-focus-label">{current.label}</h2>
+              {current.detail && <p className="ws-meta">{current.detail}</p>}
+              <div className="daily-focus-actions">
+                {current.taskId && (
+                  <button type="button" className="daily-enter" onClick={() => setDone((d) => [...d, current.taskId!])}>
+                    <Check className="mr-1.5 inline h-4 w-4" /> Finished — next task
+                  </button>
+                )}
+                <button type="button" className="ws-chip" onClick={() => go(current)}>
+                  Open it <ArrowRight className="h-3.5 w-3.5" />
+                </button>
+              </div>
+            </div>
+          ) : (
+            <div className="daily-focus-task lane-green">
+              <h2 className="daily-focus-label">Everything is finished.</h2>
+              <p className="ws-meta">Leave Focus Mode and close your day.</p>
+            </div>
+          )}
+        </div>
+
+        <div className="daily-dock">
+          <FrassyComposer
+            value={command}
+            onChange={setCommand}
+            onSend={(text) => runIntent(text.trim())}
+            voice
+            placeholder="Talk to Frassy while you work…"
+            tools={["files", "images", "documents", "camera", "clipboard"]}
+          />
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div data-blueprint="daily" className={`frass-workspace daily-overlay ${entered ? "is-in" : ""}`} role="dialog" aria-label="The Frass Daily">
+
       {/* Cinematic scenery — quiet Jamaican landscape, rotating by the day */}
       <div className="daily-scene" aria-hidden="true">
         <img src={scene} alt="" />
