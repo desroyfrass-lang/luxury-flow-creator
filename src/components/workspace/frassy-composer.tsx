@@ -264,16 +264,16 @@ export function FrassyComposer({
           const meta = TOOL_META[t];
           const Icon = meta.icon;
           return (
-            <button key={t} type="button" className="ws-chip" onClick={() => openPicker(t)}>
+            <button key={t} type="button" className="ws-chip" onClick={() => openPicker(t)} title={meta.label}>
               <Icon className="h-3.5 w-3.5" />
-              <span className="hidden sm:inline">{meta.label}</span>
+              <span>{meta.label}</span>
             </button>
           );
         })}
         {studio && (
-          <Link to="/studio" className="ws-chip">
+          <Link to="/studio" className="ws-chip" title="FV Studios">
             <Clapperboard className="h-3.5 w-3.5" />
-            <span className="hidden sm:inline">FV Studios</span>
+            <span>FV Studios</span>
           </Link>
         )}
         {onMic && (
@@ -285,7 +285,7 @@ export function FrassyComposer({
             aria-label="Talk to Frassy"
           >
             <Mic className="h-3.5 w-3.5" />
-            <span className="hidden sm:inline">Voice</span>
+            <span>Voice</span>
           </button>
         )}
         {queue.stats.total > 0 && (
@@ -297,7 +297,7 @@ export function FrassyComposer({
       </div>
 
       <form
-        className="mt-2 flex items-end gap-2"
+        className="ws-composer-row"
         onSubmit={(e) => {
           e.preventDefault();
           submit();
@@ -364,7 +364,7 @@ export function FrassyComposer({
 
         <textarea
           ref={textRef}
-          rows={1}
+          rows={2}
           value={value}
           onChange={(e) => onChange(e.target.value)}
           onKeyDown={(e) => {
