@@ -17,8 +17,15 @@ type NavGroup = {
   items?: NavItem[];
 };
 
-/** Every destination in the World of Frass is reachable from this bar. */
-const NAV: NavGroup[] = [
+// FRASS-0414 — Dual Navigation Architecture.
+//
+// Frass Hill and Frass District are two different places, so they get two
+// different navigations. Commerce never clutters the town; the town never
+// clutters the shop. The switcher in the bar is the only door between them.
+//
+// SHOP_NAV / SHOP_PRIMARY → Frass District (buying).
+// HILL_NAV / HILL_PRIMARY → Frass Hill (living, learning, community).
+const SHOP_NAV: NavGroup[] = [
   { label: "Frass District", to: "/frass-district", match: "/frass-district" },
   {
     label: "Frass Kicks",
