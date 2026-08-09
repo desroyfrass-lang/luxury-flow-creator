@@ -1786,6 +1786,12 @@ a.ps-row:hover { border-color: color-mix(in srgb, var(--gold) 60%, transparent);
 .frass-workspace .frass-card-widget .mini-widget-status,
 .frass-workspace .frass-card-widget .mini-widget-label,
 .frass-workspace .frass-card-widget .living-card-role { color: var(--ws-soft); }
+.frass-workspace .frass-link-widget {
+  background: var(--ws-panel);
+  border-color: var(--ws-line);
+  color: var(--ws-ink);
+}
+.frass-workspace .frass-link-widget .frass-link-url { border-color: var(--ws-line); }
 
 
 /* FRASS-0429 — Pay is the universal payment door */
