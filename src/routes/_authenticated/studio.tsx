@@ -21,7 +21,10 @@ import {
   Info,
 } from "lucide-react";
 import { SiteShell } from "@/components/site-shell";
+import { PhoneContentMode } from "@/components/studio/phone-content-mode";
+import type { QualityReport } from "@/lib/studio/phone-content-mode";
 import { FREE_CAPABILITIES, formatDuration, unitLabel, usdFor } from "@/lib/studio/credits";
+
 import { DIRECTOR_EXAMPLES, planFromDirection, type DirectorPlan } from "@/lib/studio/director";
 import {
   createStudioProject,
