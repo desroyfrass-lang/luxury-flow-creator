@@ -747,6 +747,111 @@ export type Database = {
           },
         ]
       }
+      business_card_events: {
+        Row: {
+          card_user_id: string
+          created_at: string
+          detail: string | null
+          id: string
+          kind: string
+        }
+        Insert: {
+          card_user_id: string
+          created_at?: string
+          detail?: string | null
+          id?: string
+          kind: string
+        }
+        Update: {
+          card_user_id?: string
+          created_at?: string
+          detail?: string | null
+          id?: string
+          kind?: string
+        }
+        Relationships: []
+      }
+      business_cards: {
+        Row: {
+          accent: string
+          background_url: string | null
+          booking_url: string | null
+          business_hours: string | null
+          calendar_url: string | null
+          certifications: string[]
+          company: string | null
+          created_at: string
+          cta_label: string | null
+          cta_url: string | null
+          custom_links: Json
+          headline: string | null
+          hero_media_url: string | null
+          is_published: boolean
+          job_title: string | null
+          languages: string[]
+          location: string | null
+          section_order: string[]
+          show_contact: boolean
+          social_links: Json
+          theme: string
+          updated_at: string
+          user_id: string
+          website: string | null
+        }
+        Insert: {
+          accent?: string
+          background_url?: string | null
+          booking_url?: string | null
+          business_hours?: string | null
+          calendar_url?: string | null
+          certifications?: string[]
+          company?: string | null
+          created_at?: string
+          cta_label?: string | null
+          cta_url?: string | null
+          custom_links?: Json
+          headline?: string | null
+          hero_media_url?: string | null
+          is_published?: boolean
+          job_title?: string | null
+          languages?: string[]
+          location?: string | null
+          section_order?: string[]
+          show_contact?: boolean
+          social_links?: Json
+          theme?: string
+          updated_at?: string
+          user_id: string
+          website?: string | null
+        }
+        Update: {
+          accent?: string
+          background_url?: string | null
+          booking_url?: string | null
+          business_hours?: string | null
+          calendar_url?: string | null
+          certifications?: string[]
+          company?: string | null
+          created_at?: string
+          cta_label?: string | null
+          cta_url?: string | null
+          custom_links?: Json
+          headline?: string | null
+          hero_media_url?: string | null
+          is_published?: boolean
+          job_title?: string | null
+          languages?: string[]
+          location?: string | null
+          section_order?: string[]
+          show_contact?: boolean
+          social_links?: Json
+          theme?: string
+          updated_at?: string
+          user_id?: string
+          website?: string | null
+        }
+        Relationships: []
+      }
       capsule_items: {
         Row: {
           capsule_id: string

@@ -6,6 +6,7 @@ import { ArrowLeft, MessageCircle, PenLine, Play } from "lucide-react";
 import { getMyProfile } from "@/lib/profiles.functions";
 import { resolveForUsWeather } from "@/lib/for-us";
 import { ForMeAbout } from "@/components/for-me-about";
+import { LivingCardWidget } from "@/components/card/living-card-widget";
 
 /**
  * FRASS-0421 — FOR ME.
@@ -112,6 +113,10 @@ function ForMePage() {
       </div>
 
       <main className="mx-auto max-w-[1100px] px-6 pb-24 lg:px-10">
+        {/* FRASS-0426 — the card is always one click away */}
+        <div className="mb-8">
+          <LivingCardWidget context="FOR ME" />
+        </div>
         {/* Hero — your face and your welcome video */}
         <section className="chrome-glow relative overflow-hidden rounded-[2rem] ring-1 ring-white/10">
           <div className="grid gap-8 bg-black/40 p-8 md:grid-cols-[220px_1fr] md:p-12">
