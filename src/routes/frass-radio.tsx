@@ -3,6 +3,8 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { Radio, Play, Sparkles, Wallet, Headphones, Info } from "lucide-react";
 import { SiteShell } from "@/components/site-shell";
+import { LiveBadge } from "@/components/live/live-status";
+import { useLiveNow } from "@/hooks/use-live";
 import {
   AUDIO_SHELVES,
   DISCOVERY_ROLES,
@@ -39,6 +41,7 @@ export const Route = createFileRoute("/frass-radio")({
 
 function FrassRadioPage() {
   const [station, setStation] = useState(RADIO_STATIONS[0]!.key);
+  const { data: radioLive = [] } = useLiveNow("radio");
   const current = RADIO_STATIONS.find((s) => s.key === station)!;
 
   return (
@@ -65,6 +68,52 @@ function FrassRadioPage() {
         </header>
 
         <div className="mx-auto max-w-6xl space-y-16 px-4 py-14 sm:px-6">
+          {/* FRASS-0416 — the two kinds of live, kept distinct */}
+          <section className="rounded-3xl border border-white/10 bg-white/[0.03] p-6">
+            <h2 className="text-[11px] uppercase tracking-[0.32em] text-amber-300/70">
+              Live on Frass Radio
+            </h2>
+            <p className="mt-3 text-sm leading-relaxed text-white/70">
+              Frass Radio Live is curated and broadcast-oriented: DJ sessions, music premieres, podcasts,
+              artist interviews, Foundation broadcasts, wellness talks and community news — scheduled, not
+              spontaneous. Community streaming lives somewhere else on purpose.
+            </p>
+            <p className="mt-3 text-sm leading-relaxed text-white/45">
+              <strong className="text-white/70">What this means in plain English:</strong> Radio is a show
+              with a time slot. For Us Live is standing up in the community hall and saying "come see this".
+            </p>
+            {radioLive.length > 0 && (
+              <div className="mt-5 grid gap-3 sm:grid-cols-2">
+                {radioLive.map((b) => (
+                  <Link
+                    key={b.id}
+                    to="/live/$broadcastId"
+                    params={{ broadcastId: b.id }}
+                    className="rounded-2xl border border-red-500/40 bg-black/40 p-4 transition hover:border-red-500"
+                  >
+                    <LiveBadge />
+                    <p className="mt-2 text-sm font-semibold text-white">{b.title}</p>
+                    <p className="text-[10px] uppercase tracking-[0.22em] text-amber-300/70">{b.host_name}</p>
+                  </Link>
+                ))}
+              </div>
+            )}
+            <div className="mt-6 flex flex-wrap gap-3">
+              <Link
+                to="/live"
+                className="rounded-full border border-white/25 px-5 py-2 text-[10px] font-bold uppercase tracking-[0.24em] text-white/80 transition hover:border-red-500 hover:text-white"
+              >
+                Live Directory
+              </Link>
+              <Link
+                to="/for-us"
+                className="rounded-full border border-white/25 px-5 py-2 text-[10px] font-bold uppercase tracking-[0.24em] text-white/80 transition hover:border-amber-300 hover:text-white"
+              >
+                🔴 For Us Live — community streaming
+              </Link>
+            </div>
+          </section>
+
           {/* Player + stations */}
           <section>
             <div className="rounded-3xl border border-amber-300/25 bg-white/[0.03] p-6">
