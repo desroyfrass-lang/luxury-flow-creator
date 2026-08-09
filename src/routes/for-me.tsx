@@ -6,6 +6,7 @@ import { ArrowLeft, MessageCircle, PenLine, Play } from "lucide-react";
 import { getMyProfile } from "@/lib/profiles.functions";
 import { resolveForUsWeather } from "@/lib/for-us";
 import { ForMeAbout } from "@/components/for-me-about";
+import { LivingCardWidget } from "@/components/card/living-card-widget";
 
 /**
  * FRASS-0421 — FOR ME.
