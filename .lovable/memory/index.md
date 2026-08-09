@@ -18,7 +18,15 @@ Frass Hill has exactly 8 districts (Town Square, Children's Village, Frass Distr
 "Frass World" is retired — the entrance is SHOP or ENTER FRASS HILL.
 Sightline rule: every building in Frass Hill must be visible before it is visited — each district shows what you can see from there.
 
+Navigation exposes Places, not features — features live inside places. Reserve gold for luxury moments; chrome for interaction.
+Every major milestone needs five green audits: Security, Privacy, Performance, Accessibility, Financial (FRASS-0422).
+Town Square (/town-square) is the whole town — people, businesses, artists, brands, farmers, builders, events, stores, districts, live. Not TikTok.
+For Me is personal, never algorithmic — no "chosen for you".
+
 ## Memories
+- [FRASS-0421 Town Square & For Me](mem://features/frass-0421-town-square-for-me) — Town Square presence directory, For Me fixed sections, Phase 1 approvals
+- [FRASS-0422 Security by Design](mem://preferences/frass-0422-security-by-design) — five mandatory audits per milestone
+- [Navigation places not features](mem://preferences/navigation-places-not-features) — nav lists districts; services live inside them
 - [Entrance & Arrival](mem://features/frass-0923-entrance-arrival) — FRASS-0923/0924: `/` is the ceremonial entrance (Frassy's only full welcome); ENTER FRASS HILL journeys through `/arrival` before the Town Plan
 - [One source of truth rule](mem://preferences/one-source-of-truth) — Audit-before-build discipline, consolidation over duplication, Audit Report deliverable
 
