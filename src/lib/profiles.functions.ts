@@ -142,8 +142,8 @@ export const getPublicProfileByHandle = createServerFn({ method: "GET" })
       )
       .eq("handle", data.handle)
       .eq("is_public", true)
-      .single();
+      .maybeSingle();
     if (error) throw error;
-    return profile;
+    return profile ?? null;
   });
 
