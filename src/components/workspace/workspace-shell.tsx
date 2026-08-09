@@ -217,6 +217,10 @@ export function WorkspaceShell({
                 <span aria-hidden>🎬</span>
                 <span className="flex-1 text-left">FV Studios</span>
               </Link>
+              <Link to="/business-builder" className="ws-nav">
+                <span aria-hidden>💼</span>
+                <span className="flex-1 text-left">Business Builder</span>
+              </Link>
               <Link to="/financial-center" className="ws-nav">
                 <span aria-hidden>💰</span>
                 <span className="flex-1 text-left">Financial Center</span>
