@@ -16,6 +16,7 @@ import {
   Sparkles,
 } from "lucide-react";
 import { SiteShell } from "@/components/site-shell";
+import fvMonogram from "@/assets/fv-monogram.png.asset.json";
 import {
   AGREEMENT_MODULES,
   DIVISIONS,
@@ -62,6 +63,13 @@ function FvStudiosPage() {
           <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(252,211,77,0.14),transparent_60%)]" />
           <div className="relative mx-auto max-w-6xl px-4 py-20 sm:px-6 sm:py-28">
             <p className="text-[11px] uppercase tracking-[0.5em] text-amber-300/70">FRASS-0410</p>
+            <img
+              src={fvMonogram.url}
+              alt="Frass Vision Studios monogram"
+              width={1024}
+              height={1024}
+              className="mt-6 h-20 w-20 object-contain sm:h-24 sm:w-24"
+            />
             <h1 className="mt-4 text-4xl font-light uppercase tracking-[0.18em] sm:text-6xl">
               Frass Vision
               <span className="block text-amber-300">Studios</span>

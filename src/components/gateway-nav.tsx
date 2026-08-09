@@ -128,6 +128,8 @@ const NAV: NavGroup[] = [
     items: [
       { label: "Enter FV Studios", to: "/studio", note: "Frass Vision Studios — video, audio & motion" },
       { label: "Frass Vision Studios", to: "/fv-studios", note: "The label, film studio & publishing network" },
+      { label: "Frass Radio", to: "/frass-radio", note: "Music, podcasts, Originals & live sessions" },
+      { label: "Brand Partnerships", to: "/brand-partnerships", note: "Paid campaigns — faceless friendly" },
     ],
   },
 
@@ -156,6 +158,7 @@ const PRIMARY: { label: string; to: string; match: string; editorial?: boolean }
   { label: "Frass Bridal", to: "/bridal", match: "/bridal", editorial: true },
   { label: "Frass Plus+", to: "/frass-plus", match: "/frass-plus" },
   { label: "Frass Kids", to: "/frass-kids", match: "/frass-kids" },
+  { label: "Frass Radio", to: "/frass-radio", match: "/frass-radio", editorial: true },
 ];
 
 

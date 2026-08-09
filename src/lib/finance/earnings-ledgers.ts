@@ -21,6 +21,8 @@ export type EarningsSourceId =
   | "services"
   | "podcast"
   | "music"
+  | "radio"
+  | "brand-partnerships"
   | "builder"
   | "farm"
   | "founder-compensation"
@@ -114,6 +116,26 @@ export const EARNINGS_SOURCES: EarningsSource[] = [
     explain: "Releases, sets and licensing revenue attributed to music.",
     plain: "Money your music brought in.",
     roles: ["designer", "ambassador"],
+  },
+  {
+    id: "radio",
+    label: "Radio Royalties",
+    icon: "📻",
+    ledger: "marketplace",
+    explain:
+      "Streaming participation earned when your work is played on Frass Radio, under the terms of your creator or artist agreement.",
+    plain: "Money from people listening to your work on Frass Radio.",
+    roles: ["designer", "ambassador"],
+  },
+  {
+    id: "brand-partnerships",
+    label: "Brand Partnership Earnings",
+    icon: "🤝",
+    ledger: "marketplace",
+    explain:
+      "Fixed fees, performance bonuses and revenue share from approved brand campaigns. Affiliate components stay on the Affiliate ledger.",
+    plain: "Money from campaigns you made for brands.",
+    roles: ["designer", "ambassador", "partner"],
   },
   {
     id: "builder",
