@@ -35,6 +35,7 @@ import { Route as FrassLuxuryHouseRouteImport } from './routes/frass-luxury-hous
 import { Route as FrassKidsRouteImport } from './routes/frass-kids'
 import { Route as FrassKicksRouteImport } from './routes/frass-kicks'
 import { Route as FrassHostingRouteImport } from './routes/frass-hosting'
+import { Route as FrassHillJourneyRouteImport } from './routes/frass-hill-journey'
 import { Route as FrassHillRouteImport } from './routes/frass-hill'
 import { Route as FrassDripRouteImport } from './routes/frass-drip'
 import { Route as FrassDistrictRouteImport } from './routes/frass-district'
@@ -314,6 +315,11 @@ const FrassKicksRoute = FrassKicksRouteImport.update({
 const FrassHostingRoute = FrassHostingRouteImport.update({
   id: '/frass-hosting',
   path: '/frass-hosting',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FrassHillJourneyRoute = FrassHillJourneyRouteImport.update({
+  id: '/frass-hill-journey',
+  path: '/frass-hill-journey',
   getParentRoute: () => rootRouteImport,
 } as any)
 const FrassHillRoute = FrassHillRouteImport.update({
@@ -1127,6 +1133,7 @@ export interface FileRoutesByFullPath {
   '/frass-district': typeof FrassDistrictRoute
   '/frass-drip': typeof FrassDripRouteWithChildren
   '/frass-hill': typeof FrassHillRoute
+  '/frass-hill-journey': typeof FrassHillJourneyRoute
   '/frass-hosting': typeof FrassHostingRoute
   '/frass-kicks': typeof FrassKicksRouteWithChildren
   '/frass-kids': typeof FrassKidsRouteWithChildren
@@ -1297,6 +1304,7 @@ export interface FileRoutesByTo {
   '/for-us': typeof ForUsRoute
   '/frass-district': typeof FrassDistrictRoute
   '/frass-hill': typeof FrassHillRoute
+  '/frass-hill-journey': typeof FrassHillJourneyRoute
   '/frass-hosting': typeof FrassHostingRoute
   '/frass-radio': typeof FrassRadioRoute
   '/frass-world': typeof FrassWorldRoute
@@ -1461,6 +1469,7 @@ export interface FileRoutesById {
   '/frass-district': typeof FrassDistrictRoute
   '/frass-drip': typeof FrassDripRouteWithChildren
   '/frass-hill': typeof FrassHillRoute
+  '/frass-hill-journey': typeof FrassHillJourneyRoute
   '/frass-hosting': typeof FrassHostingRoute
   '/frass-kicks': typeof FrassKicksRouteWithChildren
   '/frass-kids': typeof FrassKidsRouteWithChildren
@@ -1640,6 +1649,7 @@ export interface FileRouteTypes {
     | '/frass-district'
     | '/frass-drip'
     | '/frass-hill'
+    | '/frass-hill-journey'
     | '/frass-hosting'
     | '/frass-kicks'
     | '/frass-kids'
@@ -1810,6 +1820,7 @@ export interface FileRouteTypes {
     | '/for-us'
     | '/frass-district'
     | '/frass-hill'
+    | '/frass-hill-journey'
     | '/frass-hosting'
     | '/frass-radio'
     | '/frass-world'
@@ -1973,6 +1984,7 @@ export interface FileRouteTypes {
     | '/frass-district'
     | '/frass-drip'
     | '/frass-hill'
+    | '/frass-hill-journey'
     | '/frass-hosting'
     | '/frass-kicks'
     | '/frass-kids'
@@ -2152,6 +2164,7 @@ export interface RootRouteChildren {
   FrassDistrictRoute: typeof FrassDistrictRoute
   FrassDripRoute: typeof FrassDripRouteWithChildren
   FrassHillRoute: typeof FrassHillRoute
+  FrassHillJourneyRoute: typeof FrassHillJourneyRoute
   FrassHostingRoute: typeof FrassHostingRoute
   FrassKicksRoute: typeof FrassKicksRouteWithChildren
   FrassKidsRoute: typeof FrassKidsRouteWithChildren
@@ -2377,6 +2390,13 @@ declare module '@tanstack/react-router' {
       path: '/frass-hosting'
       fullPath: '/frass-hosting'
       preLoaderRoute: typeof FrassHostingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/frass-hill-journey': {
+      id: '/frass-hill-journey'
+      path: '/frass-hill-journey'
+      fullPath: '/frass-hill-journey'
+      preLoaderRoute: typeof FrassHillJourneyRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/frass-hill': {
@@ -3957,6 +3977,7 @@ const rootRouteChildren: RootRouteChildren = {
   FrassDistrictRoute: FrassDistrictRoute,
   FrassDripRoute: FrassDripRouteWithChildren,
   FrassHillRoute: FrassHillRoute,
+  FrassHillJourneyRoute: FrassHillJourneyRoute,
   FrassHostingRoute: FrassHostingRoute,
   FrassKicksRoute: FrassKicksRouteWithChildren,
   FrassKidsRoute: FrassKidsRouteWithChildren,
