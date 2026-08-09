@@ -18,6 +18,26 @@ import { FrassyComposer } from "@/components/workspace/frassy-composer";
 import { getWallet } from "@/lib/studio.functions";
 import { usdFor } from "@/lib/studio/credits";
 import frassyAvatar from "@/assets/frassy-gold.png.asset.json";
+import sceneCoast from "@/assets/daily-scene-coast.jpg";
+import sceneWaterfall from "@/assets/daily-scene-waterfall.jpg";
+import sceneMountain from "@/assets/daily-scene-mountain.jpg";
+import sceneVilla from "@/assets/daily-scene-villa.jpg";
+import {
+  BRIEFING_ORDER,
+  dailyProgress,
+  dailySteps,
+  LANE,
+  LANE_ORDER,
+  nextLine,
+  sceneIndexFor,
+  sectionStatuses,
+  type Lane,
+  type SectionStatus,
+} from "@/lib/workspace/daily-os";
+
+const SCENES = [sceneCoast, sceneWaterfall, sceneMountain, sceneVilla];
+
+
 
 
 import {
