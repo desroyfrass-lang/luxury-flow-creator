@@ -37,6 +37,7 @@ import buildersImg from "@/assets/hill-builders-village.jpg";
 import farmImg from "@/assets/hill-farm-district.jpg";
 import founderImg from "@/assets/hill-founder-hall.jpg";
 import bridalImg from "@/assets/district-bridal.jpg";
+import wellnessImg from "@/assets/hill-wellness-centre.jpg";
 
 const IMAGES: Record<string, string> = {
   square: squareImg,
@@ -48,6 +49,7 @@ const IMAGES: Record<string, string> = {
   farm: farmImg,
   founder: founderImg,
   bridal: bridalImg,
+  wellness: wellnessImg,
 };
 
 export const Route = createFileRoute("/frass-hill")({
