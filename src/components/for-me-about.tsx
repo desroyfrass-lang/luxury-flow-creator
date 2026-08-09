@@ -5,10 +5,12 @@ import { PenLine, Save, X } from "lucide-react";
 import { updateMyProfile } from "@/lib/profiles.functions";
 import {
   aboutIsEmpty,
+  legacyIsEmpty,
   linkLinesToText,
   parseAbout,
   parseLinkLines,
   parseTags,
+  LEGACY_FIELDS,
   type BuilderAbout,
 } from "@/lib/about";
 
