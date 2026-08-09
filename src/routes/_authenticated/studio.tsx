@@ -1,5 +1,5 @@
 // ─────────────────────────────────────────────────────────────────────────────
-// FRASS-0401/0407 — Frass Vision Studios (FV Studio). Frassy creates, the creator directs.
+// FRASS-0401/0407 — Frass Vision Studios (FV Studios). Frassy creates, the creator directs.
 // Manual editing is always free; AI work is forecast, approved, then billed.
 // ─────────────────────────────────────────────────────────────────────────────
 
@@ -37,13 +37,13 @@ import {
 export const Route = createFileRoute("/_authenticated/studio")({
   head: () => ({
     meta: [
-      { title: "Frass Vision Studios (FV Studio) — Frass Hill" },
+      { title: "Frass Vision Studios (FV Studios) — Frass Hill" },
       {
         name: "description",
         content:
-          "Frass Vision Studios, known throughout Frass as FV Studio: describe the edit and Frassy builds it, with a full professional timeline underneath whenever you want to take the controls.",
+          "Frass Vision Studios, known throughout Frass as FV Studios: describe the edit and Frassy builds it, with a full professional timeline underneath whenever you want to take the controls.",
       },
-      { property: "og:title", content: "Frass Vision Studios (FV Studio) — Frass Hill" },
+      { property: "og:title", content: "Frass Vision Studios (FV Studios) — Frass Hill" },
       {
         property: "og:description",
         content: "Frassy creates. You direct. The flagship creative production environment of Frass Hill.",
@@ -194,7 +194,7 @@ function StudioPage() {
                 <Film className="h-7 w-7 text-amber-300" /> Frass Vision Studios
               </h1>
               <p className="mt-2 max-w-2xl text-sm text-white/60">
-                Known throughout Frass as FV Studio. Frassy creates. You direct. Describe the edit
+                Known throughout Frass as FV Studios. Frassy creates. You direct. Describe the edit
                 and she builds it — the full professional timeline is underneath whenever you
                 want to take the controls.
               </p>

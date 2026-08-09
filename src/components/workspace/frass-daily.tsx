@@ -470,7 +470,7 @@ export function FrassDaily({
         {/* FRASS-0401/0402/0407 — Frass Vision Studios, open to every member and partner */}
         <Section
           title="🎬 Frass Vision Studios"
-          note="Continue your latest creative project in FV Studio. Manual editing is always free — AI work is forecast before it runs."
+          note="Continue your latest creative project in FV Studios. Manual editing is always free — AI work is forecast before it runs."
         >
           <div className="daily-grid">
             <button
