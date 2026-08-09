@@ -100,3 +100,4 @@ For Me is personal, never algorithmic — no "chosen for you".
 - [Frass Business Builder](mem://features/frass-business-builder) — FRASS-0419/0419A: build businesses not websites, one architecture from FV Studios + Workspace, customer-pays cost constitution
 - [FRASS-0420 Frass Hosting](mem://features/frass-0420-hosting) — Frass sells hosting as its own paid service; free landing page for every member; cloud infrastructure underneath, never named to the customer
 - [FRASS-0423 world realism](mem://features/frass-0423-world-realism) — Welcome Hall = arrival/registration gateway, Town Square = feature inside the Hill, Kids Valley road, photoreal cinematic standard, For Me Living Bio
+- [FRASS-0423 Legacy & Arrival](mem://features/frass-0423-legacy-and-arrival) — My Legacy section in the Living Bio; Welcome Hall as a slow cinematic arrival (gates part, sightlines, Frassy, then the two roads)

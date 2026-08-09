@@ -1,7 +1,9 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ArrowRight } from "lucide-react";
+import { useEffect, useState } from "react";
+import { ArrowRight, Volume2, VolumeX } from "lucide-react";
 import gateway from "@/assets/welcome-hall-gateway.jpg";
 import valley from "@/assets/kids-valley.jpg";
+import { ambienceEnabled, setAmbienceEnabled, startAmbience, stopAmbience } from "@/lib/for-us-ambience";
 
 /**
  * FRASS-0423 — Welcome Hall.
@@ -61,32 +63,162 @@ const ARRIVAL_SIGHTLINES = [
   { name: "Town Square", line: "The civic heart — everyone's experience.", to: "/town-square" },
 ];
 
+/** What you glimpse down the hill as the gates part — FRASS-0423 Amendment 2. */
+const GLIMPSES = [
+  { glyph: "✨", name: "Luxury House" },
+  { glyph: "🎬", name: "Studio District" },
+  { glyph: "🏛", name: "Founder Hall" },
+  { glyph: "🏗", name: "Builders Village" },
+  { glyph: "🌿", name: "Farm District" },
+  { glyph: "🎵", name: "Music from the Studio" },
+  { glyph: "👟", name: "Frass District, glowing below" },
+  { glyph: "🌈", name: "Children laughing in Kids Valley" },
+];
+
+/** The arrival unfolds: gates part → the hill appears → Frassy speaks → the roads open. */
+function useArrivalStage() {
+  const [stage, setStage] = useState(0);
+
+  useEffect(() => {
+    const reduced = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
+    if (reduced) {
+      setStage(3);
+      return;
+    }
+    const timers = [
+      setTimeout(() => setStage(1), 900),
+      setTimeout(() => setStage(2), 3400),
+      setTimeout(() => setStage(3), 6200),
+    ];
+    const skip = () => {
+      timers.forEach(clearTimeout);
+      setStage(3);
+    };
+    window.addEventListener("frass-arrival-skip", skip);
+    return () => {
+      timers.forEach(clearTimeout);
+      window.removeEventListener("frass-arrival-skip", skip);
+    };
+  }, []);
+
+  return stage;
+}
+
 function WelcomeHallPage() {
+  const stage = useArrivalStage();
+  const [sound, setSound] = useState(false);
+
+  useEffect(() => {
+    setSound(ambienceEnabled());
+  }, []);
+
+  const toggleSound = () => {
+    const next = !sound;
+    setSound(next);
+    setAmbienceEnabled(next);
+    if (next) startAmbience();
+    else stopAmbience();
+  };
+
+  useEffect(() => () => stopAmbience(), []);
+
+  const open = stage >= 1;
+
   return (
     <div className="min-h-screen bg-background text-foreground">
       {/* The gates */}
-      <header className="relative min-h-[72vh] overflow-hidden">
+      <header
+        className="relative min-h-[86vh] overflow-hidden"
+        onClick={() => window.dispatchEvent(new Event("frass-arrival-skip"))}
+      >
         <img
           src={gateway}
           alt="Visitors walking through the stone arrival gates of a Caribbean hill town at golden hour"
           width={1600}
           height={912}
-          className="hero-drift absolute inset-0 h-full w-full object-cover"
+          className={`hero-drift absolute inset-0 h-full w-full object-cover transition-all duration-[2600ms] ease-[cubic-bezier(0.22,1,0.36,1)] ${
+            open ? "scale-100 blur-0 brightness-100" : "scale-110 blur-sm brightness-[0.55]"
+          }`}
         />
         <div className="absolute inset-0 bg-gradient-to-t from-background via-background/70 to-background/30" />
-        <div className="relative mx-auto flex min-h-[72vh] max-w-[1200px] flex-col justify-end px-6 pb-16 pt-24 lg:px-10">
-          <p className="text-[10px] uppercase tracking-[0.4em] text-muted-foreground">
+
+        {/* Two gate panels, slowly parting */}
+        <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
+          <div
+            className="absolute inset-y-0 left-0 w-1/2 border-r border-[color:var(--hill-gold)]/30 bg-[#07090a] transition-transform duration-[3200ms] ease-[cubic-bezier(0.22,1,0.36,1)]"
+            style={{ transform: open ? "translateX(-101%)" : "translateX(0)" }}
+          />
+          <div
+            className="absolute inset-y-0 right-0 w-1/2 border-l border-[color:var(--hill-gold)]/30 bg-[#07090a] transition-transform duration-[3200ms] ease-[cubic-bezier(0.22,1,0.36,1)]"
+            style={{ transform: open ? "translateX(101%)" : "translateX(0)" }}
+          />
+        </div>
+
+        <button
+          type="button"
+          onClick={(e) => {
+            e.stopPropagation();
+            toggleSound();
+          }}
+          aria-label={sound ? "Turn off the sounds of Frass Hill" : "Hear the sounds of Frass Hill"}
+          className="absolute right-5 top-5 z-10 inline-flex items-center gap-2 rounded-full border border-border/70 bg-background/60 px-4 py-2 text-[10px] uppercase tracking-[0.25em] text-muted-foreground backdrop-blur transition hover:text-foreground"
+        >
+          {sound ? <Volume2 className="h-3.5 w-3.5" /> : <VolumeX className="h-3.5 w-3.5" />}
+          {sound ? "Sound on" : "Hear the Hill"}
+        </button>
+
+        <div className="relative mx-auto flex min-h-[86vh] max-w-[1200px] flex-col justify-end px-6 pb-16 pt-24 lg:px-10">
+          <p
+            className={`text-[10px] uppercase tracking-[0.4em] text-muted-foreground transition-opacity duration-1000 ${
+              open ? "opacity-100" : "opacity-0"
+            }`}
+          >
             The gates of Frass Hill
           </p>
-          <h1 className="mt-4 text-5xl font-black uppercase leading-[0.95] tracking-tight md:text-7xl">
+          <h1
+            className={`mt-4 text-5xl font-black uppercase leading-[0.95] tracking-tight transition-all duration-1000 md:text-7xl ${
+              open ? "translate-y-0 opacity-100" : "translate-y-4 opacity-0"
+            }`}
+          >
             Welcome Hall
           </h1>
-          <p className="mt-5 max-w-2xl text-base leading-relaxed text-muted-foreground">
-            Nobody teleports into Frass Hill. You arrive. This is where you register, learn what the
-            Hill is, meet Frassy, and choose the road you walk in on.
+
+          {/* What you see down the hill, arriving one by one */}
+          <ul className="mt-6 flex flex-wrap gap-x-5 gap-y-2">
+            {GLIMPSES.map((g, i) => (
+              <li
+                key={g.name}
+                className={`text-xs text-muted-foreground transition-all duration-[1200ms] ${
+                  open ? "translate-y-0 opacity-100" : "translate-y-3 opacity-0"
+                }`}
+                style={{ transitionDelay: `${900 + i * 220}ms` }}
+              >
+                <span aria-hidden className="mr-1.5">
+                  {g.glyph}
+                </span>
+                {g.name}
+              </li>
+            ))}
+          </ul>
+
+          {/* Frassy, once */}
+          <p
+            className={`mt-8 max-w-2xl text-base leading-relaxed text-foreground/90 transition-all duration-1000 md:text-lg ${
+              stage >= 2 ? "translate-y-0 opacity-100" : "translate-y-3 opacity-0"
+            }`}
+            aria-live="polite"
+          >
+            “Welcome to Frass Hill. This isn't just somewhere you visit. It's somewhere you belong.”
+            <span className="mt-1 block text-[10px] uppercase tracking-[0.3em] text-muted-foreground">
+              Frassy, host of the Hill
+            </span>
           </p>
 
-          <div className="mt-9 grid gap-4 sm:grid-cols-2 lg:max-w-3xl">
+          <div
+            className={`mt-9 grid gap-4 transition-all duration-1000 sm:grid-cols-2 lg:max-w-3xl ${
+              stage >= 3 ? "translate-y-0 opacity-100" : "pointer-events-none translate-y-4 opacity-0"
+            }`}
+          >
             <Link
               to="/auth"
               search={{ next: "/frass-hill" }}
@@ -136,6 +268,7 @@ function WelcomeHallPage() {
           </p>
         </div>
       </header>
+
 
       <main className="mx-auto max-w-[1200px] px-6 pb-24 lg:px-10">
         <section className="mt-14">

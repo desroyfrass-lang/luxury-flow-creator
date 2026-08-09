@@ -5,10 +5,12 @@ import { PenLine, Save, X } from "lucide-react";
 import { updateMyProfile } from "@/lib/profiles.functions";
 import {
   aboutIsEmpty,
+  legacyIsEmpty,
   linkLinesToText,
   parseAbout,
   parseLinkLines,
   parseTags,
+  LEGACY_FIELDS,
   type BuilderAbout,
 } from "@/lib/about";
 
@@ -164,6 +166,25 @@ export function ForMeAbout({ raw, canEdit }: { raw: unknown; canEdit: boolean })
           rows={2}
         />
 
+        <div className="rounded-2xl border border-white/15 bg-black/25 p-5">
+          <h3 className="text-[10px] uppercase tracking-[0.3em] text-white/70">My Legacy</h3>
+          <p className="mt-2 max-w-xl text-xs leading-relaxed text-white/60">
+            The permanent part of your story. Not what happened today — what you'd want remembered.
+          </p>
+          <div className="mt-5 grid gap-5">
+            {LEGACY_FIELDS.map((f) => (
+              <Field
+                key={f.key}
+                label={f.label}
+                hint={f.hint}
+                value={draft.legacy[f.key] ?? ""}
+                onChange={(v) => setDraft({ ...draft, legacy: { ...draft.legacy, [f.key]: v } })}
+                rows={f.key === "lifeLessons" ? 5 : 3}
+              />
+            ))}
+          </div>
+        </div>
+
         {error && <p className="text-xs text-white/80">{error}</p>}
 
         <div className="flex flex-wrap gap-3">
@@ -191,15 +212,16 @@ export function ForMeAbout({ raw, canEdit }: { raw: unknown; canEdit: boolean })
     );
   }
 
-  const empty = aboutIsEmpty(stored);
+  const noLegacy = legacyIsEmpty(stored.legacy);
+  const empty = aboutIsEmpty(stored) && noLegacy;
 
   return (
     <div className="mt-6">
       {empty ? (
         <p className="max-w-xl text-sm leading-relaxed text-white/70">
           Your About page is blank. This is the part of your page that stays true even when you
-          haven't posted in a month — your story, your mission, your business and how people reach
-          you.
+          haven't posted in a month — your story, your mission, your business, your legacy and how
+          people reach you.
         </p>
       ) : (
         <div className="grid gap-8 md:grid-cols-2">
@@ -259,6 +281,21 @@ export function ForMeAbout({ raw, canEdit }: { raw: unknown; canEdit: boolean })
           <Prose title="How to reach me" body={stored.contactPreference} />
         </div>
       )}
+
+      {!noLegacy && (
+        <section className="mt-10 rounded-2xl border border-[color:var(--hill-gold)]/35 bg-black/25 p-6">
+          <h2 className="font-display text-2xl uppercase leading-none text-white">My Legacy</h2>
+          <p className="mt-2 max-w-xl text-xs leading-relaxed text-white/60">
+            Not what happened today. What stays.
+          </p>
+          <div className="mt-6 grid gap-8 md:grid-cols-2">
+            {LEGACY_FIELDS.map((f) => (
+              <Prose key={f.key} title={f.label} body={stored.legacy[f.key] ?? ""} />
+            ))}
+          </div>
+        </section>
+      )}
+
 
       {canEdit && (
         <button
