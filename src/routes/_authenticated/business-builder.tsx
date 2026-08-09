@@ -57,6 +57,8 @@ function BusinessBuilderPage() {
   const [path, setPath] = useState<BuildPathId>("inside");
   const [modules, setModules] = useState<string[]>([]);
   const [planId, setPlanId] = useState("frass-starter");
+  const [publishOption, setPublishOption] = useState<PublishOptionId>("frass");
+
   const [customDomain, setCustomDomain] = useState(false);
   const [approved, setApproved] = useState(false);
 
