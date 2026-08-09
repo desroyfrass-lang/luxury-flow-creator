@@ -122,6 +122,8 @@ function PaymentRequestScreen() {
           </a>
           <p className="mt-3 text-xs text-muted-foreground">Order {done.order_id.slice(0, 8).toUpperCase()}</p>
         </div>
+        {/* FRASS-0438 — Security Confirmation, every completed payment. */}
+        <SecurityConfirmation className="mt-5" reference={done.order_id} />
       </main>
     );
   }
