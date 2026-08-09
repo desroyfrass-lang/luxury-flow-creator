@@ -376,10 +376,13 @@ function BusinessBuilderPage() {
                             {" "}
                             /{l.period === "once" ? "one-off" : l.period}
                           </span>
-                          <div className="text-[11px] text-[oklch(0.62_0.01_80)]">
-                            ${l.providerCost.toFixed(2)} provider + ${l.frassFee.toFixed(2)} Frass fee
-                          </div>
+                          {!l.frassService && (
+                            <div className="text-[11px] text-[oklch(0.62_0.01_80)]">
+                              ${l.providerCost.toFixed(2)} provider + ${l.frassFee.toFixed(2)} Frass fee
+                            </div>
+                          )}
                         </div>
+
                       </div>
                     ))}
                   </div>
