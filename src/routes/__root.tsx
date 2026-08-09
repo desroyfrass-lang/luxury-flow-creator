@@ -13,6 +13,7 @@ import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { Toaster } from "@/components/ui/sonner";
 import { VoiceStateOverlay } from "@/components/voice-state-overlay";
+import { GlobalSpeechBar } from "@/components/voice/speech-controls";
 import { FrassyChat } from "@/components/frassy-chat";
 import { FrassyHost } from "@/components/frassy-host";
 import { DailyGate } from "@/components/workspace/daily-gate";
@@ -138,6 +139,7 @@ function RootComponent() {
       <ConstructionMode />
 
 
+      <GlobalSpeechBar />
       <VoiceStateOverlay />
     </QueryClientProvider>
   );

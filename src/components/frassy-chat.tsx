@@ -19,6 +19,7 @@ import { useFrassyContext } from "@/hooks/use-frassy-context";
 import { useIsAdminStatus } from "@/hooks/use-is-admin";
 import { FrassyComposer } from "@/components/workspace/frassy-composer";
 import { usePushToTalk } from "@/hooks/use-push-to-talk";
+import { SpeechControls } from "@/components/voice/speech-controls";
 
 type ProductCard = {
   handle: string;
@@ -403,6 +404,12 @@ export function FrassyChat({ embedded = false }: { embedded?: boolean } = {}) {
           </div>
         )}
       </div>
+
+      {voice.isSpeaking || voice.isPaused ? (
+        <div className="border-t border-white/10 px-3 py-2">
+          <SpeechControls />
+        </div>
+      ) : null}
 
       <FrassyComposer
         value={input}
