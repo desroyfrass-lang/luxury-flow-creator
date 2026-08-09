@@ -34,7 +34,7 @@ export function CardStorefront({
   if (live.length === 0) return null;
 
   return (
-    <section className="living-card-block" id="card-shop">>
+    <section className="living-card-block" id="card-shop">
       <h2 className="living-card-block-title">
         <ShoppingBag className="mr-2 inline h-4 w-4" /> Buy from me
       </h2>
