@@ -150,6 +150,36 @@ function StudioPage() {
     onError: (e: Error) => toast.error(e.message),
   });
 
+  // FRASS-0406 — Phone Content Mode™ runs through the same credit pipeline.
+  const runPhone = useMutation({
+    mutationFn: (report: QualityReport) =>
+      runOp({
+        data: {
+          projectId: active?.id,
+          request: `Phone Content Mode™ — ${report.preset.label} (${report.minutes} min)`,
+          label: `Phone Content Mode™ · ${report.preset.label}`,
+          lines: report.forecast.lines.map((l) => ({
+            key: l.key,
+            label: l.label,
+            credits: l.credits,
+            qty: l.qty,
+          })),
+          total: report.forecast.total,
+          seconds: report.forecast.seconds,
+        },
+      }),
+    onSuccess: (r) => {
+      toast.success(
+        `Enhanced — ${r.charged.toLocaleString()} AI Credits used. ${r.balance.toLocaleString()} remaining.`,
+      );
+      void qc.invalidateQueries({ queryKey: ["ai-wallet"] });
+      void qc.invalidateQueries({ queryKey: ["ai-ledger"] });
+    },
+    onError: (e: Error) => toast.error(e.message),
+  });
+
+
+
   const w = walletQ.data;
   const projected = w ? Math.round((w.month_used / new Date().getDate()) * 30) : 0;
 
