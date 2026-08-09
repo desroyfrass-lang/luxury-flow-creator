@@ -294,7 +294,7 @@ export function FrassDaily({
         </Section>
 
         {/* 2 — Daily briefing */}
-        <Section title="Daily briefing" note="Everything since you were last here. Click any number to see what it is.">
+        <Section title="Since you were last here" note="Everything that moved while you were away. Click any number to see what it is.">
           <div className="daily-grid">
             {model.briefing.map((m) => (
               <MetricCard
@@ -397,7 +397,7 @@ export function FrassDaily({
 
         {/* 6 — Pending approvals */}
         {model.approvals.length > 0 && (
-          <Section title="Pending approvals" note="Everything waiting on you, in one place.">
+          <Section title="Pending Approvals" status={statuses.approvals} note="Everything waiting on you, in one place.">
             <div className="daily-grid">
               {model.approvals.map((a) => (
                 <button key={a.id} type="button" className="daily-card daily-clickable" onClick={() => go(a)}>
@@ -413,7 +413,7 @@ export function FrassDaily({
         )}
 
         {/* 7 — Opportunities */}
-        <Section title="Opportunities" note="Things I don't want you to miss.">
+        <Section title="Opportunities" status={statuses.opportunities} note="Things I don't want you to miss.">
           <div className="daily-grid">
             {model.opportunities.map((o) => (
               <button key={o.id} type="button" className="daily-card daily-clickable" onClick={() => go(o)}>
@@ -428,7 +428,7 @@ export function FrassDaily({
         </Section>
 
         {/* 8 — Goals & Vision Maps */}
-        <Section title="Goals & Vision Maps" note="How close you are.">
+        <Section title="Goals & Vision Map" status={statuses.goals} note="How close you are.">
           <div className="daily-lines">
             {model.goals.map((g) => (
               <button key={g.id} type="button" className="daily-goal daily-clickable-row" onClick={() => go(g)}>
@@ -446,7 +446,7 @@ export function FrassDaily({
         </Section>
 
         {/* 9 — Daily performance */}
-        <Section title="Daily performance" note="One glance tells you how things are going.">
+        <Section title="Daily Performance" status={statuses["daily-performance"]} note="One glance tells you how things are going.">
           <div className="daily-grid">
             {model.performance.map((m) => (
               <MetricCard
@@ -463,7 +463,7 @@ export function FrassDaily({
 
         {/* Founder-only executive panels */}
         {model.executive.length > 0 && (
-          <Section title="Founder command center" note="The executive view. Everything here opens the Founder Dashboard or the records behind it.">
+          <Section title="Founder Command Center" status={statuses["founder-command"]} note="The executive view. Everything here opens the Founder Dashboard or the records behind it.">
             <div className="daily-grid">
               {model.executive.map((m) => (
                 <MetricCard
@@ -578,7 +578,7 @@ export function FrassDaily({
         </Section>
 
         {/* 11 — Continue working */}
-        <Section title="Continue working" note="Exactly where you stopped.">
+        <Section title="Continue Working" status={statuses["continue-working"]} note="Exactly where you stopped.">
 
           <div className="daily-grid">
             {model.resume.map((r) => (
