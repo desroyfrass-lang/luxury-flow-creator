@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { useEffect, useState } from "react";
@@ -22,7 +22,6 @@ import {
   cardPath,
 } from "@/lib/card";
 import { ShareCardButton } from "@/components/card/card-share";
-import { QuickSellPanel } from "@/components/card/quick-sell";
 import { CARD_COMMERCE_PRINCIPLE, PAYOUT_PROVIDERS } from "@/lib/card-commerce";
 
 export const Route = createFileRoute("/_authenticated/workspace/card")({
