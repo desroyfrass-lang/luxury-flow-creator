@@ -220,6 +220,11 @@ export function WorkspaceShell({
                 <span aria-hidden>💰</span>
                 <span className="flex-1 text-left">Financial Center</span>
               </Link>
+              <Link to="/brand-partnerships" className="ws-nav">
+                <span aria-hidden>🤝</span>
+                <span className="flex-1 text-left">Brand Partnerships</span>
+              </Link>
+
 
               <ForUsLink className="ws-nav">
 
