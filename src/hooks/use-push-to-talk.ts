@@ -14,8 +14,17 @@
 
 import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { startWavRecording, type WavRecorder } from "@/lib/voice/wav-recorder";
-import { chunkForTTS, speakableText } from "@/lib/voice/chunk-text";
 import { conversation } from "@/lib/voice/conversation-machine";
+import {
+  getSpeechSnapshot,
+  pauseSpeech,
+  resumeSpeech,
+  speakText,
+  stopSpeech,
+  subscribeSpeech,
+  toggleSpeechPause,
+  type SpeechSnapshot,
+} from "@/lib/voice/speech-manager";
 
 export type VoicePhase = "idle" | "recording" | "transcribing" | "speaking";
 
@@ -29,39 +38,42 @@ export function useConversationState() {
   );
 }
 
-export function usePushToTalk() {
+/** Global speech playback state — shared by every surface. */
+export function useSpeechState(): SpeechSnapshot {
+  return useSyncExternalStore(subscribeSpeech, getSpeechSnapshot, getSpeechSnapshot);
+}
+
+export function usePushToTalk(owner = "frassy") {
   const [phase, setPhase] = useState<VoicePhase>("idle");
   const [voiceError, setVoiceError] = useState<string | null>(null);
   // Voice Engine truth: the UI may only advertise speech when playback actually
   // worked. Any TTS failure or blocked playback flips this off immediately.
   const [voiceAvailable, setVoiceAvailable] = useState(true);
   const recorderRef = useRef<WavRecorder | null>(null);
-  const audioRef = useRef<HTMLAudioElement | null>(null);
-  const urlsRef = useRef<string[]>([]);
-  const cancelRef = useRef(false);
+  const speakingRef = useRef(false);
+  const speech = useSpeechState();
 
   const releaseAudio = useCallback(() => {
-    const el = audioRef.current;
-    if (el) {
-      el.pause();
-      el.src = "";
+    // Only this surface's own speech may be torn down here — playback is global.
+    if (speakingRef.current) {
+      speakingRef.current = false;
+      stopSpeech();
     }
-    audioRef.current = null;
-    for (const url of urlsRef.current) URL.revokeObjectURL(url);
-    urlsRef.current = [];
   }, []);
 
-  // Never leave the mic open or audio playing behind an unmount.
+  // Never leave the mic open or our own audio playing behind an unmount.
   useEffect(
     () => () => {
-      cancelRef.current = true;
       recorderRef.current?.cancel();
       recorderRef.current = null;
-      releaseAudio();
-      conversation.reset();
+      if (speakingRef.current) {
+        speakingRef.current = false;
+        stopSpeech("surface closed");
+      }
     },
-    [releaseAudio],
+    [],
   );
+
 
   const startRecording = useCallback(async () => {
     if (recorderRef.current) return;
@@ -126,117 +138,36 @@ export function usePushToTalk() {
     setPhase("idle");
   }, []);
 
-  /** Fetches one chunk's audio as an object URL. */
-  const fetchChunk = useCallback(async (text: string): Promise<string> => {
-    const res = await fetch("/api/tts", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ text, voice: "shimmer" }),
-    });
-    if (!res.ok) throw new Error(`tts ${res.status}`);
-    const blob = await res.blob();
-    const url = URL.createObjectURL(blob);
-    urlsRef.current.push(url);
-    return url;
-  }, []);
-
-  /** Plays one clip and resolves only when the element reports completion. */
-  const playClip = useCallback(
-    (url: string, turnId: string) =>
-      new Promise<boolean>((resolve) => {
-        const audio = new Audio(url);
-        audioRef.current = audio;
-        let played = false;
-        let settled = false;
-        const finish = (ok: boolean) => {
-          if (settled) return;
-          settled = true;
-          audio.onended = null;
-          audio.onerror = null;
-          audio.ontimeupdate = null;
-          resolve(ok);
-        };
-        audio.onplaying = () => {
-          played = true;
-        };
-        audio.ontimeupdate = () => {
-          if (Number.isFinite(audio.duration)) {
-            conversation.bufferSeconds(turnId, Math.max(0, audio.duration - audio.currentTime));
-          }
-        };
-        audio.onended = () => finish(played);
-        audio.onerror = () => finish(false);
-        audio.play().catch(() => finish(false));
-      }),
-    [],
-  );
-
   /**
-   * Speaks a complete reply. The text is chunked, never truncated, and the
-   * promise resolves only after the last chunk has finished playing.
+   * Speaks a complete reply through the shared singleton player. Any speech
+   * already playing anywhere in the app is stopped first, so exactly one voice
+   * stream is ever audible.
    */
   const speak = useCallback(
     async (text: string) => {
-      const clean = speakableText(text);
-      if (!clean) return;
-      cancelRef.current = false;
-      releaseAudio();
-
-      const chunks = chunkForTTS(clean);
-      const turnId = conversation.startTurn({ spoken: true });
-      conversation.llmComplete(turnId);
-      conversation.renderComplete(turnId);
-      conversation.speechQueued(turnId, chunks.length);
+      speakingRef.current = true;
       setPhase("speaking");
-
-      try {
-        // Pipeline: fetch chunk n+1 while chunk n is playing.
-        let nextUrl: Promise<string> | null = chunks[0] ? fetchChunk(chunks[0]) : null;
-        let anyPlayed = false;
-
-        for (let i = 0; i < chunks.length; i++) {
-          if (cancelRef.current) break;
-          const url = await nextUrl!;
-          const upcoming = chunks[i + 1];
-          nextUrl = upcoming ? fetchChunk(upcoming) : null;
-          if (cancelRef.current) break;
-
-          const ok = await playClip(url, turnId);
-          if (ok) anyPlayed = true;
-          conversation.chunkSpoken(turnId, i);
-          if (!ok && !anyPlayed) {
-            // Nothing ever played — browser blocked audio. Stop cleanly.
-            setVoiceAvailable(false);
-            setVoiceError("Your browser blocked audio playback — my reply is above.");
-            conversation.playbackFailed(turnId, "browser blocked audio");
-            return;
-          }
-        }
-
-        if (cancelRef.current) {
-          conversation.interrupt("speech stopped by Builder");
-          return;
-        }
-        setVoiceAvailable(true);
-        conversation.playbackComplete(turnId);
-      } catch (err) {
+      const result = await speakText(text, { owner });
+      speakingRef.current = false;
+      if (result === "blocked") {
+        setVoiceAvailable(false);
+        setVoiceError("Your browser blocked audio playback — my reply is above.");
+      } else if (result === "failed") {
         setVoiceAvailable(false);
         setVoiceError("Voice is temporarily unavailable — my reply is above.");
-        conversation.playbackFailed(turnId, err instanceof Error ? err.message : "tts failed");
-      } finally {
-        releaseAudio();
-        setPhase("idle"); // always returns to waiting — never reopens the mic
+      } else if (result === "complete") {
+        setVoiceAvailable(true);
       }
+      setPhase("idle"); // always returns to waiting — never reopens the mic
     },
-    [fetchChunk, playClip, releaseAudio],
+    [owner],
   );
 
   const stopSpeaking = useCallback(() => {
-    cancelRef.current = true;
-    releaseAudio();
-    conversation.interrupt("speech stopped by Builder");
+    speakingRef.current = false;
+    stopSpeech();
     setPhase("idle");
-  }, [releaseAudio]);
+  }, []);
 
   return {
     phase,
@@ -248,5 +179,14 @@ export function usePushToTalk() {
     cancelRecording,
     speak,
     stopSpeaking,
+    /** Global playback controls — safe to call from any surface. */
+    speechStatus: speech.status,
+    speechProgress: { spoken: speech.chunksSpoken, total: speech.chunksTotal },
+    isSpeaking: speech.status === "playing" || speech.status === "loading",
+    isPaused: speech.status === "paused",
+    pauseSpeech,
+    resumeSpeech,
+    togglePause: toggleSpeechPause,
+    releaseAudio,
   };
 }

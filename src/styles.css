@@ -1153,3 +1153,8 @@ a.ps-row:hover { border-color: color-mix(in srgb, var(--gold) 60%, transparent);
 .frass-workspace .ws-upload-fill {
   display: block; height: 100%; background: var(--ws-gold); transition: width 0.2s linear;
 }
+
+@keyframes speech-bar {
+  0%, 100% { transform: scaleY(0.35); }
+  50% { transform: scaleY(1); }
+}
