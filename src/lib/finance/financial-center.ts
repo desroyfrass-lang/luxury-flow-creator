@@ -176,6 +176,7 @@ export type FinanceTabId =
   | "statements"
   | "audit"
   | "trust"
+  | "health"
   | "settings";
 
 export type FinanceTab = {
@@ -309,6 +310,21 @@ export const FINANCE_TABS: FinanceTab[] = [
       "Privacy settings",
     ],
     visible: always,
+  },
+  {
+    id: "health",
+    label: "Commerce Health",
+    icon: "❤️",
+    blurb: "FRASS-0439 — is the payment system serving Builders well today?",
+    sections: [
+      "Payments today",
+      "Success rate",
+      "Declines",
+      "Expired requests",
+      "Duplicate protection",
+      "Recovery events",
+    ],
+    visible: (v) => v.founder,
   },
   {
     id: "settings",

@@ -3,7 +3,14 @@ import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import type { Database } from "@/integrations/supabase/types";
 import { settle } from "@/lib/card-commerce";
-import { DELIVERY_IDS, REQUEST_KIND_IDS, isExpired, newRequestToken } from "@/lib/payment-request";
+import {
+  DEFAULT_EXPIRY_MINUTES,
+  DELIVERY_IDS,
+  REQUEST_KIND_IDS,
+  isExpired,
+  newRequestToken,
+  recoveryMessage,
+} from "@/lib/payment-request";
 
 export type PaymentRequestRow = Database["public"]["Tables"]["payment_requests"]["Row"];
 
@@ -28,6 +35,7 @@ export const createPaymentRequest = createServerFn({ method: "POST" })
       buyer_phone?: string;
       delivery?: string;
       expires_in_minutes?: number | null;
+      idempotency_key?: string;
     }) =>
       z
         .object({
@@ -43,13 +51,26 @@ export const createPaymentRequest = createServerFn({ method: "POST" })
           buyer_phone: z.string().trim().max(40).optional(),
           delivery: z.enum(DELIVERY_IDS).default("qr"),
           expires_in_minutes: z.number().int().min(5).max(20_160).nullable().optional(),
+          idempotency_key: z.string().trim().min(8).max(64).optional(),
         })
         .parse(d),
   )
   .handler(async ({ context, data }) => {
-    const expires_at = data.expires_in_minutes
-      ? new Date(Date.now() + data.expires_in_minutes * 60_000).toISOString()
-      : null;
+    // FRASS-0439 — requests do not live forever.
+    const minutes = data.expires_in_minutes ?? DEFAULT_EXPIRY_MINUTES;
+    const expires_at = new Date(Date.now() + minutes * 60_000).toISOString();
+
+    // FRASS-0439 — duplicate protection. A double tap on "Request payment"
+    // returns the request that already exists instead of creating a second one.
+    if (data.idempotency_key) {
+      const { data: existing } = await context.supabase
+        .from("payment_requests")
+        .select("*")
+        .eq("seller_id", context.userId)
+        .eq("idempotency_key", data.idempotency_key)
+        .maybeSingle();
+      if (existing) return existing as PaymentRequestRow;
+    }
 
     const { data: row, error } = await context.supabase
       .from("payment_requests")
@@ -68,7 +89,8 @@ export const createPaymentRequest = createServerFn({ method: "POST" })
         buyer_phone: data.buyer_phone ?? null,
         delivery: data.delivery,
         expires_at,
-        status: "pending",
+        idempotency_key: data.idempotency_key ?? null,
+        status: "awaiting_approval",
       })
       .select()
       .single();
@@ -95,10 +117,10 @@ export const cancelPaymentRequest = createServerFn({ method: "POST" })
   .handler(async ({ context, data }) => {
     const { error } = await context.supabase
       .from("payment_requests")
-      .update({ status: "cancelled" })
+      .update({ status: "cancelled", cancelled_at: new Date().toISOString() })
       .eq("id", data.id)
       .eq("seller_id", context.userId)
-      .eq("status", "pending");
+      .in("status", ["preparing", "awaiting_approval"]);
     if (error) throw error;
     return { ok: true as const };
   });
@@ -120,6 +142,7 @@ export type PublicPaymentRequest = {
   seller_avatar: string | null;
   payments_enabled: boolean;
   provider: string | null;
+  order_id: string | null;
 };
 
 /**
@@ -140,9 +163,18 @@ export const getPaymentRequest = createServerFn({ method: "GET" })
       .maybeSingle();
     if (!req) return { ok: false as const, reason: "This payment request could not be found." };
 
-    const expired = req.status === "pending" && isExpired(req.expires_at);
+    const expired =
+      ["preparing", "awaiting_approval"].includes(req.status) && isExpired(req.expires_at);
     if (expired) {
-      await supabaseAdmin.from("payment_requests").update({ status: "expired" }).eq("id", req.id);
+      await supabaseAdmin
+        .from("payment_requests")
+        .update({ status: "expired", expired_at: new Date().toISOString() })
+        .eq("id", req.id);
+    } else if (!req.first_viewed_at) {
+      await supabaseAdmin
+        .from("payment_requests")
+        .update({ first_viewed_at: new Date().toISOString() })
+        .eq("id", req.id);
     }
 
     const [{ data: profile }, { data: card }] = await Promise.all([
@@ -169,6 +201,7 @@ export const getPaymentRequest = createServerFn({ method: "GET" })
       seller_avatar: profile?.avatar_url ?? null,
       payments_enabled: Boolean(card?.commerce_enabled && card?.payout_url),
       provider: card?.payout_provider ?? null,
+      order_id: req.order_id,
     };
     return { ok: true as const, request: payload };
   });
@@ -197,13 +230,61 @@ export const approvePaymentRequest = createServerFn({ method: "POST" })
       .eq("token", data.token)
       .maybeSingle();
     if (!req) return { ok: false as const, reason: "This payment request could not be found." };
-    if (req.status !== "pending") {
-      return { ok: false as const, reason: "This payment request is no longer open." };
-    }
-    if (isExpired(req.expires_at)) {
-      await supabaseAdmin.from("payment_requests").update({ status: "expired" }).eq("id", req.id);
+
+    if (isExpired(req.expires_at) && ["preparing", "awaiting_approval"].includes(req.status)) {
+      await supabaseAdmin
+        .from("payment_requests")
+        .update({ status: "expired", expired_at: new Date().toISOString() })
+        .eq("id", req.id);
       return { ok: false as const, reason: "This payment request has expired." };
     }
+
+    // FRASS-0439 — duplicate protection. This conditional update is the single
+    // gate into the transaction: only the first tap can move the request out of
+    // "awaiting approval", so a second tap can never create a second sale.
+    const { data: claimed } = await supabaseAdmin
+      .from("payment_requests")
+      .update({
+        status: "processing",
+        processing_started_at: new Date().toISOString(),
+        attempts: (req.attempts ?? 0) + 1,
+      })
+      .eq("id", req.id)
+      .eq("status", "awaiting_approval")
+      .select()
+      .maybeSingle();
+
+    if (!claimed) {
+      // Someone (probably this same customer, tapping twice) got here first.
+      const { data: current } = await supabaseAdmin
+        .from("payment_requests")
+        .select("status, order_id")
+        .eq("id", req.id)
+        .maybeSingle();
+      const status = current?.status ?? req.status;
+      if (status === "successful" && current?.order_id) {
+        return {
+          ok: true as const,
+          duplicate: true as const,
+          order_id: current.order_id,
+          pay_url: null,
+          provider: null,
+          total: Math.round(Number(req.amount) * req.quantity * 100) / 100,
+          currency: req.currency,
+        };
+      }
+      return { ok: false as const, reason: recoveryMessage(status), status };
+    }
+
+
+
+    /** If anything below fails, the request goes back to the customer intact. */
+    const release = async (reason: string) => {
+      await supabaseAdmin
+        .from("payment_requests")
+        .update({ status: "awaiting_approval", processing_started_at: null, failure_reason: reason })
+        .eq("id", req.id);
+    };
 
     const { data: card } = await supabaseAdmin
       .from("business_cards")
@@ -211,6 +292,7 @@ export const approvePaymentRequest = createServerFn({ method: "POST" })
       .eq("user_id", req.seller_id)
       .maybeSingle();
     if (!card?.commerce_enabled || !card.payout_url) {
+      await release("Seller payments are not switched on.");
       return { ok: false as const, reason: "This seller has not switched on payments yet." };
     }
 
@@ -237,9 +319,13 @@ export const approvePaymentRequest = createServerFn({ method: "POST" })
       })
       .select()
       .single();
-    if (error) throw error;
+    if (error) {
+      await release("The order could not be recorded.");
+      throw error;
+    }
 
     // Inventory follows the sale automatically when a listing is attached.
+    // It runs once, because only one approval can ever reach this line.
     if (req.listing_id) {
       const { data: listing } = await supabaseAdmin
         .from("card_listings")
@@ -258,7 +344,12 @@ export const approvePaymentRequest = createServerFn({ method: "POST" })
 
     await supabaseAdmin
       .from("payment_requests")
-      .update({ status: "paid", paid_at: new Date().toISOString(), order_id: order.id })
+      .update({
+        status: "successful",
+        paid_at: new Date().toISOString(),
+        order_id: order.id,
+        failure_reason: null,
+      })
       .eq("id", req.id);
 
     await supabaseAdmin
@@ -267,13 +358,55 @@ export const approvePaymentRequest = createServerFn({ method: "POST" })
 
     return {
       ok: true as const,
+      duplicate: false as const,
       order_id: order.id,
-      pay_url: card.payout_url,
-      provider: card.payout_provider,
+      pay_url: card.payout_url as string | null,
+      provider: card.payout_provider as string | null,
       total: s.gross,
       currency: req.currency,
     };
   });
+
+/**
+ * FRASS-0439 — lost connection recovery.
+ * The customer's device asks one question when it comes back online: what
+ * actually happened? There is one answer, and it is never a guess.
+ */
+export const checkPaymentOutcome = createServerFn({ method: "GET" })
+  .inputValidator((d: { token: string }) =>
+    z.object({ token: z.string().trim().min(6).max(64) }).parse(d),
+  )
+  .handler(async ({ data }) => {
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { data: req } = await supabaseAdmin
+      .from("payment_requests")
+      .select("status, order_id, paid_at, expires_at, currency, amount, quantity")
+      .eq("token", data.token)
+      .maybeSingle();
+    if (!req) return { found: false as const };
+
+    let status = req.status;
+    if (["preparing", "awaiting_approval"].includes(status) && isExpired(req.expires_at)) {
+      status = "expired";
+      await supabaseAdmin
+        .from("payment_requests")
+        .update({ status, expired_at: new Date().toISOString() })
+        .eq("token", data.token);
+    }
+
+    return {
+      found: true as const,
+      status,
+      settled: !["preparing", "awaiting_approval", "processing"].includes(status),
+      charged: status === "successful",
+      order_id: req.order_id,
+      paid_at: req.paid_at,
+      total: Math.round(Number(req.amount) * req.quantity * 100) / 100,
+      currency: req.currency,
+      message: recoveryMessage(status),
+    };
+  });
+
 
 export const declinePaymentRequest = createServerFn({ method: "POST" })
   .inputValidator((d: { token: string }) =>
@@ -283,8 +416,67 @@ export const declinePaymentRequest = createServerFn({ method: "POST" })
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     await supabaseAdmin
       .from("payment_requests")
-      .update({ status: "declined" })
+      .update({ status: "declined", declined_at: new Date().toISOString() })
       .eq("token", data.token)
-      .eq("status", "pending");
+      .in("status", ["preparing", "awaiting_approval"]);
     return { ok: true as const };
+  });
+
+/**
+ * FRASS-0439 — Founder Commerce Health.
+ * Not vanity metrics: the question is whether the payment system is serving
+ * Builders well right now, and if not, where it is failing them.
+ */
+export const getCommerceHealth = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d: { days?: number } | undefined) =>
+    z.object({ days: z.number().int().min(1).max(90).default(7) }).parse(d ?? {}),
+  )
+  .handler(async ({ data, context }) => {
+    const { data: isAdmin } = await context.supabase.rpc("has_role", {
+      _user_id: context.userId,
+      _role: "admin",
+    });
+    const { data: isSuper } = await context.supabase.rpc("has_role", {
+      _user_id: context.userId,
+      _role: "super_admin",
+    });
+    if (!isAdmin && !isSuper) throw new Error("Forbidden");
+
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const since = new Date(Date.now() - data.days * 86_400_000).toISOString();
+    const { data: rows, error } = await supabaseAdmin
+      .from("payment_requests")
+      .select("status, amount, quantity, currency, attempts, created_at, paid_at, expires_at")
+      .gte("created_at", since);
+    if (error) throw error;
+
+    const list = rows ?? [];
+    const count = (s: string) => list.filter((r) => r.status === s).length;
+    const successful = count("successful");
+    const declined = count("declined");
+    const expired = count("expired");
+    const cancelled = count("cancelled");
+    const refunded = count("refunded");
+    const open = list.filter((r) => ["preparing", "awaiting_approval", "processing"].includes(r.status)).length;
+    const settled = successful + declined + expired + cancelled + refunded;
+    const paidValue = list
+      .filter((r) => r.status === "successful")
+      .reduce((t, r) => t + Number(r.amount) * r.quantity, 0);
+    const retried = list.filter((r) => (r.attempts ?? 0) > 1).length;
+
+    return {
+      days: data.days,
+      total: list.length,
+      open,
+      successful,
+      declined,
+      expired,
+      cancelled,
+      refunded,
+      retried,
+      successRate: settled ? Math.round((successful / settled) * 1000) / 10 : null,
+      paidValue: Math.round(paidValue * 100) / 100,
+      currency: list[0]?.currency ?? "USD",
+    };
   });

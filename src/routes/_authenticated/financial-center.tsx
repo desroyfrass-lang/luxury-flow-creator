@@ -4,6 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { SiteShell } from "@/components/site-shell";
 import { TrustCenter } from "@/components/trust/trust-center";
+import { CommerceHealth } from "@/components/finance/commerce-health";
 import { Amount } from "@/components/finance/amount";
 import { FinancialTimeline } from "@/components/finance/financial-timeline";
 import { AUDIT_PRINCIPLES } from "@/lib/finance/receipts";
@@ -314,6 +315,13 @@ function TabBody({
         <>
           <Heading>Trust Center</Heading>
           <TrustCenter />
+        </>
+      );
+    case "health":
+      return (
+        <>
+          <Heading>Commerce health</Heading>
+          <CommerceHealth />
         </>
       );
     case "settings":
