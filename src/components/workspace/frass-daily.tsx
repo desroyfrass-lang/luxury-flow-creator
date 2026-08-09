@@ -329,7 +329,48 @@ export function FrassDaily({
           </button>
         )}
 
+        {/* 1 · Morning Briefing — context before work, the way an assistant would give it */}
+        {briefOpen && (
+          <section className="daily-brief-card" data-blueprint="daily-morning">
+            <div className="daily-brief-card-head">
+              <span className="ws-meta">
+                <Sunrise className="mr-1.5 inline h-3.5 w-3.5" /> Morning Briefing
+              </span>
+              <span className="daily-progress-pct">{formatWorkload(brief.minutes)}</span>
+            </div>
+            <h2 className="daily-brief-greet">{brief.greeting}</h2>
+            <ul className="daily-brief-lines">
+              {brief.lines.map((l) => (
+                <li key={l}>{l}</li>
+              ))}
+            </ul>
+            <div className="daily-brief-card-actions">
+              <button type="button" className="daily-enter" onClick={() => setBriefOpen(false)}>
+                Ready to begin
+              </button>
+              <button type="button" className="ws-chip" onClick={() => setFocus(true)}>
+                <Focus className="h-3.5 w-3.5" /> Focus Mode
+              </button>
+            </div>
+          </section>
+        )}
+
+        {/* 5 · Consistency — operational, not gamified */}
+        <section className="daily-consistency">
+          {[
+            { k: "Today's Completion", v: record.today },
+            { k: "This Week", v: record.week },
+            { k: "This Month", v: record.month },
+          ].map((r) => (
+            <div key={r.k} className="daily-consistency-cell">
+              <span className="ws-meta">{r.k}</span>
+              <span className="daily-consistency-pct">{r.v}%</span>
+            </div>
+          ))}
+        </section>
+
         {/* Today's Progress — one quiet metre of momentum, at the very top */}
+
         <section className="daily-progress" data-blueprint="daily-myday">
           <div className="daily-progress-head">
             <h2 className="daily-h2">Today's Progress</h2>
