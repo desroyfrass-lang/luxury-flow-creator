@@ -221,7 +221,8 @@ export function FrassyChat({ embedded = false }: { embedded?: boolean } = {}) {
         type="button"
         aria-label="Open Frassy chat"
         onClick={() => setOpen(true)}
-        className="fixed bottom-5 right-5 z-50 flex h-14 w-14 items-center justify-center rounded-full border border-[color:var(--gold)]/50 bg-[#0b0c0e] shadow-lg transition-transform hover:scale-105"
+        title="Frassy is here — ask me anything"
+        className="frassy-beacon fixed bottom-5 right-5 z-50 flex h-14 w-14 items-center justify-center rounded-full border border-[color:var(--gold)]/50 bg-[#0b0c0e] shadow-lg transition-transform hover:scale-105"
       >
         <img src={symbolAsset.url} alt="" className="h-7 w-7 object-contain" />
       </button>
