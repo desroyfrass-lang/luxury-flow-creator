@@ -48,6 +48,7 @@ import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as SocialMediaViralsIndexRouteImport } from './routes/social-media-virals.index'
 import { Route as LookbookIndexRouteImport } from './routes/lookbook.index'
+import { Route as LiveIndexRouteImport } from './routes/live.index'
 import { Route as KidsWorldIndexRouteImport } from './routes/kids-world.index'
 import { Route as FrassShapeIndexRouteImport } from './routes/frass-shape.index'
 import { Route as FrassPlusIndexRouteImport } from './routes/frass-plus.index'
@@ -362,6 +363,11 @@ const LookbookIndexRoute = LookbookIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => LookbookRoute,
+} as any)
+const LiveIndexRoute = LiveIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => LiveRoute,
 } as any)
 const KidsWorldIndexRoute = KidsWorldIndexRouteImport.update({
   id: '/',
@@ -1031,7 +1037,7 @@ export interface FileRoutesByFullPath {
   '/health-wellness': typeof HealthWellnessRoute
   '/kicks-district': typeof KicksDistrictRoute
   '/kids-world': typeof KidsWorldRouteWithChildren
-  '/live': typeof LiveRoute
+  '/live': typeof LiveRouteWithChildren
   '/lookbook': typeof LookbookRouteWithChildren
   '/mcp': typeof McpRoute
   '/music-media': typeof MusicMediaRoute
@@ -1107,6 +1113,7 @@ export interface FileRoutesByFullPath {
   '/frass-plus/': typeof FrassPlusIndexRoute
   '/frass-shape/': typeof FrassShapeIndexRoute
   '/kids-world/': typeof KidsWorldIndexRoute
+  '/live/': typeof LiveIndexRoute
   '/lookbook/': typeof LookbookIndexRoute
   '/social-media-virals/': typeof SocialMediaViralsIndexRoute
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
@@ -1178,7 +1185,6 @@ export interface FileRoutesByTo {
   '/gateway': typeof GatewayRoute
   '/health-wellness': typeof HealthWellnessRoute
   '/kicks-district': typeof KicksDistrictRoute
-  '/live': typeof LiveRoute
   '/mcp': typeof McpRoute
   '/music-media': typeof MusicMediaRoute
   '/rewards': typeof RewardsRoute
@@ -1246,6 +1252,7 @@ export interface FileRoutesByTo {
   '/frass-plus': typeof FrassPlusIndexRoute
   '/frass-shape': typeof FrassShapeIndexRoute
   '/kids-world': typeof KidsWorldIndexRoute
+  '/live': typeof LiveIndexRoute
   '/lookbook': typeof LookbookIndexRoute
   '/social-media-virals': typeof SocialMediaViralsIndexRoute
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
@@ -1332,7 +1339,7 @@ export interface FileRoutesById {
   '/health-wellness': typeof HealthWellnessRoute
   '/kicks-district': typeof KicksDistrictRoute
   '/kids-world': typeof KidsWorldRouteWithChildren
-  '/live': typeof LiveRoute
+  '/live': typeof LiveRouteWithChildren
   '/lookbook': typeof LookbookRouteWithChildren
   '/mcp': typeof McpRoute
   '/music-media': typeof MusicMediaRoute
@@ -1408,6 +1415,7 @@ export interface FileRoutesById {
   '/frass-plus/': typeof FrassPlusIndexRoute
   '/frass-shape/': typeof FrassShapeIndexRoute
   '/kids-world/': typeof KidsWorldIndexRoute
+  '/live/': typeof LiveIndexRoute
   '/lookbook/': typeof LookbookIndexRoute
   '/social-media-virals/': typeof SocialMediaViralsIndexRoute
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
@@ -1570,6 +1578,7 @@ export interface FileRouteTypes {
     | '/frass-plus/'
     | '/frass-shape/'
     | '/kids-world/'
+    | '/live/'
     | '/lookbook/'
     | '/social-media-virals/'
     | '/.lovable/oauth/consent'
@@ -1641,7 +1650,6 @@ export interface FileRouteTypes {
     | '/gateway'
     | '/health-wellness'
     | '/kicks-district'
-    | '/live'
     | '/mcp'
     | '/music-media'
     | '/rewards'
@@ -1709,6 +1717,7 @@ export interface FileRouteTypes {
     | '/frass-plus'
     | '/frass-shape'
     | '/kids-world'
+    | '/live'
     | '/lookbook'
     | '/social-media-virals'
     | '/.lovable/oauth/consent'
@@ -1870,6 +1879,7 @@ export interface FileRouteTypes {
     | '/frass-plus/'
     | '/frass-shape/'
     | '/kids-world/'
+    | '/live/'
     | '/lookbook/'
     | '/social-media-virals/'
     | '/.lovable/oauth/consent'
@@ -1956,7 +1966,7 @@ export interface RootRouteChildren {
   HealthWellnessRoute: typeof HealthWellnessRoute
   KicksDistrictRoute: typeof KicksDistrictRoute
   KidsWorldRoute: typeof KidsWorldRouteWithChildren
-  LiveRoute: typeof LiveRoute
+  LiveRoute: typeof LiveRouteWithChildren
   LookbookRoute: typeof LookbookRouteWithChildren
   McpRoute: typeof McpRoute
   MusicMediaRoute: typeof MusicMediaRoute
@@ -2253,6 +2263,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/lookbook/'
       preLoaderRoute: typeof LookbookIndexRouteImport
       parentRoute: typeof LookbookRoute
+    }
+    '/live/': {
+      id: '/live/'
+      path: '/'
+      fullPath: '/live/'
+      preLoaderRoute: typeof LiveIndexRouteImport
+      parentRoute: typeof LiveRoute
     }
     '/kids-world/': {
       id: '/kids-world/'
@@ -3523,6 +3540,16 @@ const KidsWorldRouteWithChildren = KidsWorldRoute._addFileChildren(
   KidsWorldRouteChildren,
 )
 
+interface LiveRouteChildren {
+  LiveIndexRoute: typeof LiveIndexRoute
+}
+
+const LiveRouteChildren: LiveRouteChildren = {
+  LiveIndexRoute: LiveIndexRoute,
+}
+
+const LiveRouteWithChildren = LiveRoute._addFileChildren(LiveRouteChildren)
+
 interface LookbookRouteChildren {
   LookbookStoryRoute: typeof LookbookStoryRoute
   LookbookIndexRoute: typeof LookbookIndexRoute
@@ -3609,7 +3636,7 @@ const rootRouteChildren: RootRouteChildren = {
   HealthWellnessRoute: HealthWellnessRoute,
   KicksDistrictRoute: KicksDistrictRoute,
   KidsWorldRoute: KidsWorldRouteWithChildren,
-  LiveRoute: LiveRoute,
+  LiveRoute: LiveRouteWithChildren,
   LookbookRoute: LookbookRouteWithChildren,
   McpRoute: McpRoute,
   MusicMediaRoute: MusicMediaRoute,
