@@ -12,7 +12,7 @@ const HIDDEN_PREFIXES = [
   "/arrival",
   "/gateway",
   "/welcome-hall",
-  "/frass-hill/journey",
+  "/frass-hill-journey",
   "/api",
   "/checkout",
 ];
