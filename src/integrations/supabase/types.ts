@@ -1787,6 +1787,7 @@ export type Database = {
       }
       live_comments: {
         Row: {
+          author_handle: string | null
           author_id: string
           author_name: string
           body: string
@@ -1795,6 +1796,7 @@ export type Database = {
           id: string
         }
         Insert: {
+          author_handle?: string | null
           author_id: string
           author_name?: string
           body: string
@@ -1803,6 +1805,7 @@ export type Database = {
           id?: string
         }
         Update: {
+          author_handle?: string | null
           author_id?: string
           author_name?: string
           body?: string
@@ -1830,6 +1833,7 @@ export type Database = {
           gift_key: string
           id: string
           note: string | null
+          sender_handle: string | null
           sender_id: string
           sender_name: string
         }
@@ -1842,6 +1846,7 @@ export type Database = {
           gift_key: string
           id?: string
           note?: string | null
+          sender_handle?: string | null
           sender_id: string
           sender_name?: string
         }
@@ -1854,6 +1859,7 @@ export type Database = {
           gift_key?: string
           id?: string
           note?: string | null
+          sender_handle?: string | null
           sender_id?: string
           sender_name?: string
         }
