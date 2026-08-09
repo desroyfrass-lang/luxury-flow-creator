@@ -156,6 +156,10 @@ function WalletHub() {
         <QuickSellPanel provider={card?.payout_provider ?? null} />
       )}
 
+      {section === "request" && (
+        <RequestPaymentPanel enabled={Boolean(card?.commerce_enabled && card?.payout_url)} />
+      )}
+
       {section === "history" && (
         <section className={panel}>
           <h2 className={heading}>
