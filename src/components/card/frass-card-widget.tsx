@@ -66,6 +66,9 @@ export function FrassCardWidget({ context }: { context?: string }) {
         <Link className="ws-chip" to="/workspace/card">
           <Pencil className="h-3.5 w-3.5" /> Edit
         </Link>
+        <Link className="ws-chip" to="/workspace/wallet">
+          <Wallet className="h-3.5 w-3.5" /> Wallet
+        </Link>
         <Link className="ws-chip" to="/workspace/card" hash="analytics">
           <BarChart3 className="h-3.5 w-3.5" /> Analytics
         </Link>
