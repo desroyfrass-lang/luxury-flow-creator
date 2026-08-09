@@ -138,7 +138,7 @@ function AuthPage() {
           </button>
         </form>
 
-        <div className="mt-6 text-center text-xs text-muted-foreground">
+        <div className="mt-6 space-y-3 text-center text-xs text-muted-foreground">
           {mode === "signin" ? (
             <button onClick={() => setMode("signup")} className="hover:text-[color:var(--gold)] underline">
               First time? Create the owner account
@@ -148,7 +148,28 @@ function AuthPage() {
               Have an account? Sign in
             </button>
           )}
+          <div>
+            <button
+              type="button"
+              onClick={async () => {
+                if (!email) {
+                  toast.error("Enter your email above first.");
+                  return;
+                }
+                const { error } = await supabase.auth.resetPasswordForEmail(email, {
+                  redirectTo: window.location.origin + "/reset-password",
+                });
+                toast[error ? "error" : "success"](
+                  error ? error.message : `Recovery link sent to ${email}.`,
+                );
+              }}
+              className="underline hover:text-[color:var(--gold)]"
+            >
+              Forgot your password?
+            </button>
+          </div>
         </div>
+
         <div className="mt-4 text-center text-[11px] uppercase tracking-[0.25em] text-muted-foreground">
           <Link to="/" className="hover:text-foreground">← Back to site</Link>
         </div>

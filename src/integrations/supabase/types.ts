@@ -2509,10 +2509,14 @@ export type Database = {
       }
       profiles: {
         Row: {
+          address_line1: string | null
+          address_line2: string | null
           avatar_url: string | null
           bio: string | null
           birthday: string | null
           builder_stage: string
+          city: string | null
+          country: string | null
           created_at: string
           display_name: string | null
           email: string | null
@@ -2525,17 +2529,24 @@ export type Database = {
           last_seen_at: string | null
           newsletter_opt_in: boolean
           onboarding_completed_at: string | null
+          phone: string | null
+          postal_code: string | null
           preferences: Json
           primary_district: string | null
+          region: string | null
           social_followed: boolean
           style_preferences: string[] | null
           updated_at: string
         }
         Insert: {
+          address_line1?: string | null
+          address_line2?: string | null
           avatar_url?: string | null
           bio?: string | null
           birthday?: string | null
           builder_stage?: string
+          city?: string | null
+          country?: string | null
           created_at?: string
           display_name?: string | null
           email?: string | null
@@ -2548,17 +2559,24 @@ export type Database = {
           last_seen_at?: string | null
           newsletter_opt_in?: boolean
           onboarding_completed_at?: string | null
+          phone?: string | null
+          postal_code?: string | null
           preferences?: Json
           primary_district?: string | null
+          region?: string | null
           social_followed?: boolean
           style_preferences?: string[] | null
           updated_at?: string
         }
         Update: {
+          address_line1?: string | null
+          address_line2?: string | null
           avatar_url?: string | null
           bio?: string | null
           birthday?: string | null
           builder_stage?: string
+          city?: string | null
+          country?: string | null
           created_at?: string
           display_name?: string | null
           email?: string | null
@@ -2571,8 +2589,11 @@ export type Database = {
           last_seen_at?: string | null
           newsletter_opt_in?: boolean
           onboarding_completed_at?: string | null
+          phone?: string | null
+          postal_code?: string | null
           preferences?: Json
           primary_district?: string | null
+          region?: string | null
           social_followed?: boolean
           style_preferences?: string[] | null
           updated_at?: string

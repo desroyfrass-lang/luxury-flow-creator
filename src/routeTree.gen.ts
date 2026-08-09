@@ -14,6 +14,7 @@ import { Route as SocialMediaViralsRouteImport } from './routes/social-media-vir
 import { Route as ShopFrassRouteImport } from './routes/shop-frass'
 import { Route as SalesClearanceRouteImport } from './routes/sales-clearance'
 import { Route as RewardsRouteImport } from './routes/rewards'
+import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as MusicMediaRouteImport } from './routes/music-media'
 import { Route as McpRouteImport } from './routes/mcp'
 import { Route as LookbookRouteImport } from './routes/lookbook'
@@ -197,6 +198,11 @@ const SalesClearanceRoute = SalesClearanceRouteImport.update({
 const RewardsRoute = RewardsRouteImport.update({
   id: '/rewards',
   path: '/rewards',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ResetPasswordRoute = ResetPasswordRouteImport.update({
+  id: '/reset-password',
+  path: '/reset-password',
   getParentRoute: () => rootRouteImport,
 } as any)
 const MusicMediaRoute = MusicMediaRouteImport.update({
@@ -1067,6 +1073,7 @@ export interface FileRoutesByFullPath {
   '/lookbook': typeof LookbookRouteWithChildren
   '/mcp': typeof McpRoute
   '/music-media': typeof MusicMediaRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/rewards': typeof RewardsRoute
   '/sales-clearance': typeof SalesClearanceRoute
   '/shop-frass': typeof ShopFrassRoute
@@ -1217,6 +1224,7 @@ export interface FileRoutesByTo {
   '/kicks-district': typeof KicksDistrictRoute
   '/mcp': typeof McpRoute
   '/music-media': typeof MusicMediaRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/rewards': typeof RewardsRoute
   '/sales-clearance': typeof SalesClearanceRoute
   '/shop-frass': typeof ShopFrassRoute
@@ -1377,6 +1385,7 @@ export interface FileRoutesById {
   '/lookbook': typeof LookbookRouteWithChildren
   '/mcp': typeof McpRoute
   '/music-media': typeof MusicMediaRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/rewards': typeof RewardsRoute
   '/sales-clearance': typeof SalesClearanceRoute
   '/shop-frass': typeof ShopFrassRoute
@@ -1544,6 +1553,7 @@ export interface FileRouteTypes {
     | '/lookbook'
     | '/mcp'
     | '/music-media'
+    | '/reset-password'
     | '/rewards'
     | '/sales-clearance'
     | '/shop-frass'
@@ -1694,6 +1704,7 @@ export interface FileRouteTypes {
     | '/kicks-district'
     | '/mcp'
     | '/music-media'
+    | '/reset-password'
     | '/rewards'
     | '/sales-clearance'
     | '/shop-frass'
@@ -1853,6 +1864,7 @@ export interface FileRouteTypes {
     | '/lookbook'
     | '/mcp'
     | '/music-media'
+    | '/reset-password'
     | '/rewards'
     | '/sales-clearance'
     | '/shop-frass'
@@ -2020,6 +2032,7 @@ export interface RootRouteChildren {
   LookbookRoute: typeof LookbookRouteWithChildren
   McpRoute: typeof McpRoute
   MusicMediaRoute: typeof MusicMediaRoute
+  ResetPasswordRoute: typeof ResetPasswordRoute
   RewardsRoute: typeof RewardsRoute
   SalesClearanceRoute: typeof SalesClearanceRoute
   ShopFrassRoute: typeof ShopFrassRoute
@@ -2074,6 +2087,13 @@ declare module '@tanstack/react-router' {
       path: '/rewards'
       fullPath: '/rewards'
       preLoaderRoute: typeof RewardsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/reset-password': {
+      id: '/reset-password'
+      path: '/reset-password'
+      fullPath: '/reset-password'
+      preLoaderRoute: typeof ResetPasswordRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/music-media': {
@@ -3725,6 +3745,7 @@ const rootRouteChildren: RootRouteChildren = {
   LookbookRoute: LookbookRouteWithChildren,
   McpRoute: McpRoute,
   MusicMediaRoute: MusicMediaRoute,
+  ResetPasswordRoute: ResetPasswordRoute,
   RewardsRoute: RewardsRoute,
   SalesClearanceRoute: SalesClearanceRoute,
   ShopFrassRoute: ShopFrassRoute,
