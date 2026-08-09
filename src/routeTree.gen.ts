@@ -17,6 +17,7 @@ import { Route as RewardsRouteImport } from './routes/rewards'
 import { Route as MusicMediaRouteImport } from './routes/music-media'
 import { Route as McpRouteImport } from './routes/mcp'
 import { Route as LookbookRouteImport } from './routes/lookbook'
+import { Route as LiveRouteImport } from './routes/live'
 import { Route as KidsWorldRouteImport } from './routes/kids-world'
 import { Route as KicksDistrictRouteImport } from './routes/kicks-district'
 import { Route as HealthWellnessRouteImport } from './routes/health-wellness'
@@ -206,6 +207,11 @@ const McpRoute = McpRouteImport.update({
 const LookbookRoute = LookbookRouteImport.update({
   id: '/lookbook',
   path: '/lookbook',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LiveRoute = LiveRouteImport.update({
+  id: '/live',
+  path: '/live',
   getParentRoute: () => rootRouteImport,
 } as any)
 const KidsWorldRoute = KidsWorldRouteImport.update({
@@ -1025,6 +1031,7 @@ export interface FileRoutesByFullPath {
   '/health-wellness': typeof HealthWellnessRoute
   '/kicks-district': typeof KicksDistrictRoute
   '/kids-world': typeof KidsWorldRouteWithChildren
+  '/live': typeof LiveRoute
   '/lookbook': typeof LookbookRouteWithChildren
   '/mcp': typeof McpRoute
   '/music-media': typeof MusicMediaRoute
@@ -1171,6 +1178,7 @@ export interface FileRoutesByTo {
   '/gateway': typeof GatewayRoute
   '/health-wellness': typeof HealthWellnessRoute
   '/kicks-district': typeof KicksDistrictRoute
+  '/live': typeof LiveRoute
   '/mcp': typeof McpRoute
   '/music-media': typeof MusicMediaRoute
   '/rewards': typeof RewardsRoute
@@ -1324,6 +1332,7 @@ export interface FileRoutesById {
   '/health-wellness': typeof HealthWellnessRoute
   '/kicks-district': typeof KicksDistrictRoute
   '/kids-world': typeof KidsWorldRouteWithChildren
+  '/live': typeof LiveRoute
   '/lookbook': typeof LookbookRouteWithChildren
   '/mcp': typeof McpRoute
   '/music-media': typeof MusicMediaRoute
@@ -1485,6 +1494,7 @@ export interface FileRouteTypes {
     | '/health-wellness'
     | '/kicks-district'
     | '/kids-world'
+    | '/live'
     | '/lookbook'
     | '/mcp'
     | '/music-media'
@@ -1631,6 +1641,7 @@ export interface FileRouteTypes {
     | '/gateway'
     | '/health-wellness'
     | '/kicks-district'
+    | '/live'
     | '/mcp'
     | '/music-media'
     | '/rewards'
@@ -1783,6 +1794,7 @@ export interface FileRouteTypes {
     | '/health-wellness'
     | '/kicks-district'
     | '/kids-world'
+    | '/live'
     | '/lookbook'
     | '/mcp'
     | '/music-media'
@@ -1944,6 +1956,7 @@ export interface RootRouteChildren {
   HealthWellnessRoute: typeof HealthWellnessRoute
   KicksDistrictRoute: typeof KicksDistrictRoute
   KidsWorldRoute: typeof KidsWorldRouteWithChildren
+  LiveRoute: typeof LiveRoute
   LookbookRoute: typeof LookbookRouteWithChildren
   McpRoute: typeof McpRoute
   MusicMediaRoute: typeof MusicMediaRoute
@@ -2022,6 +2035,13 @@ declare module '@tanstack/react-router' {
       path: '/lookbook'
       fullPath: '/lookbook'
       preLoaderRoute: typeof LookbookRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/live': {
+      id: '/live'
+      path: '/live'
+      fullPath: '/live'
+      preLoaderRoute: typeof LiveRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/kids-world': {
@@ -3589,6 +3609,7 @@ const rootRouteChildren: RootRouteChildren = {
   HealthWellnessRoute: HealthWellnessRoute,
   KicksDistrictRoute: KicksDistrictRoute,
   KidsWorldRoute: KidsWorldRouteWithChildren,
+  LiveRoute: LiveRoute,
   LookbookRoute: LookbookRouteWithChildren,
   McpRoute: McpRoute,
   MusicMediaRoute: MusicMediaRoute,
