@@ -912,10 +912,12 @@ body.blueprint-on [data-blueprint]:hover {
   animation: hero-drift 60s ease-in-out infinite alternate;
 }
 .daily-overlay .daily-scene::after {
+  /* FRASS-0440 — tint with the WORKSPACE paper token, never the global site
+     --background (which is near-black and blacked the whole Daily out). */
   content: ""; position: absolute; inset: 0;
   background: linear-gradient(180deg,
-    color-mix(in srgb, var(--background) 88%, transparent),
-    color-mix(in srgb, var(--background) 94%, transparent));
+    color-mix(in srgb, var(--ws-bg) 84%, transparent),
+    color-mix(in srgb, var(--ws-bg) 92%, transparent));
 }
 
 /* Today's Progress */
