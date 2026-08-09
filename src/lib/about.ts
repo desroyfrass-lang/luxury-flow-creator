@@ -17,7 +17,39 @@ export const AboutMediaSchema = z.object({
   caption: z.string().max(200).optional().default(""),
 });
 
+/**
+ * FRASS-0423 Amendment — Legacy.
+ *
+ * The permanent, intentional part of a member's story: what they built, who
+ * they're proud of, the lessons they'd pass on. Never algorithmic, never
+ * chronological.
+ */
+export const LegacySchema = z.object({
+  built: z.string().max(3000).optional().default(""),
+  proudOf: z.string().max(3000).optional().default(""),
+  children: z.string().max(3000).optional().default(""),
+  family: z.string().max(3000).optional().default(""),
+  businesses: z.string().max(3000).optional().default(""),
+  foundationWork: z.string().max(3000).optional().default(""),
+  lifeLessons: z.string().max(4000).optional().default(""),
+  dreams: z.string().max(3000).optional().default(""),
+});
+
+export type BuilderLegacy = z.infer<typeof LegacySchema>;
+
+export const LEGACY_FIELDS: { key: keyof BuilderLegacy; label: string; hint: string }[] = [
+  { key: "built", label: "I built", hint: "The things that exist because of you." },
+  { key: "proudOf", label: "I'm proud of", hint: "Moments worth keeping forever." },
+  { key: "children", label: "My children", hint: "Who they are, in your own words." },
+  { key: "family", label: "My family", hint: "The people you come from and belong to." },
+  { key: "businesses", label: "My businesses", hint: "What you started, grew or carry." },
+  { key: "foundationWork", label: "My Foundation work", hint: "Service, giving and who it reached." },
+  { key: "lifeLessons", label: "My life lessons", hint: "What you'd want someone to read years from now." },
+  { key: "dreams", label: "My dreams", hint: "What you're still walking toward." },
+];
+
 export const BuilderAboutSchema = z.object({
+  legacy: LegacySchema.optional().default({}),
   biography: z.string().max(4000).optional().default(""),
   story: z.string().max(6000).optional().default(""),
   mission: z.string().max(1000).optional().default(""),
@@ -73,6 +105,11 @@ export function parseLinkLines(value: string): AboutLink[] {
 
 export function linkLinesToText(links: AboutLink[]): string {
   return links.map((l) => (l.label === l.url ? l.url : `${l.label} | ${l.url}`)).join("\n");
+}
+
+/** True when nothing has been written in the Legacy section yet. */
+export function legacyIsEmpty(legacy: BuilderLegacy): boolean {
+  return LEGACY_FIELDS.every((f) => !(legacy[f.key] ?? "").trim());
 }
 
 /** True when a Builder has actually written something here. */
