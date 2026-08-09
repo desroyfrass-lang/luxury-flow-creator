@@ -16,6 +16,7 @@ import { useServerFn } from "@tanstack/react-start";
 import { X, Check, Sparkles, ArrowRight, HelpCircle, Coins, ListTree, Film, Focus, Sunrise, Moon } from "lucide-react";
 import { FrassyComposer } from "@/components/workspace/frassy-composer";
 import { FrassLinkWidget } from "@/components/link/frass-link-widget";
+import { FrassCardWidget } from "@/components/card/frass-card-widget";
 import { getWallet } from "@/lib/studio.functions";
 import { usdFor } from "@/lib/studio/credits";
 import frassyAvatar from "@/assets/frassy-gold.png.asset.json";
