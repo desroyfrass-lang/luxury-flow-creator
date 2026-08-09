@@ -117,6 +117,18 @@ export const getPublicCard = createServerFn({ method: "GET" })
       .eq("user_id", profile.id)
       .limit(4);
 
+    // FRASS-0427 — the card is also a storefront.
+    const { data: listings } = await supabaseAdmin
+      .from("card_listings")
+      .select("id, kind, title, description, image_url, price, currency, quantity, sold, status, is_quick_sell")
+      .eq("user_id", profile.id)
+      .in("status", ["live", "sold_out"])
+      .order("created_at", { ascending: false })
+      .limit(24);
+
+    // The seller's payout URL is never exposed until a checkout is started.
+    const publicCard = card ? { ...(card as BusinessCard), payout_url: null } : null;
+
     return {
       profile: {
         id: profile.id,
@@ -128,10 +140,12 @@ export const getPublicCard = createServerFn({ method: "GET" })
         primary_district: profile.primary_district,
         about: profile.about,
       },
-      card: (card ?? null) as BusinessCard | null,
+      card: publicCard as BusinessCard | null,
       live: live ?? null,
       affiliate: affiliate ?? [],
       products: products ?? [],
+      listings: listings ?? [],
+      commerceEnabled: Boolean(card?.commerce_enabled),
     };
   });
 
