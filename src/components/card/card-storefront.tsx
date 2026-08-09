@@ -142,6 +142,8 @@ function ListingCard({ listing, onSale }: { listing: PublicListing; onSale?: () 
                 : `Pay ${money(Number(listing.price) * qty, listing.currency)}`}
             </button>
             {message && <p className="card-shop-note">{message}</p>}
+            {/* FRASS-0438 — Security Confirmation on every completed payment. */}
+            {secured && <SecurityConfirmation className="mt-3" reference={secured} plain={false} />}
           </div>
         )}
       </div>
