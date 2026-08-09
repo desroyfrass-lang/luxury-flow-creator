@@ -46,6 +46,20 @@ export function QuickSellPanel({ provider }: { provider?: string | null }) {
   const [imageUrl, setImageUrl] = useState("");
   const [price, setPrice] = useState("");
   const [quantity, setQuantity] = useState("1");
+  const [uploading, setUploading] = useState(false);
+
+  const onPickPhoto = async (file: File | null) => {
+    if (!file) return;
+    setUploading(true);
+    try {
+      setImageUrl(await uploadCardPhoto(file));
+      toast.success("Photo attached.");
+    } catch (e) {
+      toast.error(e instanceof Error ? e.message : "That photo could not be uploaded.");
+    } finally {
+      setUploading(false);
+    }
+  };
 
   const unlimited = UNLIMITED_KINDS.includes(kind);
   const preview = settle(Number(price) || 0, 1, provider);
