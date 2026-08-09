@@ -106,7 +106,7 @@ function FrassRadioPage() {
                 Live Directory
               </Link>
               <Link
-                to="/for-us"
+                to="/for-us" search={{ from: "/frass-radio" }}
                 className="rounded-full border border-white/25 px-5 py-2 text-[10px] font-bold uppercase tracking-[0.24em] text-white/80 transition hover:border-amber-300 hover:text-white"
               >
                 🔴 For Us Live — community streaming

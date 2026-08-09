@@ -148,7 +148,7 @@ function GoLivePage() {
         {ready && !userId ? (
           <p className="rounded-2xl border border-dashed border-border p-6 text-sm text-muted-foreground">
             You need to be signed in to broadcast.{" "}
-            <Link to="/auth" className="text-red-600 underline-offset-4 hover:underline">
+            <Link to="/auth" search={{ next: "/live/go" }} className="text-red-600 underline-offset-4 hover:underline">
               Sign in
             </Link>{" "}
             and come back — your stream will carry your Builder name.

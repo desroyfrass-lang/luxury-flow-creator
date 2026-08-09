@@ -213,7 +213,7 @@ function BroadcastRoom() {
               </form>
             ) : (
               <p className="mt-4 text-xs text-muted-foreground">
-                <Link to="/auth" className="text-red-600 underline-offset-4 hover:underline">
+                <Link to="/auth" search={{ next: "/live" }} className="text-red-600 underline-offset-4 hover:underline">
                   Sign in
                 </Link>{" "}
                 to join the conversation.
