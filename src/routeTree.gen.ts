@@ -30,6 +30,7 @@ import { Route as FrassPlusRouteImport } from './routes/frass-plus'
 import { Route as FrassLuxuryHouseRouteImport } from './routes/frass-luxury-house'
 import { Route as FrassKidsRouteImport } from './routes/frass-kids'
 import { Route as FrassKicksRouteImport } from './routes/frass-kicks'
+import { Route as FrassHostingRouteImport } from './routes/frass-hosting'
 import { Route as FrassHillRouteImport } from './routes/frass-hill'
 import { Route as FrassDripRouteImport } from './routes/frass-drip'
 import { Route as FrassDistrictRouteImport } from './routes/frass-district'
@@ -276,6 +277,11 @@ const FrassKidsRoute = FrassKidsRouteImport.update({
 const FrassKicksRoute = FrassKicksRouteImport.update({
   id: '/frass-kicks',
   path: '/frass-kicks',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FrassHostingRoute = FrassHostingRouteImport.update({
+  id: '/frass-hosting',
+  path: '/frass-hosting',
   getParentRoute: () => rootRouteImport,
 } as any)
 const FrassHillRoute = FrassHillRouteImport.update({
@@ -1044,6 +1050,7 @@ export interface FileRoutesByFullPath {
   '/frass-district': typeof FrassDistrictRoute
   '/frass-drip': typeof FrassDripRouteWithChildren
   '/frass-hill': typeof FrassHillRoute
+  '/frass-hosting': typeof FrassHostingRoute
   '/frass-kicks': typeof FrassKicksRouteWithChildren
   '/frass-kids': typeof FrassKidsRouteWithChildren
   '/frass-luxury-house': typeof FrassLuxuryHouseRouteWithChildren
@@ -1201,6 +1208,7 @@ export interface FileRoutesByTo {
   '/for-us': typeof ForUsRoute
   '/frass-district': typeof FrassDistrictRoute
   '/frass-hill': typeof FrassHillRoute
+  '/frass-hosting': typeof FrassHostingRoute
   '/frass-radio': typeof FrassRadioRoute
   '/frass-world': typeof FrassWorldRoute
   '/fv-studios': typeof FvStudiosRoute
@@ -1352,6 +1360,7 @@ export interface FileRoutesById {
   '/frass-district': typeof FrassDistrictRoute
   '/frass-drip': typeof FrassDripRouteWithChildren
   '/frass-hill': typeof FrassHillRoute
+  '/frass-hosting': typeof FrassHostingRoute
   '/frass-kicks': typeof FrassKicksRouteWithChildren
   '/frass-kids': typeof FrassKidsRouteWithChildren
   '/frass-luxury-house': typeof FrassLuxuryHouseRouteWithChildren
@@ -1518,6 +1527,7 @@ export interface FileRouteTypes {
     | '/frass-district'
     | '/frass-drip'
     | '/frass-hill'
+    | '/frass-hosting'
     | '/frass-kicks'
     | '/frass-kids'
     | '/frass-luxury-house'
@@ -1675,6 +1685,7 @@ export interface FileRouteTypes {
     | '/for-us'
     | '/frass-district'
     | '/frass-hill'
+    | '/frass-hosting'
     | '/frass-radio'
     | '/frass-world'
     | '/fv-studios'
@@ -1825,6 +1836,7 @@ export interface FileRouteTypes {
     | '/frass-district'
     | '/frass-drip'
     | '/frass-hill'
+    | '/frass-hosting'
     | '/frass-kicks'
     | '/frass-kids'
     | '/frass-luxury-house'
@@ -1991,6 +2003,7 @@ export interface RootRouteChildren {
   FrassDistrictRoute: typeof FrassDistrictRoute
   FrassDripRoute: typeof FrassDripRouteWithChildren
   FrassHillRoute: typeof FrassHillRoute
+  FrassHostingRoute: typeof FrassHostingRoute
   FrassKicksRoute: typeof FrassKicksRouteWithChildren
   FrassKidsRoute: typeof FrassKidsRouteWithChildren
   FrassLuxuryHouseRoute: typeof FrassLuxuryHouseRouteWithChildren
@@ -2173,6 +2186,13 @@ declare module '@tanstack/react-router' {
       path: '/frass-kicks'
       fullPath: '/frass-kicks'
       preLoaderRoute: typeof FrassKicksRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/frass-hosting': {
+      id: '/frass-hosting'
+      path: '/frass-hosting'
+      fullPath: '/frass-hosting'
+      preLoaderRoute: typeof FrassHostingRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/frass-hill': {
@@ -3688,6 +3708,7 @@ const rootRouteChildren: RootRouteChildren = {
   FrassDistrictRoute: FrassDistrictRoute,
   FrassDripRoute: FrassDripRouteWithChildren,
   FrassHillRoute: FrassHillRoute,
+  FrassHostingRoute: FrassHostingRoute,
   FrassKicksRoute: FrassKicksRouteWithChildren,
   FrassKidsRoute: FrassKidsRouteWithChildren,
   FrassLuxuryHouseRoute: FrassLuxuryHouseRouteWithChildren,
