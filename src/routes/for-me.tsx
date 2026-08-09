@@ -60,6 +60,7 @@ function ForMePage() {
         <div className="mx-auto flex max-w-[1100px] items-center gap-4 px-6 py-3 lg:px-10">
           <Link
             to="/for-us"
+            search={{ from: "/for-me" }}
             className="inline-flex items-center gap-2 text-[10px] uppercase tracking-[0.25em] text-white/85 hover:text-white"
           >
             <ArrowLeft className="h-3.5 w-3.5" />
@@ -117,6 +118,7 @@ function ForMePage() {
                 </Link>
                 <Link
                   to="/for-us"
+                  search={{ from: "/for-me" }}
                   className="inline-flex items-center gap-2 rounded-full border border-white/25 px-5 py-2.5 text-[10px] font-bold uppercase tracking-[0.25em] text-white/85 transition hover:border-[color:var(--gold)] hover:text-white"
                 >
                   <Sparkles className="h-3.5 w-3.5" />
