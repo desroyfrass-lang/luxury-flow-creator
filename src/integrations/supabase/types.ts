@@ -234,6 +234,84 @@ export type Database = {
         }
         Relationships: []
       }
+      ai_credit_ledger: {
+        Row: {
+          amount: number
+          created_at: string
+          description: string | null
+          direction: string
+          id: string
+          label: string
+          metadata: Json
+          operation_key: string | null
+          processing_ms: number | null
+          project_id: string | null
+          user_id: string
+        }
+        Insert: {
+          amount: number
+          created_at?: string
+          description?: string | null
+          direction: string
+          id?: string
+          label: string
+          metadata?: Json
+          operation_key?: string | null
+          processing_ms?: number | null
+          project_id?: string | null
+          user_id: string
+        }
+        Update: {
+          amount?: number
+          created_at?: string
+          description?: string | null
+          direction?: string
+          id?: string
+          label?: string
+          metadata?: Json
+          operation_key?: string | null
+          processing_ms?: number | null
+          project_id?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      ai_credit_wallets: {
+        Row: {
+          balance: number
+          created_at: string
+          lifetime_earned: number
+          lifetime_gifted: number
+          lifetime_purchased: number
+          lifetime_used: number
+          monthly_allowance: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          balance?: number
+          created_at?: string
+          lifetime_earned?: number
+          lifetime_gifted?: number
+          lifetime_purchased?: number
+          lifetime_used?: number
+          monthly_allowance?: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          balance?: number
+          created_at?: string
+          lifetime_earned?: number
+          lifetime_gifted?: number
+          lifetime_purchased?: number
+          lifetime_used?: number
+          monthly_allowance?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       blog_posts: {
         Row: {
           author: string | null
@@ -2449,6 +2527,95 @@ export type Database = {
           tags?: string[]
           text?: string
           updated_at?: string
+        }
+        Relationships: []
+      }
+      studio_operations: {
+        Row: {
+          actual_credits: number | null
+          created_at: string
+          estimated_credits: number
+          id: string
+          label: string
+          operation_key: string
+          output: Json
+          processing_ms: number | null
+          project_id: string | null
+          request: string | null
+          status: string
+          user_id: string
+        }
+        Insert: {
+          actual_credits?: number | null
+          created_at?: string
+          estimated_credits?: number
+          id?: string
+          label: string
+          operation_key: string
+          output?: Json
+          processing_ms?: number | null
+          project_id?: string | null
+          request?: string | null
+          status?: string
+          user_id: string
+        }
+        Update: {
+          actual_credits?: number | null
+          created_at?: string
+          estimated_credits?: number
+          id?: string
+          label?: string
+          operation_key?: string
+          output?: Json
+          processing_ms?: number | null
+          project_id?: string | null
+          request?: string | null
+          status?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "studio_operations_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "studio_projects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      studio_projects: {
+        Row: {
+          brief: string | null
+          created_at: string
+          destination: string
+          id: string
+          status: string
+          timeline: Json
+          title: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          brief?: string | null
+          created_at?: string
+          destination?: string
+          id?: string
+          status?: string
+          timeline?: Json
+          title: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          brief?: string | null
+          created_at?: string
+          destination?: string
+          id?: string
+          status?: string
+          timeline?: Json
+          title?: string
+          updated_at?: string
+          user_id?: string
         }
         Relationships: []
       }
