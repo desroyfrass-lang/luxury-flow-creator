@@ -8,6 +8,8 @@ import {
   brandBySlug,
   campaignsForBrand,
   settlementPreview,
+  type Brand,
+  type BrandCampaign,
 } from "@/lib/brand-partnerships";
 
 export const Route = createFileRoute("/brand-partnerships/brands/$brand")({
@@ -52,7 +54,10 @@ function Fallback({ message }: { message: string }) {
 }
 
 function BrandPage() {
-  const { brand, campaigns } = Route.useLoaderData();
+  const { brand, campaigns } = Route.useLoaderData() as {
+    brand: Brand;
+    campaigns: BrandCampaign[];
+  };
 
   return (
     <SiteShell>

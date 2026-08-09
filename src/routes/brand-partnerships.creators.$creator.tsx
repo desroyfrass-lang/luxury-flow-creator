@@ -7,6 +7,7 @@ import {
   creatorBySlug,
   meetsCertification,
   recommendedCampaigns,
+  type CreatorProfile,
 } from "@/lib/brand-partnerships";
 
 export const Route = createFileRoute("/brand-partnerships/creators/$creator")({
@@ -51,7 +52,7 @@ function Fallback({ message }: { message: string }) {
 }
 
 function CreatorPage() {
-  const { creator } = Route.useLoaderData();
+  const { creator } = Route.useLoaderData() as { creator: CreatorProfile };
   const certified = meetsCertification(creator);
   const matches = recommendedCampaigns(creator);
   const reach = creator.audience.reduce((n, a) => n + a.followers, 0);

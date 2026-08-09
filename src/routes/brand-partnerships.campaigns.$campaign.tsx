@@ -9,6 +9,7 @@ import {
   campaignByKey,
   recommendedCreators,
   settlementPreview,
+  type BrandCampaign,
 } from "@/lib/brand-partnerships";
 
 export const Route = createFileRoute("/brand-partnerships/campaigns/$campaign")({
@@ -53,7 +54,7 @@ function Fallback({ message }: { message: string }) {
 }
 
 function CampaignPage() {
-  const { campaign } = Route.useLoaderData();
+  const { campaign } = Route.useLoaderData() as { campaign: BrandCampaign };
   const brand = brandBySlug(campaign.brandSlug);
   const money = settlementPreview(campaign.budgetUsd);
   const matches = recommendedCreators(campaign);
