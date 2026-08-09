@@ -201,7 +201,7 @@ function LiveDirectory() {
             {REPURPOSE_FORMATS.map((f) => (
               <Link
                 key={f.key}
-                to={f.to}
+                to={f.to as never}
                 className="rounded-2xl border border-border p-5 transition hover:border-[color:var(--gold)]/60"
               >
                 <span className="text-lg" aria-hidden>

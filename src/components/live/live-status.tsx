@@ -27,11 +27,11 @@ export function GoLiveButton({ className = "" }: { className?: string }) {
 
 /** The subtle 🔴 LIVE badge that follows a creator everywhere in Frass. */
 export function LiveBadge({
-  to,
+  broadcastId,
   label = "Live",
   className = "",
 }: {
-  to?: string;
+  broadcastId?: string;
   label?: string;
   className?: string;
 }) {
@@ -43,9 +43,9 @@ export function LiveBadge({
       {label}
     </span>
   );
-  if (!to) return content;
+  if (!broadcastId) return content;
   return (
-    <Link to={to} aria-label="Watch the live broadcast">
+    <Link to="/live/$broadcastId" params={{ broadcastId }} aria-label="Watch the live broadcast">
       {content}
     </Link>
   );
@@ -59,5 +59,5 @@ export function CreatorLiveStatus({ hostId, className }: { hostId: string; class
   const { data = [] } = useLiveNow();
   const stream = data.find((b) => b.host_id === hostId);
   if (!stream) return null;
-  return <LiveBadge to={`/live/${stream.id}`} className={className} />;
+  return <LiveBadge broadcastId={stream.id} className={className} />;
 }

@@ -129,7 +129,7 @@ function BroadcastRoom() {
                 {b.product_links.map((p) => (
                   <Link
                     key={p.to}
-                    to={p.to}
+                    to={p.to as never}
                     className="rounded-full border border-[color:var(--gold)]/60 px-5 py-2 text-[11px] uppercase tracking-[0.2em] transition hover:bg-[color:var(--gold)] hover:text-[color:var(--primary-foreground)]"
                   >
                     {p.label} {p.price ? `· ${p.price}` : ""}
@@ -156,7 +156,7 @@ function BroadcastRoom() {
                 {REPURPOSE_FORMATS.map((f) => (
                   <Link
                     key={f.key}
-                    to={f.to}
+                    to={f.to as never}
                     className="rounded-2xl border border-border p-4 text-sm transition hover:border-[color:var(--gold)]/60"
                   >
                     <span aria-hidden className="mr-2">
