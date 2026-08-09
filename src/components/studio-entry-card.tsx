@@ -4,9 +4,9 @@ import { ArrowUpRight } from "lucide-react";
 import studioEntry from "@/assets/studio-entry.jpg";
 
 /**
- * Frassy Studio portal card — same block-letter / chrome-gold Frass Kicks
- * language used across the district entries. Reused on the home page and
- * on Frass Hill.
+ * Frass Vision Studios (FV Studio) portal card — same block-letter / chrome-gold
+ * Frass Kicks language used across the district entries. Reused on the home page
+ * and on Frass Hill.
  */
 export function StudioEntryCard({ className = "" }: { className?: string }) {
   return (
