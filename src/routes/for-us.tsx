@@ -307,6 +307,18 @@ function ForUsPage() {
               {weather.label}
             </span>
             <div className="ml-auto flex items-center gap-3">
+              <Link
+                to="/for-me"
+                className="rounded-full border border-white/20 px-3 py-1.5 text-[10px] uppercase tracking-[0.22em] text-white/80 transition hover:border-[color:var(--gold)] hover:text-white"
+              >
+                For Me
+              </Link>
+              <Link
+                to="/workspace/profile"
+                className="rounded-full border border-white/20 px-3 py-1.5 text-[10px] uppercase tracking-[0.22em] text-white/80 transition hover:border-[color:var(--gold)] hover:text-white"
+              >
+                My Story
+              </Link>
               <button
                 type="button"
                 onClick={toggleSound}
@@ -318,6 +330,7 @@ function ForUsPage() {
               </button>
               <GoLiveButton />
             </div>
+
           </div>
         </div>
 
