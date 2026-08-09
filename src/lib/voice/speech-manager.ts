@@ -16,6 +16,19 @@
 
 import { chunkForTTS, speakableText } from "@/lib/voice/chunk-text";
 import { conversation } from "@/lib/voice/conversation-machine";
+import {
+  getSharedAudioContext,
+  installAudioUnlockListener,
+  isAudioUnlocked,
+  unlockAudio,
+} from "@/lib/audio-unlock";
+
+// Autoplay gate. Browsers refuse programmatic audio until the page has seen a
+// real user gesture, and TTS always plays *after* an async fetch — outside the
+// gesture. So the very first pointer/key/touch anywhere on the page primes the
+// shared context and a silent HTMLAudio element. Without this, every clip is
+// silently blocked and Frassy appears mute.
+if (typeof window !== "undefined") installAudioUnlockListener();
 
 export type SpeechStatus = "idle" | "loading" | "playing" | "paused";
 
