@@ -4,7 +4,7 @@ import { useState } from "react";
 import { Radio, Play, Sparkles, Wallet, Headphones, Info } from "lucide-react";
 import { SiteShell } from "@/components/site-shell";
 import { CinematicMediaHero } from "@/components/cinematic-media-hero";
-import radioMural from "@/assets/frass-radio-blue-mural-wide.jpg.asset.json";
+import radioMural from "@/assets/frass-radio-blue-mural-wall.jpg.asset.json";
 import { LiveBadge } from "@/components/live/live-status";
 import { useLiveNow } from "@/hooks/use-live";
 import {

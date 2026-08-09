@@ -2,7 +2,7 @@ import { Link } from "@tanstack/react-router";
 import { ArrowUpRight } from "lucide-react";
 
 import studioEntry from "@/assets/studio-entry.jpg";
-import greenMural from "@/assets/frass-green-studio-mural.jpg.asset.json";
+import greenMural from "@/assets/frass-green-studio-mural-wall.jpg.asset.json";
 
 /**
  * Frass Vision Studios (FV Studios) portal card — same block-letter / chrome-gold
