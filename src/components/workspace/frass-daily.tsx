@@ -175,10 +175,16 @@ export function FrassDaily({
 
   return (
     <div data-blueprint="daily" className={`frass-workspace daily-overlay ${entered ? "is-in" : ""}`} role="dialog" aria-label="The Frass Daily">
+      {/* Cinematic scenery — quiet Jamaican landscape, rotating by the day */}
+      <div className="daily-scene" aria-hidden="true">
+        <img src={scene} alt="" />
+      </div>
+
       {/* Frassy greets large, then shrinks into her assistant position */}
       <div className={`daily-frassy ${shrunk ? "is-small" : ""}`}>
         <img src={frassyAvatar.url} alt="" />
       </div>
+
 
       <div className="daily-scroll">
         <header className="daily-head">
