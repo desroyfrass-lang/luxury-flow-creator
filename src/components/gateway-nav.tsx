@@ -213,7 +213,7 @@ const SHOP_PRIMARY: { label: string; to: string; match: string; editorial?: bool
 /** Always-visible destinations on the bar — Frass Hill side. */
 const HILL_PRIMARY: { label: string; to: string; match: string; editorial?: boolean }[] = [
   { label: "Frass Hill", to: "/frass-hill", match: "/frass-hill" },
-  { label: "Town Square", to: "/welcome-hall", match: "/welcome-hall" },
+  { label: "Town Square", to: "/town-square", match: "/town-square" },
   { label: "For Us", to: "/for-us", match: "/for-us" },
   { label: "🔴 Live", to: "/live", match: "/live" },
   { label: "Health & Wellness", to: "/health-wellness", match: "/health-wellness", editorial: true },
