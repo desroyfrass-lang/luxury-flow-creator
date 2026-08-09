@@ -2565,6 +2565,90 @@ export type Database = {
         }
         Relationships: []
       }
+      payment_requests: {
+        Row: {
+          amount: number
+          buyer_email: string | null
+          buyer_name: string | null
+          buyer_phone: string | null
+          created_at: string
+          currency: string
+          delivery: string
+          expires_at: string | null
+          id: string
+          kind: string
+          listing_id: string | null
+          note: string | null
+          order_id: string | null
+          paid_at: string | null
+          quantity: number
+          seller_id: string
+          status: string
+          title: string
+          token: string
+          updated_at: string
+        }
+        Insert: {
+          amount: number
+          buyer_email?: string | null
+          buyer_name?: string | null
+          buyer_phone?: string | null
+          created_at?: string
+          currency?: string
+          delivery?: string
+          expires_at?: string | null
+          id?: string
+          kind?: string
+          listing_id?: string | null
+          note?: string | null
+          order_id?: string | null
+          paid_at?: string | null
+          quantity?: number
+          seller_id: string
+          status?: string
+          title: string
+          token: string
+          updated_at?: string
+        }
+        Update: {
+          amount?: number
+          buyer_email?: string | null
+          buyer_name?: string | null
+          buyer_phone?: string | null
+          created_at?: string
+          currency?: string
+          delivery?: string
+          expires_at?: string | null
+          id?: string
+          kind?: string
+          listing_id?: string | null
+          note?: string | null
+          order_id?: string | null
+          paid_at?: string | null
+          quantity?: number
+          seller_id?: string
+          status?: string
+          title?: string
+          token?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "payment_requests_listing_id_fkey"
+            columns: ["listing_id"]
+            isOneToOne: false
+            referencedRelation: "card_listings"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "payment_requests_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "card_orders"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       platform_events: {
         Row: {
           actor_id: string | null
