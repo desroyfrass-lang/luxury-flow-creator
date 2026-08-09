@@ -4,6 +4,8 @@ import { useServerFn } from "@tanstack/react-start";
 import { useState } from "react";
 import { CheckCircle2, Lock, ShieldCheck } from "lucide-react";
 import { money, providerLabel } from "@/lib/card-commerce";
+import { SecurityConfirmation } from "@/components/finance/security-confirmation";
+import { SELLER_NEVER_PROMISE } from "@/lib/zero-friction";
 import {
   CUSTOMER_CONTROL_PRINCIPLE,
   REQUEST_STATUS,
@@ -227,6 +229,7 @@ function PaymentRequestScreen() {
           ))}
         </ul>
         <p className="mt-3 text-xs text-muted-foreground">{CUSTOMER_CONTROL_PRINCIPLE}</p>
+        <p className="mt-1 text-xs text-muted-foreground">{SELLER_NEVER_PROMISE}</p>
         <p className="mt-1 text-xs text-muted-foreground">
           <strong>What this means in plain English:</strong> you are approving a bill on your own
           phone. Your card never leaves your hands, and the seller only ever hears "paid".

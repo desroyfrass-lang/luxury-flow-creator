@@ -58,6 +58,7 @@ function ListingCard({ listing, onSale }: { listing: PublicListing; onSale?: () 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState<string | null>(null);
+  const [secured, setSecured] = useState<string | null>(null);
 
   const left = remaining(listing.quantity, listing.sold);
   const soldOut = listing.status === "sold_out" || left === 0;
@@ -79,6 +80,7 @@ function ListingCard({ listing, onSale }: { listing: PublicListing; onSale?: () 
       }
       onSale?.();
       setMessage("Opening secure payment…");
+      setSecured(res.order_id ?? null);
       window.open(res.pay_url, "_blank", "noopener,noreferrer");
     },
     onError: () => setMessage("Checkout could not be started. Try again in a moment."),
