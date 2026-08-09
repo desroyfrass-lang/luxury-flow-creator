@@ -127,8 +127,10 @@ const NAV: NavGroup[] = [
     editorial: true,
     items: [
       { label: "Enter FV Studios", to: "/studio", note: "Frass Vision Studios — video, audio & motion" },
+      { label: "Frass Vision Studios", to: "/fv-studios", note: "The label, film studio & publishing network" },
     ],
   },
+
   {
     label: "Discover",
     to: "/frass-hill",
