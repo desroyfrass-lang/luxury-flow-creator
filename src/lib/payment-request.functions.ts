@@ -230,13 +230,53 @@ export const approvePaymentRequest = createServerFn({ method: "POST" })
       .eq("token", data.token)
       .maybeSingle();
     if (!req) return { ok: false as const, reason: "This payment request could not be found." };
-    if (req.status !== "pending") {
-      return { ok: false as const, reason: "This payment request is no longer open." };
-    }
-    if (isExpired(req.expires_at)) {
-      await supabaseAdmin.from("payment_requests").update({ status: "expired" }).eq("id", req.id);
+
+    if (isExpired(req.expires_at) && ["preparing", "awaiting_approval"].includes(req.status)) {
+      await supabaseAdmin
+        .from("payment_requests")
+        .update({ status: "expired", expired_at: new Date().toISOString() })
+        .eq("id", req.id);
       return { ok: false as const, reason: "This payment request has expired." };
     }
+
+    // FRASS-0439 — duplicate protection. This conditional update is the single
+    // gate into the transaction: only the first tap can move the request out of
+    // "awaiting approval", so a second tap can never create a second sale.
+    const { data: claimed } = await supabaseAdmin
+      .from("payment_requests")
+      .update({
+        status: "processing",
+        processing_started_at: new Date().toISOString(),
+        attempts: (req.attempts ?? 0) + 1,
+      })
+      .eq("id", req.id)
+      .eq("status", "awaiting_approval")
+      .select()
+      .maybeSingle();
+
+    if (!claimed) {
+      // Someone (probably this same customer, tapping twice) got here first.
+      const { data: current } = await supabaseAdmin
+        .from("payment_requests")
+        .select("status, order_id")
+        .eq("id", req.id)
+        .maybeSingle();
+      const status = current?.status ?? req.status;
+      if (status === "successful" && current?.order_id) {
+        return {
+          ok: true as const,
+          duplicate: true as const,
+          order_id: current.order_id,
+          pay_url: null,
+          provider: null,
+          total: Math.round(Number(req.amount) * req.quantity * 100) / 100,
+          currency: req.currency,
+        };
+      }
+      return { ok: false as const, reason: recoveryMessage(status), status };
+    }
+
+
 
     const { data: card } = await supabaseAdmin
       .from("business_cards")
