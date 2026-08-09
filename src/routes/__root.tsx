@@ -132,6 +132,7 @@ function RootComponent() {
   return (
     <QueryClientProvider client={queryClient}>
       <RewardsRibbon />
+      <FrassTrail />
       <Outlet />
       <WelcomeLinkClaim />
       <Toaster position="top-center" />
