@@ -517,6 +517,38 @@ function FrassDistrictHome() {
         </div>
       </section>
 
+      {/* FRASS-0421 — The Liquidation Room lives on the shop floor, not the menu bar. */}
+      <section className="mx-auto mt-28 max-w-[1600px] px-6 lg:px-12">
+        <Link
+          to="/sales-clearance"
+          className="chrome-glow group relative block overflow-hidden rounded-[2rem] border border-[color:var(--gold)]/35 bg-secondary/40 p-10 md:p-16"
+        >
+          <div
+            aria-hidden
+            className="absolute inset-0 opacity-70"
+            style={{
+              background:
+                "radial-gradient(70% 90% at 20% 30%, oklch(0.78 0.14 78 / 0.2), transparent 70%)",
+            }}
+          />
+          <div className="relative">
+            <span className="text-[10px] uppercase tracking-[0.35em] text-[color:var(--gold)]">
+              Behind the district · Members welcome
+            </span>
+            <h2 className="mt-3 font-display text-3xl uppercase leading-none md:text-6xl">
+              The Liquidation Room
+            </h2>
+            <p className="mt-4 max-w-xl text-sm text-muted-foreground">
+              Sale racks, the Vault, this week's Hidden Gem, the Flash Drop clock and Frassy's Lucky
+              Spin — all in one back room.
+            </p>
+            <span className="mt-8 inline-flex rounded-full bg-[color:var(--gold)] px-6 py-3 text-[10px] font-bold uppercase tracking-[0.28em] text-black transition group-hover:scale-[1.03]">
+              Open the room
+            </span>
+          </div>
+        </Link>
+      </section>
+
       {/* Frass Vision Studios portal */}
       <section className="mx-auto mt-28 max-w-[1600px] px-6 lg:px-12">
         <StudioEntryCard />
