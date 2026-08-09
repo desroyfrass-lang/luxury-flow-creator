@@ -16,6 +16,10 @@ import {
 } from "lucide-react";
 import { PageFeedback } from "@/components/page-feedback";
 import { QuickSellPanel } from "@/components/card/quick-sell";
+import { FinancialTimeline } from "@/components/finance/financial-timeline";
+import { listMyReceipts } from "@/lib/finance/receipts.functions";
+
+
 import { getMyCard } from "@/lib/card.functions";
 import { getMyProfile } from "@/lib/profiles.functions";
 import { listMyCardOrders } from "@/lib/card-commerce.functions";
@@ -60,10 +64,13 @@ function WalletHub() {
   const cardFn = useServerFn(getMyCard);
   const ordersFn = useServerFn(listMyCardOrders);
   const profileFn = useServerFn(getMyProfile);
+  const receiptsFn = useServerFn(listMyReceipts);
 
   const { data: card } = useQuery({ queryKey: ["my-business-card"], queryFn: () => cardFn() });
   const { data: orders } = useQuery({ queryKey: ["card-orders"], queryFn: () => ordersFn() });
   const { data: profile } = useQuery({ queryKey: ["my-profile"], queryFn: () => profileFn() });
+  const { data: receipts } = useQuery({ queryKey: ["financial-receipts"], queryFn: () => receiptsFn() });
+
 
   const [section, setSection] = useState<WalletSectionId>("balance");
   const rows = useMemo(() => orders ?? [], [orders]);
@@ -150,12 +157,18 @@ function WalletHub() {
       )}
 
       {section === "history" && (
-        <MovementList
-          title="Payment history"
-          rows={rows}
-          empty="No movements yet. Zeros stay honest."
-        />
+        <section className={panel}>
+          <h2 className={heading}>
+            <Receipt className="mr-2 inline h-3.5 w-3.5" /> Financial timeline
+          </h2>
+          <p className="mt-2 mb-5 text-sm text-muted-foreground">
+            FRASS-0433 — every movement carries a receipt. Click any line to see where the money came
+            from, what was deducted and why.
+          </p>
+          <FinancialTimeline receipts={receipts ?? []} />
+        </section>
       )}
+
 
       {section === "gifts" && (
         <MovementList

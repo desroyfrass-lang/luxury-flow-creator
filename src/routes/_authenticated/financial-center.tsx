@@ -1,8 +1,13 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { useServerFn } from "@tanstack/react-start";
 import { SiteShell } from "@/components/site-shell";
 import { TrustCenter } from "@/components/trust/trust-center";
 import { Amount } from "@/components/finance/amount";
+import { FinancialTimeline } from "@/components/finance/financial-timeline";
+import { AUDIT_PRINCIPLES } from "@/lib/finance/receipts";
+import { listMyReceipts } from "@/lib/finance/receipts.functions";
 import { useMyRoles } from "@/hooks/use-my-roles";
 import {
   CREDIT_PROGRAMS,
@@ -120,6 +125,17 @@ function FinancialCenter() {
         </div>
       </div>
     </SiteShell>
+  );
+}
+
+function AuditTimeline() {
+  const receiptsFn = useServerFn(listMyReceipts);
+  const { data, isLoading } = useQuery({ queryKey: ["financial-receipts"], queryFn: () => receiptsFn() });
+  if (isLoading) return <p className="text-sm text-[oklch(0.7_0.01_80)]">Gathering your receipts…</p>;
+  return (
+    <div className="rounded-2xl border border-white/12 bg-white/[0.02] p-4">
+      <FinancialTimeline receipts={data ?? []} />
+    </div>
   );
 }
 
@@ -273,7 +289,27 @@ function TabBody({
       );
     case "statements":
       return <Empty label="Statements & reports" note="Monthly, annual, CSV, PDF and audit exports generate once ledgers hold transactions." />;
+    case "audit":
+      return (
+        <>
+          <Heading>The Financial Integrity Constitution</Heading>
+          <ul className="grid gap-2 sm:grid-cols-2">
+            {AUDIT_PRINCIPLES.map((p) => (
+              <li key={p.id} className="rounded-xl border border-white/12 bg-white/[0.02] p-3">
+                <p className="text-sm">{p.title}</p>
+                <p className="mt-1 text-xs text-[oklch(0.72_0.01_80)]">{p.explain}</p>
+                <p className="mt-1 text-xs text-[oklch(0.62_0.01_80)]">
+                  <strong>In plain English:</strong> {p.plain}
+                </p>
+              </li>
+            ))}
+          </ul>
+          <Heading>Your financial timeline</Heading>
+          <AuditTimeline />
+        </>
+      );
     case "trust":
+
       return (
         <>
           <Heading>Trust Center</Heading>

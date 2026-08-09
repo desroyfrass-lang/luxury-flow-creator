@@ -1360,6 +1360,128 @@ export type Database = {
         }
         Relationships: []
       }
+      financial_adjustments: {
+        Row: {
+          amount: number
+          created_at: string
+          created_by: string | null
+          currency: string
+          id: string
+          plain_explanation: string | null
+          reason: string
+          receipt_id: string | null
+          user_id: string
+        }
+        Insert: {
+          amount: number
+          created_at?: string
+          created_by?: string | null
+          currency?: string
+          id?: string
+          plain_explanation?: string | null
+          reason: string
+          receipt_id?: string | null
+          user_id: string
+        }
+        Update: {
+          amount?: number
+          created_at?: string
+          created_by?: string | null
+          currency?: string
+          id?: string
+          plain_explanation?: string | null
+          reason?: string
+          receipt_id?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "financial_adjustments_receipt_id_fkey"
+            columns: ["receipt_id"]
+            isOneToOne: false
+            referencedRelation: "financial_receipts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      financial_receipts: {
+        Row: {
+          counterparty_id: string | null
+          counterparty_name: string | null
+          created_at: string
+          currency: string
+          description: string | null
+          direction: string
+          external_id: string | null
+          gross: number
+          id: string
+          kind: string
+          metadata: Json
+          net: number
+          occurred_at: string
+          other_deductions: number
+          platform_allocation: number
+          processing_fee: number
+          reference: string | null
+          settled_at: string | null
+          source: string
+          status: string
+          title: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          counterparty_id?: string | null
+          counterparty_name?: string | null
+          created_at?: string
+          currency?: string
+          description?: string | null
+          direction?: string
+          external_id?: string | null
+          gross?: number
+          id?: string
+          kind: string
+          metadata?: Json
+          net?: number
+          occurred_at?: string
+          other_deductions?: number
+          platform_allocation?: number
+          processing_fee?: number
+          reference?: string | null
+          settled_at?: string | null
+          source?: string
+          status?: string
+          title: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          counterparty_id?: string | null
+          counterparty_name?: string | null
+          created_at?: string
+          currency?: string
+          description?: string | null
+          direction?: string
+          external_id?: string | null
+          gross?: number
+          id?: string
+          kind?: string
+          metadata?: Json
+          net?: number
+          occurred_at?: string
+          other_deductions?: number
+          platform_allocation?: number
+          processing_fee?: number
+          reference?: string | null
+          settled_at?: string | null
+          source?: string
+          status?: string
+          title?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       for_us_stories: {
         Row: {
           approved_by: string | null
