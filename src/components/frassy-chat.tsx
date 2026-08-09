@@ -317,7 +317,7 @@ export function FrassyChat({ embedded = false }: { embedded?: boolean } = {}) {
         </div>
       </header>
 
-      <div ref={scrollRef} className="flex-1 space-y-4 overflow-y-auto px-4 py-4">
+      <div ref={scrollRef} className="min-h-0 flex-1 space-y-4 overflow-y-auto px-4 py-4">
         {messages.map((m) => (
           <div key={m.id}>
             <div
