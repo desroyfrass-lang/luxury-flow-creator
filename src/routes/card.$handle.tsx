@@ -27,7 +27,7 @@ export const Route = createFileRoute("/card/$handle")({
     const description =
       loaderData?.card?.headline ??
       loaderData?.profile.bio ??
-      `${name}'s Frass Card on Frass: story, business, work and every way to connect.`;
+      `${name}'s Frass Card: identity, story, business, work and every way to connect.`;
     const image = loaderData?.card?.hero_media_url ?? loaderData?.profile.avatar_url ?? null;
     return {
       meta: [

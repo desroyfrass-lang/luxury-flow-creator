@@ -12,7 +12,19 @@
 // ─────────────────────────────────────────────────────────────────────────────
 
 export const CARD_PRINCIPLE =
-  "The Frass Card is the member's digital handshake. Always current, always professional, always ready to share.";
+  "Everyone has a Frass Card. It is the member's digital handshake — always current, always professional, always ready to share.";
+
+/**
+ * FRASS-0428A Constitutional Amendment — Universal Frass Card.
+ * The Frass Card replaces the traditional concept of a user profile and becomes
+ * the universal identity object across the entire Frass ecosystem: FOR ME,
+ * For Us, Town Square, Marketplace, Brand Partnerships, FV Studios, Frass
+ * Radio, music and media, comments, followers and following, search results,
+ * live broadcasts, QR codes and shared links. Selecting a member anywhere
+ * opens their Frass Card — never a tiny profile.
+ */
+export const UNIVERSAL_CARD_AMENDMENT =
+  "Every member automatically receives a Frass Card. Whenever a member's name, image, avatar, hero media or identity is selected anywhere on Frass, the platform opens their Frass Card. It is their permanent digital identity.";
 
 /** Permanent Frass URL for a member's card. */
 export function cardPath(handle: string): string {
