@@ -330,63 +330,70 @@ export function FrassDaily({
 
 
 
-        {/* 3 + 4 + 5 — Priorities, workload, delegation */}
+        {/* 3 — The numbered workday (FRASS-0425) */}
         <Section
           blueprintId="daily-priorities"
-          title="Today's priorities"
-
-          note={`Estimated work today: ${formatWorkload(remaining)}${
+          title="Today's Priorities"
+          status={statuses.priorities}
+          note={`Work through them in order. Estimated work today: ${formatWorkload(remaining)}${
             savedByFrassy ? ` · Frassy is carrying ${formatWorkload(savedByFrassy)}` : ""
           }`}
         >
-          {ORDER.map((p) => {
-            const items = model.tasks.filter((t) => t.priority === p);
-            if (!items.length) return null;
-            return (
-              <div key={p} className="daily-block">
-                <div className="ws-meta daily-block-title">{PRIORITY_LABEL[p]}</div>
-                {items.map((t) => {
-                  const isDelegated = delegated.includes(t.id);
-                  const isDone = done.includes(t.id) || t.priority === "completed";
-                  return (
-                    <div key={t.id} className={`daily-task ${isDone ? "is-done" : ""}`}>
-                      <button type="button" className="daily-task-main" onClick={() => go(t)}>
-                        <span className="daily-task-label">{t.label}</span>
-                        {t.detail && <span className="ws-meta">{t.detail}</span>}
-                        {t.minutes > 0 && <span className="ws-meta">≈ {formatWorkload(t.minutes)}</span>}
-                      </button>
-                      {!isDone && (
-                        <div className="daily-task-actions">
+          <ol className="daily-steps">
+            {steps.map((s) => {
+              const isDone = s.lane === "green";
+              const isDelegated = !!s.taskId && delegated.includes(s.taskId);
+              return (
+                <li key={s.id} className={`daily-step lane-${s.lane}`}>
+                  <span className="daily-step-n" aria-hidden="true">
+                    {s.n}
+                  </span>
+                  <span className={`daily-step-dot lane-dot-${s.lane}`} title={LANE[s.lane].meaning} />
+                  <button type="button" className="daily-step-main" onClick={() => go(s)}>
+                    <span className="daily-step-label">{s.label}</span>
+                    {s.detail && <span className="ws-meta">{s.detail}</span>}
+                  </button>
+                  <div className="daily-step-actions">
+                    <span className="ws-meta daily-step-lane">{LANE[s.lane].label}</span>
+                    {!isDone && s.taskId && (
+                      <>
+                        <button
+                          type="button"
+                          className="ws-chip"
+                          onClick={() => setDone((d) => [...d, s.taskId!])}
+                        >
+                          <Check className="h-3.5 w-3.5" /> Done
+                        </button>
+                        {s.delegable && (
                           <button
                             type="button"
-                            className="ws-chip"
-                            onClick={() => setDone((d) => [...d, t.id])}
+                            className={`ws-chip ${isDelegated ? "daily-chip-on" : ""}`}
+                            onClick={() =>
+                              setDelegated((d) =>
+                                d.includes(s.taskId!) ? d.filter((x) => x !== s.taskId) : [...d, s.taskId!],
+                              )
+                            }
                           >
-                            <Check className="h-3.5 w-3.5" /> I'll do it
+                            <Sparkles className="h-3.5 w-3.5" />
+                            {isDelegated ? "Frassy has it" : "Frassy handles it"}
                           </button>
-                          {t.delegable && (
-                            <button
-                              type="button"
-                              className={`ws-chip ${isDelegated ? "daily-chip-on" : ""}`}
-                              onClick={() =>
-                                setDelegated((d) =>
-                                  d.includes(t.id) ? d.filter((x) => x !== t.id) : [...d, t.id],
-                                )
-                              }
-                            >
-                              <Sparkles className="h-3.5 w-3.5" />
-                              {isDelegated ? "Frassy has it" : "Frassy handles it"}
-                            </button>
-                          )}
-                        </div>
-                      )}
-                    </div>
-                  );
-                })}
-              </div>
-            );
-          })}
+                        )}
+                      </>
+                    )}
+                  </div>
+                </li>
+              );
+            })}
+          </ol>
+          <div className="daily-lane-key">
+            {LANE_ORDER.map((l) => (
+              <span key={l} className="ws-meta">
+                {LANE[l].dot} {LANE[l].label} — {LANE[l].meaning}
+              </span>
+            ))}
+          </div>
         </Section>
+
 
         {/* 6 — Pending approvals */}
         {model.approvals.length > 0 && (
