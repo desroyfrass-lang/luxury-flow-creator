@@ -100,6 +100,12 @@ export type FrassyComposerProps = {
   studio?: boolean;
   /** Lets the surrounding workspace observe intake (Vault, Projects, Search). */
   onIntake?: (summary: string, queue: UploadQueue) => void;
+  /**
+   * Built-in voice: a microphone beside the + (dictate straight into the box)
+   * and a pause/play control at the far end for Frassy's speech, plus the
+   * animated Frassy presence. Used by The Daily.
+   */
+  voice?: boolean;
 };
 
 export function FrassyComposer({
@@ -120,12 +126,15 @@ export function FrassyComposer({
   inputRef,
   studio = true,
   onIntake,
+  voice = false,
 }: FrassyComposerProps) {
   const queue = useUploadQueue();
   const [menuOpen, setMenuOpen] = useState(false);
   const [dragging, setDragging] = useState(false);
   const [note, setNote] = useState<string | null>(null);
+  const ptt = usePushToTalk("daily-composer");
   const menuRef = useRef<HTMLDivElement>(null);
+
   const fileRef = useRef<HTMLInputElement>(null);
   const localInput = useRef<HTMLTextAreaElement>(null);
   const textRef = inputRef ?? localInput;
