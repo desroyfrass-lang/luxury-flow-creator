@@ -879,6 +879,9 @@ export function FrassDaily({
             </div>
           )}
         </section>
+        </>
+        )}
+
 
         <div className="daily-footer">
           <button type="button" className="daily-enter" onClick={onDismiss}>
