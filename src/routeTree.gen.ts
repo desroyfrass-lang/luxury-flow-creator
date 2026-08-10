@@ -174,6 +174,7 @@ import { Route as AuthenticatedAdminMediaRouteImport } from './routes/_authentic
 import { Route as AuthenticatedAdminLinkCheckRouteImport } from './routes/_authenticated/admin.link-check'
 import { Route as AuthenticatedAdminLaunchFeedbackRouteImport } from './routes/_authenticated/admin.launch-feedback'
 import { Route as AuthenticatedAdminImagesRouteImport } from './routes/_authenticated/admin.images'
+import { Route as AuthenticatedAdminFinancialAuditRouteImport } from './routes/_authenticated/admin.financial-audit'
 import { Route as AuthenticatedAdminFeedbackRouteImport } from './routes/_authenticated/admin.feedback'
 import { Route as AuthenticatedAdminCjImportRouteImport } from './routes/_authenticated/admin.cj-import'
 import { Route as AuthenticatedAdminCapsulesRouteImport } from './routes/_authenticated/admin.capsules'
@@ -1045,6 +1046,12 @@ const AuthenticatedAdminImagesRoute =
     path: '/images',
     getParentRoute: () => AuthenticatedAdminRoute,
   } as any)
+const AuthenticatedAdminFinancialAuditRoute =
+  AuthenticatedAdminFinancialAuditRouteImport.update({
+    id: '/financial-audit',
+    path: '/financial-audit',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
 const AuthenticatedAdminFeedbackRoute =
   AuthenticatedAdminFeedbackRouteImport.update({
     id: '/feedback',
@@ -1247,6 +1254,7 @@ export interface FileRoutesByFullPath {
   '/admin/capsules': typeof AuthenticatedAdminCapsulesRoute
   '/admin/cj-import': typeof AuthenticatedAdminCjImportRoute
   '/admin/feedback': typeof AuthenticatedAdminFeedbackRoute
+  '/admin/financial-audit': typeof AuthenticatedAdminFinancialAuditRoute
   '/admin/images': typeof AuthenticatedAdminImagesRoute
   '/admin/launch-feedback': typeof AuthenticatedAdminLaunchFeedbackRoute
   '/admin/link-check': typeof AuthenticatedAdminLinkCheckRoute
@@ -1403,6 +1411,7 @@ export interface FileRoutesByTo {
   '/admin/capsules': typeof AuthenticatedAdminCapsulesRoute
   '/admin/cj-import': typeof AuthenticatedAdminCjImportRoute
   '/admin/feedback': typeof AuthenticatedAdminFeedbackRoute
+  '/admin/financial-audit': typeof AuthenticatedAdminFinancialAuditRoute
   '/admin/images': typeof AuthenticatedAdminImagesRoute
   '/admin/launch-feedback': typeof AuthenticatedAdminLaunchFeedbackRoute
   '/admin/link-check': typeof AuthenticatedAdminLinkCheckRoute
@@ -1583,6 +1592,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/capsules': typeof AuthenticatedAdminCapsulesRoute
   '/_authenticated/admin/cj-import': typeof AuthenticatedAdminCjImportRoute
   '/_authenticated/admin/feedback': typeof AuthenticatedAdminFeedbackRoute
+  '/_authenticated/admin/financial-audit': typeof AuthenticatedAdminFinancialAuditRoute
   '/_authenticated/admin/images': typeof AuthenticatedAdminImagesRoute
   '/_authenticated/admin/launch-feedback': typeof AuthenticatedAdminLaunchFeedbackRoute
   '/_authenticated/admin/link-check': typeof AuthenticatedAdminLinkCheckRoute
@@ -1763,6 +1773,7 @@ export interface FileRouteTypes {
     | '/admin/capsules'
     | '/admin/cj-import'
     | '/admin/feedback'
+    | '/admin/financial-audit'
     | '/admin/images'
     | '/admin/launch-feedback'
     | '/admin/link-check'
@@ -1919,6 +1930,7 @@ export interface FileRouteTypes {
     | '/admin/capsules'
     | '/admin/cj-import'
     | '/admin/feedback'
+    | '/admin/financial-audit'
     | '/admin/images'
     | '/admin/launch-feedback'
     | '/admin/link-check'
@@ -2098,6 +2110,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/capsules'
     | '/_authenticated/admin/cj-import'
     | '/_authenticated/admin/feedback'
+    | '/_authenticated/admin/financial-audit'
     | '/_authenticated/admin/images'
     | '/_authenticated/admin/launch-feedback'
     | '/_authenticated/admin/link-check'
@@ -3365,6 +3378,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminImagesRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
+    '/_authenticated/admin/financial-audit': {
+      id: '/_authenticated/admin/financial-audit'
+      path: '/financial-audit'
+      fullPath: '/admin/financial-audit'
+      preLoaderRoute: typeof AuthenticatedAdminFinancialAuditRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
     '/_authenticated/admin/feedback': {
       id: '/_authenticated/admin/feedback'
       path: '/feedback'
@@ -3461,6 +3481,7 @@ interface AuthenticatedAdminRouteChildren {
   AuthenticatedAdminCapsulesRoute: typeof AuthenticatedAdminCapsulesRoute
   AuthenticatedAdminCjImportRoute: typeof AuthenticatedAdminCjImportRoute
   AuthenticatedAdminFeedbackRoute: typeof AuthenticatedAdminFeedbackRoute
+  AuthenticatedAdminFinancialAuditRoute: typeof AuthenticatedAdminFinancialAuditRoute
   AuthenticatedAdminImagesRoute: typeof AuthenticatedAdminImagesRoute
   AuthenticatedAdminLaunchFeedbackRoute: typeof AuthenticatedAdminLaunchFeedbackRoute
   AuthenticatedAdminLinkCheckRoute: typeof AuthenticatedAdminLinkCheckRoute
@@ -3484,6 +3505,7 @@ const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
   AuthenticatedAdminCapsulesRoute: AuthenticatedAdminCapsulesRoute,
   AuthenticatedAdminCjImportRoute: AuthenticatedAdminCjImportRoute,
   AuthenticatedAdminFeedbackRoute: AuthenticatedAdminFeedbackRoute,
+  AuthenticatedAdminFinancialAuditRoute: AuthenticatedAdminFinancialAuditRoute,
   AuthenticatedAdminImagesRoute: AuthenticatedAdminImagesRoute,
   AuthenticatedAdminLaunchFeedbackRoute: AuthenticatedAdminLaunchFeedbackRoute,
   AuthenticatedAdminLinkCheckRoute: AuthenticatedAdminLinkCheckRoute,

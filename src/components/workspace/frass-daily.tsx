@@ -83,9 +83,12 @@ import {
 import { Amount } from "@/components/finance/amount";
 import { VoiceFeedbackButton } from "@/components/feedback/voice-feedback";
 import { dailySnapshot, viewerFrom } from "@/lib/finance/financial-center";
+import { FounderOsPanel, FounderTabRail } from "@/components/workspace/founder-os-panel";
+import type { FounderTabId } from "@/lib/workspace/founder-os";
 
 
 const ORDER: DailyPriority[] = ["critical", "important", "optional", "completed"];
+
 
 
 export function FrassDaily({
@@ -102,7 +105,10 @@ export function FrassDaily({
   onNavigate?: (href: string) => void;
 }) {
   const [demo, setDemo] = useState(() => demoDataEnabled());
+  const isFounder = audience === "founder";
+  const [tab, setTab] = useState<FounderTabId>("today");
   const base = useMemo(() => dailyFor(audience), [audience]);
+
   const model = useMemo(() => honestDaily(base, demo), [base, demo]);
   const initial = useMemo(() => loadDailyState(), []);
   const [delegated, setDelegated] = useState<string[]>(initial.delegated);
@@ -286,7 +292,7 @@ export function FrassDaily({
       </div>
 
 
-      <div className="daily-scroll">
+      <div className={`daily-scroll ${isFounder ? "is-founder-os" : ""}`}>
         <header className="daily-head">
           <div>
             <div className="ws-meta">The Frass Daily</div>
@@ -300,6 +306,14 @@ export function FrassDaily({
             <X className="h-4 w-4" />
           </button>
         </header>
+
+        {isFounder && <FounderTabRail tab={tab} onSelect={setTab} showAudit />}
+
+        {tab !== "today" && <FounderOsPanel tab={tab} onNavigate={onNavigate} />}
+
+        {tab === "today" && (
+        <>
+
 
         {/* Daily welcome ritual — one short moment, on or off by choice */}
         {ritualOn && (
@@ -871,6 +885,9 @@ export function FrassDaily({
             </div>
           )}
         </section>
+        </>
+        )}
+
 
         <div className="daily-footer">
           <button type="button" className="daily-enter" onClick={onDismiss}>
