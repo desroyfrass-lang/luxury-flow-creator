@@ -2051,3 +2051,47 @@ a.ps-row:hover { border-color: color-mix(in srgb, var(--gold) 60%, transparent);
   .hill-life > *, .hill-walk-arrival, .hill-walk-arrival-inner { animation: none !important; }
   .hill-walk-scene { transition: none; }
 }
+
+/* ── FRASS-0450 · Founder Daily OS — one tab at a time ─────────────────── */
+.frass-workspace .founder-os-rail {
+  display: flex; flex-wrap: wrap; gap: 0.4rem;
+  margin: 1.25rem 0 0.5rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--ws-line);
+}
+.frass-workspace .founder-os-tab {
+  display: inline-flex; align-items: center; gap: 0.45rem;
+  border-radius: 999px; border: 1px solid var(--ws-line);
+  background: var(--ws-panel); color: var(--ws-soft);
+  padding: 0.45rem 0.9rem; font-size: 0.78rem; line-height: 1;
+  transition: color .15s, border-color .15s, background .15s;
+}
+.frass-workspace .founder-os-tab:hover { color: var(--ws-ink); border-color: var(--ws-gold); }
+.frass-workspace .founder-os-tab.is-active {
+  background: var(--ws-accent-bg); color: var(--ws-ink); border-color: var(--ws-gold);
+}
+.frass-workspace .founder-os-panel { padding: 1.25rem 0 2rem; }
+.frass-workspace .founder-os-head { margin-bottom: 1rem; }
+.frass-workspace .founder-os-grid {
+  display: grid; gap: 0.75rem;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+}
+.frass-workspace .founder-os-card,
+.frass-workspace .founder-os-row {
+  display: block; width: 100%; text-align: left;
+  border: 1px solid var(--ws-line); background: var(--ws-panel);
+  border-radius: 0.9rem; padding: 1rem; color: var(--ws-ink);
+}
+.frass-workspace .founder-os-card:hover,
+.frass-workspace .founder-os-row.is-clickable:hover { border-color: var(--ws-gold); }
+.frass-workspace .founder-os-card-title { display: block; font-weight: 600; margin-bottom: 0.3rem; }
+.frass-workspace .founder-os-stack { display: flex; flex-direction: column; gap: 0.7rem; }
+.frass-workspace .founder-os-row-head {
+  display: flex; align-items: baseline; justify-content: space-between; gap: 0.75rem;
+}
+.frass-workspace .founder-os-row-body { margin-top: 0.35rem; font-size: 0.9rem; color: var(--ws-soft); }
+.frass-workspace .founder-os-input {
+  width: 100%; border: 1px solid var(--ws-line); background: var(--ws-panel);
+  color: var(--ws-ink); border-radius: 0.75rem; padding: 0.7rem 0.9rem; font-size: 0.9rem;
+}
+.frass-workspace .founder-os-input:focus { outline: none; border-color: var(--ws-gold); }
