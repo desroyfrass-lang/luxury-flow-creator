@@ -56,6 +56,7 @@ For Me is personal, never algorithmic — no "chosen for you".
 
 - [Frass spelling](mem://constraints/frass-spelling) — Brand is always "Frass" (two s's), never "Fras"
 - [Frassy Personality & Voice Constitution](mem://design/frassy-personality-voice-constitution) — FRASS-0451: one Frassy everywhere, personality vs permissions, src/lib/frassy/personality.ts
+- [Frassy Context Intelligence](mem://design/frassy-context-intelligence) — FRASS-0451A: same heart/voice/different responsibilities, four-layer context engine, district roles, arrival-intent awareness
 - [Frassy Caribbean hospitality DNA](mem://design/frassy-caribbean-hospitality) — Frassy = digital Caribbean hospitality; subtle wit; anti-fraud posture; enforced in api/chat.ts SYSTEM_PROMPT
 - [Frassy Core Intelligence Engine O-22](mem://features/frassy-core-intelligence-o22) — COMPLETE: Frassy as the unified Builder companion, intelligence orchestration, and lifelong memory steward
 - [Frassy Intelligent Onboarding O-23](mem://features/frassy-intelligent-onboarding-o23) — COMPLETE: Builder-first onboarding, adaptive welcome journeys, and identity-driven personalization
