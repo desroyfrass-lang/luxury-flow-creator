@@ -61,10 +61,10 @@ export function FounderOsPanel({
 
       {tab === "audit" ? (
         <FinancialAuditDashboard />
+      ) : tab === "platform" ? (
+        <PlatformAuditTab onNavigate={onNavigate} />
       ) : tab === "decisions" ? (
         <DecisionsTab />
-      ) : tab === "health" ? (
-        <HealthTab onNavigate={onNavigate} />
       ) : tab === "notes" ? (
         <NotesTab />
       ) : tab === "registry" ? (
