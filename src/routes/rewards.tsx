@@ -41,7 +41,7 @@ export const Route = createFileRoute("/rewards")({
   component: RewardsPage,
 });
 
-const STYLE_OPTIONS = ["Streetwear", "Luxury", "Athletic", "Y2K", "Minimal", "Vintage"];
+const STYLE_OPTIONS = ["Streetwear", "Luxury", "Athletic", "Y2K", "Minimal", "Classic"];
 const CATEGORY_OPTIONS = ["Frass Kicks", "Frass Drip", "Bare Drip", "Capsules", "Virals"];
 
 const TIKTOK_URL = "https://www.tiktok.com/@frasskicks";
