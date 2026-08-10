@@ -4,7 +4,11 @@
 // lighter tabs launch you into it, the heavier tabs do the work in place.
 
 import { useMemo, useState } from "react";
-import { STATUS_DOT, loadOps, platformStatus, statusHeadline } from "@/lib/platform-status";
+import { useServerFn } from "@tanstack/react-start";
+import { STATUS_DOT, loadOps, platformStatus } from "@/lib/platform-status";
+import { platformAudit, platformAuditHeadline } from "@/lib/platform-audit";
+import { runLinkCheck } from "@/lib/link-check.functions";
+import { loadBudget } from "@/lib/construction/credit-intelligence";
 import { BLUEPRINT_COMPONENTS, loadDecisions } from "@/lib/construction/blueprint-registry";
 import {
   FOUNDER_LAUNCHERS,
