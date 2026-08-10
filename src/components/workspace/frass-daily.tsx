@@ -105,7 +105,10 @@ export function FrassDaily({
   onNavigate?: (href: string) => void;
 }) {
   const [demo, setDemo] = useState(() => demoDataEnabled());
+  const isFounder = audience === "founder";
+  const [tab, setTab] = useState<FounderTabId>("today");
   const base = useMemo(() => dailyFor(audience), [audience]);
+
   const model = useMemo(() => honestDaily(base, demo), [base, demo]);
   const initial = useMemo(() => loadDailyState(), []);
   const [delegated, setDelegated] = useState<string[]>(initial.delegated);
