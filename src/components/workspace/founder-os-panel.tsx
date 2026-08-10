@@ -4,7 +4,11 @@
 // lighter tabs launch you into it, the heavier tabs do the work in place.
 
 import { useMemo, useState } from "react";
-import { STATUS_DOT, loadOps, platformStatus, statusHeadline } from "@/lib/platform-status";
+import { useServerFn } from "@tanstack/react-start";
+import { STATUS_DOT, loadOps, platformStatus } from "@/lib/platform-status";
+import { platformAudit, platformAuditHeadline } from "@/lib/platform-audit";
+import { runLinkCheck } from "@/lib/link-check.functions";
+import { loadBudget } from "@/lib/construction/credit-intelligence";
 import { BLUEPRINT_COMPONENTS, loadDecisions } from "@/lib/construction/blueprint-registry";
 import {
   FOUNDER_LAUNCHERS,
@@ -61,10 +65,10 @@ export function FounderOsPanel({
 
       {tab === "audit" ? (
         <FinancialAuditDashboard />
+      ) : tab === "platform" ? (
+        <PlatformAuditTab onNavigate={onNavigate} />
       ) : tab === "decisions" ? (
         <DecisionsTab />
-      ) : tab === "health" ? (
-        <HealthTab onNavigate={onNavigate} />
       ) : tab === "notes" ? (
         <NotesTab />
       ) : tab === "registry" ? (
@@ -138,15 +142,91 @@ function DecisionsTab() {
   );
 }
 
-function HealthTab({ onNavigate }: { onNavigate?: (href: string) => void }) {
-  const rows = useMemo(
+function PlatformAuditTab({ onNavigate }: { onNavigate?: (href: string) => void }) {
+  const [scan, setScan] = useState<{
+    broken: number;
+    dead: number;
+    pages: number;
+    at: string;
+  } | null>(null);
+  const [scanning, setScanning] = useState(false);
+  const [scanError, setScanError] = useState<string | null>(null);
+  const runScan = useServerFn(runLinkCheck);
+
+  const health = useMemo(
     () => platformStatus({ online: true, aiOk: null, paymentsConnected: null, ops: loadOps() }),
     [],
   );
+
+  const rows = useMemo(
+    () =>
+      platformAudit({
+        online: true,
+        brokenLinks: scan?.broken ?? null,
+        deadRoutes: scan?.dead ?? null,
+        scannedPages: scan?.pages ?? null,
+        linkCheckedAt: scan?.at ?? null,
+        securityFindings: null,
+        creditBalance: loadBudget().balance,
+      }),
+    [scan],
+  );
+
+  const crawl = async () => {
+    setScanning(true);
+    setScanError(null);
+    try {
+      const report = await runScan({
+        data: { baseUrl: window.location.origin, maxPages: 30 },
+      });
+      setScan({
+        broken: report.brokenCount,
+        dead: report.results.filter((r) => !r.external && !r.ok).length,
+        pages: report.scannedPages.length,
+        at: report.ranAt,
+      });
+    } catch (e) {
+      setScanError(e instanceof Error ? e.message : "Could not run the crawl from here.");
+    } finally {
+      setScanning(false);
+    }
+  };
+
   return (
     <div className="founder-os-stack">
-      <p className="ws-meta">{statusHeadline(rows)}</p>
+      <p className="ws-meta">{platformAuditHeadline(rows)}</p>
+      <p className="ws-meta">
+        What this means in plain English: the Financial Audit checks the money. This checks the
+        building the money moves through — the doors, the lights and the wiring.
+      </p>
+
+      <div>
+        <button type="button" className="daily-enter" onClick={crawl} disabled={scanning}>
+          {scanning ? "Walking every page…" : "Run a live link & route crawl"}
+        </button>
+        {scanError && <p className="ws-meta">{scanError}</p>}
+      </div>
+
       {rows.map((r) => (
+        <button
+          key={r.id}
+          type="button"
+          className="founder-os-row is-clickable"
+          onClick={() => r.to && onNavigate?.(r.to)}
+        >
+          <div className="founder-os-row-head">
+            <strong>
+              {STATUS_DOT[r.level]} {r.label}
+            </strong>
+            <span className="ws-meta">{r.source}</span>
+          </div>
+          <p className="founder-os-row-body">{r.detail}</p>
+          <span className="ws-meta">{r.plain}</span>
+        </button>
+      ))}
+
+      <h3 className="founder-os-card-title">Operating signals</h3>
+      {health.map((r) => (
         <button
           key={r.id}
           type="button"

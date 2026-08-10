@@ -6,15 +6,20 @@
 export type FounderTabId =
   | "today"
   | "continue"
+  | "goals"
+  | "command"
+  | "approvals"
+  | "opportunities"
+  | "feedback"
   | "studios"
   | "financial"
-  | "audit"
-  | "command"
-  | "decisions"
+  | "recruitment"
   | "world"
-  | "health"
+  | "decisions"
   | "notes"
-  | "registry";
+  | "registry"
+  | "platform"
+  | "audit";
 
 export type FounderTab = {
   id: FounderTabId;
@@ -24,24 +29,32 @@ export type FounderTab = {
   founderOnly?: boolean;
 };
 
+// Amendment 1 — the administrative tabs sit at the end. Financial Audit is
+// always the very last thing, because looking backwards is never the first
+// thing a Founder does in a day.
 export const FOUNDER_TABS: FounderTab[] = [
   { id: "today", label: "Today's Daily", icon: "☀", blurb: "What needs you today, in order." },
   { id: "continue", label: "Continue Working", icon: "▶", blurb: "Pick up exactly where you stopped." },
+  { id: "goals", label: "Goals & Vision", icon: "🎯", blurb: "Where this is all going." },
+  { id: "command", label: "Founder Command Center", icon: "⌘", blurb: "Run the platform's control surfaces." },
+  { id: "approvals", label: "Pending Approvals", icon: "✔", blurb: "Things waiting on your word." },
+  { id: "opportunities", label: "Opportunities", icon: "✦", blurb: "What's worth your attention next." },
+  { id: "feedback", label: "Launch Feedback", icon: "💬", blurb: "What people are telling us." },
   { id: "studios", label: "FV Studios", icon: "🎬", blurb: "Production, credits and content." },
   { id: "financial", label: "Financial Center", icon: "◈", blurb: "Money in, money out, what's owed." },
+  { id: "recruitment", label: "Recruitment", icon: "🤝", blurb: "Who's joining and who brought them." },
+  { id: "world", label: "World Builder", icon: "🏗", blurb: "Districts, blueprints, construction." },
+  { id: "decisions", label: "Decisions", icon: "🗂", blurb: "Everything decided, searchable." },
+  { id: "notes", label: "Notes", icon: "✎", blurb: "Your own thinking, kept." },
+  { id: "registry", label: "Registry", icon: "📜", blurb: "The constitution and its components." },
+  { id: "platform", label: "Platform Audit", icon: "🏛", blurb: "Is the platform itself healthy?" },
   {
     id: "audit",
     label: "Financial Audit",
     icon: "🔍",
-    blurb: "Every record, every event, reconciled.",
+    blurb: "Every record, every event, reconciled. Observation only.",
     founderOnly: true,
   },
-  { id: "command", label: "Command Center", icon: "⌘", blurb: "Run the platform's control surfaces." },
-  { id: "decisions", label: "Decisions", icon: "🗂", blurb: "Everything decided, searchable." },
-  { id: "world", label: "World Builder", icon: "🏗", blurb: "Districts, blueprints, construction." },
-  { id: "health", label: "Platform Health", icon: "🩺", blurb: "What's live, what's watching." },
-  { id: "notes", label: "Notes", icon: "✎", blurb: "Your own thinking, kept." },
-  { id: "registry", label: "Registry", icon: "📜", blurb: "The constitution and its components." },
 ];
 
 /** Quick launchers used by the lighter tabs — places, not features. */
@@ -50,6 +63,30 @@ export const FOUNDER_LAUNCHERS: Record<string, { label: string; href: string; pl
     { label: "My Workspace", href: "/room", plain: "Reopens on your last mode and project." },
     { label: "Control Room", href: "/founder", plain: "Mission control for building." },
     { label: "Frassy", href: "/frassy", plain: "Pick up the last conversation." },
+  ],
+  goals: [
+    { label: "Control Room", href: "/founder", plain: "Goals, vision maps and construction." },
+    { label: "Insights", href: "/workspace/insights", plain: "How close the numbers are to the goal." },
+    { label: "Business Builder", href: "/business-builder", plain: "Turn a goal into a plan." },
+  ],
+  approvals: [
+    { label: "Approvals", href: "/admin/approvals", plain: "Things waiting on your word." },
+    { label: "Visual review", href: "/visual-review", plain: "Imagery waiting to be approved." },
+    { label: "Partner vendors", href: "/admin/partner-vendors", plain: "Scorecards before any supplier." },
+  ],
+  opportunities: [
+    { label: "Opportunity Center", href: "/opportunity", plain: "Everything worth building next." },
+    { label: "Creation", href: "/creation", plain: "Turn an opportunity into work." },
+    { label: "Global operations", href: "/global-operations", plain: "Where Frass can expand." },
+  ],
+  feedback: [
+    { label: "Launch feedback", href: "/admin/launch-feedback", plain: "Everything people told us." },
+    { label: "Page feedback", href: "/admin/feedback", plain: "Notes left on specific pages." },
+  ],
+  recruitment: [
+    { label: "My Frass Link", href: "/workspace/link", plain: "Your permanent link and its team." },
+    { label: "Affiliate", href: "/workspace/affiliate", plain: "Commissions and campaigns." },
+    { label: "My Frass Card", href: "/workspace/card", plain: "Identity people actually meet." },
   ],
   studios: [
     { label: "FV Studios", href: "/fv-studios", plain: "The production floor." },

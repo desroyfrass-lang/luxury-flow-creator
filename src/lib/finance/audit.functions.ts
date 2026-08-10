@@ -1,21 +1,12 @@
 // FRASS-0450 — Financial Audit Center reads. Founder/admin only.
 //
 // The caller is verified through their own RLS-scoped client first; only then
-// does the handler load the privileged client to read across every member's
-// records. Nothing here writes — the audit view can only look.
+// does the handler load the privileged read helper. Nothing here writes — the
+// audit view can only look, and the AI assistant can only explain.
 
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
-import {
-  FINAL_ORDER_STATES,
-  FINAL_REQUEST_STATES,
-  reconcile,
-  type AuditEvent,
-  type AuditRow,
-} from "@/lib/finance/audit";
-
-const round2 = (n: unknown) => Math.round((Number(n) || 0) * 100) / 100;
 
 const Input = z.object({
   from: z.string().optional(),
@@ -23,9 +14,11 @@ const Input = z.object({
   limit: z.number().int().min(10).max(1000).optional(),
 });
 
-function ev(at: string | null | undefined, label: string, detail?: string | null): AuditEvent[] {
-  return at ? [{ at, label, detail: detail ?? null }] : [];
-}
+const AskInput = z.object({
+  question: z.string().min(2).max(600),
+  from: z.string().optional(),
+  to: z.string().optional(),
+});
 
 export const searchFinancialAudit = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
@@ -37,194 +30,55 @@ export const searchFinancialAudit = createServerFn({ method: "POST" })
     });
     if (!isAdmin) throw new Error("Forbidden");
 
-    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-    const limit = data.limit ?? 400;
-    const from = data.from ?? new Date(Date.now() - 90 * 86400_000).toISOString();
-    const to = data.to ?? new Date(Date.now() + 86400_000).toISOString();
+    const { collectAudit } = await import("@/lib/finance/audit.server");
+    return collectAudit(data);
+  });
 
-    const [orders, requests, receipts, adjustments, fraud] = await Promise.all([
-      supabaseAdmin
-        .from("card_orders")
-        .select("*")
-        .gte("created_at", from)
-        .lte("created_at", to)
-        .order("created_at", { ascending: false })
-        .limit(limit),
-      supabaseAdmin
-        .from("payment_requests")
-        .select("*")
-        .gte("created_at", from)
-        .lte("created_at", to)
-        .order("created_at", { ascending: false })
-        .limit(limit),
-      supabaseAdmin
-        .from("financial_receipts")
-        .select("*")
-        .gte("occurred_at", from)
-        .lte("occurred_at", to)
-        .order("occurred_at", { ascending: false })
-        .limit(limit),
-      supabaseAdmin
-        .from("financial_adjustments")
-        .select("*")
-        .order("created_at", { ascending: false })
-        .limit(200),
-      supabaseAdmin
-        .from("fraud_reports")
-        .select("id, kind, status, details, order_reference, subject_handle, created_at")
-        .order("created_at", { ascending: false })
-        .limit(100),
-    ]);
+/** Amendment 3 — the AI Audit Assistant. It answers questions; it never acts. */
+export const askFinancialAudit = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((input: unknown) => AskInput.parse(input))
+  .handler(async ({ data, context }) => {
+    const { data: isAdmin } = await context.supabase.rpc("has_role", {
+      _user_id: context.userId,
+      _role: "admin",
+    });
+    if (!isAdmin) throw new Error("Forbidden");
 
-    const err = orders.error ?? requests.error ?? receipts.error ?? adjustments.error ?? fraud.error;
-    if (err) throw err;
+    const key = process.env["LOVABLE_API_KEY"];
+    if (!key) throw new Error("The audit assistant is not connected yet.");
 
-    const rows: AuditRow[] = [];
+    const { collectAudit, ledgerBriefing } = await import("@/lib/finance/audit.server");
+    const { summarise } = await import("@/lib/finance/audit");
+    const ledger = await collectAudit({ from: data.from, to: data.to, limit: 600 });
+    const totals = summarise(ledger.rows);
 
-    for (const o of orders.data ?? []) {
-      const final = FINAL_ORDER_STATES.includes(o.status);
-      const r = reconcile({
-        gross: round2(o.subtotal),
-        platformAllocation: round2(o.platform_fee),
-        processingFee: round2(o.processing_fee_estimate),
-        otherDeductions: 0,
-        net: round2(o.net_to_seller),
-        final,
-        settled: o.status === "paid",
-      });
-      rows.push({
-        id: o.id,
-        source: "order",
-        reference: o.reference,
-        title: `Order · ${o.quantity} × ${round2(o.unit_price).toFixed(2)}`,
-        counterparty: o.buyer_name || o.buyer_email || null,
-        partyId: o.seller_id,
-        currency: o.currency,
-        gross: round2(o.subtotal),
-        platformAllocation: round2(o.platform_fee),
-        processingFee: round2(o.processing_fee_estimate),
-        otherDeductions: 0,
-        net: round2(o.net_to_seller),
-        status: o.status,
-        occurredAt: o.created_at,
-        settledAt: o.status === "paid" ? o.updated_at : null,
-        events: [
-          ...ev(o.created_at, "Order recorded", o.payout_provider ? `via ${o.payout_provider}` : null),
-          ...ev(o.updated_at !== o.created_at ? o.updated_at : null, `Status → ${o.status}`),
-        ],
-        reconciliation: r.state,
-        reconciliationNote: r.note,
-      });
-    }
+    const { createLovableAiGatewayProvider } = await import("@/lib/ai-gateway.server");
+    const { streamText } = await import("ai");
 
-    for (const p of requests.data ?? []) {
-      const gross = round2(Number(p.amount) * Number(p.quantity || 1));
-      const platform = round2(gross * 0.1);
-      const final = FINAL_REQUEST_STATES.includes(p.status);
-      const orphanPaid = p.status === "paid" && !p.order_id ? "Marked paid but no order was ever created." : null;
-      const r = reconcile({
-        gross,
-        platformAllocation: platform,
-        processingFee: 0,
-        otherDeductions: 0,
-        net: round2(gross - platform),
-        final,
-        settled: p.status === "paid",
-        extraProblem: orphanPaid,
-      });
-      rows.push({
-        id: p.id,
-        source: "payment_request",
-        reference: p.idempotency_key ?? p.token?.slice(0, 8) ?? null,
-        title: p.title,
-        counterparty: p.buyer_name || p.buyer_email || p.buyer_phone || null,
-        partyId: p.seller_id,
-        currency: p.currency,
-        gross,
-        platformAllocation: platform,
-        processingFee: 0,
-        otherDeductions: 0,
-        net: round2(gross - platform),
-        status: p.status,
-        occurredAt: p.created_at,
-        settledAt: p.paid_at,
-        events: [
-          ...ev(p.created_at, "Request created", `${p.kind} · ${p.delivery}`),
-          ...ev(p.first_viewed_at, "Customer opened it"),
-          ...ev(p.processing_started_at, "Processing started", `attempt ${p.attempts}`),
-          ...ev(p.paid_at, "Paid"),
-          ...ev(p.declined_at, "Declined", p.failure_reason),
-          ...ev(p.cancelled_at, "Cancelled"),
-          ...ev(p.expired_at, "Expired"),
-          ...ev(p.refunded_at, "Refunded"),
-        ].sort((a, b) => (a.at < b.at ? -1 : 1)),
-        reconciliation: r.state,
-        reconciliationNote: r.note,
-      });
-    }
+    const result = streamText({
+      model: createLovableAiGatewayProvider(key)("google/gemini-3.6-flash"),
+      system: [
+        "You are Frassy, the Frass financial audit assistant.",
+        "You are inside a READ-ONLY observation room. You never approve, edit, refund, settle or change anything, and you never offer to.",
+        "If asked to act, explain plainly that the Audit Center can only observe, and name the place where that action legitimately happens.",
+        "Frass's constitutional split is 90% to the member, 10% to the platform (the founder's 1% and co-founder's 1% live inside that 10%).",
+        "Answer only from the ledger given to you. If the answer is not in it, say so.",
+        "Answer twice: first the precise financial answer, then a short paragraph beginning 'What this means in plain English:' with an everyday analogy.",
+        "Caribbean warmth, no stereotypes, no jargon left unexplained.",
+      ].join(" "),
+      prompt: [
+        `Window: ${ledger.window.from} → ${ledger.window.to}`,
+        `Totals: ${totals.count} records · gross ${totals.gross} · platform ${totals.platform} · processing ${totals.processing} · net ${totals.net} · founder ${totals.founder} · co-founder ${totals.coFounder}`,
+        `Reconciliation: ${totals.reconciled} reconciled, ${totals.pending} pending, ${totals.attention} need attention.`,
+        `Queue: ${ledger.queue.processing} payments in flight, ${ledger.queue.openFraud} open fraud reports, ${ledger.queue.adjustments} adjustments.`,
+        "",
+        "LEDGER (one record per line):",
+        ledgerBriefing(ledger.rows),
+        "",
+        `FOUNDER QUESTION: ${data.question}`,
+      ].join("\n"),
+    });
 
-    for (const f of receipts.data ?? []) {
-      const final = ["settled", "refunded", "withdrawn", "cancelled"].includes(f.status);
-      const settledMissing =
-        f.status === "settled" && !f.settled_at ? "Marked settled with no settlement timestamp." : null;
-      const r = reconcile({
-        gross: round2(f.gross),
-        platformAllocation: round2(f.platform_allocation),
-        processingFee: round2(f.processing_fee),
-        otherDeductions: round2(f.other_deductions),
-        net: round2(f.net),
-        final,
-        settled: f.status === "settled",
-        extraProblem: settledMissing,
-      });
-      rows.push({
-        id: f.id,
-        source: "receipt",
-        reference: f.reference ?? f.external_id,
-        title: f.title,
-        counterparty: f.counterparty_name,
-        partyId: f.user_id,
-        currency: f.currency,
-        gross: round2(f.gross),
-        platformAllocation: round2(f.platform_allocation),
-        processingFee: round2(f.processing_fee),
-        otherDeductions: round2(f.other_deductions),
-        net: round2(f.net),
-        status: f.status,
-        occurredAt: f.occurred_at,
-        settledAt: f.settled_at,
-        events: [
-          ...ev(f.created_at, "Receipt written", `${f.kind} · ${f.source}`),
-          ...ev(f.occurred_at !== f.created_at ? f.occurred_at : null, "Money moved"),
-          ...ev(f.settled_at, "Settled"),
-          ...(adjustments.data ?? [])
-            .filter((a) => a.receipt_id === f.id)
-            .map((a) => ({
-              at: a.created_at as string,
-              label: "Adjustment",
-              detail: a.reason as string | null,
-            })),
-        ].sort((a, b) => (a.at < b.at ? -1 : 1)),
-        reconciliation: r.state,
-        reconciliationNote: r.note,
-      });
-    }
-
-    rows.sort((a, b) => (a.occurredAt < b.occurredAt ? 1 : -1));
-
-    const processing = (requests.data ?? []).filter((p) =>
-      ["preparing", "awaiting_approval", "processing"].includes(p.status),
-    ).length;
-
-    return {
-      rows,
-      window: { from, to },
-      queue: {
-        processing,
-        openFraud: (fraud.data ?? []).filter((f) => f.status === "received" || f.status === "investigating")
-          .length,
-        adjustments: (adjustments.data ?? []).length,
-      },
-      fraud: fraud.data ?? [],
-    };
+    return { answer: await result.text };
   });
