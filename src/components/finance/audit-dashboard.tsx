@@ -196,6 +196,98 @@ export function FinancialAuditDashboard() {
   );
 }
 
+const AUDIT_PROMPTS = [
+  "Show me anything unusual today.",
+  "Why doesn't this reconcile?",
+  "Show every refund this week.",
+  "Which members are owed money right now?",
+  "Did the platform take more than 10% anywhere?",
+];
+
+/** Amendment 3 — Frassy explains the ledger. She never changes it. */
+function AuditAssistant({ days }: { days: number }) {
+  const ask = useServerFn(askFinancialAudit);
+  const [question, setQuestion] = useState("");
+  const [answer, setAnswer] = useState<string | null>(null);
+  const [thinking, setThinking] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const send = async (q: string) => {
+    const text = q.trim();
+    if (!text || thinking) return;
+    setQuestion(text);
+    setThinking(true);
+    setError(null);
+    setAnswer(null);
+    try {
+      const res = await ask({
+        data: { question: text, from: new Date(Date.now() - days * 86400_000).toISOString() },
+      });
+      setAnswer(res.answer);
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "The audit assistant could not answer that.");
+    } finally {
+      setThinking(false);
+    }
+  };
+
+  return (
+    <div className="rounded-2xl border border-white/12 bg-white/[0.02] p-5">
+      <div className="flex items-center gap-2 text-[10px] uppercase tracking-[0.24em] text-[color:var(--gold)]">
+        <Sparkles className="h-3.5 w-3.5" /> AI Audit Assistant · answers only, never actions
+      </div>
+
+      <form
+        className="mt-3 flex flex-wrap gap-2"
+        onSubmit={(e) => {
+          e.preventDefault();
+          void send(question);
+        }}
+      >
+        <input
+          value={question}
+          onChange={(e) => setQuestion(e.target.value)}
+          placeholder="Ask about the last 	{days} days of money…"
+          className="min-w-[240px] flex-1 rounded-full border border-white/15 bg-white/[0.03] px-4 py-2.5 text-sm outline-none focus:border-[color:var(--gold)]/60"
+        />
+        <button
+          type="submit"
+          disabled={thinking}
+          className="rounded-full bg-[color:var(--gold)] px-5 py-2.5 text-[11px] uppercase tracking-[0.2em] text-black disabled:opacity-50"
+        >
+          {thinking ? "Reading…" : "Ask"}
+        </button>
+      </form>
+
+      <div className="mt-3 flex flex-wrap gap-2">
+        {AUDIT_PROMPTS.map((p) => (
+          <button
+            key={p}
+            type="button"
+            onClick={() => void send(p)}
+            className="rounded-full border border-white/15 px-3 py-1.5 text-[11px] text-muted-foreground hover:border-[color:var(--gold)]/50"
+          >
+            {p}
+          </button>
+        ))}
+      </div>
+
+      {thinking && (
+        <p className="mt-4 flex items-center gap-2 text-sm text-muted-foreground">
+          <Loader2 className="h-4 w-4 animate-spin" /> Reading every record in this window…
+        </p>
+      )}
+      {error && <p className="mt-4 text-sm text-red-200">{error}</p>}
+      {answer && (
+        <div className="mt-4 whitespace-pre-wrap rounded-xl border border-[color:var(--gold)]/25 bg-[color:var(--gold)]/[0.04] p-4 text-[13px] leading-relaxed">
+          {answer}
+        </div>
+      )}
+    </div>
+  );
+}
+
+
 function Stat({ label, value }: { label: string; value: string }) {
   return (
     <div className="rounded-xl border border-white/12 bg-white/[0.02] p-4">
