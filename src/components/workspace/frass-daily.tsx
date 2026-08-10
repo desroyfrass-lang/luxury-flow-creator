@@ -83,9 +83,12 @@ import {
 import { Amount } from "@/components/finance/amount";
 import { VoiceFeedbackButton } from "@/components/feedback/voice-feedback";
 import { dailySnapshot, viewerFrom } from "@/lib/finance/financial-center";
+import { FounderOsPanel, FounderTabRail } from "@/components/workspace/founder-os-panel";
+import type { FounderTabId } from "@/lib/workspace/founder-os";
 
 
 const ORDER: DailyPriority[] = ["critical", "important", "optional", "completed"];
+
 
 
 export function FrassDaily({
