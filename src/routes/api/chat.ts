@@ -388,9 +388,16 @@ export const Route = createFileRoute("/api/chat")({
             : body.experienceContext === "builder"
               ? "builder"
               : "storefront";
-        // FRASS-0451: one Frassy everywhere — personality first, then the keys
-        // she is entrusted with for this person.
-        const voiceConstitution = `${FRASSY_VOICE_CONSTITUTION}\n\n${frassyAuthorizationLayer(audience)}`;
+        const relationship: FrassyRelationship =
+          body.relationship ??
+          (audience === "founder" ? "founder" : audience === "builder" ? "builder" : "visitor");
+        // FRASS-0451: one Frassy everywhere — personality first, then the hat she
+        // wears in this district (FRASS-0451A), then the keys she is entrusted with.
+        const voiceConstitution = `${FRASSY_VOICE_CONSTITUTION}\n\n${frassyContextLayer({
+          relationship,
+          pathname: body.districtPath ?? null,
+          arrivalIntent: body.arrivalIntent ?? null,
+        })}\n\n${frassyAuthorizationLayer(audience)}`;
 
         const basePrompt =
           body.experienceContext === "founder"
