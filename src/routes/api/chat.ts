@@ -7,6 +7,7 @@ import {
   FRASSY_VOICE_CONSTITUTION,
   frassyAuthorizationLayer,
 } from "@/lib/frassy/personality";
+import { frassyContextLayer, type FrassyRelationship } from "@/lib/frassy/context";
 
 const FRASS_LINK = `FRASS LINK (FRASS-0428)
 Every member owns ONE permanent Frass Link for life: frasskicks.com/link/<handle>. It is their identity,
