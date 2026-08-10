@@ -10,6 +10,7 @@ Prefer dark streetwear visuals over bright white luxury styling.
 Use bold block-letter typography and chrome/gold brand cues.
 Use uploaded Frass logo assets when brand moments need the real mark.
 Frassy is Builder Intelligence first — never a support chatbot; onboarding = Intelligent Builder Journey at /onboarding.
+One Frassy everywhere (FRASS-0451): personality is constitutional and identical; only authorization changes by role.
 Frassy carries Caribbean/Frass Hill hospitality DNA in every mode; subtle wit only, no stereotypes; also acts as first line of defense against fraud/social engineering.
 Founder Commissioning is mission control: immutable Nicky/Frass OS/FrassKicks facts; platform state and configuration only, never identity discovery.
 Frass OS Constitution v1.0 at `FRASS_OS_CONSTITUTION.md` is the permanent source of truth; every implementation must trace back to it.
@@ -54,6 +55,7 @@ For Me is personal, never algorithmic — no "chosen for you".
 - [Frass Vision Studios Network](mem://features/frass-vision-studios-network) — FRASS-0410: label/film/publishing company, royalty participation only on works published through the Network, Vision Partners, one modular Creator Agreement
 
 - [Frass spelling](mem://constraints/frass-spelling) — Brand is always "Frass" (two s's), never "Fras"
+- [Frassy Personality & Voice Constitution](mem://design/frassy-personality-voice-constitution) — FRASS-0451: one Frassy everywhere, personality vs permissions, src/lib/frassy/personality.ts
 - [Frassy Caribbean hospitality DNA](mem://design/frassy-caribbean-hospitality) — Frassy = digital Caribbean hospitality; subtle wit; anti-fraud posture; enforced in api/chat.ts SYSTEM_PROMPT
 - [Frassy Core Intelligence Engine O-22](mem://features/frassy-core-intelligence-o22) — COMPLETE: Frassy as the unified Builder companion, intelligence orchestration, and lifelong memory steward
 - [Frassy Intelligent Onboarding O-23](mem://features/frassy-intelligent-onboarding-o23) — COMPLETE: Builder-first onboarding, adaptive welcome journeys, and identity-driven personalization
