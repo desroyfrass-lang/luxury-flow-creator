@@ -3,8 +3,8 @@
 import { useMemo, useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import { useQuery } from "@tanstack/react-query";
-import { ChevronDown, Loader2, Search, ShieldAlert } from "lucide-react";
-import { searchFinancialAudit } from "@/lib/finance/audit.functions";
+import { ChevronDown, Loader2, Search, ShieldAlert, Sparkles } from "lucide-react";
+import { askFinancialAudit, searchFinancialAudit } from "@/lib/finance/audit.functions";
 import {
   allocationOf,
   filterRows,
