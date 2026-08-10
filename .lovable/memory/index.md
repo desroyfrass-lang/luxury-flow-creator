@@ -14,6 +14,8 @@ Frassy carries Caribbean/Frass Hill hospitality DNA in every mode; subtle wit on
 Founder Commissioning is mission control: immutable Nicky/Frass OS/FrassKicks facts; platform state and configuration only, never identity discovery.
 Frass OS Constitution v1.0 at `FRASS_OS_CONSTITUTION.md` is the permanent source of truth; every implementation must trace back to it.
 Implementation hold is lifted. The `FINAL_LOVABLE_DIRECTIVE.md` commissioning is the active build charter: Builder experience above everything; optimize for confidence, timelessness, and meaningful progress.
+Security is continuous, not one-time: every major feature gets an attacker-mindset review (FRASS-0449, `SECURITY_REVIEW_STANDARD.md`) before it is called complete.
+Money model: the client requests, the server verifies, the processor confirms — only then does money move.
 One feature, one component, one route, one source of truth — audit for existing implementations before building; never create a second version.
 Frass Hill has exactly 8 districts (Town Square, Children's Village, Frass District, Luxury House, Studio District, Builders Village, Farm District, Founder Hall); every other service is a venue INSIDE one.
 "Frass World" is retired — the entrance is SHOP or ENTER FRASS HILL.
