@@ -201,7 +201,7 @@ export const searchFinancialAudit = createServerFn({ method: "POST" })
             .filter((a) => a.receipt_id === f.id)
             .map((a) => ({
               at: a.created_at as string,
-              label: `Adjustment · ${a.kind}`,
+              label: "Adjustment",
               detail: a.reason as string | null,
             })),
         ].sort((a, b) => (a.at < b.at ? -1 : 1)),
