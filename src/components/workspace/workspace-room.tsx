@@ -3,6 +3,7 @@
 // the smart index, the timeline, and the persistent composer. Frassy adapts to
 // the open project and reopens exactly where work stopped.
 
+import { readArrivalIntent } from "@/lib/frassy/context";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { ChevronDown, ChevronRight } from "lucide-react";
 import { WorkspaceShell, type IndexEntry, type RoleLink } from "@/components/workspace/workspace-shell";
@@ -227,6 +228,9 @@ export function WorkspaceRoom({
           ],
           modeContext: "workspace",
           experienceContext: isAdmin ? "founder" : "builder",
+          // FRASS-0451A — where we are, and why they came.
+          districtPath: typeof window !== "undefined" ? window.location.pathname : undefined,
+          arrivalIntent: readArrivalIntent() ?? undefined,
           interactionMode: spoken ? "voice_and_text" : "text",
           voiceAvailable: voice.voiceAvailable,
           stream: false,
