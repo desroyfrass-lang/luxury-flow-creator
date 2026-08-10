@@ -218,6 +218,13 @@ function AdminLayout() {
             >
               AI Credits
             </Link>
+            <Link
+              to="/admin/financial-audit"
+              activeProps={{ className: "text-[color:var(--gold)]" }}
+              className="text-muted-foreground hover:text-foreground"
+            >
+              Financial Audit
+            </Link>
 
 
 
