@@ -3,6 +3,10 @@ import { convertToModelMessages, generateText, stepCountIs } from "ai";
 import { createLovableAiGatewayProvider } from "@/lib/ai-gateway.server";
 import { buildFrassyTools } from "@/lib/frassy-tools.server";
 import { isFounderIdentityDiscovery } from "@/lib/journey-prompts.server";
+import {
+  FRASSY_VOICE_CONSTITUTION,
+  frassyAuthorizationLayer,
+} from "@/lib/frassy/personality";
 
 const FRASS_LINK = `FRASS LINK (FRASS-0428)
 Every member owns ONE permanent Frass Link for life: frasskicks.com/link/<handle>. It is their identity,
@@ -374,6 +378,16 @@ export const Route = createFileRoute("/api/chat")({
           .filter(Boolean)
           .join("\n");
 
+        const audience =
+          body.experienceContext === "founder"
+            ? "founder"
+            : body.experienceContext === "builder"
+              ? "builder"
+              : "storefront";
+        // FRASS-0451: one Frassy everywhere — personality first, then the keys
+        // she is entrusted with for this person.
+        const voiceConstitution = `${FRASSY_VOICE_CONSTITUTION}\n\n${frassyAuthorizationLayer(audience)}`;
+
         const basePrompt =
           body.experienceContext === "founder"
             ? `${SYSTEM_PROMPT}\n\n${FRASS_LINK}\n\n${FOUNDER_CONTEXT}\n\n${CURATION_BRIEF}\n\n${GLOBAL_COMMERCE}\n\n${FOR_US_COMMUNITY}\n\n${STORYTELLING_ENGINE}\n\n${PLAIN_LANGUAGE_PROTOCOL}`
@@ -382,7 +396,8 @@ export const Route = createFileRoute("/api/chat")({
 
               : `${SYSTEM_PROMPT}\n\n${FOR_US_COMMUNITY}`;
 
-        const system = contextBlock ? `${basePrompt}\n\n${contextBlock}` : basePrompt;
+        const withVoice = `${basePrompt}\n\n${voiceConstitution}`;
+        const system = contextBlock ? `${withVoice}\n\n${contextBlock}` : withVoice;
 
         // Convert simple {role, content} messages into UI-message shape for the SDK.
         type UiPart =
