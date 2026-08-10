@@ -76,6 +76,20 @@ export function FinancialAuditDashboard() {
         </div>
       </div>
 
+      {/* Amendment 2 — this room can only observe. */}
+      <p className="rounded-xl border border-[color:var(--gold)]/25 bg-[color:var(--gold)]/[0.04] p-4 text-[13px]">
+        <span className="text-[10px] uppercase tracking-[0.22em] text-[color:var(--gold)]">
+          Observation room
+        </span>
+        <span className="mt-1 block">
+          Nothing in here can be edited, deleted, approved, rejected, overridden or settled. There is
+          no such button, and there is no such server function behind it. Corrections happen in the
+          workflow that created the record, and leave their own permanent mark.
+        </span>
+      </p>
+
+      <AuditAssistant days={days} />
+
       {/* Queue + integrity strip */}
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
         <Stat label="Records" value={String(totals.count)} />
