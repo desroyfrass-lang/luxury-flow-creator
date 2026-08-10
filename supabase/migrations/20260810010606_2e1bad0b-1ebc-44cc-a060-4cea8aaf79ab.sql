@@ -1,0 +1,2 @@
+REVOKE EXECUTE ON FUNCTION public.enforce_receipt_creation_authority() FROM PUBLIC, anon, authenticated;
+REVOKE EXECUTE ON FUNCTION public.enforce_payment_request_creation_authority() FROM PUBLIC, anon, authenticated;
