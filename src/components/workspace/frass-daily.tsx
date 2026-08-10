@@ -286,7 +286,7 @@ export function FrassDaily({
       </div>
 
 
-      <div className="daily-scroll">
+      <div className={`daily-scroll ${isFounder ? "is-founder-os" : ""}`}>
         <header className="daily-head">
           <div>
             <div className="ws-meta">The Frass Daily</div>
@@ -300,6 +300,14 @@ export function FrassDaily({
             <X className="h-4 w-4" />
           </button>
         </header>
+
+        {isFounder && <FounderTabRail tab={tab} onSelect={setTab} showAudit />}
+
+        {tab !== "today" && <FounderOsPanel tab={tab} onNavigate={onNavigate} />}
+
+        {tab === "today" && (
+        <>
+
 
         {/* Daily welcome ritual — one short moment, on or off by choice */}
         {ritualOn && (
