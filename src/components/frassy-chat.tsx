@@ -15,6 +15,7 @@ import { useEffect, useRef, useState } from "react";
 import { X, ShoppingBag, Trash2, Volume2, VolumeX } from "lucide-react";
 import { useCartStore } from "@/lib/cart-store";
 import symbolAsset from "@/assets/frass-logo-symbol.asset.json";
+import { readArrivalIntent } from "@/lib/frassy/context";
 import { useFrassyContext } from "@/hooks/use-frassy-context";
 import { useIsAdminStatus } from "@/hooks/use-is-admin";
 import { FrassyComposer } from "@/components/workspace/frassy-composer";
@@ -146,6 +147,9 @@ export function FrassyChat({ embedded = false }: { embedded?: boolean } = {}) {
           cartContext,
           modeContext: ctx.mode,
           experienceContext: isAdmin ? "founder" : "storefront",
+          // FRASS-0451A — where we are, and why they came.
+          districtPath: ctx.pathname,
+          arrivalIntent: readArrivalIntent() ?? undefined,
           // Actual runtime interaction mode, so Frassy never misstates her capabilities.
           interactionMode: spoken ? "voice_and_text" : "text",
           voiceAvailable: voice.voiceAvailable,

@@ -7,6 +7,7 @@ import {
   FRASSY_VOICE_CONSTITUTION,
   frassyAuthorizationLayer,
 } from "@/lib/frassy/personality";
+import { frassyContextLayer, type FrassyRelationship } from "@/lib/frassy/context";
 
 const FRASS_LINK = `FRASS LINK (FRASS-0428)
 Every member owns ONE permanent Frass Link for life: frasskicks.com/link/<handle>. It is their identity,
@@ -310,6 +311,9 @@ export const Route = createFileRoute("/api/chat")({
           modeContext?: string;
           seasonContext?: string;
           experienceContext?: "founder" | "builder" | "storefront";
+          relationship?: FrassyRelationship;
+          districtPath?: string;
+          arrivalIntent?: string;
           interactionMode?: "text" | "voice_and_text" | "voice_only";
           voiceAvailable?: boolean;
           stream?: boolean;
@@ -384,9 +388,16 @@ export const Route = createFileRoute("/api/chat")({
             : body.experienceContext === "builder"
               ? "builder"
               : "storefront";
-        // FRASS-0451: one Frassy everywhere — personality first, then the keys
-        // she is entrusted with for this person.
-        const voiceConstitution = `${FRASSY_VOICE_CONSTITUTION}\n\n${frassyAuthorizationLayer(audience)}`;
+        const relationship: FrassyRelationship =
+          body.relationship ??
+          (audience === "founder" ? "founder" : audience === "builder" ? "builder" : "visitor");
+        // FRASS-0451: one Frassy everywhere — personality first, then the hat she
+        // wears in this district (FRASS-0451A), then the keys she is entrusted with.
+        const voiceConstitution = `${FRASSY_VOICE_CONSTITUTION}\n\n${frassyContextLayer({
+          relationship,
+          pathname: body.districtPath ?? null,
+          arrivalIntent: body.arrivalIntent ?? null,
+        })}\n\n${frassyAuthorizationLayer(audience)}`;
 
         const basePrompt =
           body.experienceContext === "founder"
