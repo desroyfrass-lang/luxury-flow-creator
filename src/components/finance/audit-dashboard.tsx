@@ -247,7 +247,7 @@ function AuditAssistant({ days }: { days: number }) {
         <input
           value={question}
           onChange={(e) => setQuestion(e.target.value)}
-          placeholder="Ask about the last 	{days} days of money…"
+          placeholder={`Ask about the last ${days} days of money…`}
           className="min-w-[240px] flex-1 rounded-full border border-white/15 bg-white/[0.03] px-4 py-2.5 text-sm outline-none focus:border-[color:var(--gold)]/60"
         />
         <button
