@@ -48,7 +48,10 @@ function JoinKicks() {
     const { data, error } = await supabase.auth.signUp({
       email,
       password,
-      options: { emailRedirectTo: window.location.origin + "/frass-district" },
+      options: {
+        emailRedirectTo: window.location.origin + "/frass-district",
+        data: { frass_entry: "shop" },
+      },
     });
     setBusy(false);
     if (error) {

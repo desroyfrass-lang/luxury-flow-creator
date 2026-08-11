@@ -121,6 +121,16 @@ export const provisionFrassHill = createServerFn({ method: "POST" })
       });
     }
 
+    // The shared profile is the FrassKicks customer identity too. Frass Hill
+    // does not create a second account or a parallel customer record.
+    provisioned.push({
+      key: "kicks-profile",
+      label: "Your FrassKicks customer profile",
+      detail:
+        "Your shopping identity uses this same account for saved fits and orders. In plain English: one key opens both Frass Hill and the store.",
+      created: !profile,
+    });
+
     // 4. Frass Card.
     const { data: card } = await context.supabase
       .from("business_cards")

@@ -2,7 +2,6 @@ import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import archHero from "@/assets/frass-gateway-arch.jpg.asset.json";
-import frassyGold from "@/assets/frassy-gold.png.asset.json";
 
 /**
  * FRASS-0923 / FRASS-0471 — The Frass Entrance Experience.
@@ -34,82 +33,6 @@ export const Route = createFileRoute("/")({
   }),
   component: EntrancePage,
 });
-
-const WELCOME_LINES = [
-  "Welcome to frasskicks.com.",
-  "This is more than a fashion destination. It's a community built by people, powered by purpose, and designed to help everyone build something meaningful.",
-  "Would you like to begin by shopping, or would you like to explore Frass Hill?",
-];
-
-function EntranceFrassy() {
-  const [line, setLine] = useState(0);
-  const [seated, setSeated] = useState(false);
-
-  useEffect(() => {
-    const reduced = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
-    if (reduced) {
-      setSeated(true);
-      return;
-    }
-    const timers = [
-      setTimeout(() => setLine(1), 2600),
-      setTimeout(() => setLine(2), 6200),
-      setTimeout(() => setSeated(true), 9800),
-    ];
-    const skip = () => {
-      timers.forEach(clearTimeout);
-      setSeated(true);
-    };
-    window.addEventListener("frass-entrance-skip", skip);
-    return () => {
-      timers.forEach(clearTimeout);
-      window.removeEventListener("frass-entrance-skip", skip);
-    };
-  }, []);
-
-  return (
-    <div
-      className={`fixed inset-0 z-40 flex flex-col items-center justify-center px-6 text-center transition-opacity duration-1000 ${
-        seated ? "pointer-events-none opacity-0" : "opacity-100"
-      }`}
-      role="dialog"
-      aria-label="Frassy welcomes you to Frass"
-      onClick={() => window.dispatchEvent(new Event("frass-entrance-skip"))}
-    >
-      <div
-        aria-hidden
-        className="absolute inset-0 backdrop-blur-[6px]"
-        style={{ background: "radial-gradient(70% 55% at 50% 45%, rgba(6,6,8,0.6), rgba(6,6,8,0.9))" }}
-      />
-      <img
-        src={frassyGold.url}
-        alt="Frassy, host of the World of Frass"
-        className={`relative rounded-full object-cover transition-all duration-[1200ms] ease-[cubic-bezier(0.22,1,0.36,1)] ${
-          seated ? "h-24 w-24" : "h-[min(34vh,60vw)] w-[min(34vh,60vw)]"
-        }`}
-        style={{ boxShadow: "0 40px 120px -50px rgba(212,175,55,0.85)" }}
-        draggable={false}
-      />
-      <p
-        key={line}
-        className="relative mt-8 max-w-[min(40rem,88vw)] animate-fade-in text-balance text-base leading-relaxed text-white/90 md:text-lg"
-        aria-live="polite"
-      >
-        {WELCOME_LINES[line]}
-      </p>
-      <button
-        type="button"
-        onClick={(e) => {
-          e.stopPropagation();
-          window.dispatchEvent(new Event("frass-entrance-skip"));
-        }}
-        className="relative mt-8 rounded-full border border-[color:var(--hill-gold)]/60 px-5 py-2 text-[10px] font-bold uppercase tracking-[0.3em] text-[color:var(--hill-gold)]"
-      >
-        Start exploring
-      </button>
-    </div>
-  );
-}
 
 function EntrancePage() {
   const navigate = useNavigate();
@@ -159,8 +82,6 @@ function EntrancePage() {
         />
         <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-black/75" />
       </div>
-
-      <EntranceFrassy />
 
       <section className="gateway-swell relative mx-auto flex min-h-screen max-w-[1400px] flex-col items-center justify-end px-6 pb-14 pt-[58vh] text-center">
         <h1
