@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { SiteShell } from "@/components/site-shell";
+import { PlatformProtectionBanner } from "@/components/founder/platform-protection-banner";
 import { PageFeedback } from "@/components/page-feedback";
 import { useCartStore } from "@/lib/cart-store";
 import { Trash2, ArrowLeft, Lock, Gift, Loader2, Heart } from "lucide-react";
@@ -111,6 +112,8 @@ function CheckoutPage() {
           <ArrowLeft className="h-3 w-3" /> Continue shopping
         </Link>
         <h1 className="mt-6 font-display text-5xl md:text-7xl">Checkout</h1>
+
+        <PlatformProtectionBanner domain="purchases" className="mt-6" />
 
         {items.length === 0 ? (
           <div className="mt-16 rounded-3xl border border-dashed border-border p-16 text-center">

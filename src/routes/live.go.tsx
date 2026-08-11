@@ -3,6 +3,7 @@ import { useState } from "react";
 import { SiteShell } from "@/components/site-shell";
 import { Sparkles, Loader2 } from "lucide-react";
 import { useLiveIdentity, useStartBroadcast } from "@/hooks/use-live";
+import { PlatformProtectionBanner } from "@/components/founder/platform-protection-banner";
 import { LIVE_DESTINATIONS, LIVE_PURPOSES, type LiveDestination } from "@/lib/live";
 
 /** FRASS-0416 — Frassy asks one question first: "What are you going live for today?" */
