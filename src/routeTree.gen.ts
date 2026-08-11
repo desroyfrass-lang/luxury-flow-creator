@@ -198,6 +198,7 @@ import { Route as AuthenticatedAdminActivitiesRouteImport } from './routes/_auth
 import { Route as Char91DotmcpChar93InvokeToolToolRouteImport } from './routes/[.mcp]/invoke-tool/$tool'
 import { Route as DotlovableOauthConsentRouteImport } from './routes/[.]lovable.oauth.consent'
 import { Route as SocialMediaViralsCategorySubProductRouteImport } from './routes/social-media-virals.$category.$sub.$product'
+import { Route as LovableEmailQueueProcessRouteImport } from './routes/lovable/email/queue/process'
 import { Route as FrassShapeGenderGoalsGoalRouteImport } from './routes/frass-shape.$gender.goals.$goal'
 
 const WelcomeHallRoute = WelcomeHallRouteImport.update({
@@ -1192,6 +1193,12 @@ const SocialMediaViralsCategorySubProductRoute =
     path: '/$product',
     getParentRoute: () => SocialMediaViralsCategorySubRoute,
   } as any)
+const LovableEmailQueueProcessRoute =
+  LovableEmailQueueProcessRouteImport.update({
+    id: '/lovable/email/queue/process',
+    path: '/lovable/email/queue/process',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const FrassShapeGenderGoalsGoalRoute =
   FrassShapeGenderGoalsGoalRouteImport.update({
     id: '/goals/$goal',
@@ -1388,6 +1395,7 @@ export interface FileRoutesByFullPath {
   '/frass-shape/$gender/': typeof FrassShapeGenderIndexRoute
   '/kids-world/$age/': typeof KidsWorldAgeIndexRoute
   '/frass-shape/$gender/goals/$goal': typeof FrassShapeGenderGoalsGoalRoute
+  '/lovable/email/queue/process': typeof LovableEmailQueueProcessRoute
   '/social-media-virals/$category/$sub/$product': typeof SocialMediaViralsCategorySubProductRoute
 }
 export interface FileRoutesByTo {
@@ -1557,6 +1565,7 @@ export interface FileRoutesByTo {
   '/frass-shape/$gender': typeof FrassShapeGenderIndexRoute
   '/kids-world/$age': typeof KidsWorldAgeIndexRoute
   '/frass-shape/$gender/goals/$goal': typeof FrassShapeGenderGoalsGoalRoute
+  '/lovable/email/queue/process': typeof LovableEmailQueueProcessRoute
   '/social-media-virals/$category/$sub/$product': typeof SocialMediaViralsCategorySubProductRoute
 }
 export interface FileRoutesById {
@@ -1750,6 +1759,7 @@ export interface FileRoutesById {
   '/frass-shape/$gender/': typeof FrassShapeGenderIndexRoute
   '/kids-world/$age/': typeof KidsWorldAgeIndexRoute
   '/frass-shape/$gender/goals/$goal': typeof FrassShapeGenderGoalsGoalRoute
+  '/lovable/email/queue/process': typeof LovableEmailQueueProcessRoute
   '/social-media-virals/$category/$sub/$product': typeof SocialMediaViralsCategorySubProductRoute
 }
 export interface FileRouteTypes {
@@ -1943,6 +1953,7 @@ export interface FileRouteTypes {
     | '/frass-shape/$gender/'
     | '/kids-world/$age/'
     | '/frass-shape/$gender/goals/$goal'
+    | '/lovable/email/queue/process'
     | '/social-media-virals/$category/$sub/$product'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -2112,6 +2123,7 @@ export interface FileRouteTypes {
     | '/frass-shape/$gender'
     | '/kids-world/$age'
     | '/frass-shape/$gender/goals/$goal'
+    | '/lovable/email/queue/process'
     | '/social-media-virals/$category/$sub/$product'
   id:
     | '__root__'
@@ -2304,6 +2316,7 @@ export interface FileRouteTypes {
     | '/frass-shape/$gender/'
     | '/kids-world/$age/'
     | '/frass-shape/$gender/goals/$goal'
+    | '/lovable/email/queue/process'
     | '/social-media-virals/$category/$sub/$product'
   fileRoutesById: FileRoutesById
 }
@@ -2372,6 +2385,7 @@ export interface RootRouteChildren {
   JoinIndexRoute: typeof JoinIndexRoute
   DotlovableOauthConsentRoute: typeof DotlovableOauthConsentRoute
   Char91DotmcpChar93InvokeToolToolRoute: typeof Char91DotmcpChar93InvokeToolToolRoute
+  LovableEmailQueueProcessRoute: typeof LovableEmailQueueProcessRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -3699,6 +3713,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SocialMediaViralsCategorySubProductRouteImport
       parentRoute: typeof SocialMediaViralsCategorySubRoute
     }
+    '/lovable/email/queue/process': {
+      id: '/lovable/email/queue/process'
+      path: '/lovable/email/queue/process'
+      fullPath: '/lovable/email/queue/process'
+      preLoaderRoute: typeof LovableEmailQueueProcessRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/frass-shape/$gender/goals/$goal': {
       id: '/frass-shape/$gender/goals/$goal'
       path: '/goals/$goal'
@@ -4298,6 +4319,7 @@ const rootRouteChildren: RootRouteChildren = {
   JoinIndexRoute: JoinIndexRoute,
   DotlovableOauthConsentRoute: DotlovableOauthConsentRoute,
   Char91DotmcpChar93InvokeToolToolRoute: Char91DotmcpChar93InvokeToolToolRoute,
+  LovableEmailQueueProcessRoute: LovableEmailQueueProcessRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
