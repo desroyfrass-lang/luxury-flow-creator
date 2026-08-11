@@ -4,6 +4,7 @@ import { useServerFn } from "@tanstack/react-start";
 import { toast } from "sonner";
 import { Camera, Plus, Store, Upload } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { LaunchPending } from "@/components/launch-mode-banner";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
@@ -30,7 +31,14 @@ const panel = "rounded-2xl border border-border/60 bg-background/60 p-6 backdrop
 const heading = "text-xs uppercase tracking-[0.25em] text-muted-foreground";
 
 /** FRASS-0427 — Quick Sell: photo, price, quantity. Nothing else required. */
-export function QuickSellPanel({ provider }: { provider?: string | null }) {
+export function QuickSellPanel({
+  provider,
+  launchPending = false,
+}: {
+  provider?: string | null;
+  /** FRASS-0462 — payments are intentionally off until Frass launches. */
+  launchPending?: boolean;
+}) {
   const qc = useQueryClient();
   const listFn = useServerFn(listMyListings);
   const createFn = useServerFn(createListing);
@@ -198,6 +206,15 @@ export function QuickSellPanel({ provider }: { provider?: string | null }) {
             <li className="text-foreground">Estimated to you: {money(preview.netToSeller)}</li>
           </ul>
         </div>
+
+        {launchPending && (
+          <div className="mt-4 rounded-xl border border-[color:var(--gold,#d4af37)]/35 bg-[color:var(--gold,#d4af37)]/[0.07] p-3 text-sm">
+            <LaunchPending />
+            <p className="mt-2 text-muted-foreground">
+              Keep building your shelf. Selling switches on automatically the day Frass launches.
+            </p>
+          </div>
+        )}
 
         <Button
           className="mt-4"

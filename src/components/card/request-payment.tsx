@@ -37,7 +37,14 @@ const heading = "text-xs uppercase tracking-[0.25em] text-muted-foreground";
  * FRASS-0436 — Request Payment.
  * The seller names the sale. The customer approves it on their own phone.
  */
-export function RequestPaymentPanel({ enabled }: { enabled: boolean }) {
+export function RequestPaymentPanel({
+  enabled,
+  launchPending = false,
+}: {
+  enabled: boolean;
+  /** FRASS-0462 — payments are intentionally off until Frass launches. */
+  launchPending?: boolean;
+}) {
   const qc = useQueryClient();
   const listFn = useServerFn(listMyPaymentRequests);
   const createFn = useServerFn(createPaymentRequest);
@@ -119,7 +126,17 @@ export function RequestPaymentPanel({ enabled }: { enabled: boolean }) {
           like approving a bill that pops up on their screen.
         </p>
 
-        {!enabled && (
+        {launchPending && (
+          <div className="mt-4 rounded-xl border border-[color:var(--gold,#d4af37)]/35 bg-[color:var(--gold,#d4af37)]/[0.07] p-3 text-sm">
+            <LaunchPending />
+            <p className="mt-2 text-muted-foreground">
+              Nothing is broken. Payment requests activate the day Frass launches — build your
+              listings and pricing now so the first one goes out that morning.
+            </p>
+          </div>
+        )}
+
+        {!launchPending && !enabled && (
           <p className="mt-4 rounded-xl border border-border/60 p-3 text-sm text-muted-foreground">
             Payments are switched off on your Frass Card, so a request cannot be approved yet. Turn
             them on in Payment account.
@@ -213,10 +230,10 @@ export function RequestPaymentPanel({ enabled }: { enabled: boolean }) {
           <button
             type="button"
             className="daily-enter w-full"
-            disabled={!title.trim() || total <= 0 || create.isPending}
+            disabled={launchPending || !title.trim() || total <= 0 || create.isPending}
             onClick={() => create.mutate()}
           >
-            {create.isPending ? "Creating…" : "Request payment"}
+            {launchPending ? "Available at Launch" : create.isPending ? "Creating…" : "Request payment"}
           </button>
         </div>
       </section>
