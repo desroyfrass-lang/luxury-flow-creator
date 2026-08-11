@@ -71,11 +71,16 @@ function JoinKicks() {
             Frass Kicks
           </div>
           <h1 className="mt-3 font-display text-5xl">Shop with us</h1>
+          <p className="mt-4 text-sm leading-relaxed text-foreground/90">
+            "Welcome to FrassKicks. Before we begin shopping, let's create your FrassKicks
+            profile." — Frassy
+          </p>
           <p className="mt-4 text-sm text-muted-foreground">
             Your sizes, your saved fits and your orders in one place. That's all this account does —
             no homework attached.
           </p>
         </div>
+
 
         {checkEmail ? (
           <div className="mt-10 rounded-sm border border-[color:var(--gold)]/40 bg-background/50 p-6 text-center text-sm">
