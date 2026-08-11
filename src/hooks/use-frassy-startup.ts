@@ -60,6 +60,8 @@ export type FrassyStartupState = {
   faults: LayoutFault[];
   /** How many times the watchdog has rebuilt the shared layout. */
   repairs: number;
+  /** Gesture-safe recovery: enabling voice always speaks or explains why it cannot. */
+  speakGreetingNow: () => Promise<void>;
 };
 
 export function useFrassyStartup(opts: {
@@ -84,6 +86,21 @@ export function useFrassyStartup(opts: {
   const [repairs, setRepairs] = useState(0);
   const startedAt = useRef(Date.now());
   const handled = useRef<string | null>(null);
+
+  const speakGreetingNow = useCallback(async () => {
+    const dest = resolveDestination(pathname);
+    if (!dest) {
+      setNotice("Voice is ready. Ask me anything and I'll answer out loud.");
+      return;
+    }
+    setGreeting(dest.welcome);
+    setNotice(null);
+    const { notice: voiceNotice } = await speakWithGuarantee(dest.welcome, {
+      owner: "frassy-voice-toggle",
+    });
+    setNotice(voiceNotice);
+    setPhase("greeted");
+  }, [pathname]);
 
   // ── Layout watchdog ────────────────────────────────────────────────────────
   const sweep = useCallback(() => {
@@ -236,7 +253,7 @@ export function useFrassyStartup(opts: {
     opts.speechAllowed,
   ]);
 
-  return { phase, missing, greeting, notice, faults, repairs };
+  return { phase, missing, greeting, notice, faults, repairs, speakGreetingNow };
 }
 
 export { FAULT_LABELS };

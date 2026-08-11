@@ -4,6 +4,7 @@ import { ArrowRight, Volume2, VolumeX } from "lucide-react";
 import gateway from "@/assets/welcome-hall-gateway.jpg";
 import valley from "@/assets/kids-valley.jpg";
 import { ambienceEnabled, setAmbienceEnabled, startAmbience, stopAmbience } from "@/lib/for-us-ambience";
+import { unlockAudio } from "@/lib/audio-unlock";
 
 /**
  * FRASS-0423 — Welcome Hall.
@@ -116,7 +117,14 @@ function WelcomeHallPage() {
     const next = !sound;
     setSound(next);
     setAmbienceEnabled(next);
-    if (next) startAmbience();
+    if (next) {
+      // This click is the browser-approved gesture for all Welcome Hall audio.
+      // It starts the environment and asks the one shared Frassy surface to
+      // deliver her greeting; no page-specific chat or speech player is made.
+      unlockAudio();
+      startAmbience();
+      window.dispatchEvent(new Event("frassy-voice-enable"));
+    }
     else stopAmbience();
   };
 

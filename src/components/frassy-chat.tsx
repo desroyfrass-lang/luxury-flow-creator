@@ -11,7 +11,7 @@
 // NOT wired here. They return only after Phase 2 acceptance testing.
 // ─────────────────────────────────────────────────────────────────────────────
 
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { X, ShoppingBag, Trash2, Volume2, VolumeX } from "lucide-react";
 import { useCartStore } from "@/lib/cart-store";
 import symbolAsset from "@/assets/frass-logo-symbol.asset.json";
@@ -86,6 +86,27 @@ export function FrassyChat({ embedded = false }: { embedded?: boolean } = {}) {
     contextReady: Boolean(ctx),
     speechAllowed: speakReplies,
   });
+
+  const toggleReplyVoice = useCallback(() => {
+    if (speakReplies) {
+      if (voice.phase === "speaking") voice.stopSpeaking();
+      setSpeakReplies(false);
+      return;
+    }
+    // This runs directly inside the Builder's gesture, satisfying browser
+    // autoplay rules. Enabling voice is an action, never a silent preference.
+    setSpeakReplies(true);
+    void startup.speakGreetingNow();
+  }, [speakReplies, startup, voice]);
+
+  useEffect(() => {
+    const enableVoice = () => {
+      setSpeakReplies(true);
+      void startup.speakGreetingNow();
+    };
+    window.addEventListener("frassy-voice-enable", enableVoice);
+    return () => window.removeEventListener("frassy-voice-enable", enableVoice);
+  }, [startup]);
 
   useEffect(() => {
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" });
@@ -250,13 +271,13 @@ export function FrassyChat({ embedded = false }: { embedded?: boolean } = {}) {
       data-frassy-phase={startup.phase}
       className={
         embedded
-          ? "flex h-[min(640px,78vh)] min-h-[420px] w-full flex-col overflow-hidden rounded-lg border border-white/10 bg-[#0b0c0e]"
-          : "fixed bottom-5 right-5 z-50 flex h-[min(620px,80vh)] w-[min(400px,calc(100vw-2.5rem))] flex-col overflow-hidden rounded-lg border border-white/10 bg-[#0b0c0e] shadow-2xl"
+          ? "frass-workspace ws-dark flex h-[min(640px,78vh)] min-h-[420px] w-full flex-col overflow-hidden rounded-lg border border-white/10 bg-[#0b0c0e]"
+          : "frass-workspace ws-dark fixed bottom-5 right-5 z-50 flex h-[min(620px,80vh)] w-[min(400px,calc(100vw-2.5rem))] flex-col overflow-hidden rounded-lg border border-white/10 bg-[#0b0c0e] shadow-2xl"
       }
     >
       <header
         data-frassy-toolbar
-        className="flex shrink-0 flex-wrap items-center justify-between gap-y-2 border-b border-white/10 px-4 py-3"
+        className="grid shrink-0 grid-cols-[minmax(0,1fr)_auto] items-center gap-2 border-b border-white/10 px-4 py-3"
       >
         <div className="flex min-w-0 items-center gap-3">
           <img src={symbolAsset.url} alt="" className="h-6 w-6 object-contain" />
@@ -279,10 +300,7 @@ export function FrassyChat({ embedded = false }: { embedded?: boolean } = {}) {
           {/* Voice: tap to let Frassy speak her replies aloud, or mute her. */}
           <button
             type="button"
-            onClick={() => {
-              if (speakReplies && voice.phase === "speaking") voice.stopSpeaking();
-              setSpeakReplies((v) => !v);
-            }}
+            onClick={toggleReplyVoice}
             title={
               speakReplies
                 ? "Frassy speaks her replies — tap to mute"
