@@ -53,7 +53,9 @@ function PartnerOversightPage() {
         <div className="mt-8 space-y-4">
           {(q.data ?? []).map((r) => {
             const s = normalizeState(r.state);
+            const p = normalizeProgram((r.state as Record<string, unknown> | null)?.['program']);
             const o = oversight(s, Number(r.hours_per_day || 2));
+            const recent = [...p.reflections].slice(-3).reverse();
             return (
               <article key={r.user_id} className="rounded-3xl border border-white/12 bg-white/[0.03] p-5">
                 <div className="flex flex-wrap items-baseline justify-between gap-2">
@@ -73,6 +75,17 @@ function PartnerOversightPage() {
                   <Cell label="Earned" value={`$${o.earned.toLocaleString()}`} />
                 </div>
 
+                {p.startedOn && (
+                  <div className="mt-3 grid gap-3 sm:grid-cols-3">
+                    <Cell
+                      label="First 30 Days"
+                      value={`Day ${Math.min(programDay(p), PROGRAM_DAYS)}/${PROGRAM_DAYS}`}
+                    />
+                    <Cell label="Foundation" value={`${foundationPct(p)}%`} />
+                    <Cell label="Momentum" value={`${launchMomentum(p, s)}%`} />
+                  </div>
+                )}
+
                 {o.supportSignals.length > 0 && (
                   <ul className="mt-4 space-y-1 text-sm">
                     {o.supportSignals.map((sig) => (
@@ -82,6 +95,26 @@ function PartnerOversightPage() {
                     ))}
                   </ul>
                 )}
+
+                {recent.length > 0 && (
+                  <div className="mt-4">
+                    <p className="text-[11px] uppercase tracking-[0.18em] text-muted-foreground">
+                      In their own words
+                    </p>
+                    <ul className="mt-2 space-y-2 text-sm">
+                      {recent.map((ref) => (
+                        <li key={`${ref.date}-${ref.question}`} className="rounded-2xl bg-black/20 px-3 py-2">
+                          <p className="text-xs text-muted-foreground">
+                            {ref.date} · {ref.question}
+                          </p>
+                          <p className="mt-1">{ref.answer}</p>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+              </article>
+            );
               </article>
             );
           })}
