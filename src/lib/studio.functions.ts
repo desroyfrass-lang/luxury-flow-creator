@@ -126,9 +126,11 @@ export const createStudioProject = createServerFn({ method: "POST" })
   });
 
 /**
- * Approve-and-run. The forecast is approved client-side; this records the
- * operation, debits the wallet, and writes the receipt. Nothing is charged
- * unless the balance covers the work.
+ * Approve-and-run.
+ *
+ * FRASS-0474 — the browser may say *what* work to do, never *what it costs*.
+ * The forecast is rebuilt here from the official rate card, and a client total
+ * that disagrees halts the run and is recorded as a security alert.
  */
 export const runStudioOperation = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
@@ -149,10 +151,37 @@ export const runStudioOperation = createServerFn({ method: "POST" })
   )
   .handler(async ({ data, context }) => {
     const sb = context.supabase as unknown as Db;
+
+    const { buildForecast } = await import("@/lib/studio/credits");
+    const { assertMatchesServerTotal, assertWithinRule } = await import(
+      "@/lib/finance/guardrails.server"
+    );
+
+    // Rebuild the bill from the server's own rate card.
+    const forecast = buildForecast(
+      data.request,
+      data.lines.map((l) => ({ key: l.key, qty: l.qty })),
+    );
+    if (forecast.lines.length === 0) throw new Error("That production has no billable work.");
+
+    await assertWithinRule("creditCharge", forecast.total, "studio.runStudioOperation", context.userId, {
+      keys: forecast.lines.map((l) => l.key),
+    });
+    const total = await assertMatchesServerTotal(
+      "creditCharge",
+      data.total,
+      forecast.total,
+      "studio.runStudioOperation",
+      context.userId,
+      { keys: forecast.lines.map((l) => l.key) },
+    );
+    const lines = forecast.lines;
+    const seconds = forecast.seconds;
+
     const wallet = await ensureWallet(sb, context.userId);
-    if (wallet.balance < data.total) {
+    if (wallet.balance < total) {
       throw new Error(
-        `This needs ${data.total.toLocaleString()} AI Credits and your balance is ${wallet.balance.toLocaleString()}. Top up, or ask me for a lighter version.`,
+        `This needs ${total.toLocaleString()} AI Credits and your balance is ${wallet.balance.toLocaleString()}. Top up, or ask me for a lighter version.`,
       );
     }
 
@@ -160,7 +189,7 @@ export const runStudioOperation = createServerFn({ method: "POST" })
     const admin = supabaseAdmin as unknown as Db;
 
     const receipts: Array<{ label: string; credits: number }> = [];
-    for (const line of data.lines) {
+    for (const line of lines) {
       const { error } = await admin.from("ai_credit_ledger").insert({
         user_id: context.userId,
         direction: "debit",
@@ -169,7 +198,7 @@ export const runStudioOperation = createServerFn({ method: "POST" })
         label: line.label,
         project_id: data.projectId ?? null,
         description: data.request.slice(0, 400),
-        processing_ms: Math.round((data.seconds * 1000 * line.credits) / Math.max(1, data.total)),
+        processing_ms: Math.round((seconds * 1000 * line.credits) / Math.max(1, total)),
       });
       if (error) throw new Error(error.message);
       receipts.push({ label: line.label, credits: line.credits });
@@ -178,29 +207,29 @@ export const runStudioOperation = createServerFn({ method: "POST" })
     const { error: opErr } = await admin.from("studio_operations").insert({
       user_id: context.userId,
       project_id: data.projectId ?? null,
-      operation_key: data.lines[0]?.key ?? "composite",
+      operation_key: lines[0]?.key ?? "composite",
       label: data.label,
       request: data.request.slice(0, 1000),
-      estimated_credits: data.total,
-      actual_credits: data.total,
+      estimated_credits: total,
+      actual_credits: total,
       status: "complete",
-      processing_ms: Math.round(data.seconds * 1000),
-      output: { lines: data.lines },
+      processing_ms: Math.round(seconds * 1000),
+      output: { lines },
     });
     if (opErr) throw new Error(opErr.message);
 
     const { data: updated, error: wErr } = await admin
       .from("ai_credit_wallets")
       .update({
-        balance: wallet.balance - data.total,
-        lifetime_used: wallet.lifetime_used + data.total,
+        balance: wallet.balance - total,
+        lifetime_used: wallet.lifetime_used + total,
       })
       .eq("user_id", context.userId)
       .select("balance")
       .single();
     if (wErr) throw new Error(wErr.message);
 
-    return { charged: data.total, balance: updated.balance as number, receipts };
+    return { charged: total, balance: updated.balance as number, receipts };
   });
 
 /** Founder AI Credit Center — platform-wide usage. */

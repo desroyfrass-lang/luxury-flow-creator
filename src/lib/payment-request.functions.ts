@@ -57,6 +57,15 @@ export const createPaymentRequest = createServerFn({ method: "POST" })
   )
   .handler(async ({ context, data }) => {
     // FRASS-0439 — requests do not live forever.
+    const { assertWithinRule } = await import("@/lib/finance/guardrails.server");
+    const amount = await assertWithinRule(
+      "paymentRequestAmount",
+      data.amount,
+      "payment-request.createPaymentRequest",
+      context.userId,
+      { title: data.title, kind: data.kind },
+    );
+
     const minutes = data.expires_in_minutes ?? DEFAULT_EXPIRY_MINUTES;
     const expires_at = new Date(Date.now() + minutes * 60_000).toISOString();
 
@@ -81,7 +90,7 @@ export const createPaymentRequest = createServerFn({ method: "POST" })
         kind: data.kind,
         title: data.title,
         note: data.note ?? null,
-        amount: data.amount,
+        amount,
         quantity: data.quantity,
         currency: data.currency.toUpperCase(),
         buyer_name: data.buyer_name ?? null,
