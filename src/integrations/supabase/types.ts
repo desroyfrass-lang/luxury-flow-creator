@@ -2146,6 +2146,33 @@ export type Database = {
           },
         ]
       }
+      live_gift_catalog: {
+        Row: {
+          active: boolean
+          amount: number
+          created_at: string
+          credits: number
+          gift_key: string
+          label: string
+        }
+        Insert: {
+          active?: boolean
+          amount: number
+          created_at?: string
+          credits: number
+          gift_key: string
+          label: string
+        }
+        Update: {
+          active?: boolean
+          amount?: number
+          created_at?: string
+          credits?: number
+          gift_key?: string
+          label?: string
+        }
+        Relationships: []
+      }
       live_gifts: {
         Row: {
           amount: number
