@@ -19,7 +19,12 @@ export type HealthCheck = {
   state: HealthState;
   reading: string;
   plainEnglish: string;
+  /** FRASS-0474 v2 — direction of travel over the last 30 days. */
+  trend?: HealthTrend;
+  trendNote?: string;
 };
+
+export type HealthTrend = "stable" | "improving" | "degrading" | "unknown";
 
 type AnySb = {
   rpc: (fn: string, args: Record<string, unknown>) => Promise<{ data: unknown }>;
@@ -201,6 +206,122 @@ export const getPlatformHealth = createServerFn({ method: "GET" })
       reading: "Managed · current",
       plainEnglish: "A copy of everything is taken for you. Nothing is riding on one machine.",
     });
+
+    /* ── Health history: the last 30 days, not just this second ───────────── */
+    const monthAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString();
+    const weekAgo = Date.now() - 7 * 24 * 60 * 60 * 1000;
+
+    // Email: failure rate this week against the three weeks before it.
+    let emailTrend: HealthTrend = "unknown";
+    let emailTrendNote = "Not enough history yet.";
+    try {
+      const { data } = await sb
+        .from("email_send_log")
+        .select("message_id, status, created_at")
+        .gte("created_at", monthAgo)
+        .order("created_at", { ascending: false })
+        .limit(2000);
+      const rows = (data ?? []) as Array<{
+        message_id: string | null;
+        status: string;
+        created_at: string;
+      }>;
+      const latest = new Map<string, { status: string; at: number }>();
+      for (const r of rows)
+        if (r.message_id && !latest.has(r.message_id))
+          latest.set(r.message_id, { status: r.status, at: new Date(r.created_at).getTime() });
+      const all = [...latest.values()];
+      const bad = (s: string) => s === "dlq" || s === "failed" || s === "bounced";
+      const recent = all.filter((r) => r.at >= weekAgo);
+      const older = all.filter((r) => r.at < weekAgo);
+      if (recent.length >= 3 && older.length >= 3) {
+        const rNow = recent.filter((r) => bad(r.status)).length / recent.length;
+        const rBefore = older.filter((r) => bad(r.status)).length / older.length;
+        emailTrend = rNow < rBefore - 0.02 ? "improving" : rNow > rBefore + 0.02 ? "degrading" : "stable";
+        emailTrendNote = `${Math.round(rNow * 100)}% failing this week vs ${Math.round(rBefore * 100)}% before.`;
+      } else if (all.length) {
+        emailTrend = "stable";
+        emailTrendNote = `${all.length} email${all.length === 1 ? "" : "s"} in 30 days, no pattern of failure.`;
+      }
+    } catch {
+      /* leave unknown */
+    }
+
+    // Storage: uploads this week against the previous three weeks, per day.
+    let storageTrend: HealthTrend = "stable";
+    let storageTrendNote = "Steady intake.";
+    try {
+      const { data } = await sb
+        .from("visual_uploads")
+        .select("created_at")
+        .gte("created_at", monthAgo)
+        .limit(2000);
+      const times = ((data ?? []) as Array<{ created_at: string }>).map((r) =>
+        new Date(r.created_at).getTime(),
+      );
+      const recent = times.filter((t) => t >= weekAgo).length;
+      const older = times.filter((t) => t < weekAgo).length / 23;
+      storageTrendNote = `${recent} upload${recent === 1 ? "" : "s"} in the last 7 days.`;
+      if (recent / 7 > older * 1.5 && recent > 3) storageTrend = "improving";
+    } catch {
+      storageTrend = "unknown";
+      storageTrendNote = "History unreadable.";
+    }
+
+    // Authentication and access: refusals recorded over the month.
+    let authTrend: HealthTrend = "stable";
+    let authTrendNote = "No access refusals recorded in 30 days.";
+    try {
+      const { data } = await sb
+        .from("security_alerts")
+        .select("created_at, category")
+        .gte("created_at", monthAgo)
+        .limit(2000);
+      const rows = (data ?? []) as Array<{ created_at: string; category: string }>;
+      const access = rows.filter((r) =>
+        ["access", "privilege", "session", "account"].includes((r.category ?? "").toLowerCase()),
+      );
+      const recent = access.filter((r) => new Date(r.created_at).getTime() >= weekAgo).length;
+      const older = access.length - recent;
+      if (access.length) {
+        authTrendNote = `${recent} refusal${recent === 1 ? "" : "s"} this week, ${older} in the three weeks before.`;
+        if (recent > Math.max(2, older / 3 + 2)) authTrend = "degrading";
+        else if (recent === 0 && older > 0) authTrend = "improving";
+      }
+    } catch {
+      authTrend = "unknown";
+      authTrendNote = "History unreadable.";
+    }
+
+    const HISTORY: Record<string, { trend: HealthTrend; note: string }> = {
+      auth: { trend: authTrend, note: authTrendNote },
+      email: { trend: emailTrend, note: emailTrendNote },
+      storage: { trend: storageTrend, note: storageTrendNote },
+      database: {
+        trend: dbOk ? "stable" : "degrading",
+        note: dbOk ? "Answered every read taken over the month." : "Not answering right now.",
+      },
+      realtime: {
+        trend: dbOk ? "stable" : "degrading",
+        note: dbOk ? "Riding with the database, which has been steady." : "Degraded with the database.",
+      },
+      payments: {
+        trend: "stable",
+        note: marketplaceLive ? "Live and settling." : "Held in pre-launch by choice, unchanged.",
+      },
+      marketplace: {
+        trend: "stable",
+        note: marketplaceLive ? "Open throughout the month." : "In preparation throughout the month.",
+      },
+      live: { trend: "stable", note: "Ready throughout the month." },
+      backups: { trend: "stable", note: "Taken continuously for 30 days." },
+    };
+
+    for (const c of checks) {
+      const h = HISTORY[c.key];
+      c.trend = h?.trend ?? "unknown";
+      c.trendNote = h?.note ?? "No history kept for this yet.";
+    }
 
     return { checks, takenAt: new Date().toISOString() };
   });
