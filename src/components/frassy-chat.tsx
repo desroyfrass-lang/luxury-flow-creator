@@ -69,6 +69,12 @@ export function FrassyChat({ embedded = false }: { embedded?: boolean } = {}) {
   const { isAdmin } = useIsAdminStatus();
   const voice = usePushToTalk();
 
+  // Welcome Hall is Frassy's front desk. Open the one shared panel there;
+  // every other public page keeps the unobtrusive companion beacon.
+  useEffect(() => {
+    if (ctx.pathname === "/welcome-hall") setOpen(true);
+  }, [ctx.pathname]);
+
   const scrollRef = useRef<HTMLDivElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
