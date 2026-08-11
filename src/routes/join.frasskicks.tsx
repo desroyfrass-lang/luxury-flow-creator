@@ -117,7 +117,7 @@ function JoinKicks() {
         </p>
         <p className="mt-3 text-center text-xs text-muted-foreground">
           Already registered?{" "}
-          <Link to="/auth" className="underline hover:text-[color:var(--gold)]">
+          <Link to="/auth" search={{ next: "" }} className="underline hover:text-[color:var(--gold)]">
             Sign in
           </Link>
         </p>
