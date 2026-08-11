@@ -45,6 +45,7 @@ For Me is personal, never algorithmic — no "chosen for you".
 
 - [Frass Plus flagship](mem://features/frass-plus) — Extended sizing as a flagship boutique: wings, departments, signature confidence collections; never navigate by size
 - [FRASS Kids Shop](mem://features/frass-kids-shop) — Children's flagship: 8 age+gender stores, mirrored collections (Work Drip → School Drip), Foundation invite, checkout giving
+- [FRASS-0475 Startup Guarantee](mem://features/frass-0475-startup-guarantee) — Verify before speaking, layout watchdog self-repair, 3s silence rule with voice retry + spoken fallback
 - [Frassy entrance](mem://features/frassy-entrance) — Universal host behavior: center welcome once per destination per session, then glides to corner companion; "Welcome back" on return
 - [Frass Luxury House](mem://features/frass-luxury-house) — Estate landing, East/West Wings, live top-3 collections per wing, full roster + House Collections still on deck
 - [Showroom lighting](mem://design/showroom-lighting) — Themed store sets behind every drip showroom, per-category neon (party purple locked), hover glows + floor light pools; Bare Drip split rooms
