@@ -4160,6 +4160,7 @@ export type Database = {
         }
         Returns: number
       }
+      platform_domain_paused: { Args: { _domain: string }; Returns: boolean }
       purge_expired_visual_uploads: { Args: never; Returns: number }
       read_email_batch: {
         Args: { batch_size: number; queue_name: string; vt: number }
