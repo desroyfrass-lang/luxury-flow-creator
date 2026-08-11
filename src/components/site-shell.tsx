@@ -145,6 +145,8 @@ function Header() {
             </Link>
           )}
           <BuilderAccountMenu hasWorkspace={hasWorkspace} isAdmin={isAdmin} />
+          <HeaderSignOut />
+
           <div ref={menuRef} className="relative">
             <button
               type="button"
