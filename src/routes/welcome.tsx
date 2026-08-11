@@ -6,7 +6,8 @@ import { Volume2, VolumeX, ArrowRight } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { getArrivalState, type ArrivalState } from "@/lib/arrival.functions";
 import { designationMeta } from "@/lib/partners";
-import { speakText, stopSpeech } from "@/lib/voice/speech-manager";
+import { stopSpeech } from "@/lib/voice/speech-manager";
+import { speakWithGuarantee } from "@/lib/frassy/speak-guarantee";
 import frassyGold from "@/assets/frassy-gold.png.asset.json";
 
 /**
@@ -57,6 +58,7 @@ function WelcomePage() {
   const [line, setLine] = useState(0);
   const [muted, setMuted] = useState(false);
   const spoken = useRef(false);
+  const [voiceNotice, setVoiceNotice] = useState<string | null>(null);
 
   // Wait for the session (the email link hydrates it), then ask the backend.
   useEffect(() => {
@@ -105,11 +107,18 @@ function WelcomePage() {
   const meta = state?.designation ? designationMeta(state.designation) : null;
   const lines = firstArrivalLines(state?.displayName ?? "", meta?.label ?? null);
 
-  // Frassy speaks the greeting, and falls back silently to text if voice fails.
+  // FRASS-0475 — the shared speaking guarantee. Voice gets one retry; if it
+  // still cannot start, Frassy says so in words rather than going quiet.
   useEffect(() => {
     if (!state?.firstArrival || spoken.current || muted) return;
     spoken.current = true;
-    void speakText(lines.join(" "), { owner: "first-arrival" }).catch(() => undefined);
+    let alive = true;
+    void speakWithGuarantee(lines.join(" "), { owner: "first-arrival" }).then(({ notice }) => {
+      if (alive) setVoiceNotice(notice);
+    });
+    return () => {
+      alive = false;
+    };
   }, [state, muted, lines]);
 
   useEffect(() => {
@@ -168,6 +177,15 @@ function WelcomePage() {
           ))}
         </div>
       </div>
+
+      {voiceNotice && (
+        <p
+          role="status"
+          className="mt-6 rounded-sm border border-[color:var(--gold)]/30 bg-[color:var(--gold)]/10 px-3 py-2 text-xs text-foreground/80"
+        >
+          {voiceNotice}
+        </p>
+      )}
 
       <button
         onClick={() => {
