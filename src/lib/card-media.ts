@@ -3,14 +3,14 @@
 // Photos live in the member's own folder; the card shows a long-lived link.
 
 import { supabase } from "@/integrations/supabase/client";
+import { assertImageFile, MAX_IMAGE_BYTES } from "@/lib/uploads";
 
 export const CARD_MEDIA_BUCKET = "card-media";
 const TEN_YEARS = 60 * 60 * 24 * 365 * 10;
-const MAX_BYTES = 8 * 1024 * 1024;
+const MAX_BYTES = MAX_IMAGE_BYTES;
 
 export async function uploadCardPhoto(file: File): Promise<string> {
-  if (!file.type.startsWith("image/")) throw new Error("That file is not a photo.");
-  if (file.size > MAX_BYTES) throw new Error("That photo is larger than 8MB. Try a smaller one.");
+  assertImageFile(file, MAX_BYTES);
 
   const { data: auth } = await supabase.auth.getUser();
   const userId = auth.user?.id;
