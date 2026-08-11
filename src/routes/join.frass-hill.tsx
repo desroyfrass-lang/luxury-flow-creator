@@ -101,12 +101,32 @@ function JoinHill() {
             Frass Hill · Welcome Hall
           </div>
           <h1 className="mt-3 font-display text-5xl">Come up the hill</h1>
-          <p className="mt-5 text-sm leading-relaxed text-muted-foreground">
+          <p className="mt-5 text-sm leading-relaxed text-foreground/90">
+            "Welcome to Frass Hill. Let's prepare your membership before we begin." — Frassy
+          </p>
+          <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
             Register once and the town knows you. You'll get a Frass Card, a Builder Vault, and a
             Daily — and Frassy walks beside you the whole way, explaining everything twice if that's
             what it takes.
           </p>
+          <div className="mt-6 rounded-sm border border-[color:var(--gold)]/40 bg-background/40 p-4 text-left text-xs leading-relaxed text-muted-foreground">
+            <span className="block text-[10px] font-bold uppercase tracking-[0.28em] text-[color:var(--gold)]">
+              One account, two experiences
+            </span>
+            <p className="mt-2">
+              Joining Frass Hill automatically creates both your{" "}
+              <strong className="text-foreground">Frass Hill membership</strong> and your{" "}
+              <strong className="text-foreground">FrassKicks customer profile</strong>. No second
+              signup, ever.
+            </p>
+            <p className="mt-2">
+              <span className="text-[color:var(--gold)]">What this means in plain English: </span>
+              you can shop the store and build your business with the same email and password — like
+              one key that opens both the shop door and the house door.
+            </p>
+          </div>
         </div>
+
 
         {checkEmail ? (
           <div className="mt-12 rounded-sm border border-[color:var(--gold)]/40 bg-background/50 p-8 text-center">
