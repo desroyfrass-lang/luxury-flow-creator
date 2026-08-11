@@ -178,6 +178,7 @@ const HILL_NAV: NavGroup[] = [
       { label: "💼 Business Builder", to: "/business-builder", note: "Build a business, not just a website" },
       { label: "🚀 Launch Accelerator", to: "/launch-accelerator", note: "Today's money moves, ranked by income" },
       { label: "📅 First 30 Days", to: "/first-30-days", note: "The guided launch programme, ideas to income" },
+      { label: "💵 Money Moves", to: "/money-moves", note: "Your income operating system — highest value first" },
       { label: "🏝 Frass Hosting", to: "/frass-hosting", note: "Publish and host your business with Frass" },
 
       { label: "Frass Vision Studios", to: "/fv-studios", note: "The label, film studio & publishing network" },
