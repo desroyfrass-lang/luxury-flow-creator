@@ -171,6 +171,7 @@ import { Route as AuthenticatedAdminVisualIndexRouteImport } from './routes/_aut
 import { Route as AuthenticatedAdminViralsRouteImport } from './routes/_authenticated/admin.virals'
 import { Route as AuthenticatedAdminTextRouteImport } from './routes/_authenticated/admin.text'
 import { Route as AuthenticatedAdminRolesRouteImport } from './routes/_authenticated/admin.roles'
+import { Route as AuthenticatedAdminPartnersRouteImport } from './routes/_authenticated/admin.partners'
 import { Route as AuthenticatedAdminPartnerVendorsRouteImport } from './routes/_authenticated/admin.partner-vendors'
 import { Route as AuthenticatedAdminNewsroomRouteImport } from './routes/_authenticated/admin.newsroom'
 import { Route as AuthenticatedAdminMediaRouteImport } from './routes/_authenticated/admin.media'
@@ -1029,6 +1030,12 @@ const AuthenticatedAdminRolesRoute = AuthenticatedAdminRolesRouteImport.update({
   path: '/roles',
   getParentRoute: () => AuthenticatedAdminRoute,
 } as any)
+const AuthenticatedAdminPartnersRoute =
+  AuthenticatedAdminPartnersRouteImport.update({
+    id: '/partners',
+    path: '/partners',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
 const AuthenticatedAdminPartnerVendorsRoute =
   AuthenticatedAdminPartnerVendorsRouteImport.update({
     id: '/partner-vendors',
@@ -1282,6 +1289,7 @@ export interface FileRoutesByFullPath {
   '/admin/media': typeof AuthenticatedAdminMediaRoute
   '/admin/newsroom': typeof AuthenticatedAdminNewsroomRoute
   '/admin/partner-vendors': typeof AuthenticatedAdminPartnerVendorsRoute
+  '/admin/partners': typeof AuthenticatedAdminPartnersRoute
   '/admin/roles': typeof AuthenticatedAdminRolesRoute
   '/admin/text': typeof AuthenticatedAdminTextRoute
   '/admin/virals': typeof AuthenticatedAdminViralsRoute
@@ -1442,6 +1450,7 @@ export interface FileRoutesByTo {
   '/admin/media': typeof AuthenticatedAdminMediaRoute
   '/admin/newsroom': typeof AuthenticatedAdminNewsroomRoute
   '/admin/partner-vendors': typeof AuthenticatedAdminPartnerVendorsRoute
+  '/admin/partners': typeof AuthenticatedAdminPartnersRoute
   '/admin/roles': typeof AuthenticatedAdminRolesRoute
   '/admin/text': typeof AuthenticatedAdminTextRoute
   '/admin/virals': typeof AuthenticatedAdminViralsRoute
@@ -1626,6 +1635,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/media': typeof AuthenticatedAdminMediaRoute
   '/_authenticated/admin/newsroom': typeof AuthenticatedAdminNewsroomRoute
   '/_authenticated/admin/partner-vendors': typeof AuthenticatedAdminPartnerVendorsRoute
+  '/_authenticated/admin/partners': typeof AuthenticatedAdminPartnersRoute
   '/_authenticated/admin/roles': typeof AuthenticatedAdminRolesRoute
   '/_authenticated/admin/text': typeof AuthenticatedAdminTextRoute
   '/_authenticated/admin/virals': typeof AuthenticatedAdminViralsRoute
@@ -1810,6 +1820,7 @@ export interface FileRouteTypes {
     | '/admin/media'
     | '/admin/newsroom'
     | '/admin/partner-vendors'
+    | '/admin/partners'
     | '/admin/roles'
     | '/admin/text'
     | '/admin/virals'
@@ -1970,6 +1981,7 @@ export interface FileRouteTypes {
     | '/admin/media'
     | '/admin/newsroom'
     | '/admin/partner-vendors'
+    | '/admin/partners'
     | '/admin/roles'
     | '/admin/text'
     | '/admin/virals'
@@ -2153,6 +2165,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/media'
     | '/_authenticated/admin/newsroom'
     | '/_authenticated/admin/partner-vendors'
+    | '/_authenticated/admin/partners'
     | '/_authenticated/admin/roles'
     | '/_authenticated/admin/text'
     | '/_authenticated/admin/virals'
@@ -3396,6 +3409,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminRolesRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
+    '/_authenticated/admin/partners': {
+      id: '/_authenticated/admin/partners'
+      path: '/partners'
+      fullPath: '/admin/partners'
+      preLoaderRoute: typeof AuthenticatedAdminPartnersRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
     '/_authenticated/admin/partner-vendors': {
       id: '/_authenticated/admin/partner-vendors'
       path: '/partner-vendors'
@@ -3548,6 +3568,7 @@ interface AuthenticatedAdminRouteChildren {
   AuthenticatedAdminMediaRoute: typeof AuthenticatedAdminMediaRoute
   AuthenticatedAdminNewsroomRoute: typeof AuthenticatedAdminNewsroomRoute
   AuthenticatedAdminPartnerVendorsRoute: typeof AuthenticatedAdminPartnerVendorsRoute
+  AuthenticatedAdminPartnersRoute: typeof AuthenticatedAdminPartnersRoute
   AuthenticatedAdminRolesRoute: typeof AuthenticatedAdminRolesRoute
   AuthenticatedAdminTextRoute: typeof AuthenticatedAdminTextRoute
   AuthenticatedAdminViralsRoute: typeof AuthenticatedAdminViralsRoute
@@ -3572,6 +3593,7 @@ const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
   AuthenticatedAdminMediaRoute: AuthenticatedAdminMediaRoute,
   AuthenticatedAdminNewsroomRoute: AuthenticatedAdminNewsroomRoute,
   AuthenticatedAdminPartnerVendorsRoute: AuthenticatedAdminPartnerVendorsRoute,
+  AuthenticatedAdminPartnersRoute: AuthenticatedAdminPartnersRoute,
   AuthenticatedAdminRolesRoute: AuthenticatedAdminRolesRoute,
   AuthenticatedAdminTextRoute: AuthenticatedAdminTextRoute,
   AuthenticatedAdminViralsRoute: AuthenticatedAdminViralsRoute,
