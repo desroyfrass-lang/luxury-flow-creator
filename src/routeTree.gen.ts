@@ -57,6 +57,7 @@ import { Route as SocialMediaViralsIndexRouteImport } from './routes/social-medi
 import { Route as LookbookIndexRouteImport } from './routes/lookbook.index'
 import { Route as LiveIndexRouteImport } from './routes/live.index'
 import { Route as KidsWorldIndexRouteImport } from './routes/kids-world.index'
+import { Route as JoinIndexRouteImport } from './routes/join.index'
 import { Route as FrassShapeIndexRouteImport } from './routes/frass-shape.index'
 import { Route as FrassPlusIndexRouteImport } from './routes/frass-plus.index'
 import { Route as FrassLuxuryHouseIndexRouteImport } from './routes/frass-luxury-house.index'
@@ -426,6 +427,11 @@ const KidsWorldIndexRoute = KidsWorldIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => KidsWorldRoute,
+} as any)
+const JoinIndexRoute = JoinIndexRouteImport.update({
+  id: '/join/',
+  path: '/join/',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const FrassShapeIndexRoute = FrassShapeIndexRouteImport.update({
   id: '/',
@@ -1240,6 +1246,7 @@ export interface FileRoutesByFullPath {
   '/frass-luxury-house/': typeof FrassLuxuryHouseIndexRoute
   '/frass-plus/': typeof FrassPlusIndexRoute
   '/frass-shape/': typeof FrassShapeIndexRoute
+  '/join/': typeof JoinIndexRoute
   '/kids-world/': typeof KidsWorldIndexRoute
   '/live/': typeof LiveIndexRoute
   '/lookbook/': typeof LookbookIndexRoute
@@ -1397,6 +1404,7 @@ export interface FileRoutesByTo {
   '/frass-luxury-house': typeof FrassLuxuryHouseIndexRoute
   '/frass-plus': typeof FrassPlusIndexRoute
   '/frass-shape': typeof FrassShapeIndexRoute
+  '/join': typeof JoinIndexRoute
   '/kids-world': typeof KidsWorldIndexRoute
   '/live': typeof LiveIndexRoute
   '/lookbook': typeof LookbookIndexRoute
@@ -1578,6 +1586,7 @@ export interface FileRoutesById {
   '/frass-luxury-house/': typeof FrassLuxuryHouseIndexRoute
   '/frass-plus/': typeof FrassPlusIndexRoute
   '/frass-shape/': typeof FrassShapeIndexRoute
+  '/join/': typeof JoinIndexRoute
   '/kids-world/': typeof KidsWorldIndexRoute
   '/live/': typeof LiveIndexRoute
   '/lookbook/': typeof LookbookIndexRoute
@@ -1759,6 +1768,7 @@ export interface FileRouteTypes {
     | '/frass-luxury-house/'
     | '/frass-plus/'
     | '/frass-shape/'
+    | '/join/'
     | '/kids-world/'
     | '/live/'
     | '/lookbook/'
@@ -1916,6 +1926,7 @@ export interface FileRouteTypes {
     | '/frass-luxury-house'
     | '/frass-plus'
     | '/frass-shape'
+    | '/join'
     | '/kids-world'
     | '/live'
     | '/lookbook'
@@ -2096,6 +2107,7 @@ export interface FileRouteTypes {
     | '/frass-luxury-house/'
     | '/frass-plus/'
     | '/frass-shape/'
+    | '/join/'
     | '/kids-world/'
     | '/live/'
     | '/lookbook/'
@@ -2217,6 +2229,7 @@ export interface RootRouteChildren {
   PlusSizeMenRoute: typeof PlusSizeMenRoute
   PlusSizeWomenRoute: typeof PlusSizeWomenRoute
   ProductHandleRoute: typeof ProductHandleRoute
+  JoinIndexRoute: typeof JoinIndexRoute
   DotlovableOauthConsentRoute: typeof DotlovableOauthConsentRoute
   Char91DotmcpChar93InvokeToolToolRoute: typeof Char91DotmcpChar93InvokeToolToolRoute
 }
@@ -2558,6 +2571,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/kids-world/'
       preLoaderRoute: typeof KidsWorldIndexRouteImport
       parentRoute: typeof KidsWorldRoute
+    }
+    '/join/': {
+      id: '/join/'
+      path: '/join'
+      fullPath: '/join/'
+      preLoaderRoute: typeof JoinIndexRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/frass-shape/': {
       id: '/frass-shape/'
@@ -4040,6 +4060,7 @@ const rootRouteChildren: RootRouteChildren = {
   PlusSizeMenRoute: PlusSizeMenRoute,
   PlusSizeWomenRoute: PlusSizeWomenRoute,
   ProductHandleRoute: ProductHandleRoute,
+  JoinIndexRoute: JoinIndexRoute,
   DotlovableOauthConsentRoute: DotlovableOauthConsentRoute,
   Char91DotmcpChar93InvokeToolToolRoute: Char91DotmcpChar93InvokeToolToolRoute,
 }
