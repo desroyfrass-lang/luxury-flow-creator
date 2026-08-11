@@ -293,8 +293,7 @@ function CheckoutPage() {
 
               <button
                 onClick={handleCheckout}
-                disabled={purchasesPaused}
-                disabled={isLoading || redirecting}
+                disabled={isLoading || redirecting || purchasesPaused}
                 className="mt-6 w-full h-12 inline-flex items-center justify-center gap-2 rounded-full bg-foreground text-background uppercase tracking-[0.2em] text-xs font-medium transition hover:bg-foreground/90 disabled:opacity-60"
               >
                 {redirecting || isLoading ? (
