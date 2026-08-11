@@ -471,3 +471,55 @@ function AccountNavSection() {
     </div>
   );
 }
+
+
+/** FRASS-0464 — account & founder destinations always reachable from the drawer. */
+function DrawerAccountLinks() {
+  const section = useAccountSection();
+
+  if (!section) {
+    return (
+      <div className="border-t border-border/40 pt-3">
+        <Link
+          to="/auth"
+          search={{ next: "" }}
+          className="text-[11px] font-bold uppercase tracking-[0.24em] text-[color:var(--hill-gold)]"
+        >
+          Sign in
+        </Link>
+      </div>
+    );
+  }
+
+  return (
+    <div className="border-t border-border/40 pt-3">
+      <span className="block text-[11px] font-bold uppercase tracking-[0.24em] text-[color:var(--hill-gold)]">
+        {section.label}
+      </span>
+      <div className="mt-2 grid gap-1.5 pl-3">
+        <button
+          type="button"
+          onClick={() => openTheDaily()}
+          className="text-left text-[10px] uppercase tracking-[0.2em] text-muted-foreground"
+        >
+          The Frass Daily
+        </button>
+        <Link to="/workspace" className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground">
+          My Workspace
+        </Link>
+        <Link to="/workspace/profile" className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground">
+          My Frass Card
+        </Link>
+        {section.items.map((i) => (
+          <Link
+            key={i.to}
+            to={i.to}
+            className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground"
+          >
+            {i.label}
+          </Link>
+        ))}
+      </div>
+    </div>
+  );
+}
