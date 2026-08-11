@@ -1,0 +1,1 @@
+REVOKE EXECUTE ON FUNCTION public.expected_platform_allocation(numeric) FROM anon;
