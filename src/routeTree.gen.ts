@@ -121,6 +121,7 @@ import { Route as AuthenticatedPaymentProvidersRouteImport } from './routes/_aut
 import { Route as AuthenticatedOpportunityRouteImport } from './routes/_authenticated/opportunity'
 import { Route as AuthenticatedOnboardingRouteImport } from './routes/_authenticated/onboarding'
 import { Route as AuthenticatedNotificationsRouteImport } from './routes/_authenticated/notifications'
+import { Route as AuthenticatedLaunchAcceleratorRouteImport } from './routes/_authenticated/launch-accelerator'
 import { Route as AuthenticatedGlobalOperationsRouteImport } from './routes/_authenticated/global-operations'
 import { Route as AuthenticatedFrassyRouteImport } from './routes/_authenticated/frassy'
 import { Route as AuthenticatedFounderRouteImport } from './routes/_authenticated/founder'
@@ -756,6 +757,12 @@ const AuthenticatedNotificationsRoute =
     path: '/notifications',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedLaunchAcceleratorRoute =
+  AuthenticatedLaunchAcceleratorRouteImport.update({
+    id: '/launch-accelerator',
+    path: '/launch-accelerator',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedGlobalOperationsRoute =
   AuthenticatedGlobalOperationsRouteImport.update({
     id: '/global-operations',
@@ -1204,6 +1211,7 @@ export interface FileRoutesByFullPath {
   '/founder': typeof AuthenticatedFounderRoute
   '/frassy': typeof AuthenticatedFrassyRoute
   '/global-operations': typeof AuthenticatedGlobalOperationsRoute
+  '/launch-accelerator': typeof AuthenticatedLaunchAcceleratorRoute
   '/notifications': typeof AuthenticatedNotificationsRoute
   '/onboarding': typeof AuthenticatedOnboardingRoute
   '/opportunity': typeof AuthenticatedOpportunityRoute
@@ -1370,6 +1378,7 @@ export interface FileRoutesByTo {
   '/founder': typeof AuthenticatedFounderRoute
   '/frassy': typeof AuthenticatedFrassyRoute
   '/global-operations': typeof AuthenticatedGlobalOperationsRoute
+  '/launch-accelerator': typeof AuthenticatedLaunchAcceleratorRoute
   '/notifications': typeof AuthenticatedNotificationsRoute
   '/onboarding': typeof AuthenticatedOnboardingRoute
   '/opportunity': typeof AuthenticatedOpportunityRoute
@@ -1550,6 +1559,7 @@ export interface FileRoutesById {
   '/_authenticated/founder': typeof AuthenticatedFounderRoute
   '/_authenticated/frassy': typeof AuthenticatedFrassyRoute
   '/_authenticated/global-operations': typeof AuthenticatedGlobalOperationsRoute
+  '/_authenticated/launch-accelerator': typeof AuthenticatedLaunchAcceleratorRoute
   '/_authenticated/notifications': typeof AuthenticatedNotificationsRoute
   '/_authenticated/onboarding': typeof AuthenticatedOnboardingRoute
   '/_authenticated/opportunity': typeof AuthenticatedOpportunityRoute
@@ -1735,6 +1745,7 @@ export interface FileRouteTypes {
     | '/founder'
     | '/frassy'
     | '/global-operations'
+    | '/launch-accelerator'
     | '/notifications'
     | '/onboarding'
     | '/opportunity'
@@ -1901,6 +1912,7 @@ export interface FileRouteTypes {
     | '/founder'
     | '/frassy'
     | '/global-operations'
+    | '/launch-accelerator'
     | '/notifications'
     | '/onboarding'
     | '/opportunity'
@@ -2080,6 +2092,7 @@ export interface FileRouteTypes {
     | '/_authenticated/founder'
     | '/_authenticated/frassy'
     | '/_authenticated/global-operations'
+    | '/_authenticated/launch-accelerator'
     | '/_authenticated/notifications'
     | '/_authenticated/onboarding'
     | '/_authenticated/opportunity'
@@ -3059,6 +3072,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedNotificationsRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/launch-accelerator': {
+      id: '/_authenticated/launch-accelerator'
+      path: '/launch-accelerator'
+      fullPath: '/launch-accelerator'
+      preLoaderRoute: typeof AuthenticatedLaunchAcceleratorRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/global-operations': {
       id: '/_authenticated/global-operations'
       path: '/global-operations'
@@ -3641,6 +3661,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedFounderRoute: typeof AuthenticatedFounderRoute
   AuthenticatedFrassyRoute: typeof AuthenticatedFrassyRoute
   AuthenticatedGlobalOperationsRoute: typeof AuthenticatedGlobalOperationsRoute
+  AuthenticatedLaunchAcceleratorRoute: typeof AuthenticatedLaunchAcceleratorRoute
   AuthenticatedNotificationsRoute: typeof AuthenticatedNotificationsRoute
   AuthenticatedOnboardingRoute: typeof AuthenticatedOnboardingRoute
   AuthenticatedOpportunityRoute: typeof AuthenticatedOpportunityRoute
@@ -3664,6 +3685,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedFounderRoute: AuthenticatedFounderRoute,
   AuthenticatedFrassyRoute: AuthenticatedFrassyRoute,
   AuthenticatedGlobalOperationsRoute: AuthenticatedGlobalOperationsRoute,
+  AuthenticatedLaunchAcceleratorRoute: AuthenticatedLaunchAcceleratorRoute,
   AuthenticatedNotificationsRoute: AuthenticatedNotificationsRoute,
   AuthenticatedOnboardingRoute: AuthenticatedOnboardingRoute,
   AuthenticatedOpportunityRoute: AuthenticatedOpportunityRoute,
