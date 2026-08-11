@@ -226,6 +226,45 @@ function sweepAudioExcept(keep: HTMLAudioElement | null) {
   if (current && current !== keep) current = null;
 }
 
+/**
+ * Zero-credit, browser-native safety net. The primary TTS voice remains the
+ * preferred path, but a provider outage or exhausted allowance must never make
+ * "Voice on" silently lie. Resolves only after the browser reports completion.
+ */
+function speakWithBrowserVoice(text: string, runId: number): Promise<boolean> {
+  return new Promise<boolean>((resolve) => {
+    if (typeof window === "undefined" || !("speechSynthesis" in window)) {
+      resolve(false);
+      return;
+    }
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.rate = 0.96;
+    utterance.pitch = 1;
+    let settled = false;
+    const finish = (ok: boolean) => {
+      if (settled) return;
+      settled = true;
+      window.clearTimeout(timeout);
+      resolve(ok && runId === runCounter);
+    };
+    utterance.onstart = () => {
+      if (runId === runCounter) patch({ status: "playing" });
+    };
+    utterance.onend = () => finish(true);
+    utterance.onerror = () => finish(false);
+    const timeout = window.setTimeout(
+      () => finish(false),
+      Math.max(8_000, Math.min(60_000, text.length * 90)),
+    );
+    try {
+      window.speechSynthesis.cancel();
+      window.speechSynthesis.speak(utterance);
+    } catch {
+      finish(false);
+    }
+  });
+}
+
 export type SpeakResult = "complete" | "interrupted" | "blocked" | "failed";
 
 /**
@@ -298,6 +337,13 @@ export async function speakText(
     emit();
     return "complete";
   } catch (err) {
+    const fallbackPlayed = await speakWithBrowserVoice(clean, runId);
+    if (fallbackPlayed && runId === runCounter) {
+      conversation.playbackComplete(turnId);
+      snapshot = { ...IDLE, runId };
+      emit();
+      return "complete";
+    }
     conversation.playbackFailed(turnId, err instanceof Error ? err.message : "tts failed");
     snapshot = { ...IDLE, runId };
     emit();
