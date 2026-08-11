@@ -7,7 +7,7 @@ export type LaunchRow = {
   mission: string | null;
   hours_per_day: number;
   income_goal: number;
-  state: unknown;
+  state: Record<string, any>;
   updated_at: string;
 };
 
@@ -29,7 +29,7 @@ export const getLaunchState = createServerFn({ method: "GET" })
 export const saveLaunchState = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator(
-    (input: { mission?: string; hoursPerDay?: number; incomeGoal?: number; state?: unknown }) => input,
+    (input: { mission?: string; hoursPerDay?: number; incomeGoal?: number; state?: Record<string, any> }) => input,
   )
   .handler(async ({ data, context }): Promise<LaunchRow> => {
     const sb = context.supabase as unknown as Sb;
