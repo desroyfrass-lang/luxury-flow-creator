@@ -77,7 +77,7 @@ export const FOUNDATION_TASKS: FoundationTask[] = [
     label: "Business Vaults",
     why: "One vault per business, so nothing you create ever gets lost between ideas.",
     minutes: 10,
-    href: "/workspace/vault",
+    href: "/vault",
   },
   {
     id: "daily",
