@@ -13,11 +13,31 @@ interface TryOnInput {
   items: CartItemInput[];
 }
 
+// FRASS-0473 — the server will only pull real images, only over https, and only
+// up to a sane weight. Otherwise a link could make Frass swallow an enormous file.
+const MAX_FETCH_BYTES = 12 * 1024 * 1024;
+
 async function fetchAsDataUrl(url: string): Promise<string> {
-  const res = await fetch(url);
+  let parsed: URL;
+  try {
+    parsed = new URL(url);
+  } catch {
+    throw new Error("That image link is not valid.");
+  }
+  if (parsed.protocol !== "https:") throw new Error("Images must be served over https.");
+
+  const res = await fetch(parsed.toString());
   if (!res.ok) throw new Error(`Failed to fetch image (${res.status}): ${url.slice(0, 80)}`);
-  const contentType = res.headers.get("content-type") ?? "image/jpeg";
+
+  const contentType = (res.headers.get("content-type") ?? "").split(";")[0].trim().toLowerCase();
+  if (!contentType.startsWith("image/")) throw new Error("That link is not an image.");
+
+  const declared = Number(res.headers.get("content-length") ?? 0);
+  if (declared > MAX_FETCH_BYTES) throw new Error("That image is too large to work with.");
+
   const buf = new Uint8Array(await res.arrayBuffer());
+  if (buf.length > MAX_FETCH_BYTES) throw new Error("That image is too large to work with.");
+
   let binary = "";
   for (let i = 0; i < buf.length; i++) binary += String.fromCharCode(buf[i]);
   const base64 = btoa(binary);
