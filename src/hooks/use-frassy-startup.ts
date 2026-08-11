@@ -15,11 +15,11 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { useRouterState } from "@tanstack/react-router";
 import { resolveDestination } from "@/lib/frassy-destinations";
 import { speakText } from "@/lib/voice/speech-manager";
+import { speakWithGuarantee } from "@/lib/frassy/speak-guarantee";
 import {
   FAULT_LABELS,
   SILENCE_LIMIT_MS,
   VOICE_FALLBACK_MESSAGE,
-  VOICE_RETRY_LIMIT,
   evaluateReadiness,
   inspectLayout,
   isRepairable,
@@ -164,7 +164,6 @@ export function useFrassyStartup(opts: {
     startedAt.current = Date.now();
     let cancelled = false;
     let settled = false;
-    let attempts = 0;
 
     // The silence rule: three seconds, then Frassy explains herself in words.
     const silenceTimer = window.setTimeout(() => {
@@ -215,20 +214,13 @@ export function useFrassyStartup(opts: {
         return;
       }
 
-      let result = await speakText(dest.welcome, { owner: "frassy-startup" });
-      while (
-        !cancelled &&
-        attempts < VOICE_RETRY_LIMIT &&
-        (result === "failed" || result === "blocked")
-      ) {
-        attempts += 1;
-        result = await speakText(dest.welcome, { owner: "frassy-startup" });
-      }
+      const { notice: voiceNotice } = await speakWithGuarantee(dest.welcome, {
+        owner: "frassy-startup",
+      });
       if (cancelled) return;
       settled = true;
       window.clearTimeout(silenceTimer);
-      if (result === "failed" || result === "blocked") setNotice(VOICE_FALLBACK_MESSAGE);
-      else setNotice(null);
+      setNotice(voiceNotice);
     };
 
     void run();
