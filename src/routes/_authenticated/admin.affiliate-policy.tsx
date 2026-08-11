@@ -54,6 +54,14 @@ const NUMERIC: Array<{ key: keyof AffiliatePolicy; label: string; blurb: string 
   },
 ];
 
+const READINESS: Array<{ key: keyof AffiliatePolicy; label: string; blurb: string }> = [
+  { key: "marketplace_launched", label: "Marketplace officially launched", blurb: "The Frass Marketplace is open for real customer activity." },
+  { key: "approved_products_available", label: "Approved Frass products available", blurb: "Partners have real, approved Frass products they can promote." },
+  { key: "approved_brand_partners_available", label: "Approved Brand Partners available", blurb: "Founder-approved Brand Partners are ready inside Frass." },
+  { key: "internal_campaigns_ready", label: "Internal campaigns ready", blurb: "Complete Frass affiliate campaigns are ready to use." },
+  { key: "affiliate_marketing_activated", label: "Founder activation", blurb: "The final Founder switch that moves Partners from preparation into earning." },
+];
+
 function AffiliatePolicyPage() {
   const isAdmin = useIsAdmin();
   const navigate = useNavigate();
@@ -107,6 +115,29 @@ function AffiliatePolicyPage() {
             {form.platform_allocation_rate}% fixed, governance controlled
           </span>
         </div>
+
+        <section className="mt-8 rounded-sm border border-[color:var(--gold)]/35 bg-background/40 p-5">
+          <h2 className="font-display text-2xl">Frass First Marketplace Rule</h2>
+          <p className="mt-2 text-xs leading-relaxed text-muted-foreground">
+            Affiliate earning activates only when every switch is on. Until then, Money Moves automatically replaces affiliate work with launch preparation from Coco Vintage, Wellness, Faceless Content, Podcast, and Frass Card.
+          </p>
+          <div className="mt-5 space-y-3">
+            {READINESS.map((item) => (
+              <label key={String(item.key)} className="flex items-start justify-between gap-5 rounded-sm border border-border p-4">
+                <span>
+                  <span className="block text-sm font-semibold">{item.label}</span>
+                  <span className="mt-1 block text-xs text-muted-foreground">{item.blurb}</span>
+                </span>
+                <input
+                  type="checkbox"
+                  checked={Boolean(form[item.key])}
+                  onChange={(event) => setForm((current) => ({ ...current, [item.key]: event.target.checked }))}
+                  className="mt-1 h-5 w-5 accent-[color:var(--gold)]"
+                />
+              </label>
+            ))}
+          </div>
+        </section>
 
         <div className="mt-8 grid gap-5 sm:grid-cols-2">
           {NUMERIC.map((f) => (

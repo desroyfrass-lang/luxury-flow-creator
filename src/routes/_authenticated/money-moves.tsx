@@ -11,6 +11,8 @@ import { ArrowRight, Check, Clock, SkipForward, Sparkles } from "lucide-react";
 import { SiteShell } from "@/components/site-shell";
 import { getMyProfile } from "@/lib/profiles.functions";
 import { getLaunchState, saveLaunchState } from "@/lib/business/accelerator.functions";
+import { getAffiliatePolicy } from "@/lib/affiliate.functions";
+import { DEFAULT_POLICY } from "@/lib/affiliate-intelligence";
 import { EMPTY_STATE, normalizeState, type LaunchState } from "@/lib/business/accelerator";
 import { EMPTY_PROGRAM, normalizeProgram, todayISO, type ProgramState } from "@/lib/business/launch-program";
 import { LaunchModeBanner, useLaunchMode } from "@/components/launch-mode-banner";
@@ -29,6 +31,8 @@ import {
   EMPTY_MONEY,
   INCOME_STREAMS,
   activeStreams,
+  affiliateIsReady,
+  affiliatePreparationLine,
   crossBenefit,
   forecast,
   moneyPlan,
@@ -77,9 +81,14 @@ function MoneyMovesPage() {
   const profileFn = useServerFn(getMyProfile);
   const load = useServerFn(getLaunchState);
   const save = useServerFn(saveLaunchState);
+  const loadAffiliatePolicy = useServerFn(getAffiliatePolicy);
 
   const profile = useQuery({ queryKey: ["my-profile"], queryFn: () => profileFn({}) });
   const row = useQuery({ queryKey: ["launch-state"], queryFn: () => load({}) });
+  const affiliatePolicy = useQuery({
+    queryKey: ["affiliate-policy"],
+    queryFn: () => loadAffiliatePolicy(),
+  });
 
   const [launch, setLaunch] = useState<LaunchState>(EMPTY_STATE);
   const [program, setProgram] = useState<ProgramState>(EMPTY_PROGRAM);
@@ -117,7 +126,12 @@ function MoneyMovesPage() {
     }).catch(() => setNote("I couldn't save that just now — it's still on screen, try again in a moment."));
   }
 
-  const plan = useMemo(() => moneyPlan(program, launch, money, hours), [program, launch, money, hours]);
+  const readinessPolicy = affiliatePolicy.data ?? DEFAULT_POLICY;
+  const affiliateReady = affiliateIsReady(readinessPolicy);
+  const plan = useMemo(
+    () => moneyPlan(program, launch, money, hours, readinessPolicy),
+    [program, launch, money, hours, readinessPolicy],
+  );
   const fc = useMemo(
     () => forecast(money, Number(row.data?.income_goal ?? 0)),
     [money, row.data?.income_goal],
@@ -185,6 +199,22 @@ function MoneyMovesPage() {
         </p>
 
         <LaunchModeBanner className="mt-5" />
+
+        {launch.businesses.includes("affiliate") && (
+          <section className="mt-5 rounded-3xl border border-[color:var(--gold,#d4af37)]/35 bg-[color:var(--gold,#d4af37)]/[0.05] px-5 py-4">
+            <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-[color:var(--gold,#d4af37)]">
+              {affiliateReady ? "Affiliate Marketing · Active" : "Affiliate Marketing · Preparation Mode"}
+            </p>
+            <p className="mt-2 text-sm text-muted-foreground">
+              {affiliatePreparationLine(readinessPolicy)}
+            </p>
+            {!affiliateReady && (
+              <p className="mt-2 text-xs text-muted-foreground">
+                No external links, placeholder campaigns, or incomplete affiliate tasks will enter today's plan. Frass grows Frass first.
+              </p>
+            )}
+          </section>
+        )}
 
         <LaunchDashboard
           className="mt-5"
@@ -528,8 +558,13 @@ function MoneyMovesPage() {
                   ))}
                 </ul>
                 <p className="mt-3 text-xs text-muted-foreground">{crossBenefit(s.id)}</p>
+                {s.id === "affiliate" && !affiliateReady && (
+                  <p className="mt-3 text-xs font-semibold text-[color:var(--gold,#d4af37)]">
+                    Preparation Mode — earning tools unlock only after Founder activation.
+                  </p>
+                )}
                 <div className="mt-3 flex flex-wrap gap-2">
-                  {s.surfaces.map((sf) => (
+                  {(s.id === "affiliate" && !affiliateReady ? [] : s.surfaces).map((sf) => (
                     <Link
                       key={sf.href}
                       to={sf.href}
