@@ -32,7 +32,20 @@ export const listSecurityAlerts = createServerFn({ method: "GET" })
       _user_id: context.userId,
       _role: "super_admin",
     });
-    if (!isAdmin && !isSuper) throw new Error("Founder access only.");
+    if (!isAdmin && !isSuper) {
+      // FRASS-0475 — reaching for a Founder-only door is itself a critical event.
+      const { recordSecurityEvent } = await import("@/lib/security/events.server");
+      await recordSecurityEvent({
+        category: "access",
+        rule: "Founder-only surface",
+        surface: "security-center.listSecurityAlerts",
+        userId: context.userId,
+        detail: "A signed-in member without Founder authority requested the security log.",
+        plainEnglish: "Somebody tried the manager's office door. It stayed locked.",
+      });
+      throw new Error("Founder access only.");
+    }
+
 
     const { data, error } = await context.supabase
       .from("security_alerts")
