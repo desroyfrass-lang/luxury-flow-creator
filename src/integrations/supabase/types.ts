@@ -2529,6 +2529,42 @@ export type Database = {
         }
         Relationships: []
       }
+      partner_invitations: {
+        Row: {
+          claimed_at: string | null
+          claimed_by: string | null
+          created_at: string
+          designation: string
+          display_name: string | null
+          email: string
+          id: string
+          invited_by: string | null
+          note: string | null
+        }
+        Insert: {
+          claimed_at?: string | null
+          claimed_by?: string | null
+          created_at?: string
+          designation?: string
+          display_name?: string | null
+          email: string
+          id?: string
+          invited_by?: string | null
+          note?: string | null
+        }
+        Update: {
+          claimed_at?: string | null
+          claimed_by?: string | null
+          created_at?: string
+          designation?: string
+          display_name?: string | null
+          email?: string
+          id?: string
+          invited_by?: string | null
+          note?: string | null
+        }
+        Relationships: []
+      }
       partner_vendors: {
         Row: {
           created_at: string
@@ -3752,6 +3788,13 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      claim_partner_invitation: {
+        Args: never
+        Returns: {
+          designation: string
+          display_name: string
+        }[]
+      }
       expire_stale_payment_requests: { Args: never; Returns: number }
       get_active_partner_vendor_ids: {
         Args: { _user_id: string }
