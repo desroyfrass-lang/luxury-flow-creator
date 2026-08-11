@@ -247,8 +247,8 @@ function EntranceCard({
       >
         {cta}
         <span className="transition-transform duration-300 group-hover:translate-x-1">→</span>
-
       </span>
-    </Link>
+    </button>
+
   );
 }
