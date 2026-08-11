@@ -4049,6 +4049,10 @@ export type Database = {
         Args: { payload: Json; queue_name: string }
         Returns: number
       }
+      expected_platform_allocation: {
+        Args: { _gross: number }
+        Returns: number
+      }
       expire_stale_payment_requests: { Args: never; Returns: number }
       get_active_partner_vendor_ids: {
         Args: { _user_id: string }
