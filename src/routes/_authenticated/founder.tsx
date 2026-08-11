@@ -10,6 +10,7 @@ import { openTheDaily } from "@/components/workspace/daily-gate";
 import { openConstructionMode } from "@/components/construction/blueprint-mode";
 import { DevelopmentCredits } from "@/components/construction/development-credits";
 import { PlatformStatusCenter } from "@/components/founder/platform-status-center";
+import { PlatformProtectionHeaderToggle } from "@/components/founder/platform-protection-header-toggle";
 import { ArchitecturalHealth } from "@/components/construction/architectural-health";
 
 
@@ -146,6 +147,11 @@ function FounderPage() {
           Security, Marketplace Health, Foundation and Executive Reports. Work itself happens in
           My Workspace, and this dashboard is always one click away from it.
         </p>
+
+        {/* FRASS-0476 — the emergency switch, always in reach at the top */}
+        <PlatformProtectionHeaderToggle />
+
+
 
         {/* Frassy — the founder's direct line, first thing in the Control Room */}
         <section className="mt-8" data-blueprint="founder-frassy">

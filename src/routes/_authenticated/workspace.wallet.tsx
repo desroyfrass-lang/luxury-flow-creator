@@ -1,3 +1,4 @@
+import { PlatformProtectionBanner } from "@/components/founder/platform-protection-banner";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
@@ -201,6 +202,7 @@ function WalletHub() {
 
       {(section === "withdraw" || section === "deposit") && (
         <section className={panel}>
+          {section === "withdraw" && <PlatformProtectionBanner domain="withdrawals" className="mb-4" />}
           <h2 className={heading}>
             {section === "withdraw" ? (
               <>

@@ -1,3 +1,4 @@
+import { PlatformProtectionBanner } from "@/components/founder/platform-protection-banner";
 import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
@@ -87,6 +88,12 @@ function AuthPage() {
               : "First sign-up becomes the site owner."}
           </p>
         </div>
+
+        {mode === "signup" && (
+          <PlatformProtectionBanner domain="registrations" className="mb-4" />
+        )}
+
+
 
         <form onSubmit={onSubmit} className="space-y-4">
           <div>

@@ -3,6 +3,7 @@ import { useState } from "react";
 import { SiteShell } from "@/components/site-shell";
 import { Sparkles, Loader2 } from "lucide-react";
 import { useLiveIdentity, useStartBroadcast } from "@/hooks/use-live";
+import { PlatformProtectionBanner, useIsPaused } from "@/components/founder/platform-protection-banner";
 import { LIVE_DESTINATIONS, LIVE_PURPOSES, type LiveDestination } from "@/lib/live";
 
 /** FRASS-0416 — Frassy asks one question first: "What are you going live for today?" */
@@ -27,6 +28,7 @@ export const Route = createFileRoute("/live/go")({
 function GoLivePage() {
   const navigate = useNavigate();
   const { userId, name, ready } = useLiveIdentity();
+  const broadcastPaused = useIsPaused("broadcasting");
   const start = useStartBroadcast();
 
   const [purpose, setPurpose] = useState("community");
@@ -62,6 +64,9 @@ function GoLivePage() {
           <p className="text-[10px] uppercase tracking-[0.35em] text-red-600">FRASS-0416</p>
           <h1 className="mt-3 text-4xl font-black uppercase tracking-[0.1em]">Go Live</h1>
         </header>
+
+        <PlatformProtectionBanner domain="broadcasting" />
+
 
         <div className="flex items-start gap-3 rounded-[1.5rem] border border-[color:var(--gold)]/50 bg-card p-6">
           <Sparkles className="mt-0.5 h-5 w-5 shrink-0 text-[color:var(--gold)]" />
@@ -157,7 +162,7 @@ function GoLivePage() {
           <button
             type="button"
             onClick={begin}
-            disabled={!title.trim() || start.isPending || !userId}
+            disabled={!title.trim() || start.isPending || !userId || broadcastPaused}
             className="inline-flex items-center gap-2 rounded-full bg-red-600 px-8 py-3 text-[11px] font-bold uppercase tracking-[0.26em] text-white transition hover:bg-red-500 disabled:opacity-40"
           >
             {start.isPending && <Loader2 className="h-4 w-4 animate-spin" />}

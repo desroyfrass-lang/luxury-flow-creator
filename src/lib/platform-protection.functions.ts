@@ -83,3 +83,26 @@ export const setPlatformProtection = createServerFn({ method: "POST" })
 
     return { active: data.active, paused: data.paused, updatedAt: updated_at };
   });
+
+/**
+ * The switch as anyone can see it — signed in or not.
+ * Public surfaces (the Welcome doors, checkout, Live) need to explain a pause
+ * before a member hits a wall, so this read carries no session requirement.
+ * It returns only the switch state: no names, no numbers, nothing private.
+ */
+export const getPublicPlatformProtection = createServerFn({ method: "GET" }).handler(
+  async (): Promise<ProtectionState> => {
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { data } = await supabaseAdmin
+      .from("launch_program_settings")
+      .select("enabled, notice, updated_at")
+      .eq("id", PROTECTION_SETTINGS_ID)
+      .maybeSingle();
+    if (!data) return PROTECTION_OFF;
+    return {
+      active: Boolean(data.enabled),
+      paused: parsePaused(data.notice as string | null),
+      updatedAt: (data.updated_at as string | null) ?? null,
+    };
+  },
+);

@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { SiteShell } from "@/components/site-shell";
+import { PlatformProtectionBanner, useIsPaused } from "@/components/founder/platform-protection-banner";
 import { PageFeedback } from "@/components/page-feedback";
 import { useCartStore } from "@/lib/cart-store";
 import { Trash2, ArrowLeft, Lock, Gift, Loader2, Heart } from "lucide-react";
@@ -19,6 +20,7 @@ export const Route = createFileRoute("/checkout")({
 });
 
 function CheckoutPage() {
+  const purchasesPaused = useIsPaused("purchases");
   const items = useCartStore((s) => s.items);
   const removeItem = useCartStore((s) => s.removeItem);
   const updateQuantity = useCartStore((s) => s.updateQuantity);
@@ -111,6 +113,8 @@ function CheckoutPage() {
           <ArrowLeft className="h-3 w-3" /> Continue shopping
         </Link>
         <h1 className="mt-6 font-display text-5xl md:text-7xl">Checkout</h1>
+
+        <PlatformProtectionBanner domain="purchases" className="mt-6" />
 
         {items.length === 0 ? (
           <div className="mt-16 rounded-3xl border border-dashed border-border p-16 text-center">
@@ -289,7 +293,7 @@ function CheckoutPage() {
 
               <button
                 onClick={handleCheckout}
-                disabled={isLoading || redirecting}
+                disabled={isLoading || redirecting || purchasesPaused}
                 className="mt-6 w-full h-12 inline-flex items-center justify-center gap-2 rounded-full bg-foreground text-background uppercase tracking-[0.2em] text-xs font-medium transition hover:bg-foreground/90 disabled:opacity-60"
               >
                 {redirecting || isLoading ? (

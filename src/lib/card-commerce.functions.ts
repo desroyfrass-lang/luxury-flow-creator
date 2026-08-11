@@ -151,6 +151,10 @@ export const startCardCheckout = createServerFn({ method: "POST" })
   .handler(async ({ data }) => {
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
 
+    // FRASS-0476 — the till is closed while the Founder holds the switch.
+    const { assertPlatformOpen } = await import("@/lib/platform-protection.server");
+    await assertPlatformOpen(supabaseAdmin as never, "purchases");
+
     const { data: listing } = await supabaseAdmin
       .from("card_listings")
       .select("*")
