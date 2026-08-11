@@ -21,25 +21,20 @@ export const Route = createFileRoute("/auth")({
 function AuthPage() {
   const navigate = useNavigate();
   const { next } = Route.useSearch();
-  const dest = next || "/admin/images";
   const [mode, setMode] = useState<"signin" | "signup">("signin");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [busy, setBusy] = useState(false);
 
-  // If already signed in, bounce to destination
+  // Every authenticated entrance passes through the single arrival authority.
+  // It decides whether this is a first arrival or a returning member; a `next`
+  // parameter must never bypass the Welcome Hall ceremony.
   useEffect(() => {
     supabase.auth.getSession().then(async ({ data }) => {
       if (!data.session) return;
-      if (next) {
-        window.location.assign(dest);
-        return;
-      }
-      // FRASS-0466: /welcome is the only arrival. It decides first-time vs
-      // returning and forwards accordingly — the Daily is never the front door.
       window.location.assign("/welcome");
     });
-  }, [dest, next]);
+  }, []);
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -72,7 +67,7 @@ function AuthPage() {
     }
 
     // Signed in. Routing must never be able to strand the Builder on this page.
-    window.location.assign(next ? dest : "/welcome");
+    window.location.assign("/welcome");
   };
 
 

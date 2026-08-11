@@ -49,7 +49,7 @@ function JoinKicks() {
       email,
       password,
       options: {
-        emailRedirectTo: window.location.origin + "/frass-district",
+        emailRedirectTo: window.location.origin + "/welcome",
         data: { frass_entry: "shop" },
       },
     });
@@ -62,8 +62,8 @@ function JoinKicks() {
       setCheckEmail(true);
       return;
     }
-    toast.success("You're in. Happy shopping.");
-    navigate({ to: "/frass-district" });
+    toast.success("Your FrassKicks profile is ready. Frassy is waiting at the Welcome Hall.");
+    navigate({ to: "/welcome" });
   };
 
   return (
@@ -89,7 +89,7 @@ function JoinKicks() {
           <div className="mt-10 rounded-sm border border-[color:var(--gold)]/40 bg-background/50 p-6 text-center text-sm">
             <p className="font-display text-2xl">Check your email</p>
             <p className="mt-3 text-muted-foreground">
-              We sent a confirmation link to {email}. Click it and you're shopping.
+              We sent a confirmation link to {email}. Click it to finish your profile and meet Frassy in the Welcome Hall.
             </p>
           </div>
         ) : (
