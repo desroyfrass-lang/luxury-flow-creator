@@ -30,9 +30,19 @@ import {
 
 function useProgramOpen() {
   const statusFn = useServerFn(getFeedbackProgramStatus);
+  // The program status is a member-only read, and the widget itself needs a
+  // signed-in member to upload anything. Ask only once a session exists —
+  // otherwise the protected call throws "No authorization header provided"
+  // on every public page.
+  const { data: signedIn } = useQuery({
+    queryKey: ["launch-feedback-session"],
+    queryFn: async () => Boolean((await supabase.auth.getSession()).data.session),
+    staleTime: 60_000,
+  });
   const { data } = useQuery({
     queryKey: ["launch-feedback-status"],
-    queryFn: () => statusFn(),
+    queryFn: () => statusFn().catch(() => ({ enabled: false, notice: null })),
+    enabled: signedIn === true,
     staleTime: 5 * 60_000,
     retry: false,
   });
