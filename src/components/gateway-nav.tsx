@@ -334,8 +334,7 @@ export function GatewayNav({ mode }: { mode: "shop" | "world" }) {
           );
         })}
         <GoLiveButton className="ml-1 shrink-0 whitespace-nowrap" />
-        <DailyNavButton />
-        <AccountNavSection />
+
 
       </nav>
 
