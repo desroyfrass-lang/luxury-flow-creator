@@ -201,7 +201,23 @@ function useSession() {
   return session;
 }
 
+/**
+ * FRASS-0471 — always-visible sign-out on the bar. Same secure logout as the
+ * profile menu entry; one logout, two access points.
+ */
+function HeaderSignOut() {
+  const hasSession = useSession();
+  if (!hasSession) return null;
+  return (
+    <SignOutButton
+      label="Sign out"
+      className="inline-flex h-10 shrink-0 items-center gap-1.5 rounded-full border border-border bg-background/70 px-3 text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground backdrop-blur transition hover:border-[color:var(--gold)] hover:text-foreground"
+    />
+  );
+}
+
 function BuilderAccountMenu({ hasWorkspace, isAdmin }: { hasWorkspace: boolean; isAdmin: boolean }) {
+
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const hasSession = useSession();
