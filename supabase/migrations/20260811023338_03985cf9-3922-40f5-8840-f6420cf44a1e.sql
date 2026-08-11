@@ -1,0 +1,1 @@
+REVOKE EXECUTE ON FUNCTION public.enforce_affiliate_profile_rate() FROM PUBLIC, anon, authenticated;
