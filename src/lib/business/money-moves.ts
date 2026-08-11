@@ -195,9 +195,11 @@ export type MoneyState = {
   skipped: Record<string, string[]>;
   /** Monthly income goal for the Money Moves forecast. */
   monthlyGoal: number;
+  /** FRASS-0462 — completed launch preparation task ids (pre-launch mode). */
+  launchPrep: string[];
 };
 
-export const EMPTY_MONEY: MoneyState = { log: [], assigned: {}, skipped: {}, monthlyGoal: 0 };
+export const EMPTY_MONEY: MoneyState = { log: [], assigned: {}, skipped: {}, monthlyGoal: 0, launchPrep: [] };
 
 export function normalizeMoney(raw: unknown): MoneyState {
   const m = (raw ?? {}) as Partial<MoneyState>;
@@ -206,6 +208,7 @@ export function normalizeMoney(raw: unknown): MoneyState {
     assigned: (m.assigned as Record<string, string[]>) ?? {},
     skipped: (m.skipped as Record<string, string[]>) ?? {},
     monthlyGoal: typeof m.monthlyGoal === "number" ? m.monthlyGoal : 0,
+    launchPrep: Array.isArray(m.launchPrep) ? m.launchPrep : [],
   };
 }
 
