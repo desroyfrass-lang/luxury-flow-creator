@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as WelcomeHallRouteImport } from './routes/welcome-hall'
+import { Route as WelcomeRouteImport } from './routes/welcome'
 import { Route as VisualSearchRouteImport } from './routes/visual-search'
 import { Route as TownSquareRouteImport } from './routes/town-square'
 import { Route as SocialMediaViralsRouteImport } from './routes/social-media-virals'
@@ -201,6 +202,11 @@ import { Route as FrassShapeGenderGoalsGoalRouteImport } from './routes/frass-sh
 const WelcomeHallRoute = WelcomeHallRouteImport.update({
   id: '/welcome-hall',
   path: '/welcome-hall',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const WelcomeRoute = WelcomeRouteImport.update({
+  id: '/welcome',
+  path: '/welcome',
   getParentRoute: () => rootRouteImport,
 } as any)
 const VisualSearchRoute = VisualSearchRouteImport.update({
@@ -1230,6 +1236,7 @@ export interface FileRoutesByFullPath {
   '/social-media-virals': typeof SocialMediaViralsRouteWithChildren
   '/town-square': typeof TownSquareRoute
   '/visual-search': typeof VisualSearchRoute
+  '/welcome': typeof WelcomeRoute
   '/welcome-hall': typeof WelcomeHallRoute
   '/.mcp/list-tools': typeof Char91DotmcpChar93ListToolsRoute
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
@@ -1403,6 +1410,7 @@ export interface FileRoutesByTo {
   '/shop-frass': typeof ShopFrassRoute
   '/town-square': typeof TownSquareRoute
   '/visual-search': typeof VisualSearchRoute
+  '/welcome': typeof WelcomeRoute
   '/welcome-hall': typeof WelcomeHallRoute
   '/.mcp/list-tools': typeof Char91DotmcpChar93ListToolsRoute
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
@@ -1588,6 +1596,7 @@ export interface FileRoutesById {
   '/social-media-virals': typeof SocialMediaViralsRouteWithChildren
   '/town-square': typeof TownSquareRoute
   '/visual-search': typeof VisualSearchRoute
+  '/welcome': typeof WelcomeRoute
   '/welcome-hall': typeof WelcomeHallRoute
   '/.mcp/list-tools': typeof Char91DotmcpChar93ListToolsRoute
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
@@ -1779,6 +1788,7 @@ export interface FileRouteTypes {
     | '/social-media-virals'
     | '/town-square'
     | '/visual-search'
+    | '/welcome'
     | '/welcome-hall'
     | '/.mcp/list-tools'
     | '/.well-known/oauth-protected-resource'
@@ -1952,6 +1962,7 @@ export interface FileRouteTypes {
     | '/shop-frass'
     | '/town-square'
     | '/visual-search'
+    | '/welcome'
     | '/welcome-hall'
     | '/.mcp/list-tools'
     | '/.well-known/oauth-protected-resource'
@@ -2136,6 +2147,7 @@ export interface FileRouteTypes {
     | '/social-media-virals'
     | '/town-square'
     | '/visual-search'
+    | '/welcome'
     | '/welcome-hall'
     | '/.mcp/list-tools'
     | '/.well-known/oauth-protected-resource'
@@ -2327,6 +2339,7 @@ export interface RootRouteChildren {
   SocialMediaViralsRoute: typeof SocialMediaViralsRouteWithChildren
   TownSquareRoute: typeof TownSquareRoute
   VisualSearchRoute: typeof VisualSearchRoute
+  WelcomeRoute: typeof WelcomeRoute
   WelcomeHallRoute: typeof WelcomeHallRoute
   Char91DotmcpChar93ListToolsRoute: typeof Char91DotmcpChar93ListToolsRoute
   Char91DotwellKnownChar93OauthProtectedResourceRoute: typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
@@ -2355,6 +2368,13 @@ declare module '@tanstack/react-router' {
       path: '/welcome-hall'
       fullPath: '/welcome-hall'
       preLoaderRoute: typeof WelcomeHallRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/welcome': {
+      id: '/welcome'
+      path: '/welcome'
+      fullPath: '/welcome'
+      preLoaderRoute: typeof WelcomeRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/visual-search': {
@@ -4236,6 +4256,7 @@ const rootRouteChildren: RootRouteChildren = {
   SocialMediaViralsRoute: SocialMediaViralsRouteWithChildren,
   TownSquareRoute: TownSquareRoute,
   VisualSearchRoute: VisualSearchRoute,
+  WelcomeRoute: WelcomeRoute,
   WelcomeHallRoute: WelcomeHallRoute,
   Char91DotmcpChar93ListToolsRoute: Char91DotmcpChar93ListToolsRoute,
   Char91DotwellKnownChar93OauthProtectedResourceRoute:
