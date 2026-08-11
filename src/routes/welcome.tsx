@@ -64,7 +64,7 @@ function WelcomePage() {
       const { data } = await supabase.auth.getSession();
       if (!data.session) return false;
       try {
-        const next = await arrivalFn({ data: {} });
+        const next = await arrivalFn();
         if (alive) setState(next);
       } catch {
         if (alive) setError("I couldn't reach your record just now.");
@@ -146,7 +146,7 @@ function WelcomePage() {
 
       <div className="flex items-start gap-6">
         <img
-          src={frassyGold.src ?? (frassyGold as unknown as string)}
+          src={frassyGold.url}
           alt="Frassy, the host of Frass Hill"
           className="h-24 w-24 shrink-0 rounded-full object-cover"
           loading="lazy"
