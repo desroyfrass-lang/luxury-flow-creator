@@ -182,13 +182,13 @@ const ReceiptInput = z.object({
   title: z.string().trim().min(1).max(160),
   description: z.string().trim().max(600).nullable().optional(),
   counterparty_name: z.string().trim().max(160).nullable().optional(),
+  /**
+   * The only monetary figure a member may state. Platform allocation, fees and
+   * net are recomputed by the database from platform policy — a client can
+   * never assert what it earned.
+   */
   gross: z.number().min(0).max(10_000_000),
-  platform_allocation: z.number().min(0).max(10_000_000).default(0),
-  processing_fee: z.number().min(0).max(10_000_000).default(0),
-  other_deductions: z.number().min(0).max(10_000_000).default(0),
-  net: z.number().min(0).max(10_000_000),
   currency: z.string().trim().length(3).default("USD"),
-  status: z.enum(["pending", "settled", "refunded", "withdrawn", "cancelled"]).default("pending"),
   reference: z.string().trim().max(200).nullable().optional(),
 });
 
@@ -208,12 +208,14 @@ export const recordReceipt = createServerFn({ method: "POST" })
         description: data.description ?? null,
         counterparty_name: data.counterparty_name ?? null,
         gross: data.gross,
-        platform_allocation: data.platform_allocation,
-        processing_fee: data.processing_fee,
-        other_deductions: data.other_deductions,
-        net: data.net,
+        // Derived server-side by the creation-authority trigger; sent as a
+        // placeholder so the row satisfies NOT NULL before the trigger runs.
+        platform_allocation: 0,
+        processing_fee: 0,
+        other_deductions: 0,
+        net: data.gross,
         currency: data.currency.toUpperCase(),
-        status: data.status,
+        status: "pending",
         reference: data.reference ?? null,
       })
       .select()
@@ -221,3 +223,4 @@ export const recordReceipt = createServerFn({ method: "POST" })
     if (error) throw error;
     return row;
   });
+
