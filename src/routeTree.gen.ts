@@ -121,6 +121,7 @@ import { Route as AuthenticatedPaymentProvidersRouteImport } from './routes/_aut
 import { Route as AuthenticatedOpportunityRouteImport } from './routes/_authenticated/opportunity'
 import { Route as AuthenticatedOnboardingRouteImport } from './routes/_authenticated/onboarding'
 import { Route as AuthenticatedNotificationsRouteImport } from './routes/_authenticated/notifications'
+import { Route as AuthenticatedMoneyMovesRouteImport } from './routes/_authenticated/money-moves'
 import { Route as AuthenticatedLaunchAcceleratorRouteImport } from './routes/_authenticated/launch-accelerator'
 import { Route as AuthenticatedGlobalOperationsRouteImport } from './routes/_authenticated/global-operations'
 import { Route as AuthenticatedFrassyRouteImport } from './routes/_authenticated/frassy'
@@ -759,6 +760,11 @@ const AuthenticatedNotificationsRoute =
     path: '/notifications',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedMoneyMovesRoute = AuthenticatedMoneyMovesRouteImport.update({
+  id: '/money-moves',
+  path: '/money-moves',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedLaunchAcceleratorRoute =
   AuthenticatedLaunchAcceleratorRouteImport.update({
     id: '/launch-accelerator',
@@ -1227,6 +1233,7 @@ export interface FileRoutesByFullPath {
   '/frassy': typeof AuthenticatedFrassyRoute
   '/global-operations': typeof AuthenticatedGlobalOperationsRoute
   '/launch-accelerator': typeof AuthenticatedLaunchAcceleratorRoute
+  '/money-moves': typeof AuthenticatedMoneyMovesRoute
   '/notifications': typeof AuthenticatedNotificationsRoute
   '/onboarding': typeof AuthenticatedOnboardingRoute
   '/opportunity': typeof AuthenticatedOpportunityRoute
@@ -1396,6 +1403,7 @@ export interface FileRoutesByTo {
   '/frassy': typeof AuthenticatedFrassyRoute
   '/global-operations': typeof AuthenticatedGlobalOperationsRoute
   '/launch-accelerator': typeof AuthenticatedLaunchAcceleratorRoute
+  '/money-moves': typeof AuthenticatedMoneyMovesRoute
   '/notifications': typeof AuthenticatedNotificationsRoute
   '/onboarding': typeof AuthenticatedOnboardingRoute
   '/opportunity': typeof AuthenticatedOpportunityRoute
@@ -1579,6 +1587,7 @@ export interface FileRoutesById {
   '/_authenticated/frassy': typeof AuthenticatedFrassyRoute
   '/_authenticated/global-operations': typeof AuthenticatedGlobalOperationsRoute
   '/_authenticated/launch-accelerator': typeof AuthenticatedLaunchAcceleratorRoute
+  '/_authenticated/money-moves': typeof AuthenticatedMoneyMovesRoute
   '/_authenticated/notifications': typeof AuthenticatedNotificationsRoute
   '/_authenticated/onboarding': typeof AuthenticatedOnboardingRoute
   '/_authenticated/opportunity': typeof AuthenticatedOpportunityRoute
@@ -1767,6 +1776,7 @@ export interface FileRouteTypes {
     | '/frassy'
     | '/global-operations'
     | '/launch-accelerator'
+    | '/money-moves'
     | '/notifications'
     | '/onboarding'
     | '/opportunity'
@@ -1936,6 +1946,7 @@ export interface FileRouteTypes {
     | '/frassy'
     | '/global-operations'
     | '/launch-accelerator'
+    | '/money-moves'
     | '/notifications'
     | '/onboarding'
     | '/opportunity'
@@ -2118,6 +2129,7 @@ export interface FileRouteTypes {
     | '/_authenticated/frassy'
     | '/_authenticated/global-operations'
     | '/_authenticated/launch-accelerator'
+    | '/_authenticated/money-moves'
     | '/_authenticated/notifications'
     | '/_authenticated/onboarding'
     | '/_authenticated/opportunity'
@@ -3098,6 +3110,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedNotificationsRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/money-moves': {
+      id: '/_authenticated/money-moves'
+      path: '/money-moves'
+      fullPath: '/money-moves'
+      preLoaderRoute: typeof AuthenticatedMoneyMovesRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/launch-accelerator': {
       id: '/_authenticated/launch-accelerator'
       path: '/launch-accelerator'
@@ -3705,6 +3724,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedFrassyRoute: typeof AuthenticatedFrassyRoute
   AuthenticatedGlobalOperationsRoute: typeof AuthenticatedGlobalOperationsRoute
   AuthenticatedLaunchAcceleratorRoute: typeof AuthenticatedLaunchAcceleratorRoute
+  AuthenticatedMoneyMovesRoute: typeof AuthenticatedMoneyMovesRoute
   AuthenticatedNotificationsRoute: typeof AuthenticatedNotificationsRoute
   AuthenticatedOnboardingRoute: typeof AuthenticatedOnboardingRoute
   AuthenticatedOpportunityRoute: typeof AuthenticatedOpportunityRoute
@@ -3730,6 +3750,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedFrassyRoute: AuthenticatedFrassyRoute,
   AuthenticatedGlobalOperationsRoute: AuthenticatedGlobalOperationsRoute,
   AuthenticatedLaunchAcceleratorRoute: AuthenticatedLaunchAcceleratorRoute,
+  AuthenticatedMoneyMovesRoute: AuthenticatedMoneyMovesRoute,
   AuthenticatedNotificationsRoute: AuthenticatedNotificationsRoute,
   AuthenticatedOnboardingRoute: AuthenticatedOnboardingRoute,
   AuthenticatedOpportunityRoute: AuthenticatedOpportunityRoute,
