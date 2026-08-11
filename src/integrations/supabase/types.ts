@@ -972,9 +972,13 @@ export type Database = {
       }
       card_listings: {
         Row: {
+          brand: string | null
+          collection: string | null
           created_at: string
           currency: string
           description: string | null
+          details: Json
+          gallery: string[]
           id: string
           image_url: string | null
           is_quick_sell: boolean
@@ -988,9 +992,13 @@ export type Database = {
           user_id: string
         }
         Insert: {
+          brand?: string | null
+          collection?: string | null
           created_at?: string
           currency?: string
           description?: string | null
+          details?: Json
+          gallery?: string[]
           id?: string
           image_url?: string | null
           is_quick_sell?: boolean
@@ -1004,9 +1012,13 @@ export type Database = {
           user_id: string
         }
         Update: {
+          brand?: string | null
+          collection?: string | null
           created_at?: string
           currency?: string
           description?: string | null
+          details?: Json
+          gallery?: string[]
           id?: string
           image_url?: string | null
           is_quick_sell?: boolean
