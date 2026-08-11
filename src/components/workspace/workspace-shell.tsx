@@ -225,6 +225,10 @@ export function WorkspaceShell({
                 <span aria-hidden>🚀</span>
                 <span className="flex-1 text-left">Launch Accelerator</span>
               </Link>
+              <Link to="/first-30-days" className="ws-nav">
+                <span aria-hidden>📅</span>
+                <span className="flex-1 text-left">First 30 Days</span>
+              </Link>
               <Link to="/financial-center" className="ws-nav">
                 <span aria-hidden>💰</span>
                 <span className="flex-1 text-left">Financial Center</span>
