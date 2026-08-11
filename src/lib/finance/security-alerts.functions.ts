@@ -19,7 +19,7 @@ export type SecurityAlert = {
   detail: string | null;
   plain_english: string | null;
   created_at: string;
-  context: Record<string, unknown> | null;
+  context: Record<string, string> | null;
   review_status: string | null;
   founder_note: string | null;
   reviewed_at: string | null;
@@ -101,12 +101,12 @@ export const setSecurityAlertStatus = createServerFn({ method: "POST" })
       throw new Error("Founder access only.");
     }
 
-    const patch: Record<string, unknown> = {
+    const patch = {
       review_status: data.status,
       reviewed_at: new Date().toISOString(),
       reviewed_by: context.userId,
+      ...(data.founderNote !== null ? { founder_note: data.founderNote } : {}),
     };
-    if (data.founderNote !== null) patch["founder_note"] = data.founderNote;
 
     const { error } = await context.supabase
       .from("security_alerts")
