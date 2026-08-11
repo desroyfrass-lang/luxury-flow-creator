@@ -86,6 +86,18 @@ function PartnerOversightPage() {
                   </div>
                 )}
 
+                {(() => {
+                  const mo = moneyOversight(s, normalizeMoney((r.state as Record<string, unknown> | null)?.['money']));
+                  return (
+                    <div className="mt-3 grid gap-3 sm:grid-cols-4">
+                      <Cell label="Moves today" value={`${mo.completedToday}/${mo.assignedToday}`} />
+                      <Cell label="Skipped today" value={String(mo.skippedToday)} />
+                      <Cell label="Logged this month" value={`$${mo.revenueThisMonth.toLocaleString()}`} />
+                      <Cell label="Leading stream" value={mo.leadingStream ?? "None yet"} />
+                    </div>
+                  );
+                })()}
+
                 {o.supportSignals.length > 0 && (
                   <ul className="mt-4 space-y-1 text-sm">
                     {o.supportSignals.map((sig) => (
