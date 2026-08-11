@@ -1,7 +1,7 @@
 import { Link, useRouterState } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { Search, KeyRound, Menu, X, UserRound, Sun } from "lucide-react";
-import { useAccountSection } from "@/hooks/use-my-roles";
+import { useAccountSection, useMyRoles } from "@/hooks/use-my-roles";
 import { openTheDaily } from "@/components/workspace/daily-gate";
 
 import { GoLiveButton } from "./live/live-status";
@@ -297,7 +297,10 @@ export function GatewayNav({ mode }: { mode: "shop" | "world" }) {
             <KeyRound className="h-3.5 w-3.5" />
             Builder Vault
           </Link>
+          <DailyNavButton />
+          <AccountNavSection />
           <CartDrawer />
+
           <button
             type="button"
             aria-label={mobileOpen ? "Close menu" : "Open menu"}
@@ -334,8 +337,7 @@ export function GatewayNav({ mode }: { mode: "shop" | "world" }) {
           );
         })}
         <GoLiveButton className="ml-1 shrink-0 whitespace-nowrap" />
-        <DailyNavButton />
-        <AccountNavSection />
+
 
       </nav>
 
@@ -382,7 +384,9 @@ export function GatewayNav({ mode }: { mode: "shop" | "world" }) {
               )}
             </div>
           ))}
+          <DrawerAccountLinks />
         </nav>
+
       )}
     </header>
   );
@@ -390,8 +394,9 @@ export function GatewayNav({ mode }: { mode: "shop" | "world" }) {
 
 /** The Frass Daily — one Daily for every signed-in Builder, admin or member. */
 function DailyNavButton() {
-  const section = useAccountSection();
-  if (!section) return null;
+  const { signedIn } = useMyRoles();
+  if (!signedIn) return null;
+
   return (
     <button
       type="button"
@@ -415,19 +420,35 @@ function AccountNavSection() {
     setOpen(false);
   }, [path]);
 
-  if (!section) return null;
+  // FRASS-0464: the account control is never hidden. Signed out, it is the
+  // door to sign in; signed in (any role, any screen size) it is the door to
+  // your Frass Card, Daily, Workspace and Control Room.
+  if (!section) {
+    return (
+      <Link
+        to="/auth"
+        search={{ next: "" }}
+        aria-label="Sign in"
+        className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-border transition hover:border-[color:var(--gold)]"
+      >
+        <UserRound className="h-4 w-4" />
+      </Link>
+    );
+  }
 
   return (
-    <div className="relative ml-auto shrink-0">
+    <div className="relative shrink-0">
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
         aria-expanded={open}
-        className="inline-flex items-center gap-1.5 whitespace-nowrap px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.22em] text-[color:var(--hill-gold)] transition hover:text-foreground"
+        aria-label="Account menu"
+        className="inline-flex h-9 shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full border border-[color:var(--hill-gold)]/60 px-2.5 text-[10px] font-bold uppercase tracking-[0.22em] text-[color:var(--hill-gold)] transition hover:bg-[color:var(--hill-gold)]/10 sm:px-3"
       >
-        <UserRound className="h-3.5 w-3.5" />
-        {section.label}
+        <UserRound className="h-4 w-4" />
+        <span className="hidden lg:inline">{section.label}</span>
       </button>
+
 
       {open && (
         <div className="absolute right-0 top-full z-50 mt-2 w-60 rounded-lg border border-border/70 bg-background/95 p-2 shadow-xl backdrop-blur-xl">
@@ -447,6 +468,58 @@ function AccountNavSection() {
           ))}
         </div>
       )}
+    </div>
+  );
+}
+
+
+/** FRASS-0464 — account & founder destinations always reachable from the drawer. */
+function DrawerAccountLinks() {
+  const section = useAccountSection();
+
+  if (!section) {
+    return (
+      <div className="border-t border-border/40 pt-3">
+        <Link
+          to="/auth"
+          search={{ next: "" }}
+          className="text-[11px] font-bold uppercase tracking-[0.24em] text-[color:var(--hill-gold)]"
+        >
+          Sign in
+        </Link>
+      </div>
+    );
+  }
+
+  return (
+    <div className="border-t border-border/40 pt-3">
+      <span className="block text-[11px] font-bold uppercase tracking-[0.24em] text-[color:var(--hill-gold)]">
+        {section.label}
+      </span>
+      <div className="mt-2 grid gap-1.5 pl-3">
+        <button
+          type="button"
+          onClick={() => openTheDaily()}
+          className="text-left text-[10px] uppercase tracking-[0.2em] text-muted-foreground"
+        >
+          The Frass Daily
+        </button>
+        <Link to="/workspace" className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground">
+          My Workspace
+        </Link>
+        <Link to="/workspace/profile" className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground">
+          My Frass Card
+        </Link>
+        {section.items.map((i) => (
+          <Link
+            key={i.to}
+            to={i.to}
+            className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground"
+          >
+            {i.label}
+          </Link>
+        ))}
+      </div>
     </div>
   );
 }
