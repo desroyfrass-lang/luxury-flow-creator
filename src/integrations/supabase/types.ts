@@ -3788,13 +3788,6 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      claim_partner_invitation: {
-        Args: never
-        Returns: {
-          designation: string
-          display_name: string
-        }[]
-      }
       expire_stale_payment_requests: { Args: never; Returns: number }
       get_active_partner_vendor_ids: {
         Args: { _user_id: string }
