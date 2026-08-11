@@ -26,6 +26,10 @@ export type TieredEvent = {
   detail: string | null;
   plain_english: string | null;
   created_at: string;
+  context?: Record<string, unknown> | null;
+  review_status?: string | null;
+  founder_note?: string | null;
+  reviewed_at?: string | null;
 };
 
 export const TIERS: Array<{
