@@ -20,7 +20,7 @@ import { useSiteText } from "@/hooks/use-site-text";
 import { useIsAdmin } from "@/hooks/use-is-admin";
 import { useWorkspaceRoles } from "@/hooks/use-workspace-roles";
 import { supabase } from "@/integrations/supabase/client";
-import { useSecureSignOut } from "@/components/secure-sign-out";
+import { useSecureSignOut, SignOutButton } from "@/components/secure-sign-out";
 import fullLogo from "@/assets/frass-logo-full.asset.json";
 import symbolLogo from "@/assets/frass-logo-symbol.asset.json";
 
