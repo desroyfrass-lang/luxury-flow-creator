@@ -10,6 +10,7 @@ import { openTheDaily } from "@/components/workspace/daily-gate";
 import { openConstructionMode } from "@/components/construction/blueprint-mode";
 import { DevelopmentCredits } from "@/components/construction/development-credits";
 import { PlatformStatusCenter } from "@/components/founder/platform-status-center";
+import { PlatformProtectionHeaderToggle } from "@/components/founder/platform-protection-header-toggle";
 import { ArchitecturalHealth } from "@/components/construction/architectural-health";
 
 
