@@ -74,7 +74,7 @@ function JoinChooser() {
 
         <div className="mt-12 text-center text-xs text-muted-foreground">
           Already have an account?{" "}
-          <Link to="/auth" className="underline hover:text-[color:var(--gold)]">
+          <Link to="/auth" search={{ next: "" }} className="underline hover:text-[color:var(--gold)]">
             Sign in
           </Link>
         </div>

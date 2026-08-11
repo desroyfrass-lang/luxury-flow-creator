@@ -118,3 +118,4 @@ For Me is personal, never algorithmic — no "chosen for you".
 - [FRASS-0449 Continuous Security Verification](mem://features/frass-0449-continuous-security-verification) — Attacker-mindset review before any system is "complete"; eight questions, severity levels, launch gate, plain-English founder report; SECURITY_REVIEW_STANDARD.md
 - [FRASS-0450 Founder Daily OS](mem://features/frass-0450-founder-daily-os) — Tabbed Daily (one tab at a time, never bigger) + admin-only read-only Financial Audit Center
 - [First Partner Welcome Hall FRASS-0456](mem://features/frass-0456-first-partner-welcome-hall) — Two Welcome Halls (shop vs Hill), one identity, one onboarding engine, partner invitation designations, /admin/partners desk
+- [Launch Accelerator FRASS-0459](mem://features/frass-0459-launch-accelerator) — Business Builder coaching layer: business journeys, income-weighted money moves, 3 major/5 minor cap, just-in-time lessons, founder oversight

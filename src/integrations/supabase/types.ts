@@ -2565,6 +2565,39 @@ export type Database = {
         }
         Relationships: []
       }
+      partner_launch_state: {
+        Row: {
+          created_at: string
+          hours_per_day: number
+          id: string
+          income_goal: number
+          mission: string | null
+          state: Json
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          hours_per_day?: number
+          id?: string
+          income_goal?: number
+          mission?: string | null
+          state?: Json
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          hours_per_day?: number
+          id?: string
+          income_goal?: number
+          mission?: string | null
+          state?: Json
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       partner_vendors: {
         Row: {
           created_at: string

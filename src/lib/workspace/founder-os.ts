@@ -68,6 +68,7 @@ export const FOUNDER_LAUNCHERS: Record<string, { label: string; href: string; pl
     { label: "Control Room", href: "/founder", plain: "Goals, vision maps and construction." },
     { label: "Insights", href: "/workspace/insights", plain: "How close the numbers are to the goal." },
     { label: "Business Builder", href: "/business-builder", plain: "Turn a goal into a plan." },
+    { label: "Launch Accelerator", href: "/launch-accelerator", plain: "Today's fastest route to income." },
   ],
   approvals: [
     { label: "Approvals", href: "/admin/approvals", plain: "Things waiting on your word." },

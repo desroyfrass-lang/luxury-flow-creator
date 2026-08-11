@@ -176,6 +176,7 @@ const HILL_NAV: NavGroup[] = [
     items: [
       { label: "Enter FV Studios", to: "/studio", note: "Frass Vision Studios — video, audio & motion" },
       { label: "💼 Business Builder", to: "/business-builder", note: "Build a business, not just a website" },
+      { label: "🚀 Launch Accelerator", to: "/launch-accelerator", note: "Today's money moves, ranked by income" },
       { label: "🏝 Frass Hosting", to: "/frass-hosting", note: "Publish and host your business with Frass" },
 
       { label: "Frass Vision Studios", to: "/fv-studios", note: "The label, film studio & publishing network" },
