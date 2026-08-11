@@ -173,6 +173,7 @@ import { Route as AuthenticatedWorkspaceWalletRouteImport } from './routes/_auth
 import { Route as AuthenticatedWorkspaceProfileRouteImport } from './routes/_authenticated/workspace.profile'
 import { Route as AuthenticatedWorkspaceMerchRouteImport } from './routes/_authenticated/workspace.merch'
 import { Route as AuthenticatedWorkspaceLinkRouteImport } from './routes/_authenticated/workspace.link'
+import { Route as AuthenticatedWorkspaceJournalRouteImport } from './routes/_authenticated/workspace.journal'
 import { Route as AuthenticatedWorkspaceInsightsRouteImport } from './routes/_authenticated/workspace.insights'
 import { Route as AuthenticatedWorkspaceCardRouteImport } from './routes/_authenticated/workspace.card'
 import { Route as AuthenticatedWorkspaceAffiliateRouteImport } from './routes/_authenticated/workspace.affiliate'
@@ -1051,6 +1052,12 @@ const AuthenticatedWorkspaceLinkRoute =
     path: '/link',
     getParentRoute: () => AuthenticatedWorkspaceRoute,
   } as any)
+const AuthenticatedWorkspaceJournalRoute =
+  AuthenticatedWorkspaceJournalRouteImport.update({
+    id: '/journal',
+    path: '/journal',
+    getParentRoute: () => AuthenticatedWorkspaceRoute,
+  } as any)
 const AuthenticatedWorkspaceInsightsRoute =
   AuthenticatedWorkspaceInsightsRouteImport.update({
     id: '/insights',
@@ -1390,6 +1397,7 @@ export interface FileRoutesByFullPath {
   '/workspace/affiliate': typeof AuthenticatedWorkspaceAffiliateRoute
   '/workspace/card': typeof AuthenticatedWorkspaceCardRoute
   '/workspace/insights': typeof AuthenticatedWorkspaceInsightsRoute
+  '/workspace/journal': typeof AuthenticatedWorkspaceJournalRoute
   '/workspace/link': typeof AuthenticatedWorkspaceLinkRoute
   '/workspace/merch': typeof AuthenticatedWorkspaceMerchRoute
   '/workspace/profile': typeof AuthenticatedWorkspaceProfileRoute
@@ -1564,6 +1572,7 @@ export interface FileRoutesByTo {
   '/workspace/affiliate': typeof AuthenticatedWorkspaceAffiliateRoute
   '/workspace/card': typeof AuthenticatedWorkspaceCardRoute
   '/workspace/insights': typeof AuthenticatedWorkspaceInsightsRoute
+  '/workspace/journal': typeof AuthenticatedWorkspaceJournalRoute
   '/workspace/link': typeof AuthenticatedWorkspaceLinkRoute
   '/workspace/merch': typeof AuthenticatedWorkspaceMerchRoute
   '/workspace/profile': typeof AuthenticatedWorkspaceProfileRoute
@@ -1762,6 +1771,7 @@ export interface FileRoutesById {
   '/_authenticated/workspace/affiliate': typeof AuthenticatedWorkspaceAffiliateRoute
   '/_authenticated/workspace/card': typeof AuthenticatedWorkspaceCardRoute
   '/_authenticated/workspace/insights': typeof AuthenticatedWorkspaceInsightsRoute
+  '/_authenticated/workspace/journal': typeof AuthenticatedWorkspaceJournalRoute
   '/_authenticated/workspace/link': typeof AuthenticatedWorkspaceLinkRoute
   '/_authenticated/workspace/merch': typeof AuthenticatedWorkspaceMerchRoute
   '/_authenticated/workspace/profile': typeof AuthenticatedWorkspaceProfileRoute
@@ -1960,6 +1970,7 @@ export interface FileRouteTypes {
     | '/workspace/affiliate'
     | '/workspace/card'
     | '/workspace/insights'
+    | '/workspace/journal'
     | '/workspace/link'
     | '/workspace/merch'
     | '/workspace/profile'
@@ -2134,6 +2145,7 @@ export interface FileRouteTypes {
     | '/workspace/affiliate'
     | '/workspace/card'
     | '/workspace/insights'
+    | '/workspace/journal'
     | '/workspace/link'
     | '/workspace/merch'
     | '/workspace/profile'
@@ -2331,6 +2343,7 @@ export interface FileRouteTypes {
     | '/_authenticated/workspace/affiliate'
     | '/_authenticated/workspace/card'
     | '/_authenticated/workspace/insights'
+    | '/_authenticated/workspace/journal'
     | '/_authenticated/workspace/link'
     | '/_authenticated/workspace/merch'
     | '/_authenticated/workspace/profile'
@@ -3590,6 +3603,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedWorkspaceLinkRouteImport
       parentRoute: typeof AuthenticatedWorkspaceRoute
     }
+    '/_authenticated/workspace/journal': {
+      id: '/_authenticated/workspace/journal'
+      path: '/journal'
+      fullPath: '/workspace/journal'
+      preLoaderRoute: typeof AuthenticatedWorkspaceJournalRouteImport
+      parentRoute: typeof AuthenticatedWorkspaceRoute
+    }
     '/_authenticated/workspace/insights': {
       id: '/_authenticated/workspace/insights'
       path: '/insights'
@@ -3868,6 +3888,7 @@ interface AuthenticatedWorkspaceRouteChildren {
   AuthenticatedWorkspaceAffiliateRoute: typeof AuthenticatedWorkspaceAffiliateRoute
   AuthenticatedWorkspaceCardRoute: typeof AuthenticatedWorkspaceCardRoute
   AuthenticatedWorkspaceInsightsRoute: typeof AuthenticatedWorkspaceInsightsRoute
+  AuthenticatedWorkspaceJournalRoute: typeof AuthenticatedWorkspaceJournalRoute
   AuthenticatedWorkspaceLinkRoute: typeof AuthenticatedWorkspaceLinkRoute
   AuthenticatedWorkspaceMerchRoute: typeof AuthenticatedWorkspaceMerchRoute
   AuthenticatedWorkspaceProfileRoute: typeof AuthenticatedWorkspaceProfileRoute
@@ -3879,6 +3900,7 @@ const AuthenticatedWorkspaceRouteChildren: AuthenticatedWorkspaceRouteChildren =
     AuthenticatedWorkspaceAffiliateRoute: AuthenticatedWorkspaceAffiliateRoute,
     AuthenticatedWorkspaceCardRoute: AuthenticatedWorkspaceCardRoute,
     AuthenticatedWorkspaceInsightsRoute: AuthenticatedWorkspaceInsightsRoute,
+    AuthenticatedWorkspaceJournalRoute: AuthenticatedWorkspaceJournalRoute,
     AuthenticatedWorkspaceLinkRoute: AuthenticatedWorkspaceLinkRoute,
     AuthenticatedWorkspaceMerchRoute: AuthenticatedWorkspaceMerchRoute,
     AuthenticatedWorkspaceProfileRoute: AuthenticatedWorkspaceProfileRoute,
