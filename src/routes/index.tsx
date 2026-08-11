@@ -208,7 +208,7 @@ function EntrancePage() {
 
 
 function EntranceCard({
-  to,
+  onClick,
   emoji,
   title,
   copy,
@@ -216,7 +216,7 @@ function EntranceCard({
   tone,
   delay,
 }: {
-  to: string;
+  onClick: () => void;
   emoji: string;
   title: string;
   copy: string;
@@ -226,8 +226,9 @@ function EntranceCard({
 }) {
   const light = tone === "light";
   return (
-    <Link
-      to={to}
+    <button
+      type="button"
+      onClick={onClick}
       aria-label={`${title} — ${copy}`}
       style={{ animationDelay: delay }}
       className={`gateway-rise group relative overflow-hidden rounded-2xl border p-5 text-left backdrop-blur-xl transition duration-300 will-change-transform hover:-translate-y-1.5 ${
@@ -246,6 +247,7 @@ function EntranceCard({
       >
         {cta}
         <span className="transition-transform duration-300 group-hover:translate-x-1">→</span>
+
       </span>
     </Link>
   );
