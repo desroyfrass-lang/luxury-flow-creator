@@ -3,7 +3,14 @@
 import { useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { Activity, Loader2 } from "lucide-react";
-import { getPlatformHealth, type HealthState } from "@/lib/platform-health.functions";
+import { getPlatformHealth, type HealthState, type HealthTrend } from "@/lib/platform-health.functions";
+
+const TREND: Record<HealthTrend, { dot: string; label: string }> = {
+  stable: { dot: "🟢", label: "Stable" },
+  improving: { dot: "🟡", label: "Improving" },
+  degrading: { dot: "🔴", label: "Getting worse" },
+  unknown: { dot: "⚪", label: "No history yet" },
+};
 
 const DOT: Record<HealthState, string> = {
   healthy: "🟢",
@@ -43,7 +50,8 @@ export function PlatformHealthPanel() {
 
       <p className="mt-2 text-xs text-muted-foreground">
         Operational health, not security. This answers "is the building running?" — the Security
-        Center answers "is anyone testing the locks?".
+        Center answers "is anyone testing the locks?". Each service also shows the direction it has
+        travelled over the last 30 days, so a slow slide is visible long before it becomes a fault.
       </p>
 
       {isLoading && (
@@ -67,6 +75,14 @@ export function PlatformHealthPanel() {
               </div>
               <p className="mt-1 text-xs text-foreground">{c.reading}</p>
               <p className="mt-1 text-[11px] leading-snug text-muted-foreground">{c.plainEnglish}</p>
+              <div className="mt-2 border-t border-border/60 pt-2">
+                <div className="text-[11px] text-foreground">
+                  {TREND[c.trend ?? "unknown"].dot} 30 days · {TREND[c.trend ?? "unknown"].label}
+                </div>
+                {c.trendNote && (
+                  <p className="mt-0.5 text-[11px] leading-snug text-muted-foreground">{c.trendNote}</p>
+                )}
+              </div>
             </li>
           ))}
         </ul>

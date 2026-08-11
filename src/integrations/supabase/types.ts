@@ -3528,9 +3528,13 @@ export type Database = {
           created_at: string
           detail: string | null
           enforced_value: number | null
+          founder_note: string | null
           halted: boolean
           id: string
           plain_english: string | null
+          review_status: string
+          reviewed_at: string | null
+          reviewed_by: string | null
           rule: string
           severity: string
           surface: string
@@ -3545,9 +3549,13 @@ export type Database = {
           created_at?: string
           detail?: string | null
           enforced_value?: number | null
+          founder_note?: string | null
           halted?: boolean
           id?: string
           plain_english?: string | null
+          review_status?: string
+          reviewed_at?: string | null
+          reviewed_by?: string | null
           rule: string
           severity?: string
           surface: string
@@ -3562,9 +3570,13 @@ export type Database = {
           created_at?: string
           detail?: string | null
           enforced_value?: number | null
+          founder_note?: string | null
           halted?: boolean
           id?: string
           plain_english?: string | null
+          review_status?: string
+          reviewed_at?: string | null
+          reviewed_by?: string | null
           rule?: string
           severity?: string
           surface?: string
