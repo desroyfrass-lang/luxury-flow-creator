@@ -63,6 +63,9 @@ function GoLivePage() {
           <h1 className="mt-3 text-4xl font-black uppercase tracking-[0.1em]">Go Live</h1>
         </header>
 
+        <PlatformProtectionBanner domain="broadcasting" />
+
+
         <div className="flex items-start gap-3 rounded-[1.5rem] border border-[color:var(--gold)]/50 bg-card p-6">
           <Sparkles className="mt-0.5 h-5 w-5 shrink-0 text-[color:var(--gold)]" />
           <p className="text-sm leading-relaxed text-muted-foreground">
