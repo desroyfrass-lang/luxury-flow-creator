@@ -9,6 +9,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Loader2, MessageSquare, Power } from "lucide-react";
 import { toast } from "sonner";
 import { SecurityAlertsPanel } from "@/components/finance/security-alerts-panel";
+import { PlatformHealthPanel } from "@/components/finance/platform-health-panel";
 import {
   categoryLabel,
   FEEDBACK_CATEGORIES,
@@ -106,7 +107,8 @@ function LaunchFeedbackCenter() {
       </div>
 
       {/* FRASS-0474 — blocked financial attempts sit beside launch feedback. */}
-      <div className="mb-8">
+      <div className="mb-8 space-y-6">
+        <PlatformHealthPanel />
         <SecurityAlertsPanel />
       </div>
 
