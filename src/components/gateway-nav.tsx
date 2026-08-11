@@ -418,19 +418,35 @@ function AccountNavSection() {
     setOpen(false);
   }, [path]);
 
-  if (!section) return null;
+  // FRASS-0464: the account control is never hidden. Signed out, it is the
+  // door to sign in; signed in (any role, any screen size) it is the door to
+  // your Frass Card, Daily, Workspace and Control Room.
+  if (!section) {
+    return (
+      <Link
+        to="/auth"
+        search={{ next: "" }}
+        aria-label="Sign in"
+        className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-border transition hover:border-[color:var(--gold)]"
+      >
+        <UserRound className="h-4 w-4" />
+      </Link>
+    );
+  }
 
   return (
-    <div className="relative ml-auto shrink-0">
+    <div className="relative shrink-0">
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
         aria-expanded={open}
-        className="inline-flex items-center gap-1.5 whitespace-nowrap px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.22em] text-[color:var(--hill-gold)] transition hover:text-foreground"
+        aria-label="Account menu"
+        className="inline-flex h-9 shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full border border-[color:var(--hill-gold)]/60 px-2.5 text-[10px] font-bold uppercase tracking-[0.22em] text-[color:var(--hill-gold)] transition hover:bg-[color:var(--hill-gold)]/10 sm:px-3"
       >
-        <UserRound className="h-3.5 w-3.5" />
-        {section.label}
+        <UserRound className="h-4 w-4" />
+        <span className="hidden lg:inline">{section.label}</span>
       </button>
+
 
       {open && (
         <div className="absolute right-0 top-full z-50 mt-2 w-60 rounded-lg border border-border/70 bg-background/95 p-2 shadow-xl backdrop-blur-xl">
