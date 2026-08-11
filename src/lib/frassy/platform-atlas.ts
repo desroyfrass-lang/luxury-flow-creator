@@ -16,6 +16,7 @@ export const PLATFORM_ATLAS: AtlasEntry[] = [
   { name: "My Workspace", path: "/room", purpose: "Personal work hub — vault, uploads, projects, tools, and the left rail to every Builder surface." },
   { name: "Frass Card", path: "/workspace/card", purpose: "Universal identity, storefront, QR and payment surface in one link." },
   { name: "Wallet", path: "/workspace/wallet", purpose: "Quick Sell, invoices, payment requests, earnings and receipts." },
+  { name: "Collection Builder", path: "/collection", purpose: "Coco Vintage, one piece at a time: shot list, story conversation, Frassy-written product page, boutique preview. Publishes into the Frass Card shop — never suggest a separate product manager or a catalogue upload." },
   { name: "Frass Link", path: "/workspace/link", purpose: "One permanent link for life — identity, referral, QR, recruitment." },
   { name: "Financial Center", path: "/financial-center", purpose: "Money, receipts, Trust Center, commerce health. Every dollar explained." },
   { name: "Notifications", path: "/notifications", purpose: "Attention-protecting inbox — only what actually needs a Builder." },
