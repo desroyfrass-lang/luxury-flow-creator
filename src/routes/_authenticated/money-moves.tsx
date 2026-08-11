@@ -488,9 +488,9 @@ function MoneyMovesPage() {
                     </span>
                   </button>
                   {t.href && (
-                    <Link to={t.href} className="mt-2 inline-block text-[11px] underline text-muted-foreground">
+                    <a href={t.href} className="mt-2 inline-block text-[11px] underline text-muted-foreground">
                       Open it
-                    </Link>
+                    </a>
                   )}
                 </li>
               );
