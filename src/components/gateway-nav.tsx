@@ -1,7 +1,7 @@
 import { Link, useRouterState } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { Search, KeyRound, Menu, X, UserRound, Sun } from "lucide-react";
-import { useAccountSection } from "@/hooks/use-my-roles";
+import { useAccountSection, useMyRoles } from "@/hooks/use-my-roles";
 import { openTheDaily } from "@/components/workspace/daily-gate";
 
 import { GoLiveButton } from "./live/live-status";
