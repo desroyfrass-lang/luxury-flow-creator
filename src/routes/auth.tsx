@@ -89,6 +89,12 @@ function AuthPage() {
           </p>
         </div>
 
+        {mode === "signup" && (
+          <PlatformProtectionBanner domain="registrations" className="mb-4" />
+        )}
+
+
+
         <form onSubmit={onSubmit} className="space-y-4">
           <div>
             <label className="mb-2 block text-[11px] uppercase tracking-[0.25em] text-muted-foreground">
