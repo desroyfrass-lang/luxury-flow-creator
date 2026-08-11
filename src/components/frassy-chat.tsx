@@ -64,7 +64,6 @@ export function FrassyChat({ embedded = false }: { embedded?: boolean } = {}) {
   // Frassy speaks her replies aloud again — unless the Builder mutes her.
   const [speakReplies, setSpeakReplies] = useState(true);
 
-
   const items = useCartStore((s) => s.items);
   const ctx = useFrassyContext();
   const { isAdmin } = useIsAdminStatus();
@@ -145,7 +144,6 @@ export function FrassyChat({ embedded = false }: { embedded?: boolean } = {}) {
         inputAfter: "",
       });
     }
-
 
     const controller = new AbortController();
     abortRef.current = controller;
@@ -231,7 +229,6 @@ export function FrassyChat({ embedded = false }: { embedded?: boolean } = {}) {
     if (voice.phase === "idle" && !loading) await voice.startRecording();
   }
 
-
   if (!open && !embedded) {
     return (
       <button
@@ -257,7 +254,6 @@ export function FrassyChat({ embedded = false }: { embedded?: boolean } = {}) {
           : "fixed bottom-5 right-5 z-50 flex h-[min(620px,80vh)] w-[min(400px,calc(100vw-2.5rem))] flex-col overflow-hidden rounded-lg border border-white/10 bg-[#0b0c0e] shadow-2xl"
       }
     >
-
       <header
         data-frassy-toolbar
         className="flex shrink-0 flex-wrap items-center justify-between gap-y-2 border-b border-white/10 px-4 py-3"
@@ -302,7 +298,6 @@ export function FrassyChat({ embedded = false }: { embedded?: boolean } = {}) {
             {speakReplies ? "Voice on" : "Muted"}
           </button>
 
-
           {loading && (
             <button
               type="button"
@@ -337,11 +332,14 @@ export function FrassyChat({ embedded = false }: { embedded?: boolean } = {}) {
               <X className="h-4 w-4" />
             </button>
           )}
-
         </div>
       </header>
 
-      <div ref={scrollRef} data-frassy-transcript className="min-h-0 flex-1 space-y-4 overflow-y-auto px-4 py-4">
+      <div
+        ref={scrollRef}
+        data-frassy-transcript
+        className="min-h-0 flex-1 space-y-4 overflow-y-auto px-4 py-4"
+      >
         {startup.greeting && (
           <div className="w-fit max-w-[90%] rounded-lg bg-white/5 px-3 py-2 text-sm text-white/90">
             <p className="whitespace-pre-wrap">{startup.greeting}</p>
@@ -377,7 +375,6 @@ export function FrassyChat({ embedded = false }: { embedded?: boolean } = {}) {
                 <Volume2 className="h-3 w-3" /> Hear Frassy
               </button>
             )}
-
 
             {!!m.products?.length && (
               <div className="mt-3 grid grid-cols-2 gap-2">
@@ -453,7 +450,6 @@ export function FrassyChat({ embedded = false }: { embedded?: boolean } = {}) {
         <VoiceFeedbackButton source="chat" />
       </div>
 
-
       <div data-frassy-composer className="shrink-0">
         <FrassyComposer
           value={input}
@@ -466,8 +462,6 @@ export function FrassyChat({ embedded = false }: { embedded?: boolean } = {}) {
           micActive={voice.phase === "recording"}
         />
       </div>
-
-
     </div>
   );
 }

@@ -183,9 +183,7 @@ export function useFrassyStartup(opts: {
         context: opts.contextReady,
       };
       const verdict = evaluateReadiness(checks, { requiresAuth: opts.requiresAuth ?? false });
-      setMissing(
-        verdict.missing.map((m) => m),
-      );
+      setMissing(verdict.missing.map((m) => m));
       if (!verdict.ready) {
         setPhase("verifying");
         return; // re-runs as the dependencies settle

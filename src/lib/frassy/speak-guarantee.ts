@@ -17,7 +17,9 @@ export async function speakWithGuarantee(
   );
   while (attempts < VOICE_RETRY_LIMIT && (result === "failed" || result === "blocked")) {
     attempts += 1;
-    result = await speakText(text, { owner: opts.owner ?? "frassy" }).catch(() => "failed" as const);
+    result = await speakText(text, { owner: opts.owner ?? "frassy" }).catch(
+      () => "failed" as const,
+    );
   }
   if (result === "failed" || result === "blocked")
     return { spoke: false, notice: VOICE_FALLBACK_MESSAGE };
