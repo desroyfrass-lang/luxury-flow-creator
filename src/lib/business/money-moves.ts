@@ -20,6 +20,7 @@ import {
   type ResolvedMove,
 } from "./accelerator";
 import { foundationComplete, todayISO, type ProgramState } from "./launch-program";
+import type { AffiliatePolicy } from "@/lib/affiliate-intelligence";
 
 // ── Constitutional objectives ───────────────────────────────────────────────
 // Every Money Move must satisfy at least one of these, or it doesn't belong
@@ -332,6 +333,32 @@ export type Opportunity = {
   move?: ResolvedMove;
 };
 
+export type AffiliateReadiness = Pick<
+  AffiliatePolicy,
+  | "marketplace_launched"
+  | "approved_products_available"
+  | "approved_brand_partners_available"
+  | "internal_campaigns_ready"
+  | "affiliate_marketing_activated"
+>;
+
+export function affiliateIsReady(readiness: AffiliateReadiness): boolean {
+  return (
+    readiness.marketplace_launched &&
+    readiness.approved_products_available &&
+    readiness.approved_brand_partners_available &&
+    readiness.internal_campaigns_ready &&
+    readiness.affiliate_marketing_activated
+  );
+}
+
+export function affiliatePreparationLine(readiness: AffiliateReadiness): string {
+  if (affiliateIsReady(readiness)) {
+    return "Great news. The Frass Marketplace is live, approved products and Brand Partners are ready, and the Founder has activated Affiliate Marketing. Let's begin building your affiliate income.";
+  }
+  return "Affiliate Marketing is in Preparation Mode. Frassy is quietly watching the Marketplace; until every Frass-first requirement is ready and the Founder activates it, your time stays on work that can earn at launch.";
+}
+
 function clamp5(n: number): 1 | 2 | 3 | 4 | 5 {
   return Math.min(5, Math.max(1, Math.round(n))) as 1 | 2 | 3 | 4 | 5;
 }
@@ -425,9 +452,14 @@ export function moneyPlan(
   state: LaunchState,
   money: MoneyState,
   hoursPerDay: number,
+  affiliateReadiness?: AffiliateReadiness,
 ): MoneyPlan {
   const mom = momentum(state, money);
-  const opportunities = scanOpportunities(state, money, hoursPerDay);
+  const opportunities = scanOpportunities(state, money, hoursPerDay).filter(
+    (opportunity) =>
+      opportunity.streamId !== "affiliate" ||
+      (affiliateReadiness ? affiliateIsReady(affiliateReadiness) : false),
+  );
   const skippedToday = new Set(money.skipped[todayISO()] ?? []);
   const live = opportunities.filter((o) => !skippedToday.has(o.id));
 

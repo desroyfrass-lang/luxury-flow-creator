@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import { Check, Sparkles } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
@@ -45,6 +45,36 @@ function JoinHill() {
   const [busy, setBusy] = useState(false);
   const [checkEmail, setCheckEmail] = useState(false);
   const [result, setResult] = useState<ProvisionResult | null>(null);
+  const resumed = useRef(false);
+
+  // Email confirmation returns here, not to /welcome. Provisioning must finish
+  // before the one-time arrival record can be consumed.
+  useEffect(() => {
+    let alive = true;
+    const finishConfirmedRegistration = async () => {
+      if (resumed.current) return;
+      const { data } = await supabase.auth.getSession();
+      if (!data.session || !alive) return;
+      resumed.current = true;
+      setBusy(true);
+      try {
+        const displayName =
+          typeof data.session.user.user_metadata?.display_name === "string"
+            ? data.session.user.user_metadata.display_name
+            : undefined;
+        const provisioned = await provision({ data: { displayName } });
+        if (alive) setResult(provisioned);
+      } catch (err) {
+        if (alive) toast.error(err instanceof Error ? err.message : "Could not finish your membership.");
+      } finally {
+        if (alive) setBusy(false);
+      }
+    };
+    void finishConfirmedRegistration();
+    return () => {
+      alive = false;
+    };
+  }, [provision]);
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -58,8 +88,8 @@ function JoinHill() {
         email,
         password,
         options: {
-          emailRedirectTo: window.location.origin + "/welcome",
-          data: { display_name: name },
+          emailRedirectTo: window.location.origin + "/join/frass-hill",
+          data: { display_name: name, frass_entry: "hill" },
         },
       });
       if (error) throw error;
@@ -132,8 +162,8 @@ function JoinHill() {
           <div className="mt-12 rounded-sm border border-[color:var(--gold)]/40 bg-background/50 p-8 text-center">
             <p className="font-display text-3xl">Check your email</p>
             <p className="mt-4 text-sm text-muted-foreground">
-              We sent a confirmation link to {email}. Click it, then come back here and I'll finish
-              setting your place up.
+               We sent a confirmation link to {email}. Click it and return here; Frassy will finish
+               your Hill membership and FrassKicks customer profile before you enter.
             </p>
             <button
               onClick={continueExisting}

@@ -66,6 +66,16 @@ export const updateAffiliatePolicy = createServerFn({ method: "POST" })
       const v = (data as Record<string, unknown>)[key];
       if (v !== undefined) patch[key] = v === "" ? null : v;
     }
+    for (const key of [
+      "marketplace_launched",
+      "approved_products_available",
+      "approved_brand_partners_available",
+      "internal_campaigns_ready",
+      "affiliate_marketing_activated",
+    ] as const) {
+      const value = data[key];
+      if (typeof value === "boolean") patch[key] = value;
+    }
 
     const { data: row, error } = await sb
       .from("affiliate_policy")

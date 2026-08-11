@@ -14,6 +14,11 @@ export type AffiliatePolicy = {
   promo_max_commission_rate: number | null;
   promo_starts_at: string | null;
   promo_ends_at: string | null;
+  marketplace_launched: boolean;
+  approved_products_available: boolean;
+  approved_brand_partners_available: boolean;
+  internal_campaigns_ready: boolean;
+  affiliate_marketing_activated: boolean;
 };
 
 export const DEFAULT_POLICY: AffiliatePolicy = {
@@ -26,6 +31,11 @@ export const DEFAULT_POLICY: AffiliatePolicy = {
   promo_max_commission_rate: null,
   promo_starts_at: null,
   promo_ends_at: null,
+  marketplace_launched: false,
+  approved_products_available: false,
+  approved_brand_partners_available: false,
+  internal_campaigns_ready: false,
+  affiliate_marketing_activated: false,
 };
 
 export type ProductEconomics = {

@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -78,12 +78,12 @@ function FreshStart() {
           shortcuts, no half-finished setup.
         </p>
         {done && (
-          <a
-            href="/"
+          <Link
+            to="/"
             className="lux-press mt-10 inline-flex rounded-sm border border-[color:var(--gold)] bg-[color:var(--gold)] px-7 py-3.5 text-[11px] font-bold uppercase tracking-[0.3em] text-[color:var(--ink)]"
           >
             Start at the front door
-          </a>
+          </Link>
         )}
       </div>
     </main>
