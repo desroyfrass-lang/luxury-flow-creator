@@ -8,6 +8,7 @@ import {
   frassyAuthorizationLayer,
 } from "@/lib/frassy/personality";
 import { frassyContextLayer, type FrassyRelationship } from "@/lib/frassy/context";
+import { FRASS_PLATFORM_ATLAS, FIRST_PARTNER_PROTOCOL } from "@/lib/frassy/platform-atlas";
 
 const FRASS_LINK = `FRASS LINK (FRASS-0428)
 Every member owns ONE permanent Frass Link for life: frasskicks.com/link/<handle>. It is their identity,
@@ -401,9 +402,9 @@ export const Route = createFileRoute("/api/chat")({
 
         const basePrompt =
           body.experienceContext === "founder"
-            ? `${SYSTEM_PROMPT}\n\n${FRASS_LINK}\n\n${FOUNDER_CONTEXT}\n\n${CURATION_BRIEF}\n\n${GLOBAL_COMMERCE}\n\n${FOR_US_COMMUNITY}\n\n${STORYTELLING_ENGINE}\n\n${PLAIN_LANGUAGE_PROTOCOL}`
+            ? `${SYSTEM_PROMPT}\n\n${FRASS_LINK}\n\n${FOUNDER_CONTEXT}\n\n${CURATION_BRIEF}\n\n${GLOBAL_COMMERCE}\n\n${FOR_US_COMMUNITY}\n\n${STORYTELLING_ENGINE}\n\n${PLAIN_LANGUAGE_PROTOCOL}\n\n${FRASS_PLATFORM_ATLAS}\n\n${FIRST_PARTNER_PROTOCOL}`
             : body.experienceContext === "builder"
-              ? `${SYSTEM_PROMPT}\n\n${FRASS_LINK}\n\n${CURATION_BRIEF}\n\n${GLOBAL_COMMERCE}\n\n${FOR_US_COMMUNITY}\n\n${PLAIN_LANGUAGE_PROTOCOL}`
+              ? `${SYSTEM_PROMPT}\n\n${FRASS_LINK}\n\n${CURATION_BRIEF}\n\n${GLOBAL_COMMERCE}\n\n${FOR_US_COMMUNITY}\n\n${PLAIN_LANGUAGE_PROTOCOL}\n\n${FRASS_PLATFORM_ATLAS}\n\n${FIRST_PARTNER_PROTOCOL}`
 
               : `${SYSTEM_PROMPT}\n\n${FOR_US_COMMUNITY}`;
 
