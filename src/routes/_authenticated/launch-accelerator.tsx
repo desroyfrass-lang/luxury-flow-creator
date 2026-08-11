@@ -450,7 +450,8 @@ function LaunchAcceleratorPage() {
         <p className="mt-8 text-xs text-muted-foreground">
           Part of the Business Builder — <Link to="/business-builder" className="underline">set up a new business</Link>{" "}
           · <Link to="/room" className="underline">My Workspace</Link> ·{" "}
-          <Link to="/vault" className="underline">Vault</Link>
+          <Link to="/vault" className="underline">Vault</Link> ·{" "}
+          <Link to="/business-vaults" className="underline">Future Business Vaults</Link>
         </p>
         <p className="mt-2 text-xs text-muted-foreground">
           What this means in plain English: this page is your coach, not your filing cabinet. It already knows what
