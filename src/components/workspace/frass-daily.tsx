@@ -86,6 +86,13 @@ import { dailySnapshot, viewerFrom } from "@/lib/finance/financial-center";
 import { FounderOsPanel, FounderTabRail } from "@/components/workspace/founder-os-panel";
 import type { FounderTabId } from "@/lib/workspace/founder-os";
 import { LaunchModeBanner } from "@/components/launch-mode-banner";
+// FRASS-0476 — the Founder never has to remember to open the Security Center.
+import { listSecurityAlerts } from "@/lib/finance/security-alerts.functions";
+import { getPlatformHealth } from "@/lib/platform-health.functions";
+import { getPlatformProtection } from "@/lib/platform-protection.functions";
+import { securityBriefing } from "@/lib/security/briefing";
+import type { TieredEvent } from "@/lib/security/triage";
+
 
 
 const ORDER: DailyPriority[] = ["critical", "important", "optional", "completed"];
@@ -176,6 +183,41 @@ export function FrassDaily({
   /** FRASS-0402 — the AI credit balance travels with the Builder, not with a role. */
   const fetchWallet = useServerFn(getWallet);
   const wallet = useQuery({ queryKey: ["studio-wallet"], queryFn: () => fetchWallet(), staleTime: 60_000 });
+
+  /**
+   * FRASS-0476 — Founder Daily Integration. One sentence each morning about
+   * overnight security and platform health, so the Founder never has to wonder.
+   */
+  const alertsFn = useServerFn(listSecurityAlerts);
+  const healthFn = useServerFn(getPlatformHealth);
+  const protectionFn = useServerFn(getPlatformProtection);
+  const secAlerts = useQuery({
+    queryKey: ["admin", "security-alerts"],
+    queryFn: () => alertsFn(),
+    enabled: isFounder,
+    staleTime: 120_000,
+  });
+  const secHealth = useQuery({
+    queryKey: ["admin", "platform-health"],
+    queryFn: () => healthFn(),
+    enabled: isFounder,
+    staleTime: 120_000,
+  });
+  const secProtection = useQuery({
+    queryKey: ["admin", "platform-protection"],
+    queryFn: () => protectionFn(),
+    enabled: isFounder,
+    staleTime: 120_000,
+  });
+  const securityLine = useMemo(() => {
+    if (!isFounder || !secAlerts.data) return null;
+    return securityBriefing(
+      (secAlerts.data ?? []) as unknown as TieredEvent[],
+      secHealth.data?.checks ?? [],
+      secProtection.data ?? undefined,
+    );
+  }, [isFounder, secAlerts.data, secHealth.data?.checks, secProtection.data]);
+
 
 
   /** No dead information — every item resolves to the records behind it. */
@@ -368,6 +410,32 @@ export function FrassDaily({
                 <li key={l}>{l}</li>
               ))}
             </ul>
+            {/* FRASS-0476 — the overnight security sentence, Founder only. */}
+            {securityLine && (
+              <div
+                className={`mt-3 rounded-sm border p-3 ${
+                  securityLine.needsAttention
+                    ? "border-destructive/50 bg-destructive/10"
+                    : "border-emerald-500/30 bg-emerald-500/10"
+                }`}
+              >
+                <span className="ws-meta">Overnight · Security &amp; Platform</span>
+                <p className="mt-1 text-sm">{securityLine.sentence}</p>
+                {securityLine.needsAttention && (
+                  <button
+                    type="button"
+                    className="ws-chip mt-2"
+                    onClick={() => {
+                      onNavigate?.(securityLine.href);
+                      onDismiss();
+                    }}
+                  >
+                    Open the Security Center
+                  </button>
+                )}
+              </div>
+            )}
+
             <div className="daily-brief-card-actions">
               <button type="button" className="daily-enter" onClick={() => setBriefOpen(false)}>
                 Ready to begin

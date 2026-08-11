@@ -10,6 +10,8 @@ import { Loader2, MessageSquare, Power } from "lucide-react";
 import { toast } from "sonner";
 import { SecurityAlertsPanel } from "@/components/finance/security-alerts-panel";
 import { PlatformHealthPanel } from "@/components/finance/platform-health-panel";
+import { PlatformProtectionSwitch } from "@/components/founder/platform-protection-switch";
+
 import {
   categoryLabel,
   FEEDBACK_CATEGORIES,
@@ -110,7 +112,10 @@ function LaunchFeedbackCenter() {
       <div className="mb-8 space-y-6">
         <PlatformHealthPanel />
         <SecurityAlertsPanel />
+        {/* FRASS-0476 — the emergency control lives with the intelligence it protects. */}
+        <PlatformProtectionSwitch />
       </div>
+
 
 
 
