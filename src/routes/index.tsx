@@ -1,20 +1,18 @@
-import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
+import { supabase } from "@/integrations/supabase/client";
 import archHero from "@/assets/frass-gateway-arch.jpg.asset.json";
 import frassyGold from "@/assets/frassy-gold.png.asset.json";
 
 /**
- * FRASS-0923 — The Frass Entrance Experience.
+ * FRASS-0923 / FRASS-0471 — The Frass Entrance Experience.
  *
  * The ceremonial gateway into the Frass ecosystem. Every visitor arrives
- * beneath the arch, Frassy welcomes them once, then shrinks into companion
- * mode, and the visitor chooses commerce (Frass District) or community
- * (the journey into Frass Hill).
+ * beneath the arch, Frassy welcomes them, and the visitor chooses commerce
+ * (Frass District) or community (Frass Hill). This page never auto-redirects:
+ * frasskicks.com is always "Welcome to FrassKicks".
  */
 
-export const SKIP_ENTRANCE_KEY = "frass-skip-entrance";
-/** The welcome renews after an hour away — not on every in-and-out visit. */
-export const ENTRANCE_TTL_MS = 60 * 60 * 1000;
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -115,36 +113,31 @@ function EntranceFrassy() {
 
 function EntrancePage() {
   const navigate = useNavigate();
-  const [skipNext, setSkipNext] = useState(false);
+  const [signedIn, setSignedIn] = useState<boolean | null>(null);
 
+  // FRASS-0471: the entrance never redirects on its own. Typing frasskicks.com
+  // always shows this welcome — first visit, tenth visit, signed in or not.
   useEffect(() => {
-    try {
-      const raw = localStorage.getItem(SKIP_ENTRANCE_KEY);
-      const always = raw === "always";
-      setSkipNext(always);
-      const forced = new URLSearchParams(window.location.search).has("stay");
-      const last = raw && raw !== "always" ? Number(raw) : 0;
-      const recent = last > 0 && Date.now() - last < ENTRANCE_TTL_MS;
-      if ((always || recent) && !forced) {
-        // Back-and-forth shopping shouldn't replay the ceremony.
-        if (!always) localStorage.setItem(SKIP_ENTRANCE_KEY, String(Date.now()));
-        navigate({ to: "/frass-district", replace: true });
-        return;
-      }
-      // The welcome plays, then renews only after an hour away.
-      if (!always) localStorage.setItem(SKIP_ENTRANCE_KEY, String(Date.now()));
-    } catch {
-      /* storage blocked — always show the entrance */
-    }
-  }, [navigate]);
+    let alive = true;
+    supabase.auth.getSession().then(({ data }) => {
+      if (alive) setSignedIn(Boolean(data.session));
+    });
+    return () => {
+      alive = false;
+    };
+  }, []);
 
-  const togglePref = (checked: boolean) => {
-    setSkipNext(checked);
-    try {
-      localStorage.setItem(SKIP_ENTRANCE_KEY, checked ? "always" : String(Date.now()));
-    } catch {
-      /* ignore */
-    }
+  /** Shopping door: a customer profile comes first, then the district. */
+  const goShop = () => {
+    navigate({ to: signedIn ? "/frass-district" : "/join/frasskicks" });
+  };
+
+  /**
+   * Hill door: a stranger goes to the Welcome Hall registration; a member goes
+   * to /welcome, which is the only place that decides first-time vs returning.
+   */
+  const goHill = () => {
+    navigate({ to: signedIn ? "/welcome" : "/join/frass-hill" });
   };
 
   return (
@@ -174,7 +167,7 @@ function EntrancePage() {
           className="gateway-rise font-display text-4xl leading-[0.95] text-white drop-shadow-[0_2px_24px_rgba(0,0,0,0.55)] sm:text-6xl lg:text-8xl"
           style={{ animationDelay: "80ms" }}
         >
-          Welcome to frasskicks.com
+          Welcome to FrassKicks
         </h1>
 
         <p
@@ -186,41 +179,36 @@ function EntrancePage() {
 
         <div className="mt-10 grid w-full max-w-3xl gap-4 sm:grid-cols-2">
           <EntranceCard
-            to="/frass-district"
+            onClick={goShop}
             delay="240ms"
             emoji="🛍️"
-            title="Shop Frass"
-            copy="Straight down the promenade — Kicks, Drip, Bare Drip, Luxury House, Plus+, Kids, Bridal and the Marketplace."
-            cta="Walk the promenade"
+            title="Shop Frass District"
+            copy="Kicks, Drip, Bare Drip, Luxury House, Plus+, Kids, Bridal and the Marketplace. We'll set up your FrassKicks profile first — sizes, fits and orders in one place."
+            cta={signedIn ? "Walk the promenade" : "Create my shopping profile"}
             tone="light"
           />
           <EntranceCard
-            to="/arrival"
+            onClick={goHill}
             delay="320ms"
             emoji="⛰️"
             title="Enter Frass Hill"
-            copy="Pass beneath the arch and journey up the hill — the whole town opens before you at the overlook."
-            cta="Begin the journey"
+            copy="Membership in the town: a Frass Card, a Builder Vault and a Daily. One account covers both — joining the Hill also gives you your FrassKicks profile."
+            cta={signedIn ? "Continue into the Hill" : "Begin at the Welcome Hall"}
             tone="dark"
           />
         </div>
 
-        <label className="mt-8 inline-flex cursor-pointer items-center gap-2 text-[10px] uppercase tracking-[0.25em] text-white/60">
-          <input
-            type="checkbox"
-            checked={skipNext}
-            onChange={(e) => togglePref(e.target.checked)}
-            className="h-3.5 w-3.5 accent-[color:var(--hill-gold)]"
-          />
-          Skip entrance next time
-        </label>
+        <p className="mt-8 max-w-xl text-[10px] uppercase tracking-[0.25em] text-white/50">
+          Two doors. One account. Frassy meets you at whichever one you choose.
+        </p>
       </section>
     </main>
   );
 }
 
+
 function EntranceCard({
-  to,
+  onClick,
   emoji,
   title,
   copy,
@@ -228,7 +216,7 @@ function EntranceCard({
   tone,
   delay,
 }: {
-  to: string;
+  onClick: () => void;
   emoji: string;
   title: string;
   copy: string;
@@ -238,8 +226,9 @@ function EntranceCard({
 }) {
   const light = tone === "light";
   return (
-    <Link
-      to={to}
+    <button
+      type="button"
+      onClick={onClick}
       aria-label={`${title} — ${copy}`}
       style={{ animationDelay: delay }}
       className={`gateway-rise group relative overflow-hidden rounded-2xl border p-5 text-left backdrop-blur-xl transition duration-300 will-change-transform hover:-translate-y-1.5 ${
@@ -259,6 +248,7 @@ function EntranceCard({
         {cta}
         <span className="transition-transform duration-300 group-hover:translate-x-1">→</span>
       </span>
-    </Link>
+    </button>
+
   );
 }

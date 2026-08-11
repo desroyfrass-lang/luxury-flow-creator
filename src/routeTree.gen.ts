@@ -29,6 +29,7 @@ import { Route as KicksDistrictRouteImport } from './routes/kicks-district'
 import { Route as HealthWellnessRouteImport } from './routes/health-wellness'
 import { Route as GatewayRouteImport } from './routes/gateway'
 import { Route as FvStudiosRouteImport } from './routes/fv-studios'
+import { Route as FreshStartRouteImport } from './routes/fresh-start'
 import { Route as FrassWorldRouteImport } from './routes/frass-world'
 import { Route as FrassShapeRouteImport } from './routes/frass-shape'
 import { Route as FrassRadioRouteImport } from './routes/frass-radio'
@@ -302,6 +303,11 @@ const GatewayRoute = GatewayRouteImport.update({
 const FvStudiosRoute = FvStudiosRouteImport.update({
   id: '/fv-studios',
   path: '/fv-studios',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FreshStartRoute = FreshStartRouteImport.update({
+  id: '/fresh-start',
+  path: '/fresh-start',
   getParentRoute: () => rootRouteImport,
 } as any)
 const FrassWorldRoute = FrassWorldRouteImport.update({
@@ -1251,6 +1257,7 @@ export interface FileRoutesByFullPath {
   '/frass-radio': typeof FrassRadioRoute
   '/frass-shape': typeof FrassShapeRouteWithChildren
   '/frass-world': typeof FrassWorldRoute
+  '/fresh-start': typeof FreshStartRoute
   '/fv-studios': typeof FvStudiosRoute
   '/gateway': typeof GatewayRoute
   '/health-wellness': typeof HealthWellnessRoute
@@ -1434,6 +1441,7 @@ export interface FileRoutesByTo {
   '/frass-hosting': typeof FrassHostingRoute
   '/frass-radio': typeof FrassRadioRoute
   '/frass-world': typeof FrassWorldRoute
+  '/fresh-start': typeof FreshStartRoute
   '/fv-studios': typeof FvStudiosRoute
   '/gateway': typeof GatewayRoute
   '/health-wellness': typeof HealthWellnessRoute
@@ -1621,6 +1629,7 @@ export interface FileRoutesById {
   '/frass-radio': typeof FrassRadioRoute
   '/frass-shape': typeof FrassShapeRouteWithChildren
   '/frass-world': typeof FrassWorldRoute
+  '/fresh-start': typeof FreshStartRoute
   '/fv-studios': typeof FvStudiosRoute
   '/gateway': typeof GatewayRoute
   '/health-wellness': typeof HealthWellnessRoute
@@ -1818,6 +1827,7 @@ export interface FileRouteTypes {
     | '/frass-radio'
     | '/frass-shape'
     | '/frass-world'
+    | '/fresh-start'
     | '/fv-studios'
     | '/gateway'
     | '/health-wellness'
@@ -2001,6 +2011,7 @@ export interface FileRouteTypes {
     | '/frass-hosting'
     | '/frass-radio'
     | '/frass-world'
+    | '/fresh-start'
     | '/fv-studios'
     | '/gateway'
     | '/health-wellness'
@@ -2187,6 +2198,7 @@ export interface FileRouteTypes {
     | '/frass-radio'
     | '/frass-shape'
     | '/frass-world'
+    | '/fresh-start'
     | '/fv-studios'
     | '/gateway'
     | '/health-wellness'
@@ -2384,6 +2396,7 @@ export interface RootRouteChildren {
   FrassRadioRoute: typeof FrassRadioRoute
   FrassShapeRoute: typeof FrassShapeRouteWithChildren
   FrassWorldRoute: typeof FrassWorldRoute
+  FreshStartRoute: typeof FreshStartRoute
   FvStudiosRoute: typeof FvStudiosRoute
   GatewayRoute: typeof GatewayRoute
   HealthWellnessRoute: typeof HealthWellnessRoute
@@ -2567,6 +2580,13 @@ declare module '@tanstack/react-router' {
       path: '/fv-studios'
       fullPath: '/fv-studios'
       preLoaderRoute: typeof FvStudiosRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/fresh-start': {
+      id: '/fresh-start'
+      path: '/fresh-start'
+      fullPath: '/fresh-start'
+      preLoaderRoute: typeof FreshStartRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/frass-world': {
@@ -4342,6 +4362,7 @@ const rootRouteChildren: RootRouteChildren = {
   FrassRadioRoute: FrassRadioRoute,
   FrassShapeRoute: FrassShapeRouteWithChildren,
   FrassWorldRoute: FrassWorldRoute,
+  FreshStartRoute: FreshStartRoute,
   FvStudiosRoute: FvStudiosRoute,
   GatewayRoute: GatewayRoute,
   HealthWellnessRoute: HealthWellnessRoute,

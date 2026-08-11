@@ -301,7 +301,9 @@ export function GatewayNav({ mode }: { mode: "shop" | "world" }) {
           </Link>
           <DailyNavButton />
           <AccountNavSection />
+          <NavSignOutButton />
           <CartDrawer />
+
 
           <button
             type="button"
@@ -394,7 +396,24 @@ export function GatewayNav({ mode }: { mode: "shop" | "world" }) {
   );
 }
 
+/**
+ * FRASS-0471 — one logout, two access points. This is the always-visible
+ * button on the bar (desktop and mobile); the profile menu keeps its own
+ * entry. Both call the same secure sign-out.
+ */
+function NavSignOutButton() {
+  const { signedIn } = useMyRoles();
+  if (!signedIn) return null;
+  return (
+    <SignOutButton
+      label="Sign out"
+      className="inline-flex h-9 shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full border border-border px-2.5 text-[10px] font-bold uppercase tracking-[0.22em] text-muted-foreground transition hover:border-[color:var(--hill-gold)] hover:text-foreground sm:px-3"
+    />
+  );
+}
+
 /** The Frass Daily — one Daily for every signed-in Builder, admin or member. */
+
 function DailyNavButton() {
   const { signedIn } = useMyRoles();
   if (!signedIn) return null;
