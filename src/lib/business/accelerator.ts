@@ -278,7 +278,7 @@ export const LAUNCH_BUSINESSES: LaunchBusiness[] = [
         label: "Shoot the Pieces",
         milestone: "The collection looks like a store, not a cupboard.",
         moves: [
-          m("coco-shoot", "Photograph 10 pieces in one sitting", "Batching one shoot beats ten interruptions. This is the single biggest unlock.", 60, 4, true, { lesson: "product-photos" }),
+          m("coco-shoot", "Photograph today's two pieces", "Front, back, detail. Two garments at a time beats a whole-day catalogue shoot you never start.", 20, 4, true, { href: "/collection", lesson: "product-photos" }),
         ],
       },
       {
@@ -286,7 +286,7 @@ export const LAUNCH_BUSINESSES: LaunchBusiness[] = [
         label: "List Them",
         milestone: "The pieces are buyable.",
         moves: [
-          m("coco-list", "List the first 10 pieces", "Ten listings is the point where the shop starts looking real to a stranger.", 50, 4, true, { href: "/workspace/merch", lesson: "listing-copy" }),
+          m("coco-list", "Publish today's two pieces with their story", "Frassy writes the page from your own words. Two a day and the boutique is full before launch.", 20, 4, true, { href: "/collection", lesson: "listing-copy" }),
         ],
       },
       {

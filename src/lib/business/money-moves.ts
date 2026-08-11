@@ -107,6 +107,7 @@ export const INCOME_STREAMS: IncomeStream[] = [
     ],
     reinforces: ["faceless", "affiliate"],
     surfaces: [
+      { label: "Collection Builder", href: "/collection" },
       { label: "Marketplace", href: "/marketplace" },
       { label: "FV Studios", href: "/studio" },
       { label: "Wallet", href: "/workspace/wallet" },
