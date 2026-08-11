@@ -115,8 +115,6 @@ function PartnerOversightPage() {
                 )}
               </article>
             );
-              </article>
-            );
           })}
           {q.isSuccess && (q.data ?? []).length === 0 && (
             <p className="text-sm text-muted-foreground">No partner has started a launch plan yet.</p>
