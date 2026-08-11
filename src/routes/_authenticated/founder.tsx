@@ -148,6 +148,11 @@ function FounderPage() {
           My Workspace, and this dashboard is always one click away from it.
         </p>
 
+        {/* FRASS-0476 — the emergency switch, always in reach at the top */}
+        <PlatformProtectionHeaderToggle />
+
+
+
         {/* Frassy — the founder's direct line, first thing in the Control Room */}
         <section className="mt-8" data-blueprint="founder-frassy">
           <div className="flex flex-wrap items-baseline justify-between gap-2">
