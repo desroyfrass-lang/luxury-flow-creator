@@ -3,7 +3,7 @@ import { useState } from "react";
 import { SiteShell } from "@/components/site-shell";
 import { Sparkles, Loader2 } from "lucide-react";
 import { useLiveIdentity, useStartBroadcast } from "@/hooks/use-live";
-import { PlatformProtectionBanner } from "@/components/founder/platform-protection-banner";
+import { PlatformProtectionBanner, useIsPaused } from "@/components/founder/platform-protection-banner";
 import { LIVE_DESTINATIONS, LIVE_PURPOSES, type LiveDestination } from "@/lib/live";
 
 /** FRASS-0416 — Frassy asks one question first: "What are you going live for today?" */
@@ -28,6 +28,7 @@ export const Route = createFileRoute("/live/go")({
 function GoLivePage() {
   const navigate = useNavigate();
   const { userId, name, ready } = useLiveIdentity();
+  const broadcastPaused = useIsPaused("broadcasting");
   const start = useStartBroadcast();
 
   const [purpose, setPurpose] = useState("community");
@@ -161,7 +162,7 @@ function GoLivePage() {
           <button
             type="button"
             onClick={begin}
-            disabled={!title.trim() || start.isPending || !userId}
+            disabled={!title.trim() || start.isPending || !userId || broadcastPaused}
             className="inline-flex items-center gap-2 rounded-full bg-red-600 px-8 py-3 text-[11px] font-bold uppercase tracking-[0.26em] text-white transition hover:bg-red-500 disabled:opacity-40"
           >
             {start.isPending && <Loader2 className="h-4 w-4 animate-spin" />}

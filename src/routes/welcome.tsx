@@ -1,3 +1,4 @@
+import { PlatformProtectionBanner } from "@/components/founder/platform-protection-banner";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { useEffect, useRef, useState } from "react";
@@ -138,6 +139,7 @@ function WelcomePage() {
 
   return (
     <Shell>
+      <PlatformProtectionBanner domain="registrations" className="mb-6" />
       {meta && (
         <div className="mb-8 inline-flex items-center gap-3 rounded-sm border border-[color:var(--gold)] px-4 py-2 text-[11px] font-bold uppercase tracking-[0.3em] text-[color:var(--gold)]">
           <span className="text-base">{meta.badge}</span> {meta.label}

@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { SiteShell } from "@/components/site-shell";
-import { PlatformProtectionBanner } from "@/components/founder/platform-protection-banner";
+import { PlatformProtectionBanner, useIsPaused } from "@/components/founder/platform-protection-banner";
 import { PageFeedback } from "@/components/page-feedback";
 import { useCartStore } from "@/lib/cart-store";
 import { Trash2, ArrowLeft, Lock, Gift, Loader2, Heart } from "lucide-react";
@@ -20,6 +20,7 @@ export const Route = createFileRoute("/checkout")({
 });
 
 function CheckoutPage() {
+  const purchasesPaused = useIsPaused("purchases");
   const items = useCartStore((s) => s.items);
   const removeItem = useCartStore((s) => s.removeItem);
   const updateQuantity = useCartStore((s) => s.updateQuantity);
@@ -292,6 +293,7 @@ function CheckoutPage() {
 
               <button
                 onClick={handleCheckout}
+                disabled={purchasesPaused}
                 disabled={isLoading || redirecting}
                 className="mt-6 w-full h-12 inline-flex items-center justify-center gap-2 rounded-full bg-foreground text-background uppercase tracking-[0.2em] text-xs font-medium transition hover:bg-foreground/90 disabled:opacity-60"
               >
