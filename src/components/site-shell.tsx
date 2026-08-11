@@ -20,6 +20,7 @@ import { useSiteText } from "@/hooks/use-site-text";
 import { useIsAdmin } from "@/hooks/use-is-admin";
 import { useWorkspaceRoles } from "@/hooks/use-workspace-roles";
 import { supabase } from "@/integrations/supabase/client";
+import { useSecureSignOut } from "@/components/secure-sign-out";
 import fullLogo from "@/assets/frass-logo-full.asset.json";
 import symbolLogo from "@/assets/frass-logo-symbol.asset.json";
 
@@ -203,12 +204,7 @@ function BuilderAccountMenu({ hasWorkspace, isAdmin }: { hasWorkspace: boolean; 
   const queryClient = useQueryClient();
   const hasSession = useSession();
 
-  const handleSignOut = async () => {
-    await queryClient.cancelQueries();
-    queryClient.clear();
-    await supabase.auth.signOut();
-    navigate({ to: "/auth", search: { next: "" }, replace: true });
-  };
+  const handleSignOut = useSecureSignOut();
 
   if (!hasSession) {
     return (
@@ -327,12 +323,7 @@ function MobileAccountLinks({ hasWorkspace, isAdmin }: { hasWorkspace: boolean; 
   const queryClient = useQueryClient();
   const hasSession = useSession();
 
-  const handleSignOut = async () => {
-    await queryClient.cancelQueries();
-    queryClient.clear();
-    await supabase.auth.signOut();
-    navigate({ to: "/auth", search: { next: "" }, replace: true });
-  };
+  const handleSignOut = useSecureSignOut();
 
   if (!hasSession) {
     return (
