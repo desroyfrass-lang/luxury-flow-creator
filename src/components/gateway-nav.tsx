@@ -301,7 +301,9 @@ export function GatewayNav({ mode }: { mode: "shop" | "world" }) {
           </Link>
           <DailyNavButton />
           <AccountNavSection />
+          <NavSignOutButton />
           <CartDrawer />
+
 
           <button
             type="button"
