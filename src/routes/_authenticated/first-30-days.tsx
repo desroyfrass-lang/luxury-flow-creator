@@ -156,7 +156,7 @@ function First30DaysPage() {
           partnerReady={momentum}
           foundationPct={foundationPct(program)}
           programDay={day}
-          todayMission={focus?.title ?? null}
+          todayMission={focus?.headline ?? null}
         />
 
         {note && (
