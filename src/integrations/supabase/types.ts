@@ -155,9 +155,14 @@ export type Database = {
       }
       affiliate_policy: {
         Row: {
+          affiliate_marketing_activated: boolean
+          approved_brand_partners_available: boolean
+          approved_products_available: boolean
           default_commission_rate: number
           default_min_margin_pct: number
           id: boolean
+          internal_campaigns_ready: boolean
+          marketplace_launched: boolean
           max_commission_rate: number
           min_commission_rate: number
           platform_allocation_rate: number
@@ -168,9 +173,14 @@ export type Database = {
           updated_at: string
         }
         Insert: {
+          affiliate_marketing_activated?: boolean
+          approved_brand_partners_available?: boolean
+          approved_products_available?: boolean
           default_commission_rate?: number
           default_min_margin_pct?: number
           id?: boolean
+          internal_campaigns_ready?: boolean
+          marketplace_launched?: boolean
           max_commission_rate?: number
           min_commission_rate?: number
           platform_allocation_rate?: number
@@ -181,9 +191,14 @@ export type Database = {
           updated_at?: string
         }
         Update: {
+          affiliate_marketing_activated?: boolean
+          approved_brand_partners_available?: boolean
+          approved_products_available?: boolean
           default_commission_rate?: number
           default_min_margin_pct?: number
           id?: boolean
+          internal_campaigns_ready?: boolean
+          marketplace_launched?: boolean
           max_commission_rate?: number
           min_commission_rate?: number
           platform_allocation_rate?: number
