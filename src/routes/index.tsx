@@ -1,20 +1,18 @@
-import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
+import { supabase } from "@/integrations/supabase/client";
 import archHero from "@/assets/frass-gateway-arch.jpg.asset.json";
 import frassyGold from "@/assets/frassy-gold.png.asset.json";
 
 /**
- * FRASS-0923 — The Frass Entrance Experience.
+ * FRASS-0923 / FRASS-0471 — The Frass Entrance Experience.
  *
  * The ceremonial gateway into the Frass ecosystem. Every visitor arrives
- * beneath the arch, Frassy welcomes them once, then shrinks into companion
- * mode, and the visitor chooses commerce (Frass District) or community
- * (the journey into Frass Hill).
+ * beneath the arch, Frassy welcomes them, and the visitor chooses commerce
+ * (Frass District) or community (Frass Hill). This page never auto-redirects:
+ * frasskicks.com is always "Welcome to FrassKicks".
  */
 
-export const SKIP_ENTRANCE_KEY = "frass-skip-entrance";
-/** The welcome renews after an hour away — not on every in-and-out visit. */
-export const ENTRANCE_TTL_MS = 60 * 60 * 1000;
 
 export const Route = createFileRoute("/")({
   head: () => ({
