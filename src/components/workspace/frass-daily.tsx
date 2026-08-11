@@ -85,6 +85,7 @@ import { VoiceFeedbackButton } from "@/components/feedback/voice-feedback";
 import { dailySnapshot, viewerFrom } from "@/lib/finance/financial-center";
 import { FounderOsPanel, FounderTabRail } from "@/components/workspace/founder-os-panel";
 import type { FounderTabId } from "@/lib/workspace/founder-os";
+import { LaunchModeBanner } from "@/components/launch-mode-banner";
 
 
 const ORDER: DailyPriority[] = ["critical", "important", "optional", "completed"];
@@ -293,6 +294,7 @@ export function FrassDaily({
 
 
       <div className={`daily-scroll ${isFounder ? "is-founder-os" : ""}`}>
+        <LaunchModeBanner className="mb-4" />
         <header className="daily-head">
           <div>
             <div className="ws-meta">The Frass Daily</div>

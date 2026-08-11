@@ -17,6 +17,7 @@ import {
 import { PageFeedback } from "@/components/page-feedback";
 import { QuickSellPanel } from "@/components/card/quick-sell";
 import { RequestPaymentPanel } from "@/components/card/request-payment";
+import { LaunchModeBanner, useLaunchMode } from "@/components/launch-mode-banner";
 import { FinancialTimeline } from "@/components/finance/financial-timeline";
 import { listMyReceipts } from "@/lib/finance/receipts.functions";
 
@@ -74,6 +75,8 @@ function WalletHub() {
 
 
   const [section, setSection] = useState<WalletSectionId>("balance");
+  const launchMode = useLaunchMode();
+  const launchPending = !launchMode.paymentsLive;
   const rows = useMemo(() => orders ?? [], [orders]);
   const s = summariseWallet(rows);
   const handle = profile?.handle ?? null;
@@ -110,6 +113,8 @@ function WalletHub() {
           </Link>
         </div>
       </header>
+
+      <LaunchModeBanner />
 
       <nav className="flex flex-wrap gap-2">
         {WALLET_SECTIONS.map((w) => (
@@ -154,11 +159,14 @@ function WalletHub() {
       )}
 
       {(section === "sell" || section === "items") && (
-        <QuickSellPanel provider={card?.payout_provider ?? null} />
+        <QuickSellPanel provider={card?.payout_provider ?? null} launchPending={launchPending} />
       )}
 
       {section === "request" && (
-        <RequestPaymentPanel enabled={Boolean(card?.commerce_enabled && card?.payout_url)} />
+        <RequestPaymentPanel
+          enabled={Boolean(card?.commerce_enabled && card?.payout_url)}
+          launchPending={launchPending}
+        />
       )}
 
       {section === "history" && (
@@ -230,7 +238,7 @@ function WalletHub() {
       )}
 
       {(section === "invoices" || section === "links") && (
-        <PaymentLinkPanel handle={handle} enabled={Boolean(card?.commerce_enabled && card?.payout_url)} invoice={section === "invoices"} />
+        <PaymentLinkPanel handle={handle} enabled={Boolean(card?.commerce_enabled && card?.payout_url) && !launchPending} invoice={section === "invoices"} />
       )}
 
       {section === "taxes" && (

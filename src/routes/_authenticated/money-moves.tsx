@@ -13,6 +13,16 @@ import { getMyProfile } from "@/lib/profiles.functions";
 import { getLaunchState, saveLaunchState } from "@/lib/business/accelerator.functions";
 import { EMPTY_STATE, normalizeState, type LaunchState } from "@/lib/business/accelerator";
 import { EMPTY_PROGRAM, normalizeProgram, todayISO, type ProgramState } from "@/lib/business/launch-program";
+import { LaunchModeBanner, useLaunchMode } from "@/components/launch-mode-banner";
+import {
+  LAUNCH_PREP,
+  allStreamReadiness,
+  launchGreeting,
+  launchPrepPct,
+  normalizeCoaching,
+  overallReadiness,
+  type CoachingNote,
+} from "@/lib/launch-mode";
 import {
   EMPTY_MONEY,
   INCOME_STREAMS,
@@ -78,6 +88,7 @@ function MoneyMovesPage() {
   const [logStream, setLogStream] = useState("affiliate");
   const [logNote, setLogNote] = useState("");
   const [open, setOpen] = useState<string | null>(null);
+  const [coaching, setCoaching] = useState<CoachingNote[]>([]);
   const [hydrated, setHydrated] = useState(false);
   const [note, setNote] = useState<string | null>(null);
 
@@ -89,6 +100,7 @@ function MoneyMovesPage() {
     const m = normalizeMoney(raw['money']);
     setMoney(m);
     setGoalInput(String(m.monthlyGoal || row.data?.income_goal || ""));
+    setCoaching(normalizeCoaching(raw['coaching']));
     setHours(Number(row.data?.hours_per_day ?? 2));
     setHydrated(true);
   }, [row.isSuccess, row.data, hydrated]);
@@ -99,7 +111,7 @@ function MoneyMovesPage() {
     setMoney(nextMoney);
     setLaunch(nextLaunch);
     void save({
-      data: { state: { ...nextLaunch, program, money: nextMoney } as unknown as Record<string, any> },
+      data: { state: { ...nextLaunch, program, money: nextMoney, coaching } as unknown as Record<string, any> },
     }).catch(() => setNote("I couldn't save that just now — it's still on screen, try again in a moment."));
   }
 
@@ -109,6 +121,17 @@ function MoneyMovesPage() {
     [money, row.data?.income_goal],
   );
   const streams = useMemo(() => activeStreams(launch), [launch]);
+  const mode = useLaunchMode();
+  const readiness = useMemo(() => allStreamReadiness(launch, program, money), [launch, program, money]);
+  const overall = overallReadiness(readiness);
+  const prepPct = launchPrepPct(money);
+
+  function togglePrep(id: string) {
+    const list = money.launchPrep.includes(id)
+      ? money.launchPrep.filter((x) => x !== id)
+      : [...money.launchPrep, id];
+    persist({ ...money, launchPrep: list });
+  }
 
   function completeMove(o: Opportunity) {
     const d = todayISO();
@@ -153,10 +176,26 @@ function MoneyMovesPage() {
       <div className="mx-auto w-full max-w-5xl px-4 py-10 md:py-14">
         <p className="text-xs uppercase tracking-[0.3em] text-muted-foreground">Frass Income Operating System</p>
         <h1 className="mt-2 font-display text-3xl uppercase tracking-[0.06em] md:text-4xl">Money Moves</h1>
+        <p className="mt-2 max-w-2xl text-sm">{launchGreeting(name, mode)}</p>
         <p className="mt-2 max-w-2xl text-sm text-muted-foreground">
-          {name}, if you only have {hours} hour{hours === 1 ? "" : "s"} today, this is the work most likely to
+          If you only have {hours} hour{hours === 1 ? "" : "s"} today, this is the work most likely to
           increase your income. Highest value first — and I always tell you why.
         </p>
+
+        <LaunchModeBanner className="mt-5" />
+
+        {coaching.length > 0 && (
+          <section className="mt-5 space-y-2">
+            {[...coaching].reverse().slice(0, 3).map((c) => (
+              <article key={c.id} className="rounded-3xl border border-white/12 bg-white/[0.04] px-5 py-4">
+                <p className="text-[11px] uppercase tracking-[0.18em] text-muted-foreground">
+                  A note from the Founder · {c.about}
+                </p>
+                <p className="mt-1 text-sm">{c.text}</p>
+              </article>
+            ))}
+          </section>
+        )}
 
         {note && <p className="mt-4 rounded-2xl border border-white/12 bg-white/[0.04] px-4 py-3 text-sm">{note}</p>}
 
@@ -386,6 +425,77 @@ function MoneyMovesPage() {
                 ))}
             </ul>
           )}
+        </section>
+
+        {/* Launch readiness */}
+        <section className="mt-8 rounded-3xl border border-white/12 bg-white/[0.03] p-6">
+          <div className="flex flex-wrap items-baseline justify-between gap-2">
+            <h2 className="font-display text-lg uppercase tracking-[0.06em]">Launch readiness</h2>
+            <span className="font-display text-2xl">{overall}% ready</span>
+          </div>
+          <p className="mt-1 text-xs text-muted-foreground">
+            {mode.paymentsLive
+              ? "Payments are live. Readiness now tracks how well each business is set up to keep selling."
+              : "The goal is 100% before launch day. Every move you make now moves one of these bars."}
+          </p>
+          <div className="mt-4 space-y-3">
+            {readiness.map((r) => (
+              <div key={r.stream.id}>
+                <div className="flex justify-between text-sm">
+                  <span>
+                    {r.stream.emoji} {r.stream.label}
+                  </span>
+                  <span className="text-muted-foreground">{r.pct}% Ready</span>
+                </div>
+                <div className="mt-1">
+                  <Bar pct={r.pct} />
+                </div>
+                <p className="mt-1 text-[11px] text-muted-foreground">
+                  {r.parts.map((p) => `${p.label} ${p.pct}%`).join(" · ")}
+                </p>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* Launch preparation */}
+        <section className="mt-6 rounded-3xl border border-white/12 bg-white/[0.03] p-6">
+          <div className="flex flex-wrap items-baseline justify-between gap-2">
+            <h2 className="font-display text-lg uppercase tracking-[0.06em]">Ready for day one</h2>
+            <span className="text-sm text-muted-foreground">{prepPct}% prepared</span>
+          </div>
+          <p className="mt-1 text-xs text-muted-foreground">
+            On launch day you shouldn't begin building — you should begin earning. Tick these off before then.
+          </p>
+          <ul className="mt-4 grid gap-2 md:grid-cols-2">
+            {LAUNCH_PREP.map((t) => {
+              const done = money.launchPrep.includes(t.id);
+              return (
+                <li key={t.id} className="rounded-2xl bg-black/20 p-3">
+                  <button
+                    type="button"
+                    onClick={() => togglePrep(t.id)}
+                    className="flex w-full items-start gap-3 text-left"
+                  >
+                    <span
+                      className={`mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full border ${done ? "border-[color:var(--gold,#d4af37)] bg-[color:var(--gold,#d4af37)] text-black" : "border-white/25"}`}
+                    >
+                      {done && <Check className="h-3 w-3" />}
+                    </span>
+                    <span>
+                      <span className="text-sm">{t.label}</span>
+                      <span className="mt-0.5 block text-[11px] text-muted-foreground">{t.why}</span>
+                    </span>
+                  </button>
+                  {t.href && (
+                    <a href={t.href} className="mt-2 inline-block text-[11px] underline text-muted-foreground">
+                      Open it
+                    </a>
+                  )}
+                </li>
+              );
+            })}
+          </ul>
         </section>
 
         {/* The ecosystem */}

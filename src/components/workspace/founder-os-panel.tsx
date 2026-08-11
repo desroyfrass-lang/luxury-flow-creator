@@ -19,6 +19,7 @@ import {
   type FounderTabId,
 } from "@/lib/workspace/founder-os";
 import { FinancialAuditDashboard } from "@/components/finance/audit-dashboard";
+import { PartnerProgressTab } from "@/components/workspace/partner-progress-tab";
 
 export function FounderTabRail({
   tab,
@@ -65,6 +66,8 @@ export function FounderOsPanel({
 
       {tab === "audit" ? (
         <FinancialAuditDashboard />
+      ) : tab === "partners" ? (
+        <PartnerProgressTab />
       ) : tab === "platform" ? (
         <PlatformAuditTab onNavigate={onNavigate} />
       ) : tab === "decisions" ? (

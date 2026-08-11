@@ -19,6 +19,7 @@ export type FounderTabId =
   | "notes"
   | "registry"
   | "platform"
+  | "partners"
   | "audit";
 
 export type FounderTab = {
@@ -47,6 +48,13 @@ export const FOUNDER_TABS: FounderTab[] = [
   { id: "decisions", label: "Decisions", icon: "🗂", blurb: "Everything decided, searchable." },
   { id: "notes", label: "Notes", icon: "✎", blurb: "Your own thinking, kept." },
   { id: "registry", label: "Registry", icon: "📜", blurb: "The constitution and its components." },
+  {
+    id: "partners",
+    label: "Partner Progress",
+    icon: "👥",
+    blurb: "Every partner's launch readiness and today's Money Moves.",
+    founderOnly: true,
+  },
   { id: "platform", label: "Platform Audit", icon: "🏛", blurb: "Is the platform itself healthy?" },
   {
     id: "audit",

@@ -9,6 +9,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { ArrowRight, Check, Clock, Sparkles } from "lucide-react";
 import { SiteShell } from "@/components/site-shell";
+import { LaunchModeBanner } from "@/components/launch-mode-banner";
 import { getMyProfile } from "@/lib/profiles.functions";
 import { getLaunchState, saveLaunchState } from "@/lib/business/accelerator.functions";
 import { EMPTY_STATE, normalizeState, type LaunchState } from "@/lib/business/accelerator";
@@ -139,6 +140,9 @@ function First30DaysPage() {
 
   return (
     <SiteShell>
+      <div className="mx-auto max-w-5xl px-4 pt-6">
+        <LaunchModeBanner />
+      </div>
       <div className="mx-auto w-full max-w-5xl px-4 py-10 md:py-14">
         <p className="text-xs uppercase tracking-[0.3em] text-muted-foreground">Frass Partner Launch Program</p>
         <h1 className="mt-2 font-display text-3xl uppercase tracking-[0.06em] md:text-4xl">First 30 Days</h1>
