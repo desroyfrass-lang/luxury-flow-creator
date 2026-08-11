@@ -177,6 +177,7 @@ import { Route as AuthenticatedAdminPartnerVendorsRouteImport } from './routes/_
 import { Route as AuthenticatedAdminNewsroomRouteImport } from './routes/_authenticated/admin.newsroom'
 import { Route as AuthenticatedAdminMediaRouteImport } from './routes/_authenticated/admin.media'
 import { Route as AuthenticatedAdminLinkCheckRouteImport } from './routes/_authenticated/admin.link-check'
+import { Route as AuthenticatedAdminLaunchPartnersRouteImport } from './routes/_authenticated/admin.launch-partners'
 import { Route as AuthenticatedAdminLaunchFeedbackRouteImport } from './routes/_authenticated/admin.launch-feedback'
 import { Route as AuthenticatedAdminImagesRouteImport } from './routes/_authenticated/admin.images'
 import { Route as AuthenticatedAdminFinancialAuditRouteImport } from './routes/_authenticated/admin.financial-audit'
@@ -1066,6 +1067,12 @@ const AuthenticatedAdminLinkCheckRoute =
     path: '/link-check',
     getParentRoute: () => AuthenticatedAdminRoute,
   } as any)
+const AuthenticatedAdminLaunchPartnersRoute =
+  AuthenticatedAdminLaunchPartnersRouteImport.update({
+    id: '/launch-partners',
+    path: '/launch-partners',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
 const AuthenticatedAdminLaunchFeedbackRoute =
   AuthenticatedAdminLaunchFeedbackRouteImport.update({
     id: '/launch-feedback',
@@ -1293,6 +1300,7 @@ export interface FileRoutesByFullPath {
   '/admin/financial-audit': typeof AuthenticatedAdminFinancialAuditRoute
   '/admin/images': typeof AuthenticatedAdminImagesRoute
   '/admin/launch-feedback': typeof AuthenticatedAdminLaunchFeedbackRoute
+  '/admin/launch-partners': typeof AuthenticatedAdminLaunchPartnersRoute
   '/admin/link-check': typeof AuthenticatedAdminLinkCheckRoute
   '/admin/media': typeof AuthenticatedAdminMediaRoute
   '/admin/newsroom': typeof AuthenticatedAdminNewsroomRoute
@@ -1455,6 +1463,7 @@ export interface FileRoutesByTo {
   '/admin/financial-audit': typeof AuthenticatedAdminFinancialAuditRoute
   '/admin/images': typeof AuthenticatedAdminImagesRoute
   '/admin/launch-feedback': typeof AuthenticatedAdminLaunchFeedbackRoute
+  '/admin/launch-partners': typeof AuthenticatedAdminLaunchPartnersRoute
   '/admin/link-check': typeof AuthenticatedAdminLinkCheckRoute
   '/admin/media': typeof AuthenticatedAdminMediaRoute
   '/admin/newsroom': typeof AuthenticatedAdminNewsroomRoute
@@ -1641,6 +1650,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/financial-audit': typeof AuthenticatedAdminFinancialAuditRoute
   '/_authenticated/admin/images': typeof AuthenticatedAdminImagesRoute
   '/_authenticated/admin/launch-feedback': typeof AuthenticatedAdminLaunchFeedbackRoute
+  '/_authenticated/admin/launch-partners': typeof AuthenticatedAdminLaunchPartnersRoute
   '/_authenticated/admin/link-check': typeof AuthenticatedAdminLinkCheckRoute
   '/_authenticated/admin/media': typeof AuthenticatedAdminMediaRoute
   '/_authenticated/admin/newsroom': typeof AuthenticatedAdminNewsroomRoute
@@ -1827,6 +1837,7 @@ export interface FileRouteTypes {
     | '/admin/financial-audit'
     | '/admin/images'
     | '/admin/launch-feedback'
+    | '/admin/launch-partners'
     | '/admin/link-check'
     | '/admin/media'
     | '/admin/newsroom'
@@ -1989,6 +2000,7 @@ export interface FileRouteTypes {
     | '/admin/financial-audit'
     | '/admin/images'
     | '/admin/launch-feedback'
+    | '/admin/launch-partners'
     | '/admin/link-check'
     | '/admin/media'
     | '/admin/newsroom'
@@ -2174,6 +2186,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/financial-audit'
     | '/_authenticated/admin/images'
     | '/_authenticated/admin/launch-feedback'
+    | '/_authenticated/admin/launch-partners'
     | '/_authenticated/admin/link-check'
     | '/_authenticated/admin/media'
     | '/_authenticated/admin/newsroom'
@@ -3464,6 +3477,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminLinkCheckRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
+    '/_authenticated/admin/launch-partners': {
+      id: '/_authenticated/admin/launch-partners'
+      path: '/launch-partners'
+      fullPath: '/admin/launch-partners'
+      preLoaderRoute: typeof AuthenticatedAdminLaunchPartnersRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
     '/_authenticated/admin/launch-feedback': {
       id: '/_authenticated/admin/launch-feedback'
       path: '/launch-feedback'
@@ -3584,6 +3604,7 @@ interface AuthenticatedAdminRouteChildren {
   AuthenticatedAdminFinancialAuditRoute: typeof AuthenticatedAdminFinancialAuditRoute
   AuthenticatedAdminImagesRoute: typeof AuthenticatedAdminImagesRoute
   AuthenticatedAdminLaunchFeedbackRoute: typeof AuthenticatedAdminLaunchFeedbackRoute
+  AuthenticatedAdminLaunchPartnersRoute: typeof AuthenticatedAdminLaunchPartnersRoute
   AuthenticatedAdminLinkCheckRoute: typeof AuthenticatedAdminLinkCheckRoute
   AuthenticatedAdminMediaRoute: typeof AuthenticatedAdminMediaRoute
   AuthenticatedAdminNewsroomRoute: typeof AuthenticatedAdminNewsroomRoute
@@ -3609,6 +3630,7 @@ const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
   AuthenticatedAdminFinancialAuditRoute: AuthenticatedAdminFinancialAuditRoute,
   AuthenticatedAdminImagesRoute: AuthenticatedAdminImagesRoute,
   AuthenticatedAdminLaunchFeedbackRoute: AuthenticatedAdminLaunchFeedbackRoute,
+  AuthenticatedAdminLaunchPartnersRoute: AuthenticatedAdminLaunchPartnersRoute,
   AuthenticatedAdminLinkCheckRoute: AuthenticatedAdminLinkCheckRoute,
   AuthenticatedAdminMediaRoute: AuthenticatedAdminMediaRoute,
   AuthenticatedAdminNewsroomRoute: AuthenticatedAdminNewsroomRoute,
