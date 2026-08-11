@@ -56,8 +56,13 @@ export const createPaymentRequest = createServerFn({ method: "POST" })
         .parse(d),
   )
   .handler(async ({ context, data }) => {
+    // FRASS-0476 — nothing new starts while the Founder has the platform frozen.
+    const { assertPlatformOpen } = await import("@/lib/platform-protection.server");
+    await assertPlatformOpen(context.supabase as never, "payments");
+
     // FRASS-0439 — requests do not live forever.
     const { assertWithinRule } = await import("@/lib/finance/guardrails.server");
+
     const amount = await assertWithinRule(
       "paymentRequestAmount",
       data.amount,
@@ -232,6 +237,16 @@ export const approvePaymentRequest = createServerFn({ method: "POST" })
   )
   .handler(async ({ data }) => {
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+
+    // FRASS-0476 — no money moves while Platform Protection Mode holds payments.
+    const { readProtection } = await import("@/lib/platform-protection.server");
+    const { isPaused, pausedMessage } = await import("@/lib/platform-protection");
+    const protection = await readProtection(supabaseAdmin as never);
+    if (isPaused(protection, "payments")) {
+      return { ok: false as const, reason: pausedMessage("payments") };
+    }
+
+
 
     const { data: req } = await supabaseAdmin
       .from("payment_requests")

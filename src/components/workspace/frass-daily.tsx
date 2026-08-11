@@ -86,6 +86,13 @@ import { dailySnapshot, viewerFrom } from "@/lib/finance/financial-center";
 import { FounderOsPanel, FounderTabRail } from "@/components/workspace/founder-os-panel";
 import type { FounderTabId } from "@/lib/workspace/founder-os";
 import { LaunchModeBanner } from "@/components/launch-mode-banner";
+// FRASS-0476 — the Founder never has to remember to open the Security Center.
+import { listSecurityAlerts } from "@/lib/finance/security-alerts.functions";
+import { getPlatformHealth } from "@/lib/platform-health.functions";
+import { getPlatformProtection } from "@/lib/platform-protection.functions";
+import { securityBriefing } from "@/lib/security/briefing";
+import type { TieredEvent } from "@/lib/security/triage";
+
 
 
 const ORDER: DailyPriority[] = ["critical", "important", "optional", "completed"];
