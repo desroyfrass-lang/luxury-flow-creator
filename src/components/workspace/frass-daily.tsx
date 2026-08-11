@@ -184,6 +184,41 @@ export function FrassDaily({
   const fetchWallet = useServerFn(getWallet);
   const wallet = useQuery({ queryKey: ["studio-wallet"], queryFn: () => fetchWallet(), staleTime: 60_000 });
 
+  /**
+   * FRASS-0476 — Founder Daily Integration. One sentence each morning about
+   * overnight security and platform health, so the Founder never has to wonder.
+   */
+  const alertsFn = useServerFn(listSecurityAlerts);
+  const healthFn = useServerFn(getPlatformHealth);
+  const protectionFn = useServerFn(getPlatformProtection);
+  const secAlerts = useQuery({
+    queryKey: ["admin", "security-alerts"],
+    queryFn: () => alertsFn(),
+    enabled: isFounder,
+    staleTime: 120_000,
+  });
+  const secHealth = useQuery({
+    queryKey: ["admin", "platform-health"],
+    queryFn: () => healthFn(),
+    enabled: isFounder,
+    staleTime: 120_000,
+  });
+  const secProtection = useQuery({
+    queryKey: ["admin", "platform-protection"],
+    queryFn: () => protectionFn(),
+    enabled: isFounder,
+    staleTime: 120_000,
+  });
+  const securityLine = useMemo(() => {
+    if (!isFounder || !secAlerts.data) return null;
+    return securityBriefing(
+      (secAlerts.data ?? []) as unknown as TieredEvent[],
+      secHealth.data?.checks ?? [],
+      secProtection.data ?? undefined,
+    );
+  }, [isFounder, secAlerts.data, secHealth.data?.checks, secProtection.data]);
+
+
 
   /** No dead information — every item resolves to the records behind it. */
   const go = (target: DailyTarget) => {
