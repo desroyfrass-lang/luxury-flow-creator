@@ -5,7 +5,6 @@ import { useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
 import { SiteShell } from "@/components/site-shell";
 import { PageFeedback } from "@/components/page-feedback";
-import { LaunchDashboard } from "@/components/launch-dashboard";
 import {
   BUSINESS_ROLES,
   getMyBusinessRoles,
@@ -153,9 +152,7 @@ function WorkspacePage() {
           </form>
         ) : (
           <div className="mt-12 space-y-3">
-            {/* FRASS-0463 — launch countdown sits at the top of the partner dashboard. */}
-            <LaunchDashboard />
-            <div className="pt-6 text-center text-[10px] uppercase tracking-[0.3em] text-[color:var(--gold)]">
+            <div className="text-center text-[10px] uppercase tracking-[0.3em] text-[color:var(--gold)]">
               Choose your workspace
             </div>
 
