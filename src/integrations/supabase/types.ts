@@ -3518,6 +3518,60 @@ export type Database = {
         }
         Relationships: []
       }
+      security_alerts: {
+        Row: {
+          allowed_max: number | null
+          allowed_min: number | null
+          attempted_value: number | null
+          category: string
+          context: Json
+          created_at: string
+          detail: string | null
+          enforced_value: number | null
+          halted: boolean
+          id: string
+          plain_english: string | null
+          rule: string
+          severity: string
+          surface: string
+          user_id: string | null
+        }
+        Insert: {
+          allowed_max?: number | null
+          allowed_min?: number | null
+          attempted_value?: number | null
+          category?: string
+          context?: Json
+          created_at?: string
+          detail?: string | null
+          enforced_value?: number | null
+          halted?: boolean
+          id?: string
+          plain_english?: string | null
+          rule: string
+          severity?: string
+          surface: string
+          user_id?: string | null
+        }
+        Update: {
+          allowed_max?: number | null
+          allowed_min?: number | null
+          attempted_value?: number | null
+          category?: string
+          context?: Json
+          created_at?: string
+          detail?: string | null
+          enforced_value?: number | null
+          halted?: boolean
+          id?: string
+          plain_english?: string | null
+          rule?: string
+          severity?: string
+          surface?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       site_images: {
         Row: {
           alt: string | null

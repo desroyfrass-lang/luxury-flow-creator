@@ -243,7 +243,17 @@ export const validateCoupon = createServerFn({ method: "POST" })
       .maybeSingle();
     if (!row) return { valid: false as const, reason: "Coupon not found for your account" };
     if (row.redeemed_at) return { valid: false as const, reason: "Coupon already used" };
-    return { valid: true as const, percentOff: row.percent_off };
+    // FRASS-0474 — the 40% ceiling is re-applied at the moment of use, so a
+    // discount can never exceed the Welcome Journey maximum.
+    const { clampAndLog } = await import("@/lib/finance/guardrails.server");
+    const percentOff = await clampAndLog(
+      "couponDiscountPct",
+      row.percent_off,
+      "rewards.validateCoupon",
+      userId,
+      { code: row.code },
+    );
+    return { valid: true as const, percentOff };
   });
 
 export const getOrderCount = createServerFn({ method: "GET" })

@@ -8,6 +8,7 @@ import { useServerFn } from "@tanstack/react-start";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Loader2, MessageSquare, Power } from "lucide-react";
 import { toast } from "sonner";
+import { SecurityAlertsPanel } from "@/components/finance/security-alerts-panel";
 import {
   categoryLabel,
   FEEDBACK_CATEGORIES,
@@ -103,6 +104,13 @@ function LaunchFeedbackCenter() {
           {program?.enabled ? "Program open — close it" : "Program closed — open it"}
         </button>
       </div>
+
+      {/* FRASS-0474 — blocked financial attempts sit beside launch feedback. */}
+      <div className="mb-8">
+        <SecurityAlertsPanel />
+      </div>
+
+
 
       {themeCounts.length > 0 && (
         <div className="mb-6 flex flex-wrap gap-2">

@@ -130,8 +130,11 @@ export function progressOf(
     estimatedMinutes: remaining * MINUTES_PER_PIECE,
     launchReady,
     sentence: launchReady
-      ? `${published} pieces published. The boutique is launch ready.`
-      : `${published} of ${target || "—"} pieces published.`,
+      ? `${published} pieces published · The boutique is launch ready.`
+      : `${published} of ${target || "—"} pieces published · Today's Goal: ${
+          remaining || DAILY_GOAL
+        } ${remaining === 1 ? "piece" : "pieces"} (${(remaining || DAILY_GOAL) * MINUTES_PER_PIECE} min)`,
+
   };
 }
 

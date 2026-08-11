@@ -144,12 +144,25 @@ export const saveProductEconomics = createServerFn({ method: "POST" })
     const requested = data.commission_rate == null ? null : num(data.commission_rate);
     const enabled = Boolean(data.affiliate_enabled) && analysis.viable;
     payload["affiliate_enabled"] = enabled;
-    payload["commission_rate"] =
-      enabled && requested != null
-        ? Math.min(Math.max(requested, 0), analysis.maxRate)
-        : enabled
-          ? analysis.recommendedRate
-          : null;
+    let storedRate: number | null = null;
+    if (enabled && requested != null) {
+      storedRate = Math.min(Math.max(requested, 0), analysis.maxRate);
+      if (storedRate !== requested) {
+        // FRASS-0474 — an out-of-bounds rate is pulled back to the sustainable
+        // maximum and the attempt is left in the Founder's security log.
+        const { clampAndLog } = await import("@/lib/finance/guardrails.server");
+        await clampAndLog(
+          "affiliateCommissionPct",
+          requested,
+          "affiliate.saveProductEconomics",
+          context.userId,
+          { maxRate: analysis.maxRate, stored: storedRate },
+        );
+      }
+    } else if (enabled) {
+      storedRate = analysis.recommendedRate;
+    }
+    payload["commission_rate"] = storedRate;
 
     const { data: row, error } = await sb
       .from("product_economics")

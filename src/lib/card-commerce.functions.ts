@@ -38,6 +38,16 @@ export const createListing = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((d: z.input<typeof ListingInput>) => ListingInput.parse(d))
   .handler(async ({ context, data }) => {
+    // FRASS-0474 — a price is money, so it is verified, not accepted.
+    const { assertWithinRule } = await import("@/lib/finance/guardrails.server");
+    const price = await assertWithinRule(
+      "listingPrice",
+      data.price,
+      "card-commerce.createListing",
+      context.userId,
+      { title: data.title, kind: data.kind },
+    );
+
     const { data: row, error } = await context.supabase
       .from("card_listings")
       .insert({
@@ -46,7 +56,7 @@ export const createListing = createServerFn({ method: "POST" })
         title: data.title,
         description: data.description ?? null,
         image_url: data.image_url ?? null,
-        price: data.price,
+        price,
         currency: data.currency.toUpperCase(),
         quantity: data.quantity ?? null,
         is_quick_sell: data.is_quick_sell ?? false,
@@ -256,7 +266,15 @@ export const startCardPayment = createServerFn({ method: "POST" })
       return { ok: false as const, reason: "This member has not switched on payments yet." };
     }
 
-    const s = settle(data.amount, 1, card.payout_provider);
+    const { assertWithinRule: assertAmount } = await import("@/lib/finance/guardrails.server");
+    const amount = await assertAmount(
+      "paymentRequestAmount",
+      data.amount,
+      "card-commerce.startCardPayment",
+      null,
+      { handle: data.handle },
+    );
+    const s = settle(amount, 1, card.payout_provider);
     const reference = `${data.kind}${data.note ? `: ${data.note}` : ""}`.slice(0, 240);
 
     const { data: order, error } = await supabaseAdmin
