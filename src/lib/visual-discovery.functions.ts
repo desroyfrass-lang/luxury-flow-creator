@@ -163,9 +163,14 @@ export const runVisualSearch = createServerFn({ method: "POST" })
   .inputValidator((i: unknown) => SearchInput.parse(i))
   .handler(async ({ data, context }) => {
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { assertStoredImage } = await import("@/lib/uploads.server");
     const { embedImage, analyzeImageAttributes, toPgVector } = await import(
       "@/lib/visual-embed.server"
     );
+
+    // FRASS-0473 — the object must belong to this member and genuinely be an
+    // accepted photo within our size limit before anything is signed or analysed.
+    await assertStoredImage("visual-uploads", data.storage_path, context.userId);
 
     // Signed URL for the private upload (short-lived, server-only)
     const { data: signed, error: signErr } = await supabaseAdmin.storage

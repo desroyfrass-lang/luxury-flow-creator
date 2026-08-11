@@ -4,6 +4,7 @@ import { useMutation } from "@tanstack/react-query";
 import { useRef, useState } from "react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
+import { assertImageFile, IMAGE_ACCEPT } from "@/lib/uploads";
 import { SiteShell } from "@/components/site-shell";
 import { runVisualSearch, type VisualMatch } from "@/lib/visual-discovery.functions";
 
@@ -46,8 +47,10 @@ function VisualSearchPage() {
   });
 
   const onPick = async (file: File) => {
-    if (file.size > 10 * 1024 * 1024) {
-      toast.error("Image is too large. Please choose one under 10 MB.");
+    try {
+      assertImageFile(file);
+    } catch (e) {
+      toast.error((e as Error).message);
       return;
     }
     setUploading(true);
@@ -138,7 +141,7 @@ function VisualSearchPage() {
             id="visual-upload"
             ref={inputRef}
             type="file"
-            accept="image/*"
+            accept={IMAGE_ACCEPT}
             className="hidden"
             onChange={(e) => {
               const f = e.target.files?.[0];

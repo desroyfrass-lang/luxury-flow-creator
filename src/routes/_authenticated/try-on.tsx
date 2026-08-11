@@ -3,6 +3,7 @@ import { useRef, useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { supabase } from "@/integrations/supabase/client";
+import { assertImageFile, IMAGE_ACCEPT } from "@/lib/uploads";
 import { SiteShell } from "@/components/site-shell";
 import { useCartStore } from "@/lib/cart-store";
 import { useCustomerPhotos, useTryOnLooks, type CustomerPhoto } from "@/hooks/use-tryon";
@@ -23,6 +24,7 @@ export const Route = createFileRoute("/_authenticated/try-on")({
 const SIGNED_EXPIRY = 60 * 60 * 24 * 365;
 
 async function uploadPhoto(file: File, userId: string): Promise<string> {
+  assertImageFile(file);
   const ext = file.name.split(".").pop()?.toLowerCase() ?? "jpg";
   const path = `${userId}/source/${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${ext}`;
   const { error: upErr } = await supabase.storage
@@ -190,7 +192,7 @@ function TryOnPage() {
               <input
                 ref={fileRef}
                 type="file"
-                accept="image/*"
+                accept={IMAGE_ACCEPT}
                 capture="environment"
                 className="hidden"
                 onChange={(e) => {

@@ -12,6 +12,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
+import { assertMediaFile } from "@/lib/uploads";
 import { startWavRecording, type WavRecorder } from "@/lib/voice/wav-recorder";
 import {
   CONSENT_POINTS,
@@ -39,6 +40,7 @@ function useProgramOpen() {
 }
 
 async function uploadFile(userId: string, file: Blob, name: string): Promise<string> {
+  if (file instanceof File) assertMediaFile(file, 25 * 1024 * 1024);
   const path = `${userId}/${Date.now()}-${name.replace(/[^\w.\-]+/g, "_")}`;
   const { error } = await supabase.storage
     .from(LAUNCH_FEEDBACK_BUCKET)
