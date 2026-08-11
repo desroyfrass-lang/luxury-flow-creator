@@ -384,7 +384,9 @@ export function GatewayNav({ mode }: { mode: "shop" | "world" }) {
               )}
             </div>
           ))}
+          <DrawerAccountLinks />
         </nav>
+
       )}
     </header>
   );

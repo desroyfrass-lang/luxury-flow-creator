@@ -127,7 +127,7 @@ function Header() {
             ))}
           </div>
           <button
-            className="hidden md:inline-flex h-10 w-10 items-center justify-center rounded-full border border-border bg-background/70 backdrop-blur hover:border-[color:var(--gold)] transition"
+            className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-border bg-background/70 backdrop-blur hover:border-[color:var(--gold)] transition"
             aria-label="Search"
           >
             <Search className="h-4 w-4" />
@@ -215,7 +215,7 @@ function BuilderAccountMenu({ hasWorkspace, isAdmin }: { hasWorkspace: boolean; 
       <Link
         to="/auth"
         search={{ next: "" }}
-        className="hidden md:inline-flex h-10 w-10 items-center justify-center rounded-full border border-border bg-background/70 backdrop-blur hover:border-[color:var(--gold)] transition"
+        className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-border bg-background/70 backdrop-blur hover:border-[color:var(--gold)] transition"
         aria-label="Sign in"
       >
         <User className="h-4 w-4" />
@@ -227,7 +227,7 @@ function BuilderAccountMenu({ hasWorkspace, isAdmin }: { hasWorkspace: boolean; 
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <button
-          className="hidden md:inline-flex h-10 w-10 items-center justify-center rounded-full border border-border bg-background/70 backdrop-blur hover:border-[color:var(--gold)] transition"
+          className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-border bg-background/70 backdrop-blur hover:border-[color:var(--gold)] transition"
           aria-label="Account menu"
         >
           <User className="h-4 w-4" />
