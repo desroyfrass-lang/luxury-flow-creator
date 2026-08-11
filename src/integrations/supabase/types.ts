@@ -1734,6 +1734,51 @@ export type Database = {
         }
         Relationships: []
       }
+      future_business_vaults: {
+        Row: {
+          activated_at: string | null
+          created_at: string
+          emoji: string
+          id: string
+          key: string
+          label: string
+          notes: string | null
+          rationale: string | null
+          status: string
+          summary: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          activated_at?: string | null
+          created_at?: string
+          emoji?: string
+          id?: string
+          key: string
+          label: string
+          notes?: string | null
+          rationale?: string | null
+          status?: string
+          summary?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          activated_at?: string | null
+          created_at?: string
+          emoji?: string
+          id?: string
+          key?: string
+          label?: string
+          notes?: string | null
+          rationale?: string | null
+          status?: string
+          summary?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       launch_program_settings: {
         Row: {
           enabled: boolean
