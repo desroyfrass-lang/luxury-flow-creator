@@ -410,6 +410,32 @@ export function FrassDaily({
                 <li key={l}>{l}</li>
               ))}
             </ul>
+            {/* FRASS-0476 — the overnight security sentence, Founder only. */}
+            {securityLine && (
+              <div
+                className={`mt-3 rounded-sm border p-3 ${
+                  securityLine.needsAttention
+                    ? "border-destructive/50 bg-destructive/10"
+                    : "border-emerald-500/30 bg-emerald-500/10"
+                }`}
+              >
+                <span className="ws-meta">Overnight · Security &amp; Platform</span>
+                <p className="mt-1 text-sm">{securityLine.sentence}</p>
+                {securityLine.needsAttention && (
+                  <button
+                    type="button"
+                    className="ws-chip mt-2"
+                    onClick={() => {
+                      onNavigate?.(securityLine.href);
+                      onDismiss();
+                    }}
+                  >
+                    Open the Security Center
+                  </button>
+                )}
+              </div>
+            )}
+
             <div className="daily-brief-card-actions">
               <button type="button" className="daily-enter" onClick={() => setBriefOpen(false)}>
                 Ready to begin
