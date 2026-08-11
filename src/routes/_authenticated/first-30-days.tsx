@@ -10,6 +10,7 @@ import { useServerFn } from "@tanstack/react-start";
 import { ArrowRight, Check, Clock, Sparkles } from "lucide-react";
 import { SiteShell } from "@/components/site-shell";
 import { LaunchModeBanner } from "@/components/launch-mode-banner";
+import { LaunchDashboard } from "@/components/launch-dashboard";
 import { getMyProfile } from "@/lib/profiles.functions";
 import { getLaunchState, saveLaunchState } from "@/lib/business/accelerator.functions";
 import { EMPTY_STATE, normalizeState, type LaunchState } from "@/lib/business/accelerator";
@@ -149,6 +150,14 @@ function First30DaysPage() {
         <p className="mt-2 max-w-2xl text-sm text-muted-foreground">
           Day {Math.min(day, PROGRAM_DAYS)} of {PROGRAM_DAYS} · {week.label} — {week.objective}. {week.focus}
         </p>
+
+        <LaunchDashboard
+          className="mt-6"
+          partnerReady={momentum}
+          foundationPct={foundationPct(program)}
+          programDay={day}
+          todayMission={focus?.title ?? null}
+        />
 
         {note && (
           <p className="mt-4 rounded-2xl border border-white/12 bg-white/[0.04] px-4 py-3 text-sm">{note}</p>
