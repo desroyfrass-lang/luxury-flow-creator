@@ -5,6 +5,7 @@ import { toast } from "sonner";
 import { Check, Sparkles } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { SiteShell } from "@/components/site-shell";
+import { PasswordField, passwordIsValid } from "@/components/password-field";
 import { provisionFrassHill, type ProvisionResult } from "@/lib/partners.functions";
 import { arrivalScript, designationMeta } from "@/lib/partners";
 
@@ -47,13 +48,17 @@ function JoinHill() {
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!passwordIsValid(password)) {
+      toast.error("Please meet every password requirement listed under the field.");
+      return;
+    }
     setBusy(true);
     try {
       const { data, error } = await supabase.auth.signUp({
         email,
         password,
         options: {
-          emailRedirectTo: window.location.origin + "/join/frass-hill",
+          emailRedirectTo: window.location.origin + "/welcome",
           data: { display_name: name },
         },
       });
@@ -135,15 +140,7 @@ function JoinHill() {
               placeholder="Email"
               className="w-full rounded-sm border border-border bg-background/60 px-4 py-3 text-sm outline-none focus:border-[color:var(--gold)]"
             />
-            <input
-              type="password"
-              required
-              minLength={8}
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="Password (8+ characters)"
-              className="w-full rounded-sm border border-border bg-background/60 px-4 py-3 text-sm outline-none focus:border-[color:var(--gold)]"
-            />
+            <PasswordField value={password} onChange={setPassword} placeholder="Choose a password" />
             <button
               type="submit"
               disabled={busy}

@@ -3,6 +3,7 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { SiteShell } from "@/components/site-shell";
+import { PasswordField, passwordIsValid } from "@/components/password-field";
 
 /**
  * FRASS-0456 — The Frass Kicks Welcome Hall (shopping door).
@@ -39,6 +40,10 @@ function JoinKicks() {
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!passwordIsValid(password)) {
+      toast.error("Please meet every password requirement listed under the field.");
+      return;
+    }
     setBusy(true);
     const { data, error } = await supabase.auth.signUp({
       email,
@@ -89,15 +94,7 @@ function JoinKicks() {
               placeholder="Email"
               className="w-full rounded-sm border border-border bg-background/60 px-4 py-3 text-sm outline-none focus:border-[color:var(--gold)]"
             />
-            <input
-              type="password"
-              required
-              minLength={8}
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="Password (8+ characters)"
-              className="w-full rounded-sm border border-border bg-background/60 px-4 py-3 text-sm outline-none focus:border-[color:var(--gold)]"
-            />
+            <PasswordField value={password} onChange={setPassword} placeholder="Choose a password" />
             <button
               type="submit"
               disabled={busy}
