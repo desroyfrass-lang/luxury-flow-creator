@@ -108,7 +108,7 @@ export const INCOME_STREAMS: IncomeStream[] = [
     reinforces: ["faceless", "affiliate"],
     surfaces: [
       { label: "Marketplace", href: "/marketplace" },
-      { label: "FV Studios", href: "/studios" },
+      { label: "FV Studios", href: "/studio" },
       { label: "Wallet", href: "/workspace/wallet" },
     ],
   },
@@ -125,7 +125,7 @@ export const INCOME_STREAMS: IncomeStream[] = [
     ],
     reinforces: ["affiliate", "coco-vintage", "wellness", "podcast"],
     surfaces: [
-      { label: "FV Studios", href: "/studios" },
+      { label: "FV Studios", href: "/studio" },
       { label: "Frass Link", href: "/workspace/link" },
     ],
   },
@@ -154,8 +154,8 @@ export const INCOME_STREAMS: IncomeStream[] = [
     objectives: ["Authority", "Trust", "Audience", "Community", "Future sponsorships"],
     reinforces: ["wellness", "faceless"],
     surfaces: [
-      { label: "Frass Radio", href: "/radio" },
-      { label: "FV Studios", href: "/studios" },
+      { label: "Frass Radio", href: "/frass-radio" },
+      { label: "FV Studios", href: "/studio" },
       { label: "Brand Partnerships", href: "/brand-partnerships" },
     ],
   },
