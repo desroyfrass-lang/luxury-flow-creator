@@ -2,6 +2,7 @@ import { Link, useRouterState } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { Search, KeyRound, Menu, X, UserRound, Sun } from "lucide-react";
 import { useAccountSection, useMyRoles } from "@/hooks/use-my-roles";
+import { SignOutButton } from "@/components/secure-sign-out";
 import { openTheDaily } from "@/components/workspace/daily-gate";
 
 import { GoLiveButton } from "./live/live-status";
@@ -467,6 +468,12 @@ function AccountNavSection() {
               )}
             </Link>
           ))}
+          <div className="mt-1 border-t border-border/50 pt-1">
+            <SignOutButton
+              label="Sign out securely"
+              className="block w-full rounded-sm px-3 py-2 text-left text-[10px] uppercase tracking-[0.2em] text-muted-foreground transition hover:bg-foreground/5 hover:text-foreground"
+            />
+          </div>
         </div>
       )}
     </div>
@@ -520,6 +527,10 @@ function DrawerAccountLinks() {
             {i.label}
           </Link>
         ))}
+        <SignOutButton
+          label="Sign out securely"
+          className="mt-1 text-left text-[10px] uppercase tracking-[0.2em] text-muted-foreground"
+        />
       </div>
     </div>
   );
