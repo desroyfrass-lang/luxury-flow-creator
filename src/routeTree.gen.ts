@@ -125,6 +125,7 @@ import { Route as AuthenticatedLaunchAcceleratorRouteImport } from './routes/_au
 import { Route as AuthenticatedGlobalOperationsRouteImport } from './routes/_authenticated/global-operations'
 import { Route as AuthenticatedFrassyRouteImport } from './routes/_authenticated/frassy'
 import { Route as AuthenticatedFounderRouteImport } from './routes/_authenticated/founder'
+import { Route as AuthenticatedFirst30DaysRouteImport } from './routes/_authenticated/first-30-days'
 import { Route as AuthenticatedFinancialCenterRouteImport } from './routes/_authenticated/financial-center'
 import { Route as AuthenticatedCreationRouteImport } from './routes/_authenticated/creation'
 import { Route as AuthenticatedCommerceSimulationRouteImport } from './routes/_authenticated/commerce-simulation'
@@ -780,6 +781,12 @@ const AuthenticatedFounderRoute = AuthenticatedFounderRouteImport.update({
   path: '/founder',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedFirst30DaysRoute =
+  AuthenticatedFirst30DaysRouteImport.update({
+    id: '/first-30-days',
+    path: '/first-30-days',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedFinancialCenterRoute =
   AuthenticatedFinancialCenterRouteImport.update({
     id: '/financial-center',
@@ -1215,6 +1222,7 @@ export interface FileRoutesByFullPath {
   '/commerce-simulation': typeof AuthenticatedCommerceSimulationRoute
   '/creation': typeof AuthenticatedCreationRoute
   '/financial-center': typeof AuthenticatedFinancialCenterRoute
+  '/first-30-days': typeof AuthenticatedFirst30DaysRoute
   '/founder': typeof AuthenticatedFounderRoute
   '/frassy': typeof AuthenticatedFrassyRoute
   '/global-operations': typeof AuthenticatedGlobalOperationsRoute
@@ -1383,6 +1391,7 @@ export interface FileRoutesByTo {
   '/commerce-simulation': typeof AuthenticatedCommerceSimulationRoute
   '/creation': typeof AuthenticatedCreationRoute
   '/financial-center': typeof AuthenticatedFinancialCenterRoute
+  '/first-30-days': typeof AuthenticatedFirst30DaysRoute
   '/founder': typeof AuthenticatedFounderRoute
   '/frassy': typeof AuthenticatedFrassyRoute
   '/global-operations': typeof AuthenticatedGlobalOperationsRoute
@@ -1565,6 +1574,7 @@ export interface FileRoutesById {
   '/_authenticated/commerce-simulation': typeof AuthenticatedCommerceSimulationRoute
   '/_authenticated/creation': typeof AuthenticatedCreationRoute
   '/_authenticated/financial-center': typeof AuthenticatedFinancialCenterRoute
+  '/_authenticated/first-30-days': typeof AuthenticatedFirst30DaysRoute
   '/_authenticated/founder': typeof AuthenticatedFounderRoute
   '/_authenticated/frassy': typeof AuthenticatedFrassyRoute
   '/_authenticated/global-operations': typeof AuthenticatedGlobalOperationsRoute
@@ -1752,6 +1762,7 @@ export interface FileRouteTypes {
     | '/commerce-simulation'
     | '/creation'
     | '/financial-center'
+    | '/first-30-days'
     | '/founder'
     | '/frassy'
     | '/global-operations'
@@ -1920,6 +1931,7 @@ export interface FileRouteTypes {
     | '/commerce-simulation'
     | '/creation'
     | '/financial-center'
+    | '/first-30-days'
     | '/founder'
     | '/frassy'
     | '/global-operations'
@@ -2101,6 +2113,7 @@ export interface FileRouteTypes {
     | '/_authenticated/commerce-simulation'
     | '/_authenticated/creation'
     | '/_authenticated/financial-center'
+    | '/_authenticated/first-30-days'
     | '/_authenticated/founder'
     | '/_authenticated/frassy'
     | '/_authenticated/global-operations'
@@ -3113,6 +3126,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedFounderRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/first-30-days': {
+      id: '/_authenticated/first-30-days'
+      path: '/first-30-days'
+      fullPath: '/first-30-days'
+      preLoaderRoute: typeof AuthenticatedFirst30DaysRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/financial-center': {
       id: '/_authenticated/financial-center'
       path: '/financial-center'
@@ -3680,6 +3700,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedCommerceSimulationRoute: typeof AuthenticatedCommerceSimulationRoute
   AuthenticatedCreationRoute: typeof AuthenticatedCreationRoute
   AuthenticatedFinancialCenterRoute: typeof AuthenticatedFinancialCenterRoute
+  AuthenticatedFirst30DaysRoute: typeof AuthenticatedFirst30DaysRoute
   AuthenticatedFounderRoute: typeof AuthenticatedFounderRoute
   AuthenticatedFrassyRoute: typeof AuthenticatedFrassyRoute
   AuthenticatedGlobalOperationsRoute: typeof AuthenticatedGlobalOperationsRoute
@@ -3704,6 +3725,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedCommerceSimulationRoute: AuthenticatedCommerceSimulationRoute,
   AuthenticatedCreationRoute: AuthenticatedCreationRoute,
   AuthenticatedFinancialCenterRoute: AuthenticatedFinancialCenterRoute,
+  AuthenticatedFirst30DaysRoute: AuthenticatedFirst30DaysRoute,
   AuthenticatedFounderRoute: AuthenticatedFounderRoute,
   AuthenticatedFrassyRoute: AuthenticatedFrassyRoute,
   AuthenticatedGlobalOperationsRoute: AuthenticatedGlobalOperationsRoute,
