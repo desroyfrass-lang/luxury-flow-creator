@@ -1,9 +1,9 @@
 import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import { fetchJourneyStatus } from "@/hooks/use-journey-status";
 import { SiteShell } from "@/components/site-shell";
 import { toast } from "sonner";
+import { PasswordField, passwordIsValid } from "@/components/password-field";
 
 export const Route = createFileRoute("/auth")({
   validateSearch: (s: Record<string, unknown>) => ({
@@ -35,12 +35,9 @@ function AuthPage() {
         window.location.assign(dest);
         return;
       }
-      try {
-        const status = await fetchJourneyStatus();
-        window.location.assign(status.needsJourney ? "/onboarding" : dest);
-      } catch {
-        window.location.assign(dest);
-      }
+      // FRASS-0466: /welcome is the only arrival. It decides first-time vs
+      // returning and forwards accordingly — the Daily is never the front door.
+      window.location.assign("/welcome");
     });
   }, [dest, next]);
 
@@ -53,14 +50,19 @@ function AuthPage() {
         if (error) throw error;
         toast.success("Signed in");
       } else {
+        if (!passwordIsValid(password)) {
+          setBusy(false);
+          toast.error("Please meet every password requirement listed below the field.");
+          return;
+        }
         const { error } = await supabase.auth.signUp({
           email,
           password,
-          options: { emailRedirectTo: window.location.origin + "/onboarding" },
+          options: { emailRedirectTo: window.location.origin + "/welcome" },
         });
         if (error) throw error;
-        toast.success("Welcome — Frassy is ready to begin");
-        window.location.assign("/onboarding");
+        toast.success("Welcome — Frassy is waiting at the gate");
+        window.location.assign("/welcome");
         return;
       }
     } catch (err) {
@@ -70,16 +72,7 @@ function AuthPage() {
     }
 
     // Signed in. Routing must never be able to strand the Builder on this page.
-    let target = dest;
-    if (!next) {
-      try {
-        const status = await fetchJourneyStatus();
-        if (status.needsJourney) target = "/onboarding";
-      } catch {
-        /* journey lookup is advisory only */
-      }
-    }
-    window.location.assign(target);
+    window.location.assign(next ? dest : "/welcome");
   };
 
 
@@ -119,14 +112,11 @@ function AuthPage() {
             <label className="mb-2 block text-[11px] uppercase tracking-[0.25em] text-muted-foreground">
               Password
             </label>
-            <input
-              type="password"
-              required
-              minLength={8}
+            <PasswordField
               value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="w-full rounded-sm border border-border bg-background/60 px-4 py-3 text-sm outline-none focus:border-[color:var(--gold)]"
-              placeholder="At least 8 characters"
+              onChange={setPassword}
+              placeholder={mode === "signup" ? "Choose a password" : "Your password"}
+              showRules={mode === "signup"}
             />
           </div>
           <button

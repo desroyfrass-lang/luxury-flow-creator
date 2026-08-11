@@ -4,6 +4,7 @@ import { useServerFn } from "@tanstack/react-start";
 import { useQuery } from "@tanstack/react-query";
 import { checkIsAdmin, claimInitialAdmin } from "@/lib/admin.functions";
 import { supabase } from "@/integrations/supabase/client";
+import { useSecureSignOut } from "@/components/secure-sign-out";
 import { SiteShell } from "@/components/site-shell";
 import { toast } from "sonner";
 
@@ -39,10 +40,7 @@ function AdminLayout() {
     }
   };
 
-  const signOut = async () => {
-    await supabase.auth.signOut();
-    navigate({ to: "/auth", search: { next: "" } });
-  };
+  const signOut = useSecureSignOut();
 
   if (isLoading) {
     return (
