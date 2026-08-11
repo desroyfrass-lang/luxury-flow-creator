@@ -2529,6 +2529,42 @@ export type Database = {
         }
         Relationships: []
       }
+      partner_invitations: {
+        Row: {
+          claimed_at: string | null
+          claimed_by: string | null
+          created_at: string
+          designation: string
+          display_name: string | null
+          email: string
+          id: string
+          invited_by: string | null
+          note: string | null
+        }
+        Insert: {
+          claimed_at?: string | null
+          claimed_by?: string | null
+          created_at?: string
+          designation?: string
+          display_name?: string | null
+          email: string
+          id?: string
+          invited_by?: string | null
+          note?: string | null
+        }
+        Update: {
+          claimed_at?: string | null
+          claimed_by?: string | null
+          created_at?: string
+          designation?: string
+          display_name?: string | null
+          email?: string
+          id?: string
+          invited_by?: string | null
+          note?: string | null
+        }
+        Relationships: []
+      }
       partner_vendors: {
         Row: {
           created_at: string

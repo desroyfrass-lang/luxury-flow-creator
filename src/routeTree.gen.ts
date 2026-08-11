@@ -57,6 +57,7 @@ import { Route as SocialMediaViralsIndexRouteImport } from './routes/social-medi
 import { Route as LookbookIndexRouteImport } from './routes/lookbook.index'
 import { Route as LiveIndexRouteImport } from './routes/live.index'
 import { Route as KidsWorldIndexRouteImport } from './routes/kids-world.index'
+import { Route as JoinIndexRouteImport } from './routes/join.index'
 import { Route as FrassShapeIndexRouteImport } from './routes/frass-shape.index'
 import { Route as FrassPlusIndexRouteImport } from './routes/frass-plus.index'
 import { Route as FrassLuxuryHouseIndexRouteImport } from './routes/frass-luxury-house.index'
@@ -80,6 +81,8 @@ import { Route as LiveBroadcastIdRouteImport } from './routes/live.$broadcastId'
 import { Route as LinkHandleRouteImport } from './routes/link.$handle'
 import { Route as KidsWorldParentsRouteImport } from './routes/kids-world.parents'
 import { Route as KidsWorldDiscoverRouteImport } from './routes/kids-world.discover'
+import { Route as JoinFrasskicksRouteImport } from './routes/join.frasskicks'
+import { Route as JoinFrassHillRouteImport } from './routes/join.frass-hill'
 import { Route as FrassShapeGenderRouteImport } from './routes/frass-shape.$gender'
 import { Route as FrassPlusSalesRouteImport } from './routes/frass-plus.sales'
 import { Route as FrassLuxuryHouseWomenRouteImport } from './routes/frass-luxury-house.women'
@@ -168,6 +171,7 @@ import { Route as AuthenticatedAdminVisualIndexRouteImport } from './routes/_aut
 import { Route as AuthenticatedAdminViralsRouteImport } from './routes/_authenticated/admin.virals'
 import { Route as AuthenticatedAdminTextRouteImport } from './routes/_authenticated/admin.text'
 import { Route as AuthenticatedAdminRolesRouteImport } from './routes/_authenticated/admin.roles'
+import { Route as AuthenticatedAdminPartnersRouteImport } from './routes/_authenticated/admin.partners'
 import { Route as AuthenticatedAdminPartnerVendorsRouteImport } from './routes/_authenticated/admin.partner-vendors'
 import { Route as AuthenticatedAdminNewsroomRouteImport } from './routes/_authenticated/admin.newsroom'
 import { Route as AuthenticatedAdminMediaRouteImport } from './routes/_authenticated/admin.media'
@@ -427,6 +431,11 @@ const KidsWorldIndexRoute = KidsWorldIndexRouteImport.update({
   path: '/',
   getParentRoute: () => KidsWorldRoute,
 } as any)
+const JoinIndexRoute = JoinIndexRouteImport.update({
+  id: '/join/',
+  path: '/join/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const FrassShapeIndexRoute = FrassShapeIndexRouteImport.update({
   id: '/',
   path: '/',
@@ -542,6 +551,16 @@ const KidsWorldDiscoverRoute = KidsWorldDiscoverRouteImport.update({
   id: '/discover',
   path: '/discover',
   getParentRoute: () => KidsWorldRoute,
+} as any)
+const JoinFrasskicksRoute = JoinFrasskicksRouteImport.update({
+  id: '/join/frasskicks',
+  path: '/join/frasskicks',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const JoinFrassHillRoute = JoinFrassHillRouteImport.update({
+  id: '/join/frass-hill',
+  path: '/join/frass-hill',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const FrassShapeGenderRoute = FrassShapeGenderRouteImport.update({
   id: '/$gender',
@@ -1011,6 +1030,12 @@ const AuthenticatedAdminRolesRoute = AuthenticatedAdminRolesRouteImport.update({
   path: '/roles',
   getParentRoute: () => AuthenticatedAdminRoute,
 } as any)
+const AuthenticatedAdminPartnersRoute =
+  AuthenticatedAdminPartnersRouteImport.update({
+    id: '/partners',
+    path: '/partners',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
 const AuthenticatedAdminPartnerVendorsRoute =
   AuthenticatedAdminPartnerVendorsRouteImport.update({
     id: '/partner-vendors',
@@ -1217,6 +1242,8 @@ export interface FileRoutesByFullPath {
   '/frass-luxury-house/women': typeof FrassLuxuryHouseWomenRoute
   '/frass-plus/sales': typeof FrassPlusSalesRoute
   '/frass-shape/$gender': typeof FrassShapeGenderRouteWithChildren
+  '/join/frass-hill': typeof JoinFrassHillRoute
+  '/join/frasskicks': typeof JoinFrasskicksRoute
   '/kids-world/discover': typeof KidsWorldDiscoverRoute
   '/kids-world/parents': typeof KidsWorldParentsRoute
   '/link/$handle': typeof LinkHandleRoute
@@ -1240,6 +1267,7 @@ export interface FileRoutesByFullPath {
   '/frass-luxury-house/': typeof FrassLuxuryHouseIndexRoute
   '/frass-plus/': typeof FrassPlusIndexRoute
   '/frass-shape/': typeof FrassShapeIndexRoute
+  '/join/': typeof JoinIndexRoute
   '/kids-world/': typeof KidsWorldIndexRoute
   '/live/': typeof LiveIndexRoute
   '/lookbook/': typeof LookbookIndexRoute
@@ -1261,6 +1289,7 @@ export interface FileRoutesByFullPath {
   '/admin/media': typeof AuthenticatedAdminMediaRoute
   '/admin/newsroom': typeof AuthenticatedAdminNewsroomRoute
   '/admin/partner-vendors': typeof AuthenticatedAdminPartnerVendorsRoute
+  '/admin/partners': typeof AuthenticatedAdminPartnersRoute
   '/admin/roles': typeof AuthenticatedAdminRolesRoute
   '/admin/text': typeof AuthenticatedAdminTextRoute
   '/admin/virals': typeof AuthenticatedAdminViralsRoute
@@ -1374,6 +1403,8 @@ export interface FileRoutesByTo {
   '/frass-luxury-house/men': typeof FrassLuxuryHouseMenRoute
   '/frass-luxury-house/women': typeof FrassLuxuryHouseWomenRoute
   '/frass-plus/sales': typeof FrassPlusSalesRoute
+  '/join/frass-hill': typeof JoinFrassHillRoute
+  '/join/frasskicks': typeof JoinFrasskicksRoute
   '/kids-world/discover': typeof KidsWorldDiscoverRoute
   '/kids-world/parents': typeof KidsWorldParentsRoute
   '/link/$handle': typeof LinkHandleRoute
@@ -1397,6 +1428,7 @@ export interface FileRoutesByTo {
   '/frass-luxury-house': typeof FrassLuxuryHouseIndexRoute
   '/frass-plus': typeof FrassPlusIndexRoute
   '/frass-shape': typeof FrassShapeIndexRoute
+  '/join': typeof JoinIndexRoute
   '/kids-world': typeof KidsWorldIndexRoute
   '/live': typeof LiveIndexRoute
   '/lookbook': typeof LookbookIndexRoute
@@ -1418,6 +1450,7 @@ export interface FileRoutesByTo {
   '/admin/media': typeof AuthenticatedAdminMediaRoute
   '/admin/newsroom': typeof AuthenticatedAdminNewsroomRoute
   '/admin/partner-vendors': typeof AuthenticatedAdminPartnerVendorsRoute
+  '/admin/partners': typeof AuthenticatedAdminPartnersRoute
   '/admin/roles': typeof AuthenticatedAdminRolesRoute
   '/admin/text': typeof AuthenticatedAdminTextRoute
   '/admin/virals': typeof AuthenticatedAdminViralsRoute
@@ -1555,6 +1588,8 @@ export interface FileRoutesById {
   '/frass-luxury-house/women': typeof FrassLuxuryHouseWomenRoute
   '/frass-plus/sales': typeof FrassPlusSalesRoute
   '/frass-shape/$gender': typeof FrassShapeGenderRouteWithChildren
+  '/join/frass-hill': typeof JoinFrassHillRoute
+  '/join/frasskicks': typeof JoinFrasskicksRoute
   '/kids-world/discover': typeof KidsWorldDiscoverRoute
   '/kids-world/parents': typeof KidsWorldParentsRoute
   '/link/$handle': typeof LinkHandleRoute
@@ -1578,6 +1613,7 @@ export interface FileRoutesById {
   '/frass-luxury-house/': typeof FrassLuxuryHouseIndexRoute
   '/frass-plus/': typeof FrassPlusIndexRoute
   '/frass-shape/': typeof FrassShapeIndexRoute
+  '/join/': typeof JoinIndexRoute
   '/kids-world/': typeof KidsWorldIndexRoute
   '/live/': typeof LiveIndexRoute
   '/lookbook/': typeof LookbookIndexRoute
@@ -1599,6 +1635,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/media': typeof AuthenticatedAdminMediaRoute
   '/_authenticated/admin/newsroom': typeof AuthenticatedAdminNewsroomRoute
   '/_authenticated/admin/partner-vendors': typeof AuthenticatedAdminPartnerVendorsRoute
+  '/_authenticated/admin/partners': typeof AuthenticatedAdminPartnersRoute
   '/_authenticated/admin/roles': typeof AuthenticatedAdminRolesRoute
   '/_authenticated/admin/text': typeof AuthenticatedAdminTextRoute
   '/_authenticated/admin/virals': typeof AuthenticatedAdminViralsRoute
@@ -1736,6 +1773,8 @@ export interface FileRouteTypes {
     | '/frass-luxury-house/women'
     | '/frass-plus/sales'
     | '/frass-shape/$gender'
+    | '/join/frass-hill'
+    | '/join/frasskicks'
     | '/kids-world/discover'
     | '/kids-world/parents'
     | '/link/$handle'
@@ -1759,6 +1798,7 @@ export interface FileRouteTypes {
     | '/frass-luxury-house/'
     | '/frass-plus/'
     | '/frass-shape/'
+    | '/join/'
     | '/kids-world/'
     | '/live/'
     | '/lookbook/'
@@ -1780,6 +1820,7 @@ export interface FileRouteTypes {
     | '/admin/media'
     | '/admin/newsroom'
     | '/admin/partner-vendors'
+    | '/admin/partners'
     | '/admin/roles'
     | '/admin/text'
     | '/admin/virals'
@@ -1893,6 +1934,8 @@ export interface FileRouteTypes {
     | '/frass-luxury-house/men'
     | '/frass-luxury-house/women'
     | '/frass-plus/sales'
+    | '/join/frass-hill'
+    | '/join/frasskicks'
     | '/kids-world/discover'
     | '/kids-world/parents'
     | '/link/$handle'
@@ -1916,6 +1959,7 @@ export interface FileRouteTypes {
     | '/frass-luxury-house'
     | '/frass-plus'
     | '/frass-shape'
+    | '/join'
     | '/kids-world'
     | '/live'
     | '/lookbook'
@@ -1937,6 +1981,7 @@ export interface FileRouteTypes {
     | '/admin/media'
     | '/admin/newsroom'
     | '/admin/partner-vendors'
+    | '/admin/partners'
     | '/admin/roles'
     | '/admin/text'
     | '/admin/virals'
@@ -2073,6 +2118,8 @@ export interface FileRouteTypes {
     | '/frass-luxury-house/women'
     | '/frass-plus/sales'
     | '/frass-shape/$gender'
+    | '/join/frass-hill'
+    | '/join/frasskicks'
     | '/kids-world/discover'
     | '/kids-world/parents'
     | '/link/$handle'
@@ -2096,6 +2143,7 @@ export interface FileRouteTypes {
     | '/frass-luxury-house/'
     | '/frass-plus/'
     | '/frass-shape/'
+    | '/join/'
     | '/kids-world/'
     | '/live/'
     | '/lookbook/'
@@ -2117,6 +2165,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/media'
     | '/_authenticated/admin/newsroom'
     | '/_authenticated/admin/partner-vendors'
+    | '/_authenticated/admin/partners'
     | '/_authenticated/admin/roles'
     | '/_authenticated/admin/text'
     | '/_authenticated/admin/virals'
@@ -2212,11 +2261,14 @@ export interface RootRouteChildren {
   BuilderHandleRoute: typeof BuilderHandleRoute
   CardHandleRoute: typeof CardHandleRoute
   CollectionHandleRoute: typeof CollectionHandleRoute
+  JoinFrassHillRoute: typeof JoinFrassHillRoute
+  JoinFrasskicksRoute: typeof JoinFrasskicksRoute
   LinkHandleRoute: typeof LinkHandleRoute
   PayTokenRoute: typeof PayTokenRoute
   PlusSizeMenRoute: typeof PlusSizeMenRoute
   PlusSizeWomenRoute: typeof PlusSizeWomenRoute
   ProductHandleRoute: typeof ProductHandleRoute
+  JoinIndexRoute: typeof JoinIndexRoute
   DotlovableOauthConsentRoute: typeof DotlovableOauthConsentRoute
   Char91DotmcpChar93InvokeToolToolRoute: typeof Char91DotmcpChar93InvokeToolToolRoute
 }
@@ -2559,6 +2611,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof KidsWorldIndexRouteImport
       parentRoute: typeof KidsWorldRoute
     }
+    '/join/': {
+      id: '/join/'
+      path: '/join'
+      fullPath: '/join/'
+      preLoaderRoute: typeof JoinIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/frass-shape/': {
       id: '/frass-shape/'
       path: '/'
@@ -2719,6 +2778,20 @@ declare module '@tanstack/react-router' {
       fullPath: '/kids-world/discover'
       preLoaderRoute: typeof KidsWorldDiscoverRouteImport
       parentRoute: typeof KidsWorldRoute
+    }
+    '/join/frasskicks': {
+      id: '/join/frasskicks'
+      path: '/join/frasskicks'
+      fullPath: '/join/frasskicks'
+      preLoaderRoute: typeof JoinFrasskicksRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/join/frass-hill': {
+      id: '/join/frass-hill'
+      path: '/join/frass-hill'
+      fullPath: '/join/frass-hill'
+      preLoaderRoute: typeof JoinFrassHillRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/frass-shape/$gender': {
       id: '/frass-shape/$gender'
@@ -3336,6 +3409,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminRolesRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
+    '/_authenticated/admin/partners': {
+      id: '/_authenticated/admin/partners'
+      path: '/partners'
+      fullPath: '/admin/partners'
+      preLoaderRoute: typeof AuthenticatedAdminPartnersRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
     '/_authenticated/admin/partner-vendors': {
       id: '/_authenticated/admin/partner-vendors'
       path: '/partner-vendors'
@@ -3488,6 +3568,7 @@ interface AuthenticatedAdminRouteChildren {
   AuthenticatedAdminMediaRoute: typeof AuthenticatedAdminMediaRoute
   AuthenticatedAdminNewsroomRoute: typeof AuthenticatedAdminNewsroomRoute
   AuthenticatedAdminPartnerVendorsRoute: typeof AuthenticatedAdminPartnerVendorsRoute
+  AuthenticatedAdminPartnersRoute: typeof AuthenticatedAdminPartnersRoute
   AuthenticatedAdminRolesRoute: typeof AuthenticatedAdminRolesRoute
   AuthenticatedAdminTextRoute: typeof AuthenticatedAdminTextRoute
   AuthenticatedAdminViralsRoute: typeof AuthenticatedAdminViralsRoute
@@ -3512,6 +3593,7 @@ const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
   AuthenticatedAdminMediaRoute: AuthenticatedAdminMediaRoute,
   AuthenticatedAdminNewsroomRoute: AuthenticatedAdminNewsroomRoute,
   AuthenticatedAdminPartnerVendorsRoute: AuthenticatedAdminPartnerVendorsRoute,
+  AuthenticatedAdminPartnersRoute: AuthenticatedAdminPartnersRoute,
   AuthenticatedAdminRolesRoute: AuthenticatedAdminRolesRoute,
   AuthenticatedAdminTextRoute: AuthenticatedAdminTextRoute,
   AuthenticatedAdminViralsRoute: AuthenticatedAdminViralsRoute,
@@ -4035,11 +4117,14 @@ const rootRouteChildren: RootRouteChildren = {
   BuilderHandleRoute: BuilderHandleRoute,
   CardHandleRoute: CardHandleRoute,
   CollectionHandleRoute: CollectionHandleRoute,
+  JoinFrassHillRoute: JoinFrassHillRoute,
+  JoinFrasskicksRoute: JoinFrasskicksRoute,
   LinkHandleRoute: LinkHandleRoute,
   PayTokenRoute: PayTokenRoute,
   PlusSizeMenRoute: PlusSizeMenRoute,
   PlusSizeWomenRoute: PlusSizeWomenRoute,
   ProductHandleRoute: ProductHandleRoute,
+  JoinIndexRoute: JoinIndexRoute,
   DotlovableOauthConsentRoute: DotlovableOauthConsentRoute,
   Char91DotmcpChar93InvokeToolToolRoute: Char91DotmcpChar93InvokeToolToolRoute,
 }
