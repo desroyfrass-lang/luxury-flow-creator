@@ -392,8 +392,9 @@ export function GatewayNav({ mode }: { mode: "shop" | "world" }) {
 
 /** The Frass Daily — one Daily for every signed-in Builder, admin or member. */
 function DailyNavButton() {
-  const section = useAccountSection();
-  if (!section) return null;
+  const { signedIn } = useMyRoles();
+  if (!signedIn) return null;
+
   return (
     <button
       type="button"
