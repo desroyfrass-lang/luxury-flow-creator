@@ -23,6 +23,13 @@ interface DestinationRule extends FrassyDestination {
 
 const RULES: DestinationRule[] = [
   {
+    id: "welcome-hall",
+    match: "/welcome-hall",
+    label: "Welcome Hall",
+    welcome:
+      "Welcome to Frass Hill. This isn't just somewhere you visit. It's somewhere you belong. I'm Frassy, your host. Take your time at the gate — I'll help you find your way in.",
+  },
+  {
     id: "home",
     match: "/",
     label: "Frass",
