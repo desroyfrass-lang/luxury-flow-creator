@@ -275,10 +275,11 @@ export function FrassyChat({ embedded = false }: { embedded?: boolean } = {}) {
       ref={panelRef}
       data-frassy-panel
       data-frassy-phase={startup.phase}
+      aria-busy={startup.phase === "verifying" || startup.phase === "recovering"}
       className={
-        embedded
+        `${startup.phase === "verifying" || startup.phase === "recovering" ? "invisible pointer-events-none" : "visible"} ${embedded
           ? "frass-workspace ws-dark flex h-[min(640px,78vh)] min-h-[420px] w-full flex-col overflow-hidden rounded-lg border border-white/10 bg-[#0b0c0e]"
-          : "frass-workspace ws-dark fixed bottom-5 right-5 z-50 flex h-[min(620px,80vh)] w-[min(400px,calc(100vw-2.5rem))] flex-col overflow-hidden rounded-lg border border-white/10 bg-[#0b0c0e] shadow-2xl"
+          : "frass-workspace ws-dark fixed bottom-5 right-5 z-50 flex h-[min(620px,80vh)] w-[min(400px,calc(100vw-2.5rem))] flex-col overflow-hidden rounded-lg border border-white/10 bg-[#0b0c0e] shadow-2xl"}`
       }
     >
       <header
