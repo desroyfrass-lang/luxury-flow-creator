@@ -31,7 +31,9 @@ const EMAIL_TEMPLATES: Record<string, React.ComponentType<any>> = {
 }
 
 // Configuration
-const SITE_NAME = "luxury-flow-creator"
+const SITE_NAME = "Frass"
+// Frassy hosts the house, so she signs the letters too.
+const FROM_ADDRESS = "frassy"
 const SENDER_DOMAIN = "notify.frasskicks.com"
 const ROOT_DOMAIN = "frasskicks.com"
 const FROM_DOMAIN = "notify.frasskicks.com"
