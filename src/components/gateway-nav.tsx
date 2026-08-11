@@ -297,7 +297,10 @@ export function GatewayNav({ mode }: { mode: "shop" | "world" }) {
             <KeyRound className="h-3.5 w-3.5" />
             Builder Vault
           </Link>
+          <DailyNavButton />
+          <AccountNavSection />
           <CartDrawer />
+
           <button
             type="button"
             aria-label={mobileOpen ? "Close menu" : "Open menu"}
