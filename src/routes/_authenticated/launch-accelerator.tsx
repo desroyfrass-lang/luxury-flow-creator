@@ -11,6 +11,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { Check, ChevronRight, Clock, GraduationCap, Target } from "lucide-react";
 import { SiteShell } from "@/components/site-shell";
+import { LaunchModeBanner } from "@/components/launch-mode-banner";
 import { getMyProfile } from "@/lib/profiles.functions";
 import { getLaunchState, saveLaunchState } from "@/lib/business/accelerator.functions";
 import {
@@ -144,6 +145,9 @@ function LaunchAcceleratorPage() {
 
   return (
     <SiteShell>
+      <div className="mx-auto max-w-5xl px-4 pt-6">
+        <LaunchModeBanner />
+      </div>
       <div className="mx-auto w-full max-w-5xl px-4 py-10 md:py-14">
         <p className="text-xs uppercase tracking-[0.3em] text-muted-foreground">
           Frass Business Builder · Launch Accelerator
