@@ -152,9 +152,12 @@ function WorkspacePage() {
           </form>
         ) : (
           <div className="mt-12 space-y-3">
-            <div className="text-center text-[10px] uppercase tracking-[0.3em] text-[color:var(--gold)]">
+            {/* FRASS-0463 — launch countdown sits at the top of the partner dashboard. */}
+            <LaunchDashboard />
+            <div className="pt-6 text-center text-[10px] uppercase tracking-[0.3em] text-[color:var(--gold)]">
               Choose your workspace
             </div>
+
             <Link to="/onboarding">
               <div className="flex items-center justify-between rounded-xl border border-border/70 bg-background/70 px-5 py-4 backdrop-blur transition hover:border-[color:var(--gold)]">
                 <div>
