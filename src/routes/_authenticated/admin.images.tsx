@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useRef, useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+import { assertImageFile, IMAGE_ACCEPT } from "@/lib/uploads";
 import { SLOT_SECTIONS, LOOKBOOK_STORY_SLUGS, type SlotDef } from "@/lib/image-slots";
 import {
   useSiteImages,
@@ -14,6 +15,7 @@ import { Upload, RotateCcw, Trash2, Plus, Search } from "lucide-react";
 const SIGNED_EXPIRY = 60 * 60 * 24 * 365 * 100; // ~100 years
 
 async function uploadAndSign(file: File, folder: string) {
+  assertImageFile(file);
   const ext = file.name.split(".").pop()?.toLowerCase() ?? "jpg";
   const path = `${folder}/${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${ext}`;
   const { error: upErr } = await supabase.storage
@@ -138,7 +140,7 @@ function SlotCard({ slot, currentUrl }: { slot: SlotDef; currentUrl?: string }) 
           <input
             ref={inputRef}
             type="file"
-            accept="image/*"
+            accept={IMAGE_ACCEPT}
             className="hidden"
             onChange={(e) => {
               const f = e.target.files?.[0];
@@ -240,7 +242,7 @@ function StoryGallery({ slug }: { slug: string }) {
         <input
           ref={inputRef}
           type="file"
-          accept="image/*"
+          accept={IMAGE_ACCEPT}
           multiple
           className="hidden"
           onChange={(e) => {
@@ -355,7 +357,7 @@ function ProductOverrideEditor({ productId }: { productId: string }) {
         <input
           ref={inputRef}
           type="file"
-          accept="image/*"
+          accept={IMAGE_ACCEPT}
           multiple
           className="hidden"
           onChange={(e) => {

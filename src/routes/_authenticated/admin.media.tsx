@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useRef, useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+import { assertMediaFile } from "@/lib/uploads";
 import { useMediaItems, type MediaItem, type MediaKind } from "@/hooks/use-media-items";
 import { toast } from "sonner";
 import { Upload, Trash2, Plus, Save } from "lucide-react";
@@ -13,6 +14,7 @@ export const Route = createFileRoute("/_authenticated/admin/media")({
 });
 
 async function uploadAndSign(file: File, folder: string) {
+  assertMediaFile(file);
   const ext = file.name.split(".").pop()?.toLowerCase() ?? "bin";
   const path = `${folder}/${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${ext}`;
   const { error: upErr } = await supabase.storage
