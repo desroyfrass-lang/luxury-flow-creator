@@ -14,6 +14,8 @@ import { getLaunchState, saveLaunchState } from "@/lib/business/accelerator.func
 import { EMPTY_STATE, normalizeState, type LaunchState } from "@/lib/business/accelerator";
 import { EMPTY_PROGRAM, normalizeProgram, todayISO, type ProgramState } from "@/lib/business/launch-program";
 import { LaunchModeBanner, useLaunchMode } from "@/components/launch-mode-banner";
+import { LaunchDashboard } from "@/components/launch-dashboard";
+import { foundationPct, programDay } from "@/lib/business/launch-program";
 import {
   LAUNCH_PREP,
   allStreamReadiness,
@@ -183,6 +185,14 @@ function MoneyMovesPage() {
         </p>
 
         <LaunchModeBanner className="mt-5" />
+
+        <LaunchDashboard
+          className="mt-5"
+          partnerReady={overall}
+          foundationPct={foundationPct(program)}
+          programDay={programDay(program)}
+          todayMission={plan.highest ? plan.highest.title : null}
+        />
 
         {coaching.length > 0 && (
           <section className="mt-5 space-y-2">

@@ -233,6 +233,10 @@ export function WorkspaceShell({
                 <span aria-hidden>💵</span>
                 <span className="flex-1 text-left">Money Moves</span>
               </Link>
+              <Link to="/journal" className="ws-nav">
+                <span aria-hidden>📔</span>
+                <span className="flex-1 text-left">Partner Journal</span>
+              </Link>
               <Link to="/financial-center" className="ws-nav">
                 <span aria-hidden>💰</span>
                 <span className="flex-1 text-left">Financial Center</span>

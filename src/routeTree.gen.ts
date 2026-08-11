@@ -123,6 +123,7 @@ import { Route as AuthenticatedOnboardingRouteImport } from './routes/_authentic
 import { Route as AuthenticatedNotificationsRouteImport } from './routes/_authenticated/notifications'
 import { Route as AuthenticatedMoneyMovesRouteImport } from './routes/_authenticated/money-moves'
 import { Route as AuthenticatedLaunchAcceleratorRouteImport } from './routes/_authenticated/launch-accelerator'
+import { Route as AuthenticatedJournalRouteImport } from './routes/_authenticated/journal'
 import { Route as AuthenticatedGlobalOperationsRouteImport } from './routes/_authenticated/global-operations'
 import { Route as AuthenticatedFrassyRouteImport } from './routes/_authenticated/frassy'
 import { Route as AuthenticatedFounderRouteImport } from './routes/_authenticated/founder'
@@ -771,6 +772,11 @@ const AuthenticatedLaunchAcceleratorRoute =
     path: '/launch-accelerator',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedJournalRoute = AuthenticatedJournalRouteImport.update({
+  id: '/journal',
+  path: '/journal',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedGlobalOperationsRoute =
   AuthenticatedGlobalOperationsRouteImport.update({
     id: '/global-operations',
@@ -1232,6 +1238,7 @@ export interface FileRoutesByFullPath {
   '/founder': typeof AuthenticatedFounderRoute
   '/frassy': typeof AuthenticatedFrassyRoute
   '/global-operations': typeof AuthenticatedGlobalOperationsRoute
+  '/journal': typeof AuthenticatedJournalRoute
   '/launch-accelerator': typeof AuthenticatedLaunchAcceleratorRoute
   '/money-moves': typeof AuthenticatedMoneyMovesRoute
   '/notifications': typeof AuthenticatedNotificationsRoute
@@ -1402,6 +1409,7 @@ export interface FileRoutesByTo {
   '/founder': typeof AuthenticatedFounderRoute
   '/frassy': typeof AuthenticatedFrassyRoute
   '/global-operations': typeof AuthenticatedGlobalOperationsRoute
+  '/journal': typeof AuthenticatedJournalRoute
   '/launch-accelerator': typeof AuthenticatedLaunchAcceleratorRoute
   '/money-moves': typeof AuthenticatedMoneyMovesRoute
   '/notifications': typeof AuthenticatedNotificationsRoute
@@ -1586,6 +1594,7 @@ export interface FileRoutesById {
   '/_authenticated/founder': typeof AuthenticatedFounderRoute
   '/_authenticated/frassy': typeof AuthenticatedFrassyRoute
   '/_authenticated/global-operations': typeof AuthenticatedGlobalOperationsRoute
+  '/_authenticated/journal': typeof AuthenticatedJournalRoute
   '/_authenticated/launch-accelerator': typeof AuthenticatedLaunchAcceleratorRoute
   '/_authenticated/money-moves': typeof AuthenticatedMoneyMovesRoute
   '/_authenticated/notifications': typeof AuthenticatedNotificationsRoute
@@ -1775,6 +1784,7 @@ export interface FileRouteTypes {
     | '/founder'
     | '/frassy'
     | '/global-operations'
+    | '/journal'
     | '/launch-accelerator'
     | '/money-moves'
     | '/notifications'
@@ -1945,6 +1955,7 @@ export interface FileRouteTypes {
     | '/founder'
     | '/frassy'
     | '/global-operations'
+    | '/journal'
     | '/launch-accelerator'
     | '/money-moves'
     | '/notifications'
@@ -2128,6 +2139,7 @@ export interface FileRouteTypes {
     | '/_authenticated/founder'
     | '/_authenticated/frassy'
     | '/_authenticated/global-operations'
+    | '/_authenticated/journal'
     | '/_authenticated/launch-accelerator'
     | '/_authenticated/money-moves'
     | '/_authenticated/notifications'
@@ -3124,6 +3136,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedLaunchAcceleratorRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/journal': {
+      id: '/_authenticated/journal'
+      path: '/journal'
+      fullPath: '/journal'
+      preLoaderRoute: typeof AuthenticatedJournalRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/global-operations': {
       id: '/_authenticated/global-operations'
       path: '/global-operations'
@@ -3723,6 +3742,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedFounderRoute: typeof AuthenticatedFounderRoute
   AuthenticatedFrassyRoute: typeof AuthenticatedFrassyRoute
   AuthenticatedGlobalOperationsRoute: typeof AuthenticatedGlobalOperationsRoute
+  AuthenticatedJournalRoute: typeof AuthenticatedJournalRoute
   AuthenticatedLaunchAcceleratorRoute: typeof AuthenticatedLaunchAcceleratorRoute
   AuthenticatedMoneyMovesRoute: typeof AuthenticatedMoneyMovesRoute
   AuthenticatedNotificationsRoute: typeof AuthenticatedNotificationsRoute
@@ -3749,6 +3769,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedFounderRoute: AuthenticatedFounderRoute,
   AuthenticatedFrassyRoute: AuthenticatedFrassyRoute,
   AuthenticatedGlobalOperationsRoute: AuthenticatedGlobalOperationsRoute,
+  AuthenticatedJournalRoute: AuthenticatedJournalRoute,
   AuthenticatedLaunchAcceleratorRoute: AuthenticatedLaunchAcceleratorRoute,
   AuthenticatedMoneyMovesRoute: AuthenticatedMoneyMovesRoute,
   AuthenticatedNotificationsRoute: AuthenticatedNotificationsRoute,

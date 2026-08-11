@@ -2565,6 +2565,42 @@ export type Database = {
         }
         Relationships: []
       }
+      partner_journal_entries: {
+        Row: {
+          body: string
+          created_at: string
+          entry_date: string
+          id: string
+          mood: string | null
+          prompt: string
+          shared: boolean
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          body: string
+          created_at?: string
+          entry_date: string
+          id?: string
+          mood?: string | null
+          prompt?: string
+          shared?: boolean
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          body?: string
+          created_at?: string
+          entry_date?: string
+          id?: string
+          mood?: string | null
+          prompt?: string
+          shared?: boolean
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       partner_launch_state: {
         Row: {
           created_at: string

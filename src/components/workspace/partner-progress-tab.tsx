@@ -25,6 +25,7 @@ import {
   overallReadiness,
 } from "@/lib/launch-mode";
 import { addCoachingNote, getLaunchMode, setLaunchMode } from "@/lib/launch-mode.functions";
+import { listSharedJournal } from "@/lib/partner-journal.functions";
 
 export function PartnerProgressTab() {
   const qc = useQueryClient();
@@ -95,6 +96,7 @@ export function PartnerProgressTab() {
 
   return (
     <div className="space-y-6">
+      <SharedJournal />
       {/* Launch control — the Founder decides when the lights come on. */}
       <section className="rounded-3xl border border-white/12 bg-white/[0.03] p-5">
         <h3 className="font-display text-sm uppercase tracking-[0.18em]">Launch control</h3>
@@ -264,4 +266,33 @@ function moveLabel(key: string): string {
   const stream = streamById(streamId);
   const rest = key.slice(streamId.length + 1).replace(/[-_:]/g, " ");
   return stream ? `${stream.emoji} ${stream.label} — ${rest || "move"}` : key;
+}
+
+
+/** FRASS-0463 — Journal entries the Partner explicitly chose to share. Read-only. */
+function SharedJournal() {
+  const fn = useServerFn(listSharedJournal);
+  const q = useQuery({ queryKey: ["shared-journal"], queryFn: () => fn({}) });
+  const rows = q.data ?? [];
+  if (!rows.length) return null;
+  return (
+    <section className="rounded-3xl border border-white/12 bg-white/[0.03] p-5">
+      <h3 className="font-display text-sm uppercase tracking-[0.18em]">In their own words</h3>
+      <p className="mt-1 text-xs text-muted-foreground">
+        Journal entries partners chose to share with you. Private entries never appear here.
+      </p>
+      <div className="mt-4 space-y-3">
+        {rows.slice(0, 10).map((r) => (
+          <article key={r.id} className="rounded-2xl border border-white/10 bg-black/20 px-4 py-3">
+            <p className="text-[11px] uppercase tracking-[0.18em] text-muted-foreground">
+              {r.display_name ?? "Partner"} · {r.entry_date}
+              {r.mood ? ` · ${r.mood}` : ""}
+            </p>
+            <p className="mt-1 text-xs text-muted-foreground">{r.prompt}</p>
+            <p className="mt-2 whitespace-pre-wrap text-sm">{r.body}</p>
+          </article>
+        ))}
+      </div>
+    </section>
+  );
 }
