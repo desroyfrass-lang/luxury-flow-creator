@@ -22,6 +22,7 @@ import { FrassyComposer } from "@/components/workspace/frassy-composer";
 import { usePushToTalk } from "@/hooks/use-push-to-talk";
 import { SpeechControls } from "@/components/voice/speech-controls";
 import { VoiceFeedbackButton } from "@/components/feedback/voice-feedback";
+import { useFrassyStartup } from "@/hooks/use-frassy-startup";
 
 type ProductCard = {
   handle: string;
@@ -70,10 +71,22 @@ export function FrassyChat({ embedded = false }: { embedded?: boolean } = {}) {
   const voice = usePushToTalk();
 
   const scrollRef = useRef<HTMLDivElement>(null);
+  const panelRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const abortRef = useRef<AbortController | null>(null);
   // Turn ownership: exactly one in-flight assistant turn, owned by one user turn.
   const turnRef = useRef(0);
+
+  // FRASS-0475 — the shared startup sequence. Verifies layout, chat, voice and
+  // context before Frassy says a word, repairs a distorted panel in place, and
+  // guarantees she is never silent for more than three seconds.
+  const startup = useFrassyStartup({
+    panelRef,
+    embedded,
+    active: open || embedded,
+    contextReady: Boolean(ctx),
+    speechAllowed: speakReplies,
+  });
 
   useEffect(() => {
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" });
@@ -235,6 +248,9 @@ export function FrassyChat({ embedded = false }: { embedded?: boolean } = {}) {
 
   return (
     <div
+      ref={panelRef}
+      data-frassy-panel
+      data-frassy-phase={startup.phase}
       className={
         embedded
           ? "flex h-[min(640px,78vh)] min-h-[420px] w-full flex-col overflow-hidden rounded-lg border border-white/10 bg-[#0b0c0e]"
@@ -242,7 +258,10 @@ export function FrassyChat({ embedded = false }: { embedded?: boolean } = {}) {
       }
     >
 
-      <header className="flex shrink-0 flex-wrap items-center justify-between gap-y-2 border-b border-white/10 px-4 py-3">
+      <header
+        data-frassy-toolbar
+        className="flex shrink-0 flex-wrap items-center justify-between gap-y-2 border-b border-white/10 px-4 py-3"
+      >
         <div className="flex min-w-0 items-center gap-3">
           <img src={symbolAsset.url} alt="" className="h-6 w-6 object-contain" />
           <div>
@@ -260,7 +279,7 @@ export function FrassyChat({ embedded = false }: { embedded?: boolean } = {}) {
             </div>
           </div>
         </div>
-        <div className="flex shrink-0 items-center gap-1">
+        <div data-frassy-voice className="flex shrink-0 items-center gap-1">
           {/* Voice: tap to let Frassy speak her replies aloud, or mute her. */}
           <button
             type="button"
@@ -322,7 +341,19 @@ export function FrassyChat({ embedded = false }: { embedded?: boolean } = {}) {
         </div>
       </header>
 
-      <div ref={scrollRef} className="min-h-0 flex-1 space-y-4 overflow-y-auto px-4 py-4">
+      <div ref={scrollRef} data-frassy-transcript className="min-h-0 flex-1 space-y-4 overflow-y-auto px-4 py-4">
+        {startup.greeting && (
+          <div className="w-fit max-w-[90%] rounded-lg bg-white/5 px-3 py-2 text-sm text-white/90">
+            <p className="whitespace-pre-wrap">{startup.greeting}</p>
+          </div>
+        )}
+
+        {startup.notice && (
+          <div className="rounded-sm border border-[color:var(--gold)]/30 bg-[color:var(--gold)]/10 px-3 py-2 text-xs text-white/80">
+            {startup.notice}
+          </div>
+        )}
+
         {messages.map((m) => (
           <div key={m.id}>
             <div
@@ -423,7 +454,7 @@ export function FrassyChat({ embedded = false }: { embedded?: boolean } = {}) {
       </div>
 
 
-      <div className="shrink-0">
+      <div data-frassy-composer className="shrink-0">
         <FrassyComposer
           value={input}
           onChange={setInput}
