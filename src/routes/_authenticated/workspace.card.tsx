@@ -25,6 +25,8 @@ import { ShareCardButton } from "@/components/card/card-share";
 import { CARD_COMMERCE_PRINCIPLE, PAYOUT_PROVIDERS } from "@/lib/card-commerce";
 // FRASS-0488 — identity lives with the Card, not in a separate dashboard.
 import { IdentityCenter } from "@/components/security/identity-center";
+// FRASS-0490 — Founding Partner recognition lives with Builder Identity, not apart from it.
+import { FoundingPanel } from "@/components/founding/founding-panel";
 
 export const Route = createFileRoute("/_authenticated/workspace/card")({
   head: () => ({
@@ -315,6 +317,8 @@ function CardStudio() {
           Open my Wallet
         </Link>
       </section>
+
+      <FoundingPanel name={name} />
 
       <IdentityCenter />
 
