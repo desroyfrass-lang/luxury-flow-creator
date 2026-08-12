@@ -17,6 +17,26 @@ interface TryOnInput {
 // up to a sane weight. Otherwise a link could make Frass swallow an enormous file.
 const MAX_FETCH_BYTES = 12 * 1024 * 1024;
 
+// FRASS security — SSRF protection: only trusted image hosts may be fetched
+// server-side. Anything else (internal hosts, arbitrary third parties) is refused.
+const ALLOWED_IMAGE_HOST_SUFFIXES = [
+  ".supabase.co",
+  ".supabase.in",
+  "cdn.shopify.com",
+  ".myshopify.com",
+  ".shopifycdn.com",
+  "images.unsplash.com",
+  ".lovable.app",
+  ".lovableproject.com",
+];
+
+function isAllowedImageHost(hostname: string): boolean {
+  const host = hostname.toLowerCase();
+  return ALLOWED_IMAGE_HOST_SUFFIXES.some(
+    (suffix) => host === suffix.replace(/^\./, "") || host.endsWith(suffix),
+  );
+}
+
 async function fetchAsDataUrl(url: string): Promise<string> {
   let parsed: URL;
   try {
@@ -25,8 +45,12 @@ async function fetchAsDataUrl(url: string): Promise<string> {
     throw new Error("That image link is not valid.");
   }
   if (parsed.protocol !== "https:") throw new Error("Images must be served over https.");
+  if (!isAllowedImageHost(parsed.hostname)) {
+    throw new Error("That image link isn't from a trusted Frass image source.");
+  }
 
-  const res = await fetch(parsed.toString());
+  const res = await fetch(parsed.toString(), { redirect: "error" });
+
   if (!res.ok) throw new Error(`Failed to fetch image (${res.status}): ${url.slice(0, 80)}`);
 
   const contentType = (res.headers.get("content-type") ?? "").split(";")[0].trim().toLowerCase();
