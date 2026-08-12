@@ -21,6 +21,15 @@ import {
   type FutureVaultRow,
 } from "@/lib/business/future-vaults";
 import {
+  BUSINESS_VAULTS,
+  FAMILY_PRINCIPLE,
+  STAGE_LABEL,
+  STAGE_PLAIN,
+  movesByStage,
+  pathwayMinutes,
+  type VaultStage,
+} from "@/lib/business/vault-family";
+import {
   activateFutureVault,
   listFutureVaults,
   removeFutureVault,
