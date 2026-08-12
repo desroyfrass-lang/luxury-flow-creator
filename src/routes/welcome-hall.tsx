@@ -296,6 +296,23 @@ function WelcomeHallPage() {
           </div>
         </section>
 
+        {/* FRASS-0499 — trust begins before the first step */}
+        <section className="mt-16">
+          <h2 className="text-xl font-black uppercase tracking-tight md:text-2xl">
+            Before you build with us
+          </h2>
+          <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted-foreground">
+            Two agreements govern the whole of Frass. Shoppers accept the Visitor Agreement. Anyone entering
+            Frass Hill to build accepts the Builder Agreement as well. Both are written in plain English first.
+          </p>
+          <div className="mt-6 grid gap-4 lg:grid-cols-2">
+            <AgreementGate level="visitor" />
+            <AgreementGate level="builder" />
+          </div>
+        </section>
+
+
+
         {/* Sightlines — every building visible before it is visited */}
         <section className="mt-16">
           <h2 className="text-xl font-black uppercase tracking-tight md:text-2xl">
