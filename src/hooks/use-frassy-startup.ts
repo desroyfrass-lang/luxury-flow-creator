@@ -22,7 +22,6 @@ import {
   hasVisited,
   markNudged,
   markVisited,
-  IDLE_NUDGE_MS,
   type PresenceState,
 } from "@/lib/frassy/presence";
 import { getVoiceTier, subscribeVoiceTier, type VoiceTier } from "@/lib/voice/voice-tier";
