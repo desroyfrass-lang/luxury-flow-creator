@@ -284,8 +284,8 @@ export const FRASSY_STUDIO_HELP = [
 export const PALETTES: { id: string; label: string; colors: string[] }[] = [
   { id: "frass", label: "Frass House", colors: ["#0a0a0b", "#1c1c1f", "#d4af37", "#c8c8cc", "#8a8a90", "#f5f5f0"] },
   { id: "island", label: "Island Light", colors: ["#0b3d3b", "#118a7e", "#f2c14e", "#f78154", "#e6f2ef", "#1b1b1b"] },
-  { id: "earth", label: "Earth & Ochre", colors: ["#2b1d14", "#7a4b2a", "#b07d४".replace("४", "4"), "#d9b382", "#efe3d0", "#141210"] },
-  { id: "skin", label: "Skin Tones", colors: ["#3b2219", "#6b3f2a", "#a3684a", "#c98d६".replace("६", "6"), "#e5b894", "#f6ddc7"] },
+  { id: "earth", label: "Earth & Ochre", colors: ["#2b1d14", "#7a4b2a", "#b07d44", "#d9b382", "#efe3d0", "#141210"] },
+  { id: "skin", label: "Skin Tones", colors: ["#3b2219", "#6b3f2a", "#a3684a", "#c98d66", "#e5b894", "#f6ddc7"] },
   { id: "night", label: "Night Study", colors: ["#05070f", "#101a33", "#22406b", "#4a76a8", "#8fb3d9", "#dfe9f5"] },
   { id: "pop", label: "Comic Pop", colors: ["#111111", "#ff2e4c", "#ffb703", "#0aa1dd", "#2ec4b6", "#ffffff"] },
 ];
