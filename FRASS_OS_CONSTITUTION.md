@@ -827,3 +827,125 @@ Card, and the Founder's desk inside `/admin/partners`.
 
 **Founder Principle:** Founding Partners are remembered not because they arrived first,
 but because they chose to help build something before its success was certain.
+
+---
+
+## FRASS-0492 — Digital Rights & Content Protection (Constitutional Amendment, P0)
+
+**Protect what members create.** Platform-wide: Frass Gallery, FOR ME, Marketplace,
+FV Studios, Collections, the Media Library, the Frass Card and anything a member makes.
+It extends the existing content, storage and permission architecture. There is no
+second media pipeline and no parallel rights service.
+
+1. **Original member content is protected by default.** Unauthorised copying,
+   downloading and redistribution are made as difficult as reasonably possible, within
+   what devices and browsers actually allow.
+2. **Where technically supported**, Frass disables direct downloads, prevents
+   drag-and-drop saving, prevents right-click saving, applies secure delivery, uses
+   time-limited access for protected assets, applies visible or invisible watermarking,
+   and delivers protected content at display resolution rather than archival quality
+   unless it has been purchased.
+3. **Screenshot honesty.** Screenshots cannot be universally prevented; browsers and
+   operating systems control them. Frass never claims otherwise and never relies on
+   screenshot blocking alone. Protection is layered: secure viewing, watermarking,
+   display-resolution delivery and clear rights. Additional OS-level protection may be
+   enabled where a platform supports it.
+4. **Purchased content matches the creator's licensing choice** — display only,
+   personal download, commercial licence, NFT ownership, or the original physical
+   artwork. Creators remain in control of distribution.
+5. **Frassy teaches rights** — copyright, licensing, pricing, NFT ownership, usage
+   permissions — and never changes a creator's rights without permission.
+6. **Every listing states plainly** ownership status, available licences, purchase
+   options, NFT availability and physical availability.
+7. **Frassy makes the screenshot.** Members should not screenshot Frass to share it.
+   When someone wants to share something they own or are authorised to share, Frassy
+   generates an approved branded share card: Frass Card preview, business milestone,
+   product preview, watermarked artwork preview, achievement certificate, QR code or
+   promotional image. Rather than fight the operating system, Frass offers something
+   better than a screenshot.
+
+**Founder Principle:** Protection should never make the platform difficult to use, but
+creators should always feel that Frass values their work as much as they do.
+
+---
+
+## FRASS-0493 — Trust & Reputation Engine (Constitutional Amendment, P0)
+
+**Your reputation is earned.** This extends the existing Frass identity architecture —
+Frass Card, FOR ME, profiles, verifications. It is not a review platform and not a
+social rating system.
+
+1. **Trust is measured through verified experiences**: completed services, marketplace
+   transactions, deliveries completed, projects delivered, businesses launched, verified
+   partnerships, long-term reliability, community contributions, educational
+   achievements, professional certifications, Founder recognition and verified customer
+   feedback.
+2. **Popularity never counts.** Followers, likes, views, viral reach and audience size
+   never increase trust — not directly, not indirectly.
+3. **Trust is a profile, not a score.** No "92/100", no leaderboard, no stars out of
+   five. Verified accomplishments are shown as facts: Identity Verified · 48 Successful
+   Transactions · 100% of Commitments Met · Certified Esthetician · Founding Partner ·
+   Trusted by 27 Verified Customers.
+4. **Only genuine counterparties may leave feedback** — someone who purchased a product,
+   used a service, completed a shipping transaction or collaborated on a verified
+   project — once per transaction, and never rewritten after the fact.
+5. **Builder growth reflects consistency, not status**: 🌱 New Builder, 🌿 Growing
+   Builder, 🏆 Trusted Builder, ⭐ Established Builder.
+6. **No hidden scoring.** Members always see why trust changed, what helped and what
+   needs improvement.
+7. **Trust recovers.** Honest mistakes are not permanent. Repeated misconduct carries
+   lasting consequences.
+8. **FOR ME tells your story. Trust reflects your reliability.** They complement one
+   another and never merge.
+9. **The Frass Card may display verified trust only** — Verified Builder, Trusted
+   Service Provider, Verified Shipping Partner, Certified Professional. Nothing
+   unverified ever appears.
+
+**Founder Principle:** Trust is earned through integrity, consistency and completed
+commitments — not through popularity.
+
+---
+
+## FRASS-0494 — Architectural Integrity Engine (Constitutional Amendment, P0)
+
+**Build once. Extend forever.** This amendment adds no member-facing feature. It
+protects every future one, and it applies to every feature, department, service and
+business built inside Frass from this point onward.
+
+**The law:** before anything new is built, determine whether the capability already
+exists somewhere in Frass. If it exists — extend it, never duplicate it. If it does not
+— build it once, then make it reusable across the platform.
+
+**Mandatory audit** before creating anything: Daily · Workspace · Welcome Hall · Money
+Moves · Frassy · Builder Vault · Business Builder · FOR ME · Frass Card · Marketplace ·
+Financial Center · Founder Mode · Services Marketplace · existing APIs · existing
+databases · existing navigation · existing permissions · existing UI components.
+
+**One source of truth:** one Frassy · one Wallet · one Financial Center · one Daily ·
+one Workspace · one Money Moves engine · one notification system · one authentication
+system · one profile architecture · one Trust engine. All future improvement extends
+these.
+
+**UI consistency:** reuse existing layouts, buttons, components, permissions, styling
+and animation. Members should feel they are using one platform, not dozens of
+disconnected apps.
+
+**Database integrity:** extend existing tables through configuration before creating new
+ones. Avoid duplicate tables, duplicate business logic, duplicate APIs and duplicate
+permissions.
+
+**Frassy's role:** she understands the platform's architecture and always guides members
+and administrators toward existing workflows rather than inventing parallel ones.
+
+**Founder review — every major feature must answer:** Does this already exist? Can an
+existing system be extended? Will this confuse members? Does this introduce duplicate
+navigation? Does this create duplicate data? Does this strengthen or weaken the overall
+architecture? If duplication cannot be justified, it is not implemented.
+
+**Constitutional Laws:** Audit before building · Extend before creating · One system per
+responsibility · One source of truth · No duplicate engines · No duplicate identities ·
+No duplicate financial systems · No duplicate AI assistants · No duplicate navigation ·
+No duplicate business logic.
+
+**Founder Principle:** Every new capability should make Frass simpler, not more
+complicated. Consistency builds confidence, and confidence builds trust.
