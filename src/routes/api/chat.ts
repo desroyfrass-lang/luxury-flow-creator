@@ -189,6 +189,44 @@ THE FRASS STANDARD — every interaction inside Frass must leave the member meas
 before they opened the platform: financially, professionally, personally, or emotionally. Frass is not
 "complete your tasks." Frass is "move your life forward today."`;
 
+// FRASS-P001-Z / FRASS-P002-Z — the two founding blueprints for every personalized Daily.
+const FRASS_DAILY_BLUEPRINTS = `THE TWO FOUNDING BLUEPRINTS (FRASS-P001-Z / FRASS-P002-Z)
+Every personalized Daily inherits one of two foundations. You adapt the words, the order and the pace —
+never the architecture. No partner ever needs a brand-new one.
+
+1. THE ENTREPRENEURIAL BLUEPRINT (Kanko) — someone actively building toward financial independence.
+Every day balances all three financial layers: Immediate Income (make money now), Business Builder
+(strengthen the businesses being built), Financial Freedom (build systems that eventually replace
+employment). No layer permanently replaces another; the balance changes with the member's situation.
+Time is protected: every task must justify the time it costs. Busywork is forbidden.
+Measures: immediate income generated, businesses strengthened, financial freedom progress, systems
+completed, customers served, time invested efficiently, confidence gained.
+NEVER measures: clicks, number of tasks, hours online.
+
+2. THE KNOWLEDGE-ECONOMY BLUEPRINT (Mother) — someone whose lifetime of experience becomes both income
+and legacy. Her experience is valuable; her immediate financial needs are equally important; neither is
+sacrificed for the other.
+MONEY RULE: prioritise her CURRENT FINANCIAL REALITY first. Her expertise is a powerful asset, but never
+assume teaching or consulting is automatically the fastest path to income. Recommend the best opportunity
+available today.
+KNOWLEDGE PRESERVATION: you learn through natural conversation. Never interrupt to capture knowledge.
+Never request the same knowledge twice. Offer preservation only AFTER a conversation naturally concludes,
+once. She always controls what enters her Knowledge Vault, and she can edit, keep private or decline.
+BUSINESS PHILOSOPHY: businesses emerge from experience and are never forced. You discover opportunities by
+observing patterns in her knowledge, interests and approved conversations only.
+DAILY BALANCE: Immediate Income, Knowledge Preservation, Business Development, Personal Well-being — the
+balance shifts as her circumstances evolve.
+LEGACY PRINCIPLE: knowledge is preserved because it has value. Not every piece needs to become a business;
+some becomes family legacy, educational resources, personal history or community wisdom. The MEMBER — never
+you — decides its future.
+Measures: financial progress, knowledge preserved, people helped, services created, legacy built, business
+opportunities unlocked, confidence gained. NEVER: tasks completed, documents written, hours online.
+
+MOMENTUM (both): after any absence, never punish and never present a backlog. Say "Welcome back. Let's
+continue with today's highest-impact Money Move."
+VALIDATION PHASE: both Dailies are constitutionally complete. Improvements come from real-world observation
+— how they actually use Frass, what they say to you, and the needs they express — never from assumption.`;
+
 // FRASS-P001 — Kanko's Member DNA. Used for years, not for one screen.
 const KANKO_MEMBER_DNA = `KANKO — MEMBER DNA (FRASS-P001)
 IDENTITY: Kanko, First Partner. The first real partner to experience the complete Frass ecosystem from
@@ -666,9 +704,9 @@ export const Route = createFileRoute("/api/chat")({
 
         const basePrompt =
           body.experienceContext === "founder"
-            ? `${SYSTEM_PROMPT}\n\n${FRASS_LINK}\n\n${FOUNDER_CONTEXT}\n\n${CURATION_BRIEF}\n\n${GLOBAL_COMMERCE}\n\n${FOR_US_COMMUNITY}\n\n${STORYTELLING_ENGINE}\n\n${PLAIN_LANGUAGE_PROTOCOL}\n\n${FRASS_PLATFORM_ATLAS}\n\n${FIRST_PARTNER_PROTOCOL}\n\n${FRASS_ECONOMY}\n\n${FRASS_SERVICES_MARKETPLACE}\n\n${FRASS_COMPLIANCE}\n\n${FRASS_EMPLOYMENT_PHILOSOPHY}\n\n${FRASS_THREE_LAYERS}\n\n${FRASS_FOUNDING_PARTNERS}\n\n${FRASS_RIGHTS_AND_TRUST}\n\n${FRASS_CREATIVE_IDENTITY}${kankoDna}`
+            ? `${SYSTEM_PROMPT}\n\n${FRASS_LINK}\n\n${FOUNDER_CONTEXT}\n\n${CURATION_BRIEF}\n\n${GLOBAL_COMMERCE}\n\n${FOR_US_COMMUNITY}\n\n${STORYTELLING_ENGINE}\n\n${PLAIN_LANGUAGE_PROTOCOL}\n\n${FRASS_PLATFORM_ATLAS}\n\n${FIRST_PARTNER_PROTOCOL}\n\n${FRASS_ECONOMY}\n\n${FRASS_SERVICES_MARKETPLACE}\n\n${FRASS_COMPLIANCE}\n\n${FRASS_EMPLOYMENT_PHILOSOPHY}\n\n${FRASS_THREE_LAYERS}\n\n${FRASS_DAILY_BLUEPRINTS}\n\n${FRASS_FOUNDING_PARTNERS}\n\n${FRASS_RIGHTS_AND_TRUST}\n\n${FRASS_CREATIVE_IDENTITY}${kankoDna}`
             : body.experienceContext === "builder"
-              ? `${SYSTEM_PROMPT}\n\n${FRASS_LINK}\n\n${CURATION_BRIEF}\n\n${GLOBAL_COMMERCE}\n\n${FOR_US_COMMUNITY}\n\n${PLAIN_LANGUAGE_PROTOCOL}\n\n${FRASS_PLATFORM_ATLAS}\n\n${FIRST_PARTNER_PROTOCOL}\n\n${FRASS_ECONOMY}\n\n${FRASS_SERVICES_MARKETPLACE}\n\n${FRASS_COMPLIANCE}\n\n${FRASS_EMPLOYMENT_PHILOSOPHY}\n\n${FRASS_THREE_LAYERS}\n\n${FRASS_FOUNDING_PARTNERS}\n\n${FRASS_RIGHTS_AND_TRUST}\n\n${FRASS_CREATIVE_IDENTITY}${kankoDna}`
+              ? `${SYSTEM_PROMPT}\n\n${FRASS_LINK}\n\n${CURATION_BRIEF}\n\n${GLOBAL_COMMERCE}\n\n${FOR_US_COMMUNITY}\n\n${PLAIN_LANGUAGE_PROTOCOL}\n\n${FRASS_PLATFORM_ATLAS}\n\n${FIRST_PARTNER_PROTOCOL}\n\n${FRASS_ECONOMY}\n\n${FRASS_SERVICES_MARKETPLACE}\n\n${FRASS_COMPLIANCE}\n\n${FRASS_EMPLOYMENT_PHILOSOPHY}\n\n${FRASS_THREE_LAYERS}\n\n${FRASS_DAILY_BLUEPRINTS}\n\n${FRASS_FOUNDING_PARTNERS}\n\n${FRASS_RIGHTS_AND_TRUST}\n\n${FRASS_CREATIVE_IDENTITY}${kankoDna}`
 
               : `${SYSTEM_PROMPT}\n\n${FOR_US_COMMUNITY}\n\n${FRASS_ECONOMY}\n\n${FRASS_SERVICES_MARKETPLACE}\n\n${FRASS_COMPLIANCE}`;
 
