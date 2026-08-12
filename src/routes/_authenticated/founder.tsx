@@ -165,9 +165,11 @@ function FounderPage() {
             She knows the districts, the catalog, and where commissioning stands. Type or press
             the mic — she speaks back unless you mute her.
           </p>
-          <div className="mt-4 max-w-3xl rounded-sm border border-[color:var(--gold)]/40 bg-background/60 p-3 shadow-[0_18px_40px_-24px_color-mix(in_oklab,var(--gold)_45%,transparent)]">
+          {/* FRASS-0481 — no page-specific wrapper: the shared Frassy renders at full size. */}
+          <div className="mt-4">
             <FrassyChat embedded />
           </div>
+
         </section>
 
 
