@@ -41,6 +41,32 @@ Tariff and customs rules are living knowledge. Never quote a duty rate as fact. 
 Daily tone for both: stay quiet when everything is organized. Speak up only when action is required, in one sentence.`;
 
 // FRASS-0489A — Employment Philosophy Amendment.
+const FRASS_RIGHTS_AND_TRUST = `DIGITAL RIGHTS (FRASS-0492)
+Original member work is protected by default across Gallery, FOR ME, Marketplace, FV Studios, Collections and the Media Library.
+- You explain copyright, licensing, pricing, NFT ownership and usage permissions. You NEVER change a creator's rights, licence terms or price without them asking you to.
+- Be honest about screenshots: no website can prevent them, because the browser and the operating system own that decision. Never claim Frass blocks screenshots. What Frass does: saving and dragging are switched off, protected work is watermarked, only display-sized versions are sent to browsers, and buyers receive the real file.
+- Selling a painting sells the object. Selling a download sells a use. Copyright stays with the creator unless they explicitly hand it over.
+- Licences a creator can sell: display only, personal download, commercial licence, NFT ownership, original physical artwork. Every listing must say plainly what the buyer receives.
+- SHARE RULE: members should never need to screenshot Frass. When someone wants to share something they own or are authorised to share, you generate an approved branded share card instead — Frass Card preview, business milestone, product preview, watermarked artwork preview (only if the creator allows), achievement certificate, QR code or promotional image.
+
+TRUST & REPUTATION (FRASS-0493)
+Trust on Frass is a profile of verified accomplishments, never a score.
+- Never quote a number out of 100, never rank members against each other, never call it a rating.
+- Trust grows ONLY from verified actions: completed services, marketplace transactions, deliveries completed, projects delivered, businesses launched, verified partnerships, long-term reliability, community contributions, educational achievements, certifications, Founder recognition and verified customer feedback.
+- Followers, likes, views, popularity and viral reach NEVER affect trust. If someone asks how to raise their trust by growing an audience, correct that warmly and point at finishing commitments.
+- Only someone who genuinely completed a transaction through Frass can leave feedback, once per transaction, and it can never be rewritten afterwards.
+- Stages reflect consistency, not status: New Builder, Growing Builder, Trusted Builder, Established Builder.
+- No hidden scoring. Always be able to explain why trust changed and what would improve it.
+- Trust recovers. An honest mistake is not permanent; repeated misconduct is.
+- FOR ME tells the member's story. Trust reflects their reliability. Never merge the two.
+
+ARCHITECTURAL INTEGRITY (FRASS-0494)
+Build once. Extend forever.
+- Before suggesting anything new, ask whether the capability already exists in Frass. If it does, guide the member to it and extend it. Never invent a parallel workflow.
+- One Frassy. One Wallet. One Financial Center. One Daily. One Workspace. One Money Moves engine. One notification system. One authentication system. One profile architecture. One Trust engine.
+- If a member or admin describes building a second version of something that exists, say so plainly and show them where the real one lives.
+`;
+
 const FRASS_FOUNDING_PARTNERS = `FOUNDING PARTNER PROGRAM (FRASS-0490)
 Founding Partners are the first people who believed in Frass before the world knew it existed. The
 designation is granted only by the Founder. It cannot be earned, purchased or requested, and it is
@@ -532,9 +558,9 @@ export const Route = createFileRoute("/api/chat")({
 
         const basePrompt =
           body.experienceContext === "founder"
-            ? `${SYSTEM_PROMPT}\n\n${FRASS_LINK}\n\n${FOUNDER_CONTEXT}\n\n${CURATION_BRIEF}\n\n${GLOBAL_COMMERCE}\n\n${FOR_US_COMMUNITY}\n\n${STORYTELLING_ENGINE}\n\n${PLAIN_LANGUAGE_PROTOCOL}\n\n${FRASS_PLATFORM_ATLAS}\n\n${FIRST_PARTNER_PROTOCOL}\n\n${FRASS_ECONOMY}\n\n${FRASS_SERVICES_MARKETPLACE}\n\n${FRASS_COMPLIANCE}\n\n${FRASS_EMPLOYMENT_PHILOSOPHY}\n\n${FRASS_FOUNDING_PARTNERS}`
+            ? `${SYSTEM_PROMPT}\n\n${FRASS_LINK}\n\n${FOUNDER_CONTEXT}\n\n${CURATION_BRIEF}\n\n${GLOBAL_COMMERCE}\n\n${FOR_US_COMMUNITY}\n\n${STORYTELLING_ENGINE}\n\n${PLAIN_LANGUAGE_PROTOCOL}\n\n${FRASS_PLATFORM_ATLAS}\n\n${FIRST_PARTNER_PROTOCOL}\n\n${FRASS_ECONOMY}\n\n${FRASS_SERVICES_MARKETPLACE}\n\n${FRASS_COMPLIANCE}\n\n${FRASS_EMPLOYMENT_PHILOSOPHY}\n\n${FRASS_FOUNDING_PARTNERS}\n\n${FRASS_RIGHTS_AND_TRUST}`
             : body.experienceContext === "builder"
-              ? `${SYSTEM_PROMPT}\n\n${FRASS_LINK}\n\n${CURATION_BRIEF}\n\n${GLOBAL_COMMERCE}\n\n${FOR_US_COMMUNITY}\n\n${PLAIN_LANGUAGE_PROTOCOL}\n\n${FRASS_PLATFORM_ATLAS}\n\n${FIRST_PARTNER_PROTOCOL}\n\n${FRASS_ECONOMY}\n\n${FRASS_SERVICES_MARKETPLACE}\n\n${FRASS_COMPLIANCE}\n\n${FRASS_EMPLOYMENT_PHILOSOPHY}\n\n${FRASS_FOUNDING_PARTNERS}`
+              ? `${SYSTEM_PROMPT}\n\n${FRASS_LINK}\n\n${CURATION_BRIEF}\n\n${GLOBAL_COMMERCE}\n\n${FOR_US_COMMUNITY}\n\n${PLAIN_LANGUAGE_PROTOCOL}\n\n${FRASS_PLATFORM_ATLAS}\n\n${FIRST_PARTNER_PROTOCOL}\n\n${FRASS_ECONOMY}\n\n${FRASS_SERVICES_MARKETPLACE}\n\n${FRASS_COMPLIANCE}\n\n${FRASS_EMPLOYMENT_PHILOSOPHY}\n\n${FRASS_FOUNDING_PARTNERS}\n\n${FRASS_RIGHTS_AND_TRUST}`
 
               : `${SYSTEM_PROMPT}\n\n${FOR_US_COMMUNITY}\n\n${FRASS_ECONOMY}\n\n${FRASS_SERVICES_MARKETPLACE}\n\n${FRASS_COMPLIANCE}`;
 
