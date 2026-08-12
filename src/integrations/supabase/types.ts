@@ -456,6 +456,45 @@ export type Database = {
           },
         ]
       }
+      auth_devices: {
+        Row: {
+          approx_location: string | null
+          device_key: string
+          first_seen_at: string
+          id: string
+          label: string
+          last_seen_at: string
+          platform: string | null
+          revoked_at: string | null
+          trusted: boolean
+          user_id: string
+        }
+        Insert: {
+          approx_location?: string | null
+          device_key: string
+          first_seen_at?: string
+          id?: string
+          label?: string
+          last_seen_at?: string
+          platform?: string | null
+          revoked_at?: string | null
+          trusted?: boolean
+          user_id: string
+        }
+        Update: {
+          approx_location?: string | null
+          device_key?: string
+          first_seen_at?: string
+          id?: string
+          label?: string
+          last_seen_at?: string
+          platform?: string | null
+          revoked_at?: string | null
+          trusted?: boolean
+          user_id?: string
+        }
+        Relationships: []
+      }
       blog_posts: {
         Row: {
           author: string | null
@@ -3976,6 +4015,36 @@ export type Database = {
         }
         Relationships: []
       }
+      sensitive_verifications: {
+        Row: {
+          action: string
+          created_at: string
+          device_key: string | null
+          id: string
+          method: string
+          succeeded: boolean
+          user_id: string
+        }
+        Insert: {
+          action: string
+          created_at?: string
+          device_key?: string | null
+          id?: string
+          method: string
+          succeeded: boolean
+          user_id: string
+        }
+        Update: {
+          action?: string
+          created_at?: string
+          device_key?: string | null
+          id?: string
+          method?: string
+          succeeded?: boolean
+          user_id?: string
+        }
+        Relationships: []
+      }
       site_images: {
         Row: {
           alt: string | null
@@ -4304,6 +4373,48 @@ export type Database = {
           },
         ]
       }
+      user_passkeys: {
+        Row: {
+          backed_up: boolean
+          counter: number
+          created_at: string
+          credential_id: string
+          device_kind: string
+          device_label: string
+          id: string
+          last_used_at: string | null
+          public_key: string
+          transports: string[]
+          user_id: string
+        }
+        Insert: {
+          backed_up?: boolean
+          counter?: number
+          created_at?: string
+          credential_id: string
+          device_kind?: string
+          device_label?: string
+          id?: string
+          last_used_at?: string | null
+          public_key: string
+          transports?: string[]
+          user_id: string
+        }
+        Update: {
+          backed_up?: boolean
+          counter?: number
+          created_at?: string
+          credential_id?: string
+          device_kind?: string
+          device_label?: string
+          id?: string
+          last_used_at?: string | null
+          public_key?: string
+          transports?: string[]
+          user_id?: string
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           created_at: string
@@ -4537,6 +4648,30 @@ export type Database = {
           themes?: string[]
           transcript?: string | null
           updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      webauthn_challenges: {
+        Row: {
+          challenge: string
+          created_at: string
+          expires_at: string
+          purpose: string
+          user_id: string
+        }
+        Insert: {
+          challenge: string
+          created_at?: string
+          expires_at?: string
+          purpose: string
+          user_id: string
+        }
+        Update: {
+          challenge?: string
+          created_at?: string
+          expires_at?: string
+          purpose?: string
           user_id?: string
         }
         Relationships: []

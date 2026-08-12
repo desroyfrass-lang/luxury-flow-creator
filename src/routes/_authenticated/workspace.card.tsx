@@ -23,6 +23,8 @@ import {
 } from "@/lib/card";
 import { ShareCardButton } from "@/components/card/card-share";
 import { CARD_COMMERCE_PRINCIPLE, PAYOUT_PROVIDERS } from "@/lib/card-commerce";
+// FRASS-0488 — identity lives with the Card, not in a separate dashboard.
+import { IdentityCenter } from "@/components/security/identity-center";
 
 export const Route = createFileRoute("/_authenticated/workspace/card")({
   head: () => ({
@@ -313,6 +315,8 @@ function CardStudio() {
           Open my Wallet
         </Link>
       </section>
+
+      <IdentityCenter />
 
       <PageFeedback pageTitle="Frass Card" />
     </main>

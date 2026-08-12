@@ -1,31 +1,34 @@
 import { createFileRoute, useNavigate, Link, Outlet, useRouterState } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { useQuery } from "@tanstack/react-query";
-import { useEffect, useMemo, useState } from "react";
-import { toast } from "sonner";
+import { useEffect, useMemo } from "react";
 import { SiteShell } from "@/components/site-shell";
 import { PageFeedback } from "@/components/page-feedback";
 import {
   BUSINESS_ROLES,
   getMyBusinessRoles,
-  reauthenticateWithPassword,
   type BusinessRole,
 } from "@/lib/workspace.functions";
 import symbolLogo from "@/assets/frass-logo-symbol.asset.json";
+import { IdentityGate } from "@/components/security/identity-gate";
 
 export const Route = createFileRoute("/_authenticated/workspace")({
-  component: WorkspacePage,
+  component: WorkspaceRoute,
 });
 
-const REAUTH_KEY = "frass:workspace-reauth";
-const REAUTH_MS = 15 * 60 * 1000;
-
-function hasFreshReauth(): boolean {
-  if (typeof window === "undefined") return false;
-  const raw = window.sessionStorage.getItem(REAUTH_KEY);
-  if (!raw) return false;
-  const ts = Number(raw);
-  return Number.isFinite(ts) && Date.now() - ts < REAUTH_MS;
+// FRASS-0488 — the bespoke password form that used to live here is gone.
+// Every sensitive door in Frass now uses the one shared IdentityGate:
+// strongest method first (Face ID / Touch ID / Windows Hello / passkey),
+// password always available as the fallback.
+function WorkspaceRoute() {
+  const pathname = useRouterState({ select: (s) => s.location.pathname });
+  // Child routes gate themselves; only the lounge needs the identity check.
+  if (pathname !== "/workspace") return <Outlet />;
+  return (
+    <IdentityGate action="workspace">
+      <WorkspacePage />
+    </IdentityGate>
+  );
 }
 
 const ROLE_META: Record<BusinessRole, { label: string; blurb: string; to?: string }> = {
@@ -42,20 +45,6 @@ const ROLE_META: Record<BusinessRole, { label: string; blurb: string; to?: strin
 function WorkspacePage() {
   const navigate = useNavigate();
   const rolesFn = useServerFn(getMyBusinessRoles);
-  const reauthFn = useServerFn(reauthenticateWithPassword);
-  const [reauthed, setReauthed] = useState(false);
-  const [password, setPassword] = useState("");
-  const [submitting, setSubmitting] = useState(false);
-  const pathname = useRouterState({ select: (s) => s.location.pathname });
-  const isChildRoute = pathname !== "/workspace";
-
-  // Child routes (e.g. /workspace/merch) render themselves inside their own SiteShell
-  // and handle their own role gating. This page only shows the lounge at /workspace.
-  if (isChildRoute) return <Outlet />;
-
-  useEffect(() => {
-    setReauthed(hasFreshReauth());
-  }, []);
 
   const { data: roles, isLoading } = useQuery({
     queryKey: ["workspace-roles"],
@@ -75,31 +64,6 @@ function WorkspacePage() {
     }
   }, [isLoading, roles, navigate]);
 
-  const onSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setSubmitting(true);
-    try {
-      const res = await reauthFn({ data: { password } });
-      if (!res.ok) {
-        toast.error("Identity not confirmed.");
-        setPassword("");
-        return;
-      }
-      window.sessionStorage.setItem(REAUTH_KEY, String(Date.now()));
-      setReauthed(true);
-      setPassword("");
-      // Auto-enter the highest workspace with a destination.
-      const primary = orderedRoles.find((r) => ROLE_META[r].to);
-      if (primary && ROLE_META[primary].to) {
-        navigate({ to: ROLE_META[primary].to! });
-      }
-    } catch {
-      toast.error("Identity not confirmed.");
-    } finally {
-      setSubmitting(false);
-    }
-  };
-
   return (
     <SiteShell>
       <div className="mx-auto max-w-2xl px-6 py-24">
@@ -112,7 +76,7 @@ function WorkspacePage() {
             You're entering your Frass Hill Workspace.
           </h1>
           <p className="mt-4 text-sm text-muted-foreground">
-            For your protection, please confirm your identity to unlock business systems.
+            Your identity is confirmed. Choose the system you want to work in.
           </p>
         </div>
 
@@ -122,34 +86,6 @@ function WorkspacePage() {
           <div className="mt-16 text-center text-sm text-muted-foreground">
             Returning you to the boutique…
           </div>
-        ) : !reauthed ? (
-          <form
-            onSubmit={onSubmit}
-            className="mt-12 rounded-2xl border border-[color:var(--gold)]/30 bg-background/70 p-8 shadow-2xl backdrop-blur"
-          >
-            <label className="text-[10px] uppercase tracking-[0.3em] text-muted-foreground">
-              Confirm password
-            </label>
-            <input
-              type="password"
-              autoFocus
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="mt-2 w-full rounded-sm border border-border bg-background px-4 py-3 text-sm outline-none focus:border-[color:var(--gold)]"
-              placeholder="••••••••"
-              autoComplete="current-password"
-            />
-            <button
-              type="submit"
-              disabled={submitting || !password}
-              className="lux-press mt-6 w-full rounded-sm border border-[color:var(--gold)] bg-[color:var(--gold)] px-6 py-3.5 text-xs font-bold uppercase tracking-[0.32em] text-[color:var(--ink)] disabled:opacity-50"
-            >
-              {submitting ? "Verifying…" : "Enter Workspace"}
-            </button>
-            <p className="mt-4 text-center text-[10px] uppercase tracking-[0.25em] text-muted-foreground">
-              Additional methods coming soon · Passkeys · Face ID · Security Keys
-            </p>
-          </form>
         ) : (
           <div className="mt-12 space-y-3">
             <div className="text-center text-[10px] uppercase tracking-[0.3em] text-[color:var(--gold)]">
