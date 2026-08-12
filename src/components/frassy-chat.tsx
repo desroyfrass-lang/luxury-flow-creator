@@ -57,7 +57,19 @@ const nextId = () => `m${++seq}-${Date.now()}`;
 
 export function FrassyChat({ embedded = false }: { embedded?: boolean } = {}) {
   const [open, setOpen] = useState(embedded);
+  // FRASS-0476B — one shared conversation history. A refresh or a change of
+  // district continues the same conversation instead of restarting it.
   const [messages, setMessages] = useState<Msg[]>([]);
+  useEffect(() => {
+    const prior = loadTranscript();
+    if (prior.length) {
+      setMessages(prior.map((t) => ({ id: nextId(), role: t.role, content: t.content })));
+    }
+  }, []);
+  useEffect(() => {
+    if (messages.length) saveTranscript(messages.map((m) => ({ role: m.role, content: m.content })));
+  }, [messages]);
+
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
