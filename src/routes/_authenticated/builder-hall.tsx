@@ -1,4 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { WorkingStyleCard } from "@/components/frassy/working-style-card";
 import { useServerFn } from "@tanstack/react-start";
 import { useQuery } from "@tanstack/react-query";
 import { useMemo } from "react";
@@ -147,6 +148,18 @@ function WelcomeHallPage() {
               </Link>
             </>
           )}
+        </section>
+
+        {/* FRASS-0478 — how you like to work */}
+        <section className="mt-16">
+          <h2 className="font-display text-2xl">How Frassy works with you</h2>
+          <p className="mt-2 text-sm text-muted-foreground">
+            Not what you said — how you like to be helped. Learned by observation, never
+            configured.
+          </p>
+          <div className="mt-8 max-w-xl">
+            <WorkingStyleCard />
+          </div>
         </section>
 
         {/* What Frassy remembers */}

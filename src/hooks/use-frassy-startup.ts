@@ -24,6 +24,7 @@ import {
   markVisited,
   type PresenceState,
 } from "@/lib/frassy/presence";
+import { markNudgeOffered } from "@/lib/frassy/working-style";
 import { getVoiceTier, subscribeVoiceTier, type VoiceTier } from "@/lib/voice/voice-tier";
 import {
   FAULT_LABELS,
@@ -121,6 +122,9 @@ export function useFrassyStartup(opts: {
       );
       if (decision.state === "idle" && decision.line) {
         markNudged(roomId);
+        // FRASS-0478 — the offer is now open; how they answer teaches her
+        // whether reminders are welcome for this person.
+        markNudgeOffered();
         setPresence("idle");
         setNotice(decision.line);
       } else if (decision.state === "working") {

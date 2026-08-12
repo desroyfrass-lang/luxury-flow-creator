@@ -25,6 +25,13 @@ import { VoiceFeedbackButton } from "@/components/feedback/voice-feedback";
 import { useFrassyStartup } from "@/hooks/use-frassy-startup";
 import { loadTranscript, saveTranscript, type FrassyTurn } from "@/lib/frassy/transcript";
 import { VOICE_TIER_LABELS } from "@/lib/voice/voice-tier";
+// FRASS-0478 — she learns how you like to work, never who you are.
+import {
+  observeInterruption,
+  observeNudge,
+  observeTurn,
+  workingStyleContext,
+} from "@/lib/frassy/working-style";
 
 type ProductCard = {
   handle: string;
@@ -189,6 +196,13 @@ export function FrassyChat({ embedded = false }: { embedded?: boolean } = {}) {
     const controller = new AbortController();
     abortRef.current = controller;
 
+    // Did they take her up on the gentle offer of help, or work straight past it?
+    observeNudge(startup.presence === "idle");
+
+    // FRASS-0478 — observe *how* they work (channel, length, timing), then hand
+    // Frassy manner-guidance only. Nothing here leaves the browser as raw data.
+    const style = observeTurn({ channel: spoken ? "voice" : "text", text });
+
     try {
       const res = await fetch("/api/chat", {
         method: "POST",
@@ -205,6 +219,7 @@ export function FrassyChat({ embedded = false }: { embedded?: boolean } = {}) {
           // Actual runtime interaction mode, so Frassy never misstates her capabilities.
           interactionMode: spoken ? "voice_and_text" : "text",
           voiceAvailable: voice.voiceAvailable,
+          workingStyleContext: workingStyleContext(style) || undefined,
           stream: false,
         }),
       });
@@ -256,6 +271,8 @@ export function FrassyChat({ embedded = false }: { embedded?: boolean } = {}) {
   // Push-to-talk: press → record, press again → transcribe → one spoken turn.
   async function toggleMic() {
     if (voice.phase === "speaking") {
+      // Cutting her off mid-sentence is the clearest "shorter, please" signal.
+      observeInterruption();
       voice.stopSpeaking();
       return;
     }

@@ -317,6 +317,8 @@ export const Route = createFileRoute("/api/chat")({
           arrivalIntent?: string;
           interactionMode?: "text" | "voice_and_text" | "voice_only";
           voiceAvailable?: boolean;
+          // FRASS-0478 — learned working style (manner guidance only, never facts).
+          workingStyleContext?: string;
           stream?: boolean;
           attachments?: Array<{
             name: string;
@@ -378,6 +380,7 @@ export const Route = createFileRoute("/api/chat")({
           body.seasonContext && `Season accent: ${body.seasonContext}`,
           body.memoryContext && `Shopper memory: ${body.memoryContext}`,
           body.cartContext && `Cart: ${body.cartContext}`,
+          body.workingStyleContext,
           attachmentContext,
         ]
           .filter(Boolean)
