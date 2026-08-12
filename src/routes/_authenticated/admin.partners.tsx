@@ -10,6 +10,15 @@ import {
   listPartnerInvitations,
   revokePartnerInvitation,
 } from "@/lib/partners.functions";
+// FRASS-0490 — Founding Partner Program shares this desk; it is not a second partner system.
+import { FOUNDING_PLAIN_ENGLISH, FOUNDING_PRINCIPLE } from "@/lib/founding";
+import { FoundingBadge } from "@/components/founding/founding-badge";
+import {
+  getFoundingRoster,
+  grantFoundingPartner,
+  revokeFoundingPartner,
+  setFoundingPeriod,
+} from "@/lib/founding.functions";
 
 /**
  * FRASS-0456 — Founder's invitation desk.
@@ -173,3 +182,149 @@ function AdminPartners() {
   );
 }
 
+
+/**
+ * FRASS-0490 — Founding Partner Program.
+ * Only the Founder can open this desk, and only from here can recognition begin.
+ */
+function FoundingDesk() {
+  const rosterFn = useServerFn(getFoundingRoster);
+  const grantFn = useServerFn(grantFoundingPartner);
+  const revokeFn = useServerFn(revokeFoundingPartner);
+  const periodFn = useServerFn(setFoundingPeriod);
+  const qc = useQueryClient();
+
+  const roster = useQuery({ queryKey: ["founding-roster"], queryFn: () => rosterFn() });
+  const [email, setEmail] = useState("");
+  const [note, setNote] = useState("");
+
+  const refresh = () => qc.invalidateQueries({ queryKey: ["founding-roster"] });
+
+  const grant = useMutation({
+    mutationFn: () => grantFn({ data: { email, note: note || undefined } }),
+    onSuccess: () => {
+      toast.success("Founding Partner recognised. This is permanent.");
+      setEmail("");
+      setNote("");
+      refresh();
+    },
+    onError: (e: Error) => toast.error(e.message),
+  });
+
+  const drop = useMutation({
+    mutationFn: (id: string) => revokeFn({ data: { id } }),
+    onSuccess: refresh,
+    onError: (e: Error) => toast.error(e.message),
+  });
+
+  const period = useMutation({
+    mutationFn: (open: boolean) => periodFn({ data: { open } }),
+    onSuccess: (r) => {
+      toast.success(r.open ? "Founding period reopened." : "Founding period closed.");
+      refresh();
+    },
+    onError: (e: Error) => toast.error(e.message),
+  });
+
+  const open = roster.data?.periodOpen ?? false;
+
+  return (
+    <section className="mt-20 border-t border-border pt-12">
+      <div className="text-[11px] uppercase tracking-[0.32em] text-[color:var(--gold)]">
+        FRASS-0490
+      </div>
+      <h2 className="mt-3 font-display text-4xl">Founding Partners</h2>
+      <p className="mt-4 max-w-2xl text-sm leading-relaxed text-muted-foreground">
+        {FOUNDING_PRINCIPLE}
+      </p>
+      <p className="mt-3 max-w-2xl text-sm leading-relaxed text-muted-foreground">
+        {FOUNDING_PLAIN_ENGLISH}
+      </p>
+
+      <div className="mt-8 flex flex-wrap items-center gap-4 rounded-sm border border-border bg-background/40 px-5 py-4">
+        <div className="flex-1">
+          <div className="text-sm font-semibold">
+            Founding period is {open ? "open" : "closed"}
+          </div>
+          <div className="text-xs text-muted-foreground">
+            {open
+              ? "You can recognise new Founding Partners right now."
+              : "No new Founding Partners can be created until you reopen it."}
+          </div>
+        </div>
+        <button
+          onClick={() => period.mutate(!open)}
+          disabled={period.isPending}
+          className="rounded-sm border border-border px-5 py-2 text-[10px] uppercase tracking-[0.28em] hover:border-[color:var(--gold)]"
+        >
+          {open ? "Close the founding period" : "Reopen the founding period"}
+        </button>
+      </div>
+
+      <form
+        className="mt-6 grid gap-4 sm:grid-cols-[2fr_2fr_auto]"
+        onSubmit={(e) => {
+          e.preventDefault();
+          grant.mutate();
+        }}
+      >
+        <input
+          type="email"
+          required
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          placeholder="Member's email (they must already be on Frass)"
+          className="rounded-sm border border-border bg-background/60 px-4 py-3 text-sm"
+        />
+        <input
+          value={note}
+          onChange={(e) => setNote(e.target.value)}
+          placeholder="Private note for the record (optional)"
+          className="rounded-sm border border-border bg-background/60 px-4 py-3 text-sm"
+        />
+        <button
+          type="submit"
+          disabled={!open || grant.isPending}
+          className="lux-press rounded-sm border border-[color:var(--gold)] bg-[color:var(--gold)] px-7 py-3 text-[11px] font-bold uppercase tracking-[0.3em] text-[color:var(--ink)] disabled:opacity-50"
+        >
+          {grant.isPending ? "Recording…" : "Recognise"}
+        </button>
+      </form>
+
+      <div className="mt-10 space-y-3">
+        {roster.data?.partners.length === 0 && (
+          <p className="text-sm text-muted-foreground">
+            No Founding Partners yet. The first one recognised becomes No. 1 forever.
+          </p>
+        )}
+        {roster.data?.partners.map((p) => (
+          <div
+            key={p.id}
+            className="flex items-center justify-between gap-4 rounded-sm border border-border bg-background/40 px-5 py-4"
+          >
+            <div>
+              <div className="flex items-center gap-3 text-sm font-semibold">
+                <FoundingBadge sequence={p.sequence} size="sm" />
+                {p.name || p.email || p.userId}
+              </div>
+              <div className="mt-1 text-xs text-muted-foreground">
+                Invited {new Date(p.invitedAt).toLocaleDateString()} ·{" "}
+                {p.acceptedAt
+                  ? `Accepted ${new Date(p.acceptedAt).toLocaleDateString()}`
+                  : "Not yet accepted"}{" "}
+                · Visibility: {p.visibility}
+                {p.note ? ` · ${p.note}` : ""}
+              </div>
+            </div>
+            <button
+              onClick={() => drop.mutate(p.id)}
+              className="text-[10px] uppercase tracking-[0.28em] text-muted-foreground hover:text-destructive"
+            >
+              Remove
+            </button>
+          </div>
+        ))}
+      </div>
+    </section>
+  );
+}
