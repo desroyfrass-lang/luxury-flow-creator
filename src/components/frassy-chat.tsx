@@ -211,6 +211,7 @@ export function FrassyChat({ embedded = false }: { embedded?: boolean } = {}) {
           // Actual runtime interaction mode, so Frassy never misstates her capabilities.
           interactionMode: spoken ? "voice_and_text" : "text",
           voiceAvailable: voice.voiceAvailable,
+          workingStyleContext: workingStyleContext(style) || undefined,
           stream: false,
         }),
       });
