@@ -14,12 +14,16 @@ function KidsWorldLayout() {
     ? KIDS_WORLDS.filter((w) => w.slug === passport.age)
     : KIDS_WORLDS;
 
+  const activeAge = KIDS_WORLDS.find((w) => path.includes(`/kids-world/${w.slug}`))?.slug;
+
   return (
     <SiteShell>
+      <div className="kids-zone min-h-screen" data-age={activeAge ?? "3-6"}>
       <nav
         aria-label="Kids World"
-        className="sticky top-[64px] z-30 border-b border-[color:var(--gold)]/20 bg-background/85 backdrop-blur-xl"
+        className="sticky top-[64px] z-30 border-b border-[color:var(--primary)]/25 bg-background/90 backdrop-blur-xl"
       >
+
         <div className="mx-auto flex max-w-[1600px] flex-wrap items-center gap-3 px-6 py-3 lg:px-12">
           <Link
             to="/kids-world"
