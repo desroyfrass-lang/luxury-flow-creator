@@ -253,7 +253,7 @@ export function DrawingCanvas({ width = 2048, height = 2560, onExport }: Props) 
     // Palm rejection: once a pen has been seen, ignore stray touches.
     if (pressureSeen && e.pointerType === "touch") return;
 
-    if (tool === "pan" || e.button === 1 || e.shiftKey === false && tool === "pan") {
+    if (tool === "pan" || e.button === 1) {
       dragRef.current = { mode: "pan", from: pt };
       return;
     }
