@@ -24,6 +24,7 @@ import {
 import { COMMISSIONING_PHASES } from "@/lib/commissioning";
 import { DISTRICTS } from "@/lib/districts";
 import { trackOf } from "@/lib/journey";
+import { IdentityGate } from "@/components/security/identity-gate";
 
 export const Route = createFileRoute("/_authenticated/founder")({
   head: () => ({
@@ -37,7 +38,12 @@ export const Route = createFileRoute("/_authenticated/founder")({
       { name: "robots", content: "noindex,nofollow" },
     ],
   }),
-  component: FounderPage,
+  component: () => (
+    // FRASS-0488 — money and platform authority sit behind the one identity gate.
+    <IdentityGate action="founder_mode">
+      <FounderPage />
+    </IdentityGate>
+  ),
 });
 
 const CONTROLS = [

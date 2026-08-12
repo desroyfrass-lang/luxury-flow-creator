@@ -38,6 +38,7 @@ import {
   type WalletSectionId,
 } from "@/lib/card-wallet";
 import type { CardOrder } from "@/lib/card-commerce.functions";
+import { IdentityGate } from "@/components/security/identity-gate";
 
 export const Route = createFileRoute("/_authenticated/workspace/wallet")({
   head: () => ({
@@ -57,7 +58,12 @@ export const Route = createFileRoute("/_authenticated/workspace/wallet")({
       { name: "twitter:card", content: "summary" },
     ],
   }),
-  component: WalletHub,
+  component: () => (
+    // FRASS-0488 — money and platform authority sit behind the one identity gate.
+    <IdentityGate action="wallet">
+      <WalletHub />
+    </IdentityGate>
+  ),
 });
 
 const panel = "rounded-2xl border border-border/60 bg-background/60 p-6 backdrop-blur";

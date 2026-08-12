@@ -34,6 +34,8 @@ import {
 } from "@/lib/frassy/working-style";
 // FRASS-0482 — the business already inside the person.
 import { loadProfile, noticeAssets, partnerContext } from "@/lib/business/partner-profile";
+// FRASS-0479A — Human Balance Layer: achievement balanced with wellbeing.
+import { balanceBriefing, NO_SIGNALS, readBalance, readBalanceSignals } from "@/lib/frassy/balance-signals";
 
 
 type ProductCard = {
@@ -229,6 +231,9 @@ export function FrassyChat({ embedded = false }: { embedded?: boolean } = {}) {
           workingStyleContext: workingStyleContext(style) || undefined,
           // FRASS-0482 — Frassy plans around the business already inside the person.
           partnerContext: partnerContext(loadProfile()) || undefined,
+          // FRASS-0479A — how hard this week has been, and what deserves celebrating.
+          balanceContext:
+            balanceBriefing(readBalance(readBalanceSignals() ?? NO_SIGNALS, style), []) || undefined,
           stream: false,
         }),
       });

@@ -381,6 +381,8 @@ export const Route = createFileRoute("/api/chat")({
           workingStyleContext?: string;
           // FRASS-0482 — who this Partner already is (strengths, certifications, time, goal).
           partnerContext?: string;
+          // FRASS-0479A — Human Balance: pace, coaching adjustment, milestones to celebrate.
+          balanceContext?: string;
           stream?: boolean;
           attachments?: Array<{
             name: string;
@@ -444,6 +446,7 @@ export const Route = createFileRoute("/api/chat")({
           body.cartContext && `Cart: ${body.cartContext}`,
           body.workingStyleContext,
           body.partnerContext,
+          body.balanceContext,
           attachmentContext,
         ]
           .filter(Boolean)

@@ -41,6 +41,7 @@ import {
   loadOwnerPolicy,
   type OwnerPolicy,
 } from "@/lib/finance/owner-compensation";
+import { IdentityGate } from "@/components/security/identity-gate";
 
 
 export const Route = createFileRoute("/_authenticated/financial-center")({
@@ -61,7 +62,12 @@ export const Route = createFileRoute("/_authenticated/financial-center")({
       { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
-  component: FinancialCenter,
+  component: () => (
+    // FRASS-0488 — money and platform authority sit behind the one identity gate.
+    <IdentityGate action="financial_center">
+      <FinancialCenter />
+    </IdentityGate>
+  ),
 });
 
 function FinancialCenter() {
