@@ -132,6 +132,9 @@ import { listSecurityAlerts } from "@/lib/finance/security-alerts.functions";
 import { getPlatformHealth } from "@/lib/platform-health.functions";
 import { getPlatformProtection } from "@/lib/platform-protection.functions";
 import { securityBriefing } from "@/lib/security/briefing";
+import { observeDeployment } from "@/lib/deploy/observation";
+import { CURRENT_DEPLOYMENT } from "@/lib/deploy/current";
+
 import type { TieredEvent } from "@/lib/security/triage";
 
 
