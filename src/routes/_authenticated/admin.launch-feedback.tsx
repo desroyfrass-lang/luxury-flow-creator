@@ -111,6 +111,9 @@ function LaunchFeedbackCenter() {
       {/* FRASS-0474 — blocked financial attempts sit beside launch feedback. */}
       <div className="mb-8 space-y-6">
         <PlatformHealthPanel />
+        {/* FRASS-0506 — the latest release stays under observation until it proves stable. */}
+        <ObservationWindowPanel />
+
         <SecurityAlertsPanel />
         {/* FRASS-0476 — the emergency control lives with the intelligence it protects. */}
         <PlatformProtectionSwitch />
