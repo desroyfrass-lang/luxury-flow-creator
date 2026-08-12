@@ -66,7 +66,15 @@ export function FoundingPanel({ name }: { name: string }) {
   });
 
   const save = useMutation({
-    mutationFn: (patch: Parameters<typeof saveFn>[0]["data"]) => saveFn({ data: patch }),
+    mutationFn: (patch: {
+      visibility?: "public" | "partners" | "private";
+      showOnCard?: boolean;
+      storyPublic?: boolean;
+      story_why?: string | null;
+      story_hoped?: string | null;
+      story_journey?: string | null;
+      story_lessons?: string | null;
+    }) => saveFn({ data: patch }),
     onSuccess: (r) => {
       qc.setQueryData(["my-founding-status"], r);
       toast.success("Saved.");
