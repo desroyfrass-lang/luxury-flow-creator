@@ -317,6 +317,123 @@ export function momentum(state: LaunchState, money: MoneyState): Momentum {
 
 // ── Opportunities & the 5-star score ────────────────────────────────────────
 
+// ── Opportunity Tiers (FRASS-0489A — Employment Philosophy Amendment) ────────
+// The hierarchy Frassy uses when evaluating any opportunity. Financial
+// independence is always preferred; employment is supported but never the
+// ceiling. Tiers break score ties so the higher tier always wins.
+
+export type OpportunityTier = "financial_independence" | "career_advancement" | "employment";
+
+export const OPPORTUNITY_TIERS: Record<
+  OpportunityTier,
+  { rank: number; label: string; plainEnglish: string }
+> = {
+  financial_independence: {
+    rank: 1,
+    label: "Financial Independence",
+    plainEnglish:
+      "Owning something — a business, a skill you can sell, an income stream. This is the path Frass is built for.",
+  },
+  career_advancement: {
+    rank: 2,
+    label: "Career Advancement",
+    plainEnglish:
+      "Growing a profession toward greater earning power and autonomy. A bridge toward financial independence.",
+  },
+  employment: {
+    rank: 3,
+    label: "Employment",
+    plainEnglish:
+      "Securing a job. Supported when it is the best next step right now, but always a stepping stone, never the destination.",
+  },
+};
+
+export function tierLabel(tier: OpportunityTier): string {
+  return OPPORTUNITY_TIERS[tier].label;
+}
+
+/**
+ * Maps an income stream to its Opportunity Tier. Every Frass Business Vault
+ * (Wellness, Coco Vintage, Faceless Content, Affiliate, Podcast, and any
+ * Marketplace/Frass Service business) is entrepreneurship → tier 1.
+ * Employment and career streams, when added, map to tiers 2 and 3.
+ */
+export function tierOf(streamId: string): OpportunityTier {
+  // Employment and career advancement are future stream families; today every
+  // active Frass business is entrepreneurship, so the default is tier 1.
+  if (streamId.startsWith("employment")) return "employment";
+  if (streamId.startsWith("career")) return "career_advancement";
+  return "financial_independence";
+}
+
+export type MobilityStage = {
+  /** Stable id within the roadmap. */
+  id: string;
+  /** Frassy's plain name for the stage. */
+  label: string;
+  /** One sentence on what this stage achieves and why it matters. */
+  why: string;
+  /** Which Learn → Build → Monetize phase this stage belongs to. */
+  phase: "learn" | "build" | "monetize";
+};
+
+/**
+ * Learn → Build → Monetize roadmap for a career or employment goal that
+ * involves relocating (e.g. "become a nurse in the UK"). The loop never stops at
+ * the job offer — it continues through relocation and arrival into financial
+ * independence. FRASS-0489A.
+ */
+export function mobilityRoadmap(goal: {
+  role: string;
+  destination?: string;
+}): MobilityStage[] {
+  const dest = goal.destination ?? "your destination country";
+  return [
+    {
+      id: "qualifications",
+      label: "Qualification requirements",
+      why: `Confirm exactly which ${goal.role} qualifications ${dest} recognises and whether yours transfer or need upgrading.`,
+      phase: "learn",
+    },
+    {
+      id: "application",
+      label: "Application preparation",
+      why: `Prepare a ${goal.role}-specific CV, references and registrations the way ${dest} employers expect.`,
+      phase: "learn",
+    },
+    {
+      id: "documentation",
+      label: "Documentation",
+      why: `Gather visas, licensing bodies, police records, transcripts and any regulated documents ${dest} requires before you can work.`,
+      phase: "learn",
+    },
+    {
+      id: "interview",
+      label: "Interview preparation",
+      why: `Practise the ${goal.role} interview format ${dest} uses and prepare the questions that decide the offer.`,
+      phase: "build",
+    },
+    {
+      id: "secured",
+      label: "Employment secured",
+      why: `The offer is a Build step, not the end — it funds the move and the income that follows.`,
+      phase: "build",
+    },
+    {
+      id: "relocation",
+      label: "Relocation planning",
+      why: `Plan housing, flights, banking, healthcare and arrival costs so the move is calm, not a scramble.`,
+      phase: "build",
+    },
+    {
+      id: "arrival",
+      label: "Successful arrival",
+      why: `Settle in, start the role, and immediately wire the new income back into Money Moves toward financial independence.`,
+      phase: "monetize",
+    },
+  ];
+}
+
 export type Opportunity = {
   id: string;
   streamId: string;
@@ -327,6 +444,8 @@ export type Opportunity = {
   strategy: string;
   minutes: number;
   objectives: ObjectiveId[];
+  /** FRASS-0489A — which tier of the Opportunity Hierarchy this move belongs to. */
+  tier: OpportunityTier;
   score: 1 | 2 | 3 | 4 | 5;
   scoreParts: { label: string; value: number }[];
   href?: string;
