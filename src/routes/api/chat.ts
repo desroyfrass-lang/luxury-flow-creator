@@ -58,6 +58,10 @@ picks, guides, memberships and talks) — help them see options they had not con
 Every discovered opportunity must connect to Money Moves and end in a monetization outcome or an honest
 preparation stage, and the member's Daily should reflect their own strengths, never a generic template.`;
 
+import { servicesContext } from "@/lib/services/marketplace";
+
+const FRASS_SERVICES_MARKETPLACE = servicesContext();
+
 const SYSTEM_PROMPT = `You are Frassy, the constitutional intelligence of Frass Operating System.
 
 Your primary role is Builder Intelligence — memory, guidance, planning, teaching, and stewardship across every district of Frass OS. Helping a shopper is one small capability inside that much larger role, and it is the capability being used right now on the public storefront.
@@ -445,11 +449,11 @@ export const Route = createFileRoute("/api/chat")({
 
         const basePrompt =
           body.experienceContext === "founder"
-            ? `${SYSTEM_PROMPT}\n\n${FRASS_LINK}\n\n${FOUNDER_CONTEXT}\n\n${CURATION_BRIEF}\n\n${GLOBAL_COMMERCE}\n\n${FOR_US_COMMUNITY}\n\n${STORYTELLING_ENGINE}\n\n${PLAIN_LANGUAGE_PROTOCOL}\n\n${FRASS_PLATFORM_ATLAS}\n\n${FIRST_PARTNER_PROTOCOL}\n\n${FRASS_ECONOMY}`
+            ? `${SYSTEM_PROMPT}\n\n${FRASS_LINK}\n\n${FOUNDER_CONTEXT}\n\n${CURATION_BRIEF}\n\n${GLOBAL_COMMERCE}\n\n${FOR_US_COMMUNITY}\n\n${STORYTELLING_ENGINE}\n\n${PLAIN_LANGUAGE_PROTOCOL}\n\n${FRASS_PLATFORM_ATLAS}\n\n${FIRST_PARTNER_PROTOCOL}\n\n${FRASS_ECONOMY}\n\n${FRASS_SERVICES_MARKETPLACE}`
             : body.experienceContext === "builder"
-              ? `${SYSTEM_PROMPT}\n\n${FRASS_LINK}\n\n${CURATION_BRIEF}\n\n${GLOBAL_COMMERCE}\n\n${FOR_US_COMMUNITY}\n\n${PLAIN_LANGUAGE_PROTOCOL}\n\n${FRASS_PLATFORM_ATLAS}\n\n${FIRST_PARTNER_PROTOCOL}\n\n${FRASS_ECONOMY}`
+              ? `${SYSTEM_PROMPT}\n\n${FRASS_LINK}\n\n${CURATION_BRIEF}\n\n${GLOBAL_COMMERCE}\n\n${FOR_US_COMMUNITY}\n\n${PLAIN_LANGUAGE_PROTOCOL}\n\n${FRASS_PLATFORM_ATLAS}\n\n${FIRST_PARTNER_PROTOCOL}\n\n${FRASS_ECONOMY}\n\n${FRASS_SERVICES_MARKETPLACE}`
 
-              : `${SYSTEM_PROMPT}\n\n${FOR_US_COMMUNITY}\n\n${FRASS_ECONOMY}`;
+              : `${SYSTEM_PROMPT}\n\n${FOR_US_COMMUNITY}\n\n${FRASS_ECONOMY}\n\n${FRASS_SERVICES_MARKETPLACE}`;
 
         const withVoice = `${basePrompt}\n\n${voiceConstitution}`;
         const system = contextBlock ? `${withVoice}\n\n${contextBlock}` : withVoice;
