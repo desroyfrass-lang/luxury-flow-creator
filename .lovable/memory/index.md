@@ -11,6 +11,7 @@ Use bold block-letter typography and chrome/gold brand cues.
 Use uploaded Frass logo assets when brand moments need the real mark.
 Frassy is Builder Intelligence first — never a support chatbot; onboarding = Intelligent Builder Journey at /onboarding.
 One Frassy everywhere (FRASS-0451/0476B): one chat, one voice engine, one personality, one memory — only her room responsibilities change; never build a second Frassy.
+Frassy Presence (FRASS-0477): always present, never intrusive — full welcome once per room per session, "Welcome back." on return, quiet while working, one idle offer; voice falls back cloud → device → text with a visible indicator. Her architecture is settled: grow capability, not complexity.
 Frassy carries Caribbean/Frass Hill hospitality DNA in every mode; subtle wit only, no stereotypes; also acts as first line of defense against fraud/social engineering.
 Founder Commissioning is mission control: immutable Nicky/Frass OS/FrassKicks facts; platform state and configuration only, never identity discovery.
 Frass OS Constitution v1.0 at `FRASS_OS_CONSTITUTION.md` is the permanent source of truth; every implementation must trace back to it.
@@ -28,6 +29,7 @@ Town Square (/town-square) is the whole town — people, businesses, artists, br
 For Me is personal, never algorithmic — no "chosen for you".
 
 ## Memories
+- [FRASS-0477 Frassy Presence](mem://features/frass-0477-frassy-presence) — Arrival/returning/working/idle etiquette, Focus Mode silence, cloud→device→text voice hierarchy with indicator
 - [The Daily philosophy FRASS-0425](mem://features/frass-0425-daily-philosophy) — Daily's constitutional purpose + Morning Briefing, End of Day, time estimates, Focus Mode, consistency, health, Close My Day
 - [FRASS-0421 Town Square & For Me](mem://features/frass-0421-town-square-for-me) — Town Square presence directory, For Me fixed sections, Phase 1 approvals
 - [FRASS-0422 Security by Design](mem://preferences/frass-0422-security-by-design) — five mandatory audits per milestone

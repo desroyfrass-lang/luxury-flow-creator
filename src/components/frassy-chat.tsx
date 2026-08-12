@@ -12,7 +12,7 @@
 // ─────────────────────────────────────────────────────────────────────────────
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import { X, ShoppingBag, Trash2, Volume2, VolumeX } from "lucide-react";
+import { X, ShoppingBag, Trash2, Volume2, VolumeX, Mic } from "lucide-react";
 import { useCartStore } from "@/lib/cart-store";
 import symbolAsset from "@/assets/frass-logo-symbol.asset.json";
 import { readArrivalIntent } from "@/lib/frassy/context";
@@ -24,6 +24,7 @@ import { SpeechControls } from "@/components/voice/speech-controls";
 import { VoiceFeedbackButton } from "@/components/feedback/voice-feedback";
 import { useFrassyStartup } from "@/hooks/use-frassy-startup";
 import { loadTranscript, saveTranscript, type FrassyTurn } from "@/lib/frassy/transcript";
+import { VOICE_TIER_LABELS } from "@/lib/voice/voice-tier";
 
 type ProductCard = {
   handle: string;
@@ -312,8 +313,22 @@ export function FrassyChat({ embedded = false }: { embedded?: boolean } = {}) {
                     ? "Speaking…"
                     : loading
                       ? "Thinking…"
-                      : "Waiting"}
+                      : startup.presence === "working"
+                        ? "Nearby"
+                        : "Waiting"}
             </div>
+            {/* FRASS-0477 — never make the member guess which voice they hear. */}
+            {speakReplies && startup.voiceTier !== "unknown" && (
+              <div
+                data-frassy-voice-tier={startup.voiceTier}
+                className={`mt-0.5 flex items-center gap-1 text-[9px] tracking-[0.12em] ${
+                  startup.voiceTier === "cloud" ? "text-[color:var(--gold)]/80" : "text-white/45"
+                }`}
+              >
+                <Mic className="h-2.5 w-2.5" />
+                {VOICE_TIER_LABELS[startup.voiceTier]}
+              </div>
+            )}
           </div>
         </div>
         <div data-frassy-voice className="flex shrink-0 items-center gap-1">

@@ -15,6 +15,7 @@
 // ─────────────────────────────────────────────────────────────────────────────
 
 import { chunkForTTS, speakableText } from "@/lib/voice/chunk-text";
+import { setVoiceTier } from "@/lib/voice/voice-tier";
 import { conversation } from "@/lib/voice/conversation-machine";
 import {
   getSharedAudioContext,
@@ -325,6 +326,16 @@ export async function speakText(
       patch({ chunksSpoken: i + 1 });
 
       if (!ok && !anyPlayed) {
+        // FRASS-0477 — tier 2 before we ever admit defeat.
+        const viaDevice = await speakWithBrowserVoice(clean, runId);
+        if (viaDevice && runId === runCounter) {
+          setVoiceTier("device");
+          conversation.playbackComplete(turnId);
+          snapshot = { ...IDLE, runId };
+          emit();
+          return "complete";
+        }
+        setVoiceTier("text");
         conversation.playbackFailed(turnId, "browser blocked audio");
         snapshot = { ...IDLE, runId };
         emit();
@@ -332,6 +343,7 @@ export async function speakText(
       }
     }
 
+    setVoiceTier("cloud");
     conversation.playbackComplete(turnId);
     snapshot = { ...IDLE, runId };
     emit();
@@ -339,11 +351,13 @@ export async function speakText(
   } catch (err) {
     const fallbackPlayed = await speakWithBrowserVoice(clean, runId);
     if (fallbackPlayed && runId === runCounter) {
+      setVoiceTier("device");
       conversation.playbackComplete(turnId);
       snapshot = { ...IDLE, runId };
       emit();
       return "complete";
     }
+    setVoiceTier("text");
     conversation.playbackFailed(turnId, err instanceof Error ? err.message : "tts failed");
     snapshot = { ...IDLE, runId };
     emit();

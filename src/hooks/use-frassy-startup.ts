@@ -17,6 +17,15 @@ import { resolveDestination } from "@/lib/frassy-destinations";
 import { speakText } from "@/lib/voice/speech-manager";
 import { speakWithGuarantee } from "@/lib/frassy/speak-guarantee";
 import {
+  decidePresence,
+  hasNudged,
+  hasVisited,
+  markNudged,
+  markVisited,
+  type PresenceState,
+} from "@/lib/frassy/presence";
+import { getVoiceTier, subscribeVoiceTier, type VoiceTier } from "@/lib/voice/voice-tier";
+import {
   FAULT_LABELS,
   SILENCE_LIMIT_MS,
   VOICE_FALLBACK_MESSAGE,
@@ -27,25 +36,6 @@ import {
   type LayoutFault,
   type ReadinessChecks,
 } from "@/lib/frassy/startup";
-
-const GREETED_PREFIX = "frassy-startup:";
-
-function greetedThisSession(id: string) {
-  if (typeof window === "undefined") return true;
-  try {
-    return sessionStorage.getItem(GREETED_PREFIX + id) === "1";
-  } catch {
-    return true;
-  }
-}
-
-function markGreeted(id: string) {
-  try {
-    sessionStorage.setItem(GREETED_PREFIX + id, "1");
-  } catch {
-    /* private mode — greeting again is harmless */
-  }
-}
 
 export type FrassyStartupState = {
   /** Where the startup sequence has got to. */
@@ -62,6 +52,10 @@ export type FrassyStartupState = {
   repairs: number;
   /** Gesture-safe recovery: enabling voice always speaks or explains why it cannot. */
   speakGreetingNow: () => Promise<void>;
+  /** FRASS-0477 — arrival / returning / working / idle. */
+  presence: PresenceState;
+  /** Which voice she is currently using: cloud, device or text only. */
+  voiceTier: VoiceTier;
 };
 
 export function useFrassyStartup(opts: {
@@ -76,6 +70,8 @@ export function useFrassyStartup(opts: {
   authReady?: boolean;
   /** Muted members get the words, never the voice. */
   speechAllowed: boolean;
+  /** Focus Mode — task, progress, completion and emergencies only. */
+  focusMode?: boolean;
 }): FrassyStartupState {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const [phase, setPhase] = useState<FrassyStartupState["phase"]>("verifying");
@@ -86,6 +82,53 @@ export function useFrassyStartup(opts: {
   const [repairs, setRepairs] = useState(0);
   const startedAt = useRef(Date.now());
   const handled = useRef<string | null>(null);
+  const [presence, setPresence] = useState<PresenceState>("arrival");
+  const [voiceTier, setVoiceTierState] = useState<VoiceTier>(getVoiceTier());
+  const lastActivity = useRef(Date.now());
+  const interacted = useRef(false);
+
+  useEffect(() => subscribeVoiceTier(() => setVoiceTierState(getVoiceTier())), []);
+
+  // ── Presence: is the member working, or has the room gone quiet? ───────────
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const mark = () => {
+      lastActivity.current = Date.now();
+      interacted.current = true;
+    };
+    const events = ["pointerdown", "keydown", "wheel", "touchstart"] as const;
+    for (const e of events) window.addEventListener(e, mark, { passive: true });
+    return () => {
+      for (const e of events) window.removeEventListener(e, mark);
+    };
+  }, []);
+
+  // She waits while they work; after several quiet minutes she offers once.
+  useEffect(() => {
+    if (!opts.active || typeof window === "undefined") return;
+    const dest = resolveDestination(pathname);
+    const roomId = dest?.id ?? "frass";
+    const timer = window.setInterval(() => {
+      const decision = decidePresence(
+        {
+          visited: true,
+          focusMode: Boolean(opts.focusMode),
+          interacted: interacted.current,
+          idleMs: Date.now() - lastActivity.current,
+          nudged: hasNudged(roomId),
+        },
+        dest?.welcome ?? "",
+      );
+      if (decision.state === "idle" && decision.line) {
+        markNudged(roomId);
+        setPresence("idle");
+        setNotice(decision.line);
+      } else if (decision.state === "working") {
+        setPresence("working");
+      }
+    }, 30_000);
+    return () => window.clearInterval(timer);
+  }, [opts.active, opts.focusMode, pathname]);
 
   const speakGreetingNow = useCallback(async () => {
     const dest = resolveDestination(pathname);
@@ -93,9 +136,11 @@ export function useFrassyStartup(opts: {
       setNotice("Voice is ready. Ask me anything and I'll answer out loud.");
       return;
     }
-    setGreeting(dest.welcome);
+    const line = hasVisited(dest.id) ? "Welcome back." : dest.welcome;
+    markVisited(dest.id);
+    setGreeting(line);
     setNotice(null);
-    const { notice: voiceNotice } = await speakWithGuarantee(dest.welcome, {
+    const { notice: voiceNotice } = await speakWithGuarantee(line, {
       owner: "frassy-voice-toggle",
     });
     setNotice(voiceNotice);
@@ -211,25 +256,46 @@ export function useFrassyStartup(opts: {
       handled.current = key;
       setPhase("ready");
 
-      if (!dest || greetedThisSession(key)) {
+      if (!dest) {
         settled = true;
         window.clearTimeout(silenceTimer);
         setPhase("greeted");
         return;
       }
-      markGreeted(key);
+
+      // FRASS-0477 — presence decides *whether* and *what*: the full welcome on
+      // first arrival, a short "Welcome back." on return, quiet while working.
+      const decision = decidePresence(
+        {
+          visited: hasVisited(key),
+          focusMode: Boolean(opts.focusMode),
+          interacted: interacted.current,
+          idleMs: Date.now() - lastActivity.current,
+          nudged: hasNudged(key),
+        },
+        dest.welcome,
+      );
+      markVisited(key);
+      setPresence(decision.state);
+
+      if (!decision.line) {
+        settled = true;
+        window.clearTimeout(silenceTimer);
+        setPhase("greeted");
+        return;
+      }
 
       // Step 3 — the greeting. Words first, so silence is impossible.
-      setGreeting(dest.welcome);
+      setGreeting(decision.line);
       setPhase("greeted");
 
-      if (!opts.speechAllowed) {
+      if (!opts.speechAllowed || !decision.speak) {
         settled = true;
         window.clearTimeout(silenceTimer);
         return;
       }
 
-      const { notice: voiceNotice } = await speakWithGuarantee(dest.welcome, {
+      const { notice: voiceNotice } = await speakWithGuarantee(decision.line, {
         owner: "frassy-startup",
       });
       if (cancelled) return;
@@ -251,9 +317,20 @@ export function useFrassyStartup(opts: {
     opts.authReady,
     opts.requiresAuth,
     opts.speechAllowed,
+    opts.focusMode,
   ]);
 
-  return { phase, missing, greeting, notice, faults, repairs, speakGreetingNow };
+  return {
+    phase,
+    missing,
+    greeting,
+    notice,
+    faults,
+    repairs,
+    speakGreetingNow,
+    presence,
+    voiceTier,
+  };
 }
 
 export { FAULT_LABELS };
