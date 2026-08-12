@@ -46,7 +46,7 @@ function StudioPage() {
     const { data: gallery } = await supabase
       .from("artist_galleries")
       .select("id, handle")
-      .eq("owner_id", user.id)
+      .eq("user_id", user.id)
       .maybeSingle();
     if (!gallery) {
       setStatus("You don't have a gallery yet — ask Frassy to build one and this piece goes in first.");
@@ -65,14 +65,14 @@ function StudioPage() {
     }
     const { error } = await supabase.from("gallery_artworks").insert({
       gallery_id: gallery.id,
-      owner_id: user.id,
       title,
       slug: `${slugify(title)}-${Date.now().toString(36)}`,
       medium: "Digital painting",
-      image_path: upload.data.path,
-      thumbnail_data_url: thumbnail,
+      image_url: upload.data.path,
+      thumb_url: thumbnail,
       availability: "not_for_sale",
-      published: false,
+      source: "studio",
+      is_published: false,
     });
     setStatus(
       error
