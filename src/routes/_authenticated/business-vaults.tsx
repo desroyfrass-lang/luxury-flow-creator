@@ -92,7 +92,8 @@ function FutureVaultsPage() {
   const [customLabel, setCustomLabel] = useState("");
 
   const shelved = new Set(rows.map((r) => r.key));
-  const suggestions = VAULT_IDEAS.filter((i) => !shelved.has(i.key));
+  const familyKeys = new Set(BUSINESS_VAULTS.map((v) => v.key));
+  const suggestions = VAULT_IDEAS.filter((i) => !shelved.has(i.key) && !familyKeys.has(i.key));
 
   return (
     <SiteShell>
