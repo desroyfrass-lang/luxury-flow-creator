@@ -161,8 +161,31 @@ export function observeInterruption() {
   save({ ...s, interruptions: s.interruptions + 1, updatedAt: new Date().toISOString() });
 }
 
-/** Did they take her up on a gentle offer of help, or work straight past it? */
+const NUDGE_PENDING_KEY = "frassy:working-style:nudge-pending";
+
+/** Frassy just offered help — the offer is now open for an answer. */
+export function markNudgeOffered() {
+  if (typeof window === "undefined") return;
+  try {
+    window.sessionStorage.setItem(NUDGE_PENDING_KEY, "1");
+  } catch {
+    /* noop */
+  }
+}
+
+/**
+ * Did they take her up on a gentle offer of help, or work straight past it?
+ * Only counts when an offer is actually outstanding, so ordinary conversation
+ * never gets misread as ignoring her.
+ */
 export function observeNudge(accepted: boolean) {
+  if (typeof window === "undefined") return;
+  try {
+    if (window.sessionStorage.getItem(NUDGE_PENDING_KEY) !== "1") return;
+    window.sessionStorage.removeItem(NUDGE_PENDING_KEY);
+  } catch {
+    return;
+  }
   const s = loadWorkingStyle();
   save({
     ...s,
