@@ -6,7 +6,7 @@
 
 import { Link } from "@tanstack/react-router";
 import { useKidsProgress } from "@/lib/kids-progress";
-import { STREET_ABSENT_BY_DESIGN, TOPIC_LABEL, type StreetTopic } from "@/lib/kids/frass-street";
+import { FORBIDDEN_IN_STREET, TOPIC_LABEL, type StreetTopic } from "@/lib/kids/frass-street";
 
 export function StreetParentPanel() {
   const { progress } = useKidsProgress();
@@ -65,7 +65,7 @@ export function StreetParentPanel() {
         Not built into this street
       </p>
       <ul className="mt-2 space-y-1 text-sm text-muted-foreground">
-        {STREET_ABSENT_BY_DESIGN.map((item) => (
+        {FORBIDDEN_IN_STREET.map((item: string) => (
           <li key={item}>· {item}</li>
         ))}
       </ul>
