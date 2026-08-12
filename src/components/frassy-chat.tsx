@@ -32,6 +32,9 @@ import {
   observeTurn,
   workingStyleContext,
 } from "@/lib/frassy/working-style";
+// FRASS-0482 — the business already inside the person.
+import { loadProfile, partnerContext } from "@/lib/business/partner-profile";
+
 
 type ProductCard = {
   handle: string;
