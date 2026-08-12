@@ -34,6 +34,15 @@ export type SectionId =
   | "coco-vintage"
   | "freight-prep"
   | "frassy-note"
+  | "time-plan"
+  | "freedom-countdown"
+  | "freedom-move"
+  | "quick-income"
+  | "business-builder"
+  | "learning-unlock"
+  | "balance-check"
+  | "affiliate-prep"
+  | "success-dashboard"
   | "partner-progress"
   | "legacy-dashboard";
 
@@ -183,6 +192,61 @@ export const DAILY_SECTIONS: SectionMeta[] = [
     plain: "One encouraging message. Never ten.",
     aliases: ["encouragement", "frassy", "message of the day"],
   },
+  // FRASS-0501 / FRASS-0502 — purpose, time and milestones.
+  {
+    id: "time-plan",
+    label: "How today's time is spent",
+    plain: "Your hours split between money now, business building and lasting freedom.",
+    aliases: ["time", "time plan", "my hours", "schedule", "balance of time", "layers"],
+  },
+  {
+    id: "freedom-countdown",
+    label: "Freedom Countdown",
+    plain: "Milestones on the way to employment being optional.",
+    aliases: ["countdown", "milestones", "freedom countdown", "road to freedom"],
+  },
+  {
+    id: "freedom-move",
+    label: "Freedom Move",
+    plain: "The one action most likely to improve your financial future today.",
+    aliases: ["freedom move", "one thing", "first thing", "top move"],
+  },
+  {
+    id: "quick-income",
+    label: "Quick Income",
+    plain: "The fastest honest ways to bring money in.",
+    aliases: ["quick income", "fast money", "cash now", "immediate income"],
+  },
+  {
+    id: "business-builder",
+    label: "Business Builder",
+    plain: "One action that strengthens the business you're building.",
+    aliases: ["business builder", "long term", "build my business"],
+  },
+  {
+    id: "learning-unlock",
+    label: "Learning",
+    plain: "Only appears when learning something unlocks income today.",
+    aliases: ["learning", "lesson", "training", "academy"],
+  },
+  {
+    id: "balance-check",
+    label: "Balance",
+    plain: "One gentle reminder. Never another task list.",
+    aliases: ["balance", "wellbeing", "rest", "health"],
+  },
+  {
+    id: "affiliate-prep",
+    label: "Affiliate Preparation",
+    plain: "Getting ready so day one of affiliate is loud, not empty.",
+    aliases: ["affiliate", "affiliate prep", "promotion"],
+  },
+  {
+    id: "success-dashboard",
+    label: "Success Dashboard",
+    plain: "Outcomes, not activity — what actually changed in your life.",
+    aliases: ["success", "outcomes", "results", "dashboard"],
+  },
   // Founder Daily Amendment — Founder-only widgets.
   {
     id: "partner-progress",
@@ -209,9 +273,18 @@ export const RECOMMENDED_ORDER: SectionId[] = [
   "personal-welcome",
   "celebrate-first",
   "freedom-progress",
+  "freedom-countdown",
+  "time-plan",
+  "freedom-move",
+  "quick-income",
   "money-moves-today",
   "coco-vintage",
+  "business-builder",
+  "learning-unlock",
+  "affiliate-prep",
   "freight-prep",
+  "balance-check",
+  "success-dashboard",
   "todays-priorities",
   "partner-progress",
   "legacy-dashboard",
