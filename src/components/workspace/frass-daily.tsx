@@ -279,6 +279,20 @@ function FrassDailyBody({
     );
   }, [isFounder, secAlerts.data, secHealth.data?.checks, secProtection.data]);
 
+  /**
+   * FRASS-0506 — Post-Launch Observation Window. The Founder sees the health of
+   * the latest deployment before anything else: 🟢 Stable · 🟡 Monitoring · 🔴 Action Required.
+   */
+  const observation = useMemo(() => {
+    if (!isFounder) return null;
+    return observeDeployment(
+      CURRENT_DEPLOYMENT,
+      (secHealth.data?.checks ?? []).map((c) => ({ key: c.key, state: c.state })),
+      (secAlerts.data ?? []) as unknown as TieredEvent[],
+    );
+  }, [isFounder, secAlerts.data, secHealth.data?.checks]);
+
+
 
 
   /** No dead information — every item resolves to the records behind it. */
