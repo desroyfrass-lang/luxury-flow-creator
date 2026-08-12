@@ -134,16 +134,8 @@ function Header() {
             <Search className="h-4 w-4" />
           </button>
           <NotificationBell />
-          {hasWorkspace && (
-            <Link
-              to="/workspace"
-              aria-label="Workspace"
-              title="Enter your private workspace"
-              className="hidden md:inline-flex h-10 w-10 items-center justify-center rounded-full border border-[color:var(--gold)]/60 bg-background/70 backdrop-blur text-[color:var(--gold)] hover:bg-[color:var(--gold)]/10 transition"
-            >
-              <KeyRound className="h-4 w-4" />
-            </Link>
-          )}
+          {/* FRASS-0481 — one way in. The Workspace lives in the account menu only. */}
+
           <BuilderAccountMenu hasWorkspace={hasWorkspace} isAdmin={isAdmin} />
           <HeaderSignOut />
 
