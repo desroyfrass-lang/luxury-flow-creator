@@ -32,7 +32,7 @@ function MoveCard({ move, onNavigate }: { move: MotherMove; onNavigate?: (href: 
     <div className="rounded-2xl border border-white/12 bg-white/[0.03] p-4">
       <div className="flex flex-wrap items-center gap-2">
         <span className="ws-chip">
-          {layer?.emoji} {layer?.label}
+          {layer?.dot} {layer?.label}
         </span>
         <span className="ws-meta">{move.minutes} min · {move.impact}</span>
       </div>
@@ -53,7 +53,7 @@ export function MotherWelcome({ name = "Mom", daysAway = 0 }: { name?: string; d
       <p className="mt-2 text-sm leading-relaxed">
         {MOTHER_VISION_LINE}
       </p>
-      <p className="ws-meta mt-2">{restart.message}</p>
+      <p className="ws-meta mt-2">{restart.greeting} {restart.reassurance}</p>
     </div>
   );
 }
