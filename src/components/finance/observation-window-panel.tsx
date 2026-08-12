@@ -29,7 +29,7 @@ export function ObservationWindowPanel() {
     key: c.key,
     state: c.state,
   }));
-  const events = ((alerts.data ?? []) as unknown as TieredEvent[]) ?? [];
+  const events = (alerts.data ?? []) as unknown as TieredEvent[];
   const verdict = observeDeployment(CURRENT_DEPLOYMENT, signals, Array.isArray(events) ? events : []);
 
 
