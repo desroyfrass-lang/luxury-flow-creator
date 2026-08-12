@@ -68,7 +68,7 @@ function ParentDashboard() {
             {error && <p className="mt-3 text-xs text-destructive">That PIN doesn&rsquo;t match.</p>}
             <button
               type="submit"
-              className="mt-6 rounded-full bg-[color:var(--gold)] px-7 py-3 text-[11px] font-bold uppercase tracking-[0.26em] text-background"
+              className="mt-6 rounded-full bg-[color:var(--gold)] px-7 py-3 text-[11px] font-bold uppercase tracking-[0.26em] text-[color:var(--ink)]"
             >
               Unlock settings
             </button>
@@ -135,7 +135,7 @@ function ParentDashboard() {
                 <Link
                   to="/kids-world/$age"
                   params={{ age: passport.age }}
-                  className="rounded-full bg-[color:var(--gold)] px-7 py-3 text-[11px] font-bold uppercase tracking-[0.26em] text-background"
+                  className="rounded-full bg-[color:var(--gold)] px-7 py-3 text-[11px] font-bold uppercase tracking-[0.26em] text-[color:var(--ink)]"
                 >
                   Open Kids World
                 </Link>

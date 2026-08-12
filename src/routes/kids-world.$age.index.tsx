@@ -47,7 +47,7 @@ function AgeWorld() {
         </p>
         <Link
           to="/kids-world/parents"
-          className="mt-7 inline-block rounded-full bg-[color:var(--gold)] px-7 py-3 text-[11px] font-bold uppercase tracking-[0.26em] text-background"
+          className="mt-7 inline-block rounded-full bg-[color:var(--gold)] px-7 py-3 text-[11px] font-bold uppercase tracking-[0.26em] text-[color:var(--ink)]"
         >
           Parent Dashboard
         </Link>

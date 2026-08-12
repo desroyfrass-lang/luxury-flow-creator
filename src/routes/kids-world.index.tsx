@@ -36,15 +36,15 @@ function KidsWorldHome() {
           height={1088}
           className="h-full w-full object-cover"
         />
-        <div className="absolute inset-0 bg-[linear-gradient(to_top,oklch(0.09_0.01_60/0.94),oklch(0.09_0.01_60/0.1)_60%)]" />
+        <div className="absolute inset-0 bg-[linear-gradient(to_top,oklch(0.98_0.02_95/0.95),oklch(0.98_0.02_95/0.05)_62%)]" />
         <div className="absolute inset-x-0 bottom-0 mx-auto max-w-[1600px] px-6 pb-12 lg:px-12">
-          <span className="text-[10px] uppercase tracking-[0.42em] text-[color:var(--gold)]">
+          <span className="text-[10px] uppercase tracking-[0.42em] text-primary">
             A district of Frass Hill
           </span>
-          <h1 className="mt-4 font-display text-5xl uppercase leading-[0.88] text-[color:var(--luxe-linen,#f6f1e7)] md:text-8xl">
+          <h1 className="mt-4 font-display text-5xl uppercase leading-[0.88] text-foreground md:text-8xl">
             Kids World
           </h1>
-          <p className="mt-5 max-w-2xl text-sm text-[color:var(--luxe-linen,#f6f1e7)]/80 md:text-lg">
+          <p className="mt-5 max-w-2xl text-sm text-foreground/75 md:text-lg">
             A valley of hills, streams and bridges where children learn, play, create
             and discover. Not a game. Not a classroom. A place.
           </p>
@@ -54,9 +54,9 @@ function KidsWorldHome() {
       {/* Passport */}
       <section className="mx-auto max-w-[1600px] px-6 py-14 lg:px-12">
         {ready && passport ? (
-          <div className="flex flex-wrap items-center justify-between gap-6 rounded-[2rem] border border-[color:var(--gold)]/30 bg-card/70 p-7 backdrop-blur-xl">
+          <div className="flex flex-wrap items-center justify-between gap-6 rounded-[2rem] border border-primary/30 bg-card/70 p-7 backdrop-blur-xl">
             <div>
-              <p className="text-[10px] uppercase tracking-[0.38em] text-[color:var(--gold)]">
+              <p className="text-[10px] uppercase tracking-[0.38em] text-primary">
                 Passport ready
               </p>
               <h2 className="mt-2 font-display text-2xl uppercase md:text-3xl">
@@ -72,7 +72,7 @@ function KidsWorldHome() {
               <Link
                 to="/kids-world/$age"
                 params={{ age: passport.age }}
-                className="rounded-full bg-[color:var(--gold)] px-7 py-3 text-[11px] font-bold uppercase tracking-[0.26em] text-background"
+                className="rounded-full bg-primary px-7 py-3 text-sm font-bold text-primary-foreground"
               >
                 Enter the world
               </Link>
@@ -92,7 +92,7 @@ function KidsWorldHome() {
       {/* The worlds */}
       <section className="mx-auto max-w-[1600px] px-6 pb-20 lg:px-12">
         <header className="mb-8 max-w-2xl">
-          <p className="text-[10px] uppercase tracking-[0.38em] text-[color:var(--gold)]">
+          <p className="text-[10px] uppercase tracking-[0.38em] text-primary">
             Four worlds, one valley
           </p>
           <h2 className="mt-3 font-display text-3xl uppercase md:text-5xl">
@@ -115,18 +115,18 @@ function KidsWorldHome() {
                       allowed ? "group-hover:scale-105" : "opacity-45 saturate-50"
                     }`}
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/15 to-transparent" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-card via-card/40 to-transparent" />
                   <div className="absolute inset-x-0 bottom-0 p-6">
                     <span className="text-2xl" aria-hidden>
                       {w.emoji}
                     </span>
-                    <h3 className="mt-1 font-display text-2xl uppercase leading-none text-white md:text-3xl">
+                    <h3 className="mt-1 font-display text-2xl uppercase leading-none text-foreground md:text-3xl">
                       {w.title}
                     </h3>
                     <p className="mt-2 text-xs uppercase tracking-[0.22em]" style={{ color: w.accent }}>
                       Ages {w.ageLabel}
                     </p>
-                    <p className="mt-2 max-w-md text-sm text-white/75">{w.tagline}</p>
+                    <p className="mt-2 max-w-md text-sm text-muted-foreground">{w.tagline}</p>
                   </div>
                 </div>
                 {!allowed && (
@@ -151,9 +151,9 @@ function KidsWorldHome() {
       </section>
 
       {/* Kindness, quietly */}
-      <section className="border-t border-[color:var(--gold)]/20 bg-[color-mix(in_oklab,var(--foreground)_4%,transparent)]">
+      <section className="border-t border-primary/20 bg-[color-mix(in_oklab,var(--foreground)_4%,transparent)]">
         <div className="mx-auto max-w-[1600px] px-6 py-14 lg:px-12">
-          <p className="text-[10px] uppercase tracking-[0.38em] text-[color:var(--gold)]">
+          <p className="text-[10px] uppercase tracking-[0.38em] text-primary">
             The Frass Hill way
           </p>
           <h2 className="mt-3 max-w-3xl font-display text-3xl uppercase md:text-5xl">
@@ -167,7 +167,7 @@ function KidsWorldHome() {
           <div className="mt-8 flex flex-wrap gap-3">
             <Link
               to="/frass-kids"
-              className="rounded-full border border-[color:var(--gold)]/50 px-7 py-3 text-[11px] font-bold uppercase tracking-[0.26em] text-[color:var(--gold)]"
+              className="rounded-full border border-primary/50 px-7 py-3 text-[11px] font-bold uppercase tracking-[0.26em] text-primary"
             >
               🛍 Shop Kids
             </Link>

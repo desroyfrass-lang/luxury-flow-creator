@@ -654,3 +654,70 @@ confidence labels, Daily signal), `src/lib/compliance/trade-intelligence.ts` (sh
 customs checklist), `src/lib/compliance/index.ts` (compliance areas + shared derivation),
 `src/components/finance/tax-intelligence-panel.tsx` (Financial Center → Taxes),
 `src/components/finance/compliance-daily-line.tsx` (The Daily), `src/routes/api/chat.ts` (Frassy context).
+
+---
+
+## 📌 FRASS-0491 — FOR ME Architecture Audit & Constitutional Freeze (PINNED)
+
+**Status:** Pinned. Scheduled *after* the current constitutional roadmap completes. Do not execute early —
+auditing a moving target produces an architecture that must be re-frozen.
+
+**Purpose.** A complete architectural audit of the existing FOR ME page and a formal definition of
+everything that belongs there. This is not a redesign. It is an audit, a refinement, and a constitutional
+freeze of the architecture that already exists.
+
+### Sections to audit and verify
+Frass Link · Frass Card · Builder Identity · Builder Page · Hero Video · Biography · Stories · Posts ·
+Photos · Videos · Collections · Saved · Media · About · Followers · Following · Messaging · Creator
+Journey · Achievements · Analytics · Wallet integration.
+
+### Workspace integration
+- Workspace belongs to the member's FOR ME environment.
+- Closing the Daily always returns the member to Workspace.
+- Opening Workspace from anywhere restores the member's working environment.
+- Navigation is consistent everywhere.
+
+### Daily integration
+- The Daily is part of the member's FOR ME ecosystem.
+- The Daily always opens *over* the Workspace.
+- Closing the Daily reveals the Workspace beneath it.
+- Navigation stays intuitive and consistent.
+
+### Frass Link
+One permanent link for life: identity, Frass Card, welcome page, referral link, QR code, checkout, public
+Builder page. One link. One identity. For life.
+
+### Frass Card
+The member's professional handshake and the public gateway into their FOR ME page.
+
+### Constitutional Rule
+FOR ME is the member's permanent home inside the Frass ecosystem. Everything that represents the member
+belongs here unless there is a compelling architectural reason for it to live elsewhere.
+No duplicate identity systems. No duplicate profile systems. No duplicate creator pages.
+
+### Final audit questions (answer before freezing)
+1. Does every section belong here?
+2. Is anything duplicated elsewhere?
+3. Should anything move to another department?
+4. Are navigation paths consistent?
+5. Does the page still feel like one unified home?
+
+**Founder Principle.** FOR ME is the member's home inside Frass — where identity, reputation, creativity,
+business presence and personal journey come together. Every member should always know: *"This is my place."*
+
+*What this means in plain English:* FOR ME is the member's house. Before we nail the walls shut, we walk
+every room once, make sure nothing was built twice, and confirm every hallway leads somewhere sensible.
+
+---
+
+## FRASS-0486E — Kids Interface Constitution (bright, rounded, never black)
+
+Every children's surface (`/kids-world/*`, `/frass-kids/*`, Frass Street) renders inside the `.kids-zone`
+theme scope. The zone re-declares the design tokens: cream-light backgrounds, deep-blue-violet text
+(never black), rounded 1.5rem+ corners, and rounded kid-friendly type (Fredoka display, Nunito body) with
+sentence case instead of condensed uppercase tracking. Age worlds tint the whole zone through
+`data-age="0-3" | "3-6" | "6-12"`. Adult luxury tokens (ink black, luxe linen, gold-on-dark) must never
+reach a children's page.
+
+**Implementation.** `.kids-zone` in `src/styles.css`; applied in `src/routes/kids-world.tsx` and
+`src/routes/frass-kids.tsx`.

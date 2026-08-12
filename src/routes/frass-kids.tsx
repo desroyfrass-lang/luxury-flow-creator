@@ -7,9 +7,10 @@ export const Route = createFileRoute("/frass-kids")({
 
 function KidsLayout() {
   return (
-    <>
+    <div className="kids-zone min-h-screen">
       <Outlet />
       <FoundationInvite cause="kids" />
-    </>
+    </div>
   );
 }
+

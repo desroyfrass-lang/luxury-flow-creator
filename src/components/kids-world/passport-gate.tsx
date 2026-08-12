@@ -133,7 +133,7 @@ export function PassportGate({ onIssued }: { onIssued?: (age: string) => void })
 
       <button
         type="submit"
-        className="mt-8 rounded-full bg-[color:var(--gold)] px-8 py-3 text-[11px] font-bold uppercase tracking-[0.26em] text-background transition hover:opacity-90"
+        className="mt-8 rounded-full bg-[color:var(--gold)] px-8 py-3 text-[11px] font-bold uppercase tracking-[0.26em] text-[color:var(--ink)] transition hover:opacity-90"
       >
         Issue the passport
       </button>
