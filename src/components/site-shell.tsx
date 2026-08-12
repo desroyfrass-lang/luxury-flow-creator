@@ -29,6 +29,7 @@ const NAV_ITEMS = [
   { to: "/afro-designers", slot: "nav-afro-designers", fallback: "Afro Designers" },
   { to: "/capsules", slot: "nav-capsules", fallback: "Lookbooks & Capsules" },
   { to: "/social-media-virals", slot: "nav-social-virals", fallback: "Social Media Virals" },
+  { to: "/services", slot: "nav-services", fallback: "Frass Services" },
 ] as const;
 
 
