@@ -584,3 +584,73 @@ people doing the work, like a good hotel concierge who knows everybody on the is
 **Implementation.** `src/lib/services/marketplace.ts` (categories, corridors, orchestrations, vault seeds,
 launch roadmap, Frassy context), `src/routes/services.tsx` (marketplace surface), `src/routes/api/chat.ts`
 (Marketplace Coordinator context).
+
+---
+
+## FRASS-0484 — Financial & Compliance Intelligence (Constitutional Amendment, P0)
+
+### Taxes Without Stress
+
+**Audit first, always.** Financial Center, Orders, Marketplace, Money Moves, affiliate earnings, service
+earnings, Receipts, Financial Audit Center and Business Vaults were audited before this amendment. Tax
+Intelligence extends the Financial Center. There is no second ledger, no second receipt store and no
+second reporting surface — every figure is derived from the receipts the Financial Center already owns.
+
+1. **Automatic history.** Every financial transaction inside Frass automatically becomes part of the
+   member's financial history. No member ever keeps a parallel set of books.
+2. **Year-round, not year-end.** Frassy organises, categorises and prepares continuously. Taxes are a
+   year-round process, never a yearly panic.
+3. **Automatic categorisation.** Marketplace sales, service income, affiliate commissions, creator income,
+   digital product sales, subscription income, business expenses, platform fees, refunds, shipping,
+   advertising, equipment and other supported deductions are categorised automatically wherever possible.
+4. **Country awareness.** Canada, United States, United Kingdom and Jamaica ship first. New countries are
+   added by configuration, never by redesign.
+5. **The tax package.** At any moment a member can ask "how am I doing this year?" and receive estimated
+   income, estimated expenses, estimated taxable income, estimated tax reserve, outstanding records and
+   suggested next steps. At year end Frassy prepares a complete package for review.
+6. **Frassy prepares. She is not the tax authority.** Members review and file under the laws of their
+   country and, where required, are encouraged to have a qualified professional review the filing.
+7. **Never invent tax advice.** Every statement is labelled by origin: what the member's records show,
+   what comes from configured tax rules, and what requires current professional or official confirmation.
+8. **Business integration.** Every Business Vault contributes to tax organisation, every Money Move updates
+   financial records, every completed monetization updates the Financial Center. No duplicate bookkeeping.
+9. **Daily integration.** The Daily surfaces only what matters: organised, receipts needing categories,
+   an upcoming instalment, or a review required before filing.
+
+**Founder Principle.** People join Frass to build wealth, not to drown in paperwork.
+
+### Trade & Tariff Intelligence
+
+10. **Lives inside Freight Brokerage & Logistics** in the Frass Services Marketplace — never a separate
+    shipping system. Tariff awareness, customs documentation, import/export guidance, duty estimates where
+    available, restrictions, declarations, classifications, country requirements, common mistakes and
+    documentation checklists.
+11. **Proactive attention.** Frassy flags country restrictions, tariff policy changes, missing customs
+    documents, restricted or regulated goods, high-value shipments and commercial-versus-personal
+    shipments — always explaining what needs attention and why.
+12. **Living knowledge.** Tariff and customs information is operational knowledge that changes. Nothing is
+    quoted as a current legal rate. When guidance cannot be confidently verified, Frassy says so and points
+    to the destination customs authority or a licensed customs broker.
+13. **Daily integration.** Green when clear, yellow when documentation needs review, orange when tariff
+    changes may apply, red when the shipment cannot proceed.
+
+**Founder Principle.** Frass helps members navigate international trade with confidence by organising
+information, reducing surprises and preparing documentation — never guessing when a legal or regulatory
+requirement needs current verification.
+
+### One Compliance Layer
+
+Taxes, tariffs, customs, financial reporting, compliance reminders, business registrations, required
+renewals and regulatory deadlines are one intelligent compliance layer, each area living where it already
+belongs — never eight separate systems.
+
+*What this means in plain English:* Frassy is the bookkeeper who quietly files everything as it happens, so
+when tax time comes there's nothing to hunt for — and when you ship something across a border, she tells you
+what the border will ask for before you get there. She never makes up an answer about the law; she tells you
+what your own records say, what rule she's using, and when you need a real professional.
+
+**Implementation.** `src/lib/compliance/tax-intelligence.ts` (categories, country rules, year package,
+confidence labels, Daily signal), `src/lib/compliance/trade-intelligence.ts` (shipment inspection, flags,
+customs checklist), `src/lib/compliance/index.ts` (compliance areas + shared derivation),
+`src/components/finance/tax-intelligence-panel.tsx` (Financial Center → Taxes),
+`src/components/finance/compliance-daily-line.tsx` (The Daily), `src/routes/api/chat.ts` (Frassy context).

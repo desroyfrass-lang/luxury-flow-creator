@@ -8,6 +8,7 @@ import { CommerceHealth } from "@/components/finance/commerce-health";
 import { Amount } from "@/components/finance/amount";
 import { FinancialTimeline } from "@/components/finance/financial-timeline";
 import { AUDIT_PRINCIPLES } from "@/lib/finance/receipts";
+import { TaxIntelligencePanel } from "@/components/finance/tax-intelligence-panel";
 import { listMyReceipts } from "@/lib/finance/receipts.functions";
 import { useMyRoles } from "@/hooks/use-my-roles";
 import {
@@ -140,6 +141,15 @@ function AuditTimeline() {
   );
 }
 
+// FRASS-0484 — Tax Intelligence reads the same receipts, never a second ledger.
+function TaxIntelligence() {
+  const receiptsFn = useServerFn(listMyReceipts);
+  const { data, isLoading } = useQuery({ queryKey: ["financial-receipts"], queryFn: () => receiptsFn() });
+  if (isLoading) return <p className="text-sm text-[oklch(0.7_0.01_80)]">Organizing your records…</p>;
+  return <TaxIntelligencePanel receipts={data ?? []} />;
+}
+
+
 function TabBody({
   tab,
   viewer,
@@ -254,6 +264,7 @@ function TabBody({
         <>
           <Grid items={[snap.taxes]} />
           <Note>{notice.message}</Note>
+          <TaxIntelligence />
           <Heading>How tax is handled</Heading>
           <ul className="space-y-2">
             {TAX_PRINCIPLES.map((p) => (

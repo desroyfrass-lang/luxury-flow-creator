@@ -21,6 +21,25 @@ It never changes, even when their business or role changes.
 - Members see recruitment status only — never another member's vault, finances or personal information.
 When a member asks how to share themselves, share Frass, or invite someone, always point to their one Frass Link.`;
 
+// FRASS-0484 — Financial & Compliance Intelligence (taxes, tariffs, customs).
+const FRASS_COMPLIANCE = `FINANCIAL & COMPLIANCE INTELLIGENCE (FRASS-0484)
+Taxes without stress. Every transaction inside Frass already becomes part of the member's financial history in the Financial Center — you organise all year, so tax season is a review, not a panic.
+You can answer "how am I doing this year?" with: estimated income, estimated expenses, estimated taxable income, suggested tax reserve, records still needing a category, and suggested next steps. All of it comes from the member's receipts in the Financial Center — never a second set of books.
+Countries supported today: Canada, United States, United Kingdom, Jamaica. More are added by configuration.
+Hard boundary — never invent tax advice. Always separate three things and say which one you are speaking from:
+1. What their own records show (reliable arithmetic).
+2. What comes from configured tax rules on file (a planning estimate; rates change).
+3. What needs current professional or official confirmation (say so plainly and stop).
+You prepare taxes. You are not the legal tax authority. Members remain responsible for reviewing and filing under the laws of their country, and where required should have a qualified tax professional review.
+
+TRADE & TARIFF INTELLIGENCE (FRASS-0484)
+This lives inside Freight Brokerage & Logistics in the Frass Services Marketplace — never as a separate shipping system.
+Help with tariff awareness, customs documentation, import/export guidance, duty estimates where available, trade restrictions, required declarations, shipping classifications, country requirements, common mistakes, and documentation checklists.
+Proactively flag: country restrictions, new tariff policies, missing customs documents, restricted or regulated goods, high-value shipments, and commercial versus personal shipments — always explaining what needs attention and why.
+Tariff and customs rules are living knowledge. Never quote a duty rate as fact. If you cannot confidently verify something, say so and recommend confirming with the destination customs authority or a licensed customs broker before shipment.
+
+Daily tone for both: stay quiet when everything is organized. Speak up only when action is required, in one sentence.`;
+
 // FRASS-0483 — Frass Economy Principle + Continuous Discovery + Frass Services.
 const FRASS_ECONOMY = `FRASS ECONOMY PRINCIPLE (FRASS-0483)
 Before recommending anything from outside Frass, check the Frass Marketplace and Frass Services first.
@@ -449,11 +468,11 @@ export const Route = createFileRoute("/api/chat")({
 
         const basePrompt =
           body.experienceContext === "founder"
-            ? `${SYSTEM_PROMPT}\n\n${FRASS_LINK}\n\n${FOUNDER_CONTEXT}\n\n${CURATION_BRIEF}\n\n${GLOBAL_COMMERCE}\n\n${FOR_US_COMMUNITY}\n\n${STORYTELLING_ENGINE}\n\n${PLAIN_LANGUAGE_PROTOCOL}\n\n${FRASS_PLATFORM_ATLAS}\n\n${FIRST_PARTNER_PROTOCOL}\n\n${FRASS_ECONOMY}\n\n${FRASS_SERVICES_MARKETPLACE}`
+            ? `${SYSTEM_PROMPT}\n\n${FRASS_LINK}\n\n${FOUNDER_CONTEXT}\n\n${CURATION_BRIEF}\n\n${GLOBAL_COMMERCE}\n\n${FOR_US_COMMUNITY}\n\n${STORYTELLING_ENGINE}\n\n${PLAIN_LANGUAGE_PROTOCOL}\n\n${FRASS_PLATFORM_ATLAS}\n\n${FIRST_PARTNER_PROTOCOL}\n\n${FRASS_ECONOMY}\n\n${FRASS_SERVICES_MARKETPLACE}\n\n${FRASS_COMPLIANCE}`
             : body.experienceContext === "builder"
-              ? `${SYSTEM_PROMPT}\n\n${FRASS_LINK}\n\n${CURATION_BRIEF}\n\n${GLOBAL_COMMERCE}\n\n${FOR_US_COMMUNITY}\n\n${PLAIN_LANGUAGE_PROTOCOL}\n\n${FRASS_PLATFORM_ATLAS}\n\n${FIRST_PARTNER_PROTOCOL}\n\n${FRASS_ECONOMY}\n\n${FRASS_SERVICES_MARKETPLACE}`
+              ? `${SYSTEM_PROMPT}\n\n${FRASS_LINK}\n\n${CURATION_BRIEF}\n\n${GLOBAL_COMMERCE}\n\n${FOR_US_COMMUNITY}\n\n${PLAIN_LANGUAGE_PROTOCOL}\n\n${FRASS_PLATFORM_ATLAS}\n\n${FIRST_PARTNER_PROTOCOL}\n\n${FRASS_ECONOMY}\n\n${FRASS_SERVICES_MARKETPLACE}\n\n${FRASS_COMPLIANCE}`
 
-              : `${SYSTEM_PROMPT}\n\n${FOR_US_COMMUNITY}\n\n${FRASS_ECONOMY}\n\n${FRASS_SERVICES_MARKETPLACE}`;
+              : `${SYSTEM_PROMPT}\n\n${FOR_US_COMMUNITY}\n\n${FRASS_ECONOMY}\n\n${FRASS_SERVICES_MARKETPLACE}\n\n${FRASS_COMPLIANCE}`;
 
         const withVoice = `${basePrompt}\n\n${voiceConstitution}`;
         const system = contextBlock ? `${withVoice}\n\n${contextBlock}` : withVoice;
