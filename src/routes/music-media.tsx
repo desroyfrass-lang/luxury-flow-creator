@@ -115,7 +115,7 @@ function MusicMedia() {
             <div className="text-[11px] uppercase tracking-[0.3em] text-[color:var(--gold)]">Studio Sessions</div>
             <h2 className="mt-3 font-display text-4xl md:text-6xl leading-[0.95]">Tune into Frass Hill radio.</h2>
             <p className="mt-5 text-sm md:text-base text-muted-foreground max-w-md">
-              Weekly mixes, guest sets and exclusive previews from artists in the Frass Hill orbit.
+              Weekly mixes, guest sets and exclusive previews from Music Creators in the Frass Hill orbit.
             </p>
           </div>
         </div>

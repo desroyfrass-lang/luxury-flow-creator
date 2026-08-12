@@ -31,7 +31,7 @@ export const GALLERY_NO_DUPLICATE_RULE =
 export const FV_BOUNDARY =
   "FV Studios creates media. Frass Gallery Studio creates visual artwork. They never merge.";
 
-// ── Artist disciplines ───────────────────────────────────────────────────────
+// ── Visual Creator disciplines (FRASS-0495) ───────────────────────────────────────────────────────
 // Business Discovery listens for these. When one is heard, Frassy makes one
 // offer: "Would you like me to build your Frass Gallery?"
 
@@ -85,14 +85,14 @@ export const DISCIPLINES: Discipline[] = [
   {
     id: "mixed-media",
     emoji: "🧵",
-    label: "Mixed-media artist",
+    label: "Mixed-media creator",
     cues: /mixed media|collage|textile|fabric art|assemblage|found object/i,
     firstRoom: "Mixed-media works",
   },
   {
     id: "digital",
     emoji: "🖥",
-    label: "Digital artist",
+    label: "Digital creator",
     cues: /digital art|procreate|photoshop|concept art|pixel art|nft art|digital paint/i,
     firstRoom: "Digital works & editions",
   },
@@ -128,7 +128,7 @@ export type BuilderStep = {
 };
 
 export const GALLERY_BUILDER_STEPS: BuilderStep[] = [
-  { id: "profile", label: "Artist profile", frassy: "Your name, your disciplines, where you work from.", aiDrafted: false },
+  { id: "profile", label: "Visual Creator profile", frassy: "Your name, your disciplines, where you work from.", aiDrafted: false },
   { id: "biography", label: "Biography", frassy: "Tell me how you started. I'll write the first draft; you make it true.", aiDrafted: true },
   { id: "statement", label: "Artist statement", frassy: "What your work is about. Short, honest, yours.", aiDrafted: true },
   { id: "home", label: "Gallery homepage", frassy: "Your hero wall — the first thing a collector sees.", aiDrafted: false },
@@ -136,7 +136,7 @@ export const GALLERY_BUILDER_STEPS: BuilderStep[] = [
   { id: "featured", label: "Featured works", frassy: "The pieces you'd hang at the entrance.", aiDrafted: false },
   { id: "categories", label: "Categories & tags", frassy: "So collectors searching for what you make actually find you.", aiDrafted: true },
   { id: "contact", label: "Contact information", frassy: "How a collector reaches you without you posting your phone number publicly.", aiDrafted: false },
-  { id: "card", label: "Frass Card integration", frassy: "Your card gains a 🎨 Artist block that opens straight into this gallery.", aiDrafted: false },
+  { id: "card", label: "Frass Card integration", frassy: "Your card gains a 🎨 Visual Creator block that opens straight into this gallery.", aiDrafted: false },
 ];
 
 // ── Artwork ──────────────────────────────────────────────────────────────────
@@ -340,14 +340,14 @@ export function nextMonetizationStep(a: ArtworkRow): { label: string; why: strin
   return null;
 }
 
-// ── The Artist Business Vault (a seed for the existing engine) ───────────────
+// ── The Visual Creator Business Vault (a seed for the existing engine) ───────────────
 // This does NOT create a second vault system. It is the seed row that the
 // existing Business Vault / accelerator machinery consumes.
 
 export const ARTIST_VAULT_SEED = {
   key: "artist",
   emoji: "🎨",
-  label: "Artist & Frass Gallery",
+  label: "Visual Creator & Frass Gallery",
   summary: "Your work, your gallery, your collectors — built one piece at a time.",
   rationale:
     "You already make the thing people pay for. The business part is showing it well, telling the story, and having somewhere to buy.",
@@ -394,7 +394,7 @@ export function artistDaily(dayIndex: number, opts?: { openCommissions?: number;
   return picks.slice(0, 3);
 }
 
-// ── Frass Card — the 🎨 Artist block ─────────────────────────────────────────
+// ── Frass Card — the 🎨 Visual Creator block ─────────────────────────────────────────
 
 export type ArtistCardBlock = {
   headline: string;
