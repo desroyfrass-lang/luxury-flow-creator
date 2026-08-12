@@ -50,7 +50,9 @@ export const listMyReceipts = createServerFn({ method: "GET" })
         .limit(500),
       supabase
         .from("card_orders")
-        .select("*, card_listings(title, is_quick_sell)")
+        .select(
+          "id, quantity, unit_price, subtotal, platform_fee, processing_fee_estimate, net_to_seller, currency, status, reference, created_at, buyer_name, card_listings(title, is_quick_sell)",
+        )
         .eq("seller_id", userId)
         .order("created_at", { ascending: false })
         .limit(300),
@@ -99,7 +101,7 @@ export const listMyReceipts = createServerFn({ method: "GET" })
         source: "frass-card",
         title: listing?.title ?? receiptKind(kind).label,
         description: o.quantity > 1 ? `${o.quantity} × ${round(o.unit_price)}` : null,
-        counterparty: o.buyer_name || o.buyer_email || null,
+        counterparty: o.buyer_name || null,
         gross: round(o.subtotal),
         platformAllocation: round(o.platform_fee),
         processingFee: round(o.processing_fee_estimate),
