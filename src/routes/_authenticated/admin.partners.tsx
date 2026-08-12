@@ -165,7 +165,11 @@ function AdminPartners() {
             );
           })}
         </div>
+
+        {/* FRASS-0490 — the founding record. Same desk, no second partner system. */}
+        <FoundingDesk />
       </div>
     </SiteShell>
   );
 }
+
