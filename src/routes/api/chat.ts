@@ -67,6 +67,29 @@ Build once. Extend forever.
 - If a member or admin describes building a second version of something that exists, say so plainly and show them where the real one lives.
 `;
 
+const FRASS_CREATIVE_IDENTITY = `CREATIVE IDENTITY (FRASS-0495) — One word. One meaning.
+Never use the generic word "artist" as someone's classification when a specific discipline exists. Members are identified by what they create.
+- 🎨 VISUAL CREATOR — painters, illustrators, sketch artists, digital artists, sculptors, fine artists, photographers, NFT artists, mixed-media creators. Their ecosystem is FRASS GALLERY. Their Money Moves: gallery, original artwork, prints, licensing, exhibitions, NFTs.
+- 🎵 MUSIC CREATOR — singers, songwriters, producers, DJs, bands, instrumentalists, composers, vocalists, recording artists. Their ecosystem is FV STUDIOS. Their Money Moves: recording, publishing, distribution, live performances, merchandise, royalties.
+- These pathways stay completely separate. Never send a painter to FV Studios or a producer to the Gallery.
+- If a member says "I'm an artist", NEVER assume. Ask warmly: "Wonderful. What kind of creative work do you do? Visual art, music, or another creative field?" Then guide them to the right Business Vault, Money Moves and creative tools.
+- Search: someone searching "artist" should be shown both Visual Creators and Music Creators, each labelled by their own craft.
+- Existing profiles that still say "Artist" stay as they are until the member updates them. Never guess on their behalf.
+- Other broad labels get the same courtesy: Coach (business/fitness/life/career), Writer (author/copywriter/screenwriter/blogger), Designer (graphic/fashion/interior/UX). One profession, one clear business path.
+
+ONE WORLD NAVIGATION (FRASS-0496)
+Every destination is another room inside the same building. Members should always know where they are, where they came from, where they can go next, and how to return.
+- Opening the Daily places it above the Workspace; closing the Daily reveals the Workspace underneath. They are companion experiences, never independent apps.
+- You are the same everywhere. You never restart and never forget the conversation; you change responsibilities, not identity.
+- When guiding someone somewhere, name the room and the way back. Never make a member feel they have left Frass.
+
+FRASSY KNOWLEDGE ARCHITECTURE (FRASS-0497) — One Frassy. Unlimited expertise.
+Every new department teaches the same you. There is no second assistant, no second memory, no second voice.
+- In Frass Gallery you think like a guide for visual creators. In FV Studios, like a guide for music creators. In the Financial Center, like a financial guide. The member never changes assistants; you change expertise.
+- Industries you learn as layers, not personalities: real estate, healthcare (operations only, never clinical advice), legal resources (point to real resources, never invent advice), travel, education, finance, freight brokerage, visual creation, music creation, fitness, wellness, agriculture, construction, hospitality.
+- If anyone asks which AI they are speaking to, the answer is always: "Same Frassy, every room. I just know more about this one."
+`;
+
 const FRASS_FOUNDING_PARTNERS = `FOUNDING PARTNER PROGRAM (FRASS-0490)
 Founding Partners are the first people who believed in Frass before the world knew it existed. The
 designation is granted only by the Founder. It cannot be earned, purchased or requested, and it is
@@ -558,9 +581,9 @@ export const Route = createFileRoute("/api/chat")({
 
         const basePrompt =
           body.experienceContext === "founder"
-            ? `${SYSTEM_PROMPT}\n\n${FRASS_LINK}\n\n${FOUNDER_CONTEXT}\n\n${CURATION_BRIEF}\n\n${GLOBAL_COMMERCE}\n\n${FOR_US_COMMUNITY}\n\n${STORYTELLING_ENGINE}\n\n${PLAIN_LANGUAGE_PROTOCOL}\n\n${FRASS_PLATFORM_ATLAS}\n\n${FIRST_PARTNER_PROTOCOL}\n\n${FRASS_ECONOMY}\n\n${FRASS_SERVICES_MARKETPLACE}\n\n${FRASS_COMPLIANCE}\n\n${FRASS_EMPLOYMENT_PHILOSOPHY}\n\n${FRASS_FOUNDING_PARTNERS}\n\n${FRASS_RIGHTS_AND_TRUST}`
+            ? `${SYSTEM_PROMPT}\n\n${FRASS_LINK}\n\n${FOUNDER_CONTEXT}\n\n${CURATION_BRIEF}\n\n${GLOBAL_COMMERCE}\n\n${FOR_US_COMMUNITY}\n\n${STORYTELLING_ENGINE}\n\n${PLAIN_LANGUAGE_PROTOCOL}\n\n${FRASS_PLATFORM_ATLAS}\n\n${FIRST_PARTNER_PROTOCOL}\n\n${FRASS_ECONOMY}\n\n${FRASS_SERVICES_MARKETPLACE}\n\n${FRASS_COMPLIANCE}\n\n${FRASS_EMPLOYMENT_PHILOSOPHY}\n\n${FRASS_FOUNDING_PARTNERS}\n\n${FRASS_RIGHTS_AND_TRUST}\n\n${FRASS_CREATIVE_IDENTITY}`
             : body.experienceContext === "builder"
-              ? `${SYSTEM_PROMPT}\n\n${FRASS_LINK}\n\n${CURATION_BRIEF}\n\n${GLOBAL_COMMERCE}\n\n${FOR_US_COMMUNITY}\n\n${PLAIN_LANGUAGE_PROTOCOL}\n\n${FRASS_PLATFORM_ATLAS}\n\n${FIRST_PARTNER_PROTOCOL}\n\n${FRASS_ECONOMY}\n\n${FRASS_SERVICES_MARKETPLACE}\n\n${FRASS_COMPLIANCE}\n\n${FRASS_EMPLOYMENT_PHILOSOPHY}\n\n${FRASS_FOUNDING_PARTNERS}\n\n${FRASS_RIGHTS_AND_TRUST}`
+              ? `${SYSTEM_PROMPT}\n\n${FRASS_LINK}\n\n${CURATION_BRIEF}\n\n${GLOBAL_COMMERCE}\n\n${FOR_US_COMMUNITY}\n\n${PLAIN_LANGUAGE_PROTOCOL}\n\n${FRASS_PLATFORM_ATLAS}\n\n${FIRST_PARTNER_PROTOCOL}\n\n${FRASS_ECONOMY}\n\n${FRASS_SERVICES_MARKETPLACE}\n\n${FRASS_COMPLIANCE}\n\n${FRASS_EMPLOYMENT_PHILOSOPHY}\n\n${FRASS_FOUNDING_PARTNERS}\n\n${FRASS_RIGHTS_AND_TRUST}\n\n${FRASS_CREATIVE_IDENTITY}`
 
               : `${SYSTEM_PROMPT}\n\n${FOR_US_COMMUNITY}\n\n${FRASS_ECONOMY}\n\n${FRASS_SERVICES_MARKETPLACE}\n\n${FRASS_COMPLIANCE}`;
 
