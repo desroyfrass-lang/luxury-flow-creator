@@ -120,6 +120,10 @@ function MoneyMovesPage() {
   const [coaching, setCoaching] = useState<CoachingNote[]>([]);
   const [hydrated, setHydrated] = useState(false);
   const [note, setNote] = useState<string | null>(null);
+  // FRASS-0482 — discovered on this device, never uploaded.
+  const [partner, setPartner] = useState<PartnerProfile>(EMPTY_PROFILE);
+  useEffect(() => setPartner(loadProfile()), []);
+
 
   useEffect(() => {
     if (!row.isSuccess || hydrated) return;
