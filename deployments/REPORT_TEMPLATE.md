@@ -58,3 +58,24 @@
 ## Pre-publish soak walk
 - Paths exercised (Welcome Hall / Register / Login / Daily / Workspace / Money Moves / Marketplace / Financial Center / Builder Vault / Frassy):
 - Soak duration:
+
+## Post-launch observation window (FRASS-0506)
+- Release class: critical / standard / minor
+- Observation period: ____ hours
+- Window opened: ____  · Window closed: ____
+- Final status: 🟢 Stable / 🟡 Monitoring / 🔴 Action Required
+
+| Monitored signal | Result | Notes |
+| --- | --- | --- |
+| Application health | | |
+| Authentication | | |
+| Financial transactions | | |
+| Worker stability | | |
+| API errors | | |
+| Console errors | | |
+| Performance | | |
+| Database health | | |
+
+- Incidents during window:
+- Rollback recommended: yes / no
+- Deployment accepted by:

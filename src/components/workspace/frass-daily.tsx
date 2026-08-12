@@ -132,6 +132,9 @@ import { listSecurityAlerts } from "@/lib/finance/security-alerts.functions";
 import { getPlatformHealth } from "@/lib/platform-health.functions";
 import { getPlatformProtection } from "@/lib/platform-protection.functions";
 import { securityBriefing } from "@/lib/security/briefing";
+import { observeDeployment } from "@/lib/deploy/observation";
+import { CURRENT_DEPLOYMENT } from "@/lib/deploy/current";
+
 import type { TieredEvent } from "@/lib/security/triage";
 
 
@@ -278,6 +281,20 @@ function FrassDailyBody({
       secProtection.data ?? undefined,
     );
   }, [isFounder, secAlerts.data, secHealth.data?.checks, secProtection.data]);
+
+  /**
+   * FRASS-0506 — Post-Launch Observation Window. The Founder sees the health of
+   * the latest deployment before anything else: 🟢 Stable · 🟡 Monitoring · 🔴 Action Required.
+   */
+  const observation = useMemo(() => {
+    if (!isFounder) return null;
+    return observeDeployment(
+      CURRENT_DEPLOYMENT,
+      (secHealth.data?.checks ?? []).map((c) => ({ key: c.key, state: c.state })),
+      (secAlerts.data ?? []) as unknown as TieredEvent[],
+    );
+  }, [isFounder, secAlerts.data, secHealth.data?.checks]);
+
 
 
 
@@ -488,7 +505,37 @@ function FrassDailyBody({
                 <li key={l}>{l}</li>
               ))}
             </ul>
+            {/* FRASS-0506 — Post-Launch Observation Window, Founder only. */}
+            {observation && (
+              <div
+                className={`mt-3 rounded-sm border p-3 ${
+                  observation.status === "action_required"
+                    ? "border-destructive/50 bg-destructive/10"
+                    : observation.status === "monitoring"
+                      ? "border-amber-400/40 bg-amber-400/10"
+                      : "border-emerald-500/30 bg-emerald-500/10"
+                }`}
+              >
+                <span className="ws-meta">
+                  Latest release · {observation.dot} {observation.headline}
+                </span>
+                <p className="mt-1 text-sm">{observation.sentence}</p>
+                {(observation.status !== "stable" || observation.rollbackRecommended) && (
+                  <button
+                    type="button"
+                    className="ws-chip mt-2"
+                    onClick={() => {
+                      onNavigate?.("/admin/launch-feedback");
+                      onDismiss();
+                    }}
+                  >
+                    Open the Observation Window
+                  </button>
+                )}
+              </div>
+            )}
             {/* FRASS-0476 — the overnight security sentence, Founder only. */}
+
             {securityLine && (
               <div
                 className={`mt-3 rounded-sm border p-3 ${

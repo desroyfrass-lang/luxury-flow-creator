@@ -32,3 +32,16 @@ Builder Vault, Frassy), publish only if nothing breaks.
 the live site with a clean incognito smoke test and production logs.
 
 Routing rule: `/daily` is a redirect to `/room?daily=1`. Never build a second Daily page.
+
+FRASS-0506 "Post-Launch Observation Window" (P0): a deployment is complete only after it
+proves stable in production. Every release enters an observation window — critical 72h,
+standard 24h, minor 6h (configurable in `src/lib/deploy/observation.ts`; the live release is
+recorded in `src/lib/deploy/current.ts`). Monitored: application health, authentication,
+financial transactions, worker stability, API errors, console errors, performance, database
+health. Founder Daily shows 🟢 Stable / 🟡 Monitoring / 🔴 Action Required; the Founder
+Security Center shows the full window. Critical issues escalate to the Founder, are recorded,
+and generate a rollback recommendation.
+
+**FROZEN AREA:** the deployment lifecycle (Build → Validate → Security Review → Rollback
+Verification → Publish → Observe → Archive → Learn) is complete. Never create a new
+deployment system, dashboard or checklist — amend the existing ones.

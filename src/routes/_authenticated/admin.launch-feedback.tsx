@@ -10,6 +10,8 @@ import { Loader2, MessageSquare, Power } from "lucide-react";
 import { toast } from "sonner";
 import { SecurityAlertsPanel } from "@/components/finance/security-alerts-panel";
 import { PlatformHealthPanel } from "@/components/finance/platform-health-panel";
+import { ObservationWindowPanel } from "@/components/finance/observation-window-panel";
+
 import { PlatformProtectionSwitch } from "@/components/founder/platform-protection-switch";
 
 import {
@@ -111,6 +113,9 @@ function LaunchFeedbackCenter() {
       {/* FRASS-0474 — blocked financial attempts sit beside launch feedback. */}
       <div className="mb-8 space-y-6">
         <PlatformHealthPanel />
+        {/* FRASS-0506 — the latest release stays under observation until it proves stable. */}
+        <ObservationWindowPanel />
+
         <SecurityAlertsPanel />
         {/* FRASS-0476 — the emergency control lives with the intelligence it protects. */}
         <PlatformProtectionSwitch />

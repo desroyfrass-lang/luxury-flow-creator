@@ -1539,3 +1539,49 @@ in the release's Deployment Report.
 Do not publish immediately after a fix. Let the preview sit, then walk it as a real user
 would — Welcome Hall · Register · Login · Daily · Workspace · Money Moves · Marketplace ·
 Financial Center · Builder Vault · Frassy. Publish only when nothing breaks.
+
+## FRASS-0506 — Post-Launch Observation Window
+
+Status: Constitutional Amendment · Priority P0 · Scope: every production deployment
+
+A successful deployment is not complete the moment it reaches production. It is complete
+only after the platform has demonstrated stability under real usage.
+
+Every production deployment enters an **Observation Window**. During it, the Founder
+Security Center continuously monitors: application health · authentication · financial
+transactions · worker stability · API errors · console errors · performance · database health.
+
+### Observation period (configurable)
+| Release class | Minimum observation |
+| --- | --- |
+| Critical | 72 hours |
+| Standard | 24 hours |
+| Minor | 6 hours |
+
+Durations live in `src/lib/deploy/observation.ts`; the release under observation lives in
+`src/lib/deploy/current.ts` and is updated with every publish, beside its Deployment Report.
+
+### Founder dashboard
+During the window the Founder Daily displays one line, before anything else:
+🟢 Stable · 🟡 Monitoring · 🔴 Action Required. The full window — every monitored signal,
+time elapsed and time remaining — sits in the Founder Security Center.
+
+### Automatic escalation
+If critical issues appear during the window: the Founder is notified in the Daily, the
+Security Center records the incident, and a rollback recommendation is generated when
+appropriate (FRASS-0504).
+
+Founder Principle: a deployment is not judged by whether it launches successfully, but by
+whether it remains stable after launch. Frass values operational stability as highly as
+successful delivery.
+
+---
+
+## Deployment lifecycle — FROZEN
+
+With FRASS-0502-D through FRASS-0506 the deployment lifecycle is complete and **frozen**:
+
+Build → Validate → Security Review → Rollback Verification → Publish → Observe → Archive → Learn
+
+No new deployment system, dashboard or checklist may be created. Changes to this lifecycle
+are amendments to the existing rules, never parallel processes.

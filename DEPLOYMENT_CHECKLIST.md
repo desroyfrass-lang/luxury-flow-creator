@@ -78,3 +78,19 @@ If rollback cannot be completed safely, the deployment does not proceed.
 - [ ] Welcome Hall  - [ ] Register  - [ ] Login  - [ ] Daily  - [ ] Workspace
 - [ ] Money Moves  - [ ] Marketplace  - [ ] Financial Center  - [ ] Builder Vault  - [ ] Frassy
 - [ ] Preview soaked (used as a real user) before publishing.
+
+## 9. Post-launch observation window (FRASS-0506, P0)
+- [ ] Release class chosen (critical 72h / standard 24h / minor 6h) and recorded.
+- [ ] `src/lib/deploy/current.ts` updated with deployment ID, time and class.
+- [ ] Observation Window panel shows the new release in the Founder Security Center.
+- [ ] Founder Daily shows 🟢 / 🟡 / 🔴 for the release.
+- [ ] Monitored throughout: application health, authentication, financial transactions,
+      worker stability, API errors, console errors, performance, database health.
+- [ ] No critical issues raised during the window (otherwise escalate + consider rollback, section 6).
+- [ ] Window closed clean → deployment accepted and archived in the Deployment Report.
+
+---
+
+## Lifecycle status: FROZEN
+Build → Validate → Security Review → Rollback Verification → Publish → Observe → Archive → Learn.
+This checklist is the only deployment process. Extend it; never duplicate it.
