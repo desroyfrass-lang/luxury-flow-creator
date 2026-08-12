@@ -87,6 +87,7 @@ import { Route as KidsWorldParentsRouteImport } from './routes/kids-world.parent
 import { Route as KidsWorldDiscoverRouteImport } from './routes/kids-world.discover'
 import { Route as JoinFrasskicksRouteImport } from './routes/join.frasskicks'
 import { Route as JoinFrassHillRouteImport } from './routes/join.frass-hill'
+import { Route as GalleryStudioRouteImport } from './routes/gallery.studio'
 import { Route as FrassShapeGenderRouteImport } from './routes/frass-shape.$gender'
 import { Route as FrassPlusSalesRouteImport } from './routes/frass-plus.sales'
 import { Route as FrassLuxuryHouseWomenRouteImport } from './routes/frass-luxury-house.women'
@@ -595,6 +596,11 @@ const JoinFrasskicksRoute = JoinFrasskicksRouteImport.update({
 const JoinFrassHillRoute = JoinFrassHillRouteImport.update({
   id: '/join/frass-hill',
   path: '/join/frass-hill',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const GalleryStudioRoute = GalleryStudioRouteImport.update({
+  id: '/gallery/studio',
+  path: '/gallery/studio',
   getParentRoute: () => rootRouteImport,
 } as any)
 const FrassShapeGenderRoute = FrassShapeGenderRouteImport.update({
@@ -1348,6 +1354,7 @@ export interface FileRoutesByFullPath {
   '/frass-luxury-house/women': typeof FrassLuxuryHouseWomenRoute
   '/frass-plus/sales': typeof FrassPlusSalesRoute
   '/frass-shape/$gender': typeof FrassShapeGenderRouteWithChildren
+  '/gallery/studio': typeof GalleryStudioRoute
   '/join/frass-hill': typeof JoinFrassHillRoute
   '/join/frasskicks': typeof JoinFrasskicksRoute
   '/kids-world/discover': typeof KidsWorldDiscoverRoute
@@ -1524,6 +1531,7 @@ export interface FileRoutesByTo {
   '/frass-luxury-house/men': typeof FrassLuxuryHouseMenRoute
   '/frass-luxury-house/women': typeof FrassLuxuryHouseWomenRoute
   '/frass-plus/sales': typeof FrassPlusSalesRoute
+  '/gallery/studio': typeof GalleryStudioRoute
   '/join/frass-hill': typeof JoinFrassHillRoute
   '/join/frasskicks': typeof JoinFrasskicksRoute
   '/kids-world/discover': typeof KidsWorldDiscoverRoute
@@ -1724,6 +1732,7 @@ export interface FileRoutesById {
   '/frass-luxury-house/women': typeof FrassLuxuryHouseWomenRoute
   '/frass-plus/sales': typeof FrassPlusSalesRoute
   '/frass-shape/$gender': typeof FrassShapeGenderRouteWithChildren
+  '/gallery/studio': typeof GalleryStudioRoute
   '/join/frass-hill': typeof JoinFrassHillRoute
   '/join/frasskicks': typeof JoinFrasskicksRoute
   '/kids-world/discover': typeof KidsWorldDiscoverRoute
@@ -1924,6 +1933,7 @@ export interface FileRouteTypes {
     | '/frass-luxury-house/women'
     | '/frass-plus/sales'
     | '/frass-shape/$gender'
+    | '/gallery/studio'
     | '/join/frass-hill'
     | '/join/frasskicks'
     | '/kids-world/discover'
@@ -2100,6 +2110,7 @@ export interface FileRouteTypes {
     | '/frass-luxury-house/men'
     | '/frass-luxury-house/women'
     | '/frass-plus/sales'
+    | '/gallery/studio'
     | '/join/frass-hill'
     | '/join/frasskicks'
     | '/kids-world/discover'
@@ -2299,6 +2310,7 @@ export interface FileRouteTypes {
     | '/frass-luxury-house/women'
     | '/frass-plus/sales'
     | '/frass-shape/$gender'
+    | '/gallery/studio'
     | '/join/frass-hill'
     | '/join/frasskicks'
     | '/kids-world/discover'
@@ -2451,6 +2463,7 @@ export interface RootRouteChildren {
   BuilderHandleRoute: typeof BuilderHandleRoute
   CardHandleRoute: typeof CardHandleRoute
   CollectionHandleRoute: typeof CollectionHandleRoute
+  GalleryStudioRoute: typeof GalleryStudioRoute
   JoinFrassHillRoute: typeof JoinFrassHillRoute
   JoinFrasskicksRoute: typeof JoinFrasskicksRoute
   LinkHandleRoute: typeof LinkHandleRoute
@@ -3012,6 +3025,13 @@ declare module '@tanstack/react-router' {
       path: '/join/frass-hill'
       fullPath: '/join/frass-hill'
       preLoaderRoute: typeof JoinFrassHillRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/gallery/studio': {
+      id: '/gallery/studio'
+      path: '/gallery/studio'
+      fullPath: '/gallery/studio'
+      preLoaderRoute: typeof GalleryStudioRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/frass-shape/$gender': {
@@ -4435,6 +4455,7 @@ const rootRouteChildren: RootRouteChildren = {
   BuilderHandleRoute: BuilderHandleRoute,
   CardHandleRoute: CardHandleRoute,
   CollectionHandleRoute: CollectionHandleRoute,
+  GalleryStudioRoute: GalleryStudioRoute,
   JoinFrassHillRoute: JoinFrassHillRoute,
   JoinFrasskicksRoute: JoinFrasskicksRoute,
   LinkHandleRoute: LinkHandleRoute,
