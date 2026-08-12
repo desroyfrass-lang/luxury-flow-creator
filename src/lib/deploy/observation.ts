@@ -86,22 +86,22 @@ export function observationSignals(
   since = 0,
 ): ObservationSignal[] {
   const recent = events.filter((e) => Date.parse(e.created_at) >= since);
-  const openCritical = recent.filter(
-    (e) => e.tier === "critical" && (!e.review_status || e.review_status === "open" || e.review_status === "reviewing"),
-  );
-  const openSuspicious = recent.filter(
-    (e) => e.tier === "suspicious" && (!e.review_status || e.review_status === "open" || e.review_status === "reviewing"),
-  );
+  const open = (e: TieredEvent) =>
+    !e.review_status || e.review_status === "open" || e.review_status === "reviewing";
+  const grouped = groupByTier(recent);
+  const openCritical = grouped.critical.filter(open);
+  const openSuspicious = grouped.suspicious.filter(open);
 
   const check = (keys: string[], label: string): ObservationSignal => {
     const found = health.filter((h) => keys.some((k) => h.key.includes(k)));
     if (!found.length) return { label, ok: true, reading: "No reading yet" };
     const down = found.find((h) => h.state === "down");
     const attention = found.find((h) => h.state === "attention");
-    if (down) return { label, ok: false, critical: true, reading: `${down.label}: down` };
-    if (attention) return { label, ok: false, reading: `${attention.label}: needs a look` };
+    if (down) return { label, ok: false, critical: true, reading: `${down.key}: down` };
+    if (attention) return { label, ok: false, reading: `${attention.key}: needs a look` };
     return { label, ok: true, reading: "Running normally" };
   };
+
 
   return [
     check(["app", "site", "render", "ssr"], "Application health"),
