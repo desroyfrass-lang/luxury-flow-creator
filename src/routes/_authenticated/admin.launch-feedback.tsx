@@ -10,6 +10,8 @@ import { Loader2, MessageSquare, Power } from "lucide-react";
 import { toast } from "sonner";
 import { SecurityAlertsPanel } from "@/components/finance/security-alerts-panel";
 import { PlatformHealthPanel } from "@/components/finance/platform-health-panel";
+import { ObservationWindowPanel } from "@/components/finance/observation-window-panel";
+
 import { PlatformProtectionSwitch } from "@/components/founder/platform-protection-switch";
 
 import {
