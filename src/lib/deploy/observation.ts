@@ -10,7 +10,7 @@
 // 🟢 Stable · 🟡 Monitoring · 🔴 Action Required.
 // ─────────────────────────────────────────────────────────────────────────────
 
-import type { HealthSignal, TieredEvent } from "@/lib/security/triage";
+import { groupByTier, type HealthSignal, type TieredEvent } from "@/lib/security/triage";
 
 export type ReleaseClass = "critical" | "standard" | "minor";
 
