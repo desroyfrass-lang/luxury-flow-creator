@@ -60,6 +60,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as SocialMediaViralsIndexRouteImport } from './routes/social-media-virals.index'
 import { Route as LookbookIndexRouteImport } from './routes/lookbook.index'
 import { Route as LiveIndexRouteImport } from './routes/live.index'
+import { Route as LegalIndexRouteImport } from './routes/legal.index'
 import { Route as KidsWorldIndexRouteImport } from './routes/kids-world.index'
 import { Route as JoinIndexRouteImport } from './routes/join.index'
 import { Route as FrassShapeIndexRouteImport } from './routes/frass-shape.index'
@@ -462,6 +463,11 @@ const LiveIndexRoute = LiveIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => LiveRoute,
+} as any)
+const LegalIndexRoute = LegalIndexRouteImport.update({
+  id: '/legal/',
+  path: '/legal/',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const KidsWorldIndexRoute = KidsWorldIndexRouteImport.update({
   id: '/',
@@ -1389,6 +1395,7 @@ export interface FileRoutesByFullPath {
   '/frass-shape/': typeof FrassShapeIndexRoute
   '/join/': typeof JoinIndexRoute
   '/kids-world/': typeof KidsWorldIndexRoute
+  '/legal/': typeof LegalIndexRoute
   '/live/': typeof LiveIndexRoute
   '/lookbook/': typeof LookbookIndexRoute
   '/social-media-virals/': typeof SocialMediaViralsIndexRoute
@@ -1567,6 +1574,7 @@ export interface FileRoutesByTo {
   '/frass-shape': typeof FrassShapeIndexRoute
   '/join': typeof JoinIndexRoute
   '/kids-world': typeof KidsWorldIndexRoute
+  '/legal': typeof LegalIndexRoute
   '/live': typeof LiveIndexRoute
   '/lookbook': typeof LookbookIndexRoute
   '/social-media-virals': typeof SocialMediaViralsIndexRoute
@@ -1769,6 +1777,7 @@ export interface FileRoutesById {
   '/frass-shape/': typeof FrassShapeIndexRoute
   '/join/': typeof JoinIndexRoute
   '/kids-world/': typeof KidsWorldIndexRoute
+  '/legal/': typeof LegalIndexRoute
   '/live/': typeof LiveIndexRoute
   '/lookbook/': typeof LookbookIndexRoute
   '/social-media-virals/': typeof SocialMediaViralsIndexRoute
@@ -1971,6 +1980,7 @@ export interface FileRouteTypes {
     | '/frass-shape/'
     | '/join/'
     | '/kids-world/'
+    | '/legal/'
     | '/live/'
     | '/lookbook/'
     | '/social-media-virals/'
@@ -2149,6 +2159,7 @@ export interface FileRouteTypes {
     | '/frass-shape'
     | '/join'
     | '/kids-world'
+    | '/legal'
     | '/live'
     | '/lookbook'
     | '/social-media-virals'
@@ -2350,6 +2361,7 @@ export interface FileRouteTypes {
     | '/frass-shape/'
     | '/join/'
     | '/kids-world/'
+    | '/legal/'
     | '/live/'
     | '/lookbook/'
     | '/social-media-virals/'
@@ -2484,6 +2496,7 @@ export interface RootRouteChildren {
   PlusSizeWomenRoute: typeof PlusSizeWomenRoute
   ProductHandleRoute: typeof ProductHandleRoute
   JoinIndexRoute: typeof JoinIndexRoute
+  LegalIndexRoute: typeof LegalIndexRoute
   DotlovableOauthConsentRoute: typeof DotlovableOauthConsentRoute
   Char91DotmcpChar93InvokeToolToolRoute: typeof Char91DotmcpChar93InvokeToolToolRoute
   LovableEmailAuthPreviewRoute: typeof LovableEmailAuthPreviewRoute
@@ -2849,6 +2862,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/live/'
       preLoaderRoute: typeof LiveIndexRouteImport
       parentRoute: typeof LiveRoute
+    }
+    '/legal/': {
+      id: '/legal/'
+      path: '/legal'
+      fullPath: '/legal/'
+      preLoaderRoute: typeof LegalIndexRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/kids-world/': {
       id: '/kids-world/'
@@ -4485,6 +4505,7 @@ const rootRouteChildren: RootRouteChildren = {
   PlusSizeWomenRoute: PlusSizeWomenRoute,
   ProductHandleRoute: ProductHandleRoute,
   JoinIndexRoute: JoinIndexRoute,
+  LegalIndexRoute: LegalIndexRoute,
   DotlovableOauthConsentRoute: DotlovableOauthConsentRoute,
   Char91DotmcpChar93InvokeToolToolRoute: Char91DotmcpChar93InvokeToolToolRoute,
   LovableEmailAuthPreviewRoute: LovableEmailAuthPreviewRoute,
