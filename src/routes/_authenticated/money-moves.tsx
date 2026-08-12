@@ -144,6 +144,16 @@ function MoneyMovesPage() {
     [money, row.data?.income_goal],
   );
   const streams = useMemo(() => activeStreams(launch), [launch]);
+  // FRASS-0480 — every active business tracked to its monetization outcome.
+  const tracks = useMemo(
+    () =>
+      monetizationTracks(
+        launch,
+        streams.map((s) => ({ id: s.id, label: s.label, emoji: s.emoji })),
+        affiliateReady ? {} : { affiliate: affiliatePreparationLine(readinessPolicy) },
+      ),
+    [launch, streams, affiliateReady, readinessPolicy],
+  );
   const mode = useLaunchMode();
   const readiness = useMemo(() => allStreamReadiness(launch, program, money), [launch, program, money]);
   const overall = overallReadiness(readiness);
