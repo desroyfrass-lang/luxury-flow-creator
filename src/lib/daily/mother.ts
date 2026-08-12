@@ -9,7 +9,12 @@
 // Marketplace (src/lib/services/marketplace.ts). Nothing here is a new system.
 // ─────────────────────────────────────────────────────────────────────────────
 
-import { balanceDay, type DailyBalance, type LayerId } from "@/lib/business/financial-layers";
+import {
+  balanceDay,
+  type DailyBalance,
+  type FinancialPressure,
+  type LayerId,
+} from "@/lib/business/financial-layers";
 import { KNOWLEDGE_ECONOMY_BLUEPRINT } from "./blueprints";
 import { planByReturnOnTime, type RoiPlan, type TimedMove } from "./time-roi";
 
@@ -121,7 +126,7 @@ export type MotherPillarId = "income" | "knowledge" | "business" | "wellbeing";
 export const MOTHER_PILLARS = KNOWLEDGE_ECONOMY_BLUEPRINT.pillars;
 
 /** The balance changes as her circumstances evolve. */
-export function motherBalance(pressure: "high" | "moderate" | "low" = "moderate"): DailyBalance {
+export function motherBalance(pressure: FinancialPressure = "moderate"): DailyBalance {
   return balanceDay(MOTHER_MINUTES_PER_DAY, pressure);
 }
 
