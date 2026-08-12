@@ -824,7 +824,12 @@ function FrassDailyBody({
 
         {/* Evening reflection — never mandatory */}
         {reflecting && (
-          <Section id="evening-reflection" title="Evening reflection" note="Optional. Only if you want it.">
+          <Section id="evening-reflection" title={isKanko ? "🌙 End of day" : "Evening reflection"} note="Optional. Only if you want it.">
+            {isKanko && (
+              <div className="mb-4">
+                <KankoEndOfDay published={0} movesDone={done} />
+              </div>
+            )}
             <div className="daily-grid">
               {["What you accomplished", "Goals completed", "Progress made", "Tomorrow's priorities", "Notes for tomorrow"].map(
                 (r) => (
