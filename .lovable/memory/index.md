@@ -31,6 +31,8 @@ Every major milestone needs five green audits: Security, Privacy, Performance, A
 Town Square (/town-square) is the whole town — people, businesses, artists, brands, farmers, builders, events, stores, districts, live. Not TikTok.
 For Me is personal, never algorithmic — no "chosen for you".
 Every production deploy must pass DEPLOYMENT_CHECKLIST.md in production (not preview) and produce an archived deployment report (FRASS-0502-D/0503-D).
+Deployment lifecycle is FROZEN (FRASS-0502-D→0506): build, validate, security review, rollback verification, publish, observe (🟢/🟡/🔴 window), archive, learn — never a parallel deploy system.
+
 
 ## Memories
 - [FRASS-0477 Frassy Presence](mem://features/frass-0477-frassy-presence) — Arrival/returning/working/idle etiquette, Focus Mode silence, cloud→device→text voice hierarchy with indicator
