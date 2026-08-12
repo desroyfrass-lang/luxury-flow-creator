@@ -23,6 +23,7 @@ import { usePushToTalk } from "@/hooks/use-push-to-talk";
 import { SpeechControls } from "@/components/voice/speech-controls";
 import { VoiceFeedbackButton } from "@/components/feedback/voice-feedback";
 import { useFrassyStartup } from "@/hooks/use-frassy-startup";
+import { loadTranscript, saveTranscript, type FrassyTurn } from "@/lib/frassy/transcript";
 
 type ProductCard = {
   handle: string;
@@ -57,7 +58,19 @@ const nextId = () => `m${++seq}-${Date.now()}`;
 
 export function FrassyChat({ embedded = false }: { embedded?: boolean } = {}) {
   const [open, setOpen] = useState(embedded);
+  // FRASS-0476B — one shared conversation history. A refresh or a change of
+  // district continues the same conversation instead of restarting it.
   const [messages, setMessages] = useState<Msg[]>([]);
+  useEffect(() => {
+    const prior = loadTranscript();
+    if (prior.length) {
+      setMessages(prior.map((t: FrassyTurn) => ({ id: nextId(), role: t.role, content: t.content })));
+    }
+  }, []);
+  useEffect(() => {
+    if (messages.length) saveTranscript(messages.map((m) => ({ role: m.role, content: m.content })));
+  }, [messages]);
+
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
