@@ -1458,3 +1458,42 @@ home may contain opportunities waiting to be recognised, organised, and ethicall
 valuation research, listing preparation) · `public.hidden_assets` + private `hidden-assets` bucket, both
 owner-scoped · `/workspace/first-venture` · Daily section `first-venture` (Customization Engine) ·
 `hidden-assets` income stream in Money Moves · `FRASS_HIDDEN_ASSETS` in Frassy's knowledge layer.
+
+---
+
+## FRASS-0502-D — Production Deployment Gate
+
+Status: Constitutional Amendment · Priority P0 · Scope: every production deployment
+
+Before any production deployment, the Deployment Checklist (`DEPLOYMENT_CHECKLIST.md`)
+must pass. No exceptions. Required categories:
+
+1. Build Integrity — TypeScript build passes; no Node-only or UMD/CJS interop code bundled.
+2. Worker Integrity — Cloudflare Worker builds and boots without exception.
+3. SSR Integrity — server-rendered HTML returned for `/` with status 200.
+4. Authentication — sign-in, session restore and sign-out all work in production.
+5. Critical Navigation — Home, Welcome Hall, Workspace, The Daily all load.
+6. Security Verification — scan current for the deployed commit, no unresolved critical findings.
+7. Console Verification — zero console errors on the critical path.
+8. Server Verification — zero 5xx responses on the critical path.
+9. Founder Security Center Verification — Platform Health green, protection mode intentional.
+10. Post-Deployment Monitoring — at least one successful production request confirmed in logs.
+11. Rollback Procedure — last known-good commit identified before publishing.
+
+A deployment is not successful until **production** — not preview — passes every gate.
+
+## FRASS-0503-D — Never Ship Blind
+
+Status: Constitutional Amendment · Priority P0
+
+Every production deployment must generate a Deployment Report containing:
+Deployment ID · Build number · Git commit · Time deployed · Smoke test results ·
+Security verification · SSR verification · Rollback status · Production URL · Final approval.
+
+Founder Mode archives every Deployment Report. Six months later it must still be possible
+to answer: what changed, when it changed, who deployed it, and whether it passed validation.
+Reports live in `deployments/` using `deployments/REPORT_TEMPLATE.md`.
+
+### Routing note (adopted with these amendments)
+`/daily` is a permanent redirect into the one canonical Daily inside My Workspace
+(`/room?daily=1`). There is never a second Daily page or component.
