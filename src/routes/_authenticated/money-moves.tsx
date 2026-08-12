@@ -43,6 +43,13 @@ import {
   type MoneyState,
   type Opportunity,
 } from "@/lib/business/money-moves";
+import {
+  BUILD_IT_MONETIZE_IT,
+  MONETIZATION_RULE,
+  PHASE_LABEL,
+  monetizationSummary,
+  monetizationTracks,
+} from "@/lib/business/monetization";
 
 export const Route = createFileRoute("/_authenticated/money-moves")({
   head: () => ({
