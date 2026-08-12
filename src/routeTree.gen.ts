@@ -84,6 +84,7 @@ import { Route as LookbookStoryRouteImport } from './routes/lookbook.$story'
 import { Route as LiveGoRouteImport } from './routes/live.go'
 import { Route as LiveBroadcastIdRouteImport } from './routes/live.$broadcastId'
 import { Route as LinkHandleRouteImport } from './routes/link.$handle'
+import { Route as LegalLevelRouteImport } from './routes/legal.$level'
 import { Route as KidsWorldStreetRouteImport } from './routes/kids-world.street'
 import { Route as KidsWorldParentsRouteImport } from './routes/kids-world.parents'
 import { Route as KidsWorldDiscoverRouteImport } from './routes/kids-world.discover'
@@ -583,6 +584,11 @@ const LiveBroadcastIdRoute = LiveBroadcastIdRouteImport.update({
 const LinkHandleRoute = LinkHandleRouteImport.update({
   id: '/link/$handle',
   path: '/link/$handle',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LegalLevelRoute = LegalLevelRouteImport.update({
+  id: '/legal/$level',
+  path: '/legal/$level',
   getParentRoute: () => rootRouteImport,
 } as any)
 const KidsWorldStreetRoute = KidsWorldStreetRouteImport.update({
@@ -1372,6 +1378,7 @@ export interface FileRoutesByFullPath {
   '/kids-world/discover': typeof KidsWorldDiscoverRoute
   '/kids-world/parents': typeof KidsWorldParentsRoute
   '/kids-world/street': typeof KidsWorldStreetRoute
+  '/legal/$level': typeof LegalLevelRoute
   '/link/$handle': typeof LinkHandleRoute
   '/live/$broadcastId': typeof LiveBroadcastIdRoute
   '/live/go': typeof LiveGoRoute
@@ -1551,6 +1558,7 @@ export interface FileRoutesByTo {
   '/kids-world/discover': typeof KidsWorldDiscoverRoute
   '/kids-world/parents': typeof KidsWorldParentsRoute
   '/kids-world/street': typeof KidsWorldStreetRoute
+  '/legal/$level': typeof LegalLevelRoute
   '/link/$handle': typeof LinkHandleRoute
   '/live/$broadcastId': typeof LiveBroadcastIdRoute
   '/live/go': typeof LiveGoRoute
@@ -1754,6 +1762,7 @@ export interface FileRoutesById {
   '/kids-world/discover': typeof KidsWorldDiscoverRoute
   '/kids-world/parents': typeof KidsWorldParentsRoute
   '/kids-world/street': typeof KidsWorldStreetRoute
+  '/legal/$level': typeof LegalLevelRoute
   '/link/$handle': typeof LinkHandleRoute
   '/live/$broadcastId': typeof LiveBroadcastIdRoute
   '/live/go': typeof LiveGoRoute
@@ -1957,6 +1966,7 @@ export interface FileRouteTypes {
     | '/kids-world/discover'
     | '/kids-world/parents'
     | '/kids-world/street'
+    | '/legal/$level'
     | '/link/$handle'
     | '/live/$broadcastId'
     | '/live/go'
@@ -2136,6 +2146,7 @@ export interface FileRouteTypes {
     | '/kids-world/discover'
     | '/kids-world/parents'
     | '/kids-world/street'
+    | '/legal/$level'
     | '/link/$handle'
     | '/live/$broadcastId'
     | '/live/go'
@@ -2338,6 +2349,7 @@ export interface FileRouteTypes {
     | '/kids-world/discover'
     | '/kids-world/parents'
     | '/kids-world/street'
+    | '/legal/$level'
     | '/link/$handle'
     | '/live/$broadcastId'
     | '/live/go'
@@ -2490,6 +2502,7 @@ export interface RootRouteChildren {
   GalleryStudioRoute: typeof GalleryStudioRoute
   JoinFrassHillRoute: typeof JoinFrassHillRoute
   JoinFrasskicksRoute: typeof JoinFrasskicksRoute
+  LegalLevelRoute: typeof LegalLevelRoute
   LinkHandleRoute: typeof LinkHandleRoute
   PayTokenRoute: typeof PayTokenRoute
   PlusSizeMenRoute: typeof PlusSizeMenRoute
@@ -3029,6 +3042,13 @@ declare module '@tanstack/react-router' {
       path: '/link/$handle'
       fullPath: '/link/$handle'
       preLoaderRoute: typeof LinkHandleRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/legal/$level': {
+      id: '/legal/$level'
+      path: '/legal/$level'
+      fullPath: '/legal/$level'
+      preLoaderRoute: typeof LegalLevelRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/kids-world/street': {
@@ -4499,6 +4519,7 @@ const rootRouteChildren: RootRouteChildren = {
   GalleryStudioRoute: GalleryStudioRoute,
   JoinFrassHillRoute: JoinFrassHillRoute,
   JoinFrasskicksRoute: JoinFrasskicksRoute,
+  LegalLevelRoute: LegalLevelRoute,
   LinkHandleRoute: LinkHandleRoute,
   PayTokenRoute: PayTokenRoute,
   PlusSizeMenRoute: PlusSizeMenRoute,
