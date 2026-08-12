@@ -515,3 +515,35 @@ FRASS-0476 through FRASS-0480 and the Daily↔Workspace integration are closed.
 From here the work is building worlds inside this constitution — Frass Gallery,
 Frass Services, FRASS STREET, Tax Intelligence — not rewriting its foundations.
 
+
+---
+
+## FRASS-0483 — Business Discovery Engine (Constitutional Amendment, P0)
+
+**Founder Principle.** Frass does not give people businesses. Frass discovers the businesses already
+inside them and helps them Build It. Monetize It.
+
+1. **One discovery journey.** Every Partner passes through the existing Discovery Interview. This
+   amendment extends that interview — it never creates a second onboarding flow.
+2. **Hidden Asset Discovery.** Professional experience, certifications, licences, hobbies, talents,
+   languages, life experience, volunteer work, cultural knowledge, community connections, family
+   businesses, existing products, customers and audiences all count. No experience is too small.
+3. **Continuous Discovery.** The interview never ends. Skills mentioned in passing months later become
+   a single warm offer ("Would you like me to open a Fitness Business Vault?"), never an interrogation.
+4. **Business Matching.** Discovered strengths route to businesses that already exist inside Frass
+   before anything new is proposed.
+5. **One business, many income streams.** A single skill may carry consultations, courses, affiliate
+   picks, guides, memberships and speaking.
+6. **Money Moves integration.** Every discovered opportunity ends in a monetization outcome or an
+   honest Preparation Mode (FRASS-0480).
+7. **Daily integration.** No two Dailies are identical unless two members genuinely share experience
+   and goals.
+
+*What this means in plain English:* Frassy keeps listening. When you mention something you used to do,
+she offers to turn it into a business Frass already knows how to run — like a friend who remembers you
+used to bake and finally says, "you know people would pay for that."
+
+**Implementation.** `src/lib/business/discovery.ts` (matching + continuous offers),
+`src/components/frassy/discovery-offers.tsx` (shared surface, mounted in The Daily and Money Moves),
+`src/lib/business/partner-profile.ts` (profile + hidden assets, device-local),
+`src/routes/api/chat.ts` (discovery, Frass Services and Frass Economy prompt blocks).
