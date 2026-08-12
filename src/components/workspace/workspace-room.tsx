@@ -4,6 +4,7 @@
 // the open project and reopens exactly where work stopped.
 
 import { readArrivalIntent } from "@/lib/frassy/context";
+import { appendTranscript } from "@/lib/frassy/transcript";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { ChevronDown, ChevronRight } from "lucide-react";
 import { WorkspaceShell, type IndexEntry, type RoleLink } from "@/components/workspace/workspace-shell";
@@ -244,6 +245,8 @@ export function WorkspaceRoom({
       }
       const reply = data.reply?.trim() || "…";
       push(sectionId, { id: nid("m"), role: "assistant", content: reply });
+      // FRASS-0476B — one shared conversation history across every room.
+      appendTranscript({ role: "user", content: text }, { role: "assistant", content: reply });
       // Workspace Awareness — real work, recorded honestly.
       recordActivity(activeProjectId);
       setAwarenessPulse((n) => n + 1);

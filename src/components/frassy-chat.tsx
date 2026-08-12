@@ -23,6 +23,7 @@ import { usePushToTalk } from "@/hooks/use-push-to-talk";
 import { SpeechControls } from "@/components/voice/speech-controls";
 import { VoiceFeedbackButton } from "@/components/feedback/voice-feedback";
 import { useFrassyStartup } from "@/hooks/use-frassy-startup";
+import { loadTranscript, saveTranscript, type FrassyTurn } from "@/lib/frassy/transcript";
 
 type ProductCard = {
   handle: string;
@@ -63,7 +64,7 @@ export function FrassyChat({ embedded = false }: { embedded?: boolean } = {}) {
   useEffect(() => {
     const prior = loadTranscript();
     if (prior.length) {
-      setMessages(prior.map((t) => ({ id: nextId(), role: t.role, content: t.content })));
+      setMessages(prior.map((t: FrassyTurn) => ({ id: nextId(), role: t.role, content: t.content })));
     }
   }, []);
   useEffect(() => {
