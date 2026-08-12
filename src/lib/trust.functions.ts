@@ -267,7 +267,7 @@ export const getTrustProfile = createServerFn({ method: "GET" })
         supabaseAdmin.from("trust_verifications").select("badge").eq("user_id", profile.id),
         supabaseAdmin
           .from("card_orders")
-          .select("id, status, buyer_id")
+          .select("id, status, buyer_email")
           .eq("seller_id", profile.id),
         supabaseAdmin
           .from("verified_feedback")
@@ -290,7 +290,10 @@ export const getTrustProfile = createServerFn({ method: "GET" })
     const commitmentsTotal = all.filter((o) =>
       [...completedStatuses, "cancelled", "refunded", "failed"].includes(o.status ?? ""),
     ).length;
-    const distinctCustomers = new Set(completed.map((o) => o.buyer_id).filter(Boolean)).size;
+    // Orders identify a customer by email, so distinct people means distinct emails.
+    const distinctCustomers = new Set(
+      completed.map((o) => (o.buyer_email ?? "").toLowerCase()).filter(Boolean),
+    ).size;
 
     const monthsActive = monthsBetween(profile.created_at);
     const stage = builderStage(completed.length, monthsActive);
@@ -380,10 +383,13 @@ export const getTrustProfile = createServerFn({ method: "GET" })
 export const getFeedbackInvitations = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
+    const email = (context.claims?.email as string | undefined)?.toLowerCase();
+    if (!email) return [] as { orderId: string; reference: string; sellerName: string; createdAt: string }[];
+
     const { data: orders } = await context.supabase
       .from("card_orders")
       .select("id, reference, seller_id, status, created_at")
-      .eq("buyer_id", context.userId)
+      .ilike("buyer_email", email)
       .in("status", ["paid", "fulfilled", "completed"])
       .order("created_at", { ascending: false })
       .limit(20);
@@ -425,13 +431,14 @@ export const leaveVerifiedFeedback = createServerFn({ method: "POST" })
   )
   .handler(async ({ context, data }) => {
     // The subject is derived from the order itself, never from the request.
+    const email = (context.claims?.email as string | undefined)?.toLowerCase();
     const { data: order } = await context.supabase
       .from("card_orders")
-      .select("id, seller_id, buyer_id, status")
+      .select("id, seller_id, buyer_email, status")
       .eq("id", data.orderId)
       .maybeSingle();
 
-    if (!order || order.buyer_id !== context.userId) {
+    if (!order || !email || (order.buyer_email ?? "").toLowerCase() !== email) {
       throw new Error("You can only leave feedback for your own completed transactions.");
     }
 
