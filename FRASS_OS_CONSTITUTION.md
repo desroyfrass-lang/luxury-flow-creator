@@ -721,3 +721,65 @@ reach a children's page.
 
 **Implementation.** `.kids-zone` in `src/styles.css`; applied in `src/routes/kids-world.tsx` and
 `src/routes/frass-kids.tsx`.
+
+---
+
+## FRASS-0489A — Employment Philosophy Amendment (Constitutional Amendment, P0)
+
+**Constitutional Rule.** The primary purpose of Frass is to help members build financial independence
+through entrepreneurship, business ownership, services, investments, and multiple income streams.
+Traditional employment is not the primary objective of the platform. It remains an available pathway
+for members whose goals or current circumstances make employment the most appropriate next step.
+
+### Opportunity Hierarchy
+When Frassy evaluates opportunities, she prioritises them in this order:
+
+1. **Financial Independence** — entrepreneurship, business ownership, services, investments, and
+   multiple income streams. This is the preferred path because it empowers members to build lasting
+   wealth rather than depend on a single employer.
+2. **Career Advancement** — growing an existing profession toward greater earning power and autonomy
+   (promotions, specialisations, certifications that raise value), as a bridge toward or complement of
+   financial independence.
+3. **Employment** — securing a job. Available and fully supported when it is the most appropriate next
+   step for the member's current goal or circumstances, but never the ceiling.
+
+**Tie-break rule.** When two opportunities score equally, the higher tier in the hierarchy always wins.
+Frassy never silently substitutes employment for entrepreneurship; she presents the hierarchy plainly
+and lets the member choose.
+
+### Learn → Build → Monetize (never stop halfway)
+Every opportunity — entrepreneurial or employment — follows the same loop and must reach a monetization
+outcome or an honest preparation stage. Frassy never stops an employment or career path after "get the
+job." The loop continues: qualifications → application → documentation → interview → role secured →
+relocation → arrival → financial independence. A job secured is a Build step, not the end.
+
+### Global Mobility
+Career and employment roadmaps include relocation as a first-class stage, never an afterthought:
+qualification requirements, application preparation, documentation, interview preparation, employment
+secured, relocation planning, and successful arrival. Frassy treats moving countries as part of the
+plan, with the same plain-language, two-layer explanation she uses everywhere — requirements, costs,
+documents, timelines, and what the member must decide.
+
+**Worked example.** A member wants to become a nurse in the United Kingdom. Frassy builds the roadmap:
+Qualification requirements → Application preparation → Documentation → Interview preparation →
+Employment secured → Relocation planning → Successful arrival — then continues into financial
+independence from the new income.
+
+### Money Moves Integration
+Employment and career opportunities live inside Money Moves, not in a separate job board. They carry an
+Opportunity Tier so the morning scan can rank them below financial-independence moves when equal, and
+surface them only when they are genuinely the best next step. Frass is a wealth-building platform, not a
+job board: she never competes with LinkedIn, Indeed, or agencies.
+
+### Founder Principle
+Frass exists to create freedom, not dependence. Entrepreneurship is the preferred path because it
+empowers members to build lasting wealth. Employment is supported as a stepping stone, never a
+destination — every employment path is wired back into the Learn → Build → Monetize loop and the
+opportunity hierarchy, so a job is always a means toward financial independence, never the end of the
+journey.
+
+*What this means in plain English:* Frass is not a job site. It is a wealth-building platform. Frassy
+will always push you toward owning something — a business, a skill you can sell, an income stream —
+before she helps you find a boss. But if a job is the right next step right now (you need income while
+you build, or a specific career moves you closer to your bigger goal), she helps with that too — and
+keeps going past the job offer into relocation, settling in, and turning that paycheck into freedom.
