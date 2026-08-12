@@ -134,16 +134,8 @@ function Header() {
             <Search className="h-4 w-4" />
           </button>
           <NotificationBell />
-          {hasWorkspace && (
-            <Link
-              to="/workspace"
-              aria-label="Workspace"
-              title="Enter your private workspace"
-              className="hidden md:inline-flex h-10 w-10 items-center justify-center rounded-full border border-[color:var(--gold)]/60 bg-background/70 backdrop-blur text-[color:var(--gold)] hover:bg-[color:var(--gold)]/10 transition"
-            >
-              <KeyRound className="h-4 w-4" />
-            </Link>
-          )}
+          {/* FRASS-0481 — one way in. The Workspace lives in the account menu only. */}
+
           <BuilderAccountMenu hasWorkspace={hasWorkspace} isAdmin={isAdmin} />
           <HeaderSignOut />
 
@@ -255,6 +247,13 @@ function BuilderAccountMenu({ hasWorkspace, isAdmin }: { hasWorkspace: boolean; 
           <Sun className="h-4 w-4" />
           The Frass Daily
         </DropdownMenuItem>
+        {/* FRASS-0481 — one workspace, one order: Daily · Workspace · Studios · places. */}
+        <DropdownMenuItem asChild className="rounded-xl cursor-pointer">
+          <Link to="/room" className="flex items-center gap-2 text-xs uppercase tracking-[0.2em]">
+            <KeyRound className="h-4 w-4" />
+            My Workspace
+          </Link>
+        </DropdownMenuItem>
         <DropdownMenuItem asChild className="rounded-xl cursor-pointer">
           <Link to="/studio" className="flex items-center gap-2 text-xs uppercase tracking-[0.2em]">
             <span aria-hidden>🎬</span>
@@ -262,8 +261,6 @@ function BuilderAccountMenu({ hasWorkspace, isAdmin }: { hasWorkspace: boolean; 
           </Link>
         </DropdownMenuItem>
         <DropdownMenuItem asChild className="rounded-xl cursor-pointer">
-
-
           <Link to="/welcome-hall" className="flex items-center gap-2 text-xs uppercase tracking-[0.2em]">
             <Sparkles className="h-4 w-4" />
             Welcome Hall
@@ -293,23 +290,13 @@ function BuilderAccountMenu({ hasWorkspace, isAdmin }: { hasWorkspace: boolean; 
             Academy District
           </Link>
         </DropdownMenuItem>
-
-
         <DropdownMenuItem asChild className="rounded-xl cursor-pointer">
-          <Link to="/workspace/profile" className="flex items-center gap-2 text-xs uppercase tracking-[0.2em]">
+          <Link to="/workspace/card" className="flex items-center gap-2 text-xs uppercase tracking-[0.2em]">
             <Settings className="h-4 w-4" />
-            Builder Profile
+            My Frass Card
           </Link>
         </DropdownMenuItem>
 
-        {hasWorkspace && (
-          <DropdownMenuItem asChild className="rounded-xl cursor-pointer">
-            <Link to="/workspace" className="flex items-center gap-2 text-xs uppercase tracking-[0.2em]">
-              <KeyRound className="h-4 w-4" />
-              Workspace
-            </Link>
-          </DropdownMenuItem>
-        )}
         {isAdmin && (
           <DropdownMenuItem asChild className="rounded-xl cursor-pointer">
             <Link to="/founder" className="flex items-center gap-2 text-xs uppercase tracking-[0.2em]">
@@ -366,15 +353,19 @@ function MobileAccountLinks({ hasWorkspace, isAdmin }: { hasWorkspace: boolean; 
       </button>
 
       <Link
+        to="/room"
+        className="nav-glow block rounded-xl px-4 py-3 text-xs uppercase tracking-[0.25em] text-muted-foreground transition-colors hover:bg-foreground/5"
+        activeProps={{ className: "text-foreground bg-foreground/5" }}
+      >
+        My Workspace
+      </Link>
+      <Link
         to="/studio"
         className="nav-glow block rounded-xl px-4 py-3 text-xs uppercase tracking-[0.25em] text-muted-foreground transition-colors hover:bg-foreground/5"
         activeProps={{ className: "text-foreground bg-foreground/5" }}
       >
         🎬 FV Studios
       </Link>
-
-
-
       <Link
         to="/welcome-hall"
         className="nav-glow block rounded-xl px-4 py-3 text-xs uppercase tracking-[0.25em] text-muted-foreground transition-colors hover:bg-foreground/5"
@@ -411,22 +402,13 @@ function MobileAccountLinks({ hasWorkspace, isAdmin }: { hasWorkspace: boolean; 
         Academy District
       </Link>
       <Link
-        to="/workspace/profile"
+        to="/workspace/card"
         className="nav-glow block rounded-xl px-4 py-3 text-xs uppercase tracking-[0.25em] text-muted-foreground transition-colors hover:bg-foreground/5"
         activeProps={{ className: "text-foreground bg-foreground/5" }}
       >
-        Builder Profile
+        My Frass Card
       </Link>
 
-      {hasWorkspace && (
-        <Link
-          to="/workspace"
-          className="nav-glow block rounded-xl px-4 py-3 text-xs uppercase tracking-[0.25em] text-muted-foreground transition-colors hover:bg-foreground/5"
-          activeProps={{ className: "text-foreground bg-foreground/5" }}
-        >
-          Workspace
-        </Link>
-      )}
       {isAdmin && (
         <Link
           to="/founder"
