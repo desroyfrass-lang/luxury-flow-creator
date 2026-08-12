@@ -27,7 +27,15 @@ export type SectionId =
   | "launch-feedback"
   | "fv-studios"
   | "continue-working"
-  | "daily-briefing";
+  | "daily-briefing"
+  | "personal-welcome"
+  | "freedom-progress"
+  | "money-moves-today"
+  | "coco-vintage"
+  | "freight-prep"
+  | "frassy-note"
+  | "partner-progress"
+  | "legacy-dashboard";
 
 export type SectionMeta = {
   id: SectionId;
@@ -138,6 +146,56 @@ export const DAILY_SECTIONS: SectionMeta[] = [
     plain: "The health of each part of your Daily at a glance.",
     aliases: ["health", "system briefing", "overview"],
   },
+  // FRASS-P001 — personalized blocks (Kanko's Daily, Version 1).
+  {
+    id: "personal-welcome",
+    label: "Your morning welcome",
+    plain: "Your personal greeting and today's one focus.",
+    aliases: ["welcome", "greeting", "good morning", "message"],
+  },
+  {
+    id: "freedom-progress",
+    label: "Freedom Progress",
+    plain: "How close you are to living off your own business.",
+    aliases: ["freedom", "progress to freedom", "independence"],
+  },
+  {
+    id: "money-moves-today",
+    label: "Today's Money Moves",
+    plain: "The three highest-earning things you can do today.",
+    aliases: ["money moves", "moves", "earning", "income today"],
+  },
+  {
+    id: "coco-vintage",
+    label: "Coco Vintage",
+    plain: "Today's publishing goal, already prepared for you.",
+    aliases: ["coco", "vintage", "products", "publishing"],
+  },
+  {
+    id: "freight-prep",
+    label: "Freight Brokerage",
+    plain: "Parked on purpose until your first business is steady.",
+    aliases: ["freight", "logistics", "brokerage"],
+  },
+  {
+    id: "frassy-note",
+    label: "A word from Frassy",
+    plain: "One encouraging message. Never ten.",
+    aliases: ["encouragement", "frassy", "message of the day"],
+  },
+  // Founder Daily Amendment — Founder-only widgets.
+  {
+    id: "partner-progress",
+    label: "Partner Progress Center",
+    plain: "How every partner is doing, without opening their Daily.",
+    aliases: ["partners", "partner progress", "team", "everyone"],
+  },
+  {
+    id: "legacy-dashboard",
+    label: "Legacy Dashboard",
+    plain: "Lives changed, not money earned.",
+    aliases: ["legacy", "impact", "lives changed"],
+  },
 ];
 
 export const SECTION_BY_ID = Object.fromEntries(
@@ -148,8 +206,16 @@ export const ALL_SECTION_IDS = DAILY_SECTIONS.map((s) => s.id);
 
 /** Frass's recommended order — what a member gets before they change anything. */
 export const RECOMMENDED_ORDER: SectionId[] = [
+  "personal-welcome",
   "celebrate-first",
+  "freedom-progress",
+  "money-moves-today",
+  "coco-vintage",
+  "freight-prep",
   "todays-priorities",
+  "partner-progress",
+  "legacy-dashboard",
+  "frassy-note",
   "since-last",
   "financial-snapshot",
   "pending-approvals",
