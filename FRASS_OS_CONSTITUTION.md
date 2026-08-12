@@ -408,3 +408,79 @@ Other builders ask *"what website do you want?"*. Frassy asks **"what business a
 - **Optional third-party services outside the hosting plan remain governed by FRASS-0419A** and are still itemised at provider cost before being switched on.
 - **Infrastructure Philosophy.** Frass builds experiences, not commodity infrastructure. Where mature, secure and scalable infrastructure already exists, Frass may use it so the team can focus on creating exceptional products. Infrastructure must never become a distraction from innovation. Phase 1: use established cloud. Phase 2: optimise and negotiate at scale. Phase 3: own more only when the mathematics demands it.
 - **Operate properly.** No special hosting licence is required, but Frass must maintain a registered entity, Terms of Service, Privacy Policy, Acceptable Use Policy, copyright/DMCA policy, data-protection compliance (GDPR, PIPEDA), tax registration, payment-provider compliance, business insurance, and stated uptime and backup commitments.
+
+---
+
+## FRASS-0479 — Frassy Architecture Freeze
+
+**Status:** Constitutional. **Priority:** Permanent. **Effective:** Immediately.
+
+Frassy has reached architectural maturity. She is no longer an experimental
+feature — she is the operating system of the Frass ecosystem. Her foundation
+is now constitutionally frozen.
+
+### Frozen Systems
+
+The following are stable architecture. They may be optimized internally but
+must never be duplicated or fundamentally redesigned without a Founder
+Constitutional Amendment:
+
+1. **One Frassy** — only one Frassy exists everywhere; she never becomes
+   another AI, she changes responsibilities by room.
+2. **One Shared Chat Engine**
+3. **One Shared Voice Engine** — cloud → device → text, never silence.
+4. **One Shared Conversation History** — room changes and refreshes never
+   restart the conversation.
+5. **One Shared Personality** — warm, intelligent, professional, encouraging,
+   calm, naturally humorous. Only responsibilities change, never identity.
+6. **One Shared Presence Engine** — welcome once, welcome back, quiet while
+   working, Focus Mode, one idle offer, never interrupt, never disappear.
+7. **One Shared Context Engine** — where, who, permissions, purpose, share.
+8. **One Shared Working Style Engine** — on-device, visible, resettable;
+   improves assistance, never changes personality.
+9. **One Shared Memory Layer**
+10. **One Shared Permission Layer**
+
+Every room extends these systems. No room owns its own copy.
+
+### Room Responsibilities (frozen model)
+
+| Room | Frassy's role |
+| --- | --- |
+| Welcome Hall | Host |
+| The Daily | Executive Assistant |
+| Workspace | Business Coach |
+| FOR ME | Personal Growth Coach |
+| Marketplace | Shopping Assistant |
+| Financial Center | Financial Assistant |
+| Control Room | Operations Officer (Founder only) |
+| Frass Card | Networking Assistant |
+
+Every future department follows this same model.
+
+### Future Development — Allowed
+
+Business knowledge, marketplace knowledge, financial explanations, Founder
+reporting, business coaching, conversation quality, timing, explanations,
+accessibility, performance, language support, new departments, new business
+specializations.
+
+### Future Development — Forbidden
+
+No duplicating Frassy. No department-specific assistants. No independent
+memories, personalities, voice engines, or chat engines. No forking or
+redesigning the frozen core.
+
+### Extension Principle
+
+Every future Frass department teaches Frassy something new. Nothing creates
+another Frassy. The architecture never changes — only Frassy's knowledge
+expands.
+
+### Founder Closing Statement
+
+Frassy's foundation is complete. From this point forward, focus shifts away
+from rebuilding the assistant and toward building the world she guides people
+through. This freeze marks the transition from platform construction to
+platform refinement, preparing Frass for launch with a single, consistent
+intelligence at its heart.
