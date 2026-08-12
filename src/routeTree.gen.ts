@@ -83,6 +83,7 @@ import { Route as LookbookStoryRouteImport } from './routes/lookbook.$story'
 import { Route as LiveGoRouteImport } from './routes/live.go'
 import { Route as LiveBroadcastIdRouteImport } from './routes/live.$broadcastId'
 import { Route as LinkHandleRouteImport } from './routes/link.$handle'
+import { Route as KidsWorldStreetRouteImport } from './routes/kids-world.street'
 import { Route as KidsWorldParentsRouteImport } from './routes/kids-world.parents'
 import { Route as KidsWorldDiscoverRouteImport } from './routes/kids-world.discover'
 import { Route as JoinFrasskicksRouteImport } from './routes/join.frasskicks'
@@ -577,6 +578,11 @@ const LinkHandleRoute = LinkHandleRouteImport.update({
   id: '/link/$handle',
   path: '/link/$handle',
   getParentRoute: () => rootRouteImport,
+} as any)
+const KidsWorldStreetRoute = KidsWorldStreetRouteImport.update({
+  id: '/street',
+  path: '/street',
+  getParentRoute: () => KidsWorldRoute,
 } as any)
 const KidsWorldParentsRoute = KidsWorldParentsRouteImport.update({
   id: '/parents',
@@ -1359,6 +1365,7 @@ export interface FileRoutesByFullPath {
   '/join/frasskicks': typeof JoinFrasskicksRoute
   '/kids-world/discover': typeof KidsWorldDiscoverRoute
   '/kids-world/parents': typeof KidsWorldParentsRoute
+  '/kids-world/street': typeof KidsWorldStreetRoute
   '/link/$handle': typeof LinkHandleRoute
   '/live/$broadcastId': typeof LiveBroadcastIdRoute
   '/live/go': typeof LiveGoRoute
@@ -1536,6 +1543,7 @@ export interface FileRoutesByTo {
   '/join/frasskicks': typeof JoinFrasskicksRoute
   '/kids-world/discover': typeof KidsWorldDiscoverRoute
   '/kids-world/parents': typeof KidsWorldParentsRoute
+  '/kids-world/street': typeof KidsWorldStreetRoute
   '/link/$handle': typeof LinkHandleRoute
   '/live/$broadcastId': typeof LiveBroadcastIdRoute
   '/live/go': typeof LiveGoRoute
@@ -1737,6 +1745,7 @@ export interface FileRoutesById {
   '/join/frasskicks': typeof JoinFrasskicksRoute
   '/kids-world/discover': typeof KidsWorldDiscoverRoute
   '/kids-world/parents': typeof KidsWorldParentsRoute
+  '/kids-world/street': typeof KidsWorldStreetRoute
   '/link/$handle': typeof LinkHandleRoute
   '/live/$broadcastId': typeof LiveBroadcastIdRoute
   '/live/go': typeof LiveGoRoute
@@ -1938,6 +1947,7 @@ export interface FileRouteTypes {
     | '/join/frasskicks'
     | '/kids-world/discover'
     | '/kids-world/parents'
+    | '/kids-world/street'
     | '/link/$handle'
     | '/live/$broadcastId'
     | '/live/go'
@@ -2115,6 +2125,7 @@ export interface FileRouteTypes {
     | '/join/frasskicks'
     | '/kids-world/discover'
     | '/kids-world/parents'
+    | '/kids-world/street'
     | '/link/$handle'
     | '/live/$broadcastId'
     | '/live/go'
@@ -2315,6 +2326,7 @@ export interface FileRouteTypes {
     | '/join/frasskicks'
     | '/kids-world/discover'
     | '/kids-world/parents'
+    | '/kids-world/street'
     | '/link/$handle'
     | '/live/$broadcastId'
     | '/live/go'
@@ -2998,6 +3010,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/link/$handle'
       preLoaderRoute: typeof LinkHandleRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/kids-world/street': {
+      id: '/kids-world/street'
+      path: '/street'
+      fullPath: '/kids-world/street'
+      preLoaderRoute: typeof KidsWorldStreetRouteImport
+      parentRoute: typeof KidsWorldRoute
     }
     '/kids-world/parents': {
       id: '/kids-world/parents'
@@ -4307,6 +4326,7 @@ const FrassShapeRouteWithChildren = FrassShapeRoute._addFileChildren(
 interface KidsWorldRouteChildren {
   KidsWorldDiscoverRoute: typeof KidsWorldDiscoverRoute
   KidsWorldParentsRoute: typeof KidsWorldParentsRoute
+  KidsWorldStreetRoute: typeof KidsWorldStreetRoute
   KidsWorldIndexRoute: typeof KidsWorldIndexRoute
   KidsWorldAgePlaceRoute: typeof KidsWorldAgePlaceRoute
   KidsWorldActivitySlugRoute: typeof KidsWorldActivitySlugRoute
@@ -4316,6 +4336,7 @@ interface KidsWorldRouteChildren {
 const KidsWorldRouteChildren: KidsWorldRouteChildren = {
   KidsWorldDiscoverRoute: KidsWorldDiscoverRoute,
   KidsWorldParentsRoute: KidsWorldParentsRoute,
+  KidsWorldStreetRoute: KidsWorldStreetRoute,
   KidsWorldIndexRoute: KidsWorldIndexRoute,
   KidsWorldAgePlaceRoute: KidsWorldAgePlaceRoute,
   KidsWorldActivitySlugRoute: KidsWorldActivitySlugRoute,

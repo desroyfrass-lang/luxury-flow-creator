@@ -4,6 +4,7 @@ import { PageHeader } from "@/components/page-header";
 import { PassportGate } from "@/components/kids-world/passport-gate";
 import { KIDS_WORLDS } from "@/lib/kids-world";
 import { useKidsPassport } from "@/lib/kids-passport";
+import { StreetParentPanel } from "@/components/kids/street-parent-panel";
 
 const TITLE = "Parent Dashboard — FRASS Kids World";
 const DESCRIPTION =
@@ -160,6 +161,7 @@ function ParentDashboard() {
                   It does not affect retail browsing anywhere in Frass.
                 </p>
               </div>
+              <StreetParentPanel />
               <div className="rounded-[2rem] border border-border bg-card p-7">
                 <h3 className="font-display text-xl uppercase">Coming next</h3>
                 <ul className="mt-4 space-y-2 text-sm text-muted-foreground">
