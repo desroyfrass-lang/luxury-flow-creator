@@ -135,4 +135,4 @@ Every production deploy must pass DEPLOYMENT_CHECKLIST.md in production (not pre
 - [FRASS-0492/0493/0494 Rights, Trust & Integrity](mem://features/frass-0492-0494-rights-trust-integrity) — Layered content protection + share cards, verified-only trust profile, audit-before-build architecture law
 - [FRASS-0495/0496/0497 Creative identity, navigation, knowledge](mem://features/frass-0495-0497-identity-navigation-knowledge) — Visual vs Music Creator classification, One World Navigation, Frassy knowledge layers
 - [FRASS-0503 Family of Business Vaults](mem://features/frass-0503-business-vault-family) — Seamstress Vault flagship + 10-Vault family, Discover→Build→Monetize pathway per trade, no duplicate commerce
-- [Production Deployment Gate](mem://preferences/deployment-gate) — FRASS-0502-D/0503-D checklist gates, deployment reports, /daily redirect rule
+- [Production Deployment Gate](mem://preferences/deployment-gate) — FRASS-0502-D/0503-D/0504/0505 checklist gates, rollback verification, security review cycle, pre-publish soak, /daily redirect rule
