@@ -16,6 +16,7 @@ import { Route as TownSquareRouteImport } from './routes/town-square'
 import { Route as SocialMediaViralsRouteImport } from './routes/social-media-virals'
 import { Route as SignedOutRouteImport } from './routes/signed-out'
 import { Route as ShopFrassRouteImport } from './routes/shop-frass'
+import { Route as ServicesRouteImport } from './routes/services'
 import { Route as SalesClearanceRouteImport } from './routes/sales-clearance'
 import { Route as RewardsRouteImport } from './routes/rewards'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
@@ -239,6 +240,11 @@ const SignedOutRoute = SignedOutRouteImport.update({
 const ShopFrassRoute = ShopFrassRouteImport.update({
   id: '/shop-frass',
   path: '/shop-frass',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ServicesRoute = ServicesRouteImport.update({
+  id: '/services',
+  path: '/services',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SalesClearanceRoute = SalesClearanceRouteImport.update({
@@ -1278,6 +1284,7 @@ export interface FileRoutesByFullPath {
   '/reset-password': typeof ResetPasswordRoute
   '/rewards': typeof RewardsRoute
   '/sales-clearance': typeof SalesClearanceRoute
+  '/services': typeof ServicesRoute
   '/shop-frass': typeof ShopFrassRoute
   '/signed-out': typeof SignedOutRoute
   '/social-media-virals': typeof SocialMediaViralsRouteWithChildren
@@ -1460,6 +1467,7 @@ export interface FileRoutesByTo {
   '/reset-password': typeof ResetPasswordRoute
   '/rewards': typeof RewardsRoute
   '/sales-clearance': typeof SalesClearanceRoute
+  '/services': typeof ServicesRoute
   '/shop-frass': typeof ShopFrassRoute
   '/signed-out': typeof SignedOutRoute
   '/town-square': typeof TownSquareRoute
@@ -1652,6 +1660,7 @@ export interface FileRoutesById {
   '/reset-password': typeof ResetPasswordRoute
   '/rewards': typeof RewardsRoute
   '/sales-clearance': typeof SalesClearanceRoute
+  '/services': typeof ServicesRoute
   '/shop-frass': typeof ShopFrassRoute
   '/signed-out': typeof SignedOutRoute
   '/social-media-virals': typeof SocialMediaViralsRouteWithChildren
@@ -1851,6 +1860,7 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/rewards'
     | '/sales-clearance'
+    | '/services'
     | '/shop-frass'
     | '/signed-out'
     | '/social-media-virals'
@@ -2033,6 +2043,7 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/rewards'
     | '/sales-clearance'
+    | '/services'
     | '/shop-frass'
     | '/signed-out'
     | '/town-square'
@@ -2224,6 +2235,7 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/rewards'
     | '/sales-clearance'
+    | '/services'
     | '/shop-frass'
     | '/signed-out'
     | '/social-media-virals'
@@ -2423,6 +2435,7 @@ export interface RootRouteChildren {
   ResetPasswordRoute: typeof ResetPasswordRoute
   RewardsRoute: typeof RewardsRoute
   SalesClearanceRoute: typeof SalesClearanceRoute
+  ServicesRoute: typeof ServicesRoute
   ShopFrassRoute: typeof ShopFrassRoute
   SignedOutRoute: typeof SignedOutRoute
   SocialMediaViralsRoute: typeof SocialMediaViralsRouteWithChildren
@@ -2502,6 +2515,13 @@ declare module '@tanstack/react-router' {
       path: '/shop-frass'
       fullPath: '/shop-frass'
       preLoaderRoute: typeof ShopFrassRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/services': {
+      id: '/services'
+      path: '/services'
+      fullPath: '/services'
+      preLoaderRoute: typeof ServicesRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/sales-clearance': {
@@ -4398,6 +4418,7 @@ const rootRouteChildren: RootRouteChildren = {
   ResetPasswordRoute: ResetPasswordRoute,
   RewardsRoute: RewardsRoute,
   SalesClearanceRoute: SalesClearanceRoute,
+  ServicesRoute: ServicesRoute,
   ShopFrassRoute: ShopFrassRoute,
   SignedOutRoute: SignedOutRoute,
   SocialMediaViralsRoute: SocialMediaViralsRouteWithChildren,
