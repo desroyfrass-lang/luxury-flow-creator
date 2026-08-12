@@ -5,6 +5,8 @@ import gateway from "@/assets/welcome-hall-gateway.jpg";
 import valley from "@/assets/kids-valley.jpg";
 import { ambienceEnabled, setAmbienceEnabled, startAmbience, stopAmbience } from "@/lib/for-us-ambience";
 import { unlockAudio } from "@/lib/audio-unlock";
+import { AgreementGate } from "@/components/legal/agreement-gate";
+
 
 /**
  * FRASS-0423 — Welcome Hall.
