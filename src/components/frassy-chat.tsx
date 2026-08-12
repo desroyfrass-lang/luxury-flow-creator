@@ -191,6 +191,10 @@ export function FrassyChat({ embedded = false }: { embedded?: boolean } = {}) {
     const controller = new AbortController();
     abortRef.current = controller;
 
+    // FRASS-0478 — observe *how* they work (channel, length, timing), then hand
+    // Frassy manner-guidance only. Nothing here leaves the browser as raw data.
+    const style = observeTurn({ channel: spoken ? "voice" : "text", text });
+
     try {
       const res = await fetch("/api/chat", {
         method: "POST",
