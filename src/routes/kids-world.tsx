@@ -76,6 +76,8 @@ function KidsWorldLayout() {
         </div>
       </nav>
       <Outlet />
+      </div>
     </SiteShell>
+
   );
 }
