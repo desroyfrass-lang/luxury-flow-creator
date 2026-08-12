@@ -43,6 +43,10 @@ export type SectionId =
   | "balance-check"
   | "affiliate-prep"
   | "success-dashboard"
+  | "balance-of-day"
+  | "knowledge-preservation"
+  | "business-development"
+  | "wellbeing"
   | "partner-progress"
   | "legacy-dashboard";
 
