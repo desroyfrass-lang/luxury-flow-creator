@@ -2,6 +2,8 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { FoundingBadge } from "@/components/founding/founding-badge";
+import { TrustProfilePanel } from "@/components/trust/trust-profile";
+import { MyTrustSummary } from "@/components/trust/my-trust-summary";
 import { getMyFoundingStatus } from "@/lib/founding.functions";
 import { useServerFn } from "@tanstack/react-start";
 import { ArrowLeft, MessageCircle, PenLine, Play } from "lucide-react";
@@ -34,6 +36,7 @@ type SectionId =
   | "journey"
   | "media"
   | "about"
+  | "reputation"
   | "message";
 
 const SECTIONS: { id: SectionId; label: string; glyph: string; line: string; empty: string }[] = [
@@ -51,6 +54,7 @@ const SECTIONS: { id: SectionId; label: string; glyph: string; line: string; emp
   { id: "journey", label: "Creator Journey", glyph: "🛤", line: "Where you started, where you are, what's next.", empty: "Your journey hasn't been recorded yet. Start it in the Academy or with Frassy." },
   { id: "media", label: "Media", glyph: "🎧", line: "Music, podcasts and broadcasts you've made.", empty: "No media yet. Go live once and the replay lives here forever." },
   { id: "about", label: "About", glyph: "ℹ️", line: "Your living bio — your story, your business, your links, your photos and videos. Separate from your posts, and always editable.", empty: "Your About page is blank. Write it once, then keep it alive." },
+  { id: "reputation", label: "Reputation", glyph: "🏆", line: "Your story is above. This is your reliability — verified work only. Followers, likes and views never count towards it.", empty: "Nothing verified yet. Reputation on Frass starts with your first completed commitment." },
   { id: "message", label: "Message", glyph: "✉️", line: "How people reach you directly.", empty: "Messaging opens from here — your inbox stays yours." },
 ];
 
@@ -254,6 +258,12 @@ function ForMePage() {
               <ForMeAbout raw={(profile as { about?: unknown } | null)?.about} canEdit={Boolean(profile)} />
             </>
 
+          ) : section.id === "reputation" ? (
+            /* FRASS-0493 — the same Trust Profile as the Frass Card. One engine, two windows. */
+            <div className="mt-6">
+              <MyTrustSummary />
+              {profile?.handle && <TrustProfilePanel handle={profile.handle} />}
+            </div>
           ) : (
             <p className="mt-6 max-w-xl text-sm leading-relaxed text-white/70">{section.empty}</p>
           )}
