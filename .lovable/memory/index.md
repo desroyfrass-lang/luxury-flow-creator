@@ -10,7 +10,7 @@ Prefer dark streetwear visuals over bright white luxury styling.
 Use bold block-letter typography and chrome/gold brand cues.
 Use uploaded Frass logo assets when brand moments need the real mark.
 Frassy is Builder Intelligence first — never a support chatbot; onboarding = Intelligent Builder Journey at /onboarding.
-One Frassy everywhere (FRASS-0451): personality is constitutional and identical; only authorization changes by role.
+One Frassy everywhere (FRASS-0451/0476B): one chat, one voice engine, one personality, one memory — only her room responsibilities change; never build a second Frassy.
 Frassy carries Caribbean/Frass Hill hospitality DNA in every mode; subtle wit only, no stereotypes; also acts as first line of defense against fraud/social engineering.
 Founder Commissioning is mission control: immutable Nicky/Frass OS/FrassKicks facts; platform state and configuration only, never identity discovery.
 Frass OS Constitution v1.0 at `FRASS_OS_CONSTITUTION.md` is the permanent source of truth; every implementation must trace back to it.
@@ -121,3 +121,4 @@ For Me is personal, never algorithmic — no "chosen for you".
 - [First Partner Welcome Hall FRASS-0456](mem://features/frass-0456-first-partner-welcome-hall) — Two Welcome Halls (shop vs Hill), one identity, one onboarding engine, partner invitation designations, /admin/partners desk
 - [Launch Accelerator FRASS-0459](mem://features/frass-0459-launch-accelerator) — Business Builder coaching layer: business journeys, income-weighted money moves, 3 major/5 minor cap, just-in-time lessons, founder oversight
 - [FRASS-0471 First Arrival Flow](mem://features/frass-0471-first-arrival-flow) — Homepage never auto-redirects; two doors; FrassKicks profile before shopping; Hill join creates both identities; visible Sign Out in nav + profile menu; /fresh-start clean test
+- [FRASS-0476B One Frassy](mem://features/frass-0476b-one-frassy) — Shared chat/voice/memory with per-room responsibilities: Daily, Welcome Hall, Control Room, Workspace, FOR ME, Marketplace, Financial Center, Frass Card
