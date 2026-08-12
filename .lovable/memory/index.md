@@ -30,6 +30,7 @@ Navigation exposes Places, not features — features live inside places. Reserve
 Every major milestone needs five green audits: Security, Privacy, Performance, Accessibility, Financial (FRASS-0422).
 Town Square (/town-square) is the whole town — people, businesses, artists, brands, farmers, builders, events, stores, districts, live. Not TikTok.
 For Me is personal, never algorithmic — no "chosen for you".
+Every production deploy must pass DEPLOYMENT_CHECKLIST.md in production (not preview) and produce an archived deployment report (FRASS-0502-D/0503-D).
 
 ## Memories
 - [FRASS-0477 Frassy Presence](mem://features/frass-0477-frassy-presence) — Arrival/returning/working/idle etiquette, Focus Mode silence, cloud→device→text voice hierarchy with indicator
@@ -134,3 +135,4 @@ For Me is personal, never algorithmic — no "chosen for you".
 - [FRASS-0492/0493/0494 Rights, Trust & Integrity](mem://features/frass-0492-0494-rights-trust-integrity) — Layered content protection + share cards, verified-only trust profile, audit-before-build architecture law
 - [FRASS-0495/0496/0497 Creative identity, navigation, knowledge](mem://features/frass-0495-0497-identity-navigation-knowledge) — Visual vs Music Creator classification, One World Navigation, Frassy knowledge layers
 - [FRASS-0503 Family of Business Vaults](mem://features/frass-0503-business-vault-family) — Seamstress Vault flagship + 10-Vault family, Discover→Build→Monetize pathway per trade, no duplicate commerce
+- [Production Deployment Gate](mem://preferences/deployment-gate) — FRASS-0502-D/0503-D checklist gates, deployment reports, /daily redirect rule
