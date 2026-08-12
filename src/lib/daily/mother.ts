@@ -122,7 +122,7 @@ export const MOTHER_PILLARS = KNOWLEDGE_ECONOMY_BLUEPRINT.pillars;
 
 /** The balance changes as her circumstances evolve. */
 export function motherBalance(pressure: "high" | "moderate" | "low" = "moderate"): DailyBalance {
-  return balanceDay({ minutes: MOTHER_MINUTES_PER_DAY, pressure });
+  return balanceDay(MOTHER_MINUTES_PER_DAY, pressure);
 }
 
 // ── Today's moves ───────────────────────────────────────────────────────────
