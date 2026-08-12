@@ -36,3 +36,18 @@ Owner: Founder / Frass OS. Ties into the Founder Security Center (FRASS-0474/047
 If any item in sections 1–3 fails in production, roll back or republish the last
 known-good commit immediately, then diagnose. Production is never left broken
 while a fix is being investigated.
+
+---
+
+## Constitutional status
+
+This checklist is enforced by **FRASS-0502-D Production Deployment Gate** (P0).
+Every deployment must also produce a report per **FRASS-0503-D Never Ship Blind**,
+using `deployments/REPORT_TEMPLATE.md`, archived in `deployments/` and surfaced in
+Founder Mode alongside the Founder Security Center.
+
+Gate categories (all must pass, in production, not preview):
+Build Integrity · Worker Integrity · SSR Integrity · Authentication ·
+Critical Navigation · Security Verification · Console Verification ·
+Server Verification · Founder Security Center Verification ·
+Post-Deployment Monitoring · Rollback Procedure.
