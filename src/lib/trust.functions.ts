@@ -431,8 +431,11 @@ export const leaveVerifiedFeedback = createServerFn({ method: "POST" })
   )
   .handler(async ({ context, data }) => {
     // The subject is derived from the order itself, never from the request.
+    // Buyer email is never handed to a browser session: the match happens
+    // entirely server-side against the verified token claim.
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const email = (context.claims?.email as string | undefined)?.toLowerCase();
-    const { data: order } = await context.supabase
+    const { data: order } = await supabaseAdmin
       .from("card_orders")
       .select("id, seller_id, buyer_email, status")
       .eq("id", data.orderId)

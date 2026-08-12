@@ -191,7 +191,7 @@ export function statementCsv(orders: CardOrder[]): string {
       o.processing_fee_estimate,
       o.net_to_seller,
       o.currency,
-      o.buyer_name || o.buyer_email || "",
+      o.buyer_name || "",
       o.reference ?? "",
     ]
       .map(esc)

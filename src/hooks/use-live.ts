@@ -11,18 +11,37 @@ import type { LiveBroadcast, LiveComment, LiveDestination, LiveGift } from "@/li
  * anonymous visitors, so every read asks for the columns it is allowed to have.
  */
 const BROADCAST_PUBLIC_COLUMNS =
-  "id, host_name, host_handle, destination, purpose, title, summary, status, viewer_count, cover_url, product_links, affiliate_url, scheduled_for, started_at, ended_at, replay_url, repurposed_as, created_at, updated_at";
+  "id, host_name, destination, purpose, title, summary, status, viewer_count, cover_url, product_links, scheduled_for, started_at, ended_at, replay_url, repurposed_as, created_at, updated_at";
 
-/** Signed-in members also get host_id, so a host recognises their own stream. */
-const BROADCAST_MEMBER_COLUMNS = `${BROADCAST_PUBLIC_COLUMNS}, host_id`;
+/**
+ * Signed-in members also get host_id, the host's handle and the monetised
+ * affiliate link — details that stay out of reach of anonymous scrapers.
+ */
+const BROADCAST_MEMBER_COLUMNS = `${BROADCAST_PUBLIC_COLUMNS}, host_id, host_handle, affiliate_url`;
 
-const COMMENT_COLUMNS = "id, broadcast_id, author_name, author_handle, body, created_at";
-const GIFT_COLUMNS =
-  "id, broadcast_id, sender_name, sender_handle, gift_key, credits, amount, currency, note, created_at";
+/** A handle is member-visible identity, so anonymous viewers see the name only. */
+const COMMENT_PUBLIC_COLUMNS = "id, broadcast_id, author_name, body, created_at";
+const COMMENT_MEMBER_COLUMNS = `${COMMENT_PUBLIC_COLUMNS}, author_handle`;
+
+/** The gift wall is public; the money behind it is not. */
+const GIFT_PUBLIC_COLUMNS = "id, broadcast_id, sender_name, gift_key, created_at";
+const GIFT_MEMBER_COLUMNS = `${GIFT_PUBLIC_COLUMNS}, sender_handle, credits, amount, currency, note`;
+
+async function signedIn(): Promise<boolean> {
+  const { data } = await supabase.auth.getSession();
+  return Boolean(data.session);
+}
 
 async function broadcastColumns(): Promise<string> {
-  const { data } = await supabase.auth.getSession();
-  return data.session ? BROADCAST_MEMBER_COLUMNS : BROADCAST_PUBLIC_COLUMNS;
+  return (await signedIn()) ? BROADCAST_MEMBER_COLUMNS : BROADCAST_PUBLIC_COLUMNS;
+}
+
+async function commentColumns(): Promise<string> {
+  return (await signedIn()) ? COMMENT_MEMBER_COLUMNS : COMMENT_PUBLIC_COLUMNS;
+}
+
+async function giftColumns(): Promise<string> {
+  return (await signedIn()) ? GIFT_MEMBER_COLUMNS : GIFT_PUBLIC_COLUMNS;
 }
 
 function normalise(row: Record<string, unknown>): LiveBroadcast {
@@ -124,12 +143,12 @@ export function useLiveComments(broadcastId: string) {
     queryFn: async (): Promise<LiveComment[]> => {
       const { data, error } = await supabase
         .from("live_comments")
-        .select(COMMENT_COLUMNS)
+        .select(await commentColumns())
         .eq("broadcast_id", broadcastId)
         .order("created_at", { ascending: true })
         .limit(200);
       if (error) throw error;
-      return (data ?? []) as LiveComment[];
+      return (data ?? []) as unknown as LiveComment[];
     },
   });
 
@@ -158,12 +177,12 @@ export function useLiveGifts(broadcastId: string) {
     queryFn: async (): Promise<LiveGift[]> => {
       const { data, error } = await supabase
         .from("live_gifts")
-        .select(GIFT_COLUMNS)
+        .select(await giftColumns())
         .eq("broadcast_id", broadcastId)
         .order("created_at", { ascending: false })
         .limit(100);
       if (error) throw error;
-      return (data ?? []) as LiveGift[];
+      return (data ?? []) as unknown as LiveGift[];
     },
   });
 

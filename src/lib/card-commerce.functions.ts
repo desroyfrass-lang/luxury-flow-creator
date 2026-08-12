@@ -83,17 +83,21 @@ export const setListingStatus = createServerFn({ method: "POST" })
     return { ok: true as const };
   });
 
+/** Buyer email stays server-side; a seller sees the name, never the address. */
+const ORDER_SELLER_COLUMNS =
+  "id, listing_id, seller_id, buyer_name, quantity, unit_price, subtotal, platform_fee, processing_fee_estimate, net_to_seller, currency, status, payout_provider, reference, created_at, updated_at";
+
 export const listMyCardOrders = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
     const { data, error } = await context.supabase
       .from("card_orders")
-      .select("*")
+      .select(ORDER_SELLER_COLUMNS)
       .eq("seller_id", context.userId)
       .order("created_at", { ascending: false })
       .limit(100);
     if (error) throw error;
-    return (data ?? []) as CardOrder[];
+    return (data ?? []) as unknown as CardOrder[];
   });
 
 export const setCardOrderStatus = createServerFn({ method: "POST" })
@@ -107,7 +111,7 @@ export const setCardOrderStatus = createServerFn({ method: "POST" })
       .update({ status: data.status })
       .eq("id", data.id)
       .eq("seller_id", context.userId)
-      .select()
+      .select(ORDER_SELLER_COLUMNS)
       .single();
     if (error) throw error;
 
@@ -127,7 +131,7 @@ export const setCardOrderStatus = createServerFn({ method: "POST" })
           .eq("user_id", context.userId);
       }
     }
-    return order as CardOrder;
+    return order as unknown as CardOrder;
   });
 
 /* ── Buyer side ──────────────────────────────────────────────────────────── */
