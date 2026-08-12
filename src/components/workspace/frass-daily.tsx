@@ -26,6 +26,7 @@ import { isMotherDaily } from "@/lib/daily/mother";
 import {
   MotherBalanceOfDay,
   MotherBusinessDevelopment,
+  MotherFirstVenture,
   MotherFrassyNote,
   MotherKnowledge,
   MotherMoneyMoves,
@@ -660,6 +661,9 @@ function FrassDailyBody({
             </Section>
             <Section id="business-development" title="🏗 Business Development" note="Businesses emerge from experience. Never forced.">
               <MotherBusinessDevelopment onNavigate={onNavigate} />
+            </Section>
+            <Section id="first-venture" title="🪙 First Business Venture" note="Your first business is something you already own.">
+              <MotherFirstVenture onNavigate={onNavigate} />
             </Section>
             <Section id="wellbeing" title="❤️ Well-being" note="One gentle note. Never another list.">
               <MotherWellbeing day={history.length} />

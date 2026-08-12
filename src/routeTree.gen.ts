@@ -180,6 +180,7 @@ import { Route as AuthenticatedWorkspaceMerchRouteImport } from './routes/_authe
 import { Route as AuthenticatedWorkspaceLinkRouteImport } from './routes/_authenticated/workspace.link'
 import { Route as AuthenticatedWorkspaceJournalRouteImport } from './routes/_authenticated/workspace.journal'
 import { Route as AuthenticatedWorkspaceInsightsRouteImport } from './routes/_authenticated/workspace.insights'
+import { Route as AuthenticatedWorkspaceFirstVentureRouteImport } from './routes/_authenticated/workspace.first-venture'
 import { Route as AuthenticatedWorkspaceDailyDesignRouteImport } from './routes/_authenticated/workspace.daily-design'
 import { Route as AuthenticatedWorkspaceCardRouteImport } from './routes/_authenticated/workspace.card'
 import { Route as AuthenticatedWorkspaceAffiliateRouteImport } from './routes/_authenticated/workspace.affiliate'
@@ -1095,6 +1096,12 @@ const AuthenticatedWorkspaceInsightsRoute =
     path: '/insights',
     getParentRoute: () => AuthenticatedWorkspaceRoute,
   } as any)
+const AuthenticatedWorkspaceFirstVentureRoute =
+  AuthenticatedWorkspaceFirstVentureRouteImport.update({
+    id: '/first-venture',
+    path: '/first-venture',
+    getParentRoute: () => AuthenticatedWorkspaceRoute,
+  } as any)
 const AuthenticatedWorkspaceDailyDesignRoute =
   AuthenticatedWorkspaceDailyDesignRouteImport.update({
     id: '/daily-design',
@@ -1439,6 +1446,7 @@ export interface FileRoutesByFullPath {
   '/workspace/affiliate': typeof AuthenticatedWorkspaceAffiliateRoute
   '/workspace/card': typeof AuthenticatedWorkspaceCardRoute
   '/workspace/daily-design': typeof AuthenticatedWorkspaceDailyDesignRoute
+  '/workspace/first-venture': typeof AuthenticatedWorkspaceFirstVentureRoute
   '/workspace/insights': typeof AuthenticatedWorkspaceInsightsRoute
   '/workspace/journal': typeof AuthenticatedWorkspaceJournalRoute
   '/workspace/link': typeof AuthenticatedWorkspaceLinkRoute
@@ -1620,6 +1628,7 @@ export interface FileRoutesByTo {
   '/workspace/affiliate': typeof AuthenticatedWorkspaceAffiliateRoute
   '/workspace/card': typeof AuthenticatedWorkspaceCardRoute
   '/workspace/daily-design': typeof AuthenticatedWorkspaceDailyDesignRoute
+  '/workspace/first-venture': typeof AuthenticatedWorkspaceFirstVentureRoute
   '/workspace/insights': typeof AuthenticatedWorkspaceInsightsRoute
   '/workspace/journal': typeof AuthenticatedWorkspaceJournalRoute
   '/workspace/link': typeof AuthenticatedWorkspaceLinkRoute
@@ -1825,6 +1834,7 @@ export interface FileRoutesById {
   '/_authenticated/workspace/affiliate': typeof AuthenticatedWorkspaceAffiliateRoute
   '/_authenticated/workspace/card': typeof AuthenticatedWorkspaceCardRoute
   '/_authenticated/workspace/daily-design': typeof AuthenticatedWorkspaceDailyDesignRoute
+  '/_authenticated/workspace/first-venture': typeof AuthenticatedWorkspaceFirstVentureRoute
   '/_authenticated/workspace/insights': typeof AuthenticatedWorkspaceInsightsRoute
   '/_authenticated/workspace/journal': typeof AuthenticatedWorkspaceJournalRoute
   '/_authenticated/workspace/link': typeof AuthenticatedWorkspaceLinkRoute
@@ -2030,6 +2040,7 @@ export interface FileRouteTypes {
     | '/workspace/affiliate'
     | '/workspace/card'
     | '/workspace/daily-design'
+    | '/workspace/first-venture'
     | '/workspace/insights'
     | '/workspace/journal'
     | '/workspace/link'
@@ -2211,6 +2222,7 @@ export interface FileRouteTypes {
     | '/workspace/affiliate'
     | '/workspace/card'
     | '/workspace/daily-design'
+    | '/workspace/first-venture'
     | '/workspace/insights'
     | '/workspace/journal'
     | '/workspace/link'
@@ -2415,6 +2427,7 @@ export interface FileRouteTypes {
     | '/_authenticated/workspace/affiliate'
     | '/_authenticated/workspace/card'
     | '/_authenticated/workspace/daily-design'
+    | '/_authenticated/workspace/first-venture'
     | '/_authenticated/workspace/insights'
     | '/_authenticated/workspace/journal'
     | '/_authenticated/workspace/link'
@@ -3729,6 +3742,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedWorkspaceInsightsRouteImport
       parentRoute: typeof AuthenticatedWorkspaceRoute
     }
+    '/_authenticated/workspace/first-venture': {
+      id: '/_authenticated/workspace/first-venture'
+      path: '/first-venture'
+      fullPath: '/workspace/first-venture'
+      preLoaderRoute: typeof AuthenticatedWorkspaceFirstVentureRouteImport
+      parentRoute: typeof AuthenticatedWorkspaceRoute
+    }
     '/_authenticated/workspace/daily-design': {
       id: '/_authenticated/workspace/daily-design'
       path: '/daily-design'
@@ -4007,6 +4027,7 @@ interface AuthenticatedWorkspaceRouteChildren {
   AuthenticatedWorkspaceAffiliateRoute: typeof AuthenticatedWorkspaceAffiliateRoute
   AuthenticatedWorkspaceCardRoute: typeof AuthenticatedWorkspaceCardRoute
   AuthenticatedWorkspaceDailyDesignRoute: typeof AuthenticatedWorkspaceDailyDesignRoute
+  AuthenticatedWorkspaceFirstVentureRoute: typeof AuthenticatedWorkspaceFirstVentureRoute
   AuthenticatedWorkspaceInsightsRoute: typeof AuthenticatedWorkspaceInsightsRoute
   AuthenticatedWorkspaceJournalRoute: typeof AuthenticatedWorkspaceJournalRoute
   AuthenticatedWorkspaceLinkRoute: typeof AuthenticatedWorkspaceLinkRoute
@@ -4021,6 +4042,8 @@ const AuthenticatedWorkspaceRouteChildren: AuthenticatedWorkspaceRouteChildren =
     AuthenticatedWorkspaceCardRoute: AuthenticatedWorkspaceCardRoute,
     AuthenticatedWorkspaceDailyDesignRoute:
       AuthenticatedWorkspaceDailyDesignRoute,
+    AuthenticatedWorkspaceFirstVentureRoute:
+      AuthenticatedWorkspaceFirstVentureRoute,
     AuthenticatedWorkspaceInsightsRoute: AuthenticatedWorkspaceInsightsRoute,
     AuthenticatedWorkspaceJournalRoute: AuthenticatedWorkspaceJournalRoute,
     AuthenticatedWorkspaceLinkRoute: AuthenticatedWorkspaceLinkRoute,

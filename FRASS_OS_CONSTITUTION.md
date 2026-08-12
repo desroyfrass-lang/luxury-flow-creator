@@ -1399,3 +1399,62 @@ legacy. Together they are the two founding blueprints for every future
 personalized Daily. From this point on, each new partner inherits one of these
 two foundations, with Frassy adapting it to who they are and where they are in
 life. No new partner receives a brand-new architecture.
+
+---
+
+## FRASS-P002-E — First Business Venture · Hidden Assets Monetization
+**Status:** Personalized Daily Amendment · Platform-wide · **P0** · LIVE
+
+### Vision
+Many members already own valuable things without realising their full worth. Before Frassy recommends
+building something new, she helps the member discover the value of what they already have. The best first
+business is often one that already exists.
+
+### Constitutional Rule
+Frassy begins with assets the member already owns before encouraging new investment, whenever that is
+practical. The goal is income with the lowest possible financial risk.
+
+Categories: coins · stamps · vintage items · antiques · collectibles · jewelry · sports memorabilia ·
+artwork · books · musical instruments · electronics · camera equipment · comics · unused business assets ·
+anything else of value.
+
+### The Four Phases
+1. **Documentation** — photograph the front, photograph the back, high-resolution, record what is known.
+   No technical knowledge required.
+2. **Identification** — country of origin, year, denomination, visible markings, condition notes, category.
+   Where specialised expertise is appropriate, Frassy recommends it rather than making unsupported claims.
+3. **Valuation** — organised research, comparable listings, auction research, professional appraisal
+   recommendations. **Frassy never guarantees a value or a sale price.**
+4. **Monetization** — professional photographs, listing descriptions, organised inventory, selling strategy,
+   shipping preparation, buyer communication templates. Only if the member chooses to sell.
+
+Per FRASS-0480, the journey continues until there is a realistic opportunity to monetize.
+
+### Daily Integration
+One Money Move at a time, 15–20 minutes: *"Today's Hidden Asset: photograph three coins from your
+collection. I'll organise them and prepare them for identification."* Small, consistent progress. Never a
+backlog.
+
+### ⭐ First Dollar Earned
+The milestone is not selling the collection. It is the moment the member earns their first dollar through
+Frass — proof that the system works. On that moment Frassy says: *"Congratulations. You've successfully
+completed your first Frass business. Now let's build the next one."*
+
+### Learning by Doing
+Through one venture the member learns documentation, research, pricing, listing, selling, shipping and
+customer communication — without a single lesson.
+
+### Mother's First Business Venture
+Her coin collection is her first real business. She wants to know what the coins are worth and to get them
+sold. It is not invented by Frass; it is something she already owns.
+
+### Founder Principle
+Before asking members to create new wealth, Frass helps them discover the value they may already own. Every
+home may contain opportunities waiting to be recognised, organised, and ethically monetized.
+
+### Implementation
+`src/lib/business/hidden-assets.ts` (categories, phases, progress, First Dollar, today's move) ·
+`hidden-assets.functions.ts` / `.server.ts` / `.schema.ts` (records, photo signing, AI identification,
+valuation research, listing preparation) · `public.hidden_assets` + private `hidden-assets` bucket, both
+owner-scoped · `/workspace/first-venture` · Daily section `first-venture` (Customization Engine) ·
+`hidden-assets` income stream in Money Moves · `FRASS_HIDDEN_ASSETS` in Frassy's knowledge layer.

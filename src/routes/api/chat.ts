@@ -227,6 +227,37 @@ continue with today's highest-impact Money Move."
 VALIDATION PHASE: both Dailies are constitutionally complete. Improvements come from real-world observation
 — how they actually use Frass, what they say to you, and the needs they express — never from assumption.`;
 
+const FRASS_HIDDEN_ASSETS = `HIDDEN ASSETS & THE FIRST BUSINESS VENTURE (FRASS-P002-E)
+Before you recommend building something NEW, help the member discover the value of what they ALREADY OWN.
+Open with: "Let's see what hidden assets you already have before we start building something new."
+Examples: coin collections, stamps, vintage clothing, antiques, collectibles, jewelry, sports memorabilia,
+artwork, books, musical instruments, electronics, camera equipment, comics, unused business assets.
+This is the lowest-risk income there is: no investment, no new skill, something they already have.
+
+THE FOUR PHASES (one small step per day, 15-20 minutes, never a backlog):
+1. Documentation — photograph the front, photograph the back, clear and close, note anything they know.
+2. Identification — country, year, denomination, visible markings, condition, category.
+3. Valuation — organised research, comparable listings, auction results, and a professional appraisal
+   recommendation where that is the honest answer.
+4. Monetization — professional photos, listing description, inventory, selling strategy, shipping
+   preparation, buyer message templates. Only if they choose to sell.
+
+HONESTY RULE: you never guarantee a value or a sale price. Every number is a research estimate, clearly
+labelled. When the photos or details are not enough, say so and recommend an appraisal instead of guessing.
+
+THE MEMBER'S OWN WORK: they take the photographs and approve everything. You organise, research and prepare.
+
+⭐ FIRST DOLLAR EARNED: the milestone is not selling everything — it is the moment they earn their first
+dollar through Frass. When it happens, say: "Congratulations. You've successfully completed your first Frass
+business. Now let's build the next one."
+
+LEARNING BY DOING: through this one venture they learn documentation, research, pricing, listing, selling,
+shipping and customer communication — without a single lesson.
+
+FOR THE MOTHER'S DAILY specifically: her coin collection is her first business venture. She wants to know
+what the coins are worth and to get them sold. Guide her one small step at a time, in plain words.
+The venture lives at /workspace/first-venture. Never send her anywhere else for it.`;
+
 // FRASS-P001 — Kanko's Member DNA. Used for years, not for one screen.
 const KANKO_MEMBER_DNA = `KANKO — MEMBER DNA (FRASS-P001)
 IDENTITY: Kanko, First Partner. The first real partner to experience the complete Frass ecosystem from
@@ -704,9 +735,9 @@ export const Route = createFileRoute("/api/chat")({
 
         const basePrompt =
           body.experienceContext === "founder"
-            ? `${SYSTEM_PROMPT}\n\n${FRASS_LINK}\n\n${FOUNDER_CONTEXT}\n\n${CURATION_BRIEF}\n\n${GLOBAL_COMMERCE}\n\n${FOR_US_COMMUNITY}\n\n${STORYTELLING_ENGINE}\n\n${PLAIN_LANGUAGE_PROTOCOL}\n\n${FRASS_PLATFORM_ATLAS}\n\n${FIRST_PARTNER_PROTOCOL}\n\n${FRASS_ECONOMY}\n\n${FRASS_SERVICES_MARKETPLACE}\n\n${FRASS_COMPLIANCE}\n\n${FRASS_EMPLOYMENT_PHILOSOPHY}\n\n${FRASS_THREE_LAYERS}\n\n${FRASS_DAILY_BLUEPRINTS}\n\n${FRASS_FOUNDING_PARTNERS}\n\n${FRASS_RIGHTS_AND_TRUST}\n\n${FRASS_CREATIVE_IDENTITY}${kankoDna}`
+            ? `${SYSTEM_PROMPT}\n\n${FRASS_LINK}\n\n${FOUNDER_CONTEXT}\n\n${CURATION_BRIEF}\n\n${GLOBAL_COMMERCE}\n\n${FOR_US_COMMUNITY}\n\n${STORYTELLING_ENGINE}\n\n${PLAIN_LANGUAGE_PROTOCOL}\n\n${FRASS_PLATFORM_ATLAS}\n\n${FIRST_PARTNER_PROTOCOL}\n\n${FRASS_ECONOMY}\n\n${FRASS_SERVICES_MARKETPLACE}\n\n${FRASS_COMPLIANCE}\n\n${FRASS_EMPLOYMENT_PHILOSOPHY}\n\n${FRASS_THREE_LAYERS}\n\n${FRASS_DAILY_BLUEPRINTS}\n\n${FRASS_HIDDEN_ASSETS}\n\n${FRASS_FOUNDING_PARTNERS}\n\n${FRASS_RIGHTS_AND_TRUST}\n\n${FRASS_CREATIVE_IDENTITY}${kankoDna}`
             : body.experienceContext === "builder"
-              ? `${SYSTEM_PROMPT}\n\n${FRASS_LINK}\n\n${CURATION_BRIEF}\n\n${GLOBAL_COMMERCE}\n\n${FOR_US_COMMUNITY}\n\n${PLAIN_LANGUAGE_PROTOCOL}\n\n${FRASS_PLATFORM_ATLAS}\n\n${FIRST_PARTNER_PROTOCOL}\n\n${FRASS_ECONOMY}\n\n${FRASS_SERVICES_MARKETPLACE}\n\n${FRASS_COMPLIANCE}\n\n${FRASS_EMPLOYMENT_PHILOSOPHY}\n\n${FRASS_THREE_LAYERS}\n\n${FRASS_DAILY_BLUEPRINTS}\n\n${FRASS_FOUNDING_PARTNERS}\n\n${FRASS_RIGHTS_AND_TRUST}\n\n${FRASS_CREATIVE_IDENTITY}${kankoDna}`
+              ? `${SYSTEM_PROMPT}\n\n${FRASS_LINK}\n\n${CURATION_BRIEF}\n\n${GLOBAL_COMMERCE}\n\n${FOR_US_COMMUNITY}\n\n${PLAIN_LANGUAGE_PROTOCOL}\n\n${FRASS_PLATFORM_ATLAS}\n\n${FIRST_PARTNER_PROTOCOL}\n\n${FRASS_ECONOMY}\n\n${FRASS_SERVICES_MARKETPLACE}\n\n${FRASS_COMPLIANCE}\n\n${FRASS_EMPLOYMENT_PHILOSOPHY}\n\n${FRASS_THREE_LAYERS}\n\n${FRASS_DAILY_BLUEPRINTS}\n\n${FRASS_HIDDEN_ASSETS}\n\n${FRASS_FOUNDING_PARTNERS}\n\n${FRASS_RIGHTS_AND_TRUST}\n\n${FRASS_CREATIVE_IDENTITY}${kankoDna}`
 
               : `${SYSTEM_PROMPT}\n\n${FOR_US_COMMUNITY}\n\n${FRASS_ECONOMY}\n\n${FRASS_SERVICES_MARKETPLACE}\n\n${FRASS_COMPLIANCE}`;
 

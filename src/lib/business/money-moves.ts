@@ -76,6 +76,26 @@ export type IncomeStream = {
 };
 
 export const INCOME_STREAMS: IncomeStream[] = [
+  // FRASS-P002-E — before asking a member to create new wealth, help them
+  // discover the value they may already own. Lowest-risk stream on the list.
+  {
+    id: "hidden-assets",
+    emoji: "🪙",
+    label: "Hidden Assets",
+    objectives: [
+      "Photograph what you already own",
+      "Identify each piece",
+      "Research what it's worth",
+      "Prepare professional listings",
+      "Earn your first dollar",
+    ],
+    reinforces: ["coco-vintage", "affiliate"],
+    surfaces: [
+      { label: "First Business Venture", href: "/workspace/first-venture" },
+      { label: "Marketplace", href: "/marketplace" },
+      { label: "Wallet", href: "/workspace/wallet" },
+    ],
+  },
   {
     id: "wellness",
     emoji: "🌿",

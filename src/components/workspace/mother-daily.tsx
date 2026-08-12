@@ -7,10 +7,16 @@ import { LAYER_BY_ID, balanceSentence } from "@/lib/business/financial-layers";
 import { KNOWLEDGE_ECONOMY_BLUEPRINT, VALIDATION_PHASE } from "@/lib/daily/blueprints";
 import { protectMomentum } from "@/lib/daily/time-roi";
 import {
+  FIRST_DOLLAR,
+  VALUATION_HONESTY,
+  VENTURE_PHASES,
+} from "@/lib/business/hidden-assets";
+import {
   KNOWLEDGE_FUTURES,
   KNOWLEDGE_PROTOCOL,
   LEGACY_PRINCIPLE,
   MOTHER_BUSINESS_PHILOSOPHY,
+  MOTHER_FIRST_VENTURE,
   MOTHER_MINUTES_PER_DAY,
   MOTHER_MONEY_RULE,
   MOTHER_MOVES,
@@ -175,6 +181,39 @@ export function MotherFrassyNote({ day = 0 }: { day?: number }) {
     <div className="rounded-3xl border border-white/12 bg-white/[0.03] p-4">
       <p className="text-sm leading-relaxed">{motherEncouragement(day)}</p>
       <p className="ws-meta mt-2">{KNOWLEDGE_ECONOMY_BLUEPRINT.founderPrinciple}</p>
+    </div>
+  );
+}
+
+// FRASS-P002-E — First Business Venture. Her first business is something she
+// already owns. Small step today; First Dollar Earned is the milestone.
+export function MotherFirstVenture({ onNavigate }: { onNavigate?: (href: string) => void }) {
+  const move = MOTHER_MOVES.find((m) => m.id === "first-venture");
+  return (
+    <div className="space-y-3">
+      <p className="ws-meta">
+        {MOTHER_FIRST_VENTURE.vision} {MOTHER_FIRST_VENTURE.lowestRisk}
+      </p>
+      {move && <MoveCard move={move} onNavigate={onNavigate} />}
+      <div className="rounded-2xl border border-white/10 bg-white/[0.02] p-4">
+        <p className="text-sm font-medium">{FIRST_DOLLAR.emoji} {FIRST_DOLLAR.label}</p>
+        <p className="ws-meta mt-1">{FIRST_DOLLAR.before}</p>
+        <div className="mt-3 flex flex-wrap gap-2">
+          {VENTURE_PHASES.map((p) => (
+            <span key={p.id} className="ws-chip">
+              {p.emoji} {p.number}. {p.label}
+            </span>
+          ))}
+        </div>
+        <p className="ws-meta mt-2">{VALUATION_HONESTY.never}</p>
+      </div>
+      <button
+        type="button"
+        className="ws-chip"
+        onClick={() => onNavigate?.(MOTHER_FIRST_VENTURE.href)}
+      >
+        Open your collection <ArrowRight className="ml-1 h-3.5 w-3.5" />
+      </button>
     </div>
   );
 }
