@@ -203,3 +203,306 @@ export const reportFraud = createServerFn({ method: "POST" })
     if (error) throw error;
     return { ok: true as const };
   });
+
+/* ── FRASS-0493 — Trust & Reputation Engine ──────────────────────────────── */
+
+/**
+ * The Trust Profile. Verified facts, no score, no ranking.
+ *
+ * It extends the existing card/profile/verifications architecture — nothing
+ * here is a second identity, and popularity signals are never read.
+ */
+export type TrustProfile = {
+  handle: string;
+  name: string;
+  stage: import("@/lib/trust").BuilderStage;
+  monthsActive: number;
+  memberSince: string | null;
+  facts: import("@/lib/trust").TrustFact[];
+  completedTransactions: number;
+  commitmentsMet: number;
+  commitmentsTotal: number;
+  feedback: {
+    id: string;
+    experience: "positive" | "mixed" | "negative";
+    body: string | null;
+    source: string;
+    createdAt: string;
+    author: string;
+  }[];
+  positiveCount: number;
+  distinctCustomers: number;
+};
+
+function monthsBetween(iso: string | null | undefined): number {
+  if (!iso) return 0;
+  const then = new Date(iso).getTime();
+  if (Number.isNaN(then)) return 0;
+  return Math.max(0, Math.floor((Date.now() - then) / (1000 * 60 * 60 * 24 * 30.44)));
+}
+
+export const getTrustProfile = createServerFn({ method: "GET" })
+  .inputValidator((d: { handle: string }) => z.object({ handle: z.string().max(40) }).parse(d))
+  .handler(async ({ data }): Promise<TrustProfile | null> => {
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const {
+      TRUST_BADGES: BADGES,
+      builderStage,
+      FEEDBACK_SOURCES,
+      reliabilityLabel,
+    } = await import("@/lib/trust");
+
+    const handle = data.handle.replace(/^@/, "").toLowerCase();
+
+    const { data: profile } = await supabaseAdmin
+      .from("profiles")
+      .select("id, display_name, created_at")
+      .eq("handle", handle)
+      .eq("is_public", true)
+      .maybeSingle();
+    if (!profile) return null;
+
+    const [{ data: verifications }, { data: orders }, { data: feedbackRows }, { data: founding }] =
+      await Promise.all([
+        supabaseAdmin.from("trust_verifications").select("badge").eq("user_id", profile.id),
+        supabaseAdmin
+          .from("card_orders")
+          .select("id, status, buyer_id")
+          .eq("seller_id", profile.id),
+        supabaseAdmin
+          .from("verified_feedback")
+          .select("id, experience, body, source, created_at, author_id")
+          .eq("subject_id", profile.id)
+          .eq("is_published", true)
+          .eq("removed_by_founder", false)
+          .order("created_at", { ascending: false })
+          .limit(20),
+        supabaseAdmin
+          .from("founding_partners")
+          .select("sequence, visibility, accepted_at")
+          .eq("user_id", profile.id)
+          .maybeSingle(),
+      ]);
+
+    const all = orders ?? [];
+    const completedStatuses = ["paid", "fulfilled", "completed"];
+    const completed = all.filter((o) => completedStatuses.includes(o.status ?? ""));
+    const commitmentsTotal = all.filter((o) =>
+      [...completedStatuses, "cancelled", "refunded", "failed"].includes(o.status ?? ""),
+    ).length;
+    const distinctCustomers = new Set(completed.map((o) => o.buyer_id).filter(Boolean)).size;
+
+    const monthsActive = monthsBetween(profile.created_at);
+    const stage = builderStage(completed.length, monthsActive);
+
+    // Author names, so feedback reads like a person rather than a UUID.
+    const authorIds = [...new Set((feedbackRows ?? []).map((f) => f.author_id))];
+    const { data: authors } = authorIds.length
+      ? await supabaseAdmin.from("profiles").select("id, display_name").in("id", authorIds)
+      : { data: [] as { id: string; display_name: string | null }[] };
+    const nameOf = new Map((authors ?? []).map((a) => [a.id, a.display_name ?? "A verified customer"]));
+
+    const positive = (feedbackRows ?? []).filter((f) => f.experience === "positive").length;
+
+    const facts: import("@/lib/trust").TrustFact[] = [];
+    for (const v of verifications ?? []) {
+      const badge = BADGES[v.badge as keyof typeof BADGES];
+      if (badge) facts.push({ icon: "✔️", label: badge.label, plain: badge.plain });
+    }
+    if (completed.length > 0) {
+      facts.push({
+        icon: "✔️",
+        label: `${completed.length} successful ${completed.length === 1 ? "transaction" : "transactions"}`,
+        plain: "Each one a real order that was paid for and fulfilled through Frass.",
+      });
+    }
+    const reliability = reliabilityLabel(completed.length, commitmentsTotal);
+    if (reliability) {
+      facts.push({
+        icon: "✔️",
+        label: reliability,
+        plain: "Orders accepted and then seen through to the end.",
+      });
+    }
+    if (distinctCustomers > 0) {
+      facts.push({
+        icon: "✔️",
+        label: `Trusted by ${distinctCustomers} verified ${distinctCustomers === 1 ? "customer" : "customers"}`,
+        plain: "Different people, each with a completed transaction — not repeat clicks.",
+      });
+    }
+    if (founding?.accepted_at && founding.visibility === "public") {
+      facts.push({
+        icon: "✔️",
+        label: `Founding Partner No. ${founding.sequence}`,
+        plain: "Recognised by the Founder as one of the first builders of Frass.",
+      });
+    }
+    if (monthsActive >= 6) {
+      facts.push({
+        icon: "✔️",
+        label: `${monthsActive} months on Frass`,
+        plain: "Longevity is its own kind of reliability.",
+      });
+    }
+
+    const sourceLabel = (id: string) =>
+      FEEDBACK_SOURCES.find((s) => s.id === id)?.label ?? "Verified transaction";
+
+    return {
+      handle,
+      name: profile.display_name ?? handle,
+      stage,
+      monthsActive,
+      memberSince: profile.created_at ?? null,
+      facts,
+      completedTransactions: completed.length,
+      commitmentsMet: completed.length,
+      commitmentsTotal,
+      positiveCount: positive,
+      distinctCustomers,
+      feedback: (feedbackRows ?? []).map((f) => ({
+        id: f.id,
+        experience: f.experience as "positive" | "mixed" | "negative",
+        body: f.body,
+        source: sourceLabel(f.source),
+        createdAt: f.created_at,
+        author: nameOf.get(f.author_id) ?? "A verified customer",
+      })),
+    };
+  });
+
+/**
+ * Transactions this member completed with somebody else and can still speak
+ * about. Feedback is offered here and nowhere else — you cannot review a
+ * stranger, and you cannot review the same order twice.
+ */
+export const getFeedbackInvitations = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }) => {
+    const { data: orders } = await context.supabase
+      .from("card_orders")
+      .select("id, reference, seller_id, status, created_at")
+      .eq("buyer_id", context.userId)
+      .in("status", ["paid", "fulfilled", "completed"])
+      .order("created_at", { ascending: false })
+      .limit(20);
+
+    if (!orders?.length) return [] as { orderId: string; reference: string; sellerName: string; createdAt: string }[];
+
+    const { data: given } = await context.supabase
+      .from("verified_feedback")
+      .select("source_id")
+      .eq("author_id", context.userId);
+    const already = new Set((given ?? []).map((g) => g.source_id));
+
+    const sellerIds = [...new Set(orders.map((o) => o.seller_id).filter(Boolean))];
+    const { data: sellers } = sellerIds.length
+      ? await context.supabase.from("profiles").select("id, display_name").in("id", sellerIds)
+      : { data: [] as { id: string; display_name: string | null }[] };
+    const nameOf = new Map((sellers ?? []).map((s) => [s.id, s.display_name ?? "A Frass member"]));
+
+    return orders
+      .filter((o) => !already.has(o.id))
+      .map((o) => ({
+        orderId: o.id,
+        reference: o.reference ?? o.id.slice(0, 8),
+        sellerName: nameOf.get(o.seller_id as string) ?? "A Frass member",
+        createdAt: o.created_at,
+      }));
+  });
+
+export const leaveVerifiedFeedback = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d: { orderId: string; experience: string; body?: string }) =>
+    z
+      .object({
+        orderId: z.string().uuid(),
+        experience: z.enum(["positive", "mixed", "negative"]),
+        body: z.string().trim().max(1200).optional(),
+      })
+      .parse(d),
+  )
+  .handler(async ({ context, data }) => {
+    // The subject is derived from the order itself, never from the request.
+    const { data: order } = await context.supabase
+      .from("card_orders")
+      .select("id, seller_id, buyer_id, status")
+      .eq("id", data.orderId)
+      .maybeSingle();
+
+    if (!order || order.buyer_id !== context.userId) {
+      throw new Error("You can only leave feedback for your own completed transactions.");
+    }
+
+    const { error } = await context.supabase.from("verified_feedback").insert({
+      subject_id: order.seller_id,
+      author_id: context.userId,
+      source: "marketplace_order",
+      source_id: order.id,
+      experience: data.experience,
+      body: data.body || null,
+    });
+    if (error) throw new Error(error.message);
+    return { ok: true as const };
+  });
+
+/** A member's own view: what is helping, what needs work. Nothing hidden. */
+export const getMyTrustProfile = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }) => {
+    const { builderStage, stageGuidance, BUILDER_STAGES } = await import("@/lib/trust");
+
+    const { data: profile } = await context.supabase
+      .from("profiles")
+      .select("created_at")
+      .eq("id", context.userId)
+      .maybeSingle();
+
+    const { data: orders } = await context.supabase
+      .from("card_orders")
+      .select("id, status")
+      .eq("seller_id", context.userId);
+
+    const all = orders ?? [];
+    const completed = all.filter((o) => ["paid", "fulfilled", "completed"].includes(o.status ?? ""));
+    const open = all.filter((o) => ["pending", "awaiting_payment", "accepted"].includes(o.status ?? ""));
+    const monthsActive = monthsBetween(profile?.created_at);
+    const stage = builderStage(completed.length, monthsActive);
+
+    const { data: feedback } = await context.supabase
+      .from("verified_feedback")
+      .select("id, experience, body, created_at, is_published")
+      .eq("subject_id", context.userId)
+      .eq("removed_by_founder", false)
+      .order("created_at", { ascending: false })
+      .limit(20);
+
+    const improvements: string[] = [];
+    if (open.length > 0) {
+      improvements.push(
+        `Finish the ${open.length} ${open.length === 1 ? "commitment" : "commitments"} still open. Completing work is the single strongest trust signal on Frass.`,
+      );
+    }
+    if ((feedback ?? []).some((f) => f.experience !== "positive")) {
+      improvements.push(
+        "Some feedback wasn't positive. It stays on your record, but a run of well-finished work sits above it over time — trust here recovers.",
+      );
+    }
+    if (completed.length === 0) {
+      improvements.push("Your first completed transaction is what turns a profile into a reputation.");
+    }
+
+    return {
+      stage,
+      stageLabel: BUILDER_STAGES[stage].label,
+      stageIcon: BUILDER_STAGES[stage].icon,
+      stagePlain: BUILDER_STAGES[stage].plain,
+      guidance: stageGuidance(stage, completed.length, monthsActive),
+      completed: completed.length,
+      open: open.length,
+      monthsActive,
+      feedback: feedback ?? [],
+      improvements,
+    };
+  });
