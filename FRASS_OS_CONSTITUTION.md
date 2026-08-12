@@ -484,3 +484,34 @@ from rebuilding the assistant and toward building the world she guides people
 through. This freeze marks the transition from platform construction to
 platform refinement, preparing Frass for launch with a single, consistent
 intelligence at its heart.
+
+## FRASS-0483 — Services, Continuous Discovery & the Frass Economy Principle
+
+### Frass Services
+The service side of Frass is one marketplace with many categories: Freight
+Brokerage & Logistics (corridors: Canada, Jamaica, Africa…), Moving, Packing,
+Cleaning, Translation, Legal, Accounting, Photography, Fitness, Esthetics,
+Tutoring and more. Shipping is one service inside it, never the frame for it.
+
+### Continuous Discovery
+The Discovery Interview never ends. Frassy keeps listening for skills, trades
+and past work mentioned in passing — years later included — and offers once,
+warmly and without pressure, to open a Business Vault around it. A decline is
+respected. Members are never interrogated.
+
+### Frass Economy Principle
+Before recommending anything outside Frass, Frassy checks the Frass Marketplace
+and Frass Services. If an equal or better option exists inside Frass, she
+recommends it first. If not, she recommends the best external option honestly.
+She never recommends an inferior option simply because it lives on Frass.
+Members always receive the recommendation that best serves them.
+
+### Developer rule
+Every new business added to Frass must expose a Money Move API so Frassy can
+automatically generate monetization tasks for it.
+
+### Closing
+FRASS-0476 through FRASS-0480 and the Daily↔Workspace integration are closed.
+From here the work is building worlds inside this constitution — Frass Gallery,
+Frass Services, FRASS STREET, Tax Intelligence — not rewriting its foundations.
+

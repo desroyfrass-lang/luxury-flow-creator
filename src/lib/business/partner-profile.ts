@@ -275,6 +275,8 @@ export type PartnerProfile = {
   version: 1;
   /** Hidden asset ids the member confirmed. */
   assets: string[];
+  /** FRASS-0483: skills overheard later, awaiting the member's confirmation. */
+  pending?: string[];
   answers: Partial<PartnerAnswers>;
   hoursPerDay: number;
   monthlyGoal: number;
@@ -286,6 +288,7 @@ export type PartnerProfile = {
 export const EMPTY_PROFILE: PartnerProfile = {
   version: 1,
   assets: [],
+  pending: [],
   answers: {},
   hoursPerDay: 1,
   monthlyGoal: 0,
@@ -306,6 +309,7 @@ export function loadProfile(): PartnerProfile {
       ...EMPTY_PROFILE,
       ...parsed,
       assets: Array.isArray(parsed.assets) ? parsed.assets.filter((a) => !!assetById(a)) : [],
+      pending: Array.isArray(parsed.pending) ? parsed.pending.filter((a) => !!assetById(a)) : [],
       answers: (parsed.answers ?? {}) as Partial<PartnerAnswers>,
     };
   } catch {
@@ -537,7 +541,13 @@ export function teachingGuidance(profile: PartnerProfile): string {
  * what the member chose to tell us, so her Daily can never be generic.
  */
 export function partnerContext(profile: PartnerProfile): string {
-  if (!profileComplete(profile)) return "";
+  const pending = (profile.pending ?? []).map(assetById).filter(Boolean) as HiddenAsset[];
+  const pendingLine =
+    pending.length > 0 &&
+    `Continuous discovery (FRASS-0483): they recently mentioned ${pending
+      .map((a) => a.label.toLowerCase())
+      .join(", ")} in passing. If it fits naturally — never as an interruption — ask once whether they'd like you to open a Business Vault around it.`;
+  if (!profileComplete(profile)) return pendingLine || "";
   const assets = profile.assets.map(assetById).filter(Boolean) as HiddenAsset[];
   const lines = [
     `Partner strengths discovered in conversation: ${assets
@@ -553,9 +563,42 @@ export function partnerContext(profile: PartnerProfile): string {
       .join(", ")} — never a generic business template, never coding or complex marketing unless they asked.`,
     "Open with simple, confidence-building work they can finish today; handle the technical part yourself.",
     teachingGuidance(profile),
+    pendingLine,
   ].filter(Boolean);
   return lines.join("\n");
 }
+
+// ── FRASS-0483 — the interview never ends ────────────────────────────────────
+// Frassy keeps listening for skills long after onboarding. Anything she
+// overhears is held as "pending" until the member confirms it.
+
+/** Reads a passing remark for skills we haven't heard before. Saves and returns them. */
+export function noticeAssets(text: string): string[] {
+  if (!text || text.trim().length < 6) return [];
+  const profile = loadProfile();
+  const known = new Set([...(profile.assets ?? []), ...(profile.pending ?? [])]);
+  const fresh = detectAssets(text).filter((id) => !known.has(id));
+  if (fresh.length === 0) return [];
+  saveProfile({ ...profile, pending: [...(profile.pending ?? []), ...fresh].slice(-6) });
+  return fresh;
+}
+
+/** The member said yes — the overheard skill becomes part of who they are. */
+export function acceptPending(id: string): PartnerProfile {
+  const profile = loadProfile();
+  return saveProfile({
+    ...profile,
+    assets: [...new Set([...profile.assets, id])],
+    pending: (profile.pending ?? []).filter((p) => p !== id),
+  });
+}
+
+/** The member said no — never raise it again this session. */
+export function dismissPending(id: string): PartnerProfile {
+  const profile = loadProfile();
+  return saveProfile({ ...profile, pending: (profile.pending ?? []).filter((p) => p !== id) });
+}
+
 
 /** One honest sentence for the top of the Daily. */
 export function dailyHeadline(profile: PartnerProfile, firstName: string): string {

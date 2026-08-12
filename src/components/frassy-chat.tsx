@@ -33,7 +33,7 @@ import {
   workingStyleContext,
 } from "@/lib/frassy/working-style";
 // FRASS-0482 — the business already inside the person.
-import { loadProfile, partnerContext } from "@/lib/business/partner-profile";
+import { loadProfile, noticeAssets, partnerContext } from "@/lib/business/partner-profile";
 
 
 type ProductCard = {
@@ -205,6 +205,10 @@ export function FrassyChat({ embedded = false }: { embedded?: boolean } = {}) {
     // FRASS-0478 — observe *how* they work (channel, length, timing), then hand
     // Frassy manner-guidance only. Nothing here leaves the browser as raw data.
     const style = observeTurn({ channel: spoken ? "voice" : "text", text });
+
+    // FRASS-0483 — the interview never ends. Anything they mention in passing
+    // ("I used to teach aerobics") is held until Frassy can offer a Vault for it.
+    noticeAssets(text);
 
     try {
       const res = await fetch("/api/chat", {
