@@ -298,10 +298,53 @@ function MoneyMovesPage() {
           )}
         </section>
 
+        {/* FRASS-0480 — Build it. Monetize it. Every move ends at an earning outcome. */}
+        <section className="mt-6 rounded-3xl border border-white/12 bg-white/[0.03] p-6">
+          <div className="flex flex-wrap items-baseline justify-between gap-2">
+            <h2 className="font-display text-lg uppercase tracking-[0.06em]">{BUILD_IT_MONETIZE_IT}</h2>
+            <p className="text-[11px] uppercase tracking-[0.18em] text-[color:var(--gold,#d4af37)]">
+              Learn → Build → Monetize
+            </p>
+          </div>
+          <p className="mt-2 text-sm text-muted-foreground">{MONETIZATION_RULE}</p>
+          <p className="mt-3 text-sm">{monetizationSummary(tracks)}</p>
+          <div className="mt-4 space-y-3">
+            {tracks.map((t) => (
+              <article key={t.streamId} className="rounded-2xl border border-white/10 bg-black/20 p-4">
+                <div className="flex flex-wrap items-baseline justify-between gap-2">
+                  <h3 className="font-display text-base uppercase tracking-[0.05em]">
+                    {t.emoji} {t.label}
+                  </h3>
+                  <span className="text-[11px] uppercase tracking-[0.18em] text-muted-foreground">
+                    {PHASE_LABEL[t.phase]} · {t.pct}%
+                  </span>
+                </div>
+                <div className="mt-2 h-1.5 w-full overflow-hidden rounded-full bg-white/10">
+                  <div
+                    className="h-full rounded-full bg-[color:var(--gold,#d4af37)]"
+                    style={{ width: `${t.pct}%` }}
+                  />
+                </div>
+                <p className="mt-2 text-xs text-muted-foreground">Outcome: {t.outcome}</p>
+                {t.nextStep && <p className="mt-1 text-sm">Next: {t.nextStep}</p>}
+                {t.preparation && (
+                  <p className="mt-2 rounded-xl border border-amber-400/25 bg-amber-400/[0.06] px-3 py-2 text-xs text-amber-100">
+                    Preparation Mode · {t.preparation}
+                  </p>
+                )}
+                <Link to={t.href} className="mt-3 inline-block text-xs underline text-muted-foreground">
+                  Open where this goes live
+                </Link>
+              </article>
+            ))}
+          </div>
+        </section>
+
         {/* Coaching line */}
         <p className="mt-4 rounded-3xl border border-white/12 bg-white/[0.03] px-5 py-4 text-sm text-muted-foreground">
           {plan.momentum.line}
         </p>
+
 
         {/* Rest of the plan */}
         {plan.rest.length > 0 && (
