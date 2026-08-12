@@ -1917,6 +1917,63 @@ export type Database = {
         }
         Relationships: []
       }
+      founding_partners: {
+        Row: {
+          accepted_at: string | null
+          created_at: string
+          id: string
+          invited_at: string
+          invited_by: string | null
+          note: string | null
+          sequence: number
+          show_on_card: boolean
+          story_hoped: string | null
+          story_journey: string | null
+          story_lessons: string | null
+          story_public: boolean
+          story_why: string | null
+          updated_at: string
+          user_id: string
+          visibility: string
+        }
+        Insert: {
+          accepted_at?: string | null
+          created_at?: string
+          id?: string
+          invited_at?: string
+          invited_by?: string | null
+          note?: string | null
+          sequence: number
+          show_on_card?: boolean
+          story_hoped?: string | null
+          story_journey?: string | null
+          story_lessons?: string | null
+          story_public?: boolean
+          story_why?: string | null
+          updated_at?: string
+          user_id: string
+          visibility?: string
+        }
+        Update: {
+          accepted_at?: string | null
+          created_at?: string
+          id?: string
+          invited_at?: string
+          invited_by?: string | null
+          note?: string | null
+          sequence?: number
+          show_on_card?: boolean
+          story_hoped?: string | null
+          story_journey?: string | null
+          story_lessons?: string | null
+          story_public?: boolean
+          story_why?: string | null
+          updated_at?: string
+          user_id?: string
+          visibility?: string
+        }
+        Relationships: []
+      }
       frassy_notes: {
         Row: {
           archived_at: string | null

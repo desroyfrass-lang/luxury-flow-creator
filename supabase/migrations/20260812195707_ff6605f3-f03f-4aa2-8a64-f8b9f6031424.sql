@@ -1,0 +1,1 @@
+REVOKE ALL ON FUNCTION public.protect_founding_partner_record() FROM PUBLIC, anon, authenticated;

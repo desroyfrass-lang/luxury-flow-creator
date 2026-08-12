@@ -16,12 +16,20 @@ import { ShareCardButton } from "@/components/card/card-share";
 import { CardStorefront, type PublicListing } from "@/components/card/card-storefront";
 import { CardActionBar } from "@/components/card/card-actions";
 import { CardTrustSection } from "@/components/card/card-trust";
+// FRASS-0490 — Founding Partner recognition, shown only when the member made it public.
+import { FoundingBadge } from "@/components/founding/founding-badge";
+import { getPublicFounding } from "@/lib/founding.functions";
+import { FOUNDING_STORY_PROMPTS } from "@/lib/founding";
 
 export const Route = createFileRoute("/card/$handle")({
   loader: async ({ params }) => {
-    const data = await getPublicCard({ data: { handle: params.handle.replace(/^@/, "").toLowerCase() } });
+    const handle = params.handle.replace(/^@/, "").toLowerCase();
+    const [data, founding] = await Promise.all([
+      getPublicCard({ data: { handle } }),
+      getPublicFounding({ data: { handle } }).catch(() => null),
+    ]);
     if (!data) throw notFound();
-    return data;
+    return { ...data, founding };
   },
   head: ({ loaderData }) => {
     const name = loaderData?.profile.display_name ?? "A Frass Builder";
@@ -68,7 +76,7 @@ function Fallback({ title }: { title: string }) {
 }
 
 function PublicCard() {
-  const { profile, card, live, affiliate, products, listings, commerceEnabled } =
+  const { profile, card, live, affiliate, products, listings, commerceEnabled, founding } =
     Route.useLoaderData();
   const handle = profile.handle ?? "";
   const name = profile.display_name ?? "Frass Builder";
@@ -147,6 +155,31 @@ function PublicCard() {
       </header>
 
       <div className="living-card-body">
+        {founding && (
+          <section className="living-card-block">
+            <FoundingBadge sequence={founding.sequence} />
+            <p className="mt-3 text-sm opacity-80">
+              One of the first people who believed in Frass before the world knew it existed.
+              Honorary lifetime recognition — it carries no special permissions or earnings.
+            </p>
+            {founding.story && (
+              <div className="mt-5 space-y-4">
+                <h3 className="living-card-block-title">Founding story</h3>
+                {FOUNDING_STORY_PROMPTS.map((prompt) => {
+                  const value = founding.story?.[prompt.key];
+                  if (!value) return null;
+                  return (
+                    <div key={prompt.key}>
+                      <p className="text-xs uppercase tracking-[0.2em] opacity-60">{prompt.title}</p>
+                      <p className="mt-1 whitespace-pre-line text-sm opacity-90">{value}</p>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </section>
+        )}
+
         {(profile.bio || legacy) && (
           <section className="living-card-block">
             <h2 className="living-card-block-title">Story</h2>

@@ -130,3 +130,4 @@ For Me is personal, never algorithmic — no "chosen for you".
 - [FRASS-0476B One Frassy](mem://features/frass-0476b-one-frassy) — Shared chat/voice/memory with per-room responsibilities: Daily, Welcome Hall, Control Room, Workspace, FOR ME, Marketplace, Financial Center, Frass Card
 - [FRASS-0478 Frassy Learns You](mem://features/frass-0478-frassy-learns-you) — Working-style learning (voice/text, depth, timing, reminders); architecture frozen
 - [FRASS-0483 Services, Continuous Discovery, Economy Principle](mem://features/frass-0483-services-discovery-economy) — Frass Services marketplace, never-ending discovery interview, Frass-first recommendation rule, Money Move API future rule
+- [FRASS-0490 Founding Partner Program](mem://features/frass-0490-founding-partner-program) — Founder-only lifetime recognition, visibility control, Founding Stories, Kanko Principle, founding period

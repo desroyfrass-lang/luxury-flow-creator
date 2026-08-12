@@ -1,6 +1,8 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
+import { FoundingBadge } from "@/components/founding/founding-badge";
+import { getMyFoundingStatus } from "@/lib/founding.functions";
 import { useServerFn } from "@tanstack/react-start";
 import { ArrowLeft, MessageCircle, PenLine, Play } from "lucide-react";
 import { getMyProfile } from "@/lib/profiles.functions";
@@ -79,6 +81,14 @@ function ForMePage() {
   const weather = useMemo(() => resolveForUsWeather(), []);
   const [active, setActive] = useState<SectionId>("hero");
 
+  // FRASS-0490 — recognition appears here only when the member allows it.
+  const loadFounding = useServerFn(getMyFoundingStatus);
+  const foundingQuery = useQuery({
+    queryKey: ["my-founding-status"],
+    queryFn: () => loadFounding(),
+    retry: false,
+  });
+
   const profileQuery = useQuery({
     queryKey: ["my-profile", "for-me"],
     queryFn: () => loadProfile(),
@@ -144,6 +154,11 @@ function ForMePage() {
               </p>
               <h1 className="mt-3 text-4xl font-black md:text-6xl">{name}</h1>
               {profile?.handle && <p className="mt-2 text-sm text-white/70">@{profile.handle}</p>}
+              {foundingQuery.data && foundingQuery.data.visibility !== "private" && (
+                <div className="mt-4">
+                  <FoundingBadge sequence={foundingQuery.data.sequence} size="sm" />
+                </div>
+              )}
               <p className="mt-5 max-w-xl text-base leading-relaxed text-white/85">
                 {profile?.bio?.trim() ||
                   "You haven't written your story yet. Every Builder on the Hill has one — where you started, what you're making, and who you're making it for."}
