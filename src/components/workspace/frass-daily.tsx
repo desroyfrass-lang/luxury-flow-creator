@@ -505,7 +505,37 @@ function FrassDailyBody({
                 <li key={l}>{l}</li>
               ))}
             </ul>
+            {/* FRASS-0506 — Post-Launch Observation Window, Founder only. */}
+            {observation && (
+              <div
+                className={`mt-3 rounded-sm border p-3 ${
+                  observation.status === "action_required"
+                    ? "border-destructive/50 bg-destructive/10"
+                    : observation.status === "monitoring"
+                      ? "border-amber-400/40 bg-amber-400/10"
+                      : "border-emerald-500/30 bg-emerald-500/10"
+                }`}
+              >
+                <span className="ws-meta">
+                  Latest release · {observation.dot} {observation.headline}
+                </span>
+                <p className="mt-1 text-sm">{observation.sentence}</p>
+                {(observation.status !== "stable" || observation.rollbackRecommended) && (
+                  <button
+                    type="button"
+                    className="ws-chip mt-2"
+                    onClick={() => {
+                      onNavigate?.("/admin/launch-feedback");
+                      onDismiss();
+                    }}
+                  >
+                    Open the Observation Window
+                  </button>
+                )}
+              </div>
+            )}
             {/* FRASS-0476 — the overnight security sentence, Founder only. */}
+
             {securityLine && (
               <div
                 className={`mt-3 rounded-sm border p-3 ${
