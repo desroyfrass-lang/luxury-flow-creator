@@ -275,6 +275,8 @@ export type PartnerProfile = {
   version: 1;
   /** Hidden asset ids the member confirmed. */
   assets: string[];
+  /** FRASS-0483: skills overheard later, awaiting the member's confirmation. */
+  pending?: string[];
   answers: Partial<PartnerAnswers>;
   hoursPerDay: number;
   monthlyGoal: number;
