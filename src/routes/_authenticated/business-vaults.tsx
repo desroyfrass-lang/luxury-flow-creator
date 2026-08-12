@@ -113,6 +113,121 @@ function FutureVaultsPage() {
           </p>
         </section>
 
+        {/* FRASS-0503 — the family of Business Vaults */}
+        <section className="mt-10">
+          <h2 className="font-display text-lg uppercase tracking-[0.06em]">The family of Business Vaults</h2>
+          <p className="mt-2 max-w-2xl text-sm text-muted-foreground">
+            {FAMILY_PRINCIPLE.headline} Each Vault is a complete pathway — <em>Discover → Build → Monetize</em> — and
+            every one of them ends somewhere real: a listing, a bookable service, a live collection.
+          </p>
+          <ul className="mt-5 grid gap-4">
+            {BUSINESS_VAULTS.map((v) => {
+              const open = openFamily === v.key;
+              const already = shelved.has(v.key);
+              return (
+                <li key={v.key} className="rounded-3xl border border-white/12 bg-white/[0.03] p-5">
+                  <div className="flex flex-wrap items-start justify-between gap-3">
+                    <div>
+                      <h3 className="font-display text-xl uppercase tracking-[0.05em]">
+                        {v.emoji} {v.label}
+                      </h3>
+                      <p className="mt-1 text-sm text-muted-foreground">{v.summary}</p>
+                      <p className="mt-1 text-xs text-muted-foreground">{v.forWho}</p>
+                    </div>
+                    <div className="flex flex-wrap gap-2">
+                      <button
+                        type="button"
+                        onClick={() => setOpenFamily(open ? null : v.key)}
+                        className="rounded-full border border-white/15 px-3 py-1.5 text-xs uppercase tracking-[0.14em]"
+                      >
+                        {open ? "Hide pathway" : "See the pathway"}
+                      </button>
+                      <button
+                        type="button"
+                        disabled={already}
+                        onClick={() =>
+                          save.mutate({
+                            key: v.key,
+                            emoji: v.emoji,
+                            label: v.label,
+                            summary: v.summary,
+                            rationale: `Ends at: ${v.monetizationOutcome}`,
+                          })
+                        }
+                        className="inline-flex items-center gap-2 rounded-full border border-white/15 px-3 py-1.5 text-xs uppercase tracking-[0.14em] disabled:opacity-40"
+                      >
+                        <Plus className="h-3.5 w-3.5" /> {already ? "On the shelf" : "Shelve for later"}
+                      </button>
+                    </div>
+                  </div>
+
+                  {open && (
+                    <div className="mt-4 space-y-5 border-t border-white/10 pt-4">
+                      <div>
+                        <p className="text-[11px] uppercase tracking-[0.18em] text-muted-foreground">
+                          Ways to run it
+                        </p>
+                        <ul className="mt-2 flex flex-wrap gap-2">
+                          {v.paths.map((p) => (
+                            <li
+                              key={p}
+                              className="rounded-full border border-white/12 bg-black/25 px-3 py-1 text-xs text-muted-foreground"
+                            >
+                              {p}
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+
+                      {v.designSupport && (
+                        <div>
+                          <p className="text-[11px] uppercase tracking-[0.18em] text-muted-foreground">
+                            Creative support
+                          </p>
+                          <p className="mt-2 text-sm text-muted-foreground">{v.designSupport.join(" · ")}</p>
+                          <p className="mt-1 text-xs text-muted-foreground">
+                            Frassy organises the process. The vision stays yours.
+                          </p>
+                        </div>
+                      )}
+
+                      <div className="grid gap-4 sm:grid-cols-3">
+                        {(["discover", "build", "monetize"] as VaultStage[]).map((stage) => (
+                          <div key={stage} className="rounded-2xl border border-white/10 bg-black/20 p-4">
+                            <p className="font-display text-sm uppercase tracking-[0.14em]">{STAGE_LABEL[stage]}</p>
+                            <p className="mt-1 text-[11px] text-muted-foreground">{STAGE_PLAIN[stage]}</p>
+                            <ol className="mt-3 grid gap-1.5 text-sm text-muted-foreground">
+                              {movesByStage(v, stage).map((m) => (
+                                <li key={m.title}>
+                                  · {m.title} <span className="text-xs opacity-70">({m.minutes} min)</span>
+                                </li>
+                              ))}
+                            </ol>
+                          </div>
+                        ))}
+                      </div>
+
+                      <p className="text-sm text-green-200">
+                        Ends at: {v.monetizationOutcome}{" "}
+                        <span className="text-muted-foreground">
+                          — about {Math.round(pathwayMinutes(v) / 60)}h of real work, spread over as many days as you
+                          have.
+                        </span>
+                      </p>
+                      <p className="text-xs text-muted-foreground">
+                        Nothing here touches your Daily until you activate it. When you're ready, tell Frassy:{" "}
+                        <span className="italic">“{activationPhrase(v.label.replace(" Vault", ""))}”</span>
+                      </p>
+                    </div>
+                  )}
+                </li>
+              );
+            })}
+          </ul>
+          <p className="mt-4 text-xs text-muted-foreground">{FAMILY_PRINCIPLE.plain}</p>
+        </section>
+
+
         {/* The shelf */}
         <section className="mt-8">
           <h2 className="font-display text-lg uppercase tracking-[0.06em]">On the shelf</h2>
