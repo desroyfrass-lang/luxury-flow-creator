@@ -44,6 +44,17 @@ import {
   type Opportunity,
 } from "@/lib/business/money-moves";
 import {
+  DiscoveryInterview,
+  PartnerStrengthsCard,
+} from "@/components/frassy/discovery-interview";
+import {
+  EMPTY_PROFILE,
+  PLAIN_ENGLISH,
+  loadProfile,
+  profileComplete,
+  type PartnerProfile,
+} from "@/lib/business/partner-profile";
+import {
   BUILD_IT_MONETIZE_IT,
   MONETIZATION_RULE,
   PHASE_LABEL,
