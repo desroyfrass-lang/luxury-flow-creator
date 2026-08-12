@@ -24,6 +24,9 @@ export default defineConfig({
     plugins: [mcpPlugin()],
     resolve: {
       alias: {
+        // tslib's UMD build breaks CJS→ESM interop in the Worker bundle
+        // (`Cannot destructure property '__extends'`). Force the ESM build.
+        tslib: path.resolve(__dirname, "node_modules/tslib/tslib.es6.mjs"),
         // React Email needs entities v4.5.0; nested v5+ copies drop ./lib/decode.js.
         "entities/lib/decode.js": path.resolve(__dirname, "node_modules/entities/lib/decode.js"),
         "entities/lib/encode.js": path.resolve(__dirname, "node_modules/entities/lib/encode.js"),
