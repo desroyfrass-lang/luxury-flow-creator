@@ -8,7 +8,7 @@ import { useCartStore } from "@/lib/cart-store";
 import { queryOptions } from "@tanstack/react-query";
 import { useSuspenseQuery } from "@tanstack/react-query";
 
-const productQueryOptions = (handle: string) =>
+export const productQueryOptions = (handle: string) =>
   queryOptions({
     queryKey: ["product", handle],
     queryFn: () => fetchProductByHandle(handle),

@@ -327,6 +327,135 @@ export type Database = {
         }
         Relationships: []
       }
+      artist_galleries: {
+        Row: {
+          accent: string
+          artist_statement: string | null
+          avatar_url: string | null
+          biography: string | null
+          commission_from_price: number | null
+          commission_note: string | null
+          commission_status: string
+          contact_email: string | null
+          created_at: string
+          currency: string
+          current_exhibition: string | null
+          disciplines: string[]
+          display_name: string
+          handle: string
+          hero_url: string | null
+          id: string
+          is_published: boolean
+          location: string | null
+          theme: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          accent?: string
+          artist_statement?: string | null
+          avatar_url?: string | null
+          biography?: string | null
+          commission_from_price?: number | null
+          commission_note?: string | null
+          commission_status?: string
+          contact_email?: string | null
+          created_at?: string
+          currency?: string
+          current_exhibition?: string | null
+          disciplines?: string[]
+          display_name: string
+          handle: string
+          hero_url?: string | null
+          id?: string
+          is_published?: boolean
+          location?: string | null
+          theme?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          accent?: string
+          artist_statement?: string | null
+          avatar_url?: string | null
+          biography?: string | null
+          commission_from_price?: number | null
+          commission_note?: string | null
+          commission_status?: string
+          contact_email?: string | null
+          created_at?: string
+          currency?: string
+          current_exhibition?: string | null
+          disciplines?: string[]
+          display_name?: string
+          handle?: string
+          hero_url?: string | null
+          id?: string
+          is_published?: boolean
+          location?: string | null
+          theme?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      artwork_stories: {
+        Row: {
+          artwork_id: string
+          audio_seconds: number | null
+          audio_url: string | null
+          created_at: string
+          creation_notes: string | null
+          gallery_id: string
+          id: string
+          process_notes: string | null
+          timelapse_url: string | null
+          updated_at: string
+          written_story: string | null
+        }
+        Insert: {
+          artwork_id: string
+          audio_seconds?: number | null
+          audio_url?: string | null
+          created_at?: string
+          creation_notes?: string | null
+          gallery_id: string
+          id?: string
+          process_notes?: string | null
+          timelapse_url?: string | null
+          updated_at?: string
+          written_story?: string | null
+        }
+        Update: {
+          artwork_id?: string
+          audio_seconds?: number | null
+          audio_url?: string | null
+          created_at?: string
+          creation_notes?: string | null
+          gallery_id?: string
+          id?: string
+          process_notes?: string | null
+          timelapse_url?: string | null
+          updated_at?: string
+          written_story?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "artwork_stories_artwork_id_fkey"
+            columns: ["artwork_id"]
+            isOneToOne: true
+            referencedRelation: "gallery_artworks"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "artwork_stories_gallery_id_fkey"
+            columns: ["gallery_id"]
+            isOneToOne: false
+            referencedRelation: "artist_galleries"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       blog_posts: {
         Row: {
           author: string | null
@@ -1289,6 +1418,78 @@ export type Database = {
           },
         ]
       }
+      commission_requests: {
+        Row: {
+          artist_note: string | null
+          artwork_id: string | null
+          brief: string
+          budget_max: number | null
+          budget_min: number | null
+          created_at: string
+          currency: string
+          deadline: string | null
+          gallery_id: string
+          id: string
+          reference_url: string | null
+          requester_email: string
+          requester_name: string
+          requester_user_id: string | null
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          artist_note?: string | null
+          artwork_id?: string | null
+          brief: string
+          budget_max?: number | null
+          budget_min?: number | null
+          created_at?: string
+          currency?: string
+          deadline?: string | null
+          gallery_id: string
+          id?: string
+          reference_url?: string | null
+          requester_email: string
+          requester_name: string
+          requester_user_id?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          artist_note?: string | null
+          artwork_id?: string | null
+          brief?: string
+          budget_max?: number | null
+          budget_min?: number | null
+          created_at?: string
+          currency?: string
+          deadline?: string | null
+          gallery_id?: string
+          id?: string
+          reference_url?: string | null
+          requester_email?: string
+          requester_name?: string
+          requester_user_id?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "commission_requests_artwork_id_fkey"
+            columns: ["artwork_id"]
+            isOneToOne: false
+            referencedRelation: "gallery_artworks"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "commission_requests_gallery_id_fkey"
+            columns: ["gallery_id"]
+            isOneToOne: false
+            referencedRelation: "artist_galleries"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       commissions: {
         Row: {
           approved_at: string | null
@@ -1793,6 +1994,170 @@ export type Database = {
           user_id?: string
         }
         Relationships: []
+      }
+      gallery_artworks: {
+        Row: {
+          availability: string
+          coa_offered: boolean
+          collection_id: string | null
+          commissions_similar: boolean
+          created_at: string
+          currency: string
+          description: string | null
+          digital_download: boolean
+          digital_price: number | null
+          dimensions: string | null
+          edition_size: number | null
+          extra_images: string[]
+          gallery_id: string
+          id: string
+          image_url: string | null
+          inspiration: string | null
+          is_published: boolean
+          license_terms: string | null
+          medium: string | null
+          nft_enabled: boolean
+          original_price: number | null
+          position: number
+          print_from_price: number | null
+          prints_available: boolean
+          signed_editions: boolean
+          slug: string
+          source: string
+          studio_canvas_id: string | null
+          tags: string[]
+          thumb_url: string | null
+          title: string
+          updated_at: string
+          year_created: number | null
+        }
+        Insert: {
+          availability?: string
+          coa_offered?: boolean
+          collection_id?: string | null
+          commissions_similar?: boolean
+          created_at?: string
+          currency?: string
+          description?: string | null
+          digital_download?: boolean
+          digital_price?: number | null
+          dimensions?: string | null
+          edition_size?: number | null
+          extra_images?: string[]
+          gallery_id: string
+          id?: string
+          image_url?: string | null
+          inspiration?: string | null
+          is_published?: boolean
+          license_terms?: string | null
+          medium?: string | null
+          nft_enabled?: boolean
+          original_price?: number | null
+          position?: number
+          print_from_price?: number | null
+          prints_available?: boolean
+          signed_editions?: boolean
+          slug: string
+          source?: string
+          studio_canvas_id?: string | null
+          tags?: string[]
+          thumb_url?: string | null
+          title: string
+          updated_at?: string
+          year_created?: number | null
+        }
+        Update: {
+          availability?: string
+          coa_offered?: boolean
+          collection_id?: string | null
+          commissions_similar?: boolean
+          created_at?: string
+          currency?: string
+          description?: string | null
+          digital_download?: boolean
+          digital_price?: number | null
+          dimensions?: string | null
+          edition_size?: number | null
+          extra_images?: string[]
+          gallery_id?: string
+          id?: string
+          image_url?: string | null
+          inspiration?: string | null
+          is_published?: boolean
+          license_terms?: string | null
+          medium?: string | null
+          nft_enabled?: boolean
+          original_price?: number | null
+          position?: number
+          print_from_price?: number | null
+          prints_available?: boolean
+          signed_editions?: boolean
+          slug?: string
+          source?: string
+          studio_canvas_id?: string | null
+          tags?: string[]
+          thumb_url?: string | null
+          title?: string
+          updated_at?: string
+          year_created?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "gallery_artworks_collection_id_fkey"
+            columns: ["collection_id"]
+            isOneToOne: false
+            referencedRelation: "gallery_collections"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "gallery_artworks_gallery_id_fkey"
+            columns: ["gallery_id"]
+            isOneToOne: false
+            referencedRelation: "artist_galleries"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      gallery_collections: {
+        Row: {
+          cover_url: string | null
+          created_at: string
+          description: string | null
+          gallery_id: string
+          id: string
+          position: number
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          cover_url?: string | null
+          created_at?: string
+          description?: string | null
+          gallery_id: string
+          id?: string
+          position?: number
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          cover_url?: string | null
+          created_at?: string
+          description?: string | null
+          gallery_id?: string
+          id?: string
+          position?: number
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "gallery_collections_gallery_id_fkey"
+            columns: ["gallery_id"]
+            isOneToOne: false
+            referencedRelation: "artist_galleries"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       launch_program_settings: {
         Row: {
@@ -3698,6 +4063,54 @@ export type Database = {
         }
         Relationships: []
       }
+      studio_canvases: {
+        Row: {
+          created_at: string
+          document: Json
+          height: number
+          id: string
+          layer_count: number
+          minutes_spent: number
+          preset: string | null
+          status: string
+          thumbnail_url: string | null
+          title: string
+          updated_at: string
+          user_id: string
+          width: number
+        }
+        Insert: {
+          created_at?: string
+          document?: Json
+          height?: number
+          id?: string
+          layer_count?: number
+          minutes_spent?: number
+          preset?: string | null
+          status?: string
+          thumbnail_url?: string | null
+          title?: string
+          updated_at?: string
+          user_id: string
+          width?: number
+        }
+        Update: {
+          created_at?: string
+          document?: Json
+          height?: number
+          id?: string
+          layer_count?: number
+          minutes_spent?: number
+          preset?: string | null
+          status?: string
+          thumbnail_url?: string | null
+          title?: string
+          updated_at?: string
+          user_id?: string
+          width?: number
+        }
+        Relationships: []
+      }
       studio_operations: {
         Row: {
           actual_credits: number | null
@@ -4147,6 +4560,7 @@ export type Database = {
         Returns: number
       }
       expire_stale_payment_requests: { Args: never; Returns: number }
+      gallery_is_public: { Args: { _gallery_id: string }; Returns: boolean }
       get_active_partner_vendor_ids: {
         Args: { _user_id: string }
         Returns: string[]
@@ -4187,6 +4601,7 @@ export type Database = {
         }
         Returns: number
       }
+      owns_gallery: { Args: { _gallery_id: string }; Returns: boolean }
       platform_domain_paused: { Args: { _domain: string }; Returns: boolean }
       purge_expired_visual_uploads: { Args: never; Returns: number }
       read_email_batch: {
