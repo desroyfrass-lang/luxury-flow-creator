@@ -2153,3 +2153,97 @@ a.ps-row:hover { border-color: color-mix(in srgb, var(--gold) 60%, transparent);
 .kids-zone[data-age="0-3"] { --primary: oklch(0.75 0.16 20); --accent: oklch(0.88 0.13 95); }
 .kids-zone[data-age="3-6"] { --primary: oklch(0.74 0.15 195); --accent: oklch(0.88 0.15 130); }
 .kids-zone[data-age="6-12"] { --primary: oklch(0.66 0.17 275); --accent: oklch(0.84 0.16 60); }
+
+/* ─────────────────────────────────────────────────────────────────────────
+   FRASS-5P000 — Personalized Daily Customization Engine.
+   Presentation only. These rules change where things sit and how big they
+   read; they never change what the Daily can do.
+   ───────────────────────────────────────────────────────────────────────── */
+
+.daily-arranged .daily-scroll {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Density — how much air sits between blocks. */
+.daily-density-spacious .daily-section { margin-top: 2.5rem; }
+.daily-density-comfortable .daily-section { margin-top: 1.75rem; }
+.daily-density-compact .daily-section { margin-top: 1rem; }
+.daily-density-compact .daily-section .mt-4 { margin-top: 0.5rem; }
+
+/* Text size — for anyone who wants larger words, including our elders. */
+.daily-text-large { font-size: 1.06rem; }
+.daily-text-largest { font-size: 1.16rem; }
+.daily-text-large .daily-h2 { font-size: 1.25rem; }
+.daily-text-largest .daily-h2 { font-size: 1.4rem; }
+
+/* Higher contrast — plain readability, not a different theme. */
+.daily-contrast .ws-meta { opacity: 1; color: color-mix(in oklab, var(--foreground) 82%, transparent); }
+.daily-contrast .daily-card,
+.daily-contrast .daily-section { border-color: color-mix(in oklab, var(--foreground) 35%, transparent); }
+
+/* Less movement — respected on top of the system setting. */
+.daily-still *,
+.daily-still *::before,
+.daily-still *::after {
+  animation-duration: 0.001ms !important;
+  transition-duration: 0.001ms !important;
+}
+
+/* Shapes — the same blocks, arranged differently. */
+.daily-shape-two-column .daily-section > .mt-4 > .daily-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.daily-shape-mosaic .daily-section > .mt-4 > .daily-grid { grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); }
+.daily-shape-wide-cards .daily-section > .mt-4 > .daily-grid { grid-template-columns: minmax(0, 1fr); }
+.daily-shape-tight-list .daily-section { margin-top: 0.9rem; }
+.daily-shape-tight-list .daily-card { padding: 0.65rem 0.85rem; }
+.daily-shape-focus .daily-section:not([data-section="todays-priorities"]) { opacity: 0.92; }
+.daily-shape-focus .daily-section[data-section="todays-priorities"] .daily-h2 { font-size: 1.5rem; }
+
+/* Collapsed blocks keep their heading so nothing ever feels lost. */
+.daily-section.is-collapsed { opacity: 0.85; }
+.daily-section-fold { margin-left: auto; }
+
+/* The layout panel itself. */
+.daily-layout-panel {
+  order: -1;
+  margin-top: 1.5rem;
+  border: 1px solid color-mix(in oklab, var(--foreground) 14%, transparent);
+  border-radius: 1rem;
+  padding: 1.1rem 1.25rem;
+  background: color-mix(in oklab, var(--background) 70%, transparent);
+}
+.daily-layout-panel-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+.daily-layout-editor { margin-top: 1rem; display: grid; gap: 1rem; }
+.daily-layout-list { display: grid; gap: 0.5rem; }
+.daily-layout-list li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  border: 1px solid color-mix(in oklab, var(--foreground) 10%, transparent);
+  border-radius: 0.75rem;
+  padding: 0.55rem 0.8rem;
+}
+.daily-layout-list li.is-hidden { opacity: 0.55; }
+.daily-layout-actions { display: flex; gap: 0.35rem; flex-shrink: 0; }
+.daily-layout-prefs {
+  display: grid;
+  gap: 0.75rem;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+}
+.daily-layout-prefs label { display: grid; gap: 0.25rem; }
+.daily-layout-prefs select,
+.daily-layout-prefs input[type="text"] {
+  border: 1px solid color-mix(in oklab, var(--foreground) 18%, transparent);
+  border-radius: 0.6rem;
+  background: transparent;
+  padding: 0.4rem 0.6rem;
+  font-size: 0.85rem;
+}
+.daily-layout-check { display: flex !important; align-items: center; gap: 0.5rem; font-size: 0.85rem; }

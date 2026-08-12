@@ -15,6 +15,12 @@ import { useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { X, Check, Sparkles, ArrowRight, HelpCircle, Coins, ListTree, Film, Focus, Sunrise, Moon } from "lucide-react";
 import { FrassyComposer } from "@/components/workspace/frassy-composer";
+import { DailyLayoutPanel } from "@/components/workspace/daily-layout-panel";
+import {
+  DailyCustomizationProvider,
+  useDailyCustomization,
+} from "@/components/workspace/daily-customization";
+import type { SectionId } from "@/lib/daily/customization";
 import { FrassLinkWidget } from "@/components/link/frass-link-widget";
 import { FrassCardWidget } from "@/components/card/frass-card-widget";
 import { getWallet } from "@/lib/studio.functions";
@@ -102,7 +108,22 @@ const ORDER: DailyPriority[] = ["critical", "important", "optional", "completed"
 
 
 
-export function FrassDaily({
+export function FrassDaily(props: {
+  audience: DailyAudience;
+  name?: string;
+  onDismiss: () => void;
+  onOpenProject?: (projectId: string) => void;
+  onNavigate?: (href: string) => void;
+}) {
+  // FRASS-5P000 — one Daily, arranged the way this member asked for it.
+  return (
+    <DailyCustomizationProvider>
+      <FrassDailyBody {...props} />
+    </DailyCustomizationProvider>
+  );
+}
+
+function FrassDailyBody({
   audience,
   name,
   onDismiss,
@@ -116,6 +137,7 @@ export function FrassDaily({
   onNavigate?: (href: string) => void;
 }) {
   const [demo, setDemo] = useState(() => demoDataEnabled());
+  const layout = useDailyCustomization();
   const isFounder = audience === "founder";
   const [tab, setTab] = useState<FounderTabId>("today");
   const base = useMemo(() => dailyFor(audience), [audience]);
@@ -233,6 +255,14 @@ export function FrassDaily({
   /** The Daily is navigable by conversation, not clicks alone. */
   const runIntent = (said: string) => {
     if (!said) return;
+    // FRASS-5P000 — "move money moves to the top", "simplify my Daily", "hide
+    // the numbers". Organisation requests never touch the underlying work.
+    const arranged = layout.speak(said);
+    if (arranged) {
+      setCommand("");
+      setCommandNote(arranged);
+      return;
+    }
     // "Frassy, what's next?" — always answer with the highest-priority open step.
     if (/what'?s?\s+next|next\s+(thing|task|step)/i.test(said)) {
       setCommand("");
@@ -325,7 +355,7 @@ export function FrassDaily({
   }
 
   return (
-    <div data-blueprint="daily" className={`frass-workspace daily-overlay ${entered ? "is-in" : ""}`} role="dialog" aria-label="The Frass Daily">
+    <div data-blueprint="daily" className={`frass-workspace daily-overlay ${layout.classes} ${entered ? "is-in" : ""}`} role="dialog" aria-label="The Frass Daily">
 
       {/* Cinematic scenery — quiet Jamaican landscape, rotating by the day */}
       <div className="daily-scene" aria-hidden="true">
@@ -524,8 +554,11 @@ export function FrassDaily({
 
 
 
+        {/* FRASS-5P000 — organise this Daily however it works for you. */}
+        <DailyLayoutPanel />
+
         {/* 1 — Celebrate first */}
-        <Section title="Celebrate first" note="Progress before problems.">
+        <Section id="celebrate-first" title="Celebrate first" note="Progress before problems.">
           <div className="daily-grid">
             {model.wins.map((w) => (
               <div key={w.id} className="daily-card daily-win">
@@ -537,7 +570,7 @@ export function FrassDaily({
         </Section>
 
         {/* 2 — Daily briefing */}
-        <Section title="Since you were last here" note="Everything that moved while you were away. Click any number to see what it is.">
+        <Section id="since-last" title="Since you were last here" note="Everything that moved while you were away. Click any number to see what it is.">
           <div className="daily-grid">
             {model.briefing.map((m) => (
               <MetricCard
@@ -554,6 +587,7 @@ export function FrassDaily({
 
         {/* 2b — Financial snapshot (FRASS-0302). Every figure is clickable. */}
         <Section
+          id="financial-snapshot"
           title="Financial snapshot"
           note="Your Frass Financial Center, one click away. Available money is withdrawable now — settlement timing only applies to pending."
         >
@@ -576,6 +610,7 @@ export function FrassDaily({
         {/* 3 — The numbered workday (FRASS-0425) */}
         <Section
           blueprintId="daily-priorities"
+          id="todays-priorities"
           title="Today's Priorities"
           status={statuses.priorities}
           note={`Work through them in order. Estimated work today: ${formatWorkload(remaining)}${
@@ -643,7 +678,7 @@ export function FrassDaily({
 
         {/* 6 — Pending approvals */}
         {model.approvals.length > 0 && (
-          <Section title="Pending Approvals" status={statuses.approvals} note="Everything waiting on you, in one place.">
+          <Section id="pending-approvals" title="Pending Approvals" status={statuses.approvals} note="Everything waiting on you, in one place.">
             <div className="daily-grid">
               {model.approvals.map((a) => (
                 <button key={a.id} type="button" className="daily-card daily-clickable" onClick={() => go(a)}>
@@ -659,7 +694,7 @@ export function FrassDaily({
         )}
 
         {/* 7 — Opportunities */}
-        <Section title="Opportunities" status={statuses.opportunities} note="Things I don't want you to miss.">
+        <Section id="opportunities" title="Opportunities" status={statuses.opportunities} note="Things I don't want you to miss.">
           <div className="daily-grid">
             {model.opportunities.map((o) => (
               <button key={o.id} type="button" className="daily-card daily-clickable" onClick={() => go(o)}>
@@ -674,7 +709,7 @@ export function FrassDaily({
         </Section>
 
         {/* 8 — Goals & Vision Maps */}
-        <Section title="Goals & Vision Map" status={statuses.goals} note="How close you are.">
+        <Section id="goals-vision" title="Goals & Vision Map" status={statuses.goals} note="How close you are.">
           <div className="daily-lines">
             {model.goals.map((g) => (
               <button key={g.id} type="button" className="daily-goal daily-clickable-row" onClick={() => go(g)}>
@@ -692,7 +727,7 @@ export function FrassDaily({
         </Section>
 
         {/* 9 — Daily performance */}
-        <Section title="Daily Performance" status={statuses["daily-performance"]} note="One glance tells you how things are going.">
+        <Section id="daily-performance" title="Daily Performance" status={statuses["daily-performance"]} note="One glance tells you how things are going.">
           <div className="daily-grid">
             {model.performance.map((m) => (
               <MetricCard
@@ -709,7 +744,7 @@ export function FrassDaily({
 
         {/* Founder-only executive panels */}
         {model.executive.length > 0 && (
-          <Section title="Founder Command Center" status={statuses["founder-command"]} note="The executive view. Everything here opens the Founder Dashboard or the records behind it.">
+          <Section id="founder-command" title="Founder Command Center" status={statuses["founder-command"]} note="The executive view. Everything here opens the Founder Dashboard or the records behind it.">
             <div className="daily-grid">
               {model.executive.map((m) => (
                 <MetricCard
@@ -726,7 +761,7 @@ export function FrassDaily({
         )}
 
         {/* 10 — Recent activity */}
-        <Section title="Recent activity" note="Since your last session.">
+        <Section id="recent-activity" title="Recent activity" note="Since your last session.">
           <div className="daily-lines">
             {model.activity.map((a) => (
               <button key={a.id} type="button" className="daily-line daily-clickable-row" onClick={() => go(a)}>
@@ -740,7 +775,7 @@ export function FrassDaily({
 
         {/* Evening reflection — never mandatory */}
         {reflecting && (
-          <Section title="Evening reflection" note="Optional. Only if you want it.">
+          <Section id="evening-reflection" title="Evening reflection" note="Optional. Only if you want it.">
             <div className="daily-grid">
               {["What you accomplished", "Goals completed", "Progress made", "Tomorrow's priorities", "Notes for tomorrow"].map(
                 (r) => (
@@ -755,6 +790,7 @@ export function FrassDaily({
 
         {/* FRASS-0412 — temporary launch feedback program */}
         <Section
+          id="launch-feedback"
           title="🎤 Launch Feedback"
           note="Talk to us. Record a voice note about anything — an idea, a bug, or something that felt confusing. Frassy writes it up for the Founder."
         >
@@ -773,6 +809,7 @@ export function FrassDaily({
 
         {/* FRASS-0401/0402/0407 — Frass Vision Studios, open to every member and partner */}
         <Section
+          id="fv-studios"
           title="🎬 Frass Vision Studios"
           note="Continue your latest creative project in FV Studios. Manual editing is always free — AI work is forecast before it runs."
         >
@@ -824,7 +861,7 @@ export function FrassDaily({
         </Section>
 
         {/* 11 — Continue working */}
-        <Section title="Continue Working" status={statuses["continue-working"]} note="Exactly where you stopped.">
+        <Section id="continue-working" title="Continue Working" status={statuses["continue-working"]} note="Exactly where you stopped.">
 
           <div className="daily-grid">
             {model.resume.map((r) => (
@@ -842,6 +879,7 @@ export function FrassDaily({
         {/* Phase Two — the Daily Briefing. The same nine workspaces, every day, in order. */}
         <Section
           blueprintId="daily-briefing"
+          id="daily-briefing"
           title="Daily Briefing"
           note="The closing routine. Frassy walks every workspace with you, in the same order, until the day is closed."
         >
@@ -1110,26 +1148,56 @@ function StatusPills({ status }: { status?: SectionStatus }) {
 }
 
 function Section({
+  id,
   title,
   note,
   blueprintId,
   status,
   children,
 }: {
+  /** FRASS-5P000 — stable id so the member can move, pin, collapse or hide it. */
+  id?: SectionId;
   title: string;
   note?: string;
   blueprintId?: string;
   status?: SectionStatus;
   children: React.ReactNode;
 }) {
+  const { arrangement, toggleCollapsed } = useDailyCustomization();
+
+  // Hidden means out of sight, never deleted — the work behind it is untouched
+  // and one sentence to Frassy brings it straight back.
+  if (id && !arrangement.visible.includes(id)) return null;
+
+  const collapsed = id ? arrangement.collapsed.has(id) : false;
+
   return (
-    <section data-blueprint={blueprintId} className="daily-section">
+    <section
+      data-blueprint={blueprintId}
+      data-section={id}
+      className={`daily-section ${collapsed ? "is-collapsed" : ""}`}
+      style={id ? { order: arrangement.orderOf(id) } : undefined}
+    >
       <div className="daily-section-head">
         <h2 className="daily-h2">{title}</h2>
         <StatusPills status={status} />
+        {id && (
+          <button
+            type="button"
+            className="ws-chip daily-section-fold"
+            aria-expanded={!collapsed}
+            onClick={() => toggleCollapsed(id)}
+          >
+            {collapsed ? "Open" : "Close"}
+          </button>
+        )}
       </div>
-      {note && <p className="ws-meta daily-note">{note}</p>}
-      <div className="mt-4">{children}</div>
+      {!collapsed && (
+        <>
+          {note && <p className="ws-meta daily-note">{note}</p>}
+          <div className="mt-4">{children}</div>
+        </>
+      )}
     </section>
   );
 }

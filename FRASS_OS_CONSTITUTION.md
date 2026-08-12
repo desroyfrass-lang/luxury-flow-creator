@@ -1071,3 +1071,48 @@ another AI?"*
 
 **Founder Principle:** Frass grows by teaching one trusted assistant new skills, not by
 creating a collection of disconnected assistants.
+
+---
+
+## FRASS-0500 — The Simplicity Constitution
+**Status: Constitutional, P0**
+
+Frass is powerful underneath and simple on the surface. Complexity is a failure
+of design, never a badge of sophistication.
+
+1. **Kindergarten test.** If a five-year-old could not tell what a screen wants
+   from them, the screen is wrong — not the member.
+2. **Progressive disclosure.** Show the next step. Depth appears only when it is
+   asked for.
+3. **Plain language first.** Every expert term is followed by "what this means in
+   plain English", with an analogy.
+4. **Momentum over completeness.** A member should always be able to do one thing
+   right now without reading anything.
+5. **No dead ends.** Every number, badge and warning opens the record behind it.
+
+## FRASS-5P000 — Personalized Daily Customization Engine
+**Status: Constitutional, P0. Extends The Daily. Creates no second Daily.**
+
+> The Daily is one system. How it is arranged belongs to the member.
+
+- **Organisation, never capability.** Every layout shows the same information and
+  performs the same work. No layout is "advanced", "pro", or tied to a job title.
+- **Twenty designs.** The Design Library at `/workspace/daily-design` offers twenty
+  named arrangements — different order, density, emphasis and shape. A member can
+  also build their own and name it.
+- **Conversational first.** "Move Money Moves to the top." "Simplify my Daily."
+  "Make everything bigger." "Hide the numbers for now." The buttons exist only for
+  members who prefer buttons.
+- **Hidden is never deleted.** Hiding a block hides a view. The work, the money and
+  the records behind it are untouched, and one sentence brings it back.
+- **Non-negotiable blocks.** Security alerts, account warnings, fraud notices and
+  legal notices appear in every layout and cannot be hidden or collapsed away.
+- **It follows the member.** The arrangement loads instantly from the device and
+  syncs to the account, so phone, tablet and desktop agree.
+- **Sharing shares arrangement only.** A shared layout carries order and preferences
+  — never businesses, money, contacts or anything personal.
+
+Engineering: `src/lib/daily/customization.ts` (15 stable section ids, 20 designs,
+`resolveArrangement`), `src/lib/daily/conversational.ts` (natural-language parser),
+`src/components/workspace/daily-customization.tsx` (provider),
+`daily_layout_prefs` and `daily_layout_presets`.
