@@ -353,15 +353,19 @@ function MobileAccountLinks({ hasWorkspace, isAdmin }: { hasWorkspace: boolean; 
       </button>
 
       <Link
+        to="/room"
+        className="nav-glow block rounded-xl px-4 py-3 text-xs uppercase tracking-[0.25em] text-muted-foreground transition-colors hover:bg-foreground/5"
+        activeProps={{ className: "text-foreground bg-foreground/5" }}
+      >
+        My Workspace
+      </Link>
+      <Link
         to="/studio"
         className="nav-glow block rounded-xl px-4 py-3 text-xs uppercase tracking-[0.25em] text-muted-foreground transition-colors hover:bg-foreground/5"
         activeProps={{ className: "text-foreground bg-foreground/5" }}
       >
         🎬 FV Studios
       </Link>
-
-
-
       <Link
         to="/welcome-hall"
         className="nav-glow block rounded-xl px-4 py-3 text-xs uppercase tracking-[0.25em] text-muted-foreground transition-colors hover:bg-foreground/5"
@@ -398,22 +402,13 @@ function MobileAccountLinks({ hasWorkspace, isAdmin }: { hasWorkspace: boolean; 
         Academy District
       </Link>
       <Link
-        to="/workspace/profile"
+        to="/workspace/card"
         className="nav-glow block rounded-xl px-4 py-3 text-xs uppercase tracking-[0.25em] text-muted-foreground transition-colors hover:bg-foreground/5"
         activeProps={{ className: "text-foreground bg-foreground/5" }}
       >
-        Builder Profile
+        My Frass Card
       </Link>
 
-      {hasWorkspace && (
-        <Link
-          to="/workspace"
-          className="nav-glow block rounded-xl px-4 py-3 text-xs uppercase tracking-[0.25em] text-muted-foreground transition-colors hover:bg-foreground/5"
-          activeProps={{ className: "text-foreground bg-foreground/5" }}
-        >
-          Workspace
-        </Link>
-      )}
       {isAdmin && (
         <Link
           to="/founder"
