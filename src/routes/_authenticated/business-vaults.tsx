@@ -87,6 +87,7 @@ function FutureVaultsPage() {
   });
 
   const [openKey, setOpenKey] = useState<string | null>(null);
+  const [openFamily, setOpenFamily] = useState<string | null>(null);
   const [draftNotes, setDraftNotes] = useState<Record<string, string>>({});
   const [customLabel, setCustomLabel] = useState("");
 
