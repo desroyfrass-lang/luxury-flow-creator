@@ -2095,3 +2095,61 @@ a.ps-row:hover { border-color: color-mix(in srgb, var(--gold) 60%, transparent);
   color: var(--ws-ink); border-radius: 0.75rem; padding: 0.7rem 0.9rem; font-size: 0.9rem;
 }
 .frass-workspace .founder-os-input:focus { outline: none; border-color: var(--ws-gold); }
+
+/* ── FRASS KIDS ZONE — bright, rounded, never black (FRASS-0486E) ────────── */
+/* Scoped theme: any subtree with .kids-zone gets kid-friendly type + colours. */
+.kids-zone {
+  --font-display: "Fredoka", "Baloo 2", "Nunito", system-ui, sans-serif;
+  --font-sans: "Nunito", system-ui, sans-serif;
+
+  --background: oklch(0.98 0.02 95);
+  --foreground: oklch(0.33 0.07 265);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.33 0.07 265);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.33 0.07 265);
+  --primary: oklch(0.72 0.17 25);
+  --primary-foreground: oklch(1 0 0);
+  --secondary: oklch(0.93 0.06 200);
+  --secondary-foreground: oklch(0.33 0.07 265);
+  --muted: oklch(0.95 0.03 95);
+  --muted-foreground: oklch(0.52 0.05 265);
+  --accent: oklch(0.86 0.15 90);
+  --accent-foreground: oklch(0.33 0.07 265);
+  --border: oklch(0.55 0.08 265 / 18%);
+  --input: oklch(0.55 0.08 265 / 22%);
+  --ring: oklch(0.72 0.17 25);
+  --gold: #ff9f1c;
+  --ink: #2f3b8f;
+  --radius: 1.5rem;
+
+  background-color: var(--color-background);
+  color: var(--color-foreground);
+  font-family: var(--font-sans);
+}
+
+.kids-zone h1,
+.kids-zone h2,
+.kids-zone h3,
+.kids-zone h4 {
+  font-family: var(--font-display);
+  font-weight: 600;
+  text-transform: none;
+  letter-spacing: -0.01em;
+  line-height: 1.05;
+}
+
+/* Kid-friendly: no shouting tracking, no hard black, softer corners. */
+.kids-zone [class*="uppercase"] { text-transform: none; }
+.kids-zone [class*="tracking-["] { letter-spacing: 0.02em; }
+.kids-zone .rounded-sm,
+.kids-zone .rounded-md { border-radius: 1rem; }
+.kids-zone .rounded-xl,
+.kids-zone .rounded-2xl { border-radius: 1.75rem; }
+.kids-zone .text-\[10px\],
+.kids-zone .text-\[11px\] { font-size: 0.8125rem; }
+
+/* Age-world palettes — the whole zone shifts colour with the child's age. */
+.kids-zone[data-age="0-3"] { --primary: oklch(0.75 0.16 20); --accent: oklch(0.88 0.13 95); }
+.kids-zone[data-age="3-6"] { --primary: oklch(0.74 0.15 195); --accent: oklch(0.88 0.15 130); }
+.kids-zone[data-age="6-12"] { --primary: oklch(0.66 0.17 275); --accent: oklch(0.84 0.16 60); }
