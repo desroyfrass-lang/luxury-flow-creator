@@ -54,6 +54,7 @@ import {
   profileComplete,
   type PartnerProfile,
 } from "@/lib/business/partner-profile";
+import { DiscoveryOffers } from "@/components/frassy/discovery-offers";
 import {
   BUILD_IT_MONETIZE_IT,
   MONETIZATION_RULE,
@@ -231,6 +232,9 @@ function MoneyMovesPage() {
         </p>
 
         <LaunchModeBanner className="mt-5" />
+
+        {/* FRASS-0483 — Continuous Discovery: skills Frassy overheard become offers. */}
+        <DiscoveryOffers className="mt-5" onProfileChange={setPartner} />
 
         {/* FRASS-0482 — the business already inside the person, discovered first. */}
         <div className="mt-5">
