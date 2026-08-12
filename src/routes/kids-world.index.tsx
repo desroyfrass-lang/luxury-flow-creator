@@ -151,7 +151,7 @@ function KidsWorldHome() {
       </section>
 
       {/* Kindness, quietly */}
-      <section className="border-t border-[color:var(--gold)]/20 bg-[color-mix(in_oklab,var(--foreground)_4%,transparent)]">
+      <section className="border-t border-primary/20 bg-[color-mix(in_oklab,var(--foreground)_4%,transparent)]">
         <div className="mx-auto max-w-[1600px] px-6 py-14 lg:px-12">
           <p className="text-[10px] uppercase tracking-[0.38em] text-primary">
             The Frass Hill way
@@ -167,7 +167,7 @@ function KidsWorldHome() {
           <div className="mt-8 flex flex-wrap gap-3">
             <Link
               to="/frass-kids"
-              className="rounded-full border border-[color:var(--gold)]/50 px-7 py-3 text-[11px] font-bold uppercase tracking-[0.26em] text-primary"
+              className="rounded-full border border-primary/50 px-7 py-3 text-[11px] font-bold uppercase tracking-[0.26em] text-primary"
             >
               🛍 Shop Kids
             </Link>
