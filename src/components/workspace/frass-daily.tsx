@@ -24,6 +24,7 @@ import type { SectionId } from "@/lib/daily/customization";
 import { isKankoDaily } from "@/lib/daily/kanko";
 import {
   KankoCocoVintage,
+  KankoEndOfDay,
   KankoFrassyNote,
   KankoFreedomProgress,
   KankoFreight,
