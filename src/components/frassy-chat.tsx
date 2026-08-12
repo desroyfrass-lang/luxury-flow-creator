@@ -28,6 +28,7 @@ import { VOICE_TIER_LABELS } from "@/lib/voice/voice-tier";
 // FRASS-0478 — she learns how you like to work, never who you are.
 import {
   observeInterruption,
+  observeNudge,
   observeTurn,
   workingStyleContext,
 } from "@/lib/frassy/working-style";
@@ -194,6 +195,9 @@ export function FrassyChat({ embedded = false }: { embedded?: boolean } = {}) {
 
     const controller = new AbortController();
     abortRef.current = controller;
+
+    // Did they take her up on the gentle offer of help, or work straight past it?
+    observeNudge(startup.presence === "idle");
 
     // FRASS-0478 — observe *how* they work (channel, length, timing), then hand
     // Frassy manner-guidance only. Nothing here leaves the browser as raw data.
