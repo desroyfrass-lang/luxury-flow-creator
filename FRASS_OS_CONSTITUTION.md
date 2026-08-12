@@ -1116,3 +1116,29 @@ Engineering: `src/lib/daily/customization.ts` (15 stable section ids, 20 designs
 `resolveArrangement`), `src/lib/daily/conversational.ts` (natural-language parser),
 `src/components/workspace/daily-customization.tsx` (provider),
 `daily_layout_prefs` and `daily_layout_presets`.
+
+## FRASS-P001 — Kanko's Daily (Version 1) · Reference Implementation — LOCKED
+
+The first personalized Daily. Opens with the Founder's own recorded greeting,
+then: Freedom Progress (progress toward freedom, not just money), three Money
+Moves ordered by financial impact, Coco Vintage's publishing goal (Frassy
+prepares description, history, SEO and pricing — Kanko only reviews and
+approves), Freight Brokerage in Preparation Mode, one Frassy encouragement,
+optional journal, real alerts only, and an End of Day summary.
+
+Personalization changes words, order and pace. It never changes capability.
+
+Rollout, one at a time: Kanko → Mother → Father → Brother → Son → Laka Joe →
+Chiki → Sheldon → BimBim → Vladimir. Kanko's Daily runs a full week and is
+observed for flow (what was ignored, moved, completed, requested, never used)
+before the next Daily is designed.
+
+## Founder Daily Amendment — Partner Progress Center & Legacy Dashboard
+
+A Founder should never have to ask "how is everyone doing?". Frassy answers it
+inside the Founder's Daily only — partner overview, per-partner progress cards,
+an Attention Queue that surfaces only meaningful events, and a Weekly Founder
+Report each Sunday.
+
+The Legacy Dashboard is the Founder's private widget. It does not measure money.
+It measures lives changed.
