@@ -191,7 +191,7 @@ function FvStudiosPage() {
                 <ol className="mt-3 space-y-1.5 text-xs text-white/60">
                   <li>$100 arrives from the streaming services.</li>
                   <li>−$8 processing and distribution costs.</li>
-                  <li>−$10 to a featured artist, split set by the creator.</li>
+                  <li>−$10 to a featured Music Creator, split set by the creator.</li>
                   <li>−$12.30 Frass Vision Network participation (15%).</li>
                   <li className="text-emerald-300">$69.70 lands in the creator&apos;s Frass Wallet.</li>
                 </ol>

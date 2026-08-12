@@ -949,3 +949,125 @@ No duplicate business logic.
 
 **Founder Principle:** Every new capability should make Frass simpler, not more
 complicated. Consistency builds confidence, and confidence builds trust.
+
+
+---
+
+## FRASS-0495 — Creative Identity Classification (Constitutional Amendment, P0)
+
+**One word. One meaning.** This amendment clarifies terminology only. It creates no
+duplicate creative systems.
+
+**Constitutional Rule:** the generic term "Artist" is never used as a primary member
+classification when a more specific discipline exists. Members are identified by what
+they create.
+
+**🎨 Visual Creator** — painters, illustrators, sketch artists, digital artists,
+sculptors, fine artists, photographers, NFT artists, mixed-media creators.
+Primary ecosystem: **Frass Gallery**.
+Money Moves: gallery · original artwork · prints · licensing · exhibitions · NFTs.
+
+**🎵 Music Creator** — singers, songwriters, producers, DJs, bands, instrumentalists,
+composers, vocalists, recording artists.
+Primary ecosystem: **FV Studios**.
+Money Moves: recording · publishing · distribution · live performances · merchandise ·
+royalties.
+
+The pathways remain completely separate.
+
+**Business Builder:** when a member selects their profession, Frassy never assumes what
+"artist" means. She discovers the creative discipline and guides them to the correct
+Business Vault, Money Moves and creative tools.
+
+**Frassy's role:** if a member says "I'm an artist", she clarifies — *"Wonderful. What
+kind of creative work do you do? Visual art, music, or another creative field?"* She
+never makes assumptions.
+
+**Existing members:** migrate stored "Artist" values only where the discipline can be
+determined safely. Where it cannot, keep the existing value until the member updates
+their profile. Never guess automatically.
+
+**Search & discovery:** searching "artist" returns both Visual Creators and Music
+Creators, each displayed with its proper classification.
+
+**Other overloaded labels** receive the same treatment: Coach → Business / Fitness /
+Life / Career Coach · Writer → Author / Copywriter / Screenwriter / Blogger · Designer →
+Graphic / Fashion / Interior / UX Designer. One profession maps to one clear business
+path.
+
+**Founder Principle:** Frass recognizes creators by the work they bring into the world.
+Every creator deserves tools designed for their craft — not a generic label that blurs
+their path.
+
+---
+
+## FRASS-0496 — One World Navigation (Constitutional Amendment, P0)
+
+**Every door leads somewhere familiar.** Navigation is not redesigned and no duplicate
+menus are created; the existing navigation architecture is extended.
+
+**Constitutional Rule:** every destination inside Frass must feel like another room
+inside the same building. Members never feel they have left one system and entered
+another.
+
+Members must always know: where they are · where they came from · where they can go next
+· how to return. Navigation never creates uncertainty.
+
+**Daily & Workspace (permanent):** opening the Daily always places it above the
+Workspace; closing the Daily always reveals the Workspace underneath; opening the
+Workspace restores the member's working environment. They are companion experiences,
+never independent.
+
+**Frassy continuity:** she is the same everywhere, never restarts, never forgets the
+conversation, and changes responsibilities without changing presence.
+
+**Visual continuity:** shared design language, typography, motion, navigation behaviour
+and accessibility standards. Each area may have personality; the platform always feels
+unmistakably like Frass.
+
+**Context preservation:** unsaved work protected where appropriate · conversations
+continue · progress stays visible · navigation history feels intuitive. Members are never
+punished for exploring.
+
+**Design question for every future feature:** *"If a member closed their eyes for one
+second and reopened them in this room, would they immediately know they're still inside
+Frass?"* If the answer is no, the feature is redesigned to fit the ecosystem.
+
+**Founder Principle:** Frass is not a collection of pages. It is one living world.
+
+---
+
+## FRASS-0497 — Frassy Knowledge Architecture (Constitutional Amendment, P0)
+
+**One Frassy. Unlimited expertise.** Extends FRASS-0479 (Architecture Freeze). No second
+AI, no department-specific assistants, no specialized chatbots.
+
+**Constitutional Rule:** every new department extends Frassy's knowledge. Nothing creates
+another personality, another memory or another assistant.
+
+**Department knowledge layers:** Real Estate · Healthcare · Legal Resources · Travel ·
+Education · Finance · Freight Brokerage · Visual Creation · Music Creation · Fitness ·
+Wellness · Agriculture · Construction · Hospitality. Each becomes a knowledge layer, not
+another AI.
+
+**Context switching:** in Frass Gallery she thinks like a guide for visual creators; in
+FV Studios like a guide for music creators; in the Financial Center like a financial
+assistant. The member never changes assistants — Frassy changes expertise.
+
+**Knowledge growth** comes from new Business Vaults, new Money Moves, new platform
+features, Founder-approved knowledge, better explanations and better coaching. Her
+identity never changes; only her knowledge grows.
+
+**Member confidence:** members never wonder which AI they are speaking to. The answer is
+always Frassy.
+
+**Constitutional Rules:** One Frassy · One personality · One memory · One voice · One
+conversation · Unlimited knowledge · Unlimited departments · Unlimited industries · No
+duplicate assistants · No competing AI identities.
+
+**Permanent development rule:** whenever a new department is proposed, the first
+architectural question is *"What does Frassy need to learn?"* — never *"Do we need
+another AI?"*
+
+**Founder Principle:** Frass grows by teaching one trusted assistant new skills, not by
+creating a collection of disconnected assistants.
