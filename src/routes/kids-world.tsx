@@ -27,7 +27,8 @@ function KidsWorldLayout() {
         <div className="mx-auto flex max-w-[1600px] flex-wrap items-center gap-3 px-6 py-3 lg:px-12">
           <Link
             to="/kids-world"
-            className="text-[10px] font-bold uppercase tracking-[0.28em] text-[color:var(--gold)]"
+            className="text-xs font-bold tracking-wide text-[color:var(--primary)]"
+
           >
             🌈 Kids World
           </Link>
