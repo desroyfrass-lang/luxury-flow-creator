@@ -133,3 +133,4 @@ For Me is personal, never algorithmic — no "chosen for you".
 - [FRASS-0490 Founding Partner Program](mem://features/frass-0490-founding-partner-program) — Founder-only lifetime recognition, visibility control, Founding Stories, Kanko Principle, founding period
 - [FRASS-0492/0493/0494 Rights, Trust & Integrity](mem://features/frass-0492-0494-rights-trust-integrity) — Layered content protection + share cards, verified-only trust profile, audit-before-build architecture law
 - [FRASS-0495/0496/0497 Creative identity, navigation, knowledge](mem://features/frass-0495-0497-identity-navigation-knowledge) — Visual vs Music Creator classification, One World Navigation, Frassy knowledge layers
+- [FRASS-0503 Family of Business Vaults](mem://features/frass-0503-business-vault-family) — Seamstress Vault flagship + 10-Vault family, Discover→Build→Monetize pathway per trade, no duplicate commerce
