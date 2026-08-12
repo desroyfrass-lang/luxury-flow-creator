@@ -12,14 +12,12 @@ function RoomScreen() {
 }
 
 export const Route = createFileRoute("/_authenticated/room")({
-  validateSearch: (search: Record<string, unknown>) => ({
-    daily:
-      search["daily"] === true ||
-      search["daily"] === "true" ||
-      search["daily"] === "1"
-        ? true
-        : undefined,
-  }),
+  validateSearch: (search: Record<string, unknown>): { daily?: true } =>
+    search["daily"] === true ||
+    search["daily"] === "true" ||
+    search["daily"] === "1"
+      ? { daily: true }
+      : {},
   head: () => ({
     meta: [
       { title: "My Workspace — Frass Operating System" },
