@@ -1,6 +1,8 @@
 # Project Memory
 
 ## Core
+Kids pages are never black: bright age-tinted .kids-zone theme, rounded kid-friendly fonts (Fredoka/Nunito).
+FRASS-0491 (FOR ME architecture freeze) is PINNED — do not execute until the current constitutional roadmap is done.
 Brand name is always "Frass" (two s's) — never "Fras". Applies to Frass Hill, Frass Kicks, Frass Drip.
 Stay true to the original Frass Kicks aesthetic.
 Frass Hill imagery is photorealistic and cinematic — no cartoon art (except the husband hero, Bob Marley graffiti, and kids sections).
