@@ -43,6 +43,10 @@ export type SectionId =
   | "balance-check"
   | "affiliate-prep"
   | "success-dashboard"
+  | "balance-of-day"
+  | "knowledge-preservation"
+  | "business-development"
+  | "wellbeing"
   | "partner-progress"
   | "legacy-dashboard";
 
@@ -247,6 +251,31 @@ export const DAILY_SECTIONS: SectionMeta[] = [
     plain: "Outcomes, not activity — what actually changed in your life.",
     aliases: ["success", "outcomes", "results", "dashboard"],
   },
+  // FRASS-P002-Z — knowledge-economy blueprint blocks (Mother's Daily).
+  {
+    id: "balance-of-day",
+    label: "Today's balance",
+    plain: "How today splits between money, knowledge, business and rest.",
+    aliases: ["balance of day", "today's balance", "my day", "shape of my day"],
+  },
+  {
+    id: "knowledge-preservation",
+    label: "Knowledge Preservation",
+    plain: "Your stories and know-how, kept exactly the way you want them.",
+    aliases: ["knowledge", "vault", "stories", "wisdom", "legacy", "preserve"],
+  },
+  {
+    id: "business-development",
+    label: "Business Development",
+    plain: "Businesses that grew out of your own experience.",
+    aliases: ["business development", "services", "my services", "offers"],
+  },
+  {
+    id: "wellbeing",
+    label: "Well-being",
+    plain: "One gentle note. Never another list.",
+    aliases: ["wellbeing", "well being", "rest", "take care"],
+  },
   // Founder Daily Amendment — Founder-only widgets.
   {
     id: "partner-progress",
@@ -283,7 +312,11 @@ export const RECOMMENDED_ORDER: SectionId[] = [
   "learning-unlock",
   "affiliate-prep",
   "freight-prep",
+  "balance-of-day",
+  "knowledge-preservation",
+  "business-development",
   "balance-check",
+  "wellbeing",
   "success-dashboard",
   "todays-priorities",
   "partner-progress",
