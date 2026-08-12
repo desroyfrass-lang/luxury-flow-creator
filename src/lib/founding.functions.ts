@@ -115,12 +115,20 @@ export const updateMyFoundingRecord = createServerFn({ method: "POST" })
       .parse(d ?? {}),
   )
   .handler(async ({ context, data }): Promise<FoundingRecord> => {
-    const patch: Record<string, unknown> = {};
+    const patch: {
+      visibility?: string;
+      show_on_card?: boolean;
+      story_public?: boolean;
+      story_why?: string | null;
+      story_hoped?: string | null;
+      story_journey?: string | null;
+      story_lessons?: string | null;
+    } = {};
     if (data.visibility !== undefined) patch.visibility = data.visibility;
     if (data.showOnCard !== undefined) patch.show_on_card = data.showOnCard;
     if (data.storyPublic !== undefined) patch.story_public = data.storyPublic;
     for (const key of ["story_why", "story_hoped", "story_journey", "story_lessons"] as const) {
-      if (data[key] !== undefined) patch[key] = data[key];
+      if (data[key] !== undefined) patch[key] = data[key] ?? null;
     }
     const { data: row, error } = await context.supabase
       .from("founding_partners")
