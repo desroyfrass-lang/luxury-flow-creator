@@ -59,8 +59,8 @@ export const VAULT_IDEAS: VaultIdea[] = [
   {
     key: "freight",
     emoji: "🚛",
-    label: "Freight & Logistics",
-    summary: "A modern freight company built on ~15 years of industry experience.",
+    label: "Freight Brokerage & Logistics",
+    summary: "A brokerage that coordinates freight — owning the customer experience, not the trucks. Built on ~15 years of industry experience.",
     rationale:
       "This is not a business started from scratch — it is fifteen years of freight and logistics knowledge turned into a company. Long term it is the most scalable idea on this shelf, because the work can be systemised and eventually run with light day-to-day involvement.",
     roadmap: [

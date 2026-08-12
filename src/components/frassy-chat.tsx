@@ -220,6 +220,8 @@ export function FrassyChat({ embedded = false }: { embedded?: boolean } = {}) {
           interactionMode: spoken ? "voice_and_text" : "text",
           voiceAvailable: voice.voiceAvailable,
           workingStyleContext: workingStyleContext(style) || undefined,
+          // FRASS-0482 — Frassy plans around the business already inside the person.
+          partnerContext: partnerContext(loadProfile()) || undefined,
           stream: false,
         }),
       });
