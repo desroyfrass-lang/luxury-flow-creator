@@ -26,7 +26,11 @@ import { useFrassyStartup } from "@/hooks/use-frassy-startup";
 import { loadTranscript, saveTranscript, type FrassyTurn } from "@/lib/frassy/transcript";
 import { VOICE_TIER_LABELS } from "@/lib/voice/voice-tier";
 // FRASS-0478 — she learns how you like to work, never who you are.
-import { observeTurn, workingStyleContext } from "@/lib/frassy/working-style";
+import {
+  observeInterruption,
+  observeTurn,
+  workingStyleContext,
+} from "@/lib/frassy/working-style";
 
 type ProductCard = {
   handle: string;
