@@ -44,6 +44,12 @@ function KidsWorldLayout() {
           ))}
           <div className="ml-auto flex items-center gap-3">
             <Link
+              to="/kids-world/street"
+              className="rounded-full bg-primary/15 px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[0.2em] text-primary hover:bg-primary/25"
+            >
+              🏘 Frass Street
+            </Link>
+            <Link
               to="/kids-world/discover"
               className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground hover:text-foreground"
             >
