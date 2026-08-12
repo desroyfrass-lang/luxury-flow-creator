@@ -219,7 +219,16 @@ export type PartnerAnswers = {
   certifications: string;
   askedFor: string;
   neverAgain: string;
+  // FRASS-0498 — path questions. Never preference questions.
+  energizes: string;
+  drains: string;
+  paidFor: string;
+  resources: string;
+  started: string;
+  tenYears: string;
+  limitations: string;
 };
+
 
 export const INTERVIEW: InterviewQuestion[] = [
   {
@@ -260,12 +269,57 @@ export const INTERVIEW: InterviewQuestion[] = [
     helper: "I'll keep it off your Daily. Promise.",
     kind: "text",
   },
+  {
+    id: "energizes",
+    ask: "What kind of work actually energizes you — the sort where you look up and hours have gone?",
+    helper: "That's usually the work you'll still be doing in ten years.",
+    kind: "text",
+  },
+  {
+    id: "drains",
+    ask: "And what drains you? Be blunt.",
+    helper: "I'll design around it instead of pretending it isn't there.",
+    kind: "text",
+  },
+  {
+    id: "paidFor",
+    ask: "What have people already paid you for — even once, even informally?",
+    helper: "Money that already changed hands is proof. I start there.",
+    kind: "text",
+  },
+  {
+    id: "resources",
+    ask: "What have you already got to work with? Inventory, equipment, licences, a network, an audience, space.",
+    helper: "Most people are richer in resources than they think.",
+    kind: "text",
+    chips: ["Inventory", "Camera / phone", "Vehicle", "Licence", "Workspace", "A following", "Contacts"],
+  },
+  {
+    id: "started",
+    ask: "What businesses have you already started, finished or abandoned?",
+    helper: "Half-built things are often the fastest to finish.",
+    kind: "text",
+  },
+  {
+    id: "tenYears",
+    ask: "What would you honestly enjoy building for the next ten years?",
+    helper: "I'd rather build one thing you love than five you resent.",
+    kind: "text",
+  },
+  {
+    id: "limitations",
+    ask: "Last one — what responsibilities or limitations should I plan around right now?",
+    helper: "Work, family, health, school, a season that won't last. No judgement, it just shapes the plan.",
+    kind: "text",
+    chips: ["Full-time job", "Parental leave", "Medical leave", "Student", "Seasonal work", "Retired", "Caring for family"],
+  },
 ];
 
 export const HOURS_QUESTION =
   "Realistically, how much time can you give this each day? Be honest — I'd rather plan small and true.";
 export const GOAL_QUESTION = "And what would this need to earn each month for it to matter to you?";
 export const COMFORT_QUESTION = "How would you like me to explain things?";
+
 
 // ── Profile ──────────────────────────────────────────────────────────────────
 
@@ -280,6 +334,9 @@ export type PartnerProfile = {
   answers: Partial<PartnerAnswers>;
   hoursPerDay: number;
   monthlyGoal: number;
+  /** FRASS-0498 — a temporary life circumstance the Daily plans around. */
+  circumstance?: string | null;
+
   comfort: Comfort;
   completedAt: string | null;
   updatedAt: string;
@@ -292,6 +349,8 @@ export const EMPTY_PROFILE: PartnerProfile = {
   answers: {},
   hoursPerDay: 1,
   monthlyGoal: 0,
+  circumstance: null,
+
   comfort: "plain",
   completedAt: null,
   updatedAt: "",
