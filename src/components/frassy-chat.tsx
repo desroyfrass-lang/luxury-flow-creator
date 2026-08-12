@@ -263,6 +263,8 @@ export function FrassyChat({ embedded = false }: { embedded?: boolean } = {}) {
   // Push-to-talk: press → record, press again → transcribe → one spoken turn.
   async function toggleMic() {
     if (voice.phase === "speaking") {
+      // Cutting her off mid-sentence is the clearest "shorter, please" signal.
+      observeInterruption();
       voice.stopSpeaking();
       return;
     }
