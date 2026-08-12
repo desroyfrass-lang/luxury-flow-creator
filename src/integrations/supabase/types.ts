@@ -2110,6 +2110,7 @@ export type Database = {
           image_url: string | null
           inspiration: string | null
           is_published: boolean
+          license_grant: string
           license_terms: string | null
           medium: string | null
           nft_enabled: boolean
@@ -2117,6 +2118,7 @@ export type Database = {
           position: number
           print_from_price: number | null
           prints_available: boolean
+          protection_level: string
           signed_editions: boolean
           slug: string
           source: string
@@ -2125,6 +2127,7 @@ export type Database = {
           thumb_url: string | null
           title: string
           updated_at: string
+          watermark_enabled: boolean
           year_created: number | null
         }
         Insert: {
@@ -2145,6 +2148,7 @@ export type Database = {
           image_url?: string | null
           inspiration?: string | null
           is_published?: boolean
+          license_grant?: string
           license_terms?: string | null
           medium?: string | null
           nft_enabled?: boolean
@@ -2152,6 +2156,7 @@ export type Database = {
           position?: number
           print_from_price?: number | null
           prints_available?: boolean
+          protection_level?: string
           signed_editions?: boolean
           slug: string
           source?: string
@@ -2160,6 +2165,7 @@ export type Database = {
           thumb_url?: string | null
           title: string
           updated_at?: string
+          watermark_enabled?: boolean
           year_created?: number | null
         }
         Update: {
@@ -2180,6 +2186,7 @@ export type Database = {
           image_url?: string | null
           inspiration?: string | null
           is_published?: boolean
+          license_grant?: string
           license_terms?: string | null
           medium?: string | null
           nft_enabled?: boolean
@@ -2187,6 +2194,7 @@ export type Database = {
           position?: number
           print_from_price?: number | null
           prints_available?: boolean
+          protection_level?: string
           signed_editions?: boolean
           slug?: string
           source?: string
@@ -2195,6 +2203,7 @@ export type Database = {
           thumb_url?: string | null
           title?: string
           updated_at?: string
+          watermark_enabled?: boolean
           year_created?: number | null
         }
         Relationships: [
@@ -4535,6 +4544,48 @@ export type Database = {
           updated_at?: string
           url?: string | null
           user_id?: string
+        }
+        Relationships: []
+      }
+      verified_feedback: {
+        Row: {
+          author_id: string
+          body: string | null
+          created_at: string
+          experience: string
+          id: string
+          is_published: boolean
+          removed_by_founder: boolean
+          source: string
+          source_id: string
+          subject_id: string
+          updated_at: string
+        }
+        Insert: {
+          author_id: string
+          body?: string | null
+          created_at?: string
+          experience: string
+          id?: string
+          is_published?: boolean
+          removed_by_founder?: boolean
+          source: string
+          source_id: string
+          subject_id: string
+          updated_at?: string
+        }
+        Update: {
+          author_id?: string
+          body?: string | null
+          created_at?: string
+          experience?: string
+          id?: string
+          is_published?: boolean
+          removed_by_founder?: boolean
+          source?: string
+          source_id?: string
+          subject_id?: string
+          updated_at?: string
         }
         Relationships: []
       }

@@ -131,3 +131,4 @@ For Me is personal, never algorithmic — no "chosen for you".
 - [FRASS-0478 Frassy Learns You](mem://features/frass-0478-frassy-learns-you) — Working-style learning (voice/text, depth, timing, reminders); architecture frozen
 - [FRASS-0483 Services, Continuous Discovery, Economy Principle](mem://features/frass-0483-services-discovery-economy) — Frass Services marketplace, never-ending discovery interview, Frass-first recommendation rule, Money Move API future rule
 - [FRASS-0490 Founding Partner Program](mem://features/frass-0490-founding-partner-program) — Founder-only lifetime recognition, visibility control, Founding Stories, Kanko Principle, founding period
+- [FRASS-0492/0493/0494 Rights, Trust & Integrity](mem://features/frass-0492-0494-rights-trust-integrity) — Layered content protection + share cards, verified-only trust profile, audit-before-build architecture law
