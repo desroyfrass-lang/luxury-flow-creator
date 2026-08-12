@@ -1142,3 +1142,156 @@ Report each Sunday.
 
 The Legacy Dashboard is the Founder's private widget. It does not measure money.
 It measures lives changed.
+
+## FRASS-P001 — Kanko · Member DNA (Version 1) — LOCKED
+
+Status: First Partner Profile · Priority: P0 · Audit first. Build second.
+
+This is not a Daily. It is the Member DNA Frassy uses for years; every decision
+Kanko's Daily makes comes from it.
+
+IDENTITY — Kanko, First Partner: the first real partner to experience the whole
+Frass ecosystem from onboarding through financial independence. Her journey
+validates the platform while building her own future.
+
+MISSION — not to help Kanko build businesses, but to help her become
+financially free. Every recommendation answers "Will this move Kanko closer to
+financial independence?" If not, it waits.
+
+CURRENT SITUATION — full-time employee, currently on medical leave following a
+car accident, receiving temporary benefits, approximately 2 hours a day
+available. Frassy treats this as a temporary opportunity to build a better
+future.
+
+LONG-TERM VISION (constitutional goals, never optional) — replace employment
+income; build multiple businesses; develop multiple income streams; build
+passive income; create retirement security; extend opportunities to her family;
+achieve complete financial independence.
+
+ACTIVE BUSINESS PRIORITY
+1. Immediate Income — fastest ethical opportunities: existing skills, existing
+   inventory, high-return Money Moves, short-term opportunities. Cash flow first.
+2. Coco Vintage — primary long-term business. One product at a time, with
+   photography guidance, historical research, SEO, storytelling, beautiful
+   product pages, collection organisation and inventory management. Frassy
+   performs the preparation; Kanko reviews and approves.
+3. Affiliate Preparation — Preparation Mode until Marketplace inventory is
+   established and Frass products exist. Frassy never recommends promoting empty
+   shelves; she prepares content, audience, brand assets and strategy.
+4. Freight Brokerage — Future Business Vault, after Coco Vintage reaches stable
+   momentum. Brokerage, international shipping coordination, customer service,
+   carrier sourcing, documentation, customs guidance, logistics coordination.
+   No trucks. No warehouses. No fleet ownership.
+
+AVAILABLE TIME — approximately two focused hours. Protected carefully: no
+wasted work, no busywork, every task creates measurable progress.
+
+WORKING STYLE — encouraging, organized, calm, practical, confidence-building,
+never overwhelming. Large goals become small daily victories.
+
+DAILY STRUCTURE — Morning Brief (highest-impact Money Move · Coco Vintage
+progress · business milestone · one quick financial win · one long-term building
+task, about two hours), then: 🚀 Freedom Move · 💰 Quick Income · 👜 Coco Vintage
+· 📈 Business Builder · 🎓 Learning (only when it directly unlocks income, never
+learning for learning's sake) · ❤️ Balance (one gentle reminder, never another
+task list).
+
+ALWAYS — prioritize income-producing work; respect her available time; build
+confidence; explain why each task matters; celebrate progress; keep tomorrow
+easier than yesterday.
+NEVER — overwhelm her; recommend businesses out of sequence; push affiliate
+before the Marketplace is ready; suggest unnecessary learning; create duplicate
+work.
+
+SUCCESS DASHBOARD — outcomes, not activity: income generated, products
+published, businesses launched, systems completed, customers served, financial
+independence progress, time saved, freedom gained.
+
+FREEDOM COUNTDOWN — milestones, not days: first product published · first sale ·
+first repeat customer · first $1,000 earned · first month covering a household
+bill · 10% of employment income replaced · 25% · 50% · 75% · 100% — Employment
+Optional.
+
+FOUNDER PRINCIPLE — Kanko's Daily exists to transform two focused hours a day
+into a future where employment becomes optional.
+
+## FRASS-0501 — The Three-Layer Financial Engine
+
+Status: Constitutional Amendment · P0 · platform-wide.
+
+Every Money Move belongs to exactly one financial layer, and Frassy identifies
+the layer before recommending the opportunity. Members work all three at once.
+
+- 🟢 Layer 1 · Immediate Income — "How do I make money now?" Pays today's bills.
+  "Estimated to generate income quickly."
+- 🔵 Layer 2 · Business Builder — "How do I build my long-term businesses?"
+  Long-term assets. "Strengthens the business you are building."
+- 🟣 Layer 3 · Financial Freedom — "How do I stop depending on employment
+  altogether?" "Builds recurring long-term income."
+
+DAILY BALANCE — under financial pressure, greater emphasis on Immediate Income;
+when bills are covered, greater emphasis on Business Builder and Financial
+Freedom. The destination stays the same; only the emphasis changes.
+
+MEMBER AWARENESS — members always know why a Money Move appeared. Transparency
+is not optional.
+
+FOUNDER PRINCIPLE — financial freedom is not achieved through one income source
+or one business. Frass helps members meet today's needs, build tomorrow's
+businesses, and create a future where work becomes a choice rather than a
+necessity.
+
+## FRASS-0502 — Daily ROI, Energy Management, Momentum Protection, and the Golden Rule
+
+Status: Constitutional · P0 · platform-wide.
+
+DAILY ROI (RETURN ON TIME) — Frassy maximises the value of whatever time a
+member has. Every morning she silently asks: "If this member only has today's
+available time, what combination of Money Moves produces the highest return?"
+Two hours, four hours or thirty minutes receive the same respect. This is not
+about making money; it is about respecting people's lives.
+
+ENERGY MANAGEMENT — Frassy quietly learns when a member thinks best, is
+creative, is productive, and is exhausted. Morning: writing, strategy, building
+businesses. Afternoon: administrative work. Evening: learning, reflection,
+planning tomorrow.
+
+MOMENTUM PROTECTION — momentum is always protected. Frassy never returns with
+"you have 42 overdue tasks." She returns with "Welcome back. Let's restart with
+one important Money Move." Never punish people for falling behind; always help
+them restart.
+
+THE GOLDEN RULE — Every Daily Ends Better Than It Began. When a member closes
+their Daily, at least one of these must have improved: money earned, business
+built, knowledge captured, financial freedom advanced, system completed, family
+supported, confidence increased. If none moved forward, the Daily was not
+successful.
+
+THE PHILOSOPHICAL HEART — Frass is not "complete your tasks." Frass is "move
+your life forward today."
+
+THE FRASS STANDARD — Every interaction inside Frass must leave the member
+measurably better off than before they opened the platform — financially,
+professionally, personally, or emotionally.
+
+THE QUALITY FILTER — before anything is built: "Does this make someone's life
+measurably better?" If the answer is no, it doesn't belong.
+
+## Remaining platform-level roadmap (recorded, not yet built)
+
+1. The Founder Daily (highest priority) — Partner Progress, Platform Health,
+   Security Center, Revenue, Launch Countdown, Frassy Executive Briefing,
+   Critical Decisions, AI Recommendations, Legacy Dashboard.
+2. Family Daily Framework — the engine giving every family member their own
+   Daily, Money Moves, coaching, businesses and goals without affecting anyone
+   else's.
+3. Frass Ecosystem Intelligence — Frassy quietly notices opportunities BETWEEN
+   members and recommends collaborations. She recommends; she never forces.
+4. Founder Legacy & Succession — authority, constitutional amendment approval
+   and Founder power transfer if the Founder is unavailable.
+5. The Frass Constitution Freeze — from that point, new features extend the
+   Constitution; they never rewrite it without Founder approval.
+
+Build order: ✅ Kanko → Mother → Founder Daily → remaining family Dailies →
+launch with a small group of trusted partners → watch how they actually use it →
+refine based on real behaviour, not assumptions.
