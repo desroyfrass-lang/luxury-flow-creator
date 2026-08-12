@@ -150,12 +150,23 @@ export const MOTHER_MOVE_LIMIT = 3;
 
 export const MOTHER_MOVES: MotherMove[] = [
   {
+    id: "first-venture",
+    label: "Photograph three coins from your collection",
+    why: "Your first business isn't something we invent — it's something you already own. I'll organise them and prepare them for identification.",
+    impact: "Your first business",
+    minutes: 15,
+    href: "/workspace/first-venture",
+    layer: "immediate-income",
+    pillar: "income",
+    weight: 6,
+  },
+  {
     id: "sell-existing",
     label: "List one thing you already own",
     why: "Money you can see this week, with no new skill required.",
     impact: "Fastest honest income",
     minutes: 20,
-    href: "/workspace/wallet",
+    href: "/workspace/first-venture",
     layer: "immediate-income",
     pillar: "income",
     weight: 5,
@@ -263,3 +274,18 @@ export function motherEncouragement(day: number): string {
 // ── Founder principle ───────────────────────────────────────────────────────
 
 export const MOTHER_FOUNDER_PRINCIPLE = KNOWLEDGE_ECONOMY_BLUEPRINT.founderPrinciple;
+
+// ── FRASS-P002-E — First Business Venture ───────────────────────────────────
+// Her first business is not something Frass invents. It is something she
+// already owns. The coin collection is the first one; the pattern is universal.
+
+export const MOTHER_FIRST_VENTURE = {
+  id: "coin-collection",
+  category: "coins" as const,
+  title: "Your coin collection",
+  vision:
+    "Her first opportunity to earn while learning how Frass works — a real, tangible business she already owns.",
+  href: "/workspace/first-venture",
+  milestone: "First Dollar Earned",
+  lowestRisk: "Income with the lowest possible financial risk.",
+} as const;

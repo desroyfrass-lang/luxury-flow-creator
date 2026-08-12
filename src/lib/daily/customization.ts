@@ -46,6 +46,7 @@ export type SectionId =
   | "balance-of-day"
   | "knowledge-preservation"
   | "business-development"
+  | "first-venture"
   | "wellbeing"
   | "partner-progress"
   | "legacy-dashboard";
@@ -270,6 +271,20 @@ export const DAILY_SECTIONS: SectionMeta[] = [
     plain: "Businesses that grew out of your own experience.",
     aliases: ["business development", "services", "my services", "offers"],
   },
+  // FRASS-P002-E — the first business is something she already owns.
+  {
+    id: "first-venture",
+    label: "First Business Venture",
+    plain: "The valuables you already own, organised and prepared for sale.",
+    aliases: [
+      "first venture",
+      "first business",
+      "hidden assets",
+      "my collection",
+      "coins",
+      "coin collection",
+    ],
+  },
   {
     id: "wellbeing",
     label: "Well-being",
@@ -315,6 +330,7 @@ export const RECOMMENDED_ORDER: SectionId[] = [
   "balance-of-day",
   "knowledge-preservation",
   "business-development",
+  "first-venture",
   "balance-check",
   "wellbeing",
   "success-dashboard",

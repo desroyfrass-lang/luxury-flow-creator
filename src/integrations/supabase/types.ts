@@ -2336,6 +2336,90 @@ export type Database = {
           },
         ]
       }
+      hidden_assets: {
+        Row: {
+          appraisal_recommended: boolean
+          back_path: string | null
+          category: string
+          condition_note: string | null
+          country: string | null
+          created_at: string
+          denomination: string | null
+          estimated_high: number | null
+          estimated_low: number | null
+          front_path: string | null
+          id: string
+          listing_description: string | null
+          listing_price: number | null
+          listing_title: string | null
+          markings: string | null
+          name: string
+          notes: string | null
+          research_notes: string | null
+          sold_amount: number | null
+          sold_at: string | null
+          status: string
+          updated_at: string
+          user_id: string
+          venture: string
+          year_text: string | null
+        }
+        Insert: {
+          appraisal_recommended?: boolean
+          back_path?: string | null
+          category?: string
+          condition_note?: string | null
+          country?: string | null
+          created_at?: string
+          denomination?: string | null
+          estimated_high?: number | null
+          estimated_low?: number | null
+          front_path?: string | null
+          id?: string
+          listing_description?: string | null
+          listing_price?: number | null
+          listing_title?: string | null
+          markings?: string | null
+          name: string
+          notes?: string | null
+          research_notes?: string | null
+          sold_amount?: number | null
+          sold_at?: string | null
+          status?: string
+          updated_at?: string
+          user_id: string
+          venture?: string
+          year_text?: string | null
+        }
+        Update: {
+          appraisal_recommended?: boolean
+          back_path?: string | null
+          category?: string
+          condition_note?: string | null
+          country?: string | null
+          created_at?: string
+          denomination?: string | null
+          estimated_high?: number | null
+          estimated_low?: number | null
+          front_path?: string | null
+          id?: string
+          listing_description?: string | null
+          listing_price?: number | null
+          listing_title?: string | null
+          markings?: string | null
+          name?: string
+          notes?: string | null
+          research_notes?: string | null
+          sold_amount?: number | null
+          sold_at?: string | null
+          status?: string
+          updated_at?: string
+          user_id?: string
+          venture?: string
+          year_text?: string | null
+        }
+        Relationships: []
+      }
       launch_program_settings: {
         Row: {
           enabled: boolean
