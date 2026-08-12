@@ -1497,3 +1497,45 @@ Reports live in `deployments/` using `deployments/REPORT_TEMPLATE.md`.
 ### Routing note (adopted with these amendments)
 `/daily` is a permanent redirect into the one canonical Daily inside My Workspace
 (`/room?daily=1`). There is never a second Daily page or component.
+
+## FRASS-0504 — Rollback Verification
+
+Status: Constitutional Amendment · Priority P0 · Scope: every production deployment
+
+A deployment is not safe because it can be deployed. It is safe only when it is proven
+that it can be safely **undone**. Before every production deployment, verify:
+
+1. Current production snapshot exists (last known-good commit + build identified).
+2. Database migrations are reversible where applicable, or the forward-only decision is recorded.
+3. Static assets can be restored from the previous build.
+4. Worker version can be reverted.
+5. Environment variables are unchanged, or the change is versioned and documented.
+6. The rollback procedure has been tested previously.
+
+If rollback cannot be completed safely, **the deployment does not proceed**.
+
+Plain English: never step onto a ledge you can't step back off.
+
+## FRASS-0505 — Security Review Cycle
+
+Status: Constitutional Amendment · Priority P0 · Scope: every major release
+
+Every major release automatically triggers a security review cycle — not because something
+is broken, but because security is part of the release process. Required reviews:
+
+1. Authentication review
+2. Authorization review
+3. Financial Center review
+4. Founder permission review
+5. Marketplace review
+6. File upload review
+7. Business Vault review
+8. Frassy permission review
+
+Each review answers the eight questions in `SECURITY_REVIEW_STANDARD.md` and is recorded
+in the release's Deployment Report.
+
+### Pre-publish soak (adopted with these amendments)
+Do not publish immediately after a fix. Let the preview sit, then walk it as a real user
+would — Welcome Hall · Register · Login · Daily · Workspace · Money Moves · Marketplace ·
+Financial Center · Builder Vault · Frassy. Publish only when nothing breaks.

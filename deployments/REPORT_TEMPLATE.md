@@ -32,3 +32,29 @@
 ## Final approval
 - Status: PASS / FAIL
 - Approved by:
+
+## Rollback verification (FRASS-0504)
+| Item | Result | Notes |
+| --- | --- | --- |
+| Production snapshot exists | | |
+| Migrations reversible / forward-only recorded | | |
+| Static assets restorable | | |
+| Worker version revertible | | |
+| Env vars unchanged or versioned | | |
+| Rollback procedure previously tested | | |
+
+## Security review cycle (FRASS-0505 — major releases)
+| Review | Result | Notes |
+| --- | --- | --- |
+| Authentication | | |
+| Authorization | | |
+| Financial Center | | |
+| Founder permissions | | |
+| Marketplace | | |
+| File uploads | | |
+| Business Vaults | | |
+| Frassy permissions | | |
+
+## Pre-publish soak walk
+- Paths exercised (Welcome Hall / Register / Login / Daily / Workspace / Money Moves / Marketplace / Financial Center / Builder Vault / Frassy):
+- Soak duration:

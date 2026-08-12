@@ -51,3 +51,30 @@ Build Integrity · Worker Integrity · SSR Integrity · Authentication ·
 Critical Navigation · Security Verification · Console Verification ·
 Server Verification · Founder Security Center Verification ·
 Post-Deployment Monitoring · Rollback Procedure.
+
+---
+
+## 6. Rollback verification (FRASS-0504, P0)
+- [ ] Current production snapshot exists (last known-good commit + build recorded).
+- [ ] Database migrations reversible where applicable, or forward-only decision recorded.
+- [ ] Static assets can be restored from the previous build.
+- [ ] Worker version can be reverted.
+- [ ] Environment variables unchanged, or the change is versioned and documented.
+- [ ] Rollback procedure has been tested previously.
+
+If rollback cannot be completed safely, the deployment does not proceed.
+
+## 7. Security review cycle (FRASS-0505, P0 — major releases)
+- [ ] Authentication review
+- [ ] Authorization review
+- [ ] Financial Center review
+- [ ] Founder permission review
+- [ ] Marketplace review
+- [ ] File upload review
+- [ ] Business Vault review
+- [ ] Frassy permission review
+
+## 8. Pre-publish soak walk (real-user paths)
+- [ ] Welcome Hall  - [ ] Register  - [ ] Login  - [ ] Daily  - [ ] Workspace
+- [ ] Money Moves  - [ ] Marketplace  - [ ] Financial Center  - [ ] Builder Vault  - [ ] Frassy
+- [ ] Preview soaked (used as a real user) before publishing.
