@@ -87,6 +87,7 @@ import { FounderOsPanel, FounderTabRail } from "@/components/workspace/founder-o
 import type { FounderTabId } from "@/lib/workspace/founder-os";
 import { LaunchModeBanner } from "@/components/launch-mode-banner";
 import { DiscoveryOffers } from "@/components/frassy/discovery-offers";
+import { OpportunitySequence } from "@/components/business/opportunity-sequence";
 import { ComplianceDailyLine } from "@/components/finance/compliance-daily-line";
 // FRASS-0476 — the Founder never has to remember to open the Security Center.
 import { listSecurityAlerts } from "@/lib/finance/security-alerts.functions";
@@ -399,6 +400,9 @@ export function FrassDaily({
 
         {/* FRASS-0483 — Business Discovery Engine: the interview never ends. */}
         <DiscoveryOffers />
+
+        {/* FRASS-0498 — the destination is fixed; only the order changes. */}
+        <OpportunitySequence className="mt-4" />
 
         {/* FRASS-0484 — compliance stays silent unless something needs attention */}
         <ComplianceDailyLine />

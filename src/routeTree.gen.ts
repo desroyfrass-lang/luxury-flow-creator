@@ -60,6 +60,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as SocialMediaViralsIndexRouteImport } from './routes/social-media-virals.index'
 import { Route as LookbookIndexRouteImport } from './routes/lookbook.index'
 import { Route as LiveIndexRouteImport } from './routes/live.index'
+import { Route as LegalIndexRouteImport } from './routes/legal.index'
 import { Route as KidsWorldIndexRouteImport } from './routes/kids-world.index'
 import { Route as JoinIndexRouteImport } from './routes/join.index'
 import { Route as FrassShapeIndexRouteImport } from './routes/frass-shape.index'
@@ -83,6 +84,7 @@ import { Route as LookbookStoryRouteImport } from './routes/lookbook.$story'
 import { Route as LiveGoRouteImport } from './routes/live.go'
 import { Route as LiveBroadcastIdRouteImport } from './routes/live.$broadcastId'
 import { Route as LinkHandleRouteImport } from './routes/link.$handle'
+import { Route as LegalLevelRouteImport } from './routes/legal.$level'
 import { Route as KidsWorldStreetRouteImport } from './routes/kids-world.street'
 import { Route as KidsWorldParentsRouteImport } from './routes/kids-world.parents'
 import { Route as KidsWorldDiscoverRouteImport } from './routes/kids-world.discover'
@@ -463,6 +465,11 @@ const LiveIndexRoute = LiveIndexRouteImport.update({
   path: '/',
   getParentRoute: () => LiveRoute,
 } as any)
+const LegalIndexRoute = LegalIndexRouteImport.update({
+  id: '/legal/',
+  path: '/legal/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const KidsWorldIndexRoute = KidsWorldIndexRouteImport.update({
   id: '/',
   path: '/',
@@ -577,6 +584,11 @@ const LiveBroadcastIdRoute = LiveBroadcastIdRouteImport.update({
 const LinkHandleRoute = LinkHandleRouteImport.update({
   id: '/link/$handle',
   path: '/link/$handle',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LegalLevelRoute = LegalLevelRouteImport.update({
+  id: '/legal/$level',
+  path: '/legal/$level',
   getParentRoute: () => rootRouteImport,
 } as any)
 const KidsWorldStreetRoute = KidsWorldStreetRouteImport.update({
@@ -1366,6 +1378,7 @@ export interface FileRoutesByFullPath {
   '/kids-world/discover': typeof KidsWorldDiscoverRoute
   '/kids-world/parents': typeof KidsWorldParentsRoute
   '/kids-world/street': typeof KidsWorldStreetRoute
+  '/legal/$level': typeof LegalLevelRoute
   '/link/$handle': typeof LinkHandleRoute
   '/live/$broadcastId': typeof LiveBroadcastIdRoute
   '/live/go': typeof LiveGoRoute
@@ -1389,6 +1402,7 @@ export interface FileRoutesByFullPath {
   '/frass-shape/': typeof FrassShapeIndexRoute
   '/join/': typeof JoinIndexRoute
   '/kids-world/': typeof KidsWorldIndexRoute
+  '/legal/': typeof LegalIndexRoute
   '/live/': typeof LiveIndexRoute
   '/lookbook/': typeof LookbookIndexRoute
   '/social-media-virals/': typeof SocialMediaViralsIndexRoute
@@ -1544,6 +1558,7 @@ export interface FileRoutesByTo {
   '/kids-world/discover': typeof KidsWorldDiscoverRoute
   '/kids-world/parents': typeof KidsWorldParentsRoute
   '/kids-world/street': typeof KidsWorldStreetRoute
+  '/legal/$level': typeof LegalLevelRoute
   '/link/$handle': typeof LinkHandleRoute
   '/live/$broadcastId': typeof LiveBroadcastIdRoute
   '/live/go': typeof LiveGoRoute
@@ -1567,6 +1582,7 @@ export interface FileRoutesByTo {
   '/frass-shape': typeof FrassShapeIndexRoute
   '/join': typeof JoinIndexRoute
   '/kids-world': typeof KidsWorldIndexRoute
+  '/legal': typeof LegalIndexRoute
   '/live': typeof LiveIndexRoute
   '/lookbook': typeof LookbookIndexRoute
   '/social-media-virals': typeof SocialMediaViralsIndexRoute
@@ -1746,6 +1762,7 @@ export interface FileRoutesById {
   '/kids-world/discover': typeof KidsWorldDiscoverRoute
   '/kids-world/parents': typeof KidsWorldParentsRoute
   '/kids-world/street': typeof KidsWorldStreetRoute
+  '/legal/$level': typeof LegalLevelRoute
   '/link/$handle': typeof LinkHandleRoute
   '/live/$broadcastId': typeof LiveBroadcastIdRoute
   '/live/go': typeof LiveGoRoute
@@ -1769,6 +1786,7 @@ export interface FileRoutesById {
   '/frass-shape/': typeof FrassShapeIndexRoute
   '/join/': typeof JoinIndexRoute
   '/kids-world/': typeof KidsWorldIndexRoute
+  '/legal/': typeof LegalIndexRoute
   '/live/': typeof LiveIndexRoute
   '/lookbook/': typeof LookbookIndexRoute
   '/social-media-virals/': typeof SocialMediaViralsIndexRoute
@@ -1948,6 +1966,7 @@ export interface FileRouteTypes {
     | '/kids-world/discover'
     | '/kids-world/parents'
     | '/kids-world/street'
+    | '/legal/$level'
     | '/link/$handle'
     | '/live/$broadcastId'
     | '/live/go'
@@ -1971,6 +1990,7 @@ export interface FileRouteTypes {
     | '/frass-shape/'
     | '/join/'
     | '/kids-world/'
+    | '/legal/'
     | '/live/'
     | '/lookbook/'
     | '/social-media-virals/'
@@ -2126,6 +2146,7 @@ export interface FileRouteTypes {
     | '/kids-world/discover'
     | '/kids-world/parents'
     | '/kids-world/street'
+    | '/legal/$level'
     | '/link/$handle'
     | '/live/$broadcastId'
     | '/live/go'
@@ -2149,6 +2170,7 @@ export interface FileRouteTypes {
     | '/frass-shape'
     | '/join'
     | '/kids-world'
+    | '/legal'
     | '/live'
     | '/lookbook'
     | '/social-media-virals'
@@ -2327,6 +2349,7 @@ export interface FileRouteTypes {
     | '/kids-world/discover'
     | '/kids-world/parents'
     | '/kids-world/street'
+    | '/legal/$level'
     | '/link/$handle'
     | '/live/$broadcastId'
     | '/live/go'
@@ -2350,6 +2373,7 @@ export interface FileRouteTypes {
     | '/frass-shape/'
     | '/join/'
     | '/kids-world/'
+    | '/legal/'
     | '/live/'
     | '/lookbook/'
     | '/social-media-virals/'
@@ -2478,12 +2502,14 @@ export interface RootRouteChildren {
   GalleryStudioRoute: typeof GalleryStudioRoute
   JoinFrassHillRoute: typeof JoinFrassHillRoute
   JoinFrasskicksRoute: typeof JoinFrasskicksRoute
+  LegalLevelRoute: typeof LegalLevelRoute
   LinkHandleRoute: typeof LinkHandleRoute
   PayTokenRoute: typeof PayTokenRoute
   PlusSizeMenRoute: typeof PlusSizeMenRoute
   PlusSizeWomenRoute: typeof PlusSizeWomenRoute
   ProductHandleRoute: typeof ProductHandleRoute
   JoinIndexRoute: typeof JoinIndexRoute
+  LegalIndexRoute: typeof LegalIndexRoute
   DotlovableOauthConsentRoute: typeof DotlovableOauthConsentRoute
   Char91DotmcpChar93InvokeToolToolRoute: typeof Char91DotmcpChar93InvokeToolToolRoute
   LovableEmailAuthPreviewRoute: typeof LovableEmailAuthPreviewRoute
@@ -2850,6 +2876,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LiveIndexRouteImport
       parentRoute: typeof LiveRoute
     }
+    '/legal/': {
+      id: '/legal/'
+      path: '/legal'
+      fullPath: '/legal/'
+      preLoaderRoute: typeof LegalIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/kids-world/': {
       id: '/kids-world/'
       path: '/'
@@ -3009,6 +3042,13 @@ declare module '@tanstack/react-router' {
       path: '/link/$handle'
       fullPath: '/link/$handle'
       preLoaderRoute: typeof LinkHandleRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/legal/$level': {
+      id: '/legal/$level'
+      path: '/legal/$level'
+      fullPath: '/legal/$level'
+      preLoaderRoute: typeof LegalLevelRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/kids-world/street': {
@@ -4479,12 +4519,14 @@ const rootRouteChildren: RootRouteChildren = {
   GalleryStudioRoute: GalleryStudioRoute,
   JoinFrassHillRoute: JoinFrassHillRoute,
   JoinFrasskicksRoute: JoinFrasskicksRoute,
+  LegalLevelRoute: LegalLevelRoute,
   LinkHandleRoute: LinkHandleRoute,
   PayTokenRoute: PayTokenRoute,
   PlusSizeMenRoute: PlusSizeMenRoute,
   PlusSizeWomenRoute: PlusSizeWomenRoute,
   ProductHandleRoute: ProductHandleRoute,
   JoinIndexRoute: JoinIndexRoute,
+  LegalIndexRoute: LegalIndexRoute,
   DotlovableOauthConsentRoute: DotlovableOauthConsentRoute,
   Char91DotmcpChar93InvokeToolToolRoute: Char91DotmcpChar93InvokeToolToolRoute,
   LovableEmailAuthPreviewRoute: LovableEmailAuthPreviewRoute,

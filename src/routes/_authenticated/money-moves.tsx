@@ -55,6 +55,7 @@ import {
   type PartnerProfile,
 } from "@/lib/business/partner-profile";
 import { DiscoveryOffers } from "@/components/frassy/discovery-offers";
+import { OpportunitySequence } from "@/components/business/opportunity-sequence";
 import {
   BUILD_IT_MONETIZE_IT,
   MONETIZATION_RULE,
@@ -232,6 +233,9 @@ function MoneyMovesPage() {
         </p>
 
         <LaunchModeBanner className="mt-5" />
+
+        {/* FRASS-0498 — Opportunity Sequencing: Now, Next, Later. */}
+        <OpportunitySequence className="mt-5" />
 
         {/* FRASS-0483 — Continuous Discovery: skills Frassy overheard become offers. */}
         <DiscoveryOffers className="mt-5" onProfileChange={setPartner} />

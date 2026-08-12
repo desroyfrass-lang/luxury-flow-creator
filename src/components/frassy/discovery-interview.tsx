@@ -72,6 +72,7 @@ export function DiscoveryInterview({
       hoursPerDay: hours,
       monthlyGoal: Math.max(0, Number(goal) || 0),
       comfort,
+      circumstance: (answers.limitations ?? "").trim() || null,
       completedAt: new Date().toISOString(),
     });
     onSaved(saved);
