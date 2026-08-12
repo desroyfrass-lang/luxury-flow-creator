@@ -44,6 +44,17 @@ import {
   type Opportunity,
 } from "@/lib/business/money-moves";
 import {
+  DiscoveryInterview,
+  PartnerStrengthsCard,
+} from "@/components/frassy/discovery-interview";
+import {
+  EMPTY_PROFILE,
+  PLAIN_ENGLISH,
+  loadProfile,
+  profileComplete,
+  type PartnerProfile,
+} from "@/lib/business/partner-profile";
+import {
   BUILD_IT_MONETIZE_IT,
   MONETIZATION_RULE,
   PHASE_LABEL,
@@ -109,6 +120,10 @@ function MoneyMovesPage() {
   const [coaching, setCoaching] = useState<CoachingNote[]>([]);
   const [hydrated, setHydrated] = useState(false);
   const [note, setNote] = useState<string | null>(null);
+  // FRASS-0482 — discovered on this device, never uploaded.
+  const [partner, setPartner] = useState<PartnerProfile>(EMPTY_PROFILE);
+  useEffect(() => setPartner(loadProfile()), []);
+
 
   useEffect(() => {
     if (!row.isSuccess || hydrated) return;
@@ -216,6 +231,17 @@ function MoneyMovesPage() {
         </p>
 
         <LaunchModeBanner className="mt-5" />
+
+        {/* FRASS-0482 — the business already inside the person, discovered first. */}
+        <div className="mt-5">
+          {profileComplete(partner) ? (
+            <PartnerStrengthsCard profile={partner} onForget={() => setPartner(EMPTY_PROFILE)} />
+          ) : (
+            <DiscoveryInterview profile={partner} firstName={name} onSaved={setPartner} />
+          )}
+        </div>
+        <p className="mt-2 text-xs text-muted-foreground">{PLAIN_ENGLISH}</p>
+
 
         {launch.businesses.includes("affiliate") && (
           <section className="mt-5 rounded-3xl border border-[color:var(--gold,#d4af37)]/35 bg-[color:var(--gold,#d4af37)]/[0.05] px-5 py-4">
