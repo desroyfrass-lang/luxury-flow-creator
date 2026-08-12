@@ -21,6 +21,17 @@ import {
   useDailyCustomization,
 } from "@/components/workspace/daily-customization";
 import type { SectionId } from "@/lib/daily/customization";
+import { isKankoDaily } from "@/lib/daily/kanko";
+import {
+  KankoCocoVintage,
+  KankoEndOfDay,
+  KankoFrassyNote,
+  KankoFreedomProgress,
+  KankoFreight,
+  KankoMoneyMoves,
+  KankoWelcome,
+} from "@/components/workspace/kanko-daily";
+import { LegacyDashboard, PartnerProgressCenter } from "@/components/workspace/partner-progress-center";
 import { FrassLinkWidget } from "@/components/link/frass-link-widget";
 import { FrassCardWidget } from "@/components/card/frass-card-widget";
 import { getWallet } from "@/lib/studio.functions";
@@ -139,6 +150,8 @@ function FrassDailyBody({
   const [demo, setDemo] = useState(() => demoDataEnabled());
   const layout = useDailyCustomization();
   const isFounder = audience === "founder";
+  /** FRASS-P001 — the first personalized Daily. */
+  const isKanko = !isFounder && isKankoDaily(name);
   const [tab, setTab] = useState<FounderTabId>("today");
   const base = useMemo(() => dailyFor(audience), [audience]);
 
@@ -557,8 +570,45 @@ function FrassDailyBody({
         {/* FRASS-5P000 — organise this Daily however it works for you. */}
         <DailyLayoutPanel />
 
+        {/* FRASS-P001 — Kanko's Daily, Version 1. Her words, her businesses. */}
+        {isKanko && (
+          <>
+            <Section id="personal-welcome" title="Good morning" note="Your welcome, and the one thing that matters today.">
+              <KankoWelcome name={name ?? "Kanko"} />
+            </Section>
+            <Section id="freedom-progress" title="🚀 Freedom Progress" note="Progress toward your goal — not just money.">
+              <KankoFreedomProgress />
+            </Section>
+            <Section id="money-moves-today" title="💰 Today's Money Moves" note="Three, highest financial impact first.">
+              <KankoMoneyMoves onNavigate={onNavigate} />
+            </Section>
+            <Section id="coco-vintage" title="👜 Coco Vintage" note="Frassy prepared everything. You review and approve.">
+              <KankoCocoVintage onNavigate={onNavigate} />
+            </Section>
+            <Section id="freight-prep" title="📦 Freight Brokerage" note="Parked on purpose.">
+              <KankoFreight />
+            </Section>
+            <Section id="frassy-note" title="❤️ Frassy" note="One message. Not ten.">
+              <KankoFrassyNote day={history.length} />
+            </Section>
+          </>
+        )}
+
+        {/* Founder Daily Amendment — how everyone is doing, and why it matters. */}
+        {isFounder && (
+          <>
+            <Section id="partner-progress" title="🌅 Partner Progress Center" note="You should never have to ask how everyone is doing.">
+              <PartnerProgressCenter onNavigate={onNavigate} />
+            </Section>
+            <Section id="legacy-dashboard" title="Legacy Dashboard" note="The one widget no one else ever sees.">
+              <LegacyDashboard />
+            </Section>
+          </>
+        )}
+
         {/* 1 — Celebrate first */}
         <Section id="celebrate-first" title="Celebrate first" note="Progress before problems.">
+
           <div className="daily-grid">
             {model.wins.map((w) => (
               <div key={w.id} className="daily-card daily-win">
@@ -775,7 +825,12 @@ function FrassDailyBody({
 
         {/* Evening reflection — never mandatory */}
         {reflecting && (
-          <Section id="evening-reflection" title="Evening reflection" note="Optional. Only if you want it.">
+          <Section id="evening-reflection" title={isKanko ? "🌙 End of day" : "Evening reflection"} note="Optional. Only if you want it.">
+            {isKanko && (
+              <div className="mb-4">
+                <KankoEndOfDay published={0} movesDone={done} />
+              </div>
+            )}
             <div className="daily-grid">
               {["What you accomplished", "Goals completed", "Progress made", "Tomorrow's priorities", "Notes for tomorrow"].map(
                 (r) => (
