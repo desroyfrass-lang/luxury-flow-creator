@@ -22,6 +22,17 @@ import {
 } from "@/components/workspace/daily-customization";
 import type { SectionId } from "@/lib/daily/customization";
 import { isKankoDaily } from "@/lib/daily/kanko";
+import { isMotherDaily } from "@/lib/daily/mother";
+import {
+  MotherBalanceOfDay,
+  MotherBusinessDevelopment,
+  MotherFrassyNote,
+  MotherKnowledge,
+  MotherMoneyMoves,
+  MotherOutcomes,
+  MotherWelcome,
+  MotherWellbeing,
+} from "@/components/workspace/mother-daily";
 import {
   KankoAffiliatePrep,
   KankoBalanceNote,
@@ -161,6 +172,8 @@ function FrassDailyBody({
   const isFounder = audience === "founder";
   /** FRASS-P001 — the first personalized Daily. */
   const isKanko = !isFounder && isKankoDaily(name);
+  /** FRASS-P002-Z — the knowledge-economy blueprint. */
+  const isMother = !isFounder && !isKanko && isMotherDaily(name);
   const [tab, setTab] = useState<FounderTabId>("today");
   const base = useMemo(() => dailyFor(audience), [audience]);
 
@@ -626,6 +639,36 @@ function FrassDailyBody({
             </Section>
             <Section id="frassy-note" title="❤️ Frassy" note="One message. Not ten.">
               <KankoFrassyNote day={history.length} />
+            </Section>
+          </>
+        )}
+
+        {/* FRASS-P002-Z — Your Mother's Daily. Wisdom that provides today and lasts tomorrow. */}
+        {isMother && (
+          <>
+            <Section id="personal-welcome" title="Good morning" note="Today, in your own pace.">
+              <MotherWelcome name={name ?? "Mom"} />
+            </Section>
+            <Section id="balance-of-day" title="⚖️ Today's balance" note="Money, knowledge, business and rest — all four, every day.">
+              <MotherBalanceOfDay />
+            </Section>
+            <Section id="money-moves-today" title="💰 Today's Money Moves" note="Your financial reality comes first.">
+              <MotherMoneyMoves onNavigate={onNavigate} />
+            </Section>
+            <Section id="knowledge-preservation" title="📚 Knowledge Preservation" note="You talk. I listen. You decide what I keep.">
+              <MotherKnowledge onNavigate={onNavigate} />
+            </Section>
+            <Section id="business-development" title="🏗 Business Development" note="Businesses emerge from experience. Never forced.">
+              <MotherBusinessDevelopment onNavigate={onNavigate} />
+            </Section>
+            <Section id="wellbeing" title="❤️ Well-being" note="One gentle note. Never another list.">
+              <MotherWellbeing day={history.length} />
+            </Section>
+            <Section id="success-dashboard" title="📊 What actually changed" note="Outcomes, not activity.">
+              <MotherOutcomes />
+            </Section>
+            <Section id="frassy-note" title="❤️ Frassy" note="One message. Not ten.">
+              <MotherFrassyNote day={history.length} />
             </Section>
           </>
         )}
