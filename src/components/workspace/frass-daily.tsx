@@ -86,6 +86,7 @@ import { dailySnapshot, viewerFrom } from "@/lib/finance/financial-center";
 import { FounderOsPanel, FounderTabRail } from "@/components/workspace/founder-os-panel";
 import type { FounderTabId } from "@/lib/workspace/founder-os";
 import { LaunchModeBanner } from "@/components/launch-mode-banner";
+import { DiscoveryOffers } from "@/components/frassy/discovery-offers";
 // FRASS-0476 — the Founder never has to remember to open the Security Center.
 import { listSecurityAlerts } from "@/lib/finance/security-alerts.functions";
 import { getPlatformHealth } from "@/lib/platform-health.functions";
@@ -394,6 +395,9 @@ export function FrassDaily({
 
         {/* FRASS-0428 — the permanent Frass Link, always one tap away */}
         <FrassLinkWidget context="The Daily" />
+
+        {/* FRASS-0483 — Business Discovery Engine: the interview never ends. */}
+        <DiscoveryOffers />
 
         {/* 1 · Morning Briefing — context before work, the way an assistant would give it */}
         {briefOpen && (
