@@ -532,6 +532,7 @@ export function scanOpportunities(state: LaunchState, money: MoneyState, hoursPe
     .map((move) => {
       const objectives = objectivesFor(move);
       const { score, parts } = scoreOpportunity(move, mom, state);
+      const tier = tierOf(move.businessId);
       const opp: Opportunity = {
         id: move.key,
         streamId: move.businessId,
@@ -541,6 +542,7 @@ export function scanOpportunities(state: LaunchState, money: MoneyState, hoursPe
         strategy: strategyFor(move, mom),
         minutes: move.minutes,
         objectives,
+        tier,
         score,
         scoreParts: parts,
         move,
@@ -549,7 +551,14 @@ export function scanOpportunities(state: LaunchState, money: MoneyState, hoursPe
       return opp;
     })
     .filter((o) => o.objectives.length > 0)
-    .sort((a, b) => b.score - a.score || a.minutes - b.minutes);
+    // FRASS-0489A — higher tier wins ties (financial independence before
+    // career advancement before employment), then the 5-star score, then time.
+    .sort(
+      (a, b) =>
+        OPPORTUNITY_TIERS[a.tier].rank - OPPORTUNITY_TIERS[b.tier].rank ||
+        b.score - a.score ||
+        a.minutes - b.minutes,
+    );
 }
 
 // ── Today's plan ────────────────────────────────────────────────────────────
