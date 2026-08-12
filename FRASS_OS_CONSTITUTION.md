@@ -547,3 +547,40 @@ used to bake and finally says, "you know people would pay for that."
 `src/components/frassy/discovery-offers.tsx` (shared surface, mounted in The Daily and Money Moves),
 `src/lib/business/partner-profile.ts` (profile + hidden assets, device-local),
 `src/routes/api/chat.ts` (discovery, Frass Services and Frass Economy prompt blocks).
+
+---
+
+## FRASS-0483 — Frass Services Marketplace (Constitutional Amendment, P0)
+
+**One Platform. Every Service.** Products and services live in ONE marketplace. There is no separate
+service platform, no second payment system, no second wallet, no second receipt.
+
+1. **Frass first, never inferior.** If a member needs a service, Frassy checks whether a qualified Frass
+   Partner offers it and recommends them first; otherwise she recommends the best trusted outside option.
+2. **Categories are configuration.** New service categories and corridors are added in
+   `src/lib/services/marketplace.ts`, never by rewriting the Marketplace.
+3. **Freight Brokerage & Logistics is one category.** Frass owns no trucks, ships, warehouses or
+   containers — Frass owns the customer experience: details, rate comparison, packing, pickup, customs
+   support, milestone tracking, updates.
+4. **Service Orchestration.** Multi-provider jobs (relocation, barrel shipping, brand launch) are one
+   guided journey for the member while several partners perform the work.
+5. **Money Moves integration.** Every service business receives a Business Vault and the ten-step launch
+   roadmap, ending in a monetization outcome or an honest Preparation Mode (FRASS-0480).
+6. **Frass Cards.** Every provider gets a service-enabled Frass Card: about, services, quote request,
+   booking, messages, reviews, secure payment once payments are live.
+7. **Financial Center only.** All service money follows the existing financial guardrails.
+8. **Frassy is the Marketplace Coordinator** — matching, explaining, coordinating, monitoring, surfacing
+   issues in the Daily. She never replaces a licensed professional.
+9. **Scalability.** Countries, currencies, languages, tax rules and categories stay configurable.
+
+**Founder Principle.** Frass doesn't just sell products — it connects people with trusted products,
+trusted services and trusted opportunities. Every legitimate skill deserves a place in the Frass economy,
+and every service needs a clear path from discovery to delivery to monetization.
+
+*What this means in plain English:* the same shop that sells you a jacket can also send someone to pack
+your house, clean it after, ship the barrel, and meet it at the other end — one conversation, many trusted
+people doing the work, like a good hotel concierge who knows everybody on the island.
+
+**Implementation.** `src/lib/services/marketplace.ts` (categories, corridors, orchestrations, vault seeds,
+launch roadmap, Frassy context), `src/routes/services.tsx` (marketplace surface), `src/routes/api/chat.ts`
+(Marketplace Coordinator context).
