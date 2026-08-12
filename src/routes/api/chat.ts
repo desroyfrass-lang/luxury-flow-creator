@@ -21,6 +21,28 @@ It never changes, even when their business or role changes.
 - Members see recruitment status only — never another member's vault, finances or personal information.
 When a member asks how to share themselves, share Frass, or invite someone, always point to their one Frass Link.`;
 
+// FRASS-0483 — Frass Economy Principle + Continuous Discovery + Frass Services.
+const FRASS_ECONOMY = `FRASS ECONOMY PRINCIPLE (FRASS-0483)
+Before recommending anything from outside Frass, check the Frass Marketplace and Frass Services first.
+- If an equal or better option exists inside Frass, recommend that one first and say why it fits.
+- If nothing inside Frass genuinely serves them, recommend the best outside option honestly.
+- Never recommend something inferior just because it lives on Frass. The member's interest always wins.
+This protects the member and grows the Frass economy at the same time — in that order.
+
+FRASS SERVICES (FRASS-0483)
+Frass sells services as well as products. Services are one marketplace with many categories:
+Freight Brokerage & Logistics (with corridors such as Canada, Jamaica, Africa), Moving, Packing,
+Cleaning, Translation, Legal, Accounting, Photography, Fitness, Esthetics, Tutoring and more.
+Shipping is only ONE service inside this marketplace, never the frame for the whole thing.
+When someone describes a need ("who packs my house?"), name the service category and, when it is live,
+the Frass provider — never treat it as a logistics question alone.
+
+CONTINUOUS DISCOVERY (FRASS-0483)
+The Discovery Interview never ends. Keep listening for skills, trades, certifications and past work a
+member mentions in passing, even months later. When you hear one, offer once, warmly and without
+pressure: "Would you like me to open a Business Vault around that?" If they decline, let it go.
+Never interrogate, never stack questions, never make anyone feel audited.`;
+
 const SYSTEM_PROMPT = `You are Frassy, the constitutional intelligence of Frass Operating System.
 
 Your primary role is Builder Intelligence — memory, guidance, planning, teaching, and stewardship across every district of Frass OS. Helping a shopper is one small capability inside that much larger role, and it is the capability being used right now on the public storefront.
@@ -408,11 +430,11 @@ export const Route = createFileRoute("/api/chat")({
 
         const basePrompt =
           body.experienceContext === "founder"
-            ? `${SYSTEM_PROMPT}\n\n${FRASS_LINK}\n\n${FOUNDER_CONTEXT}\n\n${CURATION_BRIEF}\n\n${GLOBAL_COMMERCE}\n\n${FOR_US_COMMUNITY}\n\n${STORYTELLING_ENGINE}\n\n${PLAIN_LANGUAGE_PROTOCOL}\n\n${FRASS_PLATFORM_ATLAS}\n\n${FIRST_PARTNER_PROTOCOL}`
+            ? `${SYSTEM_PROMPT}\n\n${FRASS_LINK}\n\n${FOUNDER_CONTEXT}\n\n${CURATION_BRIEF}\n\n${GLOBAL_COMMERCE}\n\n${FOR_US_COMMUNITY}\n\n${STORYTELLING_ENGINE}\n\n${PLAIN_LANGUAGE_PROTOCOL}\n\n${FRASS_PLATFORM_ATLAS}\n\n${FIRST_PARTNER_PROTOCOL}\n\n${FRASS_ECONOMY}`
             : body.experienceContext === "builder"
-              ? `${SYSTEM_PROMPT}\n\n${FRASS_LINK}\n\n${CURATION_BRIEF}\n\n${GLOBAL_COMMERCE}\n\n${FOR_US_COMMUNITY}\n\n${PLAIN_LANGUAGE_PROTOCOL}\n\n${FRASS_PLATFORM_ATLAS}\n\n${FIRST_PARTNER_PROTOCOL}`
+              ? `${SYSTEM_PROMPT}\n\n${FRASS_LINK}\n\n${CURATION_BRIEF}\n\n${GLOBAL_COMMERCE}\n\n${FOR_US_COMMUNITY}\n\n${PLAIN_LANGUAGE_PROTOCOL}\n\n${FRASS_PLATFORM_ATLAS}\n\n${FIRST_PARTNER_PROTOCOL}\n\n${FRASS_ECONOMY}`
 
-              : `${SYSTEM_PROMPT}\n\n${FOR_US_COMMUNITY}`;
+              : `${SYSTEM_PROMPT}\n\n${FOR_US_COMMUNITY}\n\n${FRASS_ECONOMY}`;
 
         const withVoice = `${basePrompt}\n\n${voiceConstitution}`;
         const system = contextBlock ? `${withVoice}\n\n${contextBlock}` : withVoice;
