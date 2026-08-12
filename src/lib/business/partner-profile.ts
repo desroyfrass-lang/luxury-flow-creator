@@ -288,6 +288,7 @@ export type PartnerProfile = {
 export const EMPTY_PROFILE: PartnerProfile = {
   version: 1,
   assets: [],
+  pending: [],
   answers: {},
   hoursPerDay: 1,
   monthlyGoal: 0,
@@ -308,6 +309,7 @@ export function loadProfile(): PartnerProfile {
       ...EMPTY_PROFILE,
       ...parsed,
       assets: Array.isArray(parsed.assets) ? parsed.assets.filter((a) => !!assetById(a)) : [],
+      pending: Array.isArray(parsed.pending) ? parsed.pending.filter((a) => !!assetById(a)) : [],
       answers: (parsed.answers ?? {}) as Partial<PartnerAnswers>,
     };
   } catch {
