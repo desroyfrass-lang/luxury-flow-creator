@@ -23,12 +23,21 @@ import {
 import type { SectionId } from "@/lib/daily/customization";
 import { isKankoDaily } from "@/lib/daily/kanko";
 import {
+  KankoAffiliatePrep,
+  KankoBalanceNote,
+  KankoBusinessBuilder,
   KankoCocoVintage,
   KankoEndOfDay,
   KankoFrassyNote,
+  KankoFreedomCountdown,
+  KankoFreedomMove,
   KankoFreedomProgress,
   KankoFreight,
+  KankoLearning,
   KankoMoneyMoves,
+  KankoQuickIncome,
+  KankoSuccessDashboard,
+  KankoTimePlan,
   KankoWelcome,
 } from "@/components/workspace/kanko-daily";
 import { LegacyDashboard, PartnerProgressCenter } from "@/components/workspace/partner-progress-center";
@@ -579,14 +588,41 @@ function FrassDailyBody({
             <Section id="freedom-progress" title="🚀 Freedom Progress" note="Progress toward your goal — not just money.">
               <KankoFreedomProgress />
             </Section>
+            <Section id="freedom-countdown" title="🔓 Freedom Countdown" note="Milestones, not days. This is the life you're building.">
+              <KankoFreedomCountdown />
+            </Section>
+            <Section id="time-plan" title="⏱ How today's two hours are spent" note="Money now, business building, and lasting freedom.">
+              <KankoTimePlan />
+            </Section>
+            <Section id="freedom-move" title="🚀 Freedom Move" note="The one action most likely to improve your financial future today.">
+              <KankoFreedomMove onNavigate={onNavigate} />
+            </Section>
+            <Section id="quick-income" title="💰 Quick Income" note="The fastest honest money available to you.">
+              <KankoQuickIncome onNavigate={onNavigate} />
+            </Section>
             <Section id="money-moves-today" title="💰 Today's Money Moves" note="Three, highest financial impact first.">
               <KankoMoneyMoves onNavigate={onNavigate} />
             </Section>
             <Section id="coco-vintage" title="👜 Coco Vintage" note="Frassy prepared everything. You review and approve.">
               <KankoCocoVintage onNavigate={onNavigate} />
             </Section>
+            <Section id="business-builder" title="📈 Business Builder" note="One action that strengthens the long game.">
+              <KankoBusinessBuilder onNavigate={onNavigate} />
+            </Section>
+            <Section id="learning-unlock" title="🎓 Learning" note="Only when it unlocks income. Never learning for learning's sake.">
+              <KankoLearning published={0} />
+            </Section>
+            <Section id="affiliate-prep" title="🤝 Affiliate Preparation" note="No empty shelves. We prepare instead.">
+              <KankoAffiliatePrep />
+            </Section>
             <Section id="freight-prep" title="📦 Freight Brokerage" note="Parked on purpose.">
               <KankoFreight />
+            </Section>
+            <Section id="balance-check" title="❤️ Balance" note="One gentle reminder. Never another list.">
+              <KankoBalanceNote day={history.length} published={0} />
+            </Section>
+            <Section id="success-dashboard" title="📊 Success Dashboard" note="Outcomes, not activity.">
+              <KankoSuccessDashboard />
             </Section>
             <Section id="frassy-note" title="❤️ Frassy" note="One message. Not ten.">
               <KankoFrassyNote day={history.length} />
