@@ -1654,6 +1654,51 @@ export type Database = {
         }
         Relationships: []
       }
+      daily_layout_prefs: {
+        Row: {
+          prefs: Json
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          prefs?: Json
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          prefs?: Json
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      daily_layout_presets: {
+        Row: {
+          created_at: string
+          id: string
+          name: string
+          owner_id: string
+          prefs: Json
+          shared: boolean
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          name: string
+          owner_id: string
+          prefs: Json
+          shared?: boolean
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          name?: string
+          owner_id?: string
+          prefs?: Json
+          shared?: boolean
+        }
+        Relationships: []
+      }
       email_send_log: {
         Row: {
           created_at: string
