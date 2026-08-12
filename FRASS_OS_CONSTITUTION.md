@@ -1295,3 +1295,107 @@ measurably better?" If the answer is no, it doesn't belong.
 Build order: ✅ Kanko → Mother → Founder Daily → remaining family Dailies →
 launch with a small group of trusted partners → watch how they actually use it →
 refine based on real behaviour, not assumptions.
+
+## FRASS-P001-Z — Kanko's Personalized Daily · FINAL
+
+Status: FINAL · P0 · From Financial Urgency to Financial Freedom.
+Audited before finalizing: all previous Kanko specifications, The Daily, Money
+Moves, the Personalized Daily Engine (FRASS-5P000), the Discovery Interview,
+Business Builder, Coco Vintage, Freight Brokerage, Affiliate Preparation and
+the Financial Center. Kanko's Daily is not redesigned; this finalizes it.
+
+VISION — Kanko's Daily exists to help her replace employment income as quickly,
+ethically and sustainably as possible while building businesses that create
+long-term financial freedom. It is measured by progress, not productivity.
+
+CONSTITUTIONAL RULE — every day Frassy balances all three financial layers:
+Immediate Income (generate income now), Business Builder (strengthen Coco
+Vintage and future businesses), Financial Freedom (build systems that eventually
+replace employment). No layer permanently replaces another; the balance changes
+with her situation.
+
+TIME PROTECTION — approximately two focused hours a day, treated as valuable.
+Every task must justify the time it requires. Busywork is forbidden.
+
+DAILY PHILOSOPHY — each morning Frassy silently asks: "If these are the only two
+hours Kanko has today, what combination of actions creates the greatest
+long-term improvement in her financial future?" That answer becomes the Daily.
+
+MOMENTUM PROTECTION — if she misses days or weeks, Frassy never punishes and
+never presents a backlog. "Welcome back. Let's continue with today's
+highest-impact Money Move." Momentum always matters more than perfection.
+
+SUCCESS METRICS — immediate income generated · businesses strengthened ·
+financial freedom progress · systems completed · customers served · time
+invested efficiently · confidence gained. NEVER: clicks, number of tasks, hours
+online.
+
+FOUNDER PRINCIPLE — transform limited time into lasting opportunity. Every
+session leaves her measurably closer to financial independence than when she
+logged in.
+
+VALIDATION PHASE — constitutionally complete. Future improvements come from
+real-world observation, never speculation.
+
+## FRASS-P002-Z — Your Mother's Personalized Daily · FINAL
+
+Status: FINAL · P0 · Wisdom That Provides Today and Lasts Tomorrow.
+Audited before finalizing: all previous specifications, the Knowledge Vault, the
+Legacy Conversation Engine, the Legacy Voice Library, Service Builder, Money
+Moves, the Personalized Daily Engine and the Opportunity Center. Her Daily is
+not redesigned; this finalizes it.
+
+VISION — improve her financial security while respectfully preserving a lifetime
+of wisdom. Her experience is valuable. Her immediate financial needs are equally
+important. Neither is sacrificed for the other.
+
+CONSTITUTIONAL RULE — Money Moves prioritize her current financial reality
+first. Her expertise remains a powerful asset, but Frassy must never assume that
+teaching or consulting is automatically the fastest path to income. Every
+recommendation is based on the best opportunity available today.
+
+KNOWLEDGE PRESERVATION — Frassy learns continuously through natural
+conversation. Knowledge is never interrupted and never repeatedly requested. It
+is reviewed and offered for preservation only after conversations naturally
+conclude. She always remains in control of what becomes part of her Knowledge
+Vault.
+
+BUSINESS PHILOSOPHY — businesses emerge from experience; they are never forced.
+Frassy discovers opportunities by observing patterns in her knowledge, interests
+and approved conversations.
+
+DAILY PHILOSOPHY — every morning Frassy silently asks: "What single combination
+of opportunities will most improve her financial security today while continuing
+to preserve the wisdom she's built over a lifetime?"
+
+DAILY BALANCE — 💰 Immediate Income · 📚 Knowledge Preservation · 🏗 Business
+Development · ❤️ Personal Well-being. The balance changes as her circumstances
+evolve.
+
+LEGACY PRINCIPLE — her knowledge is preserved because it has value. Not every
+piece of knowledge needs to become a business; some becomes family legacy,
+educational resources, personal history or community wisdom. The member — not
+Frassy — decides its future.
+
+SUCCESS METRICS — financial progress · knowledge preserved · people helped ·
+services created · legacy built · business opportunities unlocked · confidence
+gained. NEVER simply: tasks completed, documents written, hours online.
+
+FOUNDER PRINCIPLE — a lifetime of wisdom deserves both respect and opportunity.
+Frass helps experienced members improve their financial lives today while
+preserving the knowledge, stories and experience that can continue helping
+others for generations.
+
+VALIDATION PHASE — constitutionally complete. Improvements come from her
+real-world use of Frass, her conversations with Frassy, and the needs she
+expresses — never from assumptions.
+
+## The Two Founding Blueprints
+
+Kanko validates the entrepreneurial journey — someone actively building toward
+financial independence. Her mother validates the knowledge economy — someone
+whose lifetime of experience becomes both a source of income and a lasting
+legacy. Together they are the two founding blueprints for every future
+personalized Daily. From this point on, each new partner inherits one of these
+two foundations, with Frassy adapting it to who they are and where they are in
+life. No new partner receives a brand-new architecture.
