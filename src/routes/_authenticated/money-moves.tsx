@@ -217,6 +217,17 @@ function MoneyMovesPage() {
 
         <LaunchModeBanner className="mt-5" />
 
+        {/* FRASS-0482 — the business already inside the person, discovered first. */}
+        <div className="mt-5">
+          {profileComplete(partner) ? (
+            <PartnerStrengthsCard profile={partner} onForget={() => setPartner(EMPTY_PROFILE)} />
+          ) : (
+            <DiscoveryInterview profile={partner} firstName={name} onSaved={setPartner} />
+          )}
+        </div>
+        <p className="mt-2 text-xs text-muted-foreground">{PLAIN_ENGLISH}</p>
+
+
         {launch.businesses.includes("affiliate") && (
           <section className="mt-5 rounded-3xl border border-[color:var(--gold,#d4af37)]/35 bg-[color:var(--gold,#d4af37)]/[0.05] px-5 py-4">
             <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-[color:var(--gold,#d4af37)]">
