@@ -802,9 +802,12 @@ export const Route = createFileRoute("/api/chat")({
             stopWhen: stepCountIs(6),
           });
 
-          // Extract products and order cards from tool results across all steps.
+          // Extract products, order cards and navigation from tool results.
           const products: ProductCard[] = [];
           let order: OrderCard | null = null;
+          // FRASS-0513 — Frassy performs navigation; she never quotes a URL.
+          let navigate: { key: string; label: string; path: string; requiresAuth: boolean } | null =
+            null;
 
           type ToolResultPart = {
             type: string;
@@ -818,13 +821,20 @@ export const Route = createFileRoute("/api/chat")({
             for (const part of step.content ?? []) {
               if (part.type !== "tool-result" && part.type !== "tool_result") continue;
               const output = (part.output ?? part.result) as
-                | { results?: ProductCard[]; order?: OrderCard; found?: boolean }
+                | {
+                    results?: ProductCard[];
+                    order?: OrderCard;
+                    found?: boolean;
+                    navigate?: { key: string; label: string; path: string; requiresAuth: boolean };
+                  }
                 | undefined;
               if (!output) continue;
               if (Array.isArray(output.results)) products.push(...output.results);
               if (output.found && output.order) order = output.order;
+              if (output.navigate?.path) navigate = output.navigate;
             }
           }
+
 
           // Continuation, never a re-introduction: a mid-session welcome reads
           // as the conversation restarting.
