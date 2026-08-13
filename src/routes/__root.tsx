@@ -4,6 +4,7 @@ import {
   Link,
   createRootRouteWithContext,
   useRouter,
+  useRouterState,
   HeadContent,
   Scripts,
 } from "@tanstack/react-router";
@@ -17,7 +18,6 @@ import { VoiceStateOverlay } from "@/components/voice-state-overlay";
 import { FrassyConversationDock } from "@/components/voice/frassy-conversation-dock";
 import { FrassyChat } from "@/components/frassy-chat";
 import { frassySurface } from "@/lib/frassy/surfaces";
-import { useRouterState } from "@tanstack/react-router";
 import { FrassyHost } from "@/components/frassy-host";
 import { DailyGate } from "@/components/workspace/daily-gate";
 import { ConstructionMode } from "@/components/construction/blueprint-mode";
