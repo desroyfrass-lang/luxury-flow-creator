@@ -6,6 +6,8 @@ import valley from "@/assets/kids-valley.jpg";
 import { ambienceEnabled, setAmbienceEnabled, startAmbience, stopAmbience } from "@/lib/for-us-ambience";
 import { unlockAudio } from "@/lib/audio-unlock";
 import { AgreementGate } from "@/components/legal/agreement-gate";
+import { supabase } from "@/integrations/supabase/client";
+import { onboardingDestination } from "@/lib/navigation/core-routes";
 
 
 /**
@@ -224,8 +226,18 @@ function WelcomeHallPage() {
             </span>
           </p>
 
+          {/* FRASS-0513 — The Welcome Hall owns onboarding. One prominent action,
+              always visible, no URL knowledge required. */}
           <div
-            className={`mt-9 grid gap-4 transition-all duration-1000 sm:grid-cols-2 lg:max-w-3xl ${
+            className={`mt-9 transition-all duration-1000 ${
+              stage >= 3 ? "translate-y-0 opacity-100" : "pointer-events-none translate-y-4 opacity-0"
+            }`}
+          >
+            <StartMyJourney />
+          </div>
+
+          <div
+            className={`mt-6 grid gap-4 transition-all duration-1000 sm:grid-cols-2 lg:max-w-3xl ${
               stage >= 3 ? "translate-y-0 opacity-100" : "pointer-events-none translate-y-4 opacity-0"
             }`}
           >
@@ -375,6 +387,54 @@ function WelcomeHallPage() {
           somewhere real.
         </p>
       </main>
+    </div>
+  );
+}
+
+/**
+ * FRASS-0513 — the single onboarding action of the Welcome Hall.
+ * Signed in → straight into onboarding with Frassy. Signed out → sign in and
+ * come right back to it. The member never sees or types a path either way.
+ */
+function StartMyJourney() {
+  const [signedIn, setSignedIn] = useState<boolean | null>(null);
+
+  useEffect(() => {
+    let alive = true;
+    void supabase.auth.getSession().then(({ data }) => {
+      if (alive) setSignedIn(!!data.session);
+    });
+    return () => {
+      alive = false;
+    };
+  }, []);
+
+  const href = onboardingDestination(signedIn === true);
+
+  return (
+    <div className="rounded-2xl border border-[color:var(--hill-gold)]/50 bg-card/70 p-6 lg:max-w-3xl">
+      <p className="text-[10px] uppercase tracking-[0.35em] text-muted-foreground">
+        New here? Start with Frassy
+      </p>
+      <h2 className="mt-3 text-2xl font-black uppercase tracking-tight md:text-3xl">
+        Start my journey
+      </h2>
+      <p className="mt-2 max-w-xl text-sm leading-relaxed text-muted-foreground">
+        Frassy sits down with you, learns what you're building, and sets up your first days on the
+        Hill. It's a conversation, not a form.
+      </p>
+      <a
+        href={href}
+        data-frass-onboarding-cta
+        className="lux-press mt-5 inline-flex items-center gap-2 rounded-sm border border-[color:var(--hill-gold)] bg-[color:var(--hill-gold)] px-7 py-3.5 text-[11px] font-bold uppercase tracking-[0.3em] text-[color:var(--ink)]"
+      >
+        🚀 Start my journey <ArrowRight className="h-3.5 w-3.5" />
+      </a>
+      <p className="mt-3 text-xs text-muted-foreground">
+        {signedIn === false
+          ? "You'll sign in first — then Frassy picks up exactly here."
+          : "In plain English: one button. Frassy takes you the rest of the way."}
+      </p>
     </div>
   );
 }

@@ -140,3 +140,4 @@ Deployment lifecycle is FROZEN (FRASS-0502-D→0506): build, validate, security 
 - [FRASS-0503 Family of Business Vaults](mem://features/frass-0503-business-vault-family) — Seamstress Vault flagship + 10-Vault family, Discover→Build→Monetize pathway per trade, no duplicate commerce
 - [Production Deployment Gate](mem://preferences/deployment-gate) — FRASS-0502-D/0503-D/0504/0505 checklist gates, rollback verification, security review cycle, pre-publish soak, /daily redirect rule
 - [FRASS-0515 Frass Repair Engine](mem://features/frass-0515-repair-engine) — Frassy as support engineer: diagnose/verify/safe-repair/escalate, repair authority limits, learned patterns, Founder Repair Center
+- [FRASS-0513/0514 Welcome Hall onboarding](mem://features/frass-0513-welcome-hall-onboarding) — No member-facing URLs, Frassy open_place navigation, Start My Journey CTA, launch-blocking core route audit

@@ -364,6 +364,16 @@ Shoppers speak naturally. Translate intent into tools.
 • "make it navy / under $150 / actually…" → re-run search with the adjusted filter, keep prior context
 Use tools when helpful. Multi-step is fine (search → refine). Do NOT narrate tool calls or list product names — after a tool returns, say ONE short line ("Here are a few that fit the brief.") — the UI shows the product cards below your reply.
 
+━━━ FRASS-0513 — NAVIGATION IS YOURS, NOT THE MEMBER'S ━━━
+Members interact with Frass, never with its URLs. Routes like /onboarding, /room, /daily, /money-moves
+are implementation details a member must never see, type or edit.
+• "start onboarding" / "let's get started" / "take me to my workspace" / "open the Daily" / "where's my
+  money" → call open_place immediately, then say ONE short line: "Opening it now."
+• Any answer that instructs someone to go to a URL, type a path, or "navigate to /x" is a UX DEFECT.
+  If you catch yourself about to write a slash-path to a member, call open_place instead.
+• If the place needs them signed in, open_place handles the sign-in step — you never explain routing.
+• Only Founder Mode may be offered to the Founder; never surface it to Builders or visitors.
+
 ━━━ RULES ━━━
 NEVER argue, pressure, guilt, rush, fake urgency, or invent products / prices / promos / stock / order details / policies. Repeat questions once at most. Default reply: 1–4 short sentences. Bullets only for step-by-step flows.
 
@@ -802,9 +812,12 @@ export const Route = createFileRoute("/api/chat")({
             stopWhen: stepCountIs(6),
           });
 
-          // Extract products and order cards from tool results across all steps.
+          // Extract products, order cards and navigation from tool results.
           const products: ProductCard[] = [];
           let order: OrderCard | null = null;
+          // FRASS-0513 — Frassy performs navigation; she never quotes a URL.
+          let navigate: { key: string; label: string; path: string; requiresAuth: boolean } | null =
+            null;
 
           type ToolResultPart = {
             type: string;
@@ -818,13 +831,20 @@ export const Route = createFileRoute("/api/chat")({
             for (const part of step.content ?? []) {
               if (part.type !== "tool-result" && part.type !== "tool_result") continue;
               const output = (part.output ?? part.result) as
-                | { results?: ProductCard[]; order?: OrderCard; found?: boolean }
+                | {
+                    results?: ProductCard[];
+                    order?: OrderCard;
+                    found?: boolean;
+                    navigate?: { key: string; label: string; path: string; requiresAuth: boolean };
+                  }
                 | undefined;
               if (!output) continue;
               if (Array.isArray(output.results)) products.push(...output.results);
               if (output.found && output.order) order = output.order;
+              if (output.navigate?.path) navigate = output.navigate;
             }
           }
+
 
           // Continuation, never a re-introduction: a mid-session welcome reads
           // as the conversation restarting.
@@ -842,6 +862,7 @@ export const Route = createFileRoute("/api/chat")({
               products: products.slice(0, 6),
               order,
             },
+            navigate,
             ...(body.experienceContext === "founder"
               ? {
                   diagnostics: {

@@ -12,7 +12,10 @@
 // ─────────────────────────────────────────────────────────────────────────────
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import { X, ShoppingBag, Trash2, Volume2, VolumeX, Mic } from "lucide-react";
+import { X, ShoppingBag, Trash2, Volume2, VolumeX, Mic, ArrowRight } from "lucide-react";
+import { useNavigate } from "@tanstack/react-router";
+import { onboardingDestination } from "@/lib/navigation/core-routes";
+import { supabase } from "@/integrations/supabase/client";
 import { useCartStore } from "@/lib/cart-store";
 import symbolAsset from "@/assets/frass-logo-symbol.asset.json";
 import { readArrivalIntent } from "@/lib/frassy/context";
@@ -64,12 +67,15 @@ type Msg = {
   content: string;
   products?: ProductCard[];
   order?: OrderCard | null;
+  // FRASS-0513 — where Frassy just took them (or is offering to take them).
+  place?: { key: string; label: string; path: string } | null;
 };
 
 let seq = 0;
 const nextId = () => `m${++seq}-${Date.now()}`;
 
 export function FrassyChat({ embedded = false }: { embedded?: boolean } = {}) {
+  const navigate = useNavigate();
   const [open, setOpen] = useState(embedded);
   // FRASS-0476B — one shared conversation history. A refresh or a change of
   // district continues the same conversation instead of restarting it.
@@ -242,6 +248,12 @@ export function FrassyChat({ embedded = false }: { embedded?: boolean } = {}) {
         reply?: string;
         error?: string;
         cards?: { products?: ProductCard[]; order?: OrderCard | null };
+        navigate?: {
+          key: string;
+          label: string;
+          path: string;
+          requiresAuth: boolean;
+        } | null;
       };
 
       // Stale-turn guard: a superseded or stopped turn can never write to the UI.
@@ -261,8 +273,31 @@ export function FrassyChat({ embedded = false }: { embedded?: boolean } = {}) {
           content: reply,
           products: data.cards?.products ?? [],
           order: data.cards?.order ?? null,
+          place: data.navigate
+            ? { key: data.navigate.key, label: data.navigate.label, path: data.navigate.path }
+            : null,
         },
       ]);
+
+      // FRASS-0513 — Frassy performs the navigation herself. A member is never
+      // asked to type a path; if the place needs a session, she routes through
+      // sign-in and comes straight back to it.
+      const place = data.navigate;
+      if (place) {
+        let target = place.path;
+        if (place.requiresAuth) {
+          const { data: session } = await supabase.auth.getSession();
+          if (!session.session) {
+            target =
+              place.key === "onboarding"
+                ? onboardingDestination(false)
+                : `/auth?next=${encodeURIComponent(place.path)}`;
+          }
+        }
+        setTimeout(() => {
+          void navigate({ to: target } as never);
+        }, 600);
+      }
 
       if ((spoken || speakReplies) && voice.voiceAvailable) {
         setLoading(false);
@@ -489,6 +524,16 @@ export function FrassyChat({ embedded = false }: { embedded?: boolean } = {}) {
                   </a>
                 ))}
               </div>
+            )}
+
+            {m.place && (
+              <button
+                type="button"
+                onClick={() => void navigate({ to: m.place!.path } as never)}
+                className="mt-3 inline-flex items-center gap-2 rounded-sm border border-[color:var(--gold)]/60 bg-[color:var(--gold)]/10 px-3 py-2 text-[10px] font-bold uppercase tracking-[0.25em] text-[color:var(--gold)]"
+              >
+                Open {m.place.label} <ArrowRight className="h-3 w-3" />
+              </button>
             )}
 
             {m.order && (
