@@ -2256,3 +2256,50 @@ Frassy must name the stage a Money Move serves and the next move toward Legacy.
 Founder Principle: *Frass should never stop at helping members earn a living. Its
 purpose is to help members build assets, businesses and legacies that continue creating
 value for themselves, their families and future generations.*
+
+## FRASS-0535 — Progress Without Exposure
+
+**Status:** Constitutional Amendment · **Priority:** P0
+
+Members celebrate community achievements without exposing personal financial
+information. Whenever Frass displays a community accomplishment publicly it
+defaults to **celebration**, never **disclosure**.
+
+Visitors may see: 🎉 a gift was sent · 🎉 a member reached a milestone · 🎉 a
+Business Vault was completed · 🎉 someone published their first book · 🎉
+someone launched their first product.
+
+Visitors must never automatically see: dollar amounts, credit totals, account
+balances, personal notes, private identities (unless the member explicitly
+chose recognition), or internal Founder comments.
+
+Every community event carries a configurable audience — 🔒 Private, 👥
+Connections only, 🤝 Partners, 🌍 Public. The member chooses whenever
+appropriate; the platform default is Partners.
+
+**Implementation** — `src/lib/privacy/progress-without-exposure.ts`
+(`canSeeProgress`, `canSeeProgressDetail`, `celebrationLine`, `NEVER_PUBLIC`)
+and the LIVE gift wall in `src/routes/live.$broadcastId.tsx`. Enforced at the
+database layer by column-level grants: anonymous readers of `live_gifts`
+receive only `id, broadcast_id, sender_name, gift_key, created_at`; amounts,
+credits, currency, notes and sender identifiers are granted to signed-in
+members only.
+
+Founder Principle: *Celebrate the achievement, protect the individual.*
+
+## FRASS-0535-A — First Partner Terminology
+
+There is exactly one **Founder**. Everyone else is a **First Partner** or holds
+another named role. The honorary recognition formerly labelled "Founding
+Partner" is now **First Partner** on every surface (badge, Frass Card, admin
+desk, Frassy's language). Database tables, columns and function names keep
+their original identifiers; only the governance language changed.
+
+**Security model recorded (why these protections exist — do not weaken):**
+- `founding_partners`: partners-tier rows are visible only to other First
+  Partners (verified server-side by a security-definer membership check), the
+  member themselves, and admins. The internal `note` column is not granted to
+  `anon` or `authenticated` at all — Founder commentary is reachable only
+  through the service-role admin path.
+- `live_gifts`: column-level grants keep money out of anonymous reach, per
+  FRASS-0535.
