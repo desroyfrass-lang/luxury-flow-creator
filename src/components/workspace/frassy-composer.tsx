@@ -257,8 +257,23 @@ export function FrassyComposer({
       <UploadManager queue={queue} />
       {note && <p className="ws-note">{note}</p>}
 
-      {/* Intake bar — one horizontal toolbar. It never wraps; it scrolls. */}
+      {/* FRASS-0551 — the intake bar wraps so nothing is ever pushed off screen,
+          and talking to Frassy is the first control the member sees. */}
       <div className="ws-toolbar">
+        {onMic && (
+          <button
+            type="button"
+            className={`ws-chip ${micActive ? "ws-chip-live" : ""}`}
+            onClick={onMic}
+            disabled={!micAvailable}
+            aria-label="Talk to Frassy"
+            title="Talk to Frassy"
+            style={{ fontWeight: 600 }}
+          >
+            <Mic className="h-3.5 w-3.5" />
+            <span>{micActive ? "Listening — tap to send" : "Talk to Frassy"}</span>
+          </button>
+        )}
 
         {tools.map((t) => {
           const meta = TOOL_META[t];
@@ -276,18 +291,6 @@ export function FrassyComposer({
             <span>FV Studios</span>
           </Link>
         )}
-        {onMic && (
-          <button
-            type="button"
-            className={`ws-chip ${micActive ? "ws-chip-live" : ""}`}
-            onClick={onMic}
-            disabled={!micAvailable}
-            aria-label="Talk to Frassy"
-          >
-            <Mic className="h-3.5 w-3.5" />
-            <span>Voice</span>
-          </button>
-        )}
         {queue.stats.total > 0 && (
           <span className="ws-chip pointer-events-none">
             <Layers className="h-3.5 w-3.5" />
@@ -295,6 +298,7 @@ export function FrassyComposer({
           </span>
         )}
       </div>
+
 
       <form
         className="ws-composer-row"
