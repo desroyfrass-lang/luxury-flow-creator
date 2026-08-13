@@ -258,6 +258,53 @@ export function pageFinancials(page: AuditPage) {
 
 // ── The report ──────────────────────────────────────────────────────────────
 
+// FRASS-0528 — Every audit ends with one question: are we ready to invite a new
+// member onto Frass? Anything other than "Yes" keeps the unresolved findings
+// visible until they are addressed.
+export type InvitationVerdict = "yes" | "yes_with_issues" | "not_yet";
+
+export const INVITATION_VERDICTS: Array<{
+  id: InvitationVerdict;
+  icon: string;
+  label: string;
+  plain: string;
+}> = [
+  {
+    id: "yes",
+    icon: "✅",
+    label: "Yes",
+    plain: "A new member can arrive today and have a good experience.",
+  },
+  {
+    id: "yes_with_issues",
+    icon: "⚠️",
+    label: "Yes, with known issues",
+    plain: "They can come in, but we know what still isn't right.",
+  },
+  {
+    id: "not_yet",
+    icon: "❌",
+    label: "Not yet",
+    plain: "We hold the door until these are fixed.",
+  },
+];
+
+export const INVITATION_QUESTION =
+  "Based on today's audit, are you comfortable inviting a new member onto Frass?";
+
+export type InvitationReadiness = {
+  verdict: InvitationVerdict;
+  answeredAt: string;
+  note: string;
+  /** Findings that must stay visible until they are addressed. */
+  unresolved: string[];
+};
+
+export function invitationLabel(verdict: InvitationVerdict): string {
+  const v = INVITATION_VERDICTS.find((x) => x.id === verdict);
+  return v ? `${v.icon} ${v.label}` : verdict;
+}
+
 export type AuditReport = {
   startedAt: string;
   completedAt: string;
@@ -271,7 +318,9 @@ export type AuditReport = {
   improvements: string[];
   engineeringTasks: string[];
   constitutionalRecommendations: string[];
+  invitationReadiness?: InvitationReadiness;
 };
+
 
 export function buildAuditReport(
   results: PageAuditResult[],
