@@ -53,26 +53,27 @@ export function SimplifiedView({
   const name = useFirstName();
 
   return (
-    <div className="min-h-screen bg-background px-4 pb-10 pt-20 sm:px-8">
+    <div className="frass-workspace min-h-screen px-4 pb-10 pt-20 sm:px-8">
       <div className="mx-auto flex w-full max-w-2xl flex-col gap-5">
         <div className="flex items-start justify-between gap-4">
           <div>
-            <div className="flex items-center gap-2 text-[10px] uppercase tracking-[0.32em] text-white/40">
+            <div className="flex items-center gap-2 text-[10px] uppercase tracking-[0.32em] text-[color:var(--ws-soft)]">
               <Sparkles className="h-3 w-3" /> {place}
             </div>
-            <h1 className="mt-2 font-display text-2xl sm:text-3xl">
+            <h1 className="mt-2 font-display text-2xl text-[color:var(--ws-ink)] sm:text-3xl">
               {greetingFor(name)}
             </h1>
-            <p className="mt-1 text-sm text-white/55">
+            <p className="mt-1 text-sm text-[color:var(--ws-soft)]">
               Just tell me what you'd like to do — I'll take you there.
             </p>
           </div>
           <ViewModeToggle className="shrink-0" />
         </div>
 
-        <div className="overflow-hidden rounded-lg border border-white/10 bg-black/30">
+        <div className="overflow-hidden rounded-lg">
           <FrassyChat embedded />
         </div>
+
 
         {task && (
           <section className="rounded-lg border border-[color:var(--gold)]/30 bg-[color:var(--gold)]/5 p-4">
