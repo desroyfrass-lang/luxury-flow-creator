@@ -222,6 +222,13 @@ export const COMMAND_SECTIONS: CommandSection[] = [
         amendment: "FRASS-0425",
       },
       {
+        id: "member-success",
+        label: "Founder Success Dashboard",
+        plain: "How every member is progressing — momentum, milestones and revenue ranges only, never balances.",
+        kind: "panel",
+        amendment: "FRASS-0547",
+      },
+      {
         id: "health",
         label: "Platform health",
         plain: "Live signals across the platform, in plain language.",
