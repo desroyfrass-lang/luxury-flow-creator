@@ -256,6 +256,11 @@ export function FrassyComposer({
 
       <UploadManager queue={queue} />
       {note && <p className="ws-note">{note}</p>}
+      {voice && ptt.voiceError && (
+        <p className="ws-note" role="status" aria-live="polite">
+          {ptt.voiceError}
+        </p>
+      )}
 
       {/* FRASS-0551 — the intake bar wraps so nothing is ever pushed off screen,
           and talking to Frassy is the first control the member sees. */}
