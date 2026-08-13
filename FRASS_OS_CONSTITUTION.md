@@ -1585,3 +1585,48 @@ Build → Validate → Security Review → Rollback Verification → Publish →
 
 No new deployment system, dashboard or checklist may be created. Changes to this lifecycle
 are amendments to the existing rules, never parallel processes.
+
+---
+
+## FRASS-0515 — Frassy Self-Healing & Troubleshooting Engine (The Frass Repair Engine)
+
+**Status:** Constitutional Amendment · **Priority:** P0
+
+**Vision.** Members should never have to leave Frass to report a common problem or ask for
+help. Frassy diagnoses, explains and resolves issues whenever it is safe and technically
+possible.
+
+**Constitutional rule.** When a member reports a problem, Frassy follows this sequence:
+understand → diagnose → verify the root cause → attempt an approved automatic repair →
+confirm resolution → escalate only when human intervention or a code change is required.
+No guessing. No repeated questions when the information is already available. Never
+"please contact support".
+
+**Repair authority.** Frassy may automatically perform only these pre-approved actions:
+refreshing caches · rebuilding search indexes · restarting non-critical background services ·
+repairing configuration entries · correcting broken internal links · regenerating navigation
+metadata · repairing corrupted user preferences.
+
+She may **never**: deploy production code · edit source code · change constitutional rules ·
+modify security policies · change financial records · bypass permissions. Those require the
+deployment and approval process (FRASS-0502-D).
+
+**Founder Mode.** For the Founder, Frassy provides a root cause summary, files likely
+affected, recommended fix, severity, whether the issue is blocking launch, and a
+ready-to-send engineering ticket. The Founder never translates a member's problem into
+engineering language.
+
+**Learning.** Every solved issue is stored as a troubleshooting pattern and checked first
+the next time a similar issue appears. Frassy becomes a better support engineer over time.
+
+**Founder Principle.** Members should experience Frass as a platform that helps solve
+problems, not just report them. When Frassy cannot fix something, she provides a complete,
+accurate diagnosis so the right engineering action can be taken.
+
+**Implementation.** `src/lib/repair/engine.ts` (repair catalog, classification, severity,
+engineering report), `src/lib/repair/repair.server.ts` (route verification against the live
+route list, diagnosis, incident records, pattern learning, safe repair execution),
+`src/lib/repair/repair.functions.ts`, Frassy tools in `src/lib/frassy-repair-tools.server.ts`
+(`diagnose_issue`, `apply_safe_repair`, `repair_authority_info`), the constitutional prompt
+layer in `src/lib/repair/prompt.ts`, and the Repair Center inside the Founder Security Center
+(`src/components/founder/repair-center.tsx`). Records: `repair_incidents`, `repair_patterns`.
