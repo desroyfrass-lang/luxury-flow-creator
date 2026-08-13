@@ -6,6 +6,8 @@ export type JourneyStatus = {
   /** True when the Builder is signed in and has not finished the Intelligent Builder Journey. */
   needsJourney: boolean;
   started: boolean;
+  /** True once the member has actually answered Frassy at least once. */
+  metFrassy: boolean;
   loading: boolean;
 };
 
@@ -13,7 +15,8 @@ export type JourneyStatus = {
 export async function fetchJourneyStatus(): Promise<JourneyStatus> {
   const { data: userData } = await supabase.auth.getUser();
   const user = userData.user;
-  if (!user) return { signedIn: false, needsJourney: false, started: false, loading: false };
+  if (!user)
+    return { signedIn: false, needsJourney: false, started: false, metFrassy: false, loading: false };
 
   const { data } = await supabase
     .from("builder_journeys")
@@ -22,10 +25,18 @@ export async function fetchJourneyStatus(): Promise<JourneyStatus> {
     .maybeSingle();
 
   const status = data?.status ?? null;
+
+  const { count } = await supabase
+    .from("builder_journey_messages")
+    .select("id", { count: "exact", head: true })
+    .eq("user_id", user.id)
+    .eq("role", "user");
+
   return {
     signedIn: true,
     needsJourney: status !== "complete",
     started: Boolean(status),
+    metFrassy: (count ?? 0) > 0,
     loading: false,
   };
 }
@@ -35,6 +46,7 @@ export function useJourneyStatus(): JourneyStatus {
     signedIn: false,
     needsJourney: false,
     started: false,
+    metFrassy: false,
     loading: true,
   });
 
