@@ -153,6 +153,9 @@ export const BUSINESS_VAULTS: BusinessVault[] = [
       ...MARKETPLACE_CLOSE,
     ],
     monetizationOutcome: "A gallery collection for sale plus at least one merch or print product.",
+    showcase: { label: "Frass Gallery", to: "/gallery", note: "Your work hangs in the Gallery — same pieces, one catalog." },
+    manufacturing: ["art", "lifestyle"],
+    craft: "art",
   },
   {
     key: "music-creator",
@@ -251,6 +254,8 @@ export const BUSINESS_VAULTS: BusinessVault[] = [
       ...MARKETPLACE_CLOSE,
     ],
     monetizationOutcome: "A bookable service menu with prices, live on your Frass Card.",
+    manufacturing: ["beauty"],
+    craft: "beauty work",
   },
   {
     key: "woodworking",
