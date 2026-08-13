@@ -57,7 +57,9 @@ export type SectionId =
   // FRASS-0532-C — Digital Legacy: preserve a lifetime of knowledge as assets.
   | "digital-legacy"
   // FRASS-0533 — recurring creative projects (a series, a channel, a book).
-  | "episode-progress";
+  | "episode-progress"
+  // FRASS-0534 — Legacy Publication Engine: a completed journey becoming a book.
+  | "legacy-publication";
 
 export type SectionMeta = {
   id: SectionId;
