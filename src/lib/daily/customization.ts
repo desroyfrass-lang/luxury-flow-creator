@@ -388,6 +388,7 @@ export const RECOMMENDED_ORDER: SectionId[] = [
   "digital-presence",
   "digital-legacy",
   "episode-progress",
+  "legacy-publication",
   "frassy-note",
   "since-last",
   "financial-snapshot",
