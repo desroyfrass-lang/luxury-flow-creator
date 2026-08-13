@@ -2665,3 +2665,70 @@ gracefully — never clipped, never horizontally scrolling.
 **Founder Principle.** Conversation is not a feature hidden within the interface. It is the
 primary way people experience Frass. Every page should make talking to Frassy feel
 immediate, familiar and effortless.
+
+---
+
+## FRASS-0556 — AI Intelligence Router (One Frassy. Many Brains.)
+
+**Constitutional rule.** Frassy shall never be permanently tied to a single AI provider.
+Every request passes through the AI Intelligence Router before it is sent anywhere.
+
+1. **Answer without AI first.** If Frass can answer from its own rules, data or route
+   registry — today's Daily, opening a Vault, navigating the platform — it does, free
+   and instantly. AI is the last resort, never the first reflex.
+2. **Understand the request.** Complexity, memory, voice, images, reasoning, search.
+3. **Choose the best brain.** Simple → cheapest capable. Conversation → fast. Blueprint →
+   memory-aware. Fashion/vision → vision model. Strategy → high reasoning. Speech → best
+   speech provider. Members never choose a model.
+4. **Founder cost protection.** Always the lowest-cost option that still delivers the
+   expected experience.
+5. **Provider independence.** Every task carries a fallback chain. A provider outage
+   reroutes silently; adding or removing a provider never redesigns Frass.
+6. **Learning.** Equal quality means the cheaper provider wins.
+7. **Sustainability review.** No AI feature is approved until it answers: what does it
+   cost, who pays, can it scale, is there a cheaper provider, can it be done without AI?
+
+**Founder Principle.** Members know one Frassy. Frassy knows many providers.
+
+## FRASS-0557 — Persistent Frassy Companion
+
+One Universal Frassy Beacon on every eligible page, in four states: **idle** (the Frass
+mark), **listening** (a microphone), **thinking** (a gentle pulse), **speaking** (the mark
+with a live waveform). One tap starts a conversation. The beacon never touches page edges,
+chat borders, logos, buttons, navigation or content. It knows which room the member is in
+and speaks to that room — never shopping prompts inside the Daily. Every conversation
+surface has Expand and Restore.
+
+## FRASS-0558 — One Frassy Experience
+
+**One conversation. One interface. One companion.**
+
+1. **No duplicate chat systems.** Welcome Hall, Daily, Workshop, Control Room, shopping
+   and the floating companion are entrances into the same conversation, not separate ones.
+2. **One conversation engine.** Changing pages never creates a second Frassy; the
+   conversation continues, like talking while walking between rooms.
+3. **Context changes, conversation doesn't.**
+4. **No duplicate windows.** Pages with a built-in Frassy workspace never show the
+   floating chat.
+5. **Beacon only where needed.** Marketplace, catalog, knowledge and business pages.
+6. **No Frassy on social spaces.** Community feeds, timelines, profile browsing, Kids
+   World play and entertainment surfaces. Members may summon her deliberately.
+7. **Full conversation mode.** Selecting the beacon opens a real conversation workspace,
+   never a cramped floating box.
+8. **Minimize, never lose.** Closing returns her to the beacon; reopening resumes exactly.
+9. **Universal voice control.** One always-green "Talk to Frassy" in the same position:
+   🎤 Listening → 🧠 Thinking → 🗣 Speaking.
+10. **End Conversation.** One clear red exit. Voice stops, the microphone deactivates,
+    nothing keeps listening, and the conversation stays saved.
+11. **Navigation chip.** ← Back · 🏠 Home · 📍 Current Page. Upper-left, small, never
+    overlapping content, never blocking scrolling. Platform rule.
+12. **Conversation philosophy.** A member must never wonder which Frassy they are talking
+    to. There is only one answer: one Frassy.
+
+**Enforcement.** `src/lib/frassy/surfaces.ts` is the single source of truth for whether a
+page shows a workspace, a beacon, or nothing. Adding Frassy anywhere means editing that
+one list — never mounting another chat.
+
+**Founder Principle.** Frassy is not a collection of chat boxes scattered throughout
+Frass. She is one continuous companion who walks beside the member. The interface may
+change; the relationship never does.

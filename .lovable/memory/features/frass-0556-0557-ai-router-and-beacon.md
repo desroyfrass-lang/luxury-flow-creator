@@ -36,3 +36,29 @@ Members never choose a model. The Founder rarely thinks about providers.
 - Every Frassy conversation surface has Expand / Restore.
 - Navigation chip: compact, upper-left, Back · Home · 📍 current page. Never centred.
 - The beacon is the primary interaction point; the chat window is secondary.
+
+# FRASS-0558 — One Frassy Experience
+
+One conversation, one interface, one companion. Enforced by `src/lib/frassy/surfaces.ts`,
+the single place that decides how Frassy appears on any page:
+
+- **workspace** — the page already hosts a full Frassy conversation (Welcome Hall,
+  Daily, Room, Workspace, Founder, Command Center, Builder Hall, Studio, Creation,
+  Onboarding). The floating companion is not mounted at all.
+- **beacon** — pages with no built-in conversation (marketplace, catalog, knowledge,
+  business pages) get the compact beacon.
+- **none** — social, play and entertainment surfaces (For Us, For Me, Town Square,
+  Kids World, Live, Radio, member profiles) plus auth/checkout/pay. Frassy never
+  interrupts; she is summoned deliberately.
+
+Never create another chat surface. Adding a Frassy to a page = adding a prefix here.
+
+Other locked rules:
+- Conversation follows the member across pages via the one shared transcript; page
+  changes never restart it. Context changes, conversation doesn't.
+- Tapping the beacon opens a full conversation workspace, never a cramped box.
+  Closing returns to the beacon with nothing lost.
+- Universal voice control: one always-green "Talk to Frassy" control in the same
+  place, cycling Listening → Thinking → Speaking, with a red **End** that stops
+  voice, closes the mic and keeps the conversation saved.
+- Navigation chip stays small, upper-left, never overlapping content. Platform rule.

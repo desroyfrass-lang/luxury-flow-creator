@@ -12,7 +12,18 @@
 // ─────────────────────────────────────────────────────────────────────────────
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import { X, ShoppingBag, Trash2, Volume2, VolumeX, Mic, ArrowRight, Maximize2, Minimize2 } from "lucide-react";
+import {
+  X,
+  ShoppingBag,
+  Trash2,
+  Volume2,
+  VolumeX,
+  Mic,
+  ArrowRight,
+  Maximize2,
+  Minimize2,
+  Square,
+} from "lucide-react";
 import { useNavigate } from "@tanstack/react-router";
 import { onboardingDestination } from "@/lib/navigation/core-routes";
 import { supabase } from "@/integrations/supabase/client";
@@ -39,12 +50,16 @@ import {
 // FRASS-0482 — the business already inside the person.
 import { loadProfile, noticeAssets, partnerContext } from "@/lib/business/partner-profile";
 // FRASS-0479A — Human Balance Layer: achievement balanced with wellbeing.
-import { balanceBriefing, NO_SIGNALS, readBalance, readBalanceSignals } from "@/lib/frassy/balance-signals";
+import {
+  balanceBriefing,
+  NO_SIGNALS,
+  readBalance,
+  readBalanceSignals,
+} from "@/lib/frassy/balance-signals";
 import { loadMomentum, momentumContext, readMomentum } from "@/lib/frassy/momentum";
 import { PlainEnglishMessage } from "@/components/frassy/plain-english-toggle";
 import { useLearningLevel } from "@/hooks/use-learning-level";
 import { learningLevelContext, levelMeta, type LearningLevel } from "@/lib/frassy/learning-levels";
-
 
 type ProductCard = {
   handle: string;
@@ -87,9 +102,15 @@ const nextId = () => `m${++seq}-${Date.now()}`;
 // so members never get a shopping prompt while they are working in the Daily.
 const BEACON_INVITES: Array<[RegExp, string]> = [
   [/^\/(daily|room)/, "Let's finish today's Daily together."],
-  [/^\/(workshop|creation|studio|business-builder)/, "Ready to build? Tell me what you're creating."],
+  [
+    /^\/(workshop|creation|studio|business-builder)/,
+    "Ready to build? Tell me what you're creating.",
+  ],
   [/^\/(money-moves|first-30-days|financial-center)/, "Let's find your next income opportunity."],
-  [/^\/(marketplace|shop|frass-district|frass-kicks|frass-drip|product|collection|cart)/, "Looking for something to buy — or something to sell?"],
+  [
+    /^\/(marketplace|shop|frass-district|frass-kicks|frass-drip|product|collection|cart)/,
+    "Looking for something to buy — or something to sell?",
+  ],
   [/^\/(founder|command|admin)/, "Founder Mode active. What would you like to review?"],
   [/^\/academy/, "What would you like to learn today?"],
 ];
@@ -117,11 +138,14 @@ export function FrassyChat({
   useEffect(() => {
     const prior = loadTranscript();
     if (prior.length) {
-      setMessages(prior.map((t: FrassyTurn) => ({ id: nextId(), role: t.role, content: t.content })));
+      setMessages(
+        prior.map((t: FrassyTurn) => ({ id: nextId(), role: t.role, content: t.content })),
+      );
     }
   }, []);
   useEffect(() => {
-    if (messages.length) saveTranscript(messages.map((m) => ({ role: m.role, content: m.content })));
+    if (messages.length)
+      saveTranscript(messages.map((m) => ({ role: m.role, content: m.content })));
   }, [messages]);
 
   const [input, setInput] = useState("");
@@ -198,7 +222,6 @@ export function FrassyChat({
       }),
     [embedded],
   );
-
 
   useEffect(() => {
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" });
@@ -303,7 +326,8 @@ export function FrassyChat({
           partnerContext: partnerContext(loadProfile()) || undefined,
           // FRASS-0479A — how hard this week has been, and what deserves celebrating.
           balanceContext:
-            balanceBriefing(readBalance(readBalanceSignals() ?? NO_SIGNALS, style), []) || undefined,
+            balanceBriefing(readBalance(readBalanceSignals() ?? NO_SIGNALS, style), []) ||
+            undefined,
           // FRASS-0546 — challenges are only offered once they have been earned.
           momentumContext:
             momentumContext(readMomentum(readBalanceSignals() ?? NO_SIGNALS, loadMomentum())) ||
@@ -385,6 +409,20 @@ export function FrassyChat({
     }
   }
 
+  // FRASS-0558 §9/§10 — is a conversation actually live right now?
+  const conversationLive =
+    voice.phase === "recording" ||
+    voice.phase === "transcribing" ||
+    voice.phase === "speaking" ||
+    loading;
+
+  /** One tap ends it: voice stops, the mic closes, the history stays saved. */
+  function endConversation() {
+    stopTurn();
+    if (voice.phase === "speaking") voice.stopSpeaking();
+    if (voice.phase === "recording") void voice.stopRecording();
+  }
+
   // Push-to-talk: press → record, press again → transcribe → one spoken turn.
   async function toggleMic() {
     if (voice.phase === "speaking") {
@@ -423,8 +461,6 @@ export function FrassyChat({
     void toggleMic();
   };
 
-
-
   // FRASS-0557 §1 — the Universal Frassy Beacon. One mark, four states: idle
   // (the Frass logo), listening (a microphone), thinking (a gentle pulse) and
   // speaking (the logo with a live waveform). One tap starts a conversation.
@@ -438,6 +474,7 @@ export function FrassyChat({
         aria-label={`Talk to Frassy — ${beaconInvite}`}
         onClick={() => {
           setOpen(true);
+          setExpanded(true); // FRASS-0558 §7 — the conversation deserves room.
           void toggleMic();
         }}
         title={beaconInvite}
@@ -475,18 +512,15 @@ export function FrassyChat({
       data-frassy-panel
       data-frassy-phase={startup.phase}
       aria-busy={startup.phase === "verifying" || startup.phase === "recovering"}
-      className={
-        `${startup.phase === "verifying" || startup.phase === "recovering" ? "invisible pointer-events-none" : "visible"} frass-workspace ${dark ? "ws-dark" : ""} ${
-          expanded
-            ? "fixed inset-3 z-[60] flex flex-col overflow-hidden rounded-lg border border-[color:var(--ws-line)] shadow-2xl sm:inset-6"
-            : embedded
-              ? "flex h-[min(820px,86vh)] min-h-[520px] w-full max-w-full flex-col overflow-hidden rounded-lg border border-[color:var(--ws-line)]"
-              : "fixed bottom-6 right-6 z-50 flex h-[min(620px,78vh)] w-[min(420px,calc(100vw-3rem))] max-w-full flex-col overflow-hidden rounded-lg border border-[color:var(--ws-line)] shadow-2xl"
-        }`
-      }
+      className={`${startup.phase === "verifying" || startup.phase === "recovering" ? "invisible pointer-events-none" : "visible"} frass-workspace ${dark ? "ws-dark" : ""} ${
+        expanded
+          ? "fixed inset-3 z-[60] flex flex-col overflow-hidden rounded-lg border border-[color:var(--ws-line)] shadow-2xl sm:inset-6"
+          : embedded
+            ? "flex h-[min(820px,86vh)] min-h-[520px] w-full max-w-full flex-col overflow-hidden rounded-lg border border-[color:var(--ws-line)]"
+            : "fixed bottom-6 right-6 z-50 flex h-[min(620px,78vh)] w-[min(420px,calc(100vw-3rem))] max-w-full flex-col overflow-hidden rounded-lg border border-[color:var(--ws-line)] shadow-2xl"
+      }`}
       style={{ background: "var(--ws-panel)", color: "var(--ws-ink)" }}
     >
-
       <header
         data-frassy-toolbar
         className="grid shrink-0 grid-cols-[minmax(0,1fr)_auto] items-center gap-2 border-b border-[color:var(--ws-line)] px-4 py-3"
@@ -513,7 +547,9 @@ export function FrassyChat({
               <div
                 data-frassy-voice-tier={startup.voiceTier}
                 className={`mt-0.5 flex items-center gap-1 text-[9px] tracking-[0.12em] ${
-                  startup.voiceTier === "cloud" ? "text-[color:var(--gold)]/80" : "text-[color:var(--ws-soft)]"
+                  startup.voiceTier === "cloud"
+                    ? "text-[color:var(--gold)]/80"
+                    : "text-[color:var(--ws-soft)]"
                 }`}
               >
                 <Mic className="h-2.5 w-2.5" />
@@ -523,6 +559,41 @@ export function FrassyChat({
           </div>
         </div>
         <div data-frassy-voice className="flex shrink-0 items-center gap-1">
+          {/* FRASS-0558 §9 — one voice control, always green, always here. */}
+          <button
+            type="button"
+            onClick={() => void toggleMic()}
+            title="Talk to Frassy"
+            className={`mr-1 inline-flex items-center gap-1 rounded-full border px-2.5 py-1 text-[9px] font-semibold uppercase tracking-[0.18em] transition ${
+              conversationLive
+                ? "border-emerald-400 bg-emerald-500/15 text-emerald-400"
+                : "border-emerald-500/60 text-emerald-500 hover:bg-emerald-500/10"
+            }`}
+          >
+            <Mic className="h-3 w-3" />
+            {voice.phase === "recording"
+              ? "Listening"
+              : voice.phase === "transcribing" || loading
+                ? "Thinking"
+                : voice.phase === "speaking"
+                  ? "Speaking"
+                  : "Talk to Frassy"}
+          </button>
+
+          {/* FRASS-0558 §10 — a clear exit. Voice stops, the mic closes, the
+              conversation stays saved for later. */}
+          {conversationLive && (
+            <button
+              type="button"
+              onClick={endConversation}
+              title="End conversation — Frassy stops talking and the microphone closes"
+              className="mr-1 inline-flex items-center gap-1 rounded-full border border-red-500/60 px-2.5 py-1 text-[9px] font-semibold uppercase tracking-[0.18em] text-red-500 transition hover:bg-red-500/10"
+            >
+              <Square className="h-3 w-3" />
+              End
+            </button>
+          )}
+
           {/* Voice: tap to let Frassy speak her replies aloud, or mute her. */}
           <button
             type="button"
@@ -554,7 +625,9 @@ export function FrassyChat({
           {/* FRASS-0557 §5 — Expand for long work, restore for quick asks. */}
           <button
             type="button"
-            aria-label={expanded ? "Restore Frassy to compact size" : "Expand Frassy to full screen"}
+            aria-label={
+              expanded ? "Restore Frassy to compact size" : "Expand Frassy to full screen"
+            }
             title={expanded ? "Restore" : "Expand"}
             onClick={() => setExpanded((v) => !v)}
             className="rounded-sm p-2 text-[color:var(--ws-soft)] hover:bg-[color:var(--ws-accent-bg)] hover:text-[color:var(--ws-ink)]"
@@ -598,11 +671,11 @@ export function FrassyChat({
         {(startup.greeting || (!messages.length && startup.phase === "greeted")) && (
           <div className="frassy-bubble w-fit max-w-[min(46rem,95%)] rounded-lg bg-[color:var(--ws-accent-bg)] px-4 py-3 text-sm leading-relaxed text-[color:var(--ws-ink)]">
             <p className="whitespace-pre-wrap">
-              {startup.greeting ?? "I'm right here. Tell me what you'd like to do — talk or type, whichever suits you."}
+              {startup.greeting ??
+                "I'm right here. Tell me what you'd like to do — talk or type, whichever suits you."}
             </p>
           </div>
         )}
-
 
         {startup.notice && (
           <div className="rounded-sm border border-[color:var(--gold)]/30 bg-[color:var(--gold)]/10 px-3 py-2 text-xs text-[color:var(--ws-ink)]">
@@ -664,7 +737,9 @@ export function FrassyChat({
                       </div>
                     )}
                     <div className="px-2 py-2">
-                      <div className="truncate text-[11px] text-[color:var(--ws-ink)]">{p.title}</div>
+                      <div className="truncate text-[11px] text-[color:var(--ws-ink)]">
+                        {p.title}
+                      </div>
                       <div className="mt-0.5 text-[10px] text-[color:var(--ws-soft)]">
                         {p.currency} {p.price}
                       </div>
@@ -706,7 +781,9 @@ export function FrassyChat({
         ))}
 
         {loading && (
-          <div className="w-fit rounded-lg bg-[color:var(--ws-accent-bg)] px-3 py-2 text-sm text-[color:var(--ws-soft)]">Typing…</div>
+          <div className="w-fit rounded-lg bg-[color:var(--ws-accent-bg)] px-3 py-2 text-sm text-[color:var(--ws-soft)]">
+            Typing…
+          </div>
         )}
 
         {(error || voice.voiceError) && (
@@ -741,7 +818,6 @@ export function FrassyChat({
           <SpeechControls />
         </div>
       ) : null}
-
 
       {/* FRASS-0412 — temporary launch feedback program */}
       <div className="shrink-0 border-t border-[color:var(--ws-line)] px-3 py-2">

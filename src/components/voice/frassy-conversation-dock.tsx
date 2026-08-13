@@ -11,9 +11,7 @@ import { Pause, Play, Square } from "lucide-react";
 import { useRouterState } from "@tanstack/react-router";
 import { useConversationState, useSpeechState } from "@/hooks/use-push-to-talk";
 import { pauseSpeech, resumeSpeech, stopSpeech } from "@/lib/voice/speech-manager";
-
-/** Surfaces that own their own exits and have no conversation. */
-const HIDDEN_PREFIXES = ["/auth", "/reset-password", "/pay/", "/api", "/checkout"];
+import { frassySurface } from "@/lib/frassy/surfaces";
 
 type DockStatus = "listening" | "thinking" | "speaking" | "idle";
 
@@ -45,7 +43,8 @@ export function FrassyConversationDock() {
   const convo = useConversationState();
   const speech = useSpeechState();
 
-  if (HIDDEN_PREFIXES.some((p) => pathname === p || pathname.startsWith(p))) return null;
+  // FRASS-0558 — no transport controls where Frassy is deliberately absent.
+  if (frassySurface(pathname) === "none") return null;
 
   const listening = convo.state === "listening" || convo.micOpen;
   const thinking =
@@ -110,7 +109,6 @@ export function FrassyConversationDock() {
           </span>
         </div>
       )}
-
     </div>
   );
 }

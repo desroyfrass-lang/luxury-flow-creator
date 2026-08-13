@@ -4,6 +4,7 @@ import {
   Link,
   createRootRouteWithContext,
   useRouter,
+  useRouterState,
   HeadContent,
   Scripts,
 } from "@tanstack/react-router";
@@ -16,6 +17,7 @@ import { WelcomeLinkClaim } from "@/components/link/welcome-link-claim";
 import { VoiceStateOverlay } from "@/components/voice-state-overlay";
 import { FrassyConversationDock } from "@/components/voice/frassy-conversation-dock";
 import { FrassyChat } from "@/components/frassy-chat";
+import { frassySurface } from "@/lib/frassy/surfaces";
 import { FrassyHost } from "@/components/frassy-host";
 import { DailyGate } from "@/components/workspace/daily-gate";
 import { ConstructionMode } from "@/components/construction/blueprint-mode";
@@ -23,7 +25,6 @@ import { ConstructionMode } from "@/components/construction/blueprint-mode";
 import { RewardsRibbon } from "@/components/rewards-ribbon";
 import { FrassTrail } from "@/components/frass-trail";
 import { ViewModeProvider } from "@/lib/view-mode/view-mode";
-
 
 function NotFoundComponent() {
   return (
@@ -129,25 +130,31 @@ function RootShell({ children }: { children: ReactNode }) {
   );
 }
 
+function FrassyCompanion() {
+  const pathname = useRouterState({ select: (s) => s.location.pathname });
+  if (frassySurface(pathname) !== "beacon") return null;
+  return <FrassyChat />;
+}
+
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
   return (
     <QueryClientProvider client={queryClient}>
       <ViewModeProvider>
-      <RewardsRibbon />
-      <FrassTrail />
-      <Outlet />
-      <WelcomeLinkClaim />
-      <Toaster position="top-center" />
-      <FrassyChat />
-      <FrassyHost />
-      <DailyGate />
-      <ConstructionMode />
+        <RewardsRibbon />
+        <FrassTrail />
+        <Outlet />
+        <WelcomeLinkClaim />
+        <Toaster position="top-center" />
+        {/* FRASS-0558 — one Frassy. She only floats where the page has no conversation of its own. */}
+        <FrassyCompanion />
+        <FrassyHost />
+        <DailyGate />
+        <ConstructionMode />
 
-
-      {/* FRASS-0553 — one dock, one place, every conversation. */}
-      <FrassyConversationDock />
-      <VoiceStateOverlay />
+        {/* FRASS-0553 — one dock, one place, every conversation. */}
+        <FrassyConversationDock />
+        <VoiceStateOverlay />
       </ViewModeProvider>
     </QueryClientProvider>
   );
