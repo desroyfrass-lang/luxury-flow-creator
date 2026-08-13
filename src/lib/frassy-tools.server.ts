@@ -237,6 +237,9 @@ export function buildFrassyTools(
     // FRASS-0532-B — Member Success Blueprints. Personalization by conversation
     // instead of engineering. Only attached for a verified session.
     ...buildBlueprintTools({ accessToken: ctx.accessToken }),
+    // FRASS-0534 — Legacy Publication Engine. Frassy is the editor, never the
+    // author. Attached only for a verified session.
+    ...buildPublicationTools({ accessToken: ctx.accessToken }),
     // FRASS-0520/0521 — Founder Design Authority and Change Advisor.
     // Only ever attached when the server has verified the caller is the Founder.
     ...(ctx.founder ? buildFounderTools() : {}),
