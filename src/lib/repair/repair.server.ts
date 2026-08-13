@@ -186,6 +186,34 @@ export async function recordIncident(input: {
   return data;
 }
 
+/**
+ * FRASS-0515-H — Every repair leaves a trace, even a one-off manual run.
+ * Quietly written; members never see it.
+ */
+export async function recordManualRepair(input: {
+  userId: string | null;
+  action: string;
+  message: string;
+  ok: boolean;
+}) {
+  const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+  await supabaseAdmin.from("repair_incidents").insert({
+    user_id: input.userId,
+    reported_text: `Repair run on request: ${input.action}`,
+    context_path: null,
+    category: "maintenance",
+    severity: "low",
+    diagnosis: input.message.slice(0, 2000),
+    root_cause: null,
+    status: input.ok ? "auto_repaired" : "diagnosed",
+    repairs_applied: input.ok ? [input.action] : [],
+    evidence: {} as unknown as never,
+    engineering_report: null,
+    blocking_launch: false,
+    pattern_signature: `manual:${input.action}`,
+  });
+}
+
 /** Learning: every solved issue becomes a pattern checked first next time. */
 export async function learnPattern(input: {
   signature: string;

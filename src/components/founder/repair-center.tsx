@@ -1,10 +1,14 @@
 // FRASS-0515 — Repair Center: every issue Frassy diagnosed, repaired or escalated.
 import { useState } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { toast } from "sonner";
-import { Wrench, ShieldCheck, AlertTriangle, ClipboardCopy } from "lucide-react";
-import { listRepairIncidents, type RepairIncident } from "@/lib/repair/repair.functions";
+import { Wrench, ShieldCheck, AlertTriangle, ClipboardCopy, History, Repeat, Scale } from "lucide-react";
+import {
+  annotateRepairIncident,
+  listRepairIncidents,
+  type RepairIncident,
+} from "@/lib/repair/repair.functions";
 import { SAFE_REPAIRS, REPAIR_FORBIDDEN } from "@/lib/repair/engine";
 
 const STATUS_TONE: Record<string, string> = {
@@ -15,9 +19,27 @@ const STATUS_TONE: Record<string, string> = {
   open: "text-white/60 border-white/20",
 };
 
+const MODE_LABEL: Record<string, string> = {
+  automatic: "Automatic — Frassy repaired it",
+  manual: "Manual — a person fixed it",
+  escalated: "Escalated to engineering",
+  no_action: "No action needed",
+};
+
 export function RepairCenter() {
   const listFn = useServerFn(listRepairIncidents);
+  const annotateFn = useServerFn(annotateRepairIncident);
+  const qc = useQueryClient();
   const [open, setOpen] = useState<string | null>(null);
+
+  const annotate = useMutation({
+    mutationFn: annotateFn,
+    onSuccess: () => {
+      toast.success("Repair History updated.");
+      void qc.invalidateQueries({ queryKey: ["repair", "incidents"] });
+    },
+    onError: () => toast.error("Could not save that. Try again."),
+  });
 
   const incidents = useQuery<RepairIncident[]>({
     queryKey: ["repair", "incidents"],
@@ -28,6 +50,8 @@ export function RepairCenter() {
   const items = incidents.data ?? [];
   const escalated = items.filter((i) => i.status === "escalated").length;
   const repaired = items.filter((i) => i.status === "auto_repaired").length;
+  const recurring = items.filter((i) => i.recurring).length;
+  const amendments = items.filter((i) => i.amendment_ref).length;
 
   return (
     <section className="rounded-sm border border-white/10 bg-white/[0.02] p-6">
@@ -50,6 +74,14 @@ export function RepairCenter() {
           <div>
             <div className="font-display text-2xl text-amber-400">{escalated}</div>
             <div className="text-[10px] uppercase tracking-[0.3em] text-white/40">Escalated</div>
+          </div>
+          <div>
+            <div className="font-display text-2xl text-sky-400">{recurring}</div>
+            <div className="text-[10px] uppercase tracking-[0.3em] text-white/40">Recurring</div>
+          </div>
+          <div>
+            <div className="font-display text-2xl text-[color:var(--gold)]">{amendments}</div>
+            <div className="text-[10px] uppercase tracking-[0.3em] text-white/40">Amendments</div>
           </div>
         </div>
       </header>
@@ -96,9 +128,21 @@ export function RepairCenter() {
             >
               <div className="min-w-0">
                 <div className="truncate text-sm text-white">{i.reported_text}</div>
-                <div className="mt-1 text-[10px] uppercase tracking-[0.25em] text-white/40">
-                  {i.category} · {i.severity} · {i.context_path ?? "no path"} ·{" "}
-                  {new Date(i.created_at).toLocaleString()}
+                <div className="mt-1 flex flex-wrap items-center gap-2 text-[10px] uppercase tracking-[0.25em] text-white/40">
+                  <span>
+                    {i.category} · {i.severity} · {i.context_path ?? "no path"} ·{" "}
+                    {new Date(i.created_at).toLocaleString()}
+                  </span>
+                  {i.recurring && (
+                    <span className="inline-flex items-center gap-1 rounded-sm border border-sky-400/40 px-1.5 py-0.5 text-sky-400">
+                      <Repeat className="h-3 w-3" /> seen {i.times_seen}×
+                    </span>
+                  )}
+                  {i.amendment_ref && (
+                    <span className="inline-flex items-center gap-1 rounded-sm border border-[color:var(--gold)]/40 px-1.5 py-0.5 text-[color:var(--gold)]">
+                      <Scale className="h-3 w-3" /> {i.amendment_ref}
+                    </span>
+                  )}
                 </div>
               </div>
               <span
@@ -112,6 +156,69 @@ export function RepairCenter() {
 
             {open === i.id && (
               <div className="mt-4 space-y-3 border-l border-white/10 pl-4">
+                {/* FRASS-0515-H — Repair History: the six questions, always answered. */}
+                <div className="rounded-sm border border-white/10 bg-black/30 p-3">
+                  <div className="flex items-center gap-2 text-[10px] uppercase tracking-[0.3em] text-white/40">
+                    <History className="h-3 w-3" /> Repair History
+                  </div>
+                  <dl className="mt-3 grid gap-x-6 gap-y-2 text-sm sm:grid-cols-2">
+                    <div>
+                      <dt className="text-[10px] uppercase tracking-[0.25em] text-white/40">What was repaired</dt>
+                      <dd className="text-white/75">
+                        {Array.isArray(i.repairs_applied) && i.repairs_applied.length > 0
+                          ? i.repairs_applied.join(", ")
+                          : i.status === "escalated"
+                            ? "Nothing — escalated instead"
+                            : "Nothing yet"}
+                      </dd>
+                    </div>
+                    <div>
+                      <dt className="text-[10px] uppercase tracking-[0.25em] text-white/40">When</dt>
+                      <dd className="text-white/75">
+                        {i.resolved_at
+                          ? new Date(i.resolved_at).toLocaleString()
+                          : `Reported ${new Date(i.created_at).toLocaleString()} — still open`}
+                      </dd>
+                    </div>
+                    <div>
+                      <dt className="text-[10px] uppercase tracking-[0.25em] text-white/40">Automatic or manual</dt>
+                      <dd className="text-white/75">
+                        {i.resolution_mode ? MODE_LABEL[i.resolution_mode] ?? i.resolution_mode : "Not decided yet"}
+                      </dd>
+                    </div>
+                    <div>
+                      <dt className="text-[10px] uppercase tracking-[0.25em] text-white/40">Happened before?</dt>
+                      <dd className="text-white/75">
+                        {i.recurring
+                          ? `Yes — this pattern has been seen ${i.times_seen} times.`
+                          : "No — first time this pattern appeared."}
+                      </dd>
+                    </div>
+                    <div className="sm:col-span-2">
+                      <dt className="text-[10px] uppercase tracking-[0.25em] text-white/40">
+                        Constitutional amendment
+                      </dt>
+                      <dd className="text-white/75">
+                        {i.amendment_ref
+                          ? `${i.amendment_ref}${i.amendment_note ? ` — ${i.amendment_note}` : ""}`
+                          : "None recorded."}
+                      </dd>
+                    </div>
+                    {i.resolution_note && (
+                      <div className="sm:col-span-2">
+                        <dt className="text-[10px] uppercase tracking-[0.25em] text-white/40">Note</dt>
+                        <dd className="text-white/75">{i.resolution_note}</dd>
+                      </div>
+                    )}
+                  </dl>
+
+                  <AnnotateForm
+                    incident={i}
+                    busy={annotate.isPending}
+                    onSave={(values) => annotate.mutate({ data: { id: i.id, ...values } })}
+                  />
+                </div>
+
                 <div>
                   <div className="text-[10px] uppercase tracking-[0.3em] text-white/40">Root cause</div>
                   <p className="mt-1 text-sm text-white/70">{i.root_cause ?? "—"}</p>
@@ -149,5 +256,83 @@ export function RepairCenter() {
         ))}
       </div>
     </section>
+  );
+}
+
+/** Founder closes the loop on an incident. Members never see this. */
+function AnnotateForm({
+  incident,
+  busy,
+  onSave,
+}: {
+  incident: RepairIncident;
+  busy: boolean;
+  onSave: (values: {
+    resolutionMode: "automatic" | "manual" | "escalated" | "no_action" | null;
+    resolutionNote: string | null;
+    amendmentRef: string | null;
+    amendmentNote: string | null;
+    markResolved: boolean;
+  }) => void;
+}) {
+  const [mode, setMode] = useState<string>(incident.resolution_mode ?? "");
+  const [note, setNote] = useState(incident.resolution_note ?? "");
+  const [ref, setRef] = useState(incident.amendment_ref ?? "");
+  const [amendNote, setAmendNote] = useState(incident.amendment_note ?? "");
+  const [close, setClose] = useState(false);
+
+  return (
+    <div className="mt-4 grid gap-2 border-t border-white/10 pt-3 sm:grid-cols-2">
+      <select
+        value={mode}
+        onChange={(e) => setMode(e.target.value)}
+        className="rounded-sm border border-white/15 bg-black/40 px-2 py-1.5 text-xs text-white"
+        aria-label="How it was resolved"
+      >
+        <option value="">How was it resolved?</option>
+        <option value="automatic">Automatic — Frassy repaired it</option>
+        <option value="manual">Manual — a person fixed it</option>
+        <option value="escalated">Escalated to engineering</option>
+        <option value="no_action">No action needed</option>
+      </select>
+      <input
+        value={ref}
+        onChange={(e) => setRef(e.target.value)}
+        placeholder="Amendment created? e.g. FRASS-0514"
+        className="rounded-sm border border-white/15 bg-black/40 px-2 py-1.5 text-xs text-white placeholder:text-white/30"
+      />
+      <input
+        value={note}
+        onChange={(e) => setNote(e.target.value)}
+        placeholder="What actually fixed it"
+        className="rounded-sm border border-white/15 bg-black/40 px-2 py-1.5 text-xs text-white placeholder:text-white/30"
+      />
+      <input
+        value={amendNote}
+        onChange={(e) => setAmendNote(e.target.value)}
+        placeholder="Why the amendment was written"
+        className="rounded-sm border border-white/15 bg-black/40 px-2 py-1.5 text-xs text-white placeholder:text-white/30"
+      />
+      <label className="flex items-center gap-2 text-[11px] text-white/60">
+        <input type="checkbox" checked={close} onChange={(e) => setClose(e.target.checked)} />
+        Mark this incident resolved
+      </label>
+      <button
+        type="button"
+        disabled={busy}
+        onClick={() =>
+          onSave({
+            resolutionMode: (mode || null) as never,
+            resolutionNote: note.trim() || null,
+            amendmentRef: ref.trim() || null,
+            amendmentNote: amendNote.trim() || null,
+            markResolved: close,
+          })
+        }
+        className="rounded-sm border border-[color:var(--gold)]/50 px-3 py-1.5 text-[10px] uppercase tracking-[0.3em] text-[color:var(--gold)] disabled:opacity-40"
+      >
+        {busy ? "Saving…" : "Save to Repair History"}
+      </button>
+    </div>
   );
 }

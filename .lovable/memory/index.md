@@ -39,6 +39,8 @@ Every Business Vault adapts to the member's skill level (beginner/intermediate/a
 Physical products from ANY Vault go through the one shared Creator Manufacturing Network (/manufacturing) — Frass is never the manufacturer, nothing is made without member approval, no inventory ownership.
 Seamstress Vault is the business engine behind Afro Designers — one catalog, one inventory, never a second storefront.
 
+Every Frassy repair or escalation writes a Repair History entry (what/when/auto or manual/root cause/recurrence/amendment) — Founder-only, never member-facing.
+
 ## Memories
 - [FRASS-0477 Frassy Presence](mem://features/frass-0477-frassy-presence) — Arrival/returning/working/idle etiquette, Focus Mode silence, cloud→device→text voice hierarchy with indicator
 - [The Daily philosophy FRASS-0425](mem://features/frass-0425-daily-philosophy) — Daily's constitutional purpose + Morning Briefing, End of Day, time estimates, Focus Mode, consistency, health, Close My Day
