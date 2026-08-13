@@ -6,6 +6,7 @@ import { type ReactNode, useRef, useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { ForUsLink } from "@/components/for-us-link";
 import { VoiceFeedbackButton } from "@/components/feedback/voice-feedback";
+import { ViewModeToggle } from "@/components/view-mode/view-mode-toggle";
 import {
   Search,
   PanelLeftClose,
@@ -173,6 +174,7 @@ export function WorkspaceShell({
             aria-label={rightOpen ? "Collapse context panel" : "Expand context panel"}>
             {rightOpen ? <PanelRightClose className="h-4 w-4" /> : <PanelRightOpen className="h-4 w-4" />}
           </button>
+          <ViewModeToggle className="ml-1 hidden sm:inline-flex" />
         </div>
       </header>
 

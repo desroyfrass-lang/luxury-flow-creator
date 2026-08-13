@@ -8,6 +8,7 @@ import { unlockAudio } from "@/lib/audio-unlock";
 import { AgreementGate } from "@/components/legal/agreement-gate";
 import { supabase } from "@/integrations/supabase/client";
 import { onboardingDestination } from "@/lib/navigation/core-routes";
+import { ViewModeToggle } from "@/components/view-mode/view-mode-toggle";
 
 
 /**
@@ -138,6 +139,8 @@ function WelcomeHallPage() {
 
   return (
     <div className="min-h-screen bg-background text-foreground">
+      {/* FRASS-0517 — choose how Frass feels before you even begin. */}
+      <ViewModeToggle className="fixed right-4 top-4 z-40" />
       {/* The gates */}
       <header
         className="relative min-h-[86vh] overflow-hidden"

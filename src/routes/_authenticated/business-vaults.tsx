@@ -47,6 +47,8 @@ import {
   saveFutureVault,
   updateFutureVaultNotes,
 } from "@/lib/business/future-vaults.functions";
+import { ViewModeFrame } from "@/components/view-mode/simplified-view";
+import { ViewModeToggle } from "@/components/view-mode/view-mode-toggle";
 
 export const Route = createFileRoute("/_authenticated/business-vaults")({
   head: () => ({
@@ -107,9 +109,20 @@ function FutureVaultsPage() {
   const suggestions = VAULT_IDEAS.filter((i) => !shelved.has(i.key) && !familyKeys.has(i.key));
 
   return (
+    // FRASS-0517 — every Business Vault works either way: the full workshop,
+    // or the same vault as a guided conversation with Frassy.
+    <ViewModeFrame
+      place="Business Vaults"
+      task={{
+        title: "Which business would you like to work on?",
+        detail:
+          "Say the name of a vault — Seamstress, Freight, Wellness, Photography, Music — and I'll open it and walk you through the next step.",
+      }}
+    >
     <SiteShell>
       <div className="mx-auto max-w-4xl px-4 py-10">
-        <header>
+        <header className="relative">
+          <ViewModeToggle className="absolute right-0 top-0" />
           <p className="text-[11px] uppercase tracking-[0.24em] text-muted-foreground">FRASS-0469</p>
           <h1 className="mt-2 font-display text-3xl uppercase tracking-[0.06em] sm:text-4xl">
             Future Business Vaults
@@ -491,6 +504,7 @@ function FutureVaultsPage() {
         <p className="mt-2 text-xs text-muted-foreground">{PLAIN_ENGLISH}</p>
       </div>
     </SiteShell>
+    </ViewModeFrame>
   );
 }
 

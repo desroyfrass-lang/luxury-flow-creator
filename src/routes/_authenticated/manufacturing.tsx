@@ -17,6 +17,8 @@ import {
   type CreatorCategoryKey,
 } from "@/lib/manufacturing/network";
 import { vaultByKey } from "@/lib/business/vault-family";
+import { ViewModeFrame } from "@/components/view-mode/simplified-view";
+import { ViewModeToggle } from "@/components/view-mode/view-mode-toggle";
 
 export const Route = createFileRoute("/_authenticated/manufacturing")({
   head: () => ({
@@ -55,7 +57,10 @@ function ManufacturingPage() {
   const vault = active.vaultKey ? vaultByKey(active.vaultKey) : undefined;
 
   return (
+    // FRASS-0517 — same tools, presented the member's way.
+    <ViewModeFrame place="Manufacturing Network" task={{ title: "What would you like made?", detail: "Tell me the product you're building and I'll find the approved partners who can make it." }}>
     <SiteShell>
+      <ViewModeToggle className="fixed right-4 top-20 z-30" />
       <div className="mx-auto max-w-6xl px-5 py-12">
         <p className="text-[11px] uppercase tracking-[0.4em] text-muted-foreground">
           FRASS-0516 · Shared Platform Network
@@ -212,5 +217,6 @@ function ManufacturingPage() {
         </p>
       </div>
     </SiteShell>
+    </ViewModeFrame>
   );
 }

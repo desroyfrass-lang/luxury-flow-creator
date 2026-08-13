@@ -1653,3 +1653,29 @@ Every core destination is verified against the live route table before any
 production publish (Founder console → Link & card checker → Core route audit).
 A broken ordinary link is cosmetic; a core route that does not resolve blocks
 the publish, because it breaks a member's first journey.
+
+## FRASS-0517 — Simplified View Mode (One Platform. Two Ways to Experience It.)
+
+Every major workspace in Frass optionally supports **Standard View** (full
+dashboards and tools) and **Simplified View** (conversation-first with Frassy).
+Both views access the exact same data, workflows and capabilities. Only the
+presentation changes.
+
+Simplified View contains only: the personalized greeting, Frassy, the
+conversation area, the voice button, the text input, the current task or
+recommendation, Approve and Next. No sidebars, no widgets, no dashboard panels.
+The Frass aesthetic stays.
+
+Rules:
+- Simplified View is a **reduced-distraction** mode, never a reduced-feature mode.
+- Never build another Daily and never duplicate a Workshop to achieve it —
+  wrap the existing workspace with the shared view frame.
+- Members work by talking; Frassy performs the navigation (FRASS-0513) while
+  the conversation keeps flowing.
+- The choice is a **platform-wide View Preference**, remembered on the member's
+  profile and applied to every compatible area until they switch back.
+- Members may switch at any time. No information is lost and no workflow is
+  interrupted.
+- Every Business Vault supports both views, operating on the same project.
+
+Founder principle: technology adapts to people, not the other way around.

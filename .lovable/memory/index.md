@@ -41,6 +41,8 @@ Seamstress Vault is the business engine behind Afro Designers — one catalog, o
 
 Every Frassy repair or escalation writes a Repair History entry (what/when/auto or manual/root cause/recurrence/amendment) — Founder-only, never member-facing.
 
+Every major workspace supports Standard View and Simplified View (FRASS-0517) — same data and capability, presentation only; preference is remembered platform-wide.
+
 ## Memories
 - [FRASS-0477 Frassy Presence](mem://features/frass-0477-frassy-presence) — Arrival/returning/working/idle etiquette, Focus Mode silence, cloud→device→text voice hierarchy with indicator
 - [The Daily philosophy FRASS-0425](mem://features/frass-0425-daily-philosophy) — Daily's constitutional purpose + Morning Briefing, End of Day, time estimates, Focus Mode, consistency, health, Close My Day
@@ -148,3 +150,4 @@ Every Frassy repair or escalation writes a Repair History entry (what/when/auto 
 - [FRASS-0515 Frass Repair Engine](mem://features/frass-0515-repair-engine) — Frassy as support engineer: diagnose/verify/safe-repair/escalate, repair authority limits, learned patterns, Founder Repair Center
 - [FRASS-0513/0514 Welcome Hall onboarding](mem://features/frass-0513-welcome-hall-onboarding) — No member-facing URLs, Frassy open_place navigation, Start My Journey CTA, launch-blocking core route audit
 - [FRASS-0510/0511-A/0516 Fashion + Manufacturing](mem://features/frass-0510-0516-fashion-and-manufacturing) — Seamstress↔Afro Designers ecosystem, adaptive learning engine, shared Creator Manufacturing Network
+- [FRASS-0517 Simplified View Mode](mem://features/frass-0517-simplified-view) — Platform-wide View Preference, conversation-first Simplified View, no duplicate Dailies or Workshops
