@@ -19,6 +19,25 @@ const upsertSchema = z.object({
   daily_priorities: z.array(z.string().max(160)).max(20).default([]),
   money_moves_philosophy: z.string().max(600).nullable().default(null),
   business_vaults: z.array(z.string().max(80)).max(20).default([]),
+  // FRASS-0533 — recurring creative projects (series, channels, books).
+  creative_projects: z
+    .array(
+      z.object({
+        name: z.string().min(1).max(160),
+        status: z.string().max(120).nullable().default(null),
+        cadence: z.string().max(120).nullable().default(null),
+        current_episode: z.string().max(200).nullable().default(null),
+        script_status: z.string().max(120).nullable().default(null),
+        production_status: z.string().max(120).nullable().default(null),
+        upload_status: z.string().max(120).nullable().default(null),
+        thumbnail_status: z.string().max(120).nullable().default(null),
+        publish_date: z.string().max(60).nullable().default(null),
+        channel: z.string().max(160).nullable().default(null),
+        notes: z.string().max(1000).nullable().default(null),
+      }),
+    )
+    .max(10)
+    .default([]),
   learning_style: z.string().max(400).nullable().default(null),
   motivation_style: z.string().max(400).nullable().default(null),
   simplified_view: z.boolean().default(false),
