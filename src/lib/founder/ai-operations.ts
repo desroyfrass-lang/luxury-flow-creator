@@ -23,6 +23,16 @@ export type AiOperationsReport = {
     peakHour: number | null;
   };
   trends: { daily: Array<{ date: string; requests: number; credits: number }>; growthPct: number | null };
+  /** FRASS-0555 — live cost telemetry. */
+  telemetry: {
+    conversationsThisMonth: number;
+    activeMembersThisMonth: number;
+    costPerConversation: number;
+    costPerActiveMember: number;
+    dailyComputeSpendToday: number;
+    dailyComputeSpendAverage: number;
+    plain: string;
+  };
   alerts: Array<{ level: "info" | "warn" | "critical"; message: string }>;
   suggestions: string[];
   roi: {
