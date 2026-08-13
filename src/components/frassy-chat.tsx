@@ -295,7 +295,7 @@ export function FrassyChat({ embedded = false }: { embedded?: boolean } = {}) {
           }
         }
         setTimeout(() => {
-          void navigate({ to: target });
+          void navigate({ to: target } as never);
         }, 600);
       }
 
@@ -529,7 +529,7 @@ export function FrassyChat({ embedded = false }: { embedded?: boolean } = {}) {
             {m.place && (
               <button
                 type="button"
-                onClick={() => void navigate({ to: m.place!.path })}
+                onClick={() => void navigate({ to: m.place!.path } as never)}
                 className="mt-3 inline-flex items-center gap-2 rounded-sm border border-[color:var(--gold)]/60 bg-[color:var(--gold)]/10 px-3 py-2 text-[10px] font-bold uppercase tracking-[0.25em] text-[color:var(--gold)]"
               >
                 Open {m.place.label} <ArrowRight className="h-3 w-3" />
