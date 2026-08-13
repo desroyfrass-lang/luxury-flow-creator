@@ -150,7 +150,18 @@ export const TESTING_SEQUENCE: Array<{ id: string; label: string; path: string; 
   { id: "landing", label: "FrassKicks.com", path: "/", plain: "The public front door. Exactly what a stranger sees." },
   { id: "welcome", label: "Welcome Hall", path: "/welcome", plain: "The official introduction to Frassy." },
   { id: "conversation", label: "First Frassy conversation", path: "/frassy", plain: "Greeting, direction, confidence." },
-  { id: "district", label: "District selection", path: "/frass-hill", plain: "Frass District or Frass Hill — an intentional choice." },
+  {
+    id: "district",
+    label: "District choice",
+    path: "/frass-world",
+    plain: "Frass District or Frass Hill — the fork every member must choose at.",
+  },
+  {
+    id: "destination",
+    label: "Destination",
+    path: "/frass-district",
+    plain: "Where that choice actually lands them.",
+  },
 ];
 
 /** Later stages a Founder may jump to on purpose. Default is always Step 1. */
