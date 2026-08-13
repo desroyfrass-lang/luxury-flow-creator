@@ -345,7 +345,19 @@ export function FrassyChat({ embedded = false }: { embedded?: boolean } = {}) {
     }
     if (voice.phase === "recording") {
       const transcript = await voice.stopRecording();
-      if (!transcript) return;
+      if (!transcript) {
+        // FRASS-0551 — the conversation never dies quietly. If she didn't catch
+        // the words, she says so in the transcript and invites another try.
+        setMessages((prev) => [
+          ...prev,
+          {
+            id: nextId(),
+            role: "assistant",
+            content: "I didn't catch that one. Tap the mic and say it again — I'm listening.",
+          },
+        ]);
+        return;
+      }
       // Anything already typed is part of the same turn — never left behind.
       const typed = input.trim();
       await send(typed ? `${typed} ${transcript}` : transcript, true);
@@ -375,11 +387,13 @@ export function FrassyChat({ embedded = false }: { embedded?: boolean } = {}) {
       data-frassy-phase={startup.phase}
       aria-busy={startup.phase === "verifying" || startup.phase === "recovering"}
       className={
-        `${startup.phase === "verifying" || startup.phase === "recovering" ? "invisible pointer-events-none" : "visible"} ${embedded
-          ? "frass-workspace ws-dark flex h-[min(640px,78vh)] min-h-[420px] w-full flex-col overflow-hidden rounded-lg border border-[color:var(--ws-line)] bg-[#0b0c0e]"
-          : "frass-workspace ws-dark fixed bottom-5 right-5 z-50 flex h-[min(620px,80vh)] w-[min(400px,calc(100vw-2.5rem))] flex-col overflow-hidden rounded-lg border border-[color:var(--ws-line)] bg-[#0b0c0e] shadow-2xl"}`
+        `${startup.phase === "verifying" || startup.phase === "recovering" ? "invisible pointer-events-none" : "visible"} frass-workspace ${dark ? "ws-dark" : ""} ${embedded
+          ? "flex h-[min(640px,78vh)] min-h-[420px] w-full max-w-full flex-col overflow-hidden rounded-lg border border-[color:var(--ws-line)]"
+          : "fixed bottom-5 right-5 z-50 flex h-[min(620px,80vh)] w-[min(420px,calc(100vw-2rem))] max-w-full flex-col overflow-hidden rounded-lg border border-[color:var(--ws-line)] shadow-2xl"}`
       }
+      style={{ background: "var(--ws-panel)", color: "var(--ws-ink)" }}
     >
+
       <header
         data-frassy-toolbar
         className="grid shrink-0 grid-cols-[minmax(0,1fr)_auto] items-center gap-2 border-b border-[color:var(--ws-line)] px-4 py-3"
