@@ -11,6 +11,7 @@ import {
   journeyTurn,
   setJourneyStage,
   startJourneyTrack,
+  journeyOpening,
   type ConversationDiagnostics,
   type JourneyMessage,
 } from "@/lib/journey.functions";
@@ -52,6 +53,7 @@ function OnboardingPage() {
   const jumpStage = useServerFn(setJourneyStage);
   const takeTurn = useServerFn(journeyTurn);
   const switchTrack = useServerFn(startJourneyTrack);
+  const openConversation = useServerFn(journeyOpening);
   const { isAdmin, loading: roleLoading } = useIsAdminStatus();
 
   const { data, isLoading, refetch } = useQuery({
@@ -69,6 +71,7 @@ function OnboardingPage() {
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const endRef = useRef<HTMLDivElement>(null);
   const founderRef = useRef(false);
+  const openedRef = useRef(false);
 
   const stage = stageById(data?.currentStage ?? "mission");
   const idx = stageIndex(stage.id);
