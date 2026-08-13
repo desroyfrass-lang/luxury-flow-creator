@@ -204,6 +204,7 @@ import { Route as AuthenticatedAdminFeedbackRouteImport } from './routes/_authen
 import { Route as AuthenticatedAdminCjImportRouteImport } from './routes/_authenticated/admin.cj-import'
 import { Route as AuthenticatedAdminCapsulesRouteImport } from './routes/_authenticated/admin.capsules'
 import { Route as AuthenticatedAdminBlogRouteImport } from './routes/_authenticated/admin.blog'
+import { Route as AuthenticatedAdminAuditRouteImport } from './routes/_authenticated/admin.audit'
 import { Route as AuthenticatedAdminApprovalsRouteImport } from './routes/_authenticated/admin.approvals'
 import { Route as AuthenticatedAdminAiCreditsRouteImport } from './routes/_authenticated/admin.ai-credits'
 import { Route as AuthenticatedAdminAffiliatePolicyRouteImport } from './routes/_authenticated/admin.affiliate-policy'
@@ -1237,6 +1238,11 @@ const AuthenticatedAdminBlogRoute = AuthenticatedAdminBlogRouteImport.update({
   path: '/blog',
   getParentRoute: () => AuthenticatedAdminRoute,
 } as any)
+const AuthenticatedAdminAuditRoute = AuthenticatedAdminAuditRouteImport.update({
+  id: '/audit',
+  path: '/audit',
+  getParentRoute: () => AuthenticatedAdminRoute,
+} as any)
 const AuthenticatedAdminApprovalsRoute =
   AuthenticatedAdminApprovalsRouteImport.update({
     id: '/approvals',
@@ -1447,6 +1453,7 @@ export interface FileRoutesByFullPath {
   '/admin/affiliate-policy': typeof AuthenticatedAdminAffiliatePolicyRoute
   '/admin/ai-credits': typeof AuthenticatedAdminAiCreditsRoute
   '/admin/approvals': typeof AuthenticatedAdminApprovalsRoute
+  '/admin/audit': typeof AuthenticatedAdminAuditRoute
   '/admin/blog': typeof AuthenticatedAdminBlogRoute
   '/admin/capsules': typeof AuthenticatedAdminCapsulesRoute
   '/admin/cj-import': typeof AuthenticatedAdminCjImportRoute
@@ -1632,6 +1639,7 @@ export interface FileRoutesByTo {
   '/admin/affiliate-policy': typeof AuthenticatedAdminAffiliatePolicyRoute
   '/admin/ai-credits': typeof AuthenticatedAdminAiCreditsRoute
   '/admin/approvals': typeof AuthenticatedAdminApprovalsRoute
+  '/admin/audit': typeof AuthenticatedAdminAuditRoute
   '/admin/blog': typeof AuthenticatedAdminBlogRoute
   '/admin/capsules': typeof AuthenticatedAdminCapsulesRoute
   '/admin/cj-import': typeof AuthenticatedAdminCjImportRoute
@@ -1841,6 +1849,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/affiliate-policy': typeof AuthenticatedAdminAffiliatePolicyRoute
   '/_authenticated/admin/ai-credits': typeof AuthenticatedAdminAiCreditsRoute
   '/_authenticated/admin/approvals': typeof AuthenticatedAdminApprovalsRoute
+  '/_authenticated/admin/audit': typeof AuthenticatedAdminAuditRoute
   '/_authenticated/admin/blog': typeof AuthenticatedAdminBlogRoute
   '/_authenticated/admin/capsules': typeof AuthenticatedAdminCapsulesRoute
   '/_authenticated/admin/cj-import': typeof AuthenticatedAdminCjImportRoute
@@ -2050,6 +2059,7 @@ export interface FileRouteTypes {
     | '/admin/affiliate-policy'
     | '/admin/ai-credits'
     | '/admin/approvals'
+    | '/admin/audit'
     | '/admin/blog'
     | '/admin/capsules'
     | '/admin/cj-import'
@@ -2235,6 +2245,7 @@ export interface FileRouteTypes {
     | '/admin/affiliate-policy'
     | '/admin/ai-credits'
     | '/admin/approvals'
+    | '/admin/audit'
     | '/admin/blog'
     | '/admin/capsules'
     | '/admin/cj-import'
@@ -2443,6 +2454,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/affiliate-policy'
     | '/_authenticated/admin/ai-credits'
     | '/_authenticated/admin/approvals'
+    | '/_authenticated/admin/audit'
     | '/_authenticated/admin/blog'
     | '/_authenticated/admin/capsules'
     | '/_authenticated/admin/cj-import'
@@ -3948,6 +3960,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminBlogRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
+    '/_authenticated/admin/audit': {
+      id: '/_authenticated/admin/audit'
+      path: '/audit'
+      fullPath: '/admin/audit'
+      preLoaderRoute: typeof AuthenticatedAdminAuditRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
     '/_authenticated/admin/approvals': {
       id: '/_authenticated/admin/approvals'
       path: '/approvals'
@@ -4033,6 +4052,7 @@ interface AuthenticatedAdminRouteChildren {
   AuthenticatedAdminAffiliatePolicyRoute: typeof AuthenticatedAdminAffiliatePolicyRoute
   AuthenticatedAdminAiCreditsRoute: typeof AuthenticatedAdminAiCreditsRoute
   AuthenticatedAdminApprovalsRoute: typeof AuthenticatedAdminApprovalsRoute
+  AuthenticatedAdminAuditRoute: typeof AuthenticatedAdminAuditRoute
   AuthenticatedAdminBlogRoute: typeof AuthenticatedAdminBlogRoute
   AuthenticatedAdminCapsulesRoute: typeof AuthenticatedAdminCapsulesRoute
   AuthenticatedAdminCjImportRoute: typeof AuthenticatedAdminCjImportRoute
@@ -4060,6 +4080,7 @@ const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
     AuthenticatedAdminAffiliatePolicyRoute,
   AuthenticatedAdminAiCreditsRoute: AuthenticatedAdminAiCreditsRoute,
   AuthenticatedAdminApprovalsRoute: AuthenticatedAdminApprovalsRoute,
+  AuthenticatedAdminAuditRoute: AuthenticatedAdminAuditRoute,
   AuthenticatedAdminBlogRoute: AuthenticatedAdminBlogRoute,
   AuthenticatedAdminCapsulesRoute: AuthenticatedAdminCapsulesRoute,
   AuthenticatedAdminCjImportRoute: AuthenticatedAdminCjImportRoute,
