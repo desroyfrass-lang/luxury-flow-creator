@@ -233,6 +233,21 @@ export const AMENDMENTS: Amendment[] = [
     ],
     extends: ["FRASS-0519", "FRASS-0520", "FRASS-0521"],
   },
+  {
+    ref: "FRASS-0544",
+    title: "Plain English Translation Engine",
+    intent:
+      "Every technical answer is also delivered in everyday language, with an analogy, why it matters and one next step — switchable between Technical Version and Explain Like I'm New.",
+    targetProblem: "Members receiving correct answers they cannot actually understand.",
+    areas: [],
+    categories: ["confusion", "usability", "content"],
+    implementedAt: "2026-08-13",
+    evidence: [
+      "src/lib/frassy/plain-english.ts",
+      "src/components/frassy/plain-english-toggle.tsx",
+    ],
+    extends: ["FRASS-0522-A"],
+  },
 ];
 
 export function amendmentByRef(ref: string): Amendment | undefined {

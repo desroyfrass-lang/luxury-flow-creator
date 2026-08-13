@@ -39,6 +39,7 @@ import {
 import { loadProfile, noticeAssets, partnerContext } from "@/lib/business/partner-profile";
 // FRASS-0479A — Human Balance Layer: achievement balanced with wellbeing.
 import { balanceBriefing, NO_SIGNALS, readBalance, readBalanceSignals } from "@/lib/frassy/balance-signals";
+import { PlainEnglishMessage } from "@/components/frassy/plain-english-toggle";
 
 
 type ProductCard = {
@@ -485,7 +486,11 @@ export function FrassyChat({ embedded = false }: { embedded?: boolean } = {}) {
                   : "w-fit max-w-[90%] rounded-lg bg-white/5 px-3 py-2 text-sm text-white/90"
               }
             >
-              <p className="whitespace-pre-wrap">{m.content}</p>
+              {m.role === "assistant" ? (
+                <PlainEnglishMessage content={m.content} />
+              ) : (
+                <p className="whitespace-pre-wrap">{m.content}</p>
+              )}
             </div>
 
             {/* "Hear Frassy" only exists while playback is provably healthy. */}
