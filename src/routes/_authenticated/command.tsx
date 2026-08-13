@@ -19,6 +19,7 @@ import { DesignAuthorityPanel } from "@/components/founder/design-authority-pane
 import { ChangeAdvisorPanel } from "@/components/founder/change-advisor-panel";
 import { CoreRouteAuditPanel } from "@/components/founder/core-route-audit";
 import { PlatformProtectionSwitch } from "@/components/founder/platform-protection-switch";
+import { AiOperationsPanel } from "@/components/founder/ai-operations-panel";
 import { PlatformHealthPanel } from "@/components/finance/platform-health-panel";
 import { ObservationWindowPanel } from "@/components/finance/observation-window-panel";
 import { SecurityAlertsPanel } from "@/components/finance/security-alerts-panel";
@@ -135,6 +136,8 @@ function CommandCenter() {
             <BrandPersonalityPanel />
           </>
         )}
+
+        {active === "ai" && <AiOperationsPanel />}
 
         {active === "operations" && (
           <>

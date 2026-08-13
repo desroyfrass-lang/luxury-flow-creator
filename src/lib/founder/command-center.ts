@@ -8,7 +8,14 @@
 // Rule: a Founder tool is registered here or it does not exist. If it lives in
 // two places, the Command Center is the one that stays.
 
-export type CommandSectionId = "home" | "platform" | "design" | "frassy" | "operations" | "innovation";
+export type CommandSectionId =
+  | "home"
+  | "platform"
+  | "design"
+  | "frassy"
+  | "ai"
+  | "operations"
+  | "innovation";
 
 export type CommandTool = {
   id: string;
@@ -161,6 +168,42 @@ export const COMMAND_SECTIONS: CommandSection[] = [
         plain: "What Frassy remembers, and what members chose to keep.",
         kind: "link",
         path: "/vault",
+      },
+    ],
+  },
+  {
+    id: "ai",
+    icon: "🧠",
+    label: "AI Operations",
+    purpose: "Know what Frass is thinking, doing, and costing — and what members built with it.",
+    tools: [
+      {
+        id: "ai-operations",
+        label: "AI Operations Dashboard",
+        plain: "Credits, requests, reliability, speed, cost by feature, trends and alerts.",
+        kind: "panel",
+        amendment: "FRASS-0540",
+      },
+      {
+        id: "ai-roi",
+        label: "Return on intelligence",
+        plain: "Businesses started, books published, products created, member revenue influenced.",
+        kind: "panel",
+        amendment: "FRASS-0541",
+      },
+      {
+        id: "ai-approval",
+        label: "AI Approval Rule",
+        plain: "Frassy reads freely, but every change waits for your approval — deletes need two.",
+        kind: "panel",
+        amendment: "FRASS-0539",
+      },
+      {
+        id: "ai-credits",
+        label: "Member AI credits",
+        plain: "Who is spending studio credits, and on what.",
+        kind: "link",
+        path: "/admin/ai-credits",
       },
     ],
   },
