@@ -18,7 +18,25 @@ export const FOUNDER_VISIBILITY_PRINCIPLE =
   "The Founder should have visibility into member progress to better support the community, but never more visibility than is necessary to fulfil that responsibility. Member dignity, privacy and trust always come first.";
 
 export const FOUNDER_CONFIDENTIAL_BANNER =
-  "Founder Confidential — the information on this dashboard is private. It exists to support members, improve the platform and guide the Frass ecosystem. It is never publicly visible and is never shared with other members.";
+  "Founder Confidential — Support & Mentorship Only. This information exists to support members, improve the platform and guide the Frass ecosystem. It is never publicly visible and is never shared with other members.";
+
+export const FOUNDER_CONFIDENTIAL_LABEL = "Founder Confidential — Support & Mentorship Only";
+
+/** FRASS-0548 — Founder Responsibility. What this insight may and may never do. */
+export const FOUNDER_RESPONSIBILITY = {
+  mayBeUsedTo: [
+    "Support members",
+    "Improve the platform",
+    "Celebrate achievements",
+    "Offer guidance",
+  ],
+  mayNeverBeUsedTo: [
+    "Rank members publicly",
+    "Shame members",
+    "Sell member analytics",
+    "Create public leaderboards without member consent",
+  ],
+} as const;
 
 /** Things the Founder may never see about a member, whatever the surface. */
 export const NEVER_VISIBLE_TO_FOUNDER = [
