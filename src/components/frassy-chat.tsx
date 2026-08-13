@@ -659,7 +659,7 @@ export function FrassyChat({
           onSend={() => void send()}
           loading={loading}
           placeholder="Ask Frassy anything…"
-          onMic={voice.voiceAvailable ? () => void toggleMic() : undefined}
+          onMic={() => void toggleMic()}
           micAvailable={voice.voiceAvailable}
           micActive={voice.phase === "recording"}
         />

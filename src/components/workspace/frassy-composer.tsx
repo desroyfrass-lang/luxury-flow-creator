@@ -256,22 +256,35 @@ export function FrassyComposer({
 
       <UploadManager queue={queue} />
       {note && <p className="ws-note">{note}</p>}
+      {voice && ptt.voiceError && (
+        <p className="ws-note" role="status" aria-live="polite">
+          {ptt.voiceError}
+        </p>
+      )}
 
       {/* FRASS-0551 — the intake bar wraps so nothing is ever pushed off screen,
           and talking to Frassy is the first control the member sees. */}
       <div className="ws-toolbar">
-        {onMic && (
+        {/* FRASS-0552 — the voice control is present on every surface: the host
+            passes its own mic, otherwise the composer's built-in one is used. */}
+        {(onMic || voice) && (
           <button
             type="button"
-            className={`ws-chip ${micActive ? "ws-chip-live" : ""}`}
-            onClick={onMic}
-            disabled={!micAvailable}
+            className={`ws-chip ${micActive || ptt.phase === "recording" ? "ws-chip-live" : ""}`}
+            onClick={onMic ?? (() => void toggleDictation())}
+            disabled={onMic ? micAvailable === false : !ptt.voiceAvailable}
             aria-label="Talk to Frassy"
             title="Talk to Frassy"
             style={{ fontWeight: 600 }}
           >
             <Mic className="h-3.5 w-3.5" />
-            <span>{micActive ? "Listening — tap to send" : "Talk to Frassy"}</span>
+            <span>
+              {micActive || ptt.phase === "recording"
+                ? "Listening — tap to send"
+                : ptt.phase === "transcribing"
+                  ? "Catching your words…"
+                  : "Talk to Frassy"}
+            </span>
           </button>
         )}
 
