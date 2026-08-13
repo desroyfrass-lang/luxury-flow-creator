@@ -186,11 +186,17 @@ export function progressScore(p: {
   );
 }
 
+/** The raw signals every derived read is computed from. */
+export type MemberSignals = Omit<
+  MemberProgress,
+  "insight" | "tone" | "archetypeReason" | "recommendedAction"
+>;
+
 /**
  * Frassy's one-line read on a member. Observational and kind — never a verdict
  * on the person, always a description of the work.
  */
-export function memberInsight(m: Omit<MemberProgress, "insight" | "tone">, tone: SuccessTone): string {
+export function memberInsight(m: MemberSignals, tone: SuccessTone): string {
   if (tone === "support") {
     return m.daysQuiet >= 30
       ? "Quiet for over a month. A personal check-in matters more than another notification."
@@ -207,6 +213,67 @@ export function memberInsight(m: Omit<MemberProgress, "insight" | "tone">, tone:
     return "Making excellent progress independently. Celebrate rather than intervene.";
   }
   return "Steady and consistent. Nothing needed today beyond recognition.";
+}
+
+/* ── Why: the reasoning behind the label ────────────────────────────────── */
+
+const STYLE_REASONS: Record<string, string> = {
+  shark: "Chosen style: Shark — takes on ambitious challenges and finishes them early.",
+  sprinter: "Chosen style: Sprinter — works in intense bursts followed by quiet periods.",
+  climber: "Chosen style: Climber — long, steady ascents towards one large goal.",
+  gardener: "Chosen style: Gardener — steady weekly progress with high consistency.",
+  navigator: "Chosen style: Navigator — plans the route first, then moves deliberately.",
+};
+
+/**
+ * Explains, in one or two plain sentences, WHY this member reads the way they do.
+ * The Founder should understand the reasoning, not just see a label.
+ */
+export function archetypeReason(m: MemberSignals, tone: SuccessTone): string {
+  const parts: string[] = [];
+  const style = (m.achievementStyle ?? "").toLowerCase();
+  if (STYLE_REASONS[style]) parts.push(STYLE_REASONS[style]);
+  else parts.push("No achievement style chosen yet — this read comes from behaviour alone.");
+
+  if (m.dailyStreak >= 7) parts.push(`Opened their Daily ${m.dailyStreak} days in a row.`);
+  else if (m.daysQuiet >= 7) parts.push(`Last active ${m.daysQuiet} days ago.`);
+  else parts.push("Active recently, without a long streak yet.");
+
+  if (m.moneyMovesCompleted > 0)
+    parts.push(
+      `Completed ${m.moneyMovesCompleted} Money Move${m.moneyMovesCompleted === 1 ? "" : "s"}${
+        m.moneyMovesActive ? ` with ${m.moneyMovesActive} still open` : ""
+      }.`,
+    );
+  else if (m.moneyMovesActive > 0)
+    parts.push(`${m.moneyMovesActive} Money Move(s) started, none finished yet.`);
+
+  parts.push(
+    `Blueprint ${m.blueprintProgress}% complete — that is why they read as ${TONE_META[tone].label.toLowerCase()}.`,
+  );
+  return parts.join(" ");
+}
+
+/* ── Recommended Founder Action ─────────────────────────────────────────── */
+
+/**
+ * The one thing worth doing about this member today. Frassy interprets the data
+ * so the Founder does not have to.
+ */
+export function recommendedAction(m: MemberSignals, tone: SuccessTone): string {
+  if (m.daysQuiet >= 14)
+    return `Check in personally. They have not opened their Daily in ${m.daysQuiet} days.`;
+  if (tone === "support") return "Reach out yourself — a message from you carries more weight than a notification.";
+  if (m.booksPublished > 0) return "Celebrate their published book publicly, with their permission.";
+  if (m.booksInProgress > 0 && m.progress >= 55)
+    return "Encourage them to finish and publish — they are close to a milestone.";
+  if (m.revenue === "first") return "Congratulate them on their first sale. First income deserves a real message.";
+  if (m.moneyMovesCompleted === 0 && m.moneyMovesActive > 0)
+    return "Help them finish one Money Move. Finishing matters more than starting another.";
+  if (m.blueprintProgress >= 90) return "Celebrate their Business Vault completion.";
+  if (tone === "encouragement") return "Send a short encouraging note — no task attached.";
+  if (tone === "thriving") return "Nothing needed. Celebrate, don't interrupt.";
+  return "Recognise their consistency. Steady members are easy to overlook.";
 }
 
 /* ── Founder Radar — the morning attention list ─────────────────────────── */
