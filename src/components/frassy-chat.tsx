@@ -12,7 +12,7 @@
 // ─────────────────────────────────────────────────────────────────────────────
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import { X, ShoppingBag, Trash2, Volume2, VolumeX, Mic, ArrowRight } from "lucide-react";
+import { X, ShoppingBag, Trash2, Volume2, VolumeX, Mic, ArrowRight, Maximize2, Minimize2 } from "lucide-react";
 import { useNavigate } from "@tanstack/react-router";
 import { onboardingDestination } from "@/lib/navigation/core-routes";
 import { supabase } from "@/integrations/supabase/client";
@@ -551,6 +551,16 @@ export function FrassyChat({
               Stop
             </button>
           )}
+          {/* FRASS-0557 §5 — Expand for long work, restore for quick asks. */}
+          <button
+            type="button"
+            aria-label={expanded ? "Restore Frassy to compact size" : "Expand Frassy to full screen"}
+            title={expanded ? "Restore" : "Expand"}
+            onClick={() => setExpanded((v) => !v)}
+            className="rounded-sm p-2 text-[color:var(--ws-soft)] hover:bg-[color:var(--ws-accent-bg)] hover:text-[color:var(--ws-ink)]"
+          >
+            {expanded ? <Minimize2 className="h-4 w-4" /> : <Maximize2 className="h-4 w-4" />}
+          </button>
           <button
             type="button"
             aria-label="Clear conversation"
