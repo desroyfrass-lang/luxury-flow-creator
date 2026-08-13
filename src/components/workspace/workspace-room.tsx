@@ -3,6 +3,7 @@
 // the smart index, the timeline, and the persistent composer. Frassy adapts to
 // the open project and reopens exactly where work stopped.
 
+import { supabase } from "@/integrations/supabase/client";
 import { readArrivalIntent } from "@/lib/frassy/context";
 import { appendTranscript } from "@/lib/frassy/transcript";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
@@ -215,9 +216,14 @@ export function WorkspaceRoom({
     const controller = new AbortController();
     abortRef.current = controller;
     try {
+      const { data: sessionData } = await supabase.auth.getSession();
+      const accessToken = sessionData.session?.access_token;
       const res = await fetch("/api/chat", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          ...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
+        },
         signal: controller.signal,
         body: JSON.stringify({
           messages: [

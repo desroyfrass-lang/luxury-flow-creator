@@ -661,10 +661,48 @@ export const Route = createFileRoute("/api/chat")({
             dataUrl?: string;
           }>;
         };
+        // ── Server-verified audience ────────────────────────────────────────
+        // The client may ASK for the Founder or Builder experience; only a
+        // validated session (and, for Founder, a verified admin role) grants it.
+        const requested = body.experienceContext;
+        let experienceContext: "founder" | "builder" | "storefront" = "storefront";
+        if (requested === "founder" || requested === "builder") {
+          const authHeader = request.headers.get("authorization") ?? "";
+          const token = authHeader.startsWith("Bearer ") ? authHeader.slice(7).trim() : "";
+          if (token && token.split(".").length === 3) {
+            try {
+              const { createClient } = await import("@supabase/supabase-js");
+              const supa = createClient(
+                process.env.SUPABASE_URL!,
+                process.env.SUPABASE_PUBLISHABLE_KEY!,
+                {
+                  global: { headers: { Authorization: `Bearer ${token}` } },
+                  auth: { persistSession: false, autoRefreshToken: false },
+                },
+              );
+              const { data: claims } = await supa.auth.getClaims(token);
+              const userId = claims?.claims?.sub;
+              if (userId) {
+                if (requested === "builder") {
+                  experienceContext = "builder";
+                } else {
+                  const { data: isAdmin } = await supa.rpc("has_role", {
+                    _user_id: userId,
+                    _role: "admin",
+                  });
+                  experienceContext = isAdmin ? "founder" : "builder";
+                }
+              }
+            } catch {
+              experienceContext = "storefront";
+            }
+          }
+        }
+
         const attachments = Array.isArray(body.attachments) ? body.attachments : [];
         const clientMessages = (Array.isArray(body.messages) ? body.messages : []).filter(
           (message) =>
-            body.experienceContext !== "founder" ||
+            experienceContext !== "founder" ||
             message.role !== "assistant" ||
             !isFounderIdentityDiscovery(message.content),
         );
@@ -722,14 +760,18 @@ export const Route = createFileRoute("/api/chat")({
           .join("\n");
 
         const audience =
-          body.experienceContext === "founder"
+          experienceContext === "founder"
             ? "founder"
-            : body.experienceContext === "builder"
+            : experienceContext === "builder"
               ? "builder"
               : "storefront";
+        const defaultRelationship: FrassyRelationship =
+          audience === "founder" ? "founder" : audience === "builder" ? "builder" : "visitor";
+        // A client-supplied relationship can never escalate above the verified audience.
         const relationship: FrassyRelationship =
-          body.relationship ??
-          (audience === "founder" ? "founder" : audience === "builder" ? "builder" : "visitor");
+          body.relationship && !(body.relationship === "founder" && audience !== "founder")
+            ? body.relationship
+            : defaultRelationship;
         // FRASS-0451: one Frassy everywhere — personality first, then the hat she
         // wears in this district (FRASS-0451A), then the keys she is entrusted with.
         const voiceConstitution = `${FRASSY_VOICE_CONSTITUTION}\n\n${frassyContextLayer({
@@ -746,9 +788,9 @@ export const Route = createFileRoute("/api/chat")({
           : "";
 
         const basePrompt =
-          body.experienceContext === "founder"
+          experienceContext === "founder"
             ? `${SYSTEM_PROMPT}\n\n${FRASS_LINK}\n\n${FOUNDER_CONTEXT}\n\n${CURATION_BRIEF}\n\n${GLOBAL_COMMERCE}\n\n${FOR_US_COMMUNITY}\n\n${STORYTELLING_ENGINE}\n\n${PLAIN_LANGUAGE_PROTOCOL}\n\n${FRASS_PLATFORM_ATLAS}\n\n${FIRST_PARTNER_PROTOCOL}\n\n${FRASS_ECONOMY}\n\n${FRASS_SERVICES_MARKETPLACE}\n\n${FRASS_COMPLIANCE}\n\n${FRASS_EMPLOYMENT_PHILOSOPHY}\n\n${FRASS_THREE_LAYERS}\n\n${FRASS_DAILY_BLUEPRINTS}\n\n${FRASS_HIDDEN_ASSETS}\n\n${FRASS_FOUNDING_PARTNERS}\n\n${FRASS_RIGHTS_AND_TRUST}\n\n${FRASS_CREATIVE_IDENTITY}\n\n${FRASS_REPAIR_ENGINE}\n\n${FRASS_REPAIR_FOUNDER}${kankoDna}`
-            : body.experienceContext === "builder"
+            : experienceContext === "builder"
               ? `${SYSTEM_PROMPT}\n\n${FRASS_LINK}\n\n${CURATION_BRIEF}\n\n${GLOBAL_COMMERCE}\n\n${FOR_US_COMMUNITY}\n\n${PLAIN_LANGUAGE_PROTOCOL}\n\n${FRASS_PLATFORM_ATLAS}\n\n${FIRST_PARTNER_PROTOCOL}\n\n${FRASS_ECONOMY}\n\n${FRASS_SERVICES_MARKETPLACE}\n\n${FRASS_COMPLIANCE}\n\n${FRASS_EMPLOYMENT_PHILOSOPHY}\n\n${FRASS_THREE_LAYERS}\n\n${FRASS_DAILY_BLUEPRINTS}\n\n${FRASS_HIDDEN_ASSETS}\n\n${FRASS_FOUNDING_PARTNERS}\n\n${FRASS_RIGHTS_AND_TRUST}\n\n${FRASS_CREATIVE_IDENTITY}\n\n${FRASS_REPAIR_ENGINE}${kankoDna}`
 
               : `${SYSTEM_PROMPT}\n\n${FOR_US_COMMUNITY}\n\n${FRASS_ECONOMY}\n\n${FRASS_SERVICES_MARKETPLACE}\n\n${FRASS_COMPLIANCE}\n\n${FRASS_REPAIR_ENGINE}`;
@@ -813,6 +855,7 @@ export const Route = createFileRoute("/api/chat")({
               // FRASS-0518 — coarse browser/device only, so recurring
               // device-specific problems become visible over time.
               client: clientHintFrom(request.headers.get("user-agent")),
+              founder: experienceContext === "founder",
             }),
             stopWhen: stepCountIs(6),
           });
@@ -857,7 +900,7 @@ export const Route = createFileRoute("/api/chat")({
             "Let's stay with the platform decision in front of us. What would you like Frass OS to configure next?";
 
           const reply =
-            body.experienceContext === "founder" && isFounderIdentityDiscovery(result.text)
+            experienceContext === "founder" && isFounderIdentityDiscovery(result.text)
               ? founderFallback
               : result.text || "…";
 
@@ -868,7 +911,7 @@ export const Route = createFileRoute("/api/chat")({
               order,
             },
             navigate,
-            ...(body.experienceContext === "founder"
+            ...(experienceContext === "founder"
               ? {
                   diagnostics: {
                     conversationMode: "Founder",
