@@ -14,6 +14,7 @@ import {
   useSendGift,
 } from "@/hooks/use-live";
 import { LIVE_GIFTS, REPURPOSE_FORMATS, liveElapsed, purposeOf } from "@/lib/live";
+import { canSeeProgressDetail, celebrationLine } from "@/lib/privacy/progress-without-exposure";
 
 /** FRASS-0416 — the broadcast room: comments, gifts, products, and life after the stream. */
 export const Route = createFileRoute("/live/$broadcastId")({
