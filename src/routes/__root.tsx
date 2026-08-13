@@ -16,6 +16,8 @@ import { WelcomeLinkClaim } from "@/components/link/welcome-link-claim";
 import { VoiceStateOverlay } from "@/components/voice-state-overlay";
 import { FrassyConversationDock } from "@/components/voice/frassy-conversation-dock";
 import { FrassyChat } from "@/components/frassy-chat";
+import { frassySurface } from "@/lib/frassy/surfaces";
+import { useRouterState } from "@tanstack/react-router";
 import { FrassyHost } from "@/components/frassy-host";
 import { DailyGate } from "@/components/workspace/daily-gate";
 import { ConstructionMode } from "@/components/construction/blueprint-mode";
@@ -129,6 +131,12 @@ function RootShell({ children }: { children: ReactNode }) {
   );
 }
 
+function FrassyCompanion() {
+  const pathname = useRouterState({ select: (s) => s.location.pathname });
+  if (frassySurface(pathname) !== "beacon") return null;
+  return <FrassyChat />;
+}
+
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
   return (
@@ -139,7 +147,8 @@ function RootComponent() {
       <Outlet />
       <WelcomeLinkClaim />
       <Toaster position="top-center" />
-      <FrassyChat />
+      {/* FRASS-0558 — one Frassy. She only floats where the page has no conversation of its own. */}
+      <FrassyCompanion />
       <FrassyHost />
       <DailyGate />
       <ConstructionMode />
