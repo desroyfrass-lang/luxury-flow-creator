@@ -1,6 +1,7 @@
 # Project Memory
 
 ## Core
+FRASS-0558: there is only ONE Frassy and one conversation — src/lib/frassy/surfaces.ts decides workspace/beacon/none per page; never add another chat surface, and never show Frassy in social, kids or entertainment spaces by default.
 FRASS-0556: Frassy is never tied to one AI provider — every request is routed to the cheapest capable brain, and answered with no AI at all when Frass's own rules, data or routes can do it.
 FRASS-0557: one Frassy Beacon on every page (idle/listening/thinking/speaking), one tap to talk, context aware, never touching screen edges; every chat has Expand/Restore.
 FRASS-0550: every Founder insight answers Who · Why (observable behaviour) · What they need · What you should do · Likely outcome. Frassy recommends, the Founder decides.
