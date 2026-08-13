@@ -3,6 +3,7 @@
 // so no page in Frass District or Frass Hill is ever a dead end.
 import { Link, useRouter, useRouterState } from "@tanstack/react-router";
 import { ArrowLeft, Home } from "lucide-react";
+import { useChromeOffset } from "@/hooks/use-chrome-offset";
 
 /** Routes that are deliberately immersive / full-bleed and own their own exits. */
 const HIDDEN_PREFIXES = [
@@ -98,6 +99,8 @@ function labelFor(segment: string) {
 export function FrassTrail() {
   const router = useRouter();
   const pathname = useRouterState({ select: (s) => s.location.pathname });
+  // FRASS-0553 — the trail sits under the site header, never behind it.
+  const top = useChromeOffset(["header"]);
 
   if (pathname === "/" || HIDDEN_PREFIXES.some((p) => pathname === p || pathname.startsWith(p + "/") || pathname.startsWith(p))) {
     return null;
@@ -125,7 +128,8 @@ export function FrassTrail() {
   return (
     <nav
       aria-label="Breadcrumb"
-      className="pointer-events-none fixed left-0 right-0 top-[84px] z-40 px-3 sm:px-6 lg:px-12"
+      style={{ top }}
+      className="pointer-events-none fixed left-0 right-0 z-40 px-3 sm:px-6 lg:px-12"
     >
       <div className="pointer-events-auto mx-auto flex max-w-[1600px] items-center gap-1.5 overflow-x-auto rounded-full border border-border/60 bg-background/75 px-2 py-1.5 text-[10px] uppercase tracking-[0.18em] text-muted-foreground shadow-lg backdrop-blur-xl sm:w-fit sm:text-[11px]">
         <button

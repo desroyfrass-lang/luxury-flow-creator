@@ -14,7 +14,7 @@ import { reportLovableError } from "../lib/lovable-error-reporting";
 import { Toaster } from "@/components/ui/sonner";
 import { WelcomeLinkClaim } from "@/components/link/welcome-link-claim";
 import { VoiceStateOverlay } from "@/components/voice-state-overlay";
-import { GlobalSpeechBar } from "@/components/voice/speech-controls";
+import { FrassyConversationDock } from "@/components/voice/frassy-conversation-dock";
 import { FrassyChat } from "@/components/frassy-chat";
 import { FrassyHost } from "@/components/frassy-host";
 import { DailyGate } from "@/components/workspace/daily-gate";
@@ -145,7 +145,8 @@ function RootComponent() {
       <ConstructionMode />
 
 
-      <GlobalSpeechBar />
+      {/* FRASS-0553 — one dock, one place, every conversation. */}
+      <FrassyConversationDock />
       <VoiceStateOverlay />
       </ViewModeProvider>
     </QueryClientProvider>

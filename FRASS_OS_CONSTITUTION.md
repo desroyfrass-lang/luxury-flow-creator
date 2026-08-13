@@ -2625,3 +2625,43 @@ She recommends. The Founder decides.
 **Founder Principle.** The purpose of leadership is not to measure people. It is to help
 people become more than they believed possible. Every insight in Frass should ultimately
 lead to encouragement, opportunity, or growth.
+
+---
+
+## FRASS-0553 — Frassy Conversation Dock
+
+### One Place. Every Conversation.
+
+Members should never search for Frassy's controls. Consistency builds confidence.
+
+**Constitutional Rule.** Every conversational page in Frass shall display a Frassy
+Conversation Dock, fixed in one consistent position throughout the platform.
+
+**Location.** Top-right corner, directly beneath the platform navigation chip, vertically
+aligned with it:
+
+```text
+⬅️ Back  |  🏠 Home  |  📍 Current Page
+                    ↓
+🎤 Talk to Frassy | ⏸ Pause | ▶ Resume | ⏹ Stop | 🌊 Voice | 🧠 Status
+```
+
+The dock is part of the page chrome, not a floating layer. It respects safe margins and
+never overlaps logos, headings, page content or mobile navigation.
+
+**Controls.** The same everywhere: 🎤 Talk to Frassy (primary — starts voice input
+immediately), ⏸️ Pause, ▶️ Resume, ⏹️ Stop, 🌊 voice animation while she speaks, and a
+🧠 status indicator reading Listening, Thinking, Speaking or Idle.
+
+**Conversation Priority.** The microphone is always the primary action. No member should
+ever wonder "how do I talk to Frassy?" — voice is always one tap away.
+
+**Platform Consistency.** Welcome Hall, Daily, Workshop, Builder Hall, Business Vaults,
+Money Moves, Knowledge Vault, Blueprint pages, Founder Command Center and Control Room.
+
+**Accessibility.** Fully usable on desktop, tablet and mobile. Controls wrap or resize
+gracefully — never clipped, never horizontally scrolling.
+
+**Founder Principle.** Conversation is not a feature hidden within the interface. It is the
+primary way people experience Frass. Every page should make talking to Frassy feel
+immediate, familiar and effortless.
