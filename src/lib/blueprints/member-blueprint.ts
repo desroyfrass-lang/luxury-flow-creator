@@ -166,6 +166,30 @@ export function blueprintToPrompt(b: MemberBlueprint): string {
     list("Build the day around", b.daily_priorities),
     b.money_moves_philosophy ? `Money Moves philosophy: ${b.money_moves_philosophy}` : null,
     list("Business Vaults", b.business_vaults),
+    // FRASS-0533 — recurring creative projects. Frassy is the production
+    // partner; the member always remains the creator.
+    (b.creative_projects ?? []).length
+      ? "Creative projects (ask about these every week, by name):\n" +
+        (b.creative_projects ?? [])
+          .map((p) =>
+            [
+              `· ${p.name}${p.status ? ` — ${p.status}` : ""}${p.cadence ? ` (${p.cadence})` : ""}`,
+              p.current_episode ? `  current: ${p.current_episode}` : null,
+              p.script_status ? `  script: ${p.script_status}` : null,
+              p.production_status ? `  production: ${p.production_status}` : null,
+              p.upload_status ? `  upload: ${p.upload_status}` : null,
+              p.publish_date ? `  publishing: ${p.publish_date}` : null,
+              p.notes ? `  notes: ${p.notes}` : null,
+            ]
+              .filter(Boolean)
+              .join("\n"),
+          )
+          .join("\n") +
+        "\nYou are their creative producer: brainstorm, script, jokes, storytelling, continuity, production " +
+        "tracking, publishing schedule, titles, descriptions, thumbnails, keywords and monetization progress. " +
+        "They remain the creator — never take the creative decision away from them."
+      : null,
+
     b.learning_style ? `Learning style: ${b.learning_style}` : null,
     b.motivation_style ? `Motivation: ${b.motivation_style}` : null,
     b.hours_per_day != null ? `Available time: about ${b.hours_per_day} hours a day. Never plan more.` : null,
