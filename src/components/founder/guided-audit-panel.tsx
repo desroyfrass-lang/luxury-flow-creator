@@ -15,7 +15,11 @@ import {
   reportToMarkdown,
   trustBand,
   trustScore,
+  INVITATION_QUESTION,
+  INVITATION_VERDICTS,
+  invitationLabel,
   type AuditDimension,
+  type InvitationVerdict,
   type DimensionScores,
   type PageAuditResult,
 } from "@/lib/founder/platform-audit";
@@ -50,6 +54,9 @@ export function GuidedAuditPanel() {
   const [notes, setNotes] = useState("");
   const [finding, setFinding] = useState("");
   const [findings, setFindings] = useState<string[]>([]);
+  // FRASS-0528 — the closing question of every audit.
+  const [verdict, setVerdict] = useState<InvitationVerdict | null>(null);
+  const [verdictNote, setVerdictNote] = useState("");
 
   const page = AUDIT_PAGES[index];
   const financials = useMemo(() => pageFinancials(page), [page]);
@@ -58,6 +65,14 @@ export function GuidedAuditPanel() {
 
   const audit = data?.audit ?? null;
   const done = data?.pages ?? [];
+
+  // FRASS-0528 — unresolved findings from the last completed audit stay visible.
+  const openFindings = useMemo(() => {
+    const last = (data?.history ?? []).find((h) => h.status === "complete" && h.report);
+    const readiness = last?.report?.invitationReadiness;
+    if (!last || !readiness || readiness.verdict === "yes") return null;
+    return { audit: last, readiness };
+  }, [data?.history]);
 
   const startMutation = useMutation({
     mutationFn: () => start({ data: { label: "Platform audit" } }),
@@ -102,7 +117,23 @@ export function GuidedAuditPanel() {
         findings: p.findings,
         notes: p.notes,
       }));
-      const report = buildAuditReport(results, audit.started_at);
+      if (!verdict) throw new Error("Answer the invitation question before archiving.");
+      const unresolved =
+        verdict === "yes"
+          ? []
+          : done.flatMap((p) =>
+              p.findings.map(
+                (f) => `${AUDIT_PAGES.find((x) => x.id === p.page_id)?.label ?? p.page_id}: ${f}`,
+              ),
+            );
+      const report = buildAuditReport(results, audit.started_at, {
+        invitationReadiness: {
+          verdict,
+          answeredAt: new Date().toISOString(),
+          note: verdictNote.trim(),
+          unresolved,
+        },
+      });
       await complete({
         data: { auditId: audit.id, overallTrustScore: report.overallTrustScore, report },
       });
@@ -111,6 +142,8 @@ export function GuidedAuditPanel() {
     onSuccess: (report) => {
       toast.success(`Audit archived. Overall Trust Score ${report.overallTrustScore}/100.`);
       setIndex(0);
+      setVerdict(null);
+      setVerdictNote("");
       void qc.invalidateQueries({ queryKey: ["platform-audit"] });
     },
     onError: (e) => toast.error(e instanceof Error ? e.message : "Could not finish the audit."),
@@ -130,6 +163,26 @@ export function GuidedAuditPanel() {
           platform, or begin here.
         </p>
       </header>
+
+      {openFindings ? (
+        <div className="space-y-2 rounded-xl border border-amber-500/50 bg-amber-500/5 p-4">
+          <p className="text-sm font-bold text-amber-500">
+            {invitationLabel(openFindings.readiness.verdict)} — last audit on{" "}
+            {new Date(openFindings.readiness.answeredAt).toLocaleDateString()}
+          </p>
+          {openFindings.readiness.note ? (
+            <p className="text-xs text-muted-foreground">{openFindings.readiness.note}</p>
+          ) : null}
+          <ul className="space-y-1 text-xs text-muted-foreground">
+            {openFindings.readiness.unresolved.map((f) => (
+              <li key={f}>• {f}</li>
+            ))}
+          </ul>
+          <p className="text-[11px] text-muted-foreground">
+            These stay visible until an audit ends with “Yes”.
+          </p>
+        </div>
+      ) : null}
 
       {!audit ? (
         <button
@@ -295,6 +348,47 @@ export function GuidedAuditPanel() {
               className="w-full rounded-lg border border-border bg-background p-3 text-sm"
             />
 
+            {/* FRASS-0528 — Invitation readiness: the one question every audit ends with. */}
+            <div className="space-y-3 rounded-xl border border-[color:var(--gold)]/40 bg-[color:var(--gold)]/5 p-4">
+              <h4 className="text-sm font-bold">{INVITATION_QUESTION}</h4>
+              <div className="flex flex-wrap gap-2">
+                {INVITATION_VERDICTS.map((v) => (
+                  <button
+                    key={v.id}
+                    onClick={() => setVerdict(v.id)}
+                    className={`rounded-full border px-4 py-1.5 text-xs transition ${
+                      verdict === v.id
+                        ? "border-[color:var(--gold)] bg-[color:var(--gold)]/20 text-foreground"
+                        : "border-border text-muted-foreground hover:text-foreground"
+                    }`}
+                    title={v.plain}
+                  >
+                    {v.icon} {v.label}
+                  </button>
+                ))}
+              </div>
+              {verdict ? (
+                <p className="text-[11px] text-muted-foreground">
+                  {INVITATION_VERDICTS.find((v) => v.id === verdict)?.plain}
+                </p>
+              ) : null}
+              {verdict && verdict !== "yes" ? (
+                <>
+                  <textarea
+                    value={verdictNote}
+                    onChange={(e) => setVerdictNote(e.target.value)}
+                    rows={2}
+                    placeholder="What has to be true before you'd say yes?"
+                    className="w-full rounded-lg border border-border bg-background p-3 text-sm"
+                  />
+                  <p className="text-[11px] text-amber-500">
+                    Every finding from this audit stays visible here until the next audit ends in
+                    “Yes”.
+                  </p>
+                </>
+              ) : null}
+            </div>
+
             <div className="flex flex-wrap gap-2">
               <button
                 onClick={() => saveMutation.mutate()}
@@ -305,7 +399,7 @@ export function GuidedAuditPanel() {
               </button>
               <button
                 onClick={() => finishMutation.mutate()}
-                disabled={finishMutation.isPending || !done.length}
+                disabled={finishMutation.isPending || !done.length || !verdict}
                 className="rounded-full border border-border px-5 py-2 text-sm disabled:opacity-40"
               >
                 Finish and archive the report

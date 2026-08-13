@@ -1,6 +1,7 @@
 # Project Memory
 
 ## Core
+Every Founder Platform Audit ends with one question: "Are you comfortable inviting a new member onto Frass?" (Yes / Yes with known issues / Not yet); anything but Yes keeps findings visible (FRASS-0528).
 Kids pages are never black: bright age-tinted .kids-zone theme, rounded kid-friendly fonts (Fredoka/Nunito).
 FRASS-0491 (FOR ME architecture freeze) is PINNED — do not execute until the current constitutional roadmap is done.
 Brand name is always "Frass" (two s's) — never "Fras". Applies to Frass Hill, Frass Kicks, Frass Drip.
