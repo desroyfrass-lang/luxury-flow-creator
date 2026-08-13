@@ -162,9 +162,12 @@ function WelcomeHallPage() {
           )}
         </section>
 
-        {/* FRASS-0478 — how you like to work */}
-        <section className="mt-16">
-          <h2 className="font-display text-2xl">How Frassy works with you</h2>
+        {/* FRASS-0478 — how you like to work. FRASS-0551: this is a setting,
+            not the front gate, so it sits folded away beneath the conversation. */}
+        <details className="mt-16 rounded-2xl border border-border/70 p-6">
+          <summary className="cursor-pointer font-display text-xl">
+            How Frassy works with you
+          </summary>
           <p className="mt-2 text-sm text-muted-foreground">
             Not what you said — how you like to be helped. Learned by observation, never
             configured.
@@ -174,7 +177,8 @@ function WelcomeHallPage() {
             <LearningPreferencesCard />
             <MomentumCard />
           </div>
-        </section>
+        </details>
+
 
         {/* What Frassy remembers */}
         {sections.length > 0 && (
