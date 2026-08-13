@@ -813,13 +813,6 @@ function FrassDailyBody({
             >
               <TradespersonDigitalLegacy onNavigate={onNavigate} />
             </Section>
-            <Section
-              id="episode-progress"
-              title="🎬 Episode Progress"
-              note="Your recurring creative projects. I'm the producer; you're the creator."
-            >
-              <CreativeProjectProgress name={name} />
-            </Section>
             <Section id="success-dashboard" title="📊 What actually changed" note="Outcomes, not activity.">
               <MotherOutcomes />
             </Section>
@@ -870,6 +863,16 @@ function FrassDailyBody({
             </Section>
           </>
         )}
+
+        {/* FRASS-0533 — Episode Progress. Blueprint-driven: it only appears for
+            members whose Blueprint carries a recurring creative project. */}
+        <Section
+          id="episode-progress"
+          title="🎬 Episode Progress"
+          note="Your recurring creative projects. You're the creator; I'm the production partner."
+        >
+          <CreativeProjectProgress name={name} />
+        </Section>
 
         {/* 1 — Celebrate first */}
         <Section id="celebrate-first" title="Celebrate first" note="Progress before problems.">
