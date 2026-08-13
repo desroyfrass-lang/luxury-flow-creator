@@ -1,6 +1,8 @@
 # Project Memory
 
 ## Core
+FRASS-0537: Frassy meets members on the channels they already use (WhatsApp first-class); one identity everywhere; never promise free telecom/landline calls.
+FRASS-0538: content (text, images, capsules, copy, Daily messages) is edited by conversation with Frassy; engineering only for logic, data, auth, security, APIs, performance.
 Command Center opens on Founder Home ("How is Frass doing today?") — platform/member/business/intelligence health + Today (FRASS-0528).
 Never recommend publishing to production until a Release Approval decision is recorded (Approve / Delay / Request Changes) (FRASS-0529).
 Every Founder Platform Audit ends with one question: "Are you comfortable inviting a new member onto Frass?" (Yes / Yes with known issues / Not yet); anything but Yes keeps findings visible (FRASS-0528).
@@ -162,3 +164,4 @@ Creative series are intellectual property produced by Frassy from a Blueprint, n
 - [FRASS-0532-A/C Constitutional Question & Digital Legacy](mem://features/frass-0532-online-first-digital-legacy) — Retired "easiest money" question, online-first ranking, Digital Legacy for tradespeople
 - [FRASS-0533 Creative IP + Three Levels](mem://features/frass-0533-creative-ip-three-levels) — I Am Not My Hair series/Vault, Blueprint creative projects, Episode Progress, Earn→Scale→Legacy
 - [FRASS-0539/0540/0541 AI Operations](mem://features/frass-0539-0541-ai-operations) — AI Approval Rule, Command Center AI Operations dashboard, cost + return on intelligence
+- [FRASS-0537/0538 Frassy Everywhere & Content Manager](mem://features/frass-0537-0538-channels-and-content-manager) — WhatsApp-first multi-channel Frassy, honesty boundary on calls, content-by-conversation vs engineering split
