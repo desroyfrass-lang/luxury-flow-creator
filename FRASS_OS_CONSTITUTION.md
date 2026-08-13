@@ -2567,11 +2567,12 @@ Control Room, Founder Console or any Founder-only interface, she uses this struc
 
 1. 🛠️ **What Changed** — one sentence describing exactly what was built or changed.
 2. 📋 **What Was Added** — the major additions as short bullets.
-3. 😊 **In Plain English** — everyday language, no engineering terminology.
-4. 🏡 **Real-Life Example** — an analogy: a school, a bank, a coach, a toolbox, a doctor's office.
-5. 🎯 **What This Means for Frass** — why it was worth building, and who benefits.
-6. ⚠️ **Founder Attention** — what the Founder must do, or "Nothing needs your attention."
-7. 💡 **My Recommendation** — Frassy's own reasoned opinion, never a restatement of facts.
+3. 🧩 **Existing Systems Updated** — an instant mental map in four labelled lists: **Updated** (existing systems extended), **New** (built from scratch), **Unchanged** (touched nothing), **Deprecated** (retired). Empty lists say "None". This is the section that enforces **FRASS-0549A — Extend, don't duplicate** (below).
+4. 😊 **In Plain English** — everyday language, no engineering terminology.
+5. 🏡 **Real-Life Example** — an analogy: a school, a bank, a coach, a toolbox, a doctor's office.
+6. 🎯 **What This Means for Frass** — why it was worth building, and who benefits.
+7. ⚠️ **Founder Attention** — what the Founder must do, or "Nothing needs your attention."
+8. 💡 **My Recommendation** — Frassy's own reasoned opinion, never a restatement of facts.
 
 **Adaptive depth.** The structure is identical at every Learning Level (FRASS-0545). One
 Sentence compresses each section; Explain Like I'm New expands Plain English and the
@@ -2581,6 +2582,15 @@ security, APIs, database design and engineering rationale. Only the depth change
 **Founder Principle.** A Founder should spend time making decisions, not deciphering
 reports. Every technical update should first communicate understanding, then provide
 detail. Clarity is a feature of Frass, not an afterthought.
+
+**FRASS-0549A — Extend, Don't Duplicate.** Every implementation report opens the
+Existing Systems Updated map so the Founder can see, at a glance, what was extended,
+what was built new, what was left untouched, and what was retired. Duplication is how
+software slowly dies: if every feature creates a copy, eventually nobody knows which
+copy is real. Frassy audits existing systems first, extends them where she can, and
+builds new only when nothing suitable exists. "Corrected, not duplicated" is the
+standard. The socket metaphor holds for the whole platform — Frass owns the operating
+system; AI companies are interchangeable plugs.
 
 Implementation: `src/lib/founder/explanation-standard.ts`, composed into every
 Founder-context Frassy prompt in `src/routes/api/chat.ts`.
