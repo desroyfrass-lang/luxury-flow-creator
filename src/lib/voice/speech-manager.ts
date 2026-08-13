@@ -16,6 +16,7 @@
 
 import { chunkForTTS, speakableText } from "@/lib/voice/chunk-text";
 import { setVoiceTier } from "@/lib/voice/voice-tier";
+import type { VoiceTone } from "@/lib/voice/frassy-voice";
 import { conversation } from "@/lib/voice/conversation-machine";
 import {
   getSharedAudioContext,
@@ -149,11 +150,13 @@ export function isSpeechActive(): boolean {
   return snapshot.status !== "idle";
 }
 
-async function fetchChunk(text: string, voice: string): Promise<string> {
+// FRASS-0522 — the caller may say how Frassy feels (tone), never who she is.
+// The voice itself is resolved server-side from the Founder-approved record.
+async function fetchChunk(text: string, tone: VoiceTone): Promise<string> {
   const res = await fetch("/api/tts", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ text, voice }),
+    body: JSON.stringify({ text, tone }),
   });
   if (!res.ok) throw new Error(`tts ${res.status}`);
   const blob = await res.blob();
@@ -274,7 +277,7 @@ export type SpeakResult = "complete" | "interrupted" | "blocked" | "failed";
  */
 export async function speakText(
   text: string,
-  opts: { voice?: string; owner?: string } = {},
+  opts: { tone?: VoiceTone; owner?: string } = {},
 ): Promise<SpeakResult> {
   const clean = speakableText(text);
   if (!clean) return "complete";
@@ -305,18 +308,18 @@ export async function speakText(
   };
   emit();
 
-  const voice = opts.voice ?? "shimmer";
+  const tone: VoiceTone = opts.tone ?? "neutral";
 
   try {
     // Pipeline: fetch chunk n+1 while chunk n plays.
-    let nextUrl: Promise<string> | null = chunks[0] ? fetchChunk(chunks[0], voice) : null;
+    let nextUrl: Promise<string> | null = chunks[0] ? fetchChunk(chunks[0], tone) : null;
     let anyPlayed = false;
 
     for (let i = 0; i < chunks.length; i++) {
       if (runId !== runCounter) return "interrupted";
       const url = await nextUrl!;
       const upcoming = chunks[i + 1];
-      nextUrl = upcoming ? fetchChunk(upcoming, voice) : null;
+      nextUrl = upcoming ? fetchChunk(upcoming, tone) : null;
       if (runId !== runCounter) return "interrupted";
 
       const ok = await playClip(url, runId, turnId);

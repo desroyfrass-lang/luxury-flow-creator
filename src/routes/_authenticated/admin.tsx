@@ -223,6 +223,13 @@ function AdminLayout() {
             >
               Financial Audit
             </Link>
+            <Link
+              to="/admin/voice"
+              activeProps={{ className: "text-[color:var(--gold)]" }}
+              className="text-muted-foreground hover:text-foreground"
+            >
+              Voice Studio
+            </Link>
 
 
 
