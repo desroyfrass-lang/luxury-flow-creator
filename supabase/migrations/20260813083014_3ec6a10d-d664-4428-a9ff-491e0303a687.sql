@@ -1,0 +1,1 @@
+REVOKE ALL ON FUNCTION public.stamp_repair_resolution() FROM PUBLIC, anon, authenticated;
