@@ -5,6 +5,7 @@ import { useQuery } from "@tanstack/react-query";
 import { aiOperationsSnapshot } from "@/lib/founder/ai-operations.functions";
 import { approvalPolicy } from "@/lib/founder/ai-approval";
 import { ROUTER_SUMMARY, ROUTING_TABLE, type TaskKind } from "@/lib/ai/intelligence-router";
+import { AI_PROVIDERS, PROVIDER_INDEPENDENCE_SUMMARY, type AiCapability } from "@/lib/ai/providers";
 
 function Panel({ title, plain, children }: { title: string; plain: string; children: React.ReactNode }) {
   return (
@@ -99,6 +100,49 @@ export function AiOperationsPanel() {
           />
         </Panel>
       </div>
+
+      <Panel
+        title="Cost telemetry"
+        plain="What Frass's intelligence actually costs, per conversation, per member, per day."
+      >
+        <Stat label="Cost per conversation" value={`${data.telemetry.costPerConversation} credits`} />
+        <Stat label="Cost per active member (30 days)" value={`${data.telemetry.costPerActiveMember} credits`} />
+        <Stat label="Total compute spend today" value={`${data.telemetry.dailyComputeSpendToday} credits`} />
+        <Stat label="Average daily compute spend" value={`${data.telemetry.dailyComputeSpendAverage} credits`} />
+        <Stat label="Conversations (30 days)" value={data.telemetry.conversationsThisMonth} />
+        <Stat label="Active members (30 days)" value={data.telemetry.activeMembersThisMonth} />
+        <p className="pt-2 text-xs text-muted-foreground">{data.telemetry.plain}</p>
+      </Panel>
+
+      <Panel
+        title="Provider independence"
+        plain="Frass is never locked to one AI company. Each capability names a first choice and its backups."
+      >
+        {(Object.keys(AI_PROVIDERS) as AiCapability[]).map((cap) => {
+          const spec = AI_PROVIDERS[cap];
+          return (
+            <div key={cap} className="rounded-xl border border-border/70 p-3">
+              <p className="text-xs font-bold uppercase tracking-wide">{spec.label}</p>
+              <p className="text-[11px] text-muted-foreground">{spec.plain}</p>
+              <ul className="mt-2 space-y-1 text-xs">
+                {spec.chain.map((opt, i) => (
+                  <li key={opt.model} className="flex justify-between gap-3">
+                    <span>
+                      {i === 0 ? "First choice" : `Backup ${i}`} · {opt.vendor}
+                    </span>
+                    <span className="text-muted-foreground">{opt.cost} cost</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          );
+        })}
+        <ul className="mt-2 space-y-1 text-xs text-muted-foreground">
+          {PROVIDER_INDEPENDENCE_SUMMARY.map((line) => (
+            <li key={line}>• {line}</li>
+          ))}
+        </ul>
+      </Panel>
 
       <Panel title="Cost by feature" plain="Where the money actually goes, feature by feature.">
         {data.requests.byFeature.length ? (
