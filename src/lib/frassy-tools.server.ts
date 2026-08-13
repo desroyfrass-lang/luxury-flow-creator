@@ -5,6 +5,7 @@
 import { tool } from "ai";
 import { z } from "zod";
 import { fetchProducts, storefrontApiRequest } from "@/lib/shopify";
+import { buildRepairTools } from "@/lib/frassy-repair-tools.server";
 
 // ------- Product search / discovery -------
 
@@ -223,6 +224,8 @@ export function buildFrassyTools() {
     list_trending: listTrending,
     welcome_journey_info: welcomeJourneyInfo,
     lookup_order: lookupOrder,
+    // FRASS-0515 — Frass Repair Engine.
+    ...buildRepairTools(),
   };
 }
 

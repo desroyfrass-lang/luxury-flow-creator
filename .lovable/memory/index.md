@@ -31,6 +31,7 @@ Every major milestone needs five green audits: Security, Privacy, Performance, A
 Town Square (/town-square) is the whole town — people, businesses, artists, brands, farmers, builders, events, stores, districts, live. Not TikTok.
 For Me is personal, never algorithmic — no "chosen for you".
 Every production deploy must pass DEPLOYMENT_CHECKLIST.md in production (not preview) and produce an archived deployment report (FRASS-0502-D/0503-D).
+Frassy is first-line support (FRASS-0515 Repair Engine): verify before diagnosing, repair only pre-approved safe actions; never deploy code, edit source, or change security/financial records — escalate with a full engineering ticket.
 Deployment lifecycle is FROZEN (FRASS-0502-D→0506): build, validate, security review, rollback verification, publish, observe (🟢/🟡/🔴 window), archive, learn — never a parallel deploy system.
 
 
@@ -138,3 +139,4 @@ Deployment lifecycle is FROZEN (FRASS-0502-D→0506): build, validate, security 
 - [FRASS-0495/0496/0497 Creative identity, navigation, knowledge](mem://features/frass-0495-0497-identity-navigation-knowledge) — Visual vs Music Creator classification, One World Navigation, Frassy knowledge layers
 - [FRASS-0503 Family of Business Vaults](mem://features/frass-0503-business-vault-family) — Seamstress Vault flagship + 10-Vault family, Discover→Build→Monetize pathway per trade, no duplicate commerce
 - [Production Deployment Gate](mem://preferences/deployment-gate) — FRASS-0502-D/0503-D/0504/0505 checklist gates, rollback verification, security review cycle, pre-publish soak, /daily redirect rule
+- [FRASS-0515 Frass Repair Engine](mem://features/frass-0515-repair-engine) — Frassy as support engineer: diagnose/verify/safe-repair/escalate, repair authority limits, learned patterns, Founder Repair Center
