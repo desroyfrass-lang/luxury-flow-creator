@@ -230,6 +230,14 @@ function AdminLayout() {
             >
               Voice Studio
             </Link>
+            <Link
+              to="/admin/audit"
+              activeProps={{ className: "text-[color:var(--gold)]" }}
+              className="text-muted-foreground hover:text-foreground"
+            >
+              Platform Audit
+            </Link>
+
 
 
 
