@@ -2,13 +2,19 @@ import { useEffect } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { WorkspaceRoom } from "@/components/workspace/workspace-room";
 import { openTheDaily } from "@/components/workspace/daily-gate";
+import { ViewModeFrame } from "@/components/view-mode/simplified-view";
 
 function RoomScreen() {
   const { daily } = Route.useSearch();
   useEffect(() => {
     if (daily) openTheDaily();
   }, [daily]);
-  return <WorkspaceRoom />;
+  return (
+    // FRASS-0517 — the same workspace, presented the member's way.
+    <ViewModeFrame place="My Workspace">
+      <WorkspaceRoom />
+    </ViewModeFrame>
+  );
 }
 
 export const Route = createFileRoute("/_authenticated/room")({
@@ -38,5 +44,5 @@ export const Route = createFileRoute("/_authenticated/room")({
       { name: "robots", content: "noindex,nofollow" },
     ],
   }),
-  component: () => <WorkspaceRoom />,
+  component: RoomScreen,
 });

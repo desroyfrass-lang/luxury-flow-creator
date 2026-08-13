@@ -118,6 +118,8 @@ import {
   setDemoData,
   setRitualEnabled,
 } from "@/lib/workspace/daily-intel";
+import { ViewModeFrame } from "@/components/view-mode/simplified-view";
+import { ViewModeToggle } from "@/components/view-mode/view-mode-toggle";
 import { Amount } from "@/components/finance/amount";
 import { VoiceFeedbackButton } from "@/components/feedback/voice-feedback";
 import { dailySnapshot, viewerFrom } from "@/lib/finance/financial-center";
@@ -151,10 +153,25 @@ export function FrassDaily(props: {
   onNavigate?: (href: string) => void;
 }) {
   // FRASS-5P000 — one Daily, arranged the way this member asked for it.
+  // FRASS-0517 — and presented the way this member prefers to work: the full
+  // Daily, or the same Daily as a calm conversation with Frassy.
   return (
-    <DailyCustomizationProvider>
-      <FrassDailyBody {...props} />
-    </DailyCustomizationProvider>
+    <ViewModeFrame
+      place="The Frass Daily"
+      task={{
+        title: "Finish today's Daily with me",
+        detail:
+          "Ask me for your next Money Move, or say what you'd like to work on and I'll open it for you.",
+        approveLabel: "Done for now",
+        onApprove: props.onDismiss,
+        nextLabel: "Close the Daily",
+        onNext: props.onDismiss,
+      }}
+    >
+      <DailyCustomizationProvider>
+        <FrassDailyBody {...props} />
+      </DailyCustomizationProvider>
+    </ViewModeFrame>
   );
 }
 
@@ -422,6 +439,10 @@ function FrassDailyBody({
 
 
       <div className={`daily-scroll ${isFounder ? "is-founder-os" : ""}`}>
+        {/* FRASS-0517 — switch this Daily to a calm conversation at any time. */}
+        <div className="mb-3 flex justify-end">
+          <ViewModeToggle />
+        </div>
         <LaunchModeBanner className="mb-4" />
         <header className="daily-head">
           <div>

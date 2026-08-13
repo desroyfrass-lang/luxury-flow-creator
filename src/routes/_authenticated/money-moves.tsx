@@ -63,6 +63,8 @@ import {
   monetizationSummary,
   monetizationTracks,
 } from "@/lib/business/monetization";
+import { ViewModeFrame } from "@/components/view-mode/simplified-view";
+import { ViewModeToggle } from "@/components/view-mode/view-mode-toggle";
 
 export const Route = createFileRoute("/_authenticated/money-moves")({
   head: () => ({
@@ -222,7 +224,10 @@ function MoneyMovesPage() {
   }
 
   return (
+    // FRASS-0517 — same tools, presented the member's way.
+    <ViewModeFrame place="Money Moves" task={{ title: "What should we earn from today?", detail: "Ask me for your next Money Move and I'll bring you the one that fits the time and energy you have right now." }}>
     <SiteShell>
+      <ViewModeToggle className="fixed right-4 top-20 z-30" />
       <div className="mx-auto w-full max-w-5xl px-4 py-10 md:py-14">
         <p className="text-xs uppercase tracking-[0.3em] text-muted-foreground">Frass Income Operating System</p>
         <h1 className="mt-2 font-display text-3xl uppercase tracking-[0.06em] md:text-4xl">Money Moves</h1>
@@ -688,6 +693,7 @@ function MoneyMovesPage() {
         </p>
       </div>
     </SiteShell>
+    </ViewModeFrame>
   );
 }
 

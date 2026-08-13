@@ -4019,6 +4019,7 @@ export type Database = {
           social_followed: boolean
           style_preferences: string[] | null
           updated_at: string
+          view_mode: string
         }
         Insert: {
           about?: Json
@@ -4052,6 +4053,7 @@ export type Database = {
           social_followed?: boolean
           style_preferences?: string[] | null
           updated_at?: string
+          view_mode?: string
         }
         Update: {
           about?: Json
@@ -4085,6 +4087,7 @@ export type Database = {
           social_followed?: boolean
           style_preferences?: string[] | null
           updated_at?: string
+          view_mode?: string
         }
         Relationships: []
       }

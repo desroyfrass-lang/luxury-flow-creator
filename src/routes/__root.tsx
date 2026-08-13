@@ -22,6 +22,7 @@ import { ConstructionMode } from "@/components/construction/blueprint-mode";
 
 import { RewardsRibbon } from "@/components/rewards-ribbon";
 import { FrassTrail } from "@/components/frass-trail";
+import { ViewModeProvider } from "@/lib/view-mode/view-mode";
 
 
 function NotFoundComponent() {
@@ -132,6 +133,7 @@ function RootComponent() {
   const { queryClient } = Route.useRouteContext();
   return (
     <QueryClientProvider client={queryClient}>
+      <ViewModeProvider>
       <RewardsRibbon />
       <FrassTrail />
       <Outlet />
@@ -145,6 +147,7 @@ function RootComponent() {
 
       <GlobalSpeechBar />
       <VoiceStateOverlay />
+      </ViewModeProvider>
     </QueryClientProvider>
   );
 }
