@@ -5,7 +5,7 @@
 import { tool } from "ai";
 import { z } from "zod";
 import { fetchProducts, storefrontApiRequest } from "@/lib/shopify";
-import { buildRepairTools } from "@/lib/frassy-repair-tools.server";
+import { buildRepairTools, type RepairToolContext } from "@/lib/frassy-repair-tools.server";
 import { buildNavigationTools } from "@/lib/frassy-navigation-tools.server";
 
 // ------- Product search / discovery -------
@@ -219,7 +219,7 @@ export const lookupOrder = tool({
 
 // ------- Registry -------
 
-export function buildFrassyTools() {
+export function buildFrassyTools(ctx: RepairToolContext = {}) {
   return {
     search_products: searchProducts,
     list_trending: listTrending,
@@ -228,7 +228,7 @@ export function buildFrassyTools() {
     // FRASS-0513 — Frassy navigates for the member; never hands out URLs.
     ...buildNavigationTools(),
     // FRASS-0515 — Frass Repair Engine.
-    ...buildRepairTools(),
+    ...buildRepairTools(ctx),
   };
 }
 
