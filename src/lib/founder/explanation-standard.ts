@@ -21,6 +21,12 @@ export const EXPLANATION_SECTIONS = [
     guide: "The major additions as short bullet points.",
   },
   {
+    id: "systems-map",
+    heading: "🧩 Existing Systems Updated",
+    guide:
+      "An instant mental map of what changed and what did not, in four labelled lists: Updated (existing systems extended), New (built from scratch), Unchanged (touched nothing), Deprecated (retired). If a list is empty, write 'None'. This enforces 'Extend, don't duplicate' (FRASS-0549A).",
+  },
+  {
     id: "plain-english",
     heading: "😊 In Plain English",
     guide: "Everyday language only. Assume the Founder has never heard the technical words.",
