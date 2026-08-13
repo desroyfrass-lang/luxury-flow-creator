@@ -7,10 +7,14 @@ import { founderSuccessOverview } from "@/lib/founder/success.functions";
 import {
   FOUNDER_CONFIDENTIAL_BANNER,
   FOUNDER_CONFIDENTIAL_LABEL,
+  FOUNDER_COACHING_PRINCIPLE,
+  FOUNDER_COACHING_QUESTIONS,
+  FOUNDER_DECIDES_NOTE,
   FOUNDER_MAY_VIEW,
   FOUNDER_RESPONSIBILITY,
   FOUNDER_VISIBILITY_PRINCIPLE,
   JOURNEY_STAGES,
+  NEED_META,
   NEVER_VISIBLE_TO_FOUNDER,
   TONE_META,
   journeyFill,
@@ -188,16 +192,30 @@ export function FounderSuccessPanel() {
 
       <header>
         <p className="text-xs uppercase tracking-[0.3em] text-[color:var(--gold)]">
-          FRASS-0547 · FRASS-0548
+          FRASS-0547 · FRASS-0548 · FRASS-0550
         </p>
         <h2 className="mt-2 text-2xl font-black uppercase tracking-tight">
           Member Progress Radar
         </h2>
         <p className="mt-2 text-sm text-muted-foreground">
-          Measure progress. Protect privacy. You see how members are doing — never their bank
-          accounts.
+          Measure progress. Protect privacy. Lead people, not dashboards. You see how members are
+          doing — never their bank accounts.
         </p>
       </header>
+
+      <div className="rounded-2xl border border-border/70 p-4">
+        <p className="text-xs font-bold uppercase tracking-wide">
+          Every member answers five questions
+        </p>
+        <ul className="mt-2 grid gap-1 text-xs text-muted-foreground sm:grid-cols-2">
+          {FOUNDER_COACHING_QUESTIONS.map((q) => (
+            <li key={q.id}>
+              {q.glyph} <span className="font-semibold text-foreground">{q.label}</span> {q.guide}
+            </li>
+          ))}
+        </ul>
+        <p className="mt-2 text-[11px] italic text-muted-foreground">{FOUNDER_DECIDES_NOTE}</p>
+      </div>
 
       <div className="rounded-2xl border border-[color:var(--gold)]/50 bg-[color:var(--gold)]/5 p-4">
         <p className="text-xs font-bold uppercase tracking-wide text-[color:var(--gold)]">
@@ -313,6 +331,7 @@ export function FounderSuccessPanel() {
       </div>
 
       <p className="text-xs italic text-muted-foreground">{FOUNDER_VISIBILITY_PRINCIPLE}</p>
+      <p className="text-xs italic text-muted-foreground">{FOUNDER_COACHING_PRINCIPLE}</p>
 
     </section>
   );
