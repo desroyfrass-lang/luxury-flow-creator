@@ -395,7 +395,7 @@ export function FrassyChat({
       aria-busy={startup.phase === "verifying" || startup.phase === "recovering"}
       className={
         `${startup.phase === "verifying" || startup.phase === "recovering" ? "invisible pointer-events-none" : "visible"} frass-workspace ${dark ? "ws-dark" : ""} ${embedded
-          ? "flex h-[min(640px,78vh)] min-h-[420px] w-full max-w-full flex-col overflow-hidden rounded-lg border border-[color:var(--ws-line)]"
+          ? "flex h-[min(820px,86vh)] min-h-[520px] w-full max-w-full flex-col overflow-hidden rounded-lg border border-[color:var(--ws-line)]"
           : "fixed bottom-5 right-5 z-50 flex h-[min(620px,80vh)] w-[min(420px,calc(100vw-2rem))] max-w-full flex-col overflow-hidden rounded-lg border border-[color:var(--ws-line)] shadow-2xl"}`
       }
       style={{ background: "var(--ws-panel)", color: "var(--ws-ink)" }}
@@ -496,11 +496,11 @@ export function FrassyChat({
       <div
         ref={scrollRef}
         data-frassy-transcript
-        className="min-h-0 flex-1 space-y-4 overflow-y-auto px-4 py-4"
+        className="frassy-transcript min-h-0 flex-1 space-y-5 overflow-y-auto px-4 py-5 pb-8"
       >
         {/* FRASS-0551 — conversation first: the room is never an empty box. */}
         {(startup.greeting || (!messages.length && startup.phase === "greeted")) && (
-          <div className="w-fit max-w-[90%] rounded-lg bg-[color:var(--ws-accent-bg)] px-3 py-2 text-sm text-[color:var(--ws-ink)]">
+          <div className="frassy-bubble w-fit max-w-[min(46rem,95%)] rounded-lg bg-[color:var(--ws-accent-bg)] px-4 py-3 text-sm leading-relaxed text-[color:var(--ws-ink)]">
             <p className="whitespace-pre-wrap">
               {startup.greeting ?? "I'm right here. Tell me what you'd like to do — talk or type, whichever suits you."}
             </p>
@@ -519,8 +519,8 @@ export function FrassyChat({
             <div
               className={
                 m.role === "user"
-                  ? "ml-auto w-fit max-w-[85%] rounded-lg bg-[color:var(--gold)]/15 px-3 py-2 text-sm text-[color:var(--ws-ink)]"
-                  : "w-fit max-w-[90%] rounded-lg bg-[color:var(--ws-accent-bg)] px-3 py-2 text-sm text-[color:var(--ws-ink)]"
+                  ? "frassy-bubble ml-auto w-fit max-w-[min(42rem,92%)] rounded-lg bg-[color:var(--gold)]/15 px-4 py-3 text-sm leading-relaxed text-[color:var(--ws-ink)]"
+                  : "frassy-bubble w-fit max-w-[min(46rem,95%)] rounded-lg bg-[color:var(--ws-accent-bg)] px-4 py-3 text-sm leading-relaxed text-[color:var(--ws-ink)]"
               }
             >
               {m.role === "assistant" ? (

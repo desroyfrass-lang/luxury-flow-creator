@@ -1151,11 +1151,21 @@ body.blueprint-on [data-blueprint]:hover {
   margin-top: 0.55rem; display: flex; align-items: flex-end; gap: 0.5rem;
   flex-wrap: wrap; max-width: 100%;
 }
+/* Grows with the thought: comfortable at rest, up to ~5 lines before scrolling. */
 .frass-workspace .ws-input {
-  min-height: 3.6rem; max-height: 13.75rem; padding: 0.75rem 0.9rem;
-  flex: 1 1 12rem; min-width: 0;
+  min-height: 3.6rem; max-height: 10.5rem; padding: 0.75rem 0.9rem;
+  flex: 1 1 14rem; min-width: 0;
 }
 .frass-workspace .ws-composer { max-width: 100%; overflow-x: hidden; }
+
+/* FRASS-0551 — long answers read fully: no inner scrollbars, no clipping. */
+.frassy-transcript { scroll-padding-bottom: 2rem; }
+.frassy-bubble { overflow: visible; max-height: none; overflow-wrap: anywhere; }
+.frassy-bubble p { margin: 0 0 0.6rem; }
+.frassy-bubble p:last-child { margin-bottom: 0; }
+.frassy-bubble ul, .frassy-bubble ol { margin: 0.35rem 0 0.6rem; padding-left: 1.15rem; }
+.frassy-bubble li { margin-bottom: 0.3rem; }
+.frassy-bubble pre { white-space: pre-wrap; overflow-x: auto; max-width: 100%; }
 
 /* Voice confidence strip — Listening / Thinking / Speaking, always visible. */
 .frassy-state {

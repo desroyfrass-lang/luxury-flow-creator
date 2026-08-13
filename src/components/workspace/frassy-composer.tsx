@@ -375,7 +375,7 @@ export function FrassyComposer({
             // Grow with the thought, up to a comfortable ceiling.
             const el = e.currentTarget;
             el.style.height = "auto";
-            el.style.height = `${Math.min(el.scrollHeight, 220)}px`;
+            el.style.height = `${Math.min(el.scrollHeight, 168)}px`; // ~5 lines before scrolling
           }}
 
           onKeyDown={(e) => {
