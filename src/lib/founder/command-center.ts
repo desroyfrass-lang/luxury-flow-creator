@@ -15,6 +15,7 @@ export type CommandSectionId =
   | "frassy"
   | "ai"
   | "operations"
+  | "simulator"
   | "innovation";
 
 export type CommandTool = {
@@ -269,6 +270,37 @@ export const COMMAND_SECTIONS: CommandSection[] = [
         plain: "Which entrepreneurial pathways members are actually building in.",
         kind: "link",
         path: "/business-vaults",
+      },
+    ],
+  },
+  {
+    id: "simulator",
+    icon: "🧪",
+    label: "Experience Simulator",
+    purpose:
+      "Become any member and walk Frass exactly as they would — starting at the front door.",
+    tools: [
+      {
+        id: "experience-simulator",
+        label: "Founder Experience Simulator",
+        plain: "Pick a persona, start at frasskicks.com, record what you notice, get a score.",
+        kind: "panel",
+        amendment: "FRASS-0559",
+      },
+      {
+        id: "preview-reset",
+        label: "Founder Preview Reset",
+        plain: "Every new build returns you to the front door instead of somewhere random.",
+        kind: "panel",
+        amendment: "FRASS-0560",
+      },
+      {
+        id: "seed-vaults",
+        label: "Founder Seed Vaults",
+        plain: "Nothing you create while testing is thrown away — every Vault is a real asset you own.",
+        kind: "link",
+        path: "/business-vaults",
+        amendment: "FRASS-0561",
       },
     ],
   },
