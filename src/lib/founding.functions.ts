@@ -316,17 +316,29 @@ export const grantFoundingPartner = createServerFn({ method: "POST" })
     }
 
     // sequence is assigned by the database trigger; invited_by is the Founder.
-    const { error } = await supabaseAdmin.from("founding_partners").insert({
-      user_id: profile.id,
-      sequence: 0,
-      invited_by: context.userId,
-      note: data.note || null,
-    });
+    const { data: created, error } = await supabaseAdmin
+      .from("founding_partners")
+      .insert({
+        user_id: profile.id,
+        sequence: 0,
+        invited_by: context.userId,
+      })
+      .select("id")
+      .single();
     if (error) {
       if (error.code === "23505") throw new Error("They are already a First Partner.");
       throw new Error(error.message);
     }
+    const noteText = (data.note ?? "").trim();
+    if (created && noteText) {
+      await supabaseAdmin.from("founder_notes").insert({
+        partner_id: created.id,
+        founder_note: noteText,
+        created_by: context.userId,
+      });
+    }
     return { ok: true };
+
   });
 
 export const revokeFoundingPartner = createServerFn({ method: "POST" })
