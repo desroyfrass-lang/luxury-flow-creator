@@ -7,6 +7,7 @@ import { z } from "zod";
 import { fetchProducts, storefrontApiRequest } from "@/lib/shopify";
 import { buildRepairTools, type RepairToolContext } from "@/lib/frassy-repair-tools.server";
 import { buildBlueprintTools } from "@/lib/frassy-blueprint-tools.server";
+import { buildPublicationTools } from "@/lib/frassy-publication-tools.server";
 import { buildFounderTools } from "@/lib/frassy-founder-tools.server";
 import { buildNavigationTools } from "@/lib/frassy-navigation-tools.server";
 
