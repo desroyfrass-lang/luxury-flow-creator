@@ -4,6 +4,7 @@ import { useServerFn } from "@tanstack/react-start";
 import { useQuery } from "@tanstack/react-query";
 import { aiOperationsSnapshot } from "@/lib/founder/ai-operations.functions";
 import { approvalPolicy } from "@/lib/founder/ai-approval";
+import { ROUTER_SUMMARY, ROUTING_TABLE, type TaskKind } from "@/lib/ai/intelligence-router";
 
 function Panel({ title, plain, children }: { title: string; plain: string; children: React.ReactNode }) {
   return (
@@ -187,7 +188,7 @@ export function AiOperationsPanel() {
           ))}
         </ul>
         <ul className="space-y-2 text-xs">
-          {(Object.keys(ROUTING_TABLE) as Array<keyof typeof ROUTING_TABLE>).map((task) => {
+          {(Object.keys(ROUTING_TABLE) as TaskKind[]).map((task) => {
             const r = ROUTING_TABLE[task];
             return (
               <li key={task} className="rounded-lg border border-border/60 p-3">
