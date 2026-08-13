@@ -24,6 +24,7 @@ import type { SectionId } from "@/lib/daily/customization";
 import { isKankoDaily } from "@/lib/daily/kanko";
 import { isMotherDaily } from "@/lib/daily/mother";
 import { isTradespersonDaily } from "@/lib/daily/tradesperson";
+import { CreativeProjectProgress } from "@/components/workspace/creative-project-progress";
 import {
   FrassyDoesTheTech,
   TradespersonFrassyNote,
@@ -862,6 +863,16 @@ function FrassDailyBody({
             </Section>
           </>
         )}
+
+        {/* FRASS-0533 — Episode Progress. Blueprint-driven: it only appears for
+            members whose Blueprint carries a recurring creative project. */}
+        <Section
+          id="episode-progress"
+          title="🎬 Episode Progress"
+          note="Your recurring creative projects. You're the creator; I'm the production partner."
+        >
+          <CreativeProjectProgress name={name} />
+        </Section>
 
         {/* 1 — Celebrate first */}
         <Section id="celebrate-first" title="Celebrate first" note="Progress before problems.">

@@ -92,6 +92,7 @@ function BlueprintsPage() {
     daily_priorities: "",
     money_moves_philosophy: "",
     business_vaults: "",
+    creative_projects: "",
     learning_style: "",
     motivation_style: "",
     simplified_view: false,
@@ -124,6 +125,21 @@ function BlueprintsPage() {
       daily_priorities: splitList(form.daily_priorities),
       money_moves_philosophy: form.money_moves_philosophy.trim() || null,
       business_vaults: splitList(form.business_vaults),
+      // FRASS-0533 — recurring creative projects. Frassy fills in the episode
+      // details each week through conversation; here we just name them.
+      creative_projects: splitList(form.creative_projects).map((name) => ({
+        name,
+        status: "Active Weekly Money Move",
+        cadence: "weekly",
+        current_episode: null,
+        script_status: null,
+        production_status: null,
+        upload_status: null,
+        thumbnail_status: null,
+        publish_date: null,
+        channel: null,
+        notes: null,
+      })),
       learning_style: form.learning_style.trim() || null,
       motivation_style: form.motivation_style.trim() || null,
       simplified_view: form.simplified_view,
@@ -246,6 +262,10 @@ function BlueprintsPage() {
               <label className="text-xs text-white/60">
                 Business Vaults (comma separated)
                 <input {...field("business_vaults")} placeholder="tradesperson" />
+              </label>
+              <label className="text-xs text-white/60">
+                Creative projects (comma separated)
+                <input {...field("creative_projects")} placeholder="I Am Not My Hair" />
               </label>
               <label className="text-xs text-white/60">
                 Never recommend (comma separated)

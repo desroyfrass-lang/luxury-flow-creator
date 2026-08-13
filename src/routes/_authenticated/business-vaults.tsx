@@ -20,6 +20,7 @@ import {
   ideaByKey,
   type FutureVaultRow,
 } from "@/lib/business/future-vaults";
+import { FREEDOM_LEVELS, THREE_LEVELS_PRINCIPLE } from "@/lib/business/three-levels";
 import {
   BUSINESS_VAULTS,
   FAMILY_PRINCIPLE,
@@ -146,6 +147,30 @@ function FutureVaultsPage() {
           <p className="mt-3 text-xs text-muted-foreground">
             These five carry the Daily until they reach launch readiness. Everything on the shelf below stays quiet.
           </p>
+        </section>
+
+        {/* FRASS-0533-A — Three Levels of Financial Freedom */}
+        <section className="mt-10 rounded-3xl border border-[color:var(--gold)]/25 bg-[color:var(--gold)]/5 p-5">
+          <h2 className="font-display text-lg uppercase tracking-[0.06em]">
+            Three Levels of Financial Freedom
+          </h2>
+          <p className="mt-2 max-w-2xl text-sm text-muted-foreground">
+            {THREE_LEVELS_PRINCIPLE.headline} {THREE_LEVELS_PRINCIPLE.founderPrinciple}
+          </p>
+          <ul className="mt-4 grid gap-3 sm:grid-cols-3">
+            {FREEDOM_LEVELS.map((l) => (
+              <li key={l.id} className="rounded-2xl border border-white/12 bg-black/25 p-4">
+                <p className="text-[10px] uppercase tracking-[0.24em] text-muted-foreground">{l.stage}</p>
+                <h3 className="mt-1 font-display text-base">
+                  {l.emoji} {l.label}
+                </h3>
+                <p className="mt-1 text-sm text-muted-foreground">{l.plain}</p>
+                <p className="mt-2 text-xs text-muted-foreground">{l.examples.join(" · ")}</p>
+                <p className="mt-2 text-xs text-muted-foreground/80">{l.ceiling}</p>
+              </li>
+            ))}
+          </ul>
+          <p className="mt-3 text-xs text-muted-foreground">{THREE_LEVELS_PRINCIPLE.plain}</p>
         </section>
 
         {/* FRASS-0503 — the family of Business Vaults */}

@@ -20,6 +20,29 @@ export type BlueprintKind = BlueprintId | "tradesperson";
 export type TechComfort = "low" | "moderate" | "high";
 export type BlueprintStatus = "draft" | "active" | "archived";
 
+/**
+ * FRASS-0533 — a recurring creative project (a series, a channel, a book).
+ * It lives on the Blueprint, never in code, so Frassy simply knows it is one of
+ * this member's highest-priority weekly projects.
+ */
+export type CreativeProject = {
+  name: string;
+  /** e.g. "Active Weekly Money Move". */
+  status?: string | null;
+  /** How often a new instalment is made. */
+  cadence?: string | null;
+  /** Which instalment is in production right now. */
+  current_episode?: string | null;
+  script_status?: string | null;
+  production_status?: string | null;
+  upload_status?: string | null;
+  thumbnail_status?: string | null;
+  publish_date?: string | null;
+  /** Where it is published. */
+  channel?: string | null;
+  notes?: string | null;
+};
+
 export type MemberBlueprint = {
   id: string;
   user_id: string | null;
@@ -35,6 +58,8 @@ export type MemberBlueprint = {
   daily_priorities: string[];
   money_moves_philosophy: string | null;
   business_vaults: string[];
+  /** FRASS-0533 — recurring creative projects Frassy produces alongside them. */
+  creative_projects: CreativeProject[];
   learning_style: string | null;
   motivation_style: string | null;
   simplified_view: boolean;
@@ -48,6 +73,7 @@ export type MemberBlueprint = {
   updated_at: string;
 };
 
+
 /** The thirteen things Frassy needs to know to serve someone well. */
 export const BLUEPRINT_FIELDS = [
   { key: "member_name", label: "Who this person is", plain: "Their name and, in one line, who they are." },
@@ -59,6 +85,8 @@ export const BLUEPRINT_FIELDS = [
   { key: "daily_priorities", label: "Daily priorities", plain: "What their day should be built around." },
   { key: "money_moves_philosophy", label: "Money Moves philosophy", plain: "What kind of income fits their life." },
   { key: "business_vaults", label: "Business Vaults", plain: "Which trades or pathways apply to them." },
+  { key: "creative_projects", label: "Creative projects", plain: "Recurring projects Frassy produces with them each week." },
+
   { key: "learning_style", label: "Learning style", plain: "How they take in something new." },
   { key: "motivation_style", label: "Motivation style", plain: "What keeps them going." },
   { key: "simplified_view", label: "Simplified View preference", plain: "Calm conversation, or full dashboards." },
@@ -98,6 +126,8 @@ export const BLANK_BLUEPRINT: Omit<
   daily_priorities: [],
   money_moves_philosophy: null,
   business_vaults: [],
+  creative_projects: [],
+
   learning_style: null,
   motivation_style: null,
   simplified_view: false,
@@ -136,6 +166,30 @@ export function blueprintToPrompt(b: MemberBlueprint): string {
     list("Build the day around", b.daily_priorities),
     b.money_moves_philosophy ? `Money Moves philosophy: ${b.money_moves_philosophy}` : null,
     list("Business Vaults", b.business_vaults),
+    // FRASS-0533 — recurring creative projects. Frassy is the production
+    // partner; the member always remains the creator.
+    (b.creative_projects ?? []).length
+      ? "Creative projects (ask about these every week, by name):\n" +
+        (b.creative_projects ?? [])
+          .map((p) =>
+            [
+              `· ${p.name}${p.status ? ` — ${p.status}` : ""}${p.cadence ? ` (${p.cadence})` : ""}`,
+              p.current_episode ? `  current: ${p.current_episode}` : null,
+              p.script_status ? `  script: ${p.script_status}` : null,
+              p.production_status ? `  production: ${p.production_status}` : null,
+              p.upload_status ? `  upload: ${p.upload_status}` : null,
+              p.publish_date ? `  publishing: ${p.publish_date}` : null,
+              p.notes ? `  notes: ${p.notes}` : null,
+            ]
+              .filter(Boolean)
+              .join("\n"),
+          )
+          .join("\n") +
+        "\nYou are their creative producer: brainstorm, script, jokes, storytelling, continuity, production " +
+        "tracking, publishing schedule, titles, descriptions, thumbnails, keywords and monetization progress. " +
+        "They remain the creator — never take the creative decision away from them."
+      : null,
+
     b.learning_style ? `Learning style: ${b.learning_style}` : null,
     b.motivation_style ? `Motivation: ${b.motivation_style}` : null,
     b.hours_per_day != null ? `Available time: about ${b.hours_per_day} hours a day. Never plan more.` : null,

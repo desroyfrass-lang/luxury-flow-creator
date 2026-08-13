@@ -35,6 +35,26 @@ const fields = {
   daily_priorities: z.array(z.string()).default([]),
   money_moves_philosophy: z.string().nullable().default(null),
   business_vaults: z.array(z.string()).default([]),
+  creative_projects: z
+    .array(
+      z.object({
+        name: z.string(),
+        status: z.string().nullable().default(null),
+        cadence: z.string().nullable().default(null),
+        current_episode: z.string().nullable().default(null),
+        script_status: z.string().nullable().default(null),
+        production_status: z.string().nullable().default(null),
+        upload_status: z.string().nullable().default(null),
+        thumbnail_status: z.string().nullable().default(null),
+        publish_date: z.string().nullable().default(null),
+        channel: z.string().nullable().default(null),
+        notes: z.string().nullable().default(null),
+      }),
+    )
+    .default([])
+    .describe(
+      "FRASS-0533. Recurring creative projects — a series, channel or book. Update the episode status here each week; never ask for engineering.",
+    ),
   learning_style: z.string().nullable().default(null),
   motivation_style: z.string().nullable().default(null),
   simplified_view: z.boolean().default(false),

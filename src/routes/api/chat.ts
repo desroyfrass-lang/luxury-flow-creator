@@ -807,11 +807,28 @@ request, and only after analyze_change_request.
 A Blueprint may change words, order and pace — never architecture, never security
 or legal notices, never a member's capability.`;
 
+        // FRASS-0533 / FRASS-0533-A — creative producer + the three levels.
+        const CREATIVE_PRODUCER = `━━━ FRASS-0533 — CREATIVE PRODUCER & THREE LEVELS OF FREEDOM ━━━
+Some Blueprints carry recurring creative projects (a series, a channel, a book).
+For those members you are the production partner and they remain the creator.
+Each week ask by name: "Are we creating this week's episode of <project>?" Then
+work the pipeline: brainstorm → choose the funniest concept → script → plan scenes
+→ storyboards → produce → prepare the upload → publish → repurpose into Shorts →
+track performance. You help with jokes, storytelling, continuity between episodes,
+titles, descriptions, thumbnails, keywords, publishing schedule and monetization
+progress. Update the project's status on the Blueprint — never ask for engineering.
+Treat a series as intellectual property, not content: recurring characters, merch,
+books, specials and licensing are the real business.
+FRASS-0533-A — every Vault runs three stages. Stage 1 Earn (paid for today's work),
+Stage 2 Scale (knowledge turned into products), Stage 3 Legacy (assets that keep
+earning without daily labour). Always name which stage a Money Move serves and what
+the next move toward Legacy is. Never stop at helping someone earn a living.`;
+
         const basePrompt =
           experienceContext === "founder"
-            ? `${SYSTEM_PROMPT}\n\n${FRASS_LINK}\n\n${FOUNDER_CONTEXT}\n\n${CURATION_BRIEF}\n\n${GLOBAL_COMMERCE}\n\n${FOR_US_COMMUNITY}\n\n${STORYTELLING_ENGINE}\n\n${PLAIN_LANGUAGE_PROTOCOL}\n\n${FRASS_PLATFORM_ATLAS}\n\n${FIRST_PARTNER_PROTOCOL}\n\n${FRASS_ECONOMY}\n\n${FRASS_SERVICES_MARKETPLACE}\n\n${FRASS_COMPLIANCE}\n\n${FRASS_EMPLOYMENT_PHILOSOPHY}\n\n${ONLINE_FIRST_PROMPT}\n\n${BLUEPRINT_WORKFLOW}\n\n${FRASS_THREE_LAYERS}\n\n${FRASS_DAILY_BLUEPRINTS}\n\n${FRASS_HIDDEN_ASSETS}\n\n${FRASS_FOUNDING_PARTNERS}\n\n${FRASS_RIGHTS_AND_TRUST}\n\n${FRASS_CREATIVE_IDENTITY}\n\n${FRASS_REPAIR_ENGINE}\n\n${FRASS_REPAIR_FOUNDER}${kankoDna}`
+            ? `${SYSTEM_PROMPT}\n\n${FRASS_LINK}\n\n${FOUNDER_CONTEXT}\n\n${CURATION_BRIEF}\n\n${GLOBAL_COMMERCE}\n\n${FOR_US_COMMUNITY}\n\n${STORYTELLING_ENGINE}\n\n${PLAIN_LANGUAGE_PROTOCOL}\n\n${FRASS_PLATFORM_ATLAS}\n\n${FIRST_PARTNER_PROTOCOL}\n\n${FRASS_ECONOMY}\n\n${FRASS_SERVICES_MARKETPLACE}\n\n${FRASS_COMPLIANCE}\n\n${FRASS_EMPLOYMENT_PHILOSOPHY}\n\n${ONLINE_FIRST_PROMPT}\n\n${BLUEPRINT_WORKFLOW}\n\n${CREATIVE_PRODUCER}\n\n${FRASS_THREE_LAYERS}\n\n${FRASS_DAILY_BLUEPRINTS}\n\n${FRASS_HIDDEN_ASSETS}\n\n${FRASS_FOUNDING_PARTNERS}\n\n${FRASS_RIGHTS_AND_TRUST}\n\n${FRASS_CREATIVE_IDENTITY}\n\n${FRASS_REPAIR_ENGINE}\n\n${FRASS_REPAIR_FOUNDER}${kankoDna}`
             : experienceContext === "builder"
-              ? `${SYSTEM_PROMPT}\n\n${FRASS_LINK}\n\n${CURATION_BRIEF}\n\n${GLOBAL_COMMERCE}\n\n${FOR_US_COMMUNITY}\n\n${PLAIN_LANGUAGE_PROTOCOL}\n\n${FRASS_PLATFORM_ATLAS}\n\n${FIRST_PARTNER_PROTOCOL}\n\n${FRASS_ECONOMY}\n\n${FRASS_SERVICES_MARKETPLACE}\n\n${FRASS_COMPLIANCE}\n\n${FRASS_EMPLOYMENT_PHILOSOPHY}\n\n${ONLINE_FIRST_PROMPT}\n\n${BLUEPRINT_WORKFLOW}\n\n${FRASS_THREE_LAYERS}\n\n${FRASS_DAILY_BLUEPRINTS}\n\n${FRASS_HIDDEN_ASSETS}\n\n${FRASS_FOUNDING_PARTNERS}\n\n${FRASS_RIGHTS_AND_TRUST}\n\n${FRASS_CREATIVE_IDENTITY}\n\n${FRASS_REPAIR_ENGINE}${kankoDna}`
+              ? `${SYSTEM_PROMPT}\n\n${FRASS_LINK}\n\n${CURATION_BRIEF}\n\n${GLOBAL_COMMERCE}\n\n${FOR_US_COMMUNITY}\n\n${PLAIN_LANGUAGE_PROTOCOL}\n\n${FRASS_PLATFORM_ATLAS}\n\n${FIRST_PARTNER_PROTOCOL}\n\n${FRASS_ECONOMY}\n\n${FRASS_SERVICES_MARKETPLACE}\n\n${FRASS_COMPLIANCE}\n\n${FRASS_EMPLOYMENT_PHILOSOPHY}\n\n${ONLINE_FIRST_PROMPT}\n\n${BLUEPRINT_WORKFLOW}\n\n${CREATIVE_PRODUCER}\n\n${FRASS_THREE_LAYERS}\n\n${FRASS_DAILY_BLUEPRINTS}\n\n${FRASS_HIDDEN_ASSETS}\n\n${FRASS_FOUNDING_PARTNERS}\n\n${FRASS_RIGHTS_AND_TRUST}\n\n${FRASS_CREATIVE_IDENTITY}\n\n${FRASS_REPAIR_ENGINE}${kankoDna}`
 
               : `${SYSTEM_PROMPT}\n\n${FOR_US_COMMUNITY}\n\n${FRASS_ECONOMY}\n\n${FRASS_SERVICES_MARKETPLACE}\n\n${FRASS_COMPLIANCE}\n\n${FRASS_REPAIR_ENGINE}`;
 

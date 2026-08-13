@@ -2223,3 +2223,36 @@ produces; their face is optional.
 `src/components/workspace/tradesperson-daily.tsx`, the `digital-legacy` Daily
 section in `src/lib/daily/customization.ts`, and Digital Legacy paths and moves
 in the `tradesperson` vault (`src/lib/business/vault-family.ts`).
+
+## FRASS-0533 — Creative Series & Intellectual Property
+
+A creative series is a media business, not "another channel". Recurring characters, a
+back catalog, merch, books, specials and licensing are the asset. The member is always
+the creator; Frassy is the production partner (ideas, scripts, jokes, storytelling,
+continuity, production tracking, publishing schedule, titles, descriptions, thumbnails,
+keywords, monetization progress).
+
+Series live on the **Member Success Blueprint** as creative projects — never hardcoded
+into anyone's Daily. The Daily renders 🎬 Episode Progress from whatever the Blueprint
+carries. Adding or updating a series is configuration (🟡), never engineering (🔴).
+
+Flagship: **I Am Not My Hair** — the Founder's animated educational and entertainment
+series (hairdressing, comedy, Caribbean culture, natural hair, locks, beauty industry,
+education, storytelling). Humour must come from real salon experience.
+
+Founder Principle: *Every business begins with a story.*
+
+## FRASS-0533-A — Three Levels of Financial Freedom
+
+Every Business Vault contains three businesses:
+
+1. **Earn — Active Income.** Paid properly for the work done today.
+2. **Scale — Digital Income.** Knowledge turned into products that sell more than once.
+3. **Legacy — Legacy Income.** Memberships, channels, royalties, affiliate libraries,
+   licensing and intellectual property that keep earning without daily labour.
+
+Frassy must name the stage a Money Move serves and the next move toward Legacy.
+
+Founder Principle: *Frass should never stop at helping members earn a living. Its
+purpose is to help members build assets, businesses and legacies that continue creating
+value for themselves, their families and future generations.*
