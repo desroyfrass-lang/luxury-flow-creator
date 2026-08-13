@@ -35,6 +35,10 @@ Frassy is first-line support (FRASS-0515 Repair Engine): verify before diagnosin
 Deployment lifecycle is FROZEN (FRASS-0502-D→0506): build, validate, security review, rollback verification, publish, observe (🟢/🟡/🔴 window), archive, learn — never a parallel deploy system.
 
 
+Every Business Vault adapts to the member's skill level (beginner/intermediate/advanced) — same destination, different depth; never assume experience.
+Physical products from ANY Vault go through the one shared Creator Manufacturing Network (/manufacturing) — Frass is never the manufacturer, nothing is made without member approval, no inventory ownership.
+Seamstress Vault is the business engine behind Afro Designers — one catalog, one inventory, never a second storefront.
+
 ## Memories
 - [FRASS-0477 Frassy Presence](mem://features/frass-0477-frassy-presence) — Arrival/returning/working/idle etiquette, Focus Mode silence, cloud→device→text voice hierarchy with indicator
 - [The Daily philosophy FRASS-0425](mem://features/frass-0425-daily-philosophy) — Daily's constitutional purpose + Morning Briefing, End of Day, time estimates, Focus Mode, consistency, health, Close My Day
@@ -141,3 +145,4 @@ Deployment lifecycle is FROZEN (FRASS-0502-D→0506): build, validate, security 
 - [Production Deployment Gate](mem://preferences/deployment-gate) — FRASS-0502-D/0503-D/0504/0505 checklist gates, rollback verification, security review cycle, pre-publish soak, /daily redirect rule
 - [FRASS-0515 Frass Repair Engine](mem://features/frass-0515-repair-engine) — Frassy as support engineer: diagnose/verify/safe-repair/escalate, repair authority limits, learned patterns, Founder Repair Center
 - [FRASS-0513/0514 Welcome Hall onboarding](mem://features/frass-0513-welcome-hall-onboarding) — No member-facing URLs, Frassy open_place navigation, Start My Journey CTA, launch-blocking core route audit
+- [FRASS-0510/0511-A/0516 Fashion + Manufacturing](mem://features/frass-0510-0516-fashion-and-manufacturing) — Seamstress↔Afro Designers ecosystem, adaptive learning engine, shared Creator Manufacturing Network

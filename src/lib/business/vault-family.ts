@@ -56,7 +56,21 @@ export type BusinessVault = {
   monetizationOutcome: string;
   /** Optional craft-specific creative tooling notes. */
   designSupport?: string[];
+  /**
+   * FRASS-0510 — where the finished work is presented to the world.
+   * The Vault builds the business; the showcase is where people discover,
+   * follow and buy it. Same catalog, same inventory, one source of truth.
+   */
+  showcase?: { label: string; to: string; note: string };
+  /**
+   * FRASS-0516 — which Creator Manufacturing Network categories this Vault
+   * can produce through. Omit for service-only Vaults.
+   */
+  manufacturing?: string[];
+  /** FRASS-0511-A — the craft word Frassy uses when discovering skill level. */
+  craft?: string;
 };
+
 
 const MARKETPLACE_CLOSE: VaultMove[] = [
   { title: "Price the work so it pays you properly", stage: "monetize", minutes: 20, to: "/money-moves" },
@@ -102,11 +116,22 @@ export const SEAMSTRESS_VAULT: BusinessVault = {
     { title: "Sew the first piece of the collection", stage: "build", minutes: 60 },
     { title: "Photograph the garments properly", stage: "build", minutes: 30 },
     { title: "Write the product catalog — sizes, fabric, care", stage: "build", minutes: 30 },
+    { title: "Prepare the production package for a manufacturing partner", stage: "build", minutes: 30, to: "/manufacturing" },
     ...MARKETPLACE_CLOSE,
+    { title: "Publish the collection to your Afro Designers house", stage: "monetize", minutes: 20, to: "/afro-designers" },
     { title: "Plan the next collection", stage: "monetize", minutes: 20 },
   ],
-  monetizationOutcome: "A live clothing collection listed in the Marketplace and promoted on your Frass Card.",
+  monetizationOutcome:
+    "A live clothing collection listed in the Marketplace, promoted on your Frass Card, and published to your Afro Designers house.",
+  showcase: {
+    label: "Afro Designers",
+    to: "/afro-designers",
+    note: "Your finished work is published to your own designer house — same products, same inventory, no second catalog.",
+  },
+  manufacturing: ["fashion"],
+  craft: "sewing",
 };
+
 
 /** The rest of the family. Same constitution, different craft. */
 export const BUSINESS_VAULTS: BusinessVault[] = [
@@ -128,6 +153,9 @@ export const BUSINESS_VAULTS: BusinessVault[] = [
       ...MARKETPLACE_CLOSE,
     ],
     monetizationOutcome: "A gallery collection for sale plus at least one merch or print product.",
+    showcase: { label: "Frass Gallery", to: "/gallery", note: "Your work hangs in the Gallery — same pieces, one catalog." },
+    manufacturing: ["art", "lifestyle"],
+    craft: "art",
   },
   {
     key: "music-creator",
@@ -226,6 +254,8 @@ export const BUSINESS_VAULTS: BusinessVault[] = [
       ...MARKETPLACE_CLOSE,
     ],
     monetizationOutcome: "A bookable service menu with prices, live on your Frass Card.",
+    manufacturing: ["beauty"],
+    craft: "beauty work",
   },
   {
     key: "woodworking",
@@ -241,7 +271,66 @@ export const BUSINESS_VAULTS: BusinessVault[] = [
       ...MARKETPLACE_CLOSE,
     ],
     monetizationOutcome: "Made-to-order pieces listed with lead times and deposits.",
+    manufacturing: ["home"],
+    craft: "woodworking",
   },
+  {
+    key: "footwear",
+    emoji: "👟",
+    label: "Footwear Vault",
+    summary: "Design shoes and have them properly made — without owning a factory.",
+    forWho: "Anyone with a shoe idea, from a first sketch to a full line.",
+    paths: ["Sneakers", "Dress shoes", "Sandals", "Boots", "Athletic footwear", "Limited drops"],
+    moves: [
+      { title: "Decide the one silhouette you want to be known for", stage: "discover", minutes: 20 },
+      { title: "Name the label and set the look", stage: "discover", minutes: 20, to: "/business-builder" },
+      { title: "Draw the design and colourways", stage: "build", minutes: 40, to: "/workspace/composer" },
+      { title: "Prepare the production package and choose a partner", stage: "build", minutes: 30, to: "/manufacturing" },
+      { title: "Approve the sample before anything is produced", stage: "build", minutes: 20, to: "/manufacturing" },
+      ...MARKETPLACE_CLOSE,
+    ],
+    monetizationOutcome: "An approved footwear sample in production and listed for sale.",
+    showcase: { label: "Frass Kicks", to: "/frass-kicks", note: "Your drop shown where the sneaker people already are." },
+    manufacturing: ["footwear"],
+    craft: "footwear design",
+  },
+  {
+    key: "bags",
+    emoji: "👜",
+    label: "Bags & Leather Vault",
+    summary: "Bags, wallets and leather goods made to order and sold as a line.",
+    forWho: "Leather workers, bag makers and accessory designers.",
+    paths: ["Handbags", "Backpacks", "Wallets", "Travel bags", "Accessories"],
+    moves: [
+      { title: "Pick the three pieces that make the line", stage: "discover", minutes: 20 },
+      { title: "Choose materials and hardware", stage: "build", minutes: 25 },
+      { title: "Prepare the production package and choose a partner", stage: "build", minutes: 30, to: "/manufacturing" },
+      { title: "Approve the sample", stage: "build", minutes: 20, to: "/manufacturing" },
+      ...MARKETPLACE_CLOSE,
+    ],
+    monetizationOutcome: "A leather goods line listed with lead times and prices that pay you.",
+    manufacturing: ["bags"],
+    craft: "leather work",
+  },
+  {
+    key: "jewelry",
+    emoji: "💍",
+    label: "Jewelry Vault",
+    summary: "Turn pieces you design into a jewelry line people can buy.",
+    forWho: "Jewellers, beaders, metalworkers and accessory designers.",
+    paths: ["Fine jewelry", "Fashion jewelry", "Custom commissions", "Limited editions"],
+    moves: [
+      { title: "Decide the material and the story", stage: "discover", minutes: 20 },
+      { title: "Design the first five pieces", stage: "build", minutes: 40, to: "/workspace/composer" },
+      { title: "Prepare the production package and choose a partner", stage: "build", minutes: 30, to: "/manufacturing" },
+      { title: "Approve the sample", stage: "build", minutes: 20, to: "/manufacturing" },
+      ...MARKETPLACE_CLOSE,
+    ],
+    monetizationOutcome: "A jewelry collection in production and live in the Marketplace.",
+    manufacturing: ["jewelry"],
+    craft: "jewelry making",
+  },
+
   {
     key: "software",
     emoji: "💻",

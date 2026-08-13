@@ -28,7 +28,18 @@ import {
   movesByStage,
   pathwayMinutes,
   type VaultStage,
+  type BusinessVault,
 } from "@/lib/business/vault-family";
+import {
+  ADAPTIVE_PRINCIPLE,
+  COACHING_STYLE,
+  FASHION_TRACKS,
+  SKILL_LABEL,
+  SKILL_PLAIN,
+  genericTracks,
+  trackFor,
+  type SkillLevel,
+} from "@/lib/business/skill-levels";
 import {
   activateFutureVault,
   listFutureVaults,
@@ -202,6 +213,9 @@ function FutureVaultsPage() {
                         </div>
                       )}
 
+                      <VaultDepth vault={v} />
+
+
                       <div className="grid gap-4 sm:grid-cols-3">
                         {(["discover", "build", "monetize"] as VaultStage[]).map((stage) => (
                           <div key={stage} className="rounded-2xl border border-white/10 bg-black/20 p-4">
@@ -225,6 +239,30 @@ function FutureVaultsPage() {
                           have.
                         </span>
                       </p>
+                      {(v.showcase || v.manufacturing) && (
+                        <div className="flex flex-wrap items-center gap-2">
+                          {v.showcase && (
+                            <Link
+                              to={v.showcase.to as never}
+                              className="rounded-full border border-white/15 px-3 py-1.5 text-xs uppercase tracking-[0.14em]"
+                            >
+                              Show the work in {v.showcase.label}
+                            </Link>
+                          )}
+                          {v.manufacturing && (
+                            <Link
+                              to="/manufacturing"
+                              className="rounded-full border border-white/15 px-3 py-1.5 text-xs uppercase tracking-[0.14em]"
+                            >
+                              🏭 Have it made for you
+                            </Link>
+                          )}
+                          {v.showcase && (
+                            <span className="text-xs text-muted-foreground">{v.showcase.note}</span>
+                          )}
+                        </div>
+                      )}
+
                       <p className="text-xs text-muted-foreground">
                         Nothing here touches your Daily until you activate it. When you're ready, tell Frassy:{" "}
                         <span className="italic">“{activationPhrase(v.label.replace(" Vault", ""))}”</span>
@@ -453,5 +491,46 @@ function FutureVaultsPage() {
         <p className="mt-2 text-xs text-muted-foreground">{PLAIN_ENGLISH}</p>
       </div>
     </SiteShell>
+  );
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// FRASS-0511-A — Adaptive depth. The Vault never assumes what you already know.
+// Same destination for everyone; only the depth of guidance changes.
+// ─────────────────────────────────────────────────────────────────────────────
+function VaultDepth({ vault }: { vault: BusinessVault }) {
+  const [level, setLevel] = useState<SkillLevel>("beginner");
+  const tracks = vault.key === "seamstress" ? FASHION_TRACKS : genericTracks(vault.craft ?? "this work");
+  const track = trackFor(tracks, level);
+
+  return (
+    <div className="rounded-2xl border border-white/10 bg-black/20 p-4">
+      <p className="text-[11px] uppercase tracking-[0.18em] text-muted-foreground">
+        Where are you starting from?
+      </p>
+      <div className="mt-3 flex flex-wrap gap-2">
+        {(["beginner", "intermediate", "advanced"] as SkillLevel[]).map((l) => (
+          <button
+            key={l}
+            type="button"
+            onClick={() => setLevel(l)}
+            aria-pressed={l === level}
+            className={`rounded-full px-3 py-1.5 text-xs uppercase tracking-[0.14em] ${
+              l === level ? "bg-white text-black" : "border border-white/15"
+            }`}
+          >
+            {SKILL_LABEL[l]}
+          </button>
+        ))}
+      </div>
+      <p className="mt-3 text-sm text-muted-foreground">{SKILL_PLAIN[level]}</p>
+      <p className="mt-1 text-xs text-muted-foreground">{COACHING_STYLE[level]}</p>
+      <p className="mt-3 text-sm">
+        <span className="text-muted-foreground">You'll learn:</span> {track.teaches.join(" · ")}
+      </p>
+      <p className="mt-2 text-sm text-green-200">💰 {track.moneyMove}</p>
+      <p className="mt-1 text-xs text-muted-foreground">{track.firstResult}</p>
+      <p className="mt-3 text-xs text-muted-foreground">{ADAPTIVE_PRINCIPLE.rule}</p>
+    </div>
   );
 }

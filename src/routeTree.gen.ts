@@ -131,6 +131,7 @@ import { Route as AuthenticatedOpportunityRouteImport } from './routes/_authenti
 import { Route as AuthenticatedOnboardingRouteImport } from './routes/_authenticated/onboarding'
 import { Route as AuthenticatedNotificationsRouteImport } from './routes/_authenticated/notifications'
 import { Route as AuthenticatedMoneyMovesRouteImport } from './routes/_authenticated/money-moves'
+import { Route as AuthenticatedManufacturingRouteImport } from './routes/_authenticated/manufacturing'
 import { Route as AuthenticatedLaunchAcceleratorRouteImport } from './routes/_authenticated/launch-accelerator'
 import { Route as AuthenticatedJournalRouteImport } from './routes/_authenticated/journal'
 import { Route as AuthenticatedGlobalOperationsRouteImport } from './routes/_authenticated/global-operations'
@@ -828,6 +829,12 @@ const AuthenticatedMoneyMovesRoute = AuthenticatedMoneyMovesRouteImport.update({
   path: '/money-moves',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedManufacturingRoute =
+  AuthenticatedManufacturingRouteImport.update({
+    id: '/manufacturing',
+    path: '/manufacturing',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedLaunchAcceleratorRoute =
   AuthenticatedLaunchAcceleratorRouteImport.update({
     id: '/launch-accelerator',
@@ -1354,6 +1361,7 @@ export interface FileRoutesByFullPath {
   '/global-operations': typeof AuthenticatedGlobalOperationsRoute
   '/journal': typeof AuthenticatedJournalRoute
   '/launch-accelerator': typeof AuthenticatedLaunchAcceleratorRoute
+  '/manufacturing': typeof AuthenticatedManufacturingRoute
   '/money-moves': typeof AuthenticatedMoneyMovesRoute
   '/notifications': typeof AuthenticatedNotificationsRoute
   '/onboarding': typeof AuthenticatedOnboardingRoute
@@ -1542,6 +1550,7 @@ export interface FileRoutesByTo {
   '/global-operations': typeof AuthenticatedGlobalOperationsRoute
   '/journal': typeof AuthenticatedJournalRoute
   '/launch-accelerator': typeof AuthenticatedLaunchAcceleratorRoute
+  '/manufacturing': typeof AuthenticatedManufacturingRoute
   '/money-moves': typeof AuthenticatedMoneyMovesRoute
   '/notifications': typeof AuthenticatedNotificationsRoute
   '/onboarding': typeof AuthenticatedOnboardingRoute
@@ -1744,6 +1753,7 @@ export interface FileRoutesById {
   '/_authenticated/global-operations': typeof AuthenticatedGlobalOperationsRoute
   '/_authenticated/journal': typeof AuthenticatedJournalRoute
   '/_authenticated/launch-accelerator': typeof AuthenticatedLaunchAcceleratorRoute
+  '/_authenticated/manufacturing': typeof AuthenticatedManufacturingRoute
   '/_authenticated/money-moves': typeof AuthenticatedMoneyMovesRoute
   '/_authenticated/notifications': typeof AuthenticatedNotificationsRoute
   '/_authenticated/onboarding': typeof AuthenticatedOnboardingRoute
@@ -1951,6 +1961,7 @@ export interface FileRouteTypes {
     | '/global-operations'
     | '/journal'
     | '/launch-accelerator'
+    | '/manufacturing'
     | '/money-moves'
     | '/notifications'
     | '/onboarding'
@@ -2139,6 +2150,7 @@ export interface FileRouteTypes {
     | '/global-operations'
     | '/journal'
     | '/launch-accelerator'
+    | '/manufacturing'
     | '/money-moves'
     | '/notifications'
     | '/onboarding'
@@ -2340,6 +2352,7 @@ export interface FileRouteTypes {
     | '/_authenticated/global-operations'
     | '/_authenticated/journal'
     | '/_authenticated/launch-accelerator'
+    | '/_authenticated/manufacturing'
     | '/_authenticated/money-moves'
     | '/_authenticated/notifications'
     | '/_authenticated/onboarding'
@@ -3412,6 +3425,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedMoneyMovesRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/manufacturing': {
+      id: '/_authenticated/manufacturing'
+      path: '/manufacturing'
+      fullPath: '/manufacturing'
+      preLoaderRoute: typeof AuthenticatedManufacturingRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/launch-accelerator': {
       id: '/_authenticated/launch-accelerator'
       path: '/launch-accelerator'
@@ -4093,6 +4113,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedGlobalOperationsRoute: typeof AuthenticatedGlobalOperationsRoute
   AuthenticatedJournalRoute: typeof AuthenticatedJournalRoute
   AuthenticatedLaunchAcceleratorRoute: typeof AuthenticatedLaunchAcceleratorRoute
+  AuthenticatedManufacturingRoute: typeof AuthenticatedManufacturingRoute
   AuthenticatedMoneyMovesRoute: typeof AuthenticatedMoneyMovesRoute
   AuthenticatedNotificationsRoute: typeof AuthenticatedNotificationsRoute
   AuthenticatedOnboardingRoute: typeof AuthenticatedOnboardingRoute
@@ -4122,6 +4143,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedGlobalOperationsRoute: AuthenticatedGlobalOperationsRoute,
   AuthenticatedJournalRoute: AuthenticatedJournalRoute,
   AuthenticatedLaunchAcceleratorRoute: AuthenticatedLaunchAcceleratorRoute,
+  AuthenticatedManufacturingRoute: AuthenticatedManufacturingRoute,
   AuthenticatedMoneyMovesRoute: AuthenticatedMoneyMovesRoute,
   AuthenticatedNotificationsRoute: AuthenticatedNotificationsRoute,
   AuthenticatedOnboardingRoute: AuthenticatedOnboardingRoute,
