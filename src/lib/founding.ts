@@ -1,15 +1,15 @@
 /**
- * FRASS-0490 — Founding Partner Program. The First Builders of Frass.
+ * FRASS-0490 — First Partner Program. The First Builders of Frass.
  *
  * Constitutional amendment, P0. This file holds the *meaning* of the
  * recognition; the database holds the record and the server functions hold the
  * authority. It deliberately adds no new partner system, no second Builder
- * Identity and no permission of any kind — Founding Partner is an honour, and
+ * Identity and no permission of any kind — First Partner is an honour, and
  * an honour is not an access level.
  */
 
 export const FOUNDING_PRINCIPLE =
-  "Founding Partners are remembered not because they arrived first, but because they chose to help build something before its success was certain. Their contribution becomes part of the history of Frass and is honoured with lifelong recognition.";
+  "First Partners are remembered not because they arrived first, but because they chose to help build something before its success was certain. Their contribution becomes part of the history of Frass and is honoured with lifelong recognition.";
 
 export const FOUNDING_PLAIN_ENGLISH =
   "What this means in plain English: this is the platform's wall of names. It is a thank-you carved in stone, not a key to a locked door. It never changes what you earn, what you can approve, or what you can see — think of a founder's plaque in the lobby of a building: everyone reads it, nobody uses it to get into the vault.";
@@ -20,7 +20,7 @@ export const FOUNDING_RULES = [
     id: "founder-only",
     title: "Granted only by the Founder",
     detail:
-      "Founding Partner recognition cannot be earned, purchased or requested. The Founder grants it personally, or it does not exist.",
+      "First Partner recognition cannot be earned, purchased or requested. The Founder grants it personally, or it does not exist.",
     plainEnglish:
       "There is no scoreboard to climb and no button to apply. It is a personal thank-you, the way a family names a godparent.",
   },
@@ -36,7 +36,7 @@ export const FOUNDING_RULES = [
     id: "not-authority",
     title: "Recognition is not authority",
     detail:
-      "Founding Partner status grants no Founder permissions, no financial permissions, no administrative access and no security privileges.",
+      "First Partner status grants no Founder permissions, no financial permissions, no administrative access and no security privileges.",
     plainEnglish:
       "The badge opens no doors. Permissions live in roles; honour lives here, and the two never touch.",
   },
@@ -44,7 +44,7 @@ export const FOUNDING_RULES = [
     id: "no-financial-advantage",
     title: "No financial advantage",
     detail:
-      "Earnings, commissions, business rules and financial policies are identical for every member, Founding Partner or not.",
+      "Earnings, commissions, business rules and financial policies are identical for every member, First Partner or not.",
     plainEnglish:
       "Nobody gets a better cut for being early. The money rules are the same for everyone, forever.",
   },
@@ -52,7 +52,7 @@ export const FOUNDING_RULES = [
     id: "member-controls-visibility",
     title: "The member controls visibility",
     detail:
-      "Founding Partners choose whether the designation is public, partners-only or private. Recognition always exists internally, even when hidden.",
+      "First Partners choose whether the designation is public, partners-only or private. Recognition always exists internally, even when hidden.",
     plainEnglish:
       "You decide who sees it. Hiding it doesn't erase it — the record keeps your place either way.",
   },
@@ -89,23 +89,23 @@ export function visibilityMeta(id: string | null | undefined) {
 /** The badge as it appears everywhere. One mark, one wording, no variants. */
 export const FOUNDING_BADGE = {
   glyph: "◈",
-  label: "Founding Partner",
-  short: "Founding",
+  label: "First Partner",
+  short: "First Partner",
 } as const;
 
 export function foundingTitle(sequence: number | null | undefined): string {
-  if (sequence === 1) return "First Founding Partner";
+  if (sequence === 1) return "The First Partner";
   if (!sequence) return FOUNDING_BADGE.label;
-  return `Founding Partner No. ${sequence}`;
+  return `First Partner No. ${sequence}`;
 }
 
 /**
- * The Kanko Principle — the very first Founding Partner is welcomed once, and
+ * The Kanko Principle — the very first First Partner (No. 1) is welcomed once, and
  * only once. After that they are simply a builder like everyone else.
  */
 export function kankoWelcome(name: string): string[] {
   return [
-    `${name}. You are the first Founding Partner of Frass.`,
+    `${name}. You are the First Partner of Frass.`,
     "There was no proof this would work when you said yes. That's the part being remembered — not the timing, the trust.",
     "Nothing about your tools or your earnings changes today. What changes is the record: your name sits at the front of it for as long as Frass exists.",
   ];
@@ -117,7 +117,7 @@ export function kankoWelcome(name: string): string[] {
  */
 export const FOUNDING_ACKNOWLEDGEMENTS = [
   "Thank you for helping shape Frass from the beginning.",
-  "You've reached another milestone as one of our Founding Partners.",
+  "You've reached another milestone as one of our First Partners.",
   "Another one built. The people who were here at the start are still building — that's the whole point.",
 ] as const;
 

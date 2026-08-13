@@ -337,7 +337,7 @@ export const getTrustProfile = createServerFn({ method: "GET" })
     if (founding?.accepted_at && founding.visibility === "public") {
       facts.push({
         icon: "✔️",
-        label: `Founding Partner No. ${founding.sequence}`,
+        label: `First Partner No. ${founding.sequence}`,
         plain: "Recognised by the Founder as one of the first builders of Frass.",
       });
     }

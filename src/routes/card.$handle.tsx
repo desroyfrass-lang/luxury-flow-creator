@@ -18,7 +18,7 @@ import { CardActionBar } from "@/components/card/card-actions";
 import { CardTrustSection } from "@/components/card/card-trust";
 // FRASS-0493 — reputation sits beside trust on the same card, never as a score.
 import { TrustProfilePanel } from "@/components/trust/trust-profile";
-// FRASS-0490 — Founding Partner recognition, shown only when the member made it public.
+// FRASS-0490 — First Partner recognition, shown only when the member made it public.
 import { FoundingBadge } from "@/components/founding/founding-badge";
 import { getPublicFounding } from "@/lib/founding.functions";
 import { FOUNDING_STORY_PROMPTS } from "@/lib/founding";

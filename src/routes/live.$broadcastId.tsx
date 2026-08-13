@@ -14,6 +14,7 @@ import {
   useSendGift,
 } from "@/hooks/use-live";
 import { LIVE_GIFTS, REPURPOSE_FORMATS, liveElapsed, purposeOf } from "@/lib/live";
+import { canSeeProgressDetail, celebrationLine } from "@/lib/privacy/progress-without-exposure";
 
 /** FRASS-0416 — the broadcast room: comments, gifts, products, and life after the stream. */
 export const Route = createFileRoute("/live/$broadcastId")({
@@ -67,7 +68,10 @@ function BroadcastRoom() {
   const purpose = purposeOf(b.purpose);
   const ended = b.status !== "live";
   const isHost = userId === b.host_id;
-  const totalCredits = gifts.reduce((sum, g) => sum + g.credits, 0);
+  // FRASS-0535 — Progress Without Exposure: visitors see the celebration, members see the numbers.
+  const isMember = Boolean(userId);
+  const canSeeGiftDetail = canSeeProgressDetail(isMember ? "partner" : "visitor");
+  const totalCredits = gifts.reduce((sum, g) => sum + (g.credits ?? 0), 0);
 
   return (
     <SiteShell>
@@ -109,7 +113,11 @@ function BroadcastRoom() {
                 {b.viewer_count} watching
               </span>
               <span>{ended ? "Ended" : `Live ${liveElapsed(b.started_at)}`}</span>
-              <span>{totalCredits.toLocaleString()} credits gifted</span>
+              <span>
+                {canSeeGiftDetail
+                  ? `${totalCredits.toLocaleString()} credits gifted`
+                  : `${gifts.length} ${gifts.length === 1 ? "gift" : "gifts"} sent`}
+              </span>
               {isHost && !ended && (
                 <button
                   type="button"
@@ -268,7 +276,14 @@ function BroadcastRoom() {
               <ul className="mt-4 space-y-1 border-t border-border pt-3">
                 {gifts.slice(0, 6).map((g) => (
                   <li key={g.id} className="text-xs text-muted-foreground">
-                    <MemberName handle={g.sender_handle} name={g.sender_name} className="hover:underline" /> sent {g.gift_key.replace("_", " ")}
+                    {canSeeGiftDetail ? (
+                      <>
+                        <MemberName handle={g.sender_handle} name={g.sender_name} className="hover:underline" /> sent{" "}
+                        {g.gift_key.replace("_", " ")}
+                      </>
+                    ) : (
+                      celebrationLine("gift")
+                    )}
                   </li>
                 ))}
               </ul>

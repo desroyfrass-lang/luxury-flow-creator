@@ -786,9 +786,9 @@ keeps going past the job offer into relocation, settling in, and turning that pa
 
 ---
 
-## FRASS-0490 — Founding Partner Program (Constitutional Amendment, P0)
+## FRASS-0490 — First Partner Program (Constitutional Amendment, P0)
 
-**The First Builders of Frass.** Founding Partners are not early users. They are the
+**The First Builders of Frass.** First Partners are not early users. They are the
 people who chose to help build something before its success was certain.
 
 1. **Granted by the Founder alone.** Recognition cannot be earned, purchased or
@@ -796,7 +796,7 @@ people who chose to help build something before its success was certain.
 2. **Permanent for life.** The designation, the founding sequence, the date invited,
    the date accepted and the Founder who invited them are preserved permanently as the
    historical record of the platform's earliest builders.
-3. **Recognition is not authority.** Founding Partner status grants no Founder
+3. **Recognition is not authority.** First Partner status grants no Founder
    permissions, no financial permissions, no administrative access and no security
    privileges. Permissions live in roles; honour lives in the founding record, and the
    two never touch.
@@ -808,14 +808,14 @@ people who chose to help build something before its success was certain.
    even when hidden.
 6. **Frassy acknowledges it rarely.** Genuine milestones only, roughly once a month at
    most. Recognition repeated becomes noise, and noise is not honour.
-7. **The Kanko Principle.** The very first Founding Partner receives one unique welcome,
+7. **The Kanko Principle.** The very first First Partner receives one unique welcome,
    once, during onboarding — celebrating the moment without creating any permanent
    difference in platform privileges.
-8. **Founding Stories.** Every Founding Partner may record why they joined, what they
+8. **Founding Stories.** Every First Partner may record why they joined, what they
    hoped to build, their early journey and lessons learned, and may choose to make that
    story public. The founding generation becomes living history, not a badge.
-9. **The founding period.** The Founder may invite new Founding Partners while the
-   period remains open. When closed, no further Founding Partners can be created unless
+9. **The founding period.** The Founder may invite new First Partners while the
+   period remains open. When closed, no further First Partners can be created unless
    the Founder explicitly reopens the program.
 
 **Architecture:** this amendment extends the existing Partner architecture. There is no
@@ -825,7 +825,7 @@ the authority in `src/lib/founding.functions.ts`, the single badge in
 `src/components/founding/founding-badge.tsx`, the member's controls inside the Frass
 Card, and the Founder's desk inside `/admin/partners`.
 
-**Founder Principle:** Founding Partners are remembered not because they arrived first,
+**Founder Principle:** First Partners are remembered not because they arrived first,
 but because they chose to help build something before its success was certain.
 
 ---
@@ -884,7 +884,7 @@ social rating system.
    never increase trust — not directly, not indirectly.
 3. **Trust is a profile, not a score.** No "92/100", no leaderboard, no stars out of
    five. Verified accomplishments are shown as facts: Identity Verified · 48 Successful
-   Transactions · 100% of Commitments Met · Certified Esthetician · Founding Partner ·
+   Transactions · 100% of Commitments Met · Certified Esthetician · First Partner ·
    Trusted by 27 Verified Customers.
 4. **Only genuine counterparties may leave feedback** — someone who purchased a product,
    used a service, completed a shipping transaction or collaborated on a verified
@@ -2256,3 +2256,50 @@ Frassy must name the stage a Money Move serves and the next move toward Legacy.
 Founder Principle: *Frass should never stop at helping members earn a living. Its
 purpose is to help members build assets, businesses and legacies that continue creating
 value for themselves, their families and future generations.*
+
+## FRASS-0535 — Progress Without Exposure
+
+**Status:** Constitutional Amendment · **Priority:** P0
+
+Members celebrate community achievements without exposing personal financial
+information. Whenever Frass displays a community accomplishment publicly it
+defaults to **celebration**, never **disclosure**.
+
+Visitors may see: 🎉 a gift was sent · 🎉 a member reached a milestone · 🎉 a
+Business Vault was completed · 🎉 someone published their first book · 🎉
+someone launched their first product.
+
+Visitors must never automatically see: dollar amounts, credit totals, account
+balances, personal notes, private identities (unless the member explicitly
+chose recognition), or internal Founder comments.
+
+Every community event carries a configurable audience — 🔒 Private, 👥
+Connections only, 🤝 Partners, 🌍 Public. The member chooses whenever
+appropriate; the platform default is Partners.
+
+**Implementation** — `src/lib/privacy/progress-without-exposure.ts`
+(`canSeeProgress`, `canSeeProgressDetail`, `celebrationLine`, `NEVER_PUBLIC`)
+and the LIVE gift wall in `src/routes/live.$broadcastId.tsx`. Enforced at the
+database layer by column-level grants: anonymous readers of `live_gifts`
+receive only `id, broadcast_id, sender_name, gift_key, created_at`; amounts,
+credits, currency, notes and sender identifiers are granted to signed-in
+members only.
+
+Founder Principle: *Celebrate the achievement, protect the individual.*
+
+## FRASS-0535-A — First Partner Terminology
+
+There is exactly one **Founder**. Everyone else is a **First Partner** or holds
+another named role. The honorary recognition formerly labelled "Founding
+Partner" is now **First Partner** on every surface (badge, Frass Card, admin
+desk, Frassy's language). Database tables, columns and function names keep
+their original identifiers; only the governance language changed.
+
+**Security model recorded (why these protections exist — do not weaken):**
+- `founding_partners`: partners-tier rows are visible only to other First
+  Partners (verified server-side by a security-definer membership check), the
+  member themselves, and admins. The internal `note` column is not granted to
+  `anon` or `authenticated` at all — Founder commentary is reachable only
+  through the service-role admin path.
+- `live_gifts`: column-level grants keep money out of anonymous reach, per
+  FRASS-0535.

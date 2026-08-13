@@ -3,7 +3,7 @@ import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 
 /**
- * FRASS-0490 — Founding Partner Program (server authority).
+ * FRASS-0490 — First Partner Program (server authority).
  *
  * Constitutional rule: recognition is granted by the Founder alone. The client
  * may never request, imply or self-assign it. Members own exactly two things
@@ -183,7 +183,7 @@ export const getPublicFounding = createServerFn({ method: "GET" })
     const r = row as Row;
     return {
       sequence: r.sequence,
-      title: r.sequence === 1 ? "First Founding Partner" : `Founding Partner No. ${r.sequence}`,
+      title: r.sequence === 1 ? "The First Partner" : `First Partner No. ${r.sequence}`,
       acceptedAt: r.accepted_at,
       story: r.story_public
         ? {
@@ -306,7 +306,7 @@ export const grantFoundingPartner = createServerFn({ method: "POST" })
       note: data.note || null,
     });
     if (error) {
-      if (error.code === "23505") throw new Error("They are already a Founding Partner.");
+      if (error.code === "23505") throw new Error("They are already a First Partner.");
       throw new Error(error.message);
     }
     return { ok: true };
@@ -336,8 +336,8 @@ export const setFoundingPeriod = createServerFn({ method: "POST" })
           id: "founding_program",
           enabled: data.open,
           notice: data.open
-            ? "The founding period is open. Only the Founder may invite Founding Partners."
-            : "The founding period is closed. No further Founding Partners can be recognised until the Founder reopens it.",
+            ? "The founding period is open. Only the Founder may invite First Partners."
+            : "The founding period is closed. No further First Partners can be recognised until the Founder reopens it.",
           updated_at: new Date().toISOString(),
         },
         { onConflict: "id" },
