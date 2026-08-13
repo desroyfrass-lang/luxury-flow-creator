@@ -855,6 +855,7 @@ export const Route = createFileRoute("/api/chat")({
               // FRASS-0518 — coarse browser/device only, so recurring
               // device-specific problems become visible over time.
               client: clientHintFrom(request.headers.get("user-agent")),
+              founder: experienceContext === "founder",
             }),
             stopWhen: stepCountIs(6),
           });
