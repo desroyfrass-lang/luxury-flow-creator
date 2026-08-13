@@ -760,9 +760,9 @@ export const Route = createFileRoute("/api/chat")({
           .join("\n");
 
         const audience =
-          body.experienceContext === "founder"
+          experienceContext === "founder"
             ? "founder"
-            : body.experienceContext === "builder"
+            : experienceContext === "builder"
               ? "builder"
               : "storefront";
         const relationship: FrassyRelationship =
@@ -784,9 +784,9 @@ export const Route = createFileRoute("/api/chat")({
           : "";
 
         const basePrompt =
-          body.experienceContext === "founder"
+          experienceContext === "founder"
             ? `${SYSTEM_PROMPT}\n\n${FRASS_LINK}\n\n${FOUNDER_CONTEXT}\n\n${CURATION_BRIEF}\n\n${GLOBAL_COMMERCE}\n\n${FOR_US_COMMUNITY}\n\n${STORYTELLING_ENGINE}\n\n${PLAIN_LANGUAGE_PROTOCOL}\n\n${FRASS_PLATFORM_ATLAS}\n\n${FIRST_PARTNER_PROTOCOL}\n\n${FRASS_ECONOMY}\n\n${FRASS_SERVICES_MARKETPLACE}\n\n${FRASS_COMPLIANCE}\n\n${FRASS_EMPLOYMENT_PHILOSOPHY}\n\n${FRASS_THREE_LAYERS}\n\n${FRASS_DAILY_BLUEPRINTS}\n\n${FRASS_HIDDEN_ASSETS}\n\n${FRASS_FOUNDING_PARTNERS}\n\n${FRASS_RIGHTS_AND_TRUST}\n\n${FRASS_CREATIVE_IDENTITY}\n\n${FRASS_REPAIR_ENGINE}\n\n${FRASS_REPAIR_FOUNDER}${kankoDna}`
-            : body.experienceContext === "builder"
+            : experienceContext === "builder"
               ? `${SYSTEM_PROMPT}\n\n${FRASS_LINK}\n\n${CURATION_BRIEF}\n\n${GLOBAL_COMMERCE}\n\n${FOR_US_COMMUNITY}\n\n${PLAIN_LANGUAGE_PROTOCOL}\n\n${FRASS_PLATFORM_ATLAS}\n\n${FIRST_PARTNER_PROTOCOL}\n\n${FRASS_ECONOMY}\n\n${FRASS_SERVICES_MARKETPLACE}\n\n${FRASS_COMPLIANCE}\n\n${FRASS_EMPLOYMENT_PHILOSOPHY}\n\n${FRASS_THREE_LAYERS}\n\n${FRASS_DAILY_BLUEPRINTS}\n\n${FRASS_HIDDEN_ASSETS}\n\n${FRASS_FOUNDING_PARTNERS}\n\n${FRASS_RIGHTS_AND_TRUST}\n\n${FRASS_CREATIVE_IDENTITY}\n\n${FRASS_REPAIR_ENGINE}${kankoDna}`
 
               : `${SYSTEM_PROMPT}\n\n${FOR_US_COMMUNITY}\n\n${FRASS_ECONOMY}\n\n${FRASS_SERVICES_MARKETPLACE}\n\n${FRASS_COMPLIANCE}\n\n${FRASS_REPAIR_ENGINE}`;
@@ -895,7 +895,7 @@ export const Route = createFileRoute("/api/chat")({
             "Let's stay with the platform decision in front of us. What would you like Frass OS to configure next?";
 
           const reply =
-            body.experienceContext === "founder" && isFounderIdentityDiscovery(result.text)
+            experienceContext === "founder" && isFounderIdentityDiscovery(result.text)
               ? founderFallback
               : result.text || "…";
 
@@ -906,7 +906,7 @@ export const Route = createFileRoute("/api/chat")({
               order,
             },
             navigate,
-            ...(body.experienceContext === "founder"
+            ...(experienceContext === "founder"
               ? {
                   diagnostics: {
                     conversationMode: "Founder",
