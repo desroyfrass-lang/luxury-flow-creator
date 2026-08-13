@@ -2018,3 +2018,29 @@ Answers: ✅ Yes · ⚠️ Yes, with known issues · ❌ Not yet.
   unresolved; they stay visible at the top of the Audit Desk until a later
   audit ends with "Yes".
 - The audit is judged by the member experience, not by boxes checked.
+
+## FRASS-0528 — Founder Home
+
+The Command Center opens on Home, not on a tool. Home answers one question:
+"How is Frass doing today?" — Platform Health, Member Health, Business Health,
+Intelligence, and Today (what is waiting on the Founder). Every number is read
+live; nothing is estimated. From Home the Founder dives into Platform, Design,
+Frassy, Operations or Innovation.
+
+**Implementation** — `src/components/founder/founder-home.tsx`,
+`src/lib/founder/home.functions.ts`.
+
+## FRASS-0529 — Founder Release Approval
+
+No production deployment is recommended without one deliberate answer:
+
+> "Are you ready to approve this release for production?"
+
+Frassy first summarises what changed, incidents open and fixed, platform status,
+Invitation Readiness (FRASS-0528 audit answer) and outstanding known issues.
+The Founder chooses 🚀 Approve Release · ⏸ Delay Release · 📝 Request Additional
+Changes. Decisions are written once and never edited. Frassy only recommends
+publishing after an Approve Release decision.
+
+**Implementation** — `src/components/founder/release-approval-panel.tsx`,
+`public.release_approvals`.
