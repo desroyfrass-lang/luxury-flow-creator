@@ -92,6 +92,8 @@ export function FrassyChat({
   // (The Daily, the Workshop, Simplified View) inherits the warm ivory room.
   const dark = tone ? tone === "dark" : !embedded;
   const [open, setOpen] = useState(embedded);
+  // FRASS-0557 §5 — every conversation can be expanded or restored.
+  const [expanded, setExpanded] = useState(false);
 
   // FRASS-0476B — one shared conversation history. A refresh or a change of
   // district continues the same conversation instead of restarting it.
