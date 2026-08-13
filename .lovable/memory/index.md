@@ -165,3 +165,4 @@ Creative series are intellectual property produced by Frassy from a Blueprint, n
 - [FRASS-0533 Creative IP + Three Levels](mem://features/frass-0533-creative-ip-three-levels) — I Am Not My Hair series/Vault, Blueprint creative projects, Episode Progress, Earn→Scale→Legacy
 - [FRASS-0539/0540/0541 AI Operations](mem://features/frass-0539-0541-ai-operations) — AI Approval Rule, Command Center AI Operations dashboard, cost + return on intelligence
 - [FRASS-0537/0538 Frassy Everywhere & Content Manager](mem://features/frass-0537-0538-channels-and-content-manager) — WhatsApp-first multi-channel Frassy, honesty boundary on calls, content-by-conversation vs engineering split
+- [FRASS-0544 Plain English Translation Engine](mem://features/frass-0544-plain-english-engine) — Five-step explanation structure, Technical vs Explain Like I'm New toggle, tone rules
