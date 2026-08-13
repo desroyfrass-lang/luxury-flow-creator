@@ -175,6 +175,34 @@ export function AiOperationsPanel() {
           })}
         </ul>
       </Panel>
+
+      {/* FRASS-0556 — one Frassy, many brains. */}
+      <Panel
+        title="FRASS-0556 — AI Intelligence Router"
+        plain="Members meet one Frassy. Behind her, each request goes to the cheapest brain that can do it well."
+      >
+        <ul className="mb-3 space-y-1 text-xs text-muted-foreground">
+          {ROUTER_SUMMARY.map((line) => (
+            <li key={line}>• {line}</li>
+          ))}
+        </ul>
+        <ul className="space-y-2 text-xs">
+          {(Object.keys(ROUTING_TABLE) as Array<keyof typeof ROUTING_TABLE>).map((task) => {
+            const r = ROUTING_TABLE[task];
+            return (
+              <li key={task} className="rounded-lg border border-border/60 p-3">
+                <div className="flex items-baseline justify-between gap-3">
+                  <span className="font-semibold uppercase tracking-wide">{task}</span>
+                  <span className="text-muted-foreground">
+                    {r.chain.length ? r.chain.join(" → ") : "No AI · answered by Frass itself"}
+                  </span>
+                </div>
+                <p className="mt-1 text-muted-foreground">{r.why}</p>
+              </li>
+            );
+          })}
+        </ul>
+      </Panel>
     </div>
   );
 }
