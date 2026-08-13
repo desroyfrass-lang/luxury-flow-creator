@@ -228,6 +228,30 @@ function FutureVaultsPage() {
                           have.
                         </span>
                       </p>
+                      {(v.showcase || v.manufacturing) && (
+                        <div className="flex flex-wrap items-center gap-2">
+                          {v.showcase && (
+                            <Link
+                              to={v.showcase.to as never}
+                              className="rounded-full border border-white/15 px-3 py-1.5 text-xs uppercase tracking-[0.14em]"
+                            >
+                              Show the work in {v.showcase.label}
+                            </Link>
+                          )}
+                          {v.manufacturing && (
+                            <Link
+                              to="/manufacturing"
+                              className="rounded-full border border-white/15 px-3 py-1.5 text-xs uppercase tracking-[0.14em]"
+                            >
+                              🏭 Have it made for you
+                            </Link>
+                          )}
+                          {v.showcase && (
+                            <span className="text-xs text-muted-foreground">{v.showcase.note}</span>
+                          )}
+                        </div>
+                      )}
+
                       <p className="text-xs text-muted-foreground">
                         Nothing here touches your Daily until you activate it. When you're ready, tell Frassy:{" "}
                         <span className="italic">“{activationPhrase(v.label.replace(" Vault", ""))}”</span>
