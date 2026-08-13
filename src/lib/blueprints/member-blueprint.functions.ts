@@ -5,6 +5,7 @@ import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import type { MemberBlueprint } from "./member-blueprint";
+import { normalizeBlueprint } from "./member-blueprint";
 
 const upsertSchema = z.object({
   id: z.string().uuid().nullable().default(null),
@@ -38,6 +39,19 @@ const upsertSchema = z.object({
     )
     .max(10)
     .default([]),
+  // FRASS-0534 — lightweight pointers to book projects. The manuscript lives in
+  // the legacy_publications table; this is just so Frassy knows the book exists.
+  legacy_publications: z
+    .array(
+      z.object({
+        title: z.string().min(1).max(200),
+        kind: z.enum(["new-book", "republish"]).default("new-book"),
+        publication_id: z.string().uuid().nullable().default(null),
+        status: z.string().max(40).nullable().default(null),
+      }),
+    )
+    .max(10)
+    .default([]),
   learning_style: z.string().max(400).nullable().default(null),
   motivation_style: z.string().max(400).nullable().default(null),
   simplified_view: z.boolean().default(false),
@@ -62,7 +76,7 @@ export const listMemberBlueprints = createServerFn({ method: "GET" })
       .order("updated_at", { ascending: false })
       .limit(100);
     if (error) throw new Error(error.message);
-    return (data ?? []) as MemberBlueprint[];
+    return (data ?? []).map(normalizeBlueprint);
   });
 
 export const saveMemberBlueprint = createServerFn({ method: "POST" })
