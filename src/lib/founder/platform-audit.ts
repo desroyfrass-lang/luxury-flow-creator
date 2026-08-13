@@ -329,6 +329,7 @@ export function buildAuditReport(
     improvements?: string[];
     engineeringTasks?: string[];
     constitutionalRecommendations?: string[];
+    invitationReadiness?: InvitationReadiness;
   } = {},
 ): AuditReport {
   const scored = results.map((r) => ({
@@ -372,6 +373,7 @@ export function buildAuditReport(
     improvements: extras.improvements ?? results.flatMap((r) => r.findings),
     engineeringTasks: extras.engineeringTasks ?? [],
     constitutionalRecommendations: extras.constitutionalRecommendations ?? [],
+    invitationReadiness: extras.invitationReadiness,
   };
 }
 
@@ -403,6 +405,20 @@ export function reportToMarkdown(report: AuditReport): string {
     ``,
     `## Constitutional recommendations`,
     list(report.constitutionalRecommendations),
+    ``,
+    `## Invitation readiness`,
+    report.invitationReadiness
+      ? [
+          `${INVITATION_QUESTION}`,
+          `Answer: ${invitationLabel(report.invitationReadiness.verdict)}`,
+          report.invitationReadiness.note ? `Note: ${report.invitationReadiness.note}` : "",
+          report.invitationReadiness.unresolved.length
+            ? `Unresolved until addressed:\n${list(report.invitationReadiness.unresolved)}`
+            : "",
+        ]
+          .filter(Boolean)
+          .join("\n")
+      : "- Not answered.",
   ].join("\n");
 }
 
