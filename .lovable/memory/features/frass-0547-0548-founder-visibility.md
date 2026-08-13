@@ -62,3 +62,21 @@ Implementation: `src/lib/founder/explanation-standard.ts`, composed into the Fou
 Implementation: `src/lib/founder/success-dashboard.ts`,
 `src/lib/founder/success.functions.ts` (server-verified admin role, FRASS-0530),
 `src/components/founder/success-dashboard-panel.tsx`, Command Center → Operations.
+
+## FRASS-0550 — Founder Coaching Engine (Lead People, Not Dashboards)
+
+Every member insight in the Member Progress Radar answers five questions:
+👤 Who (name, Frass Card handle, active Business Vaults, learning style, momentum),
+📈 Why (observable behaviours only — streaks, Money Moves, books, blueprint %, revenue band),
+❤️ What do they need (encouragement · recognition · guidance · accountability · celebration · rest · resources),
+🎯 What should the Founder do (celebrate · encourage · credits · vault · conversation · note — editable and ignorable),
+🌱 What is the likely outcome (Frassy's reason for the suggestion).
+
+Members are sorted by `coachingPriority`, not recency: needs-support, celebrations,
+long silences, near-milestone and exceptional consistency rise to the top so the Founder
+never has to search for a chance to help.
+
+Frassy recommends. The Founder decides. Privacy is unchanged and still governed by FRASS-0548.
+
+Code: `src/lib/founder/success-dashboard.ts` (memberNeed, observedBehaviours, founderActions,
+likelyOutcome, coachingPriority), `success.functions.ts`, `success-dashboard-panel.tsx`.
