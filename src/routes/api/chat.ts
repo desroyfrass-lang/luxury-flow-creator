@@ -852,6 +852,7 @@ export const Route = createFileRoute("/api/chat")({
               products: products.slice(0, 6),
               order,
             },
+            navigate,
             ...(body.experienceContext === "founder"
               ? {
                   diagnostics: {
