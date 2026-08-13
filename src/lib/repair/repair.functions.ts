@@ -191,7 +191,7 @@ export const annotateRepairIncident = createServerFn({ method: "POST" })
 
     const { error } = await context.supabase
       .from("repair_incidents")
-      .update(patch)
+      .update(patch as never)
       .eq("id", data.id);
     if (error) throw error;
     return { ok: true };
