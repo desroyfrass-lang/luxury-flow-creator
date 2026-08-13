@@ -226,7 +226,29 @@ export function FounderSuccessPanel() {
         </div>
       </div>
 
+      <div className="grid gap-3 md:grid-cols-2">
+        <div className="rounded-2xl border border-border/70 p-4">
+          <p className="text-xs font-bold uppercase tracking-wide">
+            Founder analytics exist solely to
+          </p>
+          <ul className="mt-2 space-y-1 text-xs text-muted-foreground">
+            {FOUNDER_RESPONSIBILITY.mayBeUsedTo.map((v) => (
+              <li key={v}>• {v}</li>
+            ))}
+          </ul>
+        </div>
+        <div className="rounded-2xl border border-border/70 p-4">
+          <p className="text-xs font-bold uppercase tracking-wide">They may never be used to</p>
+          <ul className="mt-2 space-y-1 text-xs text-muted-foreground">
+            {FOUNDER_RESPONSIBILITY.mayNeverBeUsedTo.map((v) => (
+              <li key={v}>• {v}</li>
+            ))}
+          </ul>
+        </div>
+      </div>
+
       <p className="text-xs italic text-muted-foreground">{FOUNDER_VISIBILITY_PRINCIPLE}</p>
+
     </section>
   );
 }
