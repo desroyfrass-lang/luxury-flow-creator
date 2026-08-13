@@ -243,7 +243,7 @@ export const getFoundingRoster = createServerFn({ method: "GET" })
 
     const { data: rows, error } = await supabaseAdmin
       .from("founding_partners")
-      .select("id, user_id, sequence, invited_at, accepted_at, visibility, note")
+      .select("id, user_id, sequence, invited_at, accepted_at, visibility")
       .order("sequence", { ascending: true });
     if (error) throw new Error(error.message);
 
@@ -255,6 +255,22 @@ export const getFoundingRoster = createServerFn({ method: "GET" })
           .in("id", ids)
       : { data: [] as any[] };
     const byId = new Map((profiles ?? []).map((p: any) => [p.id, p]));
+
+    // Private Founder notes live in their own Founder-only table.
+    const { data: notes } = (rows ?? []).length
+      ? await supabaseAdmin
+          .from("founder_notes")
+          .select("partner_id, founder_note, created_at")
+          .in(
+            "partner_id",
+            (rows ?? []).map((r) => r.id),
+          )
+          .order("created_at", { ascending: false })
+      : { data: [] as any[] };
+    const noteByPartner = new Map<string, string>();
+    for (const n of (notes ?? []) as any[]) {
+      if (!noteByPartner.has(n.partner_id)) noteByPartner.set(n.partner_id, n.founder_note);
+    }
 
     return {
       periodOpen: Boolean(setting?.enabled),
@@ -270,10 +286,11 @@ export const getFoundingRoster = createServerFn({ method: "GET" })
           invitedAt: r.invited_at,
           acceptedAt: r.accepted_at,
           visibility: r.visibility,
-          note: r.note,
+          note: noteByPartner.get(r.id) ?? null,
         };
       }),
     };
+
   });
 
 /** The Founder's personal invitation. The only way recognition ever begins. */
@@ -299,17 +316,29 @@ export const grantFoundingPartner = createServerFn({ method: "POST" })
     }
 
     // sequence is assigned by the database trigger; invited_by is the Founder.
-    const { error } = await supabaseAdmin.from("founding_partners").insert({
-      user_id: profile.id,
-      sequence: 0,
-      invited_by: context.userId,
-      note: data.note || null,
-    });
+    const { data: created, error } = await supabaseAdmin
+      .from("founding_partners")
+      .insert({
+        user_id: profile.id,
+        sequence: 0,
+        invited_by: context.userId,
+      })
+      .select("id")
+      .single();
     if (error) {
       if (error.code === "23505") throw new Error("They are already a First Partner.");
       throw new Error(error.message);
     }
+    const noteText = (data.note ?? "").trim();
+    if (created && noteText) {
+      await supabaseAdmin.from("founder_notes").insert({
+        partner_id: created.id,
+        founder_note: noteText,
+        created_by: context.userId,
+      });
+    }
     return { ok: true };
+
   });
 
 export const revokeFoundingPartner = createServerFn({ method: "POST" })

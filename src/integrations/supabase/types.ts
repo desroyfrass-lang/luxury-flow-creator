@@ -2037,6 +2037,41 @@ export type Database = {
         }
         Relationships: []
       }
+      founder_notes: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          founder_note: string
+          id: string
+          partner_id: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          founder_note: string
+          id?: string
+          partner_id: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          founder_note?: string
+          id?: string
+          partner_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "founder_notes_partner_id_fkey"
+            columns: ["partner_id"]
+            isOneToOne: false
+            referencedRelation: "founding_partners"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       founder_observations: {
         Row: {
           amendment_ref: string | null
@@ -2142,7 +2177,6 @@ export type Database = {
           id: string
           invited_at: string
           invited_by: string | null
-          note: string | null
           sequence: number
           show_on_card: boolean
           story_hoped: string | null
@@ -2160,7 +2194,6 @@ export type Database = {
           id?: string
           invited_at?: string
           invited_by?: string | null
-          note?: string | null
           sequence: number
           show_on_card?: boolean
           story_hoped?: string | null
@@ -2178,7 +2211,6 @@ export type Database = {
           id?: string
           invited_at?: string
           invited_by?: string | null
-          note?: string | null
           sequence?: number
           show_on_card?: boolean
           story_hoped?: string | null
