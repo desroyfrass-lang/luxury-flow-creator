@@ -2427,3 +2427,32 @@ curiosity is encouraged. If someone asks twice, the explanation failed, not the 
 
 Implementation: `src/lib/frassy/plain-english.ts`,
 `src/components/frassy/plain-english-toggle.tsx`, composed into every Frassy prompt.
+
+## FRASS-0545 — Adaptive Learning Levels (P0)
+Every member learns differently. Whenever Frassy provides information, the member
+may instantly choose how deeply to explore it. The information never changes — only
+the depth of the explanation changes.
+
+- 🟢 **One Sentence** — the conclusion only. "Just tell me the answer."
+- 🔵 **Explain Like I'm New** — no prior knowledge assumed; everyday language,
+  analogies, step by step, no jargon.
+- 🟣 **Detailed** — background, context, why it happens, trade-offs, practical example.
+- ⚫ **Expert** — full technical depth: architecture, data, APIs, performance,
+  security, best practice.
+
+**Learning preference.** Every member chooses a default level in Settings → Learning
+Preferences. Frassy remembers it and applies it everywhere: Daily, Workshop, Welcome
+Hall, Business Vaults, Money Moves, Knowledge Vault, Founder Command Center, Control
+Room, security, financial, analytics and AI reports, and Blueprint discussions. A
+member never has to leave their preferred learning style.
+
+**Accessibility.** Frassy may *recommend* a different level ("This has a lot of
+technical terminology — would you like Explain Like I'm New?" / "You seem comfortable
+now — want more detail?"). She never switches on her own. The member always chooses.
+
+**Founder Principle.** Education should adapt to the learner, not force the learner
+to adapt to the education.
+
+Implementation: `src/lib/frassy/learning-levels.ts`, `src/hooks/use-learning-level.ts`,
+`src/components/frassy/learning-level-picker.tsx`,
+`src/components/frassy/learning-preferences-card.tsx`, composed into every Frassy prompt.
