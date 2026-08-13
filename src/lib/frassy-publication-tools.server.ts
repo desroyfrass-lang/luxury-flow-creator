@@ -300,15 +300,15 @@ export function buildPublicationTools(ctx: PublicationToolContext = {}) {
         PUBLICATION_FORMATS,
         PUBLICATION_STAGES,
         EDITOR_PRINCIPLES,
-        MANUSCRIPT_STATUS_FLOW,
         COMPLETION_QUESTION,
+        PUBLICATION_PRINCIPLE,
       } = await import("@/lib/legacy/publication-engine");
       return {
         formats: PUBLICATION_FORMATS,
         stages: PUBLICATION_STAGES,
         editor_principles: EDITOR_PRINCIPLES,
-        status_flow: MANUSCRIPT_STATUS_FLOW,
         completion_question: COMPLETION_QUESTION,
+        principle: PUBLICATION_PRINCIPLE,
       };
     },
   });
