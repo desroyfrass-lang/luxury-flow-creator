@@ -1,9 +1,9 @@
 // Frass Trail — every page keeps a footprint home.
 // Renders a back arrow plus a clickable breadcrumb trail on every route,
 // so no page in Frass District or Frass Hill is ever a dead end.
-import { useEffect, useState } from "react";
 import { Link, useRouter, useRouterState } from "@tanstack/react-router";
 import { ArrowLeft, Home } from "lucide-react";
+import { useChromeOffset } from "@/hooks/use-chrome-offset";
 
 /** Routes that are deliberately immersive / full-bleed and own their own exits. */
 const HIDDEN_PREFIXES = [
@@ -99,26 +99,8 @@ function labelFor(segment: string) {
 export function FrassTrail() {
   const router = useRouter();
   const pathname = useRouterState({ select: (s) => s.location.pathname });
-  // FRASS-0553 — the trail sits under the site header, never behind it, so the
-  // Conversation Dock can stay vertically aligned directly beneath it.
-  const [top, setTop] = useState(84);
-
-  useEffect(() => {
-    const measure = () => {
-      const header = document.querySelector("header");
-      const bottom = header ? header.getBoundingClientRect().bottom : 0;
-      setTop(Math.round(Math.max(84, bottom + 8)));
-    };
-    measure();
-    const t = window.setTimeout(measure, 400);
-    window.addEventListener("resize", measure);
-    window.addEventListener("scroll", measure, { passive: true });
-    return () => {
-      window.clearTimeout(t);
-      window.removeEventListener("resize", measure);
-      window.removeEventListener("scroll", measure);
-    };
-  }, [pathname]);
+  // FRASS-0553 — the trail sits under the site header, never behind it.
+  const top = useChromeOffset(["header"]);
 
   if (pathname === "/" || HIDDEN_PREFIXES.some((p) => pathname === p || pathname.startsWith(p + "/") || pathname.startsWith(p))) {
     return null;

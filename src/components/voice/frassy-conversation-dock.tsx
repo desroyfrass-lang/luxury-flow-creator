@@ -10,12 +10,12 @@
 // away from anywhere in Frass.
 // ─────────────────────────────────────────────────────────────────────────────
 
-import { useEffect, useState } from "react";
 import { Mic, Pause, Play, Square } from "lucide-react";
 import { useRouterState } from "@tanstack/react-router";
 import { useConversationState, useSpeechState } from "@/hooks/use-push-to-talk";
 import { pauseSpeech, resumeSpeech, stopSpeech } from "@/lib/voice/speech-manager";
 import { requestTalk } from "@/lib/voice/dock-bus";
+import { useChromeOffset } from "@/hooks/use-chrome-offset";
 
 /** Surfaces that own their own exits and have no conversation. */
 const HIDDEN_PREFIXES = ["/auth", "/reset-password", "/pay/", "/api", "/checkout"];
@@ -49,37 +49,9 @@ export function FrassyConversationDock() {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const convo = useConversationState();
   const speech = useSpeechState();
-  // The dock belongs to the page chrome: it parks just below whichever piece of
-  // chrome ends lowest (site header or the Frass Trail chip), so it can never
-  // hide behind the header or sit on top of a heading.
-  const [top, setTop] = useState(128);
-
-  useEffect(() => {
-    const measure = () => {
-      let lowest = 84;
-      // Anything pinned to the top of the page is chrome the dock must clear:
-      // the site header, its secondary nav row, banners and the Frass Trail.
-      const pinned = document.querySelectorAll<HTMLElement>("body *");
-      for (const el of pinned) {
-        if (el.closest("[aria-label='Frassy conversation dock']")) continue;
-        const rect = el.getBoundingClientRect();
-        if (rect.height === 0 || rect.top > 180 || rect.bottom > 260) continue;
-        const pos = getComputedStyle(el).position;
-        if (pos !== "fixed" && pos !== "sticky") continue;
-        lowest = Math.max(lowest, rect.bottom);
-      }
-      setTop(Math.round(lowest + 8));
-    };
-    measure();
-    const t = window.setTimeout(measure, 400);
-    window.addEventListener("resize", measure);
-    window.addEventListener("scroll", measure, { passive: true });
-    return () => {
-      window.clearTimeout(t);
-      window.removeEventListener("resize", measure);
-      window.removeEventListener("scroll", measure);
-    };
-  }, [pathname]);
+  // The dock is page chrome: it parks directly beneath the site header and the
+  // Frass Trail chip, vertically aligned with them on every page.
+  const top = useChromeOffset(["header", 'nav[aria-label="Breadcrumb"] > div'], 128);
 
   if (HIDDEN_PREFIXES.some((p) => pathname === p || pathname.startsWith(p))) return null;
 
