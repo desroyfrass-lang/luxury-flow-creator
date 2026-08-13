@@ -207,7 +207,15 @@ export function progressScore(p: {
 /** The raw signals every derived read is computed from. */
 export type MemberSignals = Omit<
   MemberProgress,
-  "insight" | "tone" | "archetypeReason" | "recommendedAction"
+  | "insight"
+  | "tone"
+  | "archetypeReason"
+  | "recommendedAction"
+  | "observedBehaviours"
+  | "need"
+  | "founderActions"
+  | "likelyOutcome"
+  | "coachingPriority"
 >;
 
 /**
