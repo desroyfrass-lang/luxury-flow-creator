@@ -231,6 +231,13 @@ function AdminLayout() {
               Voice Studio
             </Link>
             <Link
+              to="/command"
+              activeProps={{ className: "text-[color:var(--gold)]" }}
+              className="text-muted-foreground hover:text-foreground"
+            >
+              Command Center
+            </Link>
+            <Link
               to="/admin/audit"
               activeProps={{ className: "text-[color:var(--gold)]" }}
               className="text-muted-foreground hover:text-foreground"
