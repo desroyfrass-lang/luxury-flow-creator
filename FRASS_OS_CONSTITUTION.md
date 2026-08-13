@@ -2589,3 +2589,39 @@ Implementation: `src/lib/founder/success-dashboard.ts`,
 `src/lib/founder/success.functions.ts`,
 `src/components/founder/success-dashboard-panel.tsx`, surfaced in the Command Center
 under Operations.
+
+## FRASS-0550 — Founder Coaching Engine (Lead People, Not Dashboards)
+
+**Status:** Constitutional Amendment · **Priority:** P0
+
+The Founder Command Center exists to help the Founder grow people, not monitor people.
+Every Founder insight must end with a meaningful opportunity to encourage, celebrate,
+mentor or support a member. Numbers alone never change lives. Relationships do.
+
+**Every member insight in the Member Progress Radar must answer five questions.**
+
+- 👤 **Who?** Name, Frass Card, Business Vaults, learning style, momentum level.
+- 📈 **Why?** Observable behaviours only — "Completed 21 Daily sessions consecutively",
+  "Hasn't opened their Daily in nine days", "Published their first e-book". Never vague
+  AI statements; the reasoning is always shown.
+- ❤️ **What do they need?** One of: encouragement, recognition, guidance, accountability,
+  celebration, rest, resources.
+- 🎯 **What should the Founder do?** One recommended action — celebrate a milestone, send
+  encouragement, award bonus credits, recommend a Business Vault, schedule a Founder
+  conversation, leave a personal note. The Founder may edit or ignore every recommendation.
+- 🌱 **What is the likely outcome?** Frassy briefly explains why she suggested that action.
+
+**Founder Intelligence.** The Command Center prioritises members who need support, members
+ready for celebration, members reaching major milestones, members demonstrating exceptional
+consistency, and members at risk of giving up. The Founder should never have to search for
+opportunities to make a positive impact.
+
+**Privacy.** Governed entirely by FRASS-0548: Founder-only, never public, never searchable
+by other members, never in public rankings, never sold, never used for advertising.
+
+**AI Responsibility.** Frassy must never assume the Founder wants to intervene.
+She recommends. The Founder decides.
+
+**Founder Principle.** The purpose of leadership is not to measure people. It is to help
+people become more than they believed possible. Every insight in Frass should ultimately
+lead to encouragement, opportunity, or growth.

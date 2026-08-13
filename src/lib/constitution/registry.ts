@@ -331,6 +331,23 @@ export const AMENDMENTS: Amendment[] = [
     ],
     extends: ["FRASS-0544", "FRASS-0545"],
   },
+  {
+    ref: "FRASS-0550",
+    title: "Founder Coaching Engine",
+    intent:
+      "Lead people, not dashboards. Every member insight in the Member Progress Radar answers five questions — Who, Why (observable behaviours only), What do they need, What should the Founder do, and What is the likely outcome — and members are ordered by coaching impact so the Founder never has to search for a chance to help. Frassy recommends; the Founder decides.",
+    targetProblem:
+      "Numbers alone never change lives. A dashboard that only measures people produces monitoring, not mentorship.",
+    areas: ["Command Center", "Frassy"],
+    categories: ["governance", "usability", "privacy"],
+    implementedAt: "2026-08-13",
+    evidence: [
+      "src/lib/founder/success-dashboard.ts",
+      "src/lib/founder/success.functions.ts",
+      "src/components/founder/success-dashboard-panel.tsx",
+    ],
+    extends: ["FRASS-0547", "FRASS-0548", "FRASS-0549"],
+  },
 ];
 
 export function amendmentByRef(ref: string): Amendment | undefined {
