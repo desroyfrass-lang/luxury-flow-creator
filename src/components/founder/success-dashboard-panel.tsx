@@ -53,6 +53,14 @@ function MemberRow({ m }: { m: MemberProgress }) {
         <span className="shrink-0 text-[11px] text-muted-foreground">{m.progress}%</span>
       </button>
 
+      <p className="mt-2 rounded-lg border border-[color:var(--gold)]/40 bg-[color:var(--gold)]/5 px-3 py-2 text-xs">
+        <span className="font-bold uppercase tracking-wide text-[color:var(--gold)]">
+          Recommended action
+        </span>
+        <span className="mt-0.5 block text-muted-foreground">{m.recommendedAction}</span>
+      </p>
+
+
       {open ? (
         <div className="mt-3 space-y-3">
           <Journey progress={m.progress} />
