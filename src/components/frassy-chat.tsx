@@ -78,9 +78,16 @@ type Msg = {
 let seq = 0;
 const nextId = () => `m${++seq}-${Date.now()}`;
 
-export function FrassyChat({ embedded = false }: { embedded?: boolean } = {}) {
+export function FrassyChat({
+  embedded = false,
+  tone,
+}: { embedded?: boolean; tone?: "light" | "dark" } = {}) {
   const navigate = useNavigate();
+  // FRASS-0551 — only the Founder Control Room stays dark. Every member surface
+  // (The Daily, the Workshop, Simplified View) inherits the warm ivory room.
+  const dark = tone ? tone === "dark" : !embedded;
   const [open, setOpen] = useState(embedded);
+
   // FRASS-0476B — one shared conversation history. A refresh or a change of
   // district continues the same conversation instead of restarting it.
   const [messages, setMessages] = useState<Msg[]>([]);
