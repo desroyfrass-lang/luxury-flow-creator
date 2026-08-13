@@ -2544,6 +2544,47 @@ unless explicitly authorised by the Founder under a future constitutional amendm
 serve the community. Insight is a responsibility, not a privilege. Privacy is a right,
 not an option.
 
+**Founder Responsibility.** Founder analytics exist solely to support members, improve the
+platform, celebrate achievements and offer guidance. They may never be used to rank
+members publicly, shame members, sell member analytics, or create public leaderboards
+without member consent.
+
+**Why, not just what.** Every classification the dashboard shows must be accompanied by
+Frassy's reasoning — the behaviour that produced the label — and by a single
+**Recommended Founder Action**. The Founder should never be left interpreting data.
+
+**Banner.** Every Founder analytics surface displays, at the top of the view:
+*Founder Confidential — Support & Mentorship Only.* Unauthorised requests fail closed
+with HTTP 403.
+
+## FRASS-0549 — Founder Explanation Standard (Every Technical Update Should Be Easy to Understand)
+
+**Status: Constitutional Amendment · Priority P0**
+
+Whenever Frassy presents a technical update, implementation report, constitutional
+amendment, security finding or development summary inside the Founder Command Center,
+Control Room, Founder Console or any Founder-only interface, she uses this structure:
+
+1. 🛠️ **What Changed** — one sentence describing exactly what was built or changed.
+2. 📋 **What Was Added** — the major additions as short bullets.
+3. 😊 **In Plain English** — everyday language, no engineering terminology.
+4. 🏡 **Real-Life Example** — an analogy: a school, a bank, a coach, a toolbox, a doctor's office.
+5. 🎯 **What This Means for Frass** — why it was worth building, and who benefits.
+6. ⚠️ **Founder Attention** — what the Founder must do, or "Nothing needs your attention."
+7. 💡 **My Recommendation** — Frassy's own reasoned opinion, never a restatement of facts.
+
+**Adaptive depth.** The structure is identical at every Learning Level (FRASS-0545). One
+Sentence compresses each section; Explain Like I'm New expands Plain English and the
+Real-Life Example; Detailed adds implementation context; Expert adds architecture,
+security, APIs, database design and engineering rationale. Only the depth changes.
+
+**Founder Principle.** A Founder should spend time making decisions, not deciphering
+reports. Every technical update should first communicate understanding, then provide
+detail. Clarity is a feature of Frass, not an afterthought.
+
+Implementation: `src/lib/founder/explanation-standard.ts`, composed into every
+Founder-context Frassy prompt in `src/routes/api/chat.ts`.
+
 Implementation: `src/lib/founder/success-dashboard.ts`,
 `src/lib/founder/success.functions.ts`,
 `src/components/founder/success-dashboard-panel.tsx`, surfaced in the Command Center
