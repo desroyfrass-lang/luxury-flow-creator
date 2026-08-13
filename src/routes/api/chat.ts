@@ -10,6 +10,7 @@ import {
 import { frassyContextLayer, type FrassyRelationship } from "@/lib/frassy/context";
 import { FRASS_PLATFORM_ATLAS, FIRST_PARTNER_PROTOCOL } from "@/lib/frassy/platform-atlas";
 import { FRASS_REPAIR_ENGINE, FRASS_REPAIR_FOUNDER } from "@/lib/repair/prompt";
+import { clientHintFrom } from "@/lib/frassy-repair-tools.server";
 
 const FRASS_LINK = `FRASS LINK (FRASS-0428)
 Every member owns ONE permanent Frass Link for life: frasskicks.com/link/<handle>. It is their identity,
@@ -808,7 +809,11 @@ export const Route = createFileRoute("/api/chat")({
             model,
             system,
             messages: await convertToModelMessages(uiMessages),
-            tools: buildFrassyTools(),
+            tools: buildFrassyTools({
+              // FRASS-0518 — coarse browser/device only, so recurring
+              // device-specific problems become visible over time.
+              client: clientHintFrom(request.headers.get("user-agent")),
+            }),
             stopWhen: stepCountIs(6),
           });
 

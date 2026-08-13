@@ -7,6 +7,35 @@ import { tool } from "ai";
 import { z } from "zod";
 import { SAFE_REPAIRS, REPAIR_FORBIDDEN } from "@/lib/repair/engine";
 
+/**
+ * FRASS-0518 — coarse client hint (browser family + device kind) parsed from
+ * the request. Never a full user agent, never anything identifying — just
+ * enough for the Platform Intelligence Engine to notice "only on one browser".
+ */
+export function clientHintFrom(userAgent: string | null): { browser: string; device: string } | null {
+  if (!userAgent) return null;
+  const ua = userAgent.toLowerCase();
+  const browser = ua.includes("edg/")
+    ? "Edge"
+    : ua.includes("opr/") || ua.includes("opera")
+      ? "Opera"
+      : ua.includes("firefox")
+        ? "Firefox"
+        : ua.includes("chrome") || ua.includes("crios")
+          ? "Chrome"
+          : ua.includes("safari")
+            ? "Safari"
+            : "Other browser";
+  const device = /iphone|ipod|android.*mobile/.test(ua)
+    ? "phone"
+    : /ipad|tablet|android/.test(ua)
+      ? "tablet"
+      : "desktop";
+  return { browser, device };
+}
+
+export type RepairToolContext = { client?: { browser: string; device: string } | null };
+
 export const diagnoseIssue = tool({
   description:
     "FRASS REPAIR ENGINE (FRASS-0515). Diagnose a reported problem: verifies routes against the live route list, identifies the likely root cause, checks known troubleshooting patterns, and says whether a safe repair exists or engineering is required. Use this WHENEVER someone reports something broken, missing, a 404, a blank page, or an error — before offering any explanation.",
@@ -20,8 +49,38 @@ export const diagnoseIssue = tool({
   }),
   execute: async ({ report, path }) => {
     try {
-      const { diagnose } = await import("@/lib/repair/repair.server");
+      const { diagnose, recordIncident, learnPattern } = await import("@/lib/repair/repair.server");
       const d = await diagnose({ reportedText: report, contextPath: path });
+
+      // FRASS-0515-H / FRASS-0518 — every diagnosis quietly becomes history,
+      // so the platform can learn from it later. Members never see this.
+      try {
+        if (activeClientHint) {
+          (d as { evidence?: Record<string, unknown> }).evidence = {
+            ...((d as { evidence?: Record<string, unknown> }).evidence ?? {}),
+            client: activeClientHint,
+          };
+        }
+        await recordIncident({
+          userId: null,
+          reportedText: report,
+          contextPath: path,
+          diagnosis: d,
+          status: d.requiresEngineering ? "escalated" : "diagnosed",
+          repairsApplied: [],
+        });
+        await learnPattern({
+          signature: d.signature,
+          category: d.category,
+          symptom: report,
+          rootCause: d.rootCause,
+          repairAction: null,
+          guidance: d.plainEnglish,
+        });
+      } catch {
+        /* history must never block the member getting help */
+      }
+
       return {
         category: d.category,
         severity: d.severity,
@@ -68,7 +127,14 @@ export const repairAuthorityInfo = tool({
   }),
 });
 
-export function buildRepairTools() {
+/**
+ * Set once per request so incidents can record which browser or device the
+ * report came from. Coarse categories only.
+ */
+let activeClientHint: { browser: string; device: string } | null = null;
+
+export function buildRepairTools(ctx: RepairToolContext = {}) {
+  activeClientHint = ctx.client ?? null;
   return {
     diagnose_issue: diagnoseIssue,
     apply_safe_repair: applySafeRepair,
