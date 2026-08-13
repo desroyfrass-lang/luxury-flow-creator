@@ -47,7 +47,7 @@ export const Route = createFileRoute("/_authenticated/admin/voice")({
 const TONES = Object.keys(TONE_DELIVERY) as VoiceTone[];
 
 function VoiceStudioPage() {
-  const { isAdmin, loading } = useIsAdmin();
+  const isAdmin = useIsAdmin();
   const list = useServerFn(listVoiceIdentities);
   const approve = useServerFn(approveOfficialVoice);
   const qc = useQueryClient();
@@ -132,7 +132,7 @@ function VoiceStudioPage() {
     onError: (e) => toast.error(e instanceof Error ? e.message : "Could not approve that voice."),
   });
 
-  if (loading || (isAdmin && isLoading)) {
+  if (isAdmin && isLoading) {
     return (
       <SiteShell>
         <p className="p-10 text-sm text-muted-foreground">Loading the Voice Studio…</p>
