@@ -1,6 +1,8 @@
 # Project Memory
 
 ## Core
+FRASS-0537: Frassy meets members on the channels they already use (WhatsApp first-class); one identity everywhere; never promise free telecom/landline calls.
+FRASS-0538: content (text, images, capsules, copy, Daily messages) is edited by conversation with Frassy; engineering only for logic, data, auth, security, APIs, performance.
 Command Center opens on Founder Home ("How is Frass doing today?") — platform/member/business/intelligence health + Today (FRASS-0528).
 Never recommend publishing to production until a Release Approval decision is recorded (Approve / Delay / Request Changes) (FRASS-0529).
 Every Founder Platform Audit ends with one question: "Are you comfortable inviting a new member onto Frass?" (Yes / Yes with known issues / Not yet); anything but Yes keeps findings visible (FRASS-0528).
