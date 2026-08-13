@@ -186,6 +186,7 @@ import { Route as AuthenticatedWorkspaceFirstVentureRouteImport } from './routes
 import { Route as AuthenticatedWorkspaceDailyDesignRouteImport } from './routes/_authenticated/workspace.daily-design'
 import { Route as AuthenticatedWorkspaceCardRouteImport } from './routes/_authenticated/workspace.card'
 import { Route as AuthenticatedWorkspaceAffiliateRouteImport } from './routes/_authenticated/workspace.affiliate'
+import { Route as AuthenticatedAdminVoiceRouteImport } from './routes/_authenticated/admin.voice'
 import { Route as AuthenticatedAdminVisualIndexRouteImport } from './routes/_authenticated/admin.visual-index'
 import { Route as AuthenticatedAdminViralsRouteImport } from './routes/_authenticated/admin.virals'
 import { Route as AuthenticatedAdminTextRouteImport } from './routes/_authenticated/admin.text'
@@ -1133,6 +1134,11 @@ const AuthenticatedWorkspaceAffiliateRoute =
     path: '/affiliate',
     getParentRoute: () => AuthenticatedWorkspaceRoute,
   } as any)
+const AuthenticatedAdminVoiceRoute = AuthenticatedAdminVoiceRouteImport.update({
+  id: '/voice',
+  path: '/voice',
+  getParentRoute: () => AuthenticatedAdminRoute,
+} as any)
 const AuthenticatedAdminVisualIndexRoute =
   AuthenticatedAdminVisualIndexRouteImport.update({
     id: '/visual-index',
@@ -1458,6 +1464,7 @@ export interface FileRoutesByFullPath {
   '/admin/text': typeof AuthenticatedAdminTextRoute
   '/admin/virals': typeof AuthenticatedAdminViralsRoute
   '/admin/visual-index': typeof AuthenticatedAdminVisualIndexRoute
+  '/admin/voice': typeof AuthenticatedAdminVoiceRoute
   '/workspace/affiliate': typeof AuthenticatedWorkspaceAffiliateRoute
   '/workspace/card': typeof AuthenticatedWorkspaceCardRoute
   '/workspace/daily-design': typeof AuthenticatedWorkspaceDailyDesignRoute
@@ -1642,6 +1649,7 @@ export interface FileRoutesByTo {
   '/admin/text': typeof AuthenticatedAdminTextRoute
   '/admin/virals': typeof AuthenticatedAdminViralsRoute
   '/admin/visual-index': typeof AuthenticatedAdminVisualIndexRoute
+  '/admin/voice': typeof AuthenticatedAdminVoiceRoute
   '/workspace/affiliate': typeof AuthenticatedWorkspaceAffiliateRoute
   '/workspace/card': typeof AuthenticatedWorkspaceCardRoute
   '/workspace/daily-design': typeof AuthenticatedWorkspaceDailyDesignRoute
@@ -1850,6 +1858,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/text': typeof AuthenticatedAdminTextRoute
   '/_authenticated/admin/virals': typeof AuthenticatedAdminViralsRoute
   '/_authenticated/admin/visual-index': typeof AuthenticatedAdminVisualIndexRoute
+  '/_authenticated/admin/voice': typeof AuthenticatedAdminVoiceRoute
   '/_authenticated/workspace/affiliate': typeof AuthenticatedWorkspaceAffiliateRoute
   '/_authenticated/workspace/card': typeof AuthenticatedWorkspaceCardRoute
   '/_authenticated/workspace/daily-design': typeof AuthenticatedWorkspaceDailyDesignRoute
@@ -2058,6 +2067,7 @@ export interface FileRouteTypes {
     | '/admin/text'
     | '/admin/virals'
     | '/admin/visual-index'
+    | '/admin/voice'
     | '/workspace/affiliate'
     | '/workspace/card'
     | '/workspace/daily-design'
@@ -2242,6 +2252,7 @@ export interface FileRouteTypes {
     | '/admin/text'
     | '/admin/virals'
     | '/admin/visual-index'
+    | '/admin/voice'
     | '/workspace/affiliate'
     | '/workspace/card'
     | '/workspace/daily-design'
@@ -2449,6 +2460,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/text'
     | '/_authenticated/admin/virals'
     | '/_authenticated/admin/visual-index'
+    | '/_authenticated/admin/voice'
     | '/_authenticated/workspace/affiliate'
     | '/_authenticated/workspace/card'
     | '/_authenticated/workspace/daily-design'
@@ -3810,6 +3822,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedWorkspaceAffiliateRouteImport
       parentRoute: typeof AuthenticatedWorkspaceRoute
     }
+    '/_authenticated/admin/voice': {
+      id: '/_authenticated/admin/voice'
+      path: '/voice'
+      fullPath: '/admin/voice'
+      preLoaderRoute: typeof AuthenticatedAdminVoiceRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
     '/_authenticated/admin/visual-index': {
       id: '/_authenticated/admin/visual-index'
       path: '/visual-index'
@@ -4031,6 +4050,7 @@ interface AuthenticatedAdminRouteChildren {
   AuthenticatedAdminTextRoute: typeof AuthenticatedAdminTextRoute
   AuthenticatedAdminViralsRoute: typeof AuthenticatedAdminViralsRoute
   AuthenticatedAdminVisualIndexRoute: typeof AuthenticatedAdminVisualIndexRoute
+  AuthenticatedAdminVoiceRoute: typeof AuthenticatedAdminVoiceRoute
   AuthenticatedAdminIndexRoute: typeof AuthenticatedAdminIndexRoute
 }
 
@@ -4057,6 +4077,7 @@ const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
   AuthenticatedAdminTextRoute: AuthenticatedAdminTextRoute,
   AuthenticatedAdminViralsRoute: AuthenticatedAdminViralsRoute,
   AuthenticatedAdminVisualIndexRoute: AuthenticatedAdminVisualIndexRoute,
+  AuthenticatedAdminVoiceRoute: AuthenticatedAdminVoiceRoute,
   AuthenticatedAdminIndexRoute: AuthenticatedAdminIndexRoute,
 }
 
