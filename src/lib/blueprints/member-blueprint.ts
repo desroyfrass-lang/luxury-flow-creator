@@ -20,6 +20,29 @@ export type BlueprintKind = BlueprintId | "tradesperson";
 export type TechComfort = "low" | "moderate" | "high";
 export type BlueprintStatus = "draft" | "active" | "archived";
 
+/**
+ * FRASS-0533 — a recurring creative project (a series, a channel, a book).
+ * It lives on the Blueprint, never in code, so Frassy simply knows it is one of
+ * this member's highest-priority weekly projects.
+ */
+export type CreativeProject = {
+  name: string;
+  /** e.g. "Active Weekly Money Move". */
+  status?: string | null;
+  /** How often a new instalment is made. */
+  cadence?: string | null;
+  /** Which instalment is in production right now. */
+  current_episode?: string | null;
+  script_status?: string | null;
+  production_status?: string | null;
+  upload_status?: string | null;
+  thumbnail_status?: string | null;
+  publish_date?: string | null;
+  /** Where it is published. */
+  channel?: string | null;
+  notes?: string | null;
+};
+
 export type MemberBlueprint = {
   id: string;
   user_id: string | null;
@@ -35,6 +58,8 @@ export type MemberBlueprint = {
   daily_priorities: string[];
   money_moves_philosophy: string | null;
   business_vaults: string[];
+  /** FRASS-0533 — recurring creative projects Frassy produces alongside them. */
+  creative_projects: CreativeProject[];
   learning_style: string | null;
   motivation_style: string | null;
   simplified_view: boolean;
@@ -48,6 +73,7 @@ export type MemberBlueprint = {
   updated_at: string;
 };
 
+
 /** The thirteen things Frassy needs to know to serve someone well. */
 export const BLUEPRINT_FIELDS = [
   { key: "member_name", label: "Who this person is", plain: "Their name and, in one line, who they are." },
@@ -59,6 +85,8 @@ export const BLUEPRINT_FIELDS = [
   { key: "daily_priorities", label: "Daily priorities", plain: "What their day should be built around." },
   { key: "money_moves_philosophy", label: "Money Moves philosophy", plain: "What kind of income fits their life." },
   { key: "business_vaults", label: "Business Vaults", plain: "Which trades or pathways apply to them." },
+  { key: "creative_projects", label: "Creative projects", plain: "Recurring projects Frassy produces with them each week." },
+
   { key: "learning_style", label: "Learning style", plain: "How they take in something new." },
   { key: "motivation_style", label: "Motivation style", plain: "What keeps them going." },
   { key: "simplified_view", label: "Simplified View preference", plain: "Calm conversation, or full dashboards." },
@@ -98,6 +126,8 @@ export const BLANK_BLUEPRINT: Omit<
   daily_priorities: [],
   money_moves_philosophy: null,
   business_vaults: [],
+  creative_projects: [],
+
   learning_style: null,
   motivation_style: null,
   simplified_view: false,

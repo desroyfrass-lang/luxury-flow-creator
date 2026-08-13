@@ -401,7 +401,61 @@ export const BUSINESS_VAULTS: BusinessVault[] = [
     },
     craft: "your trade",
   },
+
+  // FRASS-0533 — the Creative Series & IP Vault. A series is a media business:
+  // characters, a world, a back catalog and licensing. Flagship: the Founder's
+  // own animated series, "I Am Not My Hair".
+  {
+    key: "creative-series",
+    emoji: "🎬",
+    label: "Creative Series & IP Vault",
+    summary: "Turn a story, a character or a series into a media brand that keeps earning — not just uploads.",
+    forWho:
+      "Anyone with a story worth telling weekly: animators, comedians, educators, storytellers, hairstylists, chefs, tradespeople — anybody whose real life is funnier and more useful than fiction.",
+    paths: [
+      "A monetized YouTube channel",
+      "Shorts and clips",
+      "Merchandise",
+      "Educational content",
+      "Digital products",
+      "Children's books",
+      "Animated specials",
+      "Licensing opportunities",
+      "Streaming opportunities",
+      "Recurring characters and intellectual property",
+    ],
+    designSupport: [
+      "Brainstorm episode ideas with Frassy",
+      "Organise scripts and keep continuity between episodes",
+      "Generate storyboards and animation in FV Studios",
+      "Optimize titles, descriptions, thumbnails and keywords",
+      "Track production and monetization progress",
+    ],
+    moves: [
+      { title: "Name the series and the world it lives in", stage: "discover", minutes: 20 },
+      { title: "Write the recurring characters people will come back for", stage: "discover", minutes: 25 },
+      { title: "List ten real-life moments funny enough to become episodes", stage: "discover", minutes: 20 },
+      { title: "Brainstorm this week's episode and pick the funniest concept", stage: "build", minutes: 20, to: "/workspace/composer" },
+      { title: "Build the script and plan the scenes", stage: "build", minutes: 40, to: "/workspace/composer" },
+      { title: "Generate the storyboards", stage: "build", minutes: 25, to: "/fv-studios" },
+      { title: "Produce the animation", stage: "build", minutes: 60, to: "/fv-studios" },
+      { title: "Prepare the upload — title, description, thumbnail, keywords", stage: "build", minutes: 25 },
+      { title: "Publish the episode", stage: "monetize", minutes: 15 },
+      { title: "Repurpose the episode into three Shorts", stage: "monetize", minutes: 20, to: "/fv-studios" },
+      { title: "Track performance and monetization progress", stage: "monetize", minutes: 15 },
+      { title: "Turn the characters into merch, a book or a licensing offer", stage: "monetize", minutes: 30, to: "/marketplace" },
+    ],
+    monetizationOutcome:
+      "A published episode on a monetized channel, three Shorts cut from it, and at least one owned product — merch, a book or a licensing offer — built on the series' characters.",
+    showcase: {
+      label: "FV Studios",
+      to: "/fv-studios",
+      note: "Scripts, storyboards, animation and Shorts are produced in FV Studios — one studio, one catalog.",
+    },
+    craft: "storytelling",
+  },
 ];
+
 
 
 export function vaultByKey(key: string): BusinessVault | undefined {
