@@ -2732,3 +2732,37 @@ one list — never mounting another chat.
 **Founder Principle.** Frassy is not a collection of chat boxes scattered throughout
 Frass. She is one continuous companion who walks beside the member. The interface may
 change; the relationship never does.
+
+## FRASS-0559 — Founder Experience Simulator
+
+The Founder should never guess what a member experiences. The Command Center
+holds a private testing laboratory: ten reusable personas (First-Time Visitor,
+Beginner, Tradesperson, Business Builder, Fashion Designer, Musician, Author,
+Parent/Kids World, First Partner, Founder). Every simulation begins fresh and
+is recorded through the existing FRASS-0519 session engine — no mock accounts,
+no second engine. Observations (🐞 Bug, 💡 Improvement, ❤️ Loved this,
+🤔 Confusing, ⚠ Needs simplification) become Founder Review items. On finish,
+Frassy asks five questions and produces a Founder Experience Score across
+Welcome, Clarity, Conversation, Navigation and Confidence, with the biggest
+opportunity named in one sentence. No production release is complete until the
+First-Time Visitor, Beginner, Tradesperson and Founder simulations pass.
+
+Founder Principle: the Founder should never approve an experience they have not
+personally walked through.
+
+## FRASS-0560 — Founder Preview Reset
+
+Every simulation, and every new preview build, returns the Founder to the front
+door: frasskicks.com → Welcome Hall → first Frassy conversation → district
+choice → destination. The preview never opens randomly inside the platform
+unless the Founder deliberately jumps to a later stage. This is Founder-only
+and switchable in the Experience Simulator.
+
+## FRASS-0561 — Founder Seed Vaults
+
+The simulator never creates fake or disposable Business Vaults. Every Vault the
+Founder creates — including during testing — is a 🌱 Founder Seed Vault: a real
+asset the Founder owns, which may become a course, an e-book, a Builder Path, a
+Blueprint, a manufacturing offer or a business handed to a partner. Resetting a
+simulation clears visitor-shaped local state only; Vaults, notes and past
+sessions are never deleted. Nothing created inside Frass is ever "just practice."
