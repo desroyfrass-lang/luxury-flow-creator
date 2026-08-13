@@ -26,6 +26,7 @@ import {
   setFeedbackProgramEnabled,
   updateVoiceFeedback,
 } from "@/lib/launch-feedback.functions";
+import { PlatformIntelligencePanel } from "@/components/founder/platform-intelligence";
 
 export const Route = createFileRoute("/_authenticated/admin/launch-feedback")({
   component: LaunchFeedbackCenter,
@@ -118,6 +119,9 @@ function LaunchFeedbackCenter() {
         <ObservationWindowPanel />
         {/* FRASS-0515 — Frass Repair Engine incidents and engineering tickets. */}
         <RepairCenter />
+
+        {/* FRASS-0518 — repairs remember; this learns from them. */}
+        <PlatformIntelligencePanel />
 
         <SecurityAlertsPanel />
         {/* FRASS-0476 — the emergency control lives with the intelligence it protects. */}

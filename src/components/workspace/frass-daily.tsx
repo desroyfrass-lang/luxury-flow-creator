@@ -135,6 +135,7 @@ import { getPlatformHealth } from "@/lib/platform-health.functions";
 import { getPlatformProtection } from "@/lib/platform-protection.functions";
 import { securityBriefing } from "@/lib/security/briefing";
 import { observeDeployment } from "@/lib/deploy/observation";
+import { usePlatformIntelligence } from "@/components/founder/platform-intelligence";
 import { CURRENT_DEPLOYMENT } from "@/lib/deploy/current";
 
 import type { TieredEvent } from "@/lib/security/triage";
@@ -303,6 +304,10 @@ function FrassDailyBody({
    * FRASS-0506 — Post-Launch Observation Window. The Founder sees the health of
    * the latest deployment before anything else: 🟢 Stable · 🟡 Monitoring · 🔴 Action Required.
    */
+  // FRASS-0518 — the Founder Daily carries one honest line of what the
+  // platform has learned, never a dashboard of numbers.
+  const intelligence = usePlatformIntelligence(isFounder).data;
+
   const observation = useMemo(() => {
     if (!isFounder) return null;
     return observeDeployment(
@@ -555,6 +560,32 @@ function FrassDailyBody({
                 )}
               </div>
             )}
+            {/* FRASS-0518 — Platform Intelligence: what the platform learned
+                from every issue it has ever seen, and what it suggests next. */}
+            {intelligence && (
+              <div className="mt-3 rounded-sm border border-white/10 bg-black/20 p-3">
+                <span className="ws-meta">Platform Intelligence</span>
+                <p className="mt-1 text-sm">{intelligence.headline}</p>
+                {intelligence.recommendations.slice(0, 2).map((r) => (
+                  <p key={r.id} className="mt-1 text-sm text-white/60">
+                    · {r.title} — {r.why}
+                  </p>
+                ))}
+                {intelligence.recommendations.length > 0 && (
+                  <button
+                    type="button"
+                    className="ws-chip mt-2"
+                    onClick={() => {
+                      onNavigate?.("/admin/launch-feedback");
+                      onDismiss();
+                    }}
+                  >
+                    Review the recommendations
+                  </button>
+                )}
+              </div>
+            )}
+
             {/* FRASS-0476 — the overnight security sentence, Founder only. */}
 
             {securityLine && (
