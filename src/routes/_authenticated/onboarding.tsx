@@ -17,6 +17,7 @@ import {
 import { stageById, stageIndex, stagesFor, trackMinutes, trackOf } from "@/lib/journey";
 import { useIsAdminStatus } from "@/hooks/use-is-admin";
 import { LaunchReadiness } from "@/components/launch-readiness";
+import { FounderWalkthrough } from "@/components/founder/founder-walkthrough";
 import { COMMISSIONING_PHASES } from "@/lib/commissioning";
 import { usePushToTalk } from "@/hooks/use-push-to-talk";
 import { Volume2, VolumeX } from "lucide-react";
@@ -282,6 +283,11 @@ function OnboardingPage() {
         </aside>
 
         <div className="space-y-8">
+          {/* FRASS-0519 — the Founder walks the same front door, with validation attached. */}
+          {isAdmin && isOwnerTrack && (
+            <FounderWalkthrough stepId={stage.id} stepLabel={stage.title} />
+          )}
+
           {isOwnerTrack && (
             <LaunchReadiness
               eyebrow="Commissioning Dashboard"

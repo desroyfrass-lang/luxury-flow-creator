@@ -6,6 +6,7 @@ import { tool } from "ai";
 import { z } from "zod";
 import { fetchProducts, storefrontApiRequest } from "@/lib/shopify";
 import { buildRepairTools, type RepairToolContext } from "@/lib/frassy-repair-tools.server";
+import { buildFounderTools } from "@/lib/frassy-founder-tools.server";
 import { buildNavigationTools } from "@/lib/frassy-navigation-tools.server";
 
 // ------- Product search / discovery -------
@@ -229,6 +230,8 @@ export function buildFrassyTools(ctx: RepairToolContext = {}) {
     ...buildNavigationTools(),
     // FRASS-0515 — Frass Repair Engine.
     ...buildRepairTools(ctx),
+    // FRASS-0520/0521 — Founder Design Authority and Change Advisor.
+    ...buildFounderTools(),
   };
 }
 

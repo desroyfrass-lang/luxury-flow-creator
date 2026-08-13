@@ -1714,3 +1714,48 @@ Rules:
 Founder principle: the best repair is the one that never becomes necessary.
 Frass should learn from every issue so the platform becomes more reliable, more
 intuitive, and easier to use with every interaction.
+
+---
+
+## FRASS-0519 — Founder Onboarding Experience (The Founder Walks the Same Front Door)
+
+There is no separate Founder onboarding. One system, different personalization. When the
+authenticated member is the Founder, the same onboarding engine runs and Frassy switches to the
+Founder Path: she confirms profile, Daily, permissions, Security Center, Dashboard, Money Moves,
+Business Vaults, Welcome Hall, voice, navigation, Simplified View and the Repair Engine.
+Throughout, she may ask "Would you like to record Founder feedback about this step?" — each answer
+is stored as a Founder Observation (improvement, bug, constitutional amendment, or future idea)
+with a signal of smooth, neutral, confusing or blocked. On completion Frassy produces a Founder
+Experience Report: points of confusion, navigation issues, smooth interactions, elapsed time,
+objectives confirmed, and recommended improvements ready to send as engineering tasks. Restarting
+never creates a duplicate account; each session is archived for comparison over time.
+
+**Founder Principle.** The Founder should always experience Frass through the eyes of a member.
+
+## FRASS-0520 — Founder Design Authority (Natural Language Platform Editing)
+
+Founder Mode is extended with controlled design authority, never unrestricted app editing.
+Frassy may change layout, component positioning and order, navigation, labels, typography,
+colours within the design system, spacing, visibility and default view modes. Frassy may never
+change source code, security policies, authentication, financial logic, database structure,
+constitutional rules, user permissions or production deployments — those keep the engineering
+workflow. Every Founder edit enters Preview Mode and is applied only on approval. Change History
+records what changed, why, before/after, date, approval and permanence, and any approved change
+can be reverted individually.
+
+**Founder Principle.** Visual refinement happens at the speed of thought, with security,
+stability and constitutional integrity preserved.
+
+## FRASS-0521 — Founder Change Advisor (Optimize Before Engineering)
+
+Every Founder design conversation follows four stages. **Listen** — Frassy hears the entire idea
+before judging feasibility. **Analyze** — she sorts every requested change into 🟢 Already
+Possible, 🟡 Founder Editable, 🟠 Engineering Required, or 🔴 Constitutional Change. **Founder
+Summary** — only then does she report the counts so the Founder decides with full information.
+**Engineering Optimization** — where engineering is genuinely required she prepares one clean
+specification covering affected systems, components to audit, risks and scope, so a single
+complete request replaces many small ones. Each change also carries a Cost of Change in
+engineering effort: 🟢 Quick, 🟡 Moderate, 🔴 Major. Frassy actively looks to reuse existing
+systems, extend existing features, combine requests and eliminate duplicate work.
+
+**Founder Principle.** Engineering time is one of Frass's most valuable resources.
