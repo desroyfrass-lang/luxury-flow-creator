@@ -154,3 +154,5 @@ Every major workspace supports Standard View and Simplified View (FRASS-0517) �
 - [FRASS-0513/0514 Welcome Hall onboarding](mem://features/frass-0513-welcome-hall-onboarding) — No member-facing URLs, Frassy open_place navigation, Start My Journey CTA, launch-blocking core route audit
 - [FRASS-0510/0511-A/0516 Fashion + Manufacturing](mem://features/frass-0510-0516-fashion-and-manufacturing) — Seamstress↔Afro Designers ecosystem, adaptive learning engine, shared Creator Manufacturing Network
 - [FRASS-0517 Simplified View Mode](mem://features/frass-0517-simplified-view) — Platform-wide View Preference, conversation-first Simplified View, no duplicate Dailies or Workshops
+- [FRASS-0531 Security Regression Protection](mem://features/frass-0531-security-regression-protection) — Append-only registry of fixed vulnerabilities, pre-deployment sweep gating Release Approval
+- [FRASS-0532 Tradesperson Daily & Vault](mem://features/frass-0532-tradesperson-daily-and-vault) — Trades Daily (Simplified View default, income first, certification honesty) and Tradesperson Vault
