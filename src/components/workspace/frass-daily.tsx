@@ -576,7 +576,7 @@ function FrassDailyBody({
                     type="button"
                     className="ws-chip mt-2"
                     onClick={() => {
-                      onNavigate?.("/admin/launch-feedback");
+                      onNavigate?.("/command");
                       onDismiss();
                     }}
                   >
@@ -585,6 +585,25 @@ function FrassDailyBody({
                 )}
               </div>
             )}
+            {/* FRASS-0518-A — Constitution Health: whether our own decisions
+                actually made the platform better. */}
+            {isFounder && (
+              <div className="mt-3 rounded-sm border border-white/10 bg-black/20 p-3">
+                <span className="ws-meta">Constitution Health</span>
+                <ConstitutionHealthPanel compact />
+                <button
+                  type="button"
+                  className="ws-chip mt-2"
+                  onClick={() => {
+                    onNavigate?.("/command");
+                    onDismiss();
+                  }}
+                >
+                  Open the Command Center
+                </button>
+              </div>
+            )}
+
 
             {/* FRASS-0476 — the overnight security sentence, Founder only. */}
 
