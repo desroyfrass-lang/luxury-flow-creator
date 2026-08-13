@@ -315,6 +315,22 @@ export const AMENDMENTS: Amendment[] = [
     ],
     extends: ["FRASS-0530", "FRASS-0536"],
   },
+  {
+    ref: "FRASS-0549",
+    title: "Founder Explanation Standard",
+    intent:
+      "Every technical update in a Founder-only surface follows one fixed structure: What Changed, What Was Added, In Plain English, Real-Life Example, What This Means for Frass, Founder Attention, My Recommendation. Depth follows the Learning Level; the structure never changes.",
+    targetProblem:
+      "A Founder forced to decode engineering language spends time deciphering reports instead of making decisions.",
+    areas: ["Command Center", "Frassy"],
+    categories: ["usability", "governance"],
+    implementedAt: "2026-08-13",
+    evidence: [
+      "src/lib/founder/explanation-standard.ts",
+      "src/routes/api/chat.ts",
+    ],
+    extends: ["FRASS-0544", "FRASS-0545"],
+  },
 ];
 
 export function amendmentByRef(ref: string): Amendment | undefined {

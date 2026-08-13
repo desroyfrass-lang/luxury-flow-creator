@@ -6,7 +6,9 @@ import { useQuery } from "@tanstack/react-query";
 import { founderSuccessOverview } from "@/lib/founder/success.functions";
 import {
   FOUNDER_CONFIDENTIAL_BANNER,
+  FOUNDER_CONFIDENTIAL_LABEL,
   FOUNDER_MAY_VIEW,
+  FOUNDER_RESPONSIBILITY,
   FOUNDER_VISIBILITY_PRINCIPLE,
   JOURNEY_STAGES,
   NEVER_VISIBLE_TO_FOUNDER,
@@ -51,6 +53,14 @@ function MemberRow({ m }: { m: MemberProgress }) {
         <span className="shrink-0 text-[11px] text-muted-foreground">{m.progress}%</span>
       </button>
 
+      <p className="mt-2 rounded-lg border border-[color:var(--gold)]/40 bg-[color:var(--gold)]/5 px-3 py-2 text-xs">
+        <span className="font-bold uppercase tracking-wide text-[color:var(--gold)]">
+          Recommended action
+        </span>
+        <span className="mt-0.5 block text-muted-foreground">{m.recommendedAction}</span>
+      </p>
+
+
       {open ? (
         <div className="mt-3 space-y-3">
           <Journey progress={m.progress} />
@@ -71,6 +81,10 @@ function MemberRow({ m }: { m: MemberProgress }) {
             <Line label="Last active" value={m.daysQuiet >= 99 ? "Unknown" : `${m.daysQuiet} day(s) ago`} />
             <Line label="Revenue range" value={revenueBandLabel(m.revenue)} />
           </dl>
+          <div className="rounded-lg border border-border/60 bg-muted/30 p-3">
+            <p className="text-[11px] font-bold uppercase tracking-wide">Why Frassy reads them this way</p>
+            <p className="mt-1 text-xs text-muted-foreground">{m.archetypeReason}</p>
+          </div>
           <p className="text-[11px] text-muted-foreground">
             {m.coachingOptIn
               ? "This member opted into Founder Coaching — they invited your support."
@@ -101,11 +115,19 @@ export function FounderSuccessPanel() {
 
   return (
     <section className="space-y-5">
+      <div className="sticky top-0 z-10 -mx-1 rounded-b-xl border-b border-[color:var(--gold)]/50 bg-background/95 px-4 py-2 backdrop-blur">
+        <p className="text-[11px] font-bold uppercase tracking-wide text-[color:var(--gold)]">
+          {FOUNDER_CONFIDENTIAL_LABEL}
+        </p>
+      </div>
+
       <header>
         <p className="text-xs uppercase tracking-[0.3em] text-[color:var(--gold)]">
           FRASS-0547 · FRASS-0548
         </p>
-        <h2 className="mt-2 text-2xl font-black uppercase tracking-tight">Founder Success Dashboard</h2>
+        <h2 className="mt-2 text-2xl font-black uppercase tracking-tight">
+          Member Progress Radar
+        </h2>
         <p className="mt-2 text-sm text-muted-foreground">
           Measure progress. Protect privacy. You see how members are doing — never their bank
           accounts.
@@ -118,6 +140,7 @@ export function FounderSuccessPanel() {
         </p>
         <p className="mt-1 text-xs text-muted-foreground">{FOUNDER_CONFIDENTIAL_BANNER}</p>
       </div>
+
 
       {isLoading ? (
         <p className="text-sm text-muted-foreground">Reading how everyone is progressing…</p>
@@ -203,7 +226,29 @@ export function FounderSuccessPanel() {
         </div>
       </div>
 
+      <div className="grid gap-3 md:grid-cols-2">
+        <div className="rounded-2xl border border-border/70 p-4">
+          <p className="text-xs font-bold uppercase tracking-wide">
+            Founder analytics exist solely to
+          </p>
+          <ul className="mt-2 space-y-1 text-xs text-muted-foreground">
+            {FOUNDER_RESPONSIBILITY.mayBeUsedTo.map((v) => (
+              <li key={v}>• {v}</li>
+            ))}
+          </ul>
+        </div>
+        <div className="rounded-2xl border border-border/70 p-4">
+          <p className="text-xs font-bold uppercase tracking-wide">They may never be used to</p>
+          <ul className="mt-2 space-y-1 text-xs text-muted-foreground">
+            {FOUNDER_RESPONSIBILITY.mayNeverBeUsedTo.map((v) => (
+              <li key={v}>• {v}</li>
+            ))}
+          </ul>
+        </div>
+      </div>
+
       <p className="text-xs italic text-muted-foreground">{FOUNDER_VISIBILITY_PRINCIPLE}</p>
+
     </section>
   );
 }

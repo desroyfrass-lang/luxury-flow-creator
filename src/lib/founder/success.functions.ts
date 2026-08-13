@@ -4,7 +4,9 @@
 import { createServerFn } from "@tanstack/react-start";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import {
+  archetypeReason,
   buildRadar,
+  recommendedAction,
   memberInsight,
   progressScore,
   revenueBand,
@@ -22,11 +24,20 @@ export type FounderSuccessOverview = {
 };
 
 async function assertFounder(context: { supabase: any; userId: string }) {
-  const role = await context.supabase.rpc("has_role", {
-    _user_id: context.userId,
-    _role: "admin",
-  });
-  if (role.data !== true) throw new Error("Founder access only.");
+  // FRASS-0548 — fail closed. Any error, any non-admin, any doubt → 403.
+  let ok = false;
+  try {
+    const role = await context.supabase.rpc("has_role", {
+      _user_id: context.userId,
+      _role: "admin",
+    });
+    ok = role.data === true;
+  } catch {
+    ok = false;
+  }
+  if (!ok) {
+    throw new Response("Forbidden — Founder access only.", { status: 403 });
+  }
 }
 
 const daysSince = (iso: string | null | undefined): number => {
@@ -126,7 +137,13 @@ export const founderSuccessOverview = createServerFn({ method: "GET" })
         coachingOptIn: prefs.founder_coaching === true,
       };
 
-      return { ...base, tone, insight: memberInsight(base, tone) };
+      return {
+        ...base,
+        tone,
+        insight: memberInsight(base, tone),
+        archetypeReason: archetypeReason(base, tone),
+        recommendedAction: recommendedAction(base, tone),
+      };
     });
 
     const count = (t: MemberProgress["tone"]) => members.filter((m) => m.tone === t).length;
