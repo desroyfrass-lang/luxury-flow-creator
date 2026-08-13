@@ -168,3 +168,4 @@ Creative series are intellectual property produced by Frassy from a Blueprint, n
 - [FRASS-0544 Plain English Translation Engine](mem://features/frass-0544-plain-english-engine) — Five-step explanation structure, Technical vs Explain Like I'm New toggle, tone rules
 - [FRASS-0545 Adaptive Learning Levels](mem://features/frass-0545-adaptive-learning-levels) — Four learning depths, remembered default in Settings, per-answer switching, Frassy recommends only
 - [FRASS-0546 Adaptive Momentum Engine](mem://features/frass-0546-adaptive-momentum) — Four earned momentum levels, five achievement styles, optional dated challenges, automatic pressure release
+- [FRASS-0547/0548 Founder Success Dashboard & Visibility](mem://features/frass-0547-0548-founder-visibility) — Progress vs financial data split, revenue ranges, Founder Radar, Founder-only enforcement
