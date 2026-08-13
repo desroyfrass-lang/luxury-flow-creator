@@ -56,7 +56,21 @@ export type BusinessVault = {
   monetizationOutcome: string;
   /** Optional craft-specific creative tooling notes. */
   designSupport?: string[];
+  /**
+   * FRASS-0510 — where the finished work is presented to the world.
+   * The Vault builds the business; the showcase is where people discover,
+   * follow and buy it. Same catalog, same inventory, one source of truth.
+   */
+  showcase?: { label: string; to: string; note: string };
+  /**
+   * FRASS-0516 — which Creator Manufacturing Network categories this Vault
+   * can produce through. Omit for service-only Vaults.
+   */
+  manufacturing?: string[];
+  /** FRASS-0511-A — the craft word Frassy uses when discovering skill level. */
+  craft?: string;
 };
+
 
 const MARKETPLACE_CLOSE: VaultMove[] = [
   { title: "Price the work so it pays you properly", stage: "monetize", minutes: 20, to: "/money-moves" },
