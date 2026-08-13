@@ -24,6 +24,7 @@ import type { SectionId } from "@/lib/daily/customization";
 import { isKankoDaily } from "@/lib/daily/kanko";
 import { isMotherDaily } from "@/lib/daily/mother";
 import { isTradespersonDaily } from "@/lib/daily/tradesperson";
+import { CreativeProjectProgress } from "@/components/workspace/creative-project-progress";
 import {
   FrassyDoesTheTech,
   TradespersonFrassyNote,
@@ -811,6 +812,13 @@ function FrassDailyBody({
               note="Don't just monetize your labour — monetize your experience."
             >
               <TradespersonDigitalLegacy onNavigate={onNavigate} />
+            </Section>
+            <Section
+              id="episode-progress"
+              title="🎬 Episode Progress"
+              note="Your recurring creative projects. I'm the producer; you're the creator."
+            >
+              <CreativeProjectProgress name={name} />
             </Section>
             <Section id="success-dashboard" title="📊 What actually changed" note="Outcomes, not activity.">
               <MotherOutcomes />
