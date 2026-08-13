@@ -17,6 +17,7 @@
 import { ENTREPRENEURIAL_BLUEPRINT } from "./blueprints";
 import type { LayerId } from "@/lib/business/financial-layers";
 import {
+  ONLINE_FIRST_PRINCIPLE,
   rankOnlineFirst,
   type EarningShape,
   type OnlineFirstContext,
@@ -59,8 +60,7 @@ export function isTradespersonDaily(
 /** The one question every interaction answers. */
 // FRASS-0532-A — the question changed. It is no longer "the fastest way to make
 // money"; it is "the fastest way to financial freedom through online income."
-export const TRADESPERSON_QUESTION =
-  "What's the easiest way to earn online today — without picking up a tool?";
+export const TRADESPERSON_QUESTION = ONLINE_FIRST_PRINCIPLE.memberQuestion;
 
 export const TRADESPERSON_VISION =
   "Your experience is already worth money. My job is to turn it into something that keeps earning " +
@@ -231,6 +231,36 @@ export const KNOWLEDGE_PRODUCTS = [
   "E-books and answers to the questions people always ask",
   "Small courses, memberships and downloadable resources",
 ];
+
+/**
+ * FRASS-0532-C — DIGITAL LEGACY.
+ *
+ * Every tradesperson carries decades of practical knowledge that has never been
+ * written down. The Vault must always ask how to preserve it digitally, because
+ * an undocumented lifetime of skill dies with the tools. Don't monetize their
+ * labour — monetize their experience.
+ */
+export const DIGITAL_LEGACY = {
+  id: "FRASS-0532-C",
+  question: "How can we preserve this knowledge digitally?",
+  principle: "Don't just monetize their labour. Monetize their experience.",
+  plain:
+    "You've solved problems for years that most people have never even seen. Saved down properly, that knowledge keeps earning long after the tools are put away — and it stays for your family.",
+  forms: [
+    { label: "Checklists", plain: "The steps you never skip on a job.", to: "/vault" },
+    { label: "Courses", plain: "Teach one skill, start to finish.", to: "/business-vaults" },
+    { label: "Templates", plain: "Quotes, contracts, inspection forms.", to: "/vault" },
+    { label: "Videos", plain: "Show it once; it explains itself forever.", to: "/workspace/composer" },
+    { label: "Voice lessons", plain: "Just talk. I'll turn it into a lesson.", to: "/workspace/composer" },
+    { label: "E-books", plain: "The answers to the questions you always get.", to: "/vault" },
+    { label: "Safety guides", plain: "What keeps people alive on site.", to: "/vault" },
+    { label: "Problem-solving library", plain: "This fault, this fix — collected.", to: "/vault" },
+    { label: "Tool recommendations", plain: "What you trust, and what you'd never buy again.", to: "/affiliate" },
+    { label: "Maintenance schedules", plain: "What a homeowner should do, and when.", to: "/vault" },
+  ],
+  prompt:
+    "Ask on every visit, gently and only once: is there one thing you know that we should save today?",
+} as const;
 
 /** He teaches. Frassy produces. His face is optional. */
 export const CONTENT_PARTNERSHIP = {

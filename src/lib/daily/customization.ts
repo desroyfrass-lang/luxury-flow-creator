@@ -53,7 +53,9 @@ export type SectionId =
   // FRASS-0532 — Tradesperson Daily sections.
   | "frassy-handles-tech"
   | "proof-of-work"
-  | "digital-presence";
+  | "digital-presence"
+  // FRASS-0532-C — Digital Legacy: preserve a lifetime of knowledge as assets.
+  | "digital-legacy";
 
 export type SectionMeta = {
   id: SectionId;
@@ -326,6 +328,12 @@ export const DAILY_SECTIONS: SectionMeta[] = [
     plain: "Your profile, Frass Card, listings and booking details.",
     aliases: ["profile", "listing", "where people find me"],
   },
+  {
+    id: "digital-legacy",
+    label: "Your Digital Legacy",
+    plain: "Turning what you know into guides, lessons and templates that keep earning.",
+    aliases: ["legacy", "knowledge", "what i know", "digital legacy"],
+  },
 ];
 
 export const SECTION_BY_ID = Object.fromEntries(
@@ -362,6 +370,7 @@ export const RECOMMENDED_ORDER: SectionId[] = [
   "frassy-handles-tech",
   "proof-of-work",
   "digital-presence",
+  "digital-legacy",
   "frassy-note",
   "since-last",
   "financial-snapshot",

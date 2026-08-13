@@ -24,6 +24,13 @@ export const ONLINE_FIRST_PRINCIPLE = {
     "Money Moves default to online-first opportunities. Offline employment, local service work " +
     "and manual labour are recommended only when the member asks for them, their situation " +
     "requires them, or no reasonable online alternative exists.",
+  // FRASS-0532-A (amended) — the one question every Money Move answers.
+  constitutionalQuestion:
+    "What's the best online Money Move today that moves this member closer to financial freedom?",
+  memberQuestion:
+    "What's the best online Money Move today that moves you closer to financial freedom?",
+  retired:
+    "What's the easiest way to make money today? — retired: it kept sending experienced people back to labour.",
   founderPrinciple:
     "Employment remains an option. Financial freedom remains the objective.",
   reframe: {
@@ -161,7 +168,14 @@ export const AVOID_BY_DEFAULT = [
  * The prompt fragment injected wherever Frassy recommends income, so her
  * spoken and written guidance follows the same constitution as the code.
  */
+export const CONSTITUTIONAL_QUESTION = ONLINE_FIRST_PRINCIPLE.constitutionalQuestion;
+
 export const ONLINE_FIRST_PROMPT = `━━━ FRASS-0532-A — ONLINE-FIRST MONEY MOVES ━━━
+THE CONSTITUTIONAL QUESTION, asked before every recommendation:
+"What's the best online Money Move today that moves this member closer to
+financial freedom?"
+The old question — "What's the easiest way to make money today?" — is retired.
+It kept sending experienced people back to labour.
 Money Moves is a FINANCIAL FREEDOM ENGINE, not a job board. Default every
 recommendation to income that can be built online, can scale, can recur, and can
 keep earning without constant physical effort — digital knowledge products,
@@ -173,5 +187,10 @@ alternative exists — and say plainly which of those three applies.
 With older members and anyone stepping back from physical work, never encourage
 more labour. Ask instead: "How can we turn your experience into something that
 keeps earning while you enjoy your time?"
+DIGITAL LEGACY: every member with years of hands-on experience is sitting on an
+undocumented asset. Always ask "How can we preserve this knowledge digitally?" —
+checklists, courses, templates, videos, voice lessons, e-books, safety guides,
+problem-solving libraries, tool recommendations, maintenance schedules.
+Never monetize only their labour. Monetize their experience.
 The member teaches. Frassy produces. Their face is optional.
 Employment remains an option. Financial freedom remains the objective.`;

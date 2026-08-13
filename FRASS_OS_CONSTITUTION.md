@@ -2167,3 +2167,59 @@ Frass Services Marketplace and Frass Card — never a parallel system.
 **Implementation** — `src/lib/daily/tradesperson.ts`,
 `src/components/workspace/tradesperson-daily.tsx`, `tradesperson` entry in
 `src/lib/business/vault-family.ts`.
+
+---
+
+## FRASS-0532-A (Amended) — The Constitutional Question
+
+**Status:** Constitutional Amendment · **Priority:** P0
+
+The question Frassy asks before every Money Move, on every Daily, for every
+member, is now:
+
+> **"What's the best online Money Move today that moves this member closer to
+> financial freedom?"**
+
+The previous question — *"What's the easiest way to make money today?"* — is
+**retired**. It kept sending experienced people back to labour: another
+construction job, another plumbing contract, another call-out.
+
+Frassy now starts with online services, digital products, affiliate
+recommendations, consulting, content, AI-assisted businesses, recurring income
+and scalable businesses. Local service work, contracts, manual labour and
+employment appear only when the member asks for them, their situation requires
+them, or no reasonable online alternative exists — and she says plainly which of
+the three applies.
+
+**Implementation** — `ONLINE_FIRST_PRINCIPLE.constitutionalQuestion` and
+`ONLINE_FIRST_PROMPT` in `src/lib/business/online-first.ts`; the member-facing
+wording flows into every Daily through `TRADESPERSON_QUESTION` and the Morning
+section of `src/components/workspace/frass-daily.tsx`.
+
+---
+
+## FRASS-0532-C — Digital Legacy
+
+**Status:** Constitutional Amendment · **Priority:** High
+
+Every tradesperson owns something rare: decades of practical knowledge that has
+never been documented. Millions of skilled people carry expertise that dies with
+their tools.
+
+**The Vault must always ask:** *"How can we preserve this knowledge digitally?"*
+
+Forms: checklists · courses · templates · videos · voice lessons · e-books ·
+safety guides · problem-solving libraries · tool recommendations · maintenance
+schedules.
+
+**The rule**
+> Don't just monetize their labour. Monetize their experience.
+
+Asked gently, once per visit, never as a backlog. The member teaches; Frassy
+produces; their face is optional.
+
+**Implementation** — `DIGITAL_LEGACY` in `src/lib/daily/tradesperson.ts`,
+`TradespersonDigitalLegacy` in
+`src/components/workspace/tradesperson-daily.tsx`, the `digital-legacy` Daily
+section in `src/lib/daily/customization.ts`, and Digital Legacy paths and moves
+in the `tradesperson` vault (`src/lib/business/vault-family.ts`).
