@@ -94,7 +94,7 @@ export const saveMemberBlueprint = createServerFn({ method: "POST" })
         .select("*")
         .single();
       if (error) throw new Error(error.message);
-      return row as MemberBlueprint;
+      return normalizeBlueprint(row as never);
     }
 
     // A member always owns the Blueprint they create for themselves. Attaching
