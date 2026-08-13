@@ -102,5 +102,5 @@ export const listRepairIncidents = createServerFn({ method: "GET" })
       .order("created_at", { ascending: false })
       .limit(100);
     if (error) throw error;
-    return (data ?? []) as RepairIncident[];
+    return (data ?? []) as unknown as RepairIncident[];
   });
