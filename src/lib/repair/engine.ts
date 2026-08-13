@@ -209,7 +209,7 @@ export function buildEngineeringReport(input: {
       ? `Outside Frassy's authority — requires a source change and a deployment (FRASS-0502-D gate applies).`
       : `Inside Frassy's authority — safe repair available: ${d.suggestedRepairs.map((r) => r.label).join(", ")}.`,
   ]
-    .filter((l) => l !== ``ateNever)
+    .filter((l) => l !== "")
     .join("\n");
 }
 
