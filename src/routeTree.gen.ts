@@ -146,6 +146,7 @@ import { Route as AuthenticatedCollectionRouteImport } from './routes/_authentic
 import { Route as AuthenticatedBusinessVaultsRouteImport } from './routes/_authenticated/business-vaults'
 import { Route as AuthenticatedBusinessBuilderRouteImport } from './routes/_authenticated/business-builder'
 import { Route as AuthenticatedBuilderHallRouteImport } from './routes/_authenticated/builder-hall'
+import { Route as AuthenticatedBlueprintsRouteImport } from './routes/_authenticated/blueprints'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
 import { Route as AuthenticatedAcademyRouteImport } from './routes/_authenticated/academy'
 import { Route as Char91DotwellKnownChar93OauthProtectedResourceRouteImport } from './routes/[.well-known]/oauth-protected-resource'
@@ -916,6 +917,11 @@ const AuthenticatedBuilderHallRoute =
     path: '/builder-hall',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedBlueprintsRoute = AuthenticatedBlueprintsRouteImport.update({
+  id: '/blueprints',
+  path: '/blueprints',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedAdminRoute = AuthenticatedAdminRouteImport.update({
   id: '/admin',
   path: '/admin',
@@ -1366,6 +1372,7 @@ export interface FileRoutesByFullPath {
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/academy': typeof AuthenticatedAcademyRoute
   '/admin': typeof AuthenticatedAdminRouteWithChildren
+  '/blueprints': typeof AuthenticatedBlueprintsRoute
   '/builder-hall': typeof AuthenticatedBuilderHallRoute
   '/business-builder': typeof AuthenticatedBusinessBuilderRoute
   '/business-vaults': typeof AuthenticatedBusinessVaultsRoute
@@ -1558,6 +1565,7 @@ export interface FileRoutesByTo {
   '/.mcp/list-tools': typeof Char91DotmcpChar93ListToolsRoute
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/academy': typeof AuthenticatedAcademyRoute
+  '/blueprints': typeof AuthenticatedBlueprintsRoute
   '/builder-hall': typeof AuthenticatedBuilderHallRoute
   '/business-builder': typeof AuthenticatedBusinessBuilderRoute
   '/business-vaults': typeof AuthenticatedBusinessVaultsRoute
@@ -1764,6 +1772,7 @@ export interface FileRoutesById {
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/_authenticated/academy': typeof AuthenticatedAcademyRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRouteWithChildren
+  '/_authenticated/blueprints': typeof AuthenticatedBlueprintsRoute
   '/_authenticated/builder-hall': typeof AuthenticatedBuilderHallRoute
   '/_authenticated/business-builder': typeof AuthenticatedBusinessBuilderRoute
   '/_authenticated/business-vaults': typeof AuthenticatedBusinessVaultsRoute
@@ -1975,6 +1984,7 @@ export interface FileRouteTypes {
     | '/.well-known/oauth-protected-resource'
     | '/academy'
     | '/admin'
+    | '/blueprints'
     | '/builder-hall'
     | '/business-builder'
     | '/business-vaults'
@@ -2167,6 +2177,7 @@ export interface FileRouteTypes {
     | '/.mcp/list-tools'
     | '/.well-known/oauth-protected-resource'
     | '/academy'
+    | '/blueprints'
     | '/builder-hall'
     | '/business-builder'
     | '/business-vaults'
@@ -2372,6 +2383,7 @@ export interface FileRouteTypes {
     | '/.well-known/oauth-protected-resource'
     | '/_authenticated/academy'
     | '/_authenticated/admin'
+    | '/_authenticated/blueprints'
     | '/_authenticated/builder-hall'
     | '/_authenticated/business-builder'
     | '/_authenticated/business-vaults'
@@ -3566,6 +3578,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedBuilderHallRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/blueprints': {
+      id: '/_authenticated/blueprints'
+      path: '/blueprints'
+      fullPath: '/blueprints'
+      preLoaderRoute: typeof AuthenticatedBlueprintsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/admin': {
       id: '/_authenticated/admin'
       path: '/admin'
@@ -4161,6 +4180,7 @@ const AuthenticatedWorkspaceRouteWithChildren =
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedAcademyRoute: typeof AuthenticatedAcademyRoute
   AuthenticatedAdminRoute: typeof AuthenticatedAdminRouteWithChildren
+  AuthenticatedBlueprintsRoute: typeof AuthenticatedBlueprintsRoute
   AuthenticatedBuilderHallRoute: typeof AuthenticatedBuilderHallRoute
   AuthenticatedBusinessBuilderRoute: typeof AuthenticatedBusinessBuilderRoute
   AuthenticatedBusinessVaultsRoute: typeof AuthenticatedBusinessVaultsRoute
@@ -4192,6 +4212,7 @@ interface AuthenticatedRouteRouteChildren {
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedAcademyRoute: AuthenticatedAcademyRoute,
   AuthenticatedAdminRoute: AuthenticatedAdminRouteWithChildren,
+  AuthenticatedBlueprintsRoute: AuthenticatedBlueprintsRoute,
   AuthenticatedBuilderHallRoute: AuthenticatedBuilderHallRoute,
   AuthenticatedBusinessBuilderRoute: AuthenticatedBusinessBuilderRoute,
   AuthenticatedBusinessVaultsRoute: AuthenticatedBusinessVaultsRoute,

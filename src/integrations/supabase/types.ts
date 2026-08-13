@@ -3118,6 +3118,90 @@ export type Database = {
         }
         Relationships: []
       }
+      member_success_blueprints: {
+        Row: {
+          accessibility_notes: string | null
+          avoid: string[]
+          blueprint_kind: string
+          business_vaults: string[]
+          communication_style: string | null
+          created_at: string
+          created_by: string
+          daily_priorities: string[]
+          financial_urgency: string | null
+          hours_per_day: number | null
+          id: string
+          learning_style: string | null
+          long_term_vision: string | null
+          member_name: string
+          money_moves_philosophy: string | null
+          motivation_style: string | null
+          notes: string | null
+          online_first: boolean
+          relationship: string | null
+          simplified_view: boolean
+          status: string
+          strengths: string[]
+          technology_comfort: string
+          updated_at: string
+          user_id: string | null
+        }
+        Insert: {
+          accessibility_notes?: string | null
+          avoid?: string[]
+          blueprint_kind?: string
+          business_vaults?: string[]
+          communication_style?: string | null
+          created_at?: string
+          created_by: string
+          daily_priorities?: string[]
+          financial_urgency?: string | null
+          hours_per_day?: number | null
+          id?: string
+          learning_style?: string | null
+          long_term_vision?: string | null
+          member_name: string
+          money_moves_philosophy?: string | null
+          motivation_style?: string | null
+          notes?: string | null
+          online_first?: boolean
+          relationship?: string | null
+          simplified_view?: boolean
+          status?: string
+          strengths?: string[]
+          technology_comfort?: string
+          updated_at?: string
+          user_id?: string | null
+        }
+        Update: {
+          accessibility_notes?: string | null
+          avoid?: string[]
+          blueprint_kind?: string
+          business_vaults?: string[]
+          communication_style?: string | null
+          created_at?: string
+          created_by?: string
+          daily_priorities?: string[]
+          financial_urgency?: string | null
+          hours_per_day?: number | null
+          id?: string
+          learning_style?: string | null
+          long_term_vision?: string | null
+          member_name?: string
+          money_moves_philosophy?: string | null
+          motivation_style?: string | null
+          notes?: string | null
+          online_first?: boolean
+          relationship?: string | null
+          simplified_view?: boolean
+          status?: string
+          strengths?: string[]
+          technology_comfort?: string
+          updated_at?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       merch_blanks: {
         Row: {
           base_cost: number | null

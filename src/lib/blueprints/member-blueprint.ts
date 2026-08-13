@@ -1,0 +1,168 @@
+// ─────────────────────────────────────────────────────────────────────────────
+// FRASS-0532-B — Member Success Blueprints
+//
+// The next evolution of Frass: we stop ENGINEERING a Daily for each person and
+// start TEACHING Frassy who they are. A Blueprint is knowledge, not code.
+// Frassy reads it and generates the experience — Daily sections, Money Moves
+// order, pace, tone, view mode — dynamically.
+//
+// New Founder workflow:  Idea → Frassy → 🟢 do it · 🟡 configure · 🟠 approve ·
+// 🔴 engineering. Only 🔴 becomes an engineering request (FRASS-0527).
+//
+// Adding a new partner (Kanko, Mother, Father, Brother, Son, Vladimir, Sheldon,
+// BimBim, Laka Joe, Chiki) = writing a Blueprint. Never a new route, never a new
+// component, never a deployment.
+// ─────────────────────────────────────────────────────────────────────────────
+
+import type { BlueprintId } from "@/lib/daily/blueprints";
+
+export type BlueprintKind = BlueprintId | "tradesperson";
+export type TechComfort = "low" | "moderate" | "high";
+export type BlueprintStatus = "draft" | "active" | "archived";
+
+export type MemberBlueprint = {
+  id: string;
+  user_id: string | null;
+  created_by: string;
+  member_name: string;
+  relationship: string | null;
+  blueprint_kind: BlueprintKind;
+  financial_urgency: string | null;
+  long_term_vision: string | null;
+  strengths: string[];
+  technology_comfort: TechComfort;
+  communication_style: string | null;
+  daily_priorities: string[];
+  money_moves_philosophy: string | null;
+  business_vaults: string[];
+  learning_style: string | null;
+  motivation_style: string | null;
+  simplified_view: boolean;
+  accessibility_notes: string | null;
+  online_first: boolean;
+  avoid: string[];
+  hours_per_day: number | null;
+  status: BlueprintStatus;
+  notes: string | null;
+  created_at: string;
+  updated_at: string;
+};
+
+/** The thirteen things Frassy needs to know to serve someone well. */
+export const BLUEPRINT_FIELDS = [
+  { key: "member_name", label: "Who this person is", plain: "Their name and, in one line, who they are." },
+  { key: "financial_urgency", label: "Their financial urgency", plain: "How badly income is needed right now." },
+  { key: "long_term_vision", label: "Their long-term vision", plain: "Where they want to end up." },
+  { key: "strengths", label: "Their strengths", plain: "What they're genuinely good at already." },
+  { key: "technology_comfort", label: "Technology comfort", plain: "How much of the computer part Frassy should do." },
+  { key: "communication_style", label: "Communication style", plain: "How they like to be spoken to." },
+  { key: "daily_priorities", label: "Daily priorities", plain: "What their day should be built around." },
+  { key: "money_moves_philosophy", label: "Money Moves philosophy", plain: "What kind of income fits their life." },
+  { key: "business_vaults", label: "Business Vaults", plain: "Which trades or pathways apply to them." },
+  { key: "learning_style", label: "Learning style", plain: "How they take in something new." },
+  { key: "motivation_style", label: "Motivation style", plain: "What keeps them going." },
+  { key: "simplified_view", label: "Simplified View preference", plain: "Calm conversation, or full dashboards." },
+  { key: "accessibility_notes", label: "Accessibility", plain: "Sight, hearing, hands, patience, language." },
+] as const;
+
+export const BLUEPRINT_KINDS: { id: BlueprintKind; label: string; plain: string }[] = [
+  {
+    id: "entrepreneurial",
+    label: "Builder (Kanko blueprint)",
+    plain: "Actively building toward financial independence.",
+  },
+  {
+    id: "knowledge-economy",
+    label: "Experience (Mother blueprint)",
+    plain: "A lifetime of wisdom becoming income and legacy.",
+  },
+  {
+    id: "tradesperson",
+    label: "Trade (Tradesperson blueprint)",
+    plain: "A skilled hand-trade turning experience into online income.",
+  },
+];
+
+export const BLANK_BLUEPRINT: Omit<
+  MemberBlueprint,
+  "id" | "user_id" | "created_by" | "created_at" | "updated_at"
+> = {
+  member_name: "",
+  relationship: null,
+  blueprint_kind: "entrepreneurial",
+  financial_urgency: null,
+  long_term_vision: null,
+  strengths: [],
+  technology_comfort: "moderate",
+  communication_style: null,
+  daily_priorities: [],
+  money_moves_philosophy: null,
+  business_vaults: [],
+  learning_style: null,
+  motivation_style: null,
+  simplified_view: false,
+  accessibility_notes: null,
+  online_first: true,
+  avoid: [],
+  hours_per_day: null,
+  status: "draft",
+  notes: null,
+};
+
+/** Constitutional guarantees no Blueprint may override. */
+export const BLUEPRINT_INVARIANTS = [
+  "A Blueprint changes words, order and pace — never architecture (FRASS-0494).",
+  "Every Blueprint inherits one of the founding blueprints; none invents a new one.",
+  "Online-first (FRASS-0532-A) stays on unless the member asks for hands-on work.",
+  "Security, legal and financial notices can never be hidden by a Blueprint.",
+  "Simplified View changes presentation only — never capability (FRASS-0517).",
+  "The member owns their Blueprint. They may read it, correct it and delete it.",
+];
+
+/** Turn a Blueprint into the instructions Frassy actually follows. */
+export function blueprintToPrompt(b: MemberBlueprint): string {
+  const list = (label: string, xs: string[]) =>
+    xs.length ? `${label}: ${xs.join(" · ")}` : null;
+  const lines = [
+    `MEMBER SUCCESS BLUEPRINT — ${b.member_name}${b.relationship ? ` (${b.relationship})` : ""}`,
+    `Foundation: ${BLUEPRINT_KINDS.find((k) => k.id === b.blueprint_kind)?.label ?? b.blueprint_kind}.`,
+    b.financial_urgency ? `Financial urgency: ${b.financial_urgency}` : null,
+    b.long_term_vision ? `Long-term vision: ${b.long_term_vision}` : null,
+    list("Strengths", b.strengths),
+    `Technology comfort: ${b.technology_comfort}${
+      b.technology_comfort === "low" ? " — do the computer work for them, always." : ""
+    }`,
+    b.communication_style ? `Speak to them like this: ${b.communication_style}` : null,
+    list("Build the day around", b.daily_priorities),
+    b.money_moves_philosophy ? `Money Moves philosophy: ${b.money_moves_philosophy}` : null,
+    list("Business Vaults", b.business_vaults),
+    b.learning_style ? `Learning style: ${b.learning_style}` : null,
+    b.motivation_style ? `Motivation: ${b.motivation_style}` : null,
+    b.hours_per_day != null ? `Available time: about ${b.hours_per_day} hours a day. Never plan more.` : null,
+    b.simplified_view ? "Simplified View is their default: voice, big text, one task, Approve / Next." : null,
+    b.accessibility_notes ? `Accessibility: ${b.accessibility_notes}` : null,
+    b.online_first
+      ? "ONLINE-FIRST (FRASS-0532-A): recommend scalable online income first; hands-on work only if they ask."
+      : "This member has chosen hands-on and local work; support it without arguing.",
+    list("Never recommend", b.avoid),
+    b.notes ? `Notes: ${b.notes}` : null,
+  ].filter(Boolean);
+  return lines.join("\n");
+}
+
+/** Everything Frassy still needs before the Blueprint can go live. */
+export function blueprintGaps(b: MemberBlueprint): string[] {
+  const gaps: string[] = [];
+  if (!b.financial_urgency) gaps.push("How urgently they need income");
+  if (!b.long_term_vision) gaps.push("Where they want to end up");
+  if (b.strengths.length === 0) gaps.push("What they're already good at");
+  if (b.daily_priorities.length === 0) gaps.push("What their day should be built around");
+  if (!b.communication_style) gaps.push("How they like to be spoken to");
+  if (b.hours_per_day == null) gaps.push("How many hours a day they actually have");
+  return gaps;
+}
+
+export function blueprintCompleteness(b: MemberBlueprint): number {
+  const total = 6;
+  return Math.round(((total - blueprintGaps(b).length) / total) * 100);
+}
