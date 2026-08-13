@@ -28,3 +28,16 @@ Implementation (extend, never duplicate): `src/lib/repair/engine.ts`,
 `src/lib/frassy-repair-tools.server.ts`, Repair Center panel in
 `src/components/founder/repair-center.tsx` inside the Founder Security Center.
 Tables: `repair_incidents`, `repair_patterns`.
+
+## FRASS-0515-H — Repair History (permanent)
+Every time Frassy resolves or escalates an issue she quietly writes a Repair History
+entry. Members never see it; Founder Mode always can. Each entry must answer:
+what was repaired · when · automatic or manual · root cause · has this happened before
+(recurrence via `pattern_signature` + `repair_patterns.times_seen`) · was a constitutional
+amendment created because of it (`amendment_ref` / `amendment_note`).
+Columns live on `public.repair_incidents`: `resolution_mode`, `resolved_at`, `resolved_by`,
+`resolution_note`, `amendment_ref`, `amendment_note`; a trigger stamps mode and time
+automatically. Standalone safe repairs also log an entry (`recordManualRepair`).
+The Founder closes the loop in the Repair Center; the history is the engineering
+knowledge base — never a member-facing surface.
+
