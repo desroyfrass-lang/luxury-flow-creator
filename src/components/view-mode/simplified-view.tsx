@@ -53,7 +53,7 @@ export function SimplifiedView({
   const name = useFirstName();
 
   return (
-    <div className="min-h-screen bg-background px-4 py-6 sm:px-8">
+    <div className="min-h-screen bg-background px-4 pb-10 pt-20 sm:px-8">
       <div className="mx-auto flex w-full max-w-2xl flex-col gap-5">
         <div className="flex items-start justify-between gap-4">
           <div>
