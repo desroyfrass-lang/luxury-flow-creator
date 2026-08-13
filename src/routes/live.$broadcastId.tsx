@@ -67,7 +67,10 @@ function BroadcastRoom() {
   const purpose = purposeOf(b.purpose);
   const ended = b.status !== "live";
   const isHost = userId === b.host_id;
-  const totalCredits = gifts.reduce((sum, g) => sum + g.credits, 0);
+  // FRASS-0535 — Progress Without Exposure: visitors see the celebration, members see the numbers.
+  const isMember = Boolean(userId);
+  const canSeeGiftDetail = canSeeProgressDetail(isMember ? "partner" : "visitor");
+  const totalCredits = gifts.reduce((sum, g) => sum + (g.credits ?? 0), 0);
 
   return (
     <SiteShell>
