@@ -265,6 +265,23 @@ export const AMENDMENTS: Amendment[] = [
     ],
     extends: ["FRASS-0544"],
   },
+  {
+    ref: "FRASS-0546",
+    title: "Adaptive Momentum Engine",
+    intent:
+      "Deadlines are earned, never imposed. Members start pressure-free and unlock optional dated challenges through demonstrated consistency, shaped by their chosen achievement style.",
+    targetProblem:
+      "Members either drifting without accountability, or being pressured by deadlines they never asked for.",
+    areas: ["Daily", "Money Moves", "Workspace"],
+    categories: ["motivation", "usability", "onboarding"],
+    implementedAt: "2026-08-13",
+    evidence: [
+      "src/lib/frassy/momentum.ts",
+      "src/hooks/use-momentum.ts",
+      "src/components/frassy/momentum-card.tsx",
+    ],
+    extends: ["FRASS-0479A"],
+  },
 ];
 
 export function amendmentByRef(ref: string): Amendment | undefined {

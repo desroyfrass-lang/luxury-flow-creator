@@ -39,6 +39,7 @@ import {
 import { loadProfile, noticeAssets, partnerContext } from "@/lib/business/partner-profile";
 // FRASS-0479A — Human Balance Layer: achievement balanced with wellbeing.
 import { balanceBriefing, NO_SIGNALS, readBalance, readBalanceSignals } from "@/lib/frassy/balance-signals";
+import { loadMomentum, momentumContext, readMomentum } from "@/lib/frassy/momentum";
 import { PlainEnglishMessage } from "@/components/frassy/plain-english-toggle";
 import { useLearningLevel } from "@/hooks/use-learning-level";
 import { learningLevelContext, levelMeta, type LearningLevel } from "@/lib/frassy/learning-levels";
@@ -253,6 +254,10 @@ export function FrassyChat({ embedded = false }: { embedded?: boolean } = {}) {
           // FRASS-0479A — how hard this week has been, and what deserves celebrating.
           balanceContext:
             balanceBriefing(readBalance(readBalanceSignals() ?? NO_SIGNALS, style), []) || undefined,
+          // FRASS-0546 — challenges are only offered once they have been earned.
+          momentumContext:
+            momentumContext(readMomentum(readBalanceSignals() ?? NO_SIGNALS, loadMomentum())) ||
+            undefined,
           stream: false,
         }),
       });
