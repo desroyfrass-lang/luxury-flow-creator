@@ -6,6 +6,8 @@ import { useState } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { IdentityGate } from "@/components/security/identity-gate";
 import { COMMAND_SECTIONS, type CommandSectionId } from "@/lib/founder/command-center";
+import { FounderHome } from "@/components/founder/founder-home";
+import { ReleaseApprovalPanel } from "@/components/founder/release-approval-panel";
 import { FounderWorkflowPanel } from "@/components/founder/founder-workflow-panel";
 import { BrandPersonalityPanel } from "@/components/founder/brand-personality-panel";
 import { GuidedAuditPanel } from "@/components/founder/guided-audit-panel";
@@ -48,7 +50,7 @@ export const Route = createFileRoute("/_authenticated/command")({
 });
 
 function CommandCenter() {
-  const [active, setActive] = useState<CommandSectionId>("platform");
+  const [active, setActive] = useState<CommandSectionId>("home");
   const section = COMMAND_SECTIONS.find((s) => s.id === active)!;
 
   return (
@@ -101,6 +103,13 @@ function CommandCenter() {
       </div>
 
       <div className="mt-10 space-y-12">
+        {active === "home" && (
+          <>
+            <FounderHome onGo={setActive} />
+            <ReleaseApprovalPanel />
+          </>
+        )}
+
         {active === "platform" && (
           <>
             <FounderWorkflowPanel />
