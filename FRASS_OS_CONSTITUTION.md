@@ -1679,3 +1679,38 @@ Rules:
 - Every Business Vault supports both views, operating on the same project.
 
 Founder principle: technology adapts to people, not the other way around.
+
+## FRASS-0518 — Platform Intelligence Engine
+
+Frass now remembers on three layers:
+
+- **Knowledge Vault** — what members learn.
+- **Repair History** — what the platform learns.
+- **Platform Intelligence** — what the platform learns *from* the Repair History.
+
+Frassy continuously analyses the Repair History for patterns across the whole
+platform: the same issue after every deployment, one Business Vault generating
+more support than the rest, new members stuck at the same onboarding step, a
+browser or device failing repeatedly, a feature that keeps causing confusion.
+
+**Founder Intelligence.** The Founder Daily carries one honest line of Platform
+Intelligence, and the Founder console carries the full picture: top recurring
+issues this month, the most stable areas, the features generating the most
+support, the constitutional amendments that actually eliminated a recurring
+problem, repair trends over time, and recommendations for proactive improvement.
+
+**Learning Engine.** When a pattern crosses its configurable threshold, Frassy
+recommends one of: a product improvement, a UX improvement, a documentation
+improvement, a constitutional amendment, or a development review — always with
+the count and the area it came from.
+
+Rules:
+- Frassy **recommends**; the Founder always decides whether to implement.
+- Nothing here is member-facing. It never becomes a public metric or a score.
+- Incidents record a coarse browser/device category only — never a user agent,
+  never anything identifying.
+- Intelligence is derived from history, never a second set of records.
+
+Founder principle: the best repair is the one that never becomes necessary.
+Frass should learn from every issue so the platform becomes more reliable, more
+intuitive, and easier to use with every interaction.
