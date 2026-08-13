@@ -406,16 +406,46 @@ export function FrassyChat({
 
 
 
+  // FRASS-0557 §1 — the Universal Frassy Beacon. One mark, four states: idle
+  // (the Frass logo), listening (a microphone), thinking (a gentle pulse) and
+  // speaking (the logo with a live waveform). One tap starts a conversation.
   if (!open && !embedded) {
+    const listening = voice.phase === "recording";
+    const speaking = voice.phase === "speaking";
+    const thinking = voice.phase === "transcribing" || loading;
     return (
       <button
         type="button"
-        aria-label="Open Frassy chat"
-        onClick={() => setOpen(true)}
-        title="Frassy is here — ask me anything"
-        className="frassy-beacon fixed bottom-5 right-5 z-50 flex h-14 w-14 items-center justify-center rounded-full border border-[color:var(--gold)]/50 bg-[#0b0c0e] shadow-lg transition-transform hover:scale-105"
+        aria-label={`Talk to Frassy — ${beaconInvite}`}
+        onClick={() => {
+          setOpen(true);
+          void toggleMic();
+        }}
+        title={beaconInvite}
+        className={`frassy-beacon fixed bottom-6 right-6 z-50 flex h-14 w-14 items-center justify-center rounded-full border bg-[#0b0c0e] shadow-lg transition-transform hover:scale-105 ${
+          listening
+            ? "border-[color:var(--gold)] ring-2 ring-[color:var(--gold)]/40"
+            : "border-[color:var(--gold)]/50"
+        } ${thinking ? "animate-pulse" : ""}`}
       >
-        <img src={symbolAsset.url} alt="" className="h-7 w-7 object-contain" />
+        {listening ? (
+          <Mic className="h-6 w-6 text-[color:var(--gold)]" />
+        ) : (
+          <span className="relative flex items-center justify-center">
+            <img src={symbolAsset.url} alt="" className="h-7 w-7 object-contain" />
+            {speaking && (
+              <span className="absolute -bottom-3 flex h-2 items-end gap-[2px]" aria-hidden>
+                {[0, 1, 2, 3].map((i) => (
+                  <span
+                    key={i}
+                    className="w-[2px] rounded-full bg-[color:var(--gold)] animate-[speech-bar_0.9s_ease-in-out_infinite]"
+                    style={{ height: "100%", animationDelay: `${i * 0.12}s` }}
+                  />
+                ))}
+              </span>
+            )}
+          </span>
+        )}
       </button>
     );
   }
@@ -427,9 +457,13 @@ export function FrassyChat({
       data-frassy-phase={startup.phase}
       aria-busy={startup.phase === "verifying" || startup.phase === "recovering"}
       className={
-        `${startup.phase === "verifying" || startup.phase === "recovering" ? "invisible pointer-events-none" : "visible"} frass-workspace ${dark ? "ws-dark" : ""} ${embedded
-          ? "flex h-[min(820px,86vh)] min-h-[520px] w-full max-w-full flex-col overflow-hidden rounded-lg border border-[color:var(--ws-line)]"
-          : "fixed bottom-5 right-5 z-50 flex h-[min(620px,80vh)] w-[min(420px,calc(100vw-2rem))] max-w-full flex-col overflow-hidden rounded-lg border border-[color:var(--ws-line)] shadow-2xl"}`
+        `${startup.phase === "verifying" || startup.phase === "recovering" ? "invisible pointer-events-none" : "visible"} frass-workspace ${dark ? "ws-dark" : ""} ${
+          expanded
+            ? "fixed inset-3 z-[60] flex flex-col overflow-hidden rounded-lg border border-[color:var(--ws-line)] shadow-2xl sm:inset-6"
+            : embedded
+              ? "flex h-[min(820px,86vh)] min-h-[520px] w-full max-w-full flex-col overflow-hidden rounded-lg border border-[color:var(--ws-line)]"
+              : "fixed bottom-6 right-6 z-50 flex h-[min(620px,78vh)] w-[min(420px,calc(100vw-3rem))] max-w-full flex-col overflow-hidden rounded-lg border border-[color:var(--ws-line)] shadow-2xl"
+        }`
       }
       style={{ background: "var(--ws-panel)", color: "var(--ws-ink)" }}
     >
