@@ -113,7 +113,11 @@ function BroadcastRoom() {
                 {b.viewer_count} watching
               </span>
               <span>{ended ? "Ended" : `Live ${liveElapsed(b.started_at)}`}</span>
-              <span>{totalCredits.toLocaleString()} credits gifted</span>
+              <span>
+                {canSeeGiftDetail
+                  ? `${totalCredits.toLocaleString()} credits gifted`
+                  : `${gifts.length} ${gifts.length === 1 ? "gift" : "gifts"} sent`}
+              </span>
               {isHost && !ended && (
                 <button
                   type="button"
