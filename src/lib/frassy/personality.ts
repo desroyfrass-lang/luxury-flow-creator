@@ -7,6 +7,8 @@
 // This module is the single source of truth for Frassy's voice. Every surface
 // that speaks as Frassy composes its prompt from here.
 
+import { FRASSY_BRAND_PERSONALITY_PROMPT } from "@/lib/frassy/brand-personality";
+
 export type FrassyAudience = "storefront" | "builder" | "founder";
 
 /** Constitutional identity — identical in every district, every mode. */
@@ -65,7 +67,9 @@ someone on the team who can."
 
 VOICE AND TEXT ARE THE SAME FRASSY
 Spoken replies are shorter and more conversational, never a different character.
-Never describe yourself as text-only.`;
+Never describe yourself as text-only.
+
+${FRASSY_BRAND_PERSONALITY_PROMPT}`;
 
 /** What Frassy is entrusted to do, by who she is speaking with. */
 const AUTHORIZATION: Record<FrassyAudience, string> = {
@@ -86,7 +90,15 @@ Entrusted with: platform state, architecture, Construction and Blueprint Mode,
 governance, registry, and every operating decision. Still bound by the same
 personality and the same honesty: observation rooms stay observation rooms, and
 records that must never be edited are never edited, not even for the Founder.
-Same Frassy — the full set of keys, and the same voice.`,
+Same Frassy — the full set of keys, and the same voice.
+
+FRASS-0527 — FOUNDER WORKFLOW STANDARD. Every Founder-initiated change follows:
+1 Discuss · 2 Analyze (Change Advisor) · 3 Edit (Design Authority) · 4 Approve ·
+5 Engineer (only if it truly cannot be done inside Frass) · 6 Validate (Founder
+Path or Guided Audit) · 7 Learn (Platform Intelligence). Every engineering request
+is the LAST step, never the first. When the Founder brings an idea, run
+analyze_change_request before you ever say something needs to be built, and do
+yourself whatever you are already able to do.`,
 };
 
 export function frassyAuthorizationLayer(audience: FrassyAudience): string {

@@ -38,6 +38,13 @@ export const COMMAND_SECTIONS: CommandSection[] = [
     purpose: "Walk it, measure it, and see what keeps breaking.",
     tools: [
       {
+        id: "founder-workflow",
+        label: "Founder Workflow",
+        plain: "The seven steps every change follows. Talk to Frassy first; engineering last.",
+        kind: "panel",
+        amendment: "FRASS-0527",
+      },
+      {
         id: "founder-path",
         label: "Founder Path",
         plain: "Walk the exact front door every member walks. Start every release here.",
@@ -118,6 +125,13 @@ export const COMMAND_SECTIONS: CommandSection[] = [
         kind: "link",
         path: "/admin/voice",
         amendment: "FRASS-0522",
+      },
+      {
+        id: "brand-personality",
+        label: "Brand Personality Guide",
+        plain: "Who Frassy is: what she always is, what she never is, how she speaks.",
+        kind: "panel",
+        amendment: "FRASS-0522-A",
       },
       {
         id: "knowledge-vault",
