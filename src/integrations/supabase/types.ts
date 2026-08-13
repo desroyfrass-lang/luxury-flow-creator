@@ -5620,7 +5620,6 @@ export type Database = {
         }
         Returns: boolean
       }
-      is_founding_partner: { Args: never; Returns: boolean }
       match_product_visuals: {
         Args: {
           match_count?: number
