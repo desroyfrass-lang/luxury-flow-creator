@@ -15,7 +15,7 @@ declare const __FRASS_BUILD_ID__: string | undefined;
 export function FounderPreviewReset() {
   const navigate = useNavigate();
   const pathname = useRouterState({ select: (s) => s.location.pathname });
-  const { isAdmin } = useIsAdmin();
+  const isAdmin = useIsAdmin();
 
   useEffect(() => {
     if (!isAdmin) return;
