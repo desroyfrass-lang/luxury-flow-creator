@@ -661,10 +661,48 @@ export const Route = createFileRoute("/api/chat")({
             dataUrl?: string;
           }>;
         };
+        // ── Server-verified audience ────────────────────────────────────────
+        // The client may ASK for the Founder or Builder experience; only a
+        // validated session (and, for Founder, a verified admin role) grants it.
+        const requested = body.experienceContext;
+        let experienceContext: "founder" | "builder" | "storefront" = "storefront";
+        if (requested === "founder" || requested === "builder") {
+          const authHeader = request.headers.get("authorization") ?? "";
+          const token = authHeader.startsWith("Bearer ") ? authHeader.slice(7).trim() : "";
+          if (token && token.split(".").length === 3) {
+            try {
+              const { createClient } = await import("@supabase/supabase-js");
+              const supa = createClient(
+                process.env.SUPABASE_URL!,
+                process.env.SUPABASE_PUBLISHABLE_KEY!,
+                {
+                  global: { headers: { Authorization: `Bearer ${token}` } },
+                  auth: { persistSession: false, autoRefreshToken: false },
+                },
+              );
+              const { data: claims } = await supa.auth.getClaims(token);
+              const userId = claims?.claims?.sub;
+              if (userId) {
+                if (requested === "builder") {
+                  experienceContext = "builder";
+                } else {
+                  const { data: isAdmin } = await supa.rpc("has_role", {
+                    _user_id: userId,
+                    _role: "admin",
+                  });
+                  experienceContext = isAdmin ? "founder" : "builder";
+                }
+              }
+            } catch {
+              experienceContext = "storefront";
+            }
+          }
+        }
+
         const attachments = Array.isArray(body.attachments) ? body.attachments : [];
         const clientMessages = (Array.isArray(body.messages) ? body.messages : []).filter(
           (message) =>
-            body.experienceContext !== "founder" ||
+            experienceContext !== "founder" ||
             message.role !== "assistant" ||
             !isFounderIdentityDiscovery(message.content),
         );
