@@ -24,6 +24,20 @@ export type CoreRoute = {
 
 export const CORE_ROUTES: CoreRoute[] = [
   {
+    key: "manufacturing",
+    label: "Creator Manufacturing Network",
+    path: "/manufacturing",
+    requiresAuth: true,
+    spoken: [
+      "manufacturing",
+      "manufacturing network",
+      "get my product made",
+      "find a manufacturer",
+      "make my designs",
+      "production partner",
+    ],
+  },
+  {
     key: "welcome-hall",
     label: "Welcome Hall",
     path: "/welcome-hall",
