@@ -125,18 +125,24 @@ export function FrassTrail() {
     }
   };
 
+  // FRASS-0557 §7 — a compact chip in the upper-left corner: Back · Home · here.
+  // It never centres over content and never repeats the whole path.
+  const here = crumbs[crumbs.length - 1]!;
+  const parentCrumb = crumbs.length > 1 ? crumbs[crumbs.length - 2]! : null;
+
   return (
     <nav
       aria-label="Breadcrumb"
       style={{ top }}
-      className="pointer-events-none fixed left-0 right-0 z-40 px-3 sm:px-6 lg:px-12"
+      className="pointer-events-none fixed left-0 z-40 pl-3 sm:pl-6 lg:pl-12"
     >
-      <div className="pointer-events-auto mx-auto flex max-w-[1600px] items-center gap-1.5 overflow-x-auto rounded-full border border-border/60 bg-background/75 px-2 py-1.5 text-[10px] uppercase tracking-[0.18em] text-muted-foreground shadow-lg backdrop-blur-xl sm:w-fit sm:text-[11px]">
+      <div className="pointer-events-auto flex w-fit max-w-[min(22rem,calc(100vw-1.5rem))] items-center gap-1 rounded-full border border-border/60 bg-background/75 px-1.5 py-1 text-[10px] uppercase tracking-[0.16em] text-muted-foreground shadow-md backdrop-blur-xl">
         <button
           type="button"
           onClick={goBack}
           aria-label="Go back to the previous page"
-          className="inline-flex shrink-0 items-center gap-1 rounded-full border border-border/60 bg-background/60 px-2.5 py-1 text-foreground transition hover:border-[color:var(--gold)] hover:text-[color:var(--gold)]"
+          title="Back"
+          className="inline-flex shrink-0 items-center gap-1 rounded-full px-2 py-0.5 text-foreground transition hover:text-[color:var(--gold)]"
         >
           <ArrowLeft className="h-3.5 w-3.5" />
           <span className="hidden sm:inline">Back</span>
@@ -145,29 +151,24 @@ export function FrassTrail() {
         <Link
           to="/"
           aria-label="Home"
-          className="inline-flex shrink-0 items-center gap-1 rounded-full px-2 py-1 transition hover:text-[color:var(--gold)]"
+          title="Home"
+          className="inline-flex shrink-0 items-center rounded-full px-1.5 py-0.5 transition hover:text-[color:var(--gold)]"
         >
           <Home className="h-3.5 w-3.5" />
-          <span className="hidden sm:inline">Home</span>
         </Link>
 
-        {crumbs.map((crumb) => (
-          <span key={crumb.href} className="flex shrink-0 items-center gap-1.5">
-            <span aria-hidden="true" className="text-border">/</span>
-            {crumb.last ? (
-              <span aria-current="page" className="rounded-full px-2 py-1 text-foreground">
-                {crumb.label}
-              </span>
-            ) : (
-              <Link
-                to={crumb.href as never}
-                className="rounded-full px-2 py-1 transition hover:text-[color:var(--gold)]"
-              >
-                {crumb.label}
-              </Link>
-            )}
-          </span>
-        ))}
+        {parentCrumb && (
+          <Link
+            to={parentCrumb.href as never}
+            className="hidden shrink-0 truncate rounded-full px-1.5 py-0.5 transition hover:text-[color:var(--gold)] md:inline"
+          >
+            {parentCrumb.label}
+          </Link>
+        )}
+
+        <span aria-current="page" className="truncate rounded-full px-1.5 py-0.5 text-foreground">
+          📍 {here.label}
+        </span>
       </div>
     </nav>
   );
