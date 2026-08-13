@@ -51,9 +51,98 @@ export const designAuthorityScope = tool({
   },
 });
 
+
+// FRASS-0524 — the guided walk through the platform.
+export const platformAuditTool = tool({
+  description:
+    "GUIDED PLATFORM AUDIT (FRASS-0524). Use when the Founder says something like 'let's audit Frass', 'walk me through the platform', or asks what a page does, promises or costs. Returns the walking order, what each page contains, and the private Trust Score criteria. Frassy guides the conversation; the Founder records the scores in the Founder Audit desk.",
+  inputSchema: z.object({
+    pageId: z
+      .string()
+      .nullable()
+      .default(null)
+      .describe("A specific page id to review. Null returns the full walking order."),
+  }),
+  execute: async ({ pageId }) => {
+    const { AUDIT_PAGES, AUDIT_DIMENSIONS, pageFinancials } = await import(
+      "@/lib/founder/platform-audit"
+    );
+    if (!pageId) {
+      return {
+        where_to_record: "/admin/audit",
+        dimensions: AUDIT_DIMENSIONS,
+        walking_order: AUDIT_PAGES.map((p) => ({
+          id: p.id,
+          label: p.label,
+          path: p.path,
+          purpose: p.purpose,
+        })),
+      };
+    }
+    const page = AUDIT_PAGES.find((p) => p.id === pageId);
+    if (!page) return { error: `No audit page called ${pageId}.` };
+    return { page, financials: pageFinancials(page), dimensions: AUDIT_DIMENSIONS };
+  },
+});
+
+// FRASS-0523 — what a feature costs before it is built.
+export const costImpactTool = tool({
+  description:
+    "COST IMPACT STATEMENT (FRASS-0523). Use when the Founder asks what a feature costs to run, whether it is free for members, or whether it can scale. Also use before agreeing to build any new AI, voice, image or video feature.",
+  inputSchema: z.object({
+    featureId: z
+      .string()
+      .nullable()
+      .default(null)
+      .describe("A registered feature id. Null returns the whole-platform picture."),
+    members: z
+      .number()
+      .nullable()
+      .default(null)
+      .describe("Member count to project against, e.g. 10000. Null uses every tier."),
+  }),
+  execute: async ({ featureId, members }) => {
+    const {
+      auditPlatform,
+      auditFeature,
+      COST_IMPACT_REGISTER,
+      COST_IMPACT_QUESTIONS,
+      FREE_FOREVER,
+      projectFeature,
+      formatMoney,
+    } = await import("@/lib/finance/sustainability");
+    if (featureId) {
+      const s = COST_IMPACT_REGISTER.find((x) => x.id === featureId);
+      if (!s)
+        return {
+          error: `No cost statement for ${featureId}.`,
+          known: COST_IMPACT_REGISTER.map((x) => x.id),
+          required_questions: COST_IMPACT_QUESTIONS,
+        };
+      return { audit: auditFeature(s), projections: projectFeature(s) };
+    }
+    const p = auditPlatform();
+    return {
+      free_forever: FREE_FOREVER,
+      required_questions: COST_IMPACT_QUESTIONS,
+      critical: p.critical.map((a) => ({ feature: a.statement.feature, warnings: a.warnings })),
+      watch: p.watch.map((a) => a.statement.feature),
+      projections: p.projections
+        .filter((x) => members == null || x.members === members)
+        .map((x) => ({
+          members: x.members,
+          monthly: formatMoney(x.monthly),
+          perMember: formatMoney(x.perMember),
+        })),
+    };
+  },
+});
+
 export function buildFounderTools() {
   return {
     analyze_change_request: analyzeChangeRequestTool,
     design_authority_scope: designAuthorityScope,
+    platform_audit: platformAuditTool,
+    cost_impact: costImpactTool,
   };
 }
