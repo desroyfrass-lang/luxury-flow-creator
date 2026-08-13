@@ -94,3 +94,14 @@ If rollback cannot be completed safely, the deployment does not proceed.
 ## Lifecycle status: FROZEN
 Build → Validate → Security Review → Rollback Verification → Publish → Observe → Archive → Learn.
 This checklist is the only deployment process. Extend it; never duplicate it.
+
+## 10. Independent penetration testing (FRASS-0530, P0 — before public launch)
+- [ ] Third-party penetration test scheduled and completed against preview + production.
+- [ ] Scope includes: authentication, Founder/Admin privilege escalation (Zero Trust,
+      FRASS-0530), payment and Financial Center flows, file uploads, Frassy tool access,
+      marketplace and business vault data boundaries.
+- [ ] All critical and high findings resolved; medium findings triaged with owners.
+- [ ] Re-test confirms fixes.
+- [ ] Result recorded in the Founder Security Center before broad public invitations.
+
+Automated scanning finds common issues only; it is not a substitute for this step.
