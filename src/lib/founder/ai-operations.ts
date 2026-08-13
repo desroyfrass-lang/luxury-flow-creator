@@ -55,6 +55,7 @@ type LedgerRow = {
   processing_ms: number | null;
   created_at: string;
   metadata?: unknown;
+  user_id?: string | null;
 };
 
 export type AiOperationsInput = {
@@ -192,6 +193,27 @@ export function buildAiOperationsReport(input: AiOperationsInput): AiOperationsR
     suggestions.push(`Image and video generation is ${image.share}% of spend. Reusing approved assets keeps that flat.`);
   if (!suggestions.length) suggestions.push("Usage is spread evenly across features. No single service is worth optimising yet.");
 
+  // FRASS-0555 — cost telemetry.
+  const conversationRows = input.ledger.filter((r) => /chat|conversation|frassy|message/i.test(r.label ?? ""));
+  const conversationsThisMonth = conversationRows.length;
+  const conversationSpend = conversationRows
+    .filter((r) => r.direction !== "credit")
+    .reduce((s, r) => s + Math.abs(r.amount), 0);
+  const activeMembers = new Set(input.ledger.map((r) => r.user_id).filter(Boolean)).size;
+  const spendingDays = new Set(spend.map((r) => dayKey(r.created_at))).size;
+  const telemetry = {
+    conversationsThisMonth,
+    activeMembersThisMonth: activeMembers,
+    costPerConversation: conversationsThisMonth > 0 ? round(conversationSpend / conversationsThisMonth, 3) : 0,
+    costPerActiveMember: activeMembers > 0 ? round(usedThisMonth / activeMembers, 3) : 0,
+    dailyComputeSpendToday: round(usedToday),
+    dailyComputeSpendAverage: spendingDays > 0 ? round(usedThisMonth / spendingDays) : 0,
+    plain:
+      activeMembers > 0
+        ? `Each conversation costs about ${conversationsThisMonth > 0 ? round(conversationSpend / conversationsThisMonth, 3) : 0} credits, and each active member costs about ${round(usedThisMonth / activeMembers, 2)} credits a month.`
+        : "No member has used Frass's intelligence in the last 30 days, so there is nothing to divide yet.",
+  };
+
   const plain =
     memberRevenueInfluenced > 0
       ? `Frass spent ${round(usedThisMonth)} credits this month, and members created about $${memberRevenueInfluenced.toLocaleString()} of value with that help.`
@@ -210,6 +232,7 @@ export function buildAiOperationsReport(input: AiOperationsInput): AiOperationsR
     reliability: { successRate, failed, total },
     performance: { averageMs, fastestMs, slowestMs, peakHour },
     trends: { daily, growthPct },
+    telemetry,
     alerts,
     suggestions,
     roi: {
