@@ -175,7 +175,7 @@ export async function recordIncident(input: {
       root_cause: input.diagnosis.rootCause,
       status: input.status,
       repairs_applied: input.repairsApplied ?? [],
-      evidence: input.diagnosis.evidence,
+      evidence: input.diagnosis.evidence as unknown as never,
       engineering_report,
       blocking_launch: Boolean(input.blockingLaunch),
       pattern_signature: input.diagnosis.signature,
@@ -233,7 +233,7 @@ export async function runSafeRepair(action: string, ctx: { userId: string | null
     case "repair_user_preferences": {
       if (!ctx.userId) return { ok: false as const, message: "Sign in first so I repair the right preferences." };
       await supabaseAdmin
-        .from("frassy_layout_prefs")
+        .from("daily_layout_prefs")
         .delete()
         .eq("user_id", ctx.userId)
         .then(() => undefined, () => undefined);
