@@ -203,6 +203,36 @@ export const AMENDMENTS: Amendment[] = [
     implementedAt: "2026-08-13",
     evidence: ["src/routes/_authenticated/command.tsx", "src/lib/founder/command-center.ts"],
   },
+  {
+    ref: "FRASS-0522-A",
+    title: "Frassy Brand Personality Guide",
+    intent:
+      "Define the person behind the voice: what Frassy always is, never is, and how she speaks — constitutional on every surface.",
+    targetProblem: "A consistent voice with an inconsistent character.",
+    areas: ["Frassy"],
+    categories: ["voice", "content"],
+    implementedAt: "2026-08-13",
+    evidence: [
+      "src/lib/frassy/brand-personality.ts",
+      "src/components/founder/brand-personality-panel.tsx",
+    ],
+    extends: ["FRASS-0522"],
+  },
+  {
+    ref: "FRASS-0527",
+    title: "Founder Workflow Standard",
+    intent:
+      "Discuss, Analyze, Edit, Approve, Engineer, Validate, Learn. Every engineering request is the last step, not the first.",
+    targetProblem: "Engineering requests raised before Frass has been asked whether it can already do it.",
+    areas: ["Founder Console"],
+    categories: ["governance", "navigation"],
+    implementedAt: "2026-08-13",
+    evidence: [
+      "src/lib/founder/workflow.ts",
+      "src/components/founder/founder-workflow-panel.tsx",
+    ],
+    extends: ["FRASS-0519", "FRASS-0520", "FRASS-0521"],
+  },
 ];
 
 export function amendmentByRef(ref: string): Amendment | undefined {

@@ -22,6 +22,8 @@ import {
 } from "@/lib/voice/frassy-voice";
 import { approveOfficialVoice, listVoiceIdentities } from "@/lib/voice/voice.functions";
 
+import { BrandPersonalityPanel } from "@/components/founder/brand-personality-panel";
+
 export const Route = createFileRoute("/_authenticated/admin/voice")({
   head: () => ({
     meta: [
@@ -364,6 +366,7 @@ function VoiceStudioPage() {
             </ul>
           </section>
         ) : null}
+        <BrandPersonalityPanel />
       </div>
     </SiteShell>
   );
