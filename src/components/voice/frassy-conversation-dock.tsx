@@ -7,11 +7,10 @@
 // controls stack directly above her, so members reach for one thing only.
 // ─────────────────────────────────────────────────────────────────────────────
 
-import { Mic, Pause, Play, Square } from "lucide-react";
+import { Pause, Play, Square } from "lucide-react";
 import { useRouterState } from "@tanstack/react-router";
 import { useConversationState, useSpeechState } from "@/hooks/use-push-to-talk";
 import { pauseSpeech, resumeSpeech, stopSpeech } from "@/lib/voice/speech-manager";
-import { requestTalk } from "@/lib/voice/dock-bus";
 
 /** Surfaces that own their own exits and have no conversation. */
 const HIDDEN_PREFIXES = ["/auth", "/reset-password", "/pay/", "/api", "/checkout"];
@@ -71,8 +70,9 @@ export function FrassyConversationDock() {
   return (
     <div
       aria-label="Frassy conversation dock"
-      // Fused with the beacon: same corner, stacked directly above her.
-      className="pointer-events-none fixed bottom-[5.25rem] right-5 z-50 flex max-w-[calc(100vw-2.5rem)] flex-col items-end gap-1.5"
+      // FRASS-0557 — fused with the beacon: the transport strip floats directly
+      // above her with clear breathing room, never touching a screen edge.
+      className="pointer-events-none fixed bottom-[6.25rem] right-6 z-50 flex max-w-[calc(100vw-3rem)] flex-col items-end gap-2"
     >
       {active && (
         <div className="pointer-events-auto flex items-center gap-1.5 rounded-full border border-border/60 bg-background/85 px-2 py-1 shadow-lg backdrop-blur-xl">
@@ -111,20 +111,6 @@ export function FrassyConversationDock() {
         </div>
       )}
 
-      {/* The one microphone — small, quiet, always one tap from Frassy. */}
-      <button
-        type="button"
-        onClick={() => requestTalk()}
-        aria-label="Talk to Frassy"
-        title="Talk to Frassy"
-        className={`pointer-events-auto inline-flex h-9 w-9 items-center justify-center rounded-full border shadow-lg backdrop-blur-xl transition ${
-          listening
-            ? "border-[color:var(--gold)] bg-[color:var(--gold)]/20 text-[color:var(--gold)]"
-            : "border-border/60 bg-background/85 text-foreground hover:border-[color:var(--gold)] hover:text-[color:var(--gold)]"
-        }`}
-      >
-        <Mic className="h-4 w-4" />
-      </button>
     </div>
   );
 }
