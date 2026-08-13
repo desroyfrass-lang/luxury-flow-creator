@@ -6,7 +6,9 @@ import { useQuery } from "@tanstack/react-query";
 import { founderSuccessOverview } from "@/lib/founder/success.functions";
 import {
   FOUNDER_CONFIDENTIAL_BANNER,
+  FOUNDER_CONFIDENTIAL_LABEL,
   FOUNDER_MAY_VIEW,
+  FOUNDER_RESPONSIBILITY,
   FOUNDER_VISIBILITY_PRINCIPLE,
   JOURNEY_STAGES,
   NEVER_VISIBLE_TO_FOUNDER,
