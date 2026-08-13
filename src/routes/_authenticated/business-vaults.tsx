@@ -202,6 +202,9 @@ function FutureVaultsPage() {
                         </div>
                       )}
 
+                      <VaultDepth vault={v} />
+
+
                       <div className="grid gap-4 sm:grid-cols-3">
                         {(["discover", "build", "monetize"] as VaultStage[]).map((stage) => (
                           <div key={stage} className="rounded-2xl border border-white/10 bg-black/20 p-4">
