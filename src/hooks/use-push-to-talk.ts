@@ -152,10 +152,14 @@ export function usePushToTalk(owner = "frassy") {
       speakingRef.current = false;
       if (result === "blocked") {
         setVoiceAvailable(false);
-        setVoiceError("Your browser blocked audio playback — my reply is above.");
+        setVoiceError(
+          "Voice is temporarily unavailable while it's being updated. Let's continue in text for now.",
+        );
       } else if (result === "failed") {
         setVoiceAvailable(false);
-        setVoiceError("Voice is temporarily unavailable — my reply is above.");
+        setVoiceError(
+          "Voice is temporarily unavailable while it's being updated. Let's continue in text for now.",
+        );
       } else if (result === "complete") {
         setVoiceAvailable(true);
       }
