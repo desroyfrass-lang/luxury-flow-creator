@@ -875,6 +875,17 @@ function FrassDailyBody({
           <CreativeProjectProgress name={name} />
         </Section>
 
+        {/* FRASS-0534 — Legacy Publication. Blueprint-driven: only appears when
+            the member has a book project (newbook or republish). Frassy is the
+            editor, never the author. */}
+        <Section
+          id="legacy-publication"
+          title="📖 Legacy Publication"
+          note="A finished journey becoming a book — and the same knowledge becoming an audiobook, a course and more. I'm the editor; you're the author."
+        >
+          <LegacyPublicationProgress name={name} />
+        </Section>
+
         {/* 1 — Celebrate first */}
         <Section id="celebrate-first" title="Celebrate first" note="Progress before problems.">
 
