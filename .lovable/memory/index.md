@@ -46,6 +46,9 @@ Every Frassy repair or escalation writes a Repair History entry (what/when/auto 
 
 Every major workspace supports Standard View and Simplified View (FRASS-0517) — same data and capability, presentation only; preference is remembered platform-wide.
 
+Every Business Vault runs three stages — Earn → Scale → Legacy (FRASS-0533-A); never stop at helping someone earn a living.
+Creative series are intellectual property produced by Frassy from a Blueprint, never hardcoded into a Daily (FRASS-0533).
+
 ## Memories
 - [FRASS-0477 Frassy Presence](mem://features/frass-0477-frassy-presence) — Arrival/returning/working/idle etiquette, Focus Mode silence, cloud→device→text voice hierarchy with indicator
 - [The Daily philosophy FRASS-0425](mem://features/frass-0425-daily-philosophy) — Daily's constitutional purpose + Morning Briefing, End of Day, time estimates, Focus Mode, consistency, health, Close My Day
@@ -157,3 +160,4 @@ Every major workspace supports Standard View and Simplified View (FRASS-0517) �
 - [FRASS-0531 Security Regression Protection](mem://features/frass-0531-security-regression-protection) — Append-only registry of fixed vulnerabilities, pre-deployment sweep gating Release Approval
 - [FRASS-0532 Tradesperson Daily & Vault](mem://features/frass-0532-tradesperson-daily-and-vault) — Trades Daily (Simplified View default, income first, certification honesty) and Tradesperson Vault
 - [FRASS-0532-A/C Constitutional Question & Digital Legacy](mem://features/frass-0532-online-first-digital-legacy) — Retired "easiest money" question, online-first ranking, Digital Legacy for tradespeople
+- [FRASS-0533 Creative IP + Three Levels](mem://features/frass-0533-creative-ip-three-levels) — I Am Not My Hair series/Vault, Blueprint creative projects, Episode Progress, Earn→Scale→Legacy
