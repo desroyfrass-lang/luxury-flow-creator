@@ -25,6 +25,7 @@ import {
   toggleSpeechPause,
   type SpeechSnapshot,
 } from "@/lib/voice/speech-manager";
+import type { VoiceTone } from "@/lib/voice/frassy-voice";
 
 export type VoicePhase = "idle" | "recording" | "transcribing" | "speaking";
 
