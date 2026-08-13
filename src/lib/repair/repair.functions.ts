@@ -12,7 +12,7 @@ export type RepairIncident = {
   severity: string;
   status: string;
   root_cause: string | null;
-  repairs_applied: unknown;
+  repairs_applied: string[];
   engineering_report: string | null;
   blocking_launch: boolean;
   created_at: string;
