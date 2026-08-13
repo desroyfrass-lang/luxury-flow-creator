@@ -12,7 +12,7 @@
 // ─────────────────────────────────────────────────────────────────────────────
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import { X, ShoppingBag, Trash2, Volume2, VolumeX, Mic, ArrowRight, Maximize2, Minimize2 } from "lucide-react";
+import { X, ShoppingBag, Trash2, Volume2, VolumeX, Mic, ArrowRight, Maximize2, Minimize2, Square } from "lucide-react";
 import { useNavigate } from "@tanstack/react-router";
 import { onboardingDestination } from "@/lib/navigation/core-routes";
 import { supabase } from "@/integrations/supabase/client";
@@ -438,6 +438,7 @@ export function FrassyChat({
         aria-label={`Talk to Frassy — ${beaconInvite}`}
         onClick={() => {
           setOpen(true);
+          setExpanded(true); // FRASS-0558 §7 — the conversation deserves room.
           void toggleMic();
         }}
         title={beaconInvite}
@@ -523,6 +524,41 @@ export function FrassyChat({
           </div>
         </div>
         <div data-frassy-voice className="flex shrink-0 items-center gap-1">
+          {/* FRASS-0558 §9 — one voice control, always green, always here. */}
+          <button
+            type="button"
+            onClick={() => void toggleMic()}
+            title="Talk to Frassy"
+            className={`mr-1 inline-flex items-center gap-1 rounded-full border px-2.5 py-1 text-[9px] font-semibold uppercase tracking-[0.18em] transition ${
+              conversationLive
+                ? "border-emerald-400 bg-emerald-500/15 text-emerald-400"
+                : "border-emerald-500/60 text-emerald-500 hover:bg-emerald-500/10"
+            }`}
+          >
+            <Mic className="h-3 w-3" />
+            {voice.phase === "recording"
+              ? "Listening"
+              : voice.phase === "transcribing" || loading
+                ? "Thinking"
+                : voice.phase === "speaking"
+                  ? "Speaking"
+                  : "Talk to Frassy"}
+          </button>
+
+          {/* FRASS-0558 §10 — a clear exit. Voice stops, the mic closes, the
+              conversation stays saved for later. */}
+          {conversationLive && (
+            <button
+              type="button"
+              onClick={endConversation}
+              title="End conversation — Frassy stops talking and the microphone closes"
+              className="mr-1 inline-flex items-center gap-1 rounded-full border border-red-500/60 px-2.5 py-1 text-[9px] font-semibold uppercase tracking-[0.18em] text-red-500 transition hover:bg-red-500/10"
+            >
+              <Square className="h-3 w-3" />
+              End
+            </button>
+          )}
+
           {/* Voice: tap to let Frassy speak her replies aloud, or mute her. */}
           <button
             type="button"
