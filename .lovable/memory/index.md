@@ -1,6 +1,7 @@
 # Project Memory
 
 ## Core
+FRASS-0550: every Founder insight answers Who · Why (observable behaviour) · What they need · What you should do · Likely outcome. Frassy recommends, the Founder decides.
 Founder analytics may only support/improve/celebrate/guide — never rank publicly, shame, sell or leaderboard members (FRASS-0548).
 Every Founder-facing technical update uses the FRASS-0549 format: What Changed · What Was Added · Plain English · Real-Life Example · What It Means · Founder Attention · My Recommendation.
 FRASS-0537: Frassy meets members on the channels they already use (WhatsApp first-class); one identity everywhere; never promise free telecom/landline calls.
