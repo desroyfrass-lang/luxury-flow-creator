@@ -116,11 +116,22 @@ export const SEAMSTRESS_VAULT: BusinessVault = {
     { title: "Sew the first piece of the collection", stage: "build", minutes: 60 },
     { title: "Photograph the garments properly", stage: "build", minutes: 30 },
     { title: "Write the product catalog — sizes, fabric, care", stage: "build", minutes: 30 },
+    { title: "Prepare the production package for a manufacturing partner", stage: "build", minutes: 30, to: "/manufacturing" },
     ...MARKETPLACE_CLOSE,
+    { title: "Publish the collection to your Afro Designers house", stage: "monetize", minutes: 20, to: "/afro-designers" },
     { title: "Plan the next collection", stage: "monetize", minutes: 20 },
   ],
-  monetizationOutcome: "A live clothing collection listed in the Marketplace and promoted on your Frass Card.",
+  monetizationOutcome:
+    "A live clothing collection listed in the Marketplace, promoted on your Frass Card, and published to your Afro Designers house.",
+  showcase: {
+    label: "Afro Designers",
+    to: "/afro-designers",
+    note: "Your finished work is published to your own designer house — same products, same inventory, no second catalog.",
+  },
+  manufacturing: ["fashion"],
+  craft: "sewing",
 };
+
 
 /** The rest of the family. Same constitution, different craft. */
 export const BUSINESS_VAULTS: BusinessVault[] = [
