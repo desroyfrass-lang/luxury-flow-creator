@@ -108,8 +108,8 @@ export const saveLegacyPublication = createServerFn({ method: "POST" })
         .select("versions, chapters, status")
         .eq("id", id)
         .maybeSingle();
-      const versions = Array.isArray((existing as Record<string, unknown> | null)?.versions)
-        ? ((existing as Record<string, unknown> | null).versions as ManuscriptVersion[])
+      const versions = Array.isArray((existing as Record<string, unknown>)?.versions)
+        ? ((existing as Record<string, unknown>).versions as ManuscriptVersion[])
         : [];
       const nextVersion: ManuscriptVersion = {
         n: versions.length + 1,
@@ -156,8 +156,8 @@ export const recordAmendment = createServerFn({ method: "POST" })
       .eq("id", data.publication_id)
       .maybeSingle();
     if (fe) throw new Error(fe.message);
-    const amendments = Array.isArray((row as Record<string, unknown> | null)?.amendments)
-      ? ((row as Record<string, unknown> | null).amendments as ManuscriptAmendment[])
+    const amendments = Array.isArray((row as Record<string, unknown>)?.amendments)
+      ? ((row as Record<string, unknown>).amendments as ManuscriptAmendment[])
       : [];
     const next: ManuscriptAmendment = {
       page: data.page,
@@ -195,14 +195,14 @@ export const applyAmendment = createServerFn({ method: "POST" })
       .eq("id", data.publication_id)
       .maybeSingle();
     if (fe) throw new Error(fe.message);
-    const amendments = Array.isArray((row as Record<string, unknown> | null)?.amendments)
-      ? ((row as Record<string, unknown> | null).amendments as ManuscriptAmendment[])
+    const amendments = Array.isArray((row as Record<string, unknown>)?.amendments)
+      ? ((row as Record<string, unknown>).amendments as ManuscriptAmendment[])
       : [];
-    const chapters = Array.isArray((row as Record<string, unknown> | null)?.chapters)
-      ? ((row as Record<string, unknown> | null).chapters as ManuscriptChapter[])
+    const chapters = Array.isArray((row as Record<string, unknown>)?.chapters)
+      ? ((row as Record<string, unknown>).chapters as ManuscriptChapter[])
       : [];
-    const versions = Array.isArray((row as Record<string, unknown> | null)?.versions)
-      ? ((row as Record<string, unknown> | null).versions as ManuscriptVersion[])
+    const versions = Array.isArray((row as Record<string, unknown>)?.versions)
+      ? ((row as Record<string, unknown>).versions as ManuscriptVersion[])
       : [];
     const amendment = amendments[data.index];
     if (!amendment) throw new Error("Amendment not found.");
