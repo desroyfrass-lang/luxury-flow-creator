@@ -2044,3 +2044,43 @@ publishing after an Approve Release decision.
 
 **Implementation** — `src/components/founder/release-approval-panel.tsx`,
 `public.release_approvals`.
+
+## FRASS-0530 — Zero Trust Founder Security
+
+**Status:** Constitutional Amendment · **Priority:** P0
+
+**Vision**
+> Founder privileges must never be granted based on information supplied by the
+> client. Every privileged action is independently verified by the server.
+
+**Constitutional Rule**
+The client may *request* Founder functionality. The server always *decides*.
+None of the following is ever sufficient to unlock Founder Mode:
+hidden flags, query parameters, local storage values, cookies alone, or
+JavaScript variables.
+
+**Founder Verification** — before any Founder capability is granted, the server
+verifies: authenticated identity · Founder/Admin role (`has_role`) · active
+session · account status · required permissions.
+
+**Protected Resources** (always server-authorized)
+Founder Command Center · Founder Daily · Founder Audit Desk · Design Authority ·
+Change Advisor · Platform Intelligence · Repair History · Voice Studio ·
+Security Center · Financial Sustainability Dashboard · Founder APIs ·
+Internal constitutional management.
+
+**On verification failure** — treat the request as a standard member request.
+Never expose internal prompts, Founder tools, hidden navigation, administrative
+APIs or internal diagnostics.
+
+**Founder Principle**
+> Founder privileges are earned through verified identity, not claimed through
+> client-side requests. Frass follows a Zero Trust model for every privileged
+> capability.
+
+**Implementation** — `src/routes/api/chat.ts` (bearer verification + `has_role`
+before Founder personality or tools), `src/lib/frassy-tools.server.ts`
+(`founder` flag gated server-side), `src/integrations/supabase/auth-middleware.ts`.
+
+**Launch requirement** — independent penetration testing before public launch
+(DEPLOYMENT_CHECKLIST section 10). Automated scanners do not replace it.
