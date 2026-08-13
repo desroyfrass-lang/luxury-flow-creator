@@ -248,6 +248,23 @@ export const AMENDMENTS: Amendment[] = [
     ],
     extends: ["FRASS-0522-A"],
   },
+  {
+    ref: "FRASS-0545",
+    title: "Adaptive Learning Levels",
+    intent:
+      "Every explanation is available at four depths — One Sentence, Explain Like I'm New, Detailed, Expert — with a remembered default the member can change instantly.",
+    targetProblem:
+      "Members overwhelmed by unnecessary complexity, or underserved by explanations that are too simple.",
+    areas: [],
+    categories: ["confusion", "usability", "content"],
+    implementedAt: "2026-08-13",
+    evidence: [
+      "src/lib/frassy/learning-levels.ts",
+      "src/components/frassy/learning-level-picker.tsx",
+      "src/components/frassy/learning-preferences-card.tsx",
+    ],
+    extends: ["FRASS-0544"],
+  },
 ];
 
 export function amendmentByRef(ref: string): Amendment | undefined {

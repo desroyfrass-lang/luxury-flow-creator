@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { WorkingStyleCard } from "@/components/frassy/working-style-card";
+import { LearningPreferencesCard } from "@/components/frassy/learning-preferences-card";
 import { useServerFn } from "@tanstack/react-start";
 import { useQuery } from "@tanstack/react-query";
 import { useMemo } from "react";
@@ -159,6 +160,7 @@ function WelcomeHallPage() {
           </p>
           <div className="mt-8 max-w-xl">
             <WorkingStyleCard />
+            <LearningPreferencesCard />
           </div>
         </section>
 
