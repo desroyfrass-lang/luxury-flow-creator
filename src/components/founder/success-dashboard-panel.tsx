@@ -73,6 +73,10 @@ function MemberRow({ m }: { m: MemberProgress }) {
             <Line label="Last active" value={m.daysQuiet >= 99 ? "Unknown" : `${m.daysQuiet} day(s) ago`} />
             <Line label="Revenue range" value={revenueBandLabel(m.revenue)} />
           </dl>
+          <div className="rounded-lg border border-border/60 bg-muted/30 p-3">
+            <p className="text-[11px] font-bold uppercase tracking-wide">Why Frassy reads them this way</p>
+            <p className="mt-1 text-xs text-muted-foreground">{m.archetypeReason}</p>
+          </div>
           <p className="text-[11px] text-muted-foreground">
             {m.coachingOptIn
               ? "This member opted into Founder Coaching — they invited your support."
