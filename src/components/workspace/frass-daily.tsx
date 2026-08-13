@@ -27,6 +27,7 @@ import { isTradespersonDaily } from "@/lib/daily/tradesperson";
 import {
   FrassyDoesTheTech,
   TradespersonFrassyNote,
+  TradespersonDigitalLegacy,
   TradespersonKnowledgeIncome,
   TradespersonMoneyMoves,
   TradespersonOutcomes,
@@ -804,6 +805,13 @@ function FrassDailyBody({
             <Section id="wellbeing" title="❤️ Well-being" note="One gentle note. Never another list.">
               <MotherWellbeing day={history.length} />
             </Section>
+            <Section
+              id="digital-legacy"
+              title="🏛️ Your Digital Legacy"
+              note="Don't just monetize your labour — monetize your experience."
+            >
+              <TradespersonDigitalLegacy onNavigate={onNavigate} />
+            </Section>
             <Section id="success-dashboard" title="📊 What actually changed" note="Outcomes, not activity.">
               <MotherOutcomes />
             </Section>
@@ -816,7 +824,7 @@ function FrassDailyBody({
         {/* FRASS-0532 — The Tradesperson's Daily. Skill first, technology handled. */}
         {isTradesperson && (
           <>
-            <Section id="personal-welcome" title="Morning" note="What's the easiest way to make money today?">
+            <Section id="personal-welcome" title="Morning" note="What's the best online Money Move today that moves you closer to financial freedom?">
               <TradespersonWelcome name={name ?? "Boss"} />
             </Section>
             <Section id="money-moves-today" title="💰 Today's Money Moves" note="Income first. One at a time.">

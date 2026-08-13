@@ -11,6 +11,7 @@ import {
   CERTIFICATION_STANCE,
   DIGITAL_PRESENCE,
   FRASSY_HANDLES,
+  DIGITAL_LEGACY,
   KNOWLEDGE_PRODUCTS,
   LONG_TERM_SHIFT,
   TRADESPERSON_MINUTES_PER_DAY,
@@ -136,6 +137,37 @@ export function TradespersonKnowledgeIncome({ onNavigate }: { onNavigate?: (href
       <p className="ws-meta mt-2 text-xs">
         {LONG_TERM_SHIFT.priority} {LONG_TERM_SHIFT.direction}
       </p>
+    </div>
+  );
+}
+
+/**
+ * FRASS-0532-C — Digital Legacy. The most valuable thing a tradesperson owns is
+ * decades of practical knowledge nobody has ever written down.
+ */
+export function TradespersonDigitalLegacy({
+  onNavigate,
+}: {
+  onNavigate?: (href: string) => void;
+}) {
+  return (
+    <div className="rounded-2xl border border-[color:var(--gold)]/25 bg-[color:var(--gold)]/[0.06] p-4">
+      <p className="text-base font-medium">{DIGITAL_LEGACY.question}</p>
+      <p className="mt-2 text-sm text-white/70">{DIGITAL_LEGACY.plain}</p>
+      <div className="mt-3 grid gap-2 sm:grid-cols-2">
+        {DIGITAL_LEGACY.forms.map((f) => (
+          <button
+            key={f.label}
+            type="button"
+            onClick={() => onNavigate?.(f.to)}
+            className="rounded-2xl border border-white/12 bg-black/20 p-3 text-left text-sm"
+          >
+            <span className="block font-medium">{f.label}</span>
+            <span className="ws-meta block text-xs">{f.plain}</span>
+          </button>
+        ))}
+      </div>
+      <p className="ws-meta mt-3 text-xs">{DIGITAL_LEGACY.principle}</p>
     </div>
   );
 }

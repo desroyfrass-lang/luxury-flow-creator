@@ -367,6 +367,11 @@ export const BUSINESS_VAULTS: BusinessVault[] = [
       "Trusted referrals",
       "Consultations and site advice",
       "Guides, checklists and DIY courses",
+      // FRASS-0532-C — Digital Legacy: the experience itself is the asset.
+      "Templates, inspection forms and maintenance schedules",
+      "Recorded voice lessons and short teaching videos",
+      "Tool and materials recommendations",
+      "A problem-solving library from decades of jobs",
     ],
     moves: [
       { title: "Name the trade and the jobs you take", stage: "discover", minutes: 15 },
@@ -380,10 +385,15 @@ export const BUSINESS_VAULTS: BusinessVault[] = [
       { title: "List the service so people can book you", stage: "monetize", minutes: 20, to: "/services" },
       { title: "Put the business on your Frass Card", stage: "monetize", minutes: 15, to: "/workspace/card" },
       { title: "Record one thing you know and turn it into a paid guide or course", stage: "monetize", minutes: 25, to: "/vault" },
+      // FRASS-0532-C — Digital Legacy moves. Monetize the experience, not only the labour.
+      { title: "Save one problem you solved and how you fixed it", stage: "build", minutes: 10, to: "/vault" },
+      { title: "Record a two-minute voice lesson — Frassy turns it into a video and an article", stage: "build", minutes: 15, to: "/workspace/composer" },
+      { title: "Publish the tools and materials you actually trust", stage: "monetize", minutes: 15, to: "/affiliate" },
+      { title: "Turn your checklists and forms into a paid template pack", stage: "monetize", minutes: 25, to: "/vault" },
       { title: "Set up trusted referrals for the jobs you can't take", stage: "monetize", minutes: 15, to: "/services" },
     ],
     monetizationOutcome:
-      "A bookable trade service in the Frass Services Marketplace with real job photos, reviews, quotes and invoices — plus at least one knowledge product earning beyond the tools.",
+      "A bookable trade service in the Frass Services Marketplace with real job photos, reviews, quotes and invoices — plus a growing Digital Legacy of guides, lessons, templates and recommendations that keep earning when the tools are down.",
     showcase: {
       label: "Frass Services",
       to: "/services",
