@@ -11,6 +11,7 @@ import { toast } from "sonner";
 import { SecurityAlertsPanel } from "@/components/finance/security-alerts-panel";
 import { PlatformHealthPanel } from "@/components/finance/platform-health-panel";
 import { ObservationWindowPanel } from "@/components/finance/observation-window-panel";
+import { RepairCenter } from "@/components/founder/repair-center";
 
 import { PlatformProtectionSwitch } from "@/components/founder/platform-protection-switch";
 
@@ -115,6 +116,8 @@ function LaunchFeedbackCenter() {
         <PlatformHealthPanel />
         {/* FRASS-0506 — the latest release stays under observation until it proves stable. */}
         <ObservationWindowPanel />
+        {/* FRASS-0515 — Frass Repair Engine incidents and engineering tickets. */}
+        <RepairCenter />
 
         <SecurityAlertsPanel />
         {/* FRASS-0476 — the emergency control lives with the intelligence it protects. */}
