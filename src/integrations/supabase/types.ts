@@ -3739,6 +3739,80 @@ export type Database = {
           },
         ]
       }
+      platform_audit_pages: {
+        Row: {
+          audit_id: string
+          created_at: string
+          findings: Json
+          id: string
+          notes: string
+          page_id: string
+          scores: Json
+          trust_score: number
+        }
+        Insert: {
+          audit_id: string
+          created_at?: string
+          findings?: Json
+          id?: string
+          notes?: string
+          page_id: string
+          scores?: Json
+          trust_score?: number
+        }
+        Update: {
+          audit_id?: string
+          created_at?: string
+          findings?: Json
+          id?: string
+          notes?: string
+          page_id?: string
+          scores?: Json
+          trust_score?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "platform_audit_pages_audit_id_fkey"
+            columns: ["audit_id"]
+            isOneToOne: false
+            referencedRelation: "platform_audits"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      platform_audits: {
+        Row: {
+          completed_at: string | null
+          id: string
+          label: string
+          overall_trust_score: number | null
+          report: Json | null
+          started_at: string
+          status: string
+          user_id: string
+        }
+        Insert: {
+          completed_at?: string | null
+          id?: string
+          label?: string
+          overall_trust_score?: number | null
+          report?: Json | null
+          started_at?: string
+          status?: string
+          user_id: string
+        }
+        Update: {
+          completed_at?: string | null
+          id?: string
+          label?: string
+          overall_trust_score?: number | null
+          report?: Json | null
+          started_at?: string
+          status?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       platform_events: {
         Row: {
           actor_id: string | null

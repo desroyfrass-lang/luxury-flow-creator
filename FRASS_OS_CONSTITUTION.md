@@ -1801,3 +1801,66 @@ of her identity, exactly like her name and her way of thinking.
 - `src/lib/voice/voice-identity.server.ts` — cached server-side resolver.
 - `src/routes/api/tts.ts` — enforces the official voice; accepts tone only.
 - `src/routes/_authenticated/admin.voice.tsx` — the Founder Voice Studio.
+
+---
+
+## FRASS-0523 — Financial Sustainability
+### Free to Build. Sustainable to Operate.
+
+Frass gives away the things that change a life and charges only for the things
+that genuinely cost money to produce. A member must never be surprised by a
+cost.
+
+**Principles**
+1. **Free means free.** Frassy conversation, the Daily, Money Moves, the Vaults,
+   the Frass Card and Link, the Workspace and the Marketplace are free to every
+   member. Guidance is never metered.
+2. **Credits are for production, not for thinking.** Video, image generation,
+   long-form voice and other heavy production draw Frass Credits.
+3. **Degrade, never block.** When credits run out the feature falls back to a
+   free path; the member keeps building.
+4. **Every new feature ships with a Cost Impact Statement** answering: what does
+   it cost Frass, what does it cost the member, how is it sustained, and can it
+   scale to a million members.
+5. **A feature a member could be surprised by is a Critical Trust Issue,** not a
+   pricing question.
+
+**Implementation**
+- `src/lib/finance/sustainability.ts` — cost drivers, the Cost Impact Register,
+  scaling projections (100 → 1,000,000 members) and the free-forever list.
+- `src/components/founder/financial-sustainability-panel.tsx` — the Founder
+  financial dashboard.
+- Frassy tool `cost_impact` — answers the four questions on demand.
+
+---
+
+## FRASS-0524 — Founder Guided Platform Audit
+### Every Page. Every Feature. Every Promise.
+
+The Founder and Frassy walk the platform together, page by page. This is not a
+separate application; it is an extension of Founder Mode.
+
+**Each page is reviewed in five passes**
+1. **Experience** — is it clear, is it fast, would a beginner understand it.
+2. **Features** — everything present, named plainly, with its real status. No
+   hidden functionality.
+3. **Financials** — what it costs Frass, what it costs the member, how it is
+   funded, what happens when credits run out.
+4. **Promises** — does the page keep every promise Frass has made.
+5. **Improvements** — the Founder's findings, sorted first by the Change Advisor
+   (FRASS-0521) so only genuine engineering reaches Lovable.
+
+**The Trust Score** is a private internal instrument across seven dimensions —
+promise, financial honesty, ease, accessibility, performance, security and
+constitutional alignment. It is never shown to members and never used as
+marketing.
+
+**Implementation**
+- `public.platform_audits` / `public.platform_audit_pages` — Founder-only
+  archive of every audit and every page reviewed.
+- `src/lib/founder/platform-audit.ts` — page registry, Trust Score, financial
+  walkthrough and the archived report.
+- `src/lib/founder/audit.functions.ts` — Founder-verified server functions.
+- `src/routes/_authenticated/admin.audit.tsx` — the Founder Audit desk.
+- Frassy tool `platform_audit` — she guides the walk from anywhere on the
+  platform.
