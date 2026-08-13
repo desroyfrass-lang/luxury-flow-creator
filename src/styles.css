@@ -1140,15 +1140,36 @@ body.blueprint-on [data-blueprint]:hover {
 .daily-brief-body { padding: 0 0.9rem 0.9rem 3.5rem; display: grid; gap: 0.5rem; }
 .daily-brief-actions { display: flex; flex-wrap: wrap; gap: 0.4rem; }
 
-/* Composer — a single horizontal toolbar, and room to think. */
+/* FRASS-0551 — the composer never clips. Every control stays on screen: the
+   toolbar wraps onto as many lines as it needs instead of scrolling sideways. */
 .frass-workspace .ws-toolbar {
-  display: flex; align-items: center; gap: 0.4rem;
-  overflow-x: auto; scrollbar-width: none; padding-bottom: 0.15rem;
+  display: flex; align-items: center; flex-wrap: wrap; gap: 0.4rem;
+  overflow: visible; padding-bottom: 0.15rem; max-width: 100%;
 }
-.frass-workspace .ws-toolbar::-webkit-scrollbar { display: none; }
-.frass-workspace .ws-toolbar > * { flex: none; white-space: nowrap; }
-.frass-workspace .ws-composer-row { margin-top: 0.55rem; display: flex; align-items: flex-end; gap: 0.5rem; }
-.frass-workspace .ws-input { min-height: 3.6rem; max-height: 13.75rem; padding: 0.75rem 0.9rem; }
+.frass-workspace .ws-toolbar > * { flex: none; white-space: nowrap; max-width: 100%; }
+.frass-workspace .ws-composer-row {
+  margin-top: 0.55rem; display: flex; align-items: flex-end; gap: 0.5rem;
+  flex-wrap: wrap; max-width: 100%;
+}
+.frass-workspace .ws-input {
+  min-height: 3.6rem; max-height: 13.75rem; padding: 0.75rem 0.9rem;
+  flex: 1 1 12rem; min-width: 0;
+}
+.frass-workspace .ws-composer { max-width: 100%; overflow-x: hidden; }
+
+/* Voice confidence strip — Listening / Thinking / Speaking, always visible. */
+.frassy-state {
+  display: flex; align-items: center; gap: 0.5rem;
+  padding: 0.45rem 0.85rem; font-size: 11px; letter-spacing: 0.22em;
+  text-transform: uppercase;
+  border-top: 1px solid color-mix(in srgb, currentColor 12%, transparent);
+}
+.frassy-state-dot {
+  height: 0.5rem; width: 0.5rem; border-radius: 999px; background: currentColor;
+  animation: frassy-pulse 1.1s ease-in-out infinite;
+}
+@keyframes frassy-pulse { 0%,100% { opacity: 0.35; } 50% { opacity: 1; } }
+
 
 
 .daily-command {

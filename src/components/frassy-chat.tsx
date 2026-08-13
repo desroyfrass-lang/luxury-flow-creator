@@ -78,9 +78,16 @@ type Msg = {
 let seq = 0;
 const nextId = () => `m${++seq}-${Date.now()}`;
 
-export function FrassyChat({ embedded = false }: { embedded?: boolean } = {}) {
+export function FrassyChat({
+  embedded = false,
+  tone,
+}: { embedded?: boolean; tone?: "light" | "dark" } = {}) {
   const navigate = useNavigate();
+  // FRASS-0551 — only the Founder Control Room stays dark. Every member surface
+  // (The Daily, the Workshop, Simplified View) inherits the warm ivory room.
+  const dark = tone ? tone === "dark" : !embedded;
   const [open, setOpen] = useState(embedded);
+
   // FRASS-0476B — one shared conversation history. A refresh or a change of
   // district continues the same conversation instead of restarting it.
   const [messages, setMessages] = useState<Msg[]>([]);
@@ -345,7 +352,19 @@ export function FrassyChat({ embedded = false }: { embedded?: boolean } = {}) {
     }
     if (voice.phase === "recording") {
       const transcript = await voice.stopRecording();
-      if (!transcript) return;
+      if (!transcript) {
+        // FRASS-0551 — the conversation never dies quietly. If she didn't catch
+        // the words, she says so in the transcript and invites another try.
+        setMessages((prev) => [
+          ...prev,
+          {
+            id: nextId(),
+            role: "assistant",
+            content: "I didn't catch that one. Tap the mic and say it again — I'm listening.",
+          },
+        ]);
+        return;
+      }
       // Anything already typed is part of the same turn — never left behind.
       const typed = input.trim();
       await send(typed ? `${typed} ${transcript}` : transcript, true);
@@ -375,20 +394,22 @@ export function FrassyChat({ embedded = false }: { embedded?: boolean } = {}) {
       data-frassy-phase={startup.phase}
       aria-busy={startup.phase === "verifying" || startup.phase === "recovering"}
       className={
-        `${startup.phase === "verifying" || startup.phase === "recovering" ? "invisible pointer-events-none" : "visible"} ${embedded
-          ? "frass-workspace ws-dark flex h-[min(640px,78vh)] min-h-[420px] w-full flex-col overflow-hidden rounded-lg border border-white/10 bg-[#0b0c0e]"
-          : "frass-workspace ws-dark fixed bottom-5 right-5 z-50 flex h-[min(620px,80vh)] w-[min(400px,calc(100vw-2.5rem))] flex-col overflow-hidden rounded-lg border border-white/10 bg-[#0b0c0e] shadow-2xl"}`
+        `${startup.phase === "verifying" || startup.phase === "recovering" ? "invisible pointer-events-none" : "visible"} frass-workspace ${dark ? "ws-dark" : ""} ${embedded
+          ? "flex h-[min(640px,78vh)] min-h-[420px] w-full max-w-full flex-col overflow-hidden rounded-lg border border-[color:var(--ws-line)]"
+          : "fixed bottom-5 right-5 z-50 flex h-[min(620px,80vh)] w-[min(420px,calc(100vw-2rem))] max-w-full flex-col overflow-hidden rounded-lg border border-[color:var(--ws-line)] shadow-2xl"}`
       }
+      style={{ background: "var(--ws-panel)", color: "var(--ws-ink)" }}
     >
+
       <header
         data-frassy-toolbar
-        className="grid shrink-0 grid-cols-[minmax(0,1fr)_auto] items-center gap-2 border-b border-white/10 px-4 py-3"
+        className="grid shrink-0 grid-cols-[minmax(0,1fr)_auto] items-center gap-2 border-b border-[color:var(--ws-line)] px-4 py-3"
       >
         <div className="flex min-w-0 items-center gap-3">
           <img src={symbolAsset.url} alt="" className="h-6 w-6 object-contain" />
           <div>
-            <div className="text-sm text-white">Frassy</div>
-            <div className="text-[10px] uppercase tracking-[0.3em] text-white/40">
+            <div className="text-sm text-[color:var(--ws-ink)]">Frassy</div>
+            <div className="text-[10px] uppercase tracking-[0.3em] text-[color:var(--ws-soft)]">
               {voice.phase === "recording"
                 ? "Listening…"
                 : voice.phase === "transcribing"
@@ -406,7 +427,7 @@ export function FrassyChat({ embedded = false }: { embedded?: boolean } = {}) {
               <div
                 data-frassy-voice-tier={startup.voiceTier}
                 className={`mt-0.5 flex items-center gap-1 text-[9px] tracking-[0.12em] ${
-                  startup.voiceTier === "cloud" ? "text-[color:var(--gold)]/80" : "text-white/45"
+                  startup.voiceTier === "cloud" ? "text-[color:var(--gold)]/80" : "text-[color:var(--ws-soft)]"
                 }`}
               >
                 <Mic className="h-2.5 w-2.5" />
@@ -428,7 +449,7 @@ export function FrassyChat({ embedded = false }: { embedded?: boolean } = {}) {
             className={`mr-1 inline-flex items-center gap-1 rounded-sm border px-1.5 py-1 text-[9px] uppercase tracking-[0.18em] transition ${
               speakReplies
                 ? "border-[color:var(--gold)]/40 text-[color:var(--gold)]"
-                : "border-white/20 text-white/50 hover:text-white"
+                : "border-[color:var(--ws-line)] text-[color:var(--ws-soft)] hover:text-[color:var(--ws-ink)]"
             }`}
           >
             {speakReplies ? <Volume2 className="h-3 w-3" /> : <VolumeX className="h-3 w-3" />}
@@ -439,7 +460,7 @@ export function FrassyChat({ embedded = false }: { embedded?: boolean } = {}) {
             <button
               type="button"
               onClick={stopTurn}
-              className="rounded-sm border border-white/20 px-2 py-1 text-[10px] uppercase tracking-[0.2em] text-white/70 hover:text-white"
+              className="rounded-sm border border-[color:var(--ws-line)] px-2 py-1 text-[10px] uppercase tracking-[0.2em] text-[color:var(--ws-soft)] hover:text-[color:var(--ws-ink)]"
             >
               Stop
             </button>
@@ -452,7 +473,7 @@ export function FrassyChat({ embedded = false }: { embedded?: boolean } = {}) {
               setMessages([]);
               setError(null);
             }}
-            className="rounded-sm p-2 text-white/50 hover:bg-white/10 hover:text-white"
+            className="rounded-sm p-2 text-[color:var(--ws-soft)] hover:bg-[color:var(--ws-accent-bg)] hover:text-[color:var(--ws-ink)]"
           >
             <Trash2 className="h-4 w-4" />
           </button>
@@ -464,7 +485,7 @@ export function FrassyChat({ embedded = false }: { embedded?: boolean } = {}) {
                 stopTurn();
                 setOpen(false);
               }}
-              className="rounded-sm p-2 text-white/50 hover:bg-white/10 hover:text-white"
+              className="rounded-sm p-2 text-[color:var(--ws-soft)] hover:bg-[color:var(--ws-accent-bg)] hover:text-[color:var(--ws-ink)]"
             >
               <X className="h-4 w-4" />
             </button>
@@ -477,14 +498,18 @@ export function FrassyChat({ embedded = false }: { embedded?: boolean } = {}) {
         data-frassy-transcript
         className="min-h-0 flex-1 space-y-4 overflow-y-auto px-4 py-4"
       >
-        {startup.greeting && (
-          <div className="w-fit max-w-[90%] rounded-lg bg-white/5 px-3 py-2 text-sm text-white/90">
-            <p className="whitespace-pre-wrap">{startup.greeting}</p>
+        {/* FRASS-0551 — conversation first: the room is never an empty box. */}
+        {(startup.greeting || (!messages.length && startup.phase === "greeted")) && (
+          <div className="w-fit max-w-[90%] rounded-lg bg-[color:var(--ws-accent-bg)] px-3 py-2 text-sm text-[color:var(--ws-ink)]">
+            <p className="whitespace-pre-wrap">
+              {startup.greeting ?? "I'm right here. Tell me what you'd like to do — talk or type, whichever suits you."}
+            </p>
           </div>
         )}
 
+
         {startup.notice && (
-          <div className="rounded-sm border border-[color:var(--gold)]/30 bg-[color:var(--gold)]/10 px-3 py-2 text-xs text-white/80">
+          <div className="rounded-sm border border-[color:var(--gold)]/30 bg-[color:var(--gold)]/10 px-3 py-2 text-xs text-[color:var(--ws-ink)]">
             {startup.notice}
           </div>
         )}
@@ -494,8 +519,8 @@ export function FrassyChat({ embedded = false }: { embedded?: boolean } = {}) {
             <div
               className={
                 m.role === "user"
-                  ? "ml-auto w-fit max-w-[85%] rounded-lg bg-[color:var(--gold)]/15 px-3 py-2 text-sm text-white"
-                  : "w-fit max-w-[90%] rounded-lg bg-white/5 px-3 py-2 text-sm text-white/90"
+                  ? "ml-auto w-fit max-w-[85%] rounded-lg bg-[color:var(--gold)]/15 px-3 py-2 text-sm text-[color:var(--ws-ink)]"
+                  : "w-fit max-w-[90%] rounded-lg bg-[color:var(--ws-accent-bg)] px-3 py-2 text-sm text-[color:var(--ws-ink)]"
               }
             >
               {m.role === "assistant" ? (
@@ -516,7 +541,7 @@ export function FrassyChat({ embedded = false }: { embedded?: boolean } = {}) {
                 type="button"
                 onClick={() => void voice.speak(m.content)}
                 disabled={voice.phase === "speaking"}
-                className="mt-2 inline-flex items-center gap-1.5 rounded-sm border border-white/15 px-2 py-1 text-[10px] uppercase tracking-[0.2em] text-white/60 hover:text-white disabled:opacity-40"
+                className="mt-2 inline-flex items-center gap-1.5 rounded-sm border border-[color:var(--ws-line)] px-2 py-1 text-[10px] uppercase tracking-[0.2em] text-[color:var(--ws-soft)] hover:text-[color:var(--ws-ink)] disabled:opacity-40"
               >
                 <Volume2 className="h-3 w-3" /> Hear Frassy
               </button>
@@ -528,7 +553,7 @@ export function FrassyChat({ embedded = false }: { embedded?: boolean } = {}) {
                   <a
                     key={`${m.id}-${p.handle}`}
                     href={p.url}
-                    className="group overflow-hidden rounded-sm border border-white/10 hover:border-[color:var(--gold)]/50"
+                    className="group overflow-hidden rounded-sm border border-[color:var(--ws-line)] hover:border-[color:var(--gold)]/50"
                   >
                     {p.image ? (
                       <img
@@ -538,13 +563,13 @@ export function FrassyChat({ embedded = false }: { embedded?: boolean } = {}) {
                         className="h-24 w-full object-cover"
                       />
                     ) : (
-                      <div className="flex h-24 items-center justify-center bg-white/5">
-                        <ShoppingBag className="h-5 w-5 text-white/30" />
+                      <div className="flex h-24 items-center justify-center bg-[color:var(--ws-accent-bg)]">
+                        <ShoppingBag className="h-5 w-5 text-[color:var(--ws-soft)]" />
                       </div>
                     )}
                     <div className="px-2 py-2">
-                      <div className="truncate text-[11px] text-white">{p.title}</div>
-                      <div className="mt-0.5 text-[10px] text-white/50">
+                      <div className="truncate text-[11px] text-[color:var(--ws-ink)]">{p.title}</div>
+                      <div className="mt-0.5 text-[10px] text-[color:var(--ws-soft)]">
                         {p.currency} {p.price}
                       </div>
                     </div>
@@ -564,8 +589,8 @@ export function FrassyChat({ embedded = false }: { embedded?: boolean } = {}) {
             )}
 
             {m.order && (
-              <div className="mt-3 rounded-sm border border-white/10 px-3 py-3 text-xs text-white/70">
-                <div className="text-white">{m.order.name}</div>
+              <div className="mt-3 rounded-sm border border-[color:var(--ws-line)] px-3 py-3 text-xs text-[color:var(--ws-soft)]">
+                <div className="text-[color:var(--ws-ink)]">{m.order.name}</div>
                 <div className="mt-1">
                   {m.order.financial_status} · {m.order.fulfillment_status} · {m.order.currency}{" "}
                   {m.order.total}
@@ -585,24 +610,45 @@ export function FrassyChat({ embedded = false }: { embedded?: boolean } = {}) {
         ))}
 
         {loading && (
-          <div className="w-fit rounded-lg bg-white/5 px-3 py-2 text-sm text-white/50">Typing…</div>
+          <div className="w-fit rounded-lg bg-[color:var(--ws-accent-bg)] px-3 py-2 text-sm text-[color:var(--ws-soft)]">Typing…</div>
         )}
 
         {(error || voice.voiceError) && (
-          <div className="rounded-sm border border-red-500/30 bg-red-500/10 px-3 py-2 text-xs text-red-200">
+          <div className="rounded-sm border border-red-500/30 bg-red-500/10 px-3 py-2 text-xs text-[color:var(--ws-ink)]">
             {error ?? voice.voiceError}
           </div>
         )}
       </div>
 
+      {/* FRASS-0551 — Voice confidence: the member always knows where the
+          conversation is. Listening · Transcribing · Thinking · Speaking. */}
+      {(voice.phase !== "idle" || loading) && (
+        <div
+          className="frassy-state shrink-0"
+          style={{ color: "var(--gold)" }}
+          role="status"
+          aria-live="polite"
+        >
+          <span className="frassy-state-dot" aria-hidden />
+          {voice.phase === "recording"
+            ? "🎤 Listening"
+            : voice.phase === "transcribing"
+              ? "✍️ Catching your words"
+              : voice.phase === "speaking"
+                ? "🗣️ Speaking"
+                : "🧠 Thinking"}
+        </div>
+      )}
+
       {voice.isSpeaking || voice.isPaused ? (
-        <div className="shrink-0 border-t border-white/10 px-3 py-2">
+        <div className="shrink-0 border-t border-[color:var(--ws-line)] px-3 py-2">
           <SpeechControls />
         </div>
       ) : null}
 
+
       {/* FRASS-0412 — temporary launch feedback program */}
-      <div className="shrink-0 border-t border-white/10 px-3 py-2">
+      <div className="shrink-0 border-t border-[color:var(--ws-line)] px-3 py-2">
         <VoiceFeedbackButton source="chat" />
       </div>
 

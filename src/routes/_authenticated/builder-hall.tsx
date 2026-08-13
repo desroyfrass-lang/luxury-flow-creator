@@ -6,6 +6,7 @@ import { useServerFn } from "@tanstack/react-start";
 import { useQuery } from "@tanstack/react-query";
 import { useMemo } from "react";
 import { SiteShell } from "@/components/site-shell";
+import { FrassyChat } from "@/components/frassy-chat";
 import { PageFeedback } from "@/components/page-feedback";
 import { getWelcomeHall, type HallMemory } from "@/lib/welcome-hall.functions";
 import { DISTRICTS, HALL_SECTIONS } from "@/lib/districts";
@@ -83,7 +84,16 @@ function WelcomeHallPage() {
           </p>
         </header>
 
-        {/* Next step — the single most important thing on this page */}
+        {/* FRASS-0551 — Conversation first. Frassy is the front gate, not a
+            settings screen: you arrive and she is already talking with you. */}
+        <section className="mt-10">
+          <FrassyChat embedded />
+          <p className="mt-3 text-center text-xs text-muted-foreground">
+            Talk or type — Frassy takes you wherever you need to go.
+          </p>
+        </section>
+
+
         <section className="mt-12 rounded-2xl border border-[color:var(--gold)]/40 bg-background/70 p-8 backdrop-blur">
           <div className="text-[10px] uppercase tracking-[0.3em] text-[color:var(--gold)]">
             Your next step
@@ -152,9 +162,12 @@ function WelcomeHallPage() {
           )}
         </section>
 
-        {/* FRASS-0478 — how you like to work */}
-        <section className="mt-16">
-          <h2 className="font-display text-2xl">How Frassy works with you</h2>
+        {/* FRASS-0478 — how you like to work. FRASS-0551: this is a setting,
+            not the front gate, so it sits folded away beneath the conversation. */}
+        <details className="mt-16 rounded-2xl border border-border/70 p-6">
+          <summary className="cursor-pointer font-display text-xl">
+            How Frassy works with you
+          </summary>
           <p className="mt-2 text-sm text-muted-foreground">
             Not what you said — how you like to be helped. Learned by observation, never
             configured.
@@ -164,7 +177,8 @@ function WelcomeHallPage() {
             <LearningPreferencesCard />
             <MomentumCard />
           </div>
-        </section>
+        </details>
+
 
         {/* What Frassy remembers */}
         {sections.length > 0 && (

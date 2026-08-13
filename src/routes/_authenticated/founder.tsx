@@ -173,7 +173,7 @@ function FounderPage() {
           </p>
           {/* FRASS-0481 — no page-specific wrapper: the shared Frassy renders at full size. */}
           <div className="mt-4">
-            <FrassyChat embedded />
+            <FrassyChat embedded tone="dark" />
           </div>
 
         </section>
