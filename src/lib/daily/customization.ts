@@ -49,7 +49,11 @@ export type SectionId =
   | "first-venture"
   | "wellbeing"
   | "partner-progress"
-  | "legacy-dashboard";
+  | "legacy-dashboard"
+  // FRASS-0532 — Tradesperson Daily sections.
+  | "frassy-handles-tech"
+  | "proof-of-work"
+  | "digital-presence";
 
 export type SectionMeta = {
   id: SectionId;
@@ -304,6 +308,24 @@ export const DAILY_SECTIONS: SectionMeta[] = [
     plain: "Lives changed, not money earned.",
     aliases: ["legacy", "impact", "lives changed"],
   },
+  {
+    id: "frassy-handles-tech",
+    label: "I'll handle the computer part",
+    plain: "The paperwork, forms, adverts and invoices Frassy does for you.",
+    aliases: ["paperwork", "computer part", "frassy does it"],
+  },
+  {
+    id: "proof-of-work",
+    label: "Your proof of work",
+    plain: "Photos, years of experience and reviews that win jobs.",
+    aliases: ["proof", "experience", "reviews", "photos"],
+  },
+  {
+    id: "digital-presence",
+    label: "Where people find you",
+    plain: "Your profile, Frass Card, listings and booking details.",
+    aliases: ["profile", "listing", "where people find me"],
+  },
 ];
 
 export const SECTION_BY_ID = Object.fromEntries(
@@ -337,6 +359,9 @@ export const RECOMMENDED_ORDER: SectionId[] = [
   "todays-priorities",
   "partner-progress",
   "legacy-dashboard",
+  "frassy-handles-tech",
+  "proof-of-work",
+  "digital-presence",
   "frassy-note",
   "since-last",
   "financial-snapshot",
