@@ -3,6 +3,7 @@
 // the smart index, the timeline, and the persistent composer. Frassy adapts to
 // the open project and reopens exactly where work stopped.
 
+import { supabase } from "@/integrations/supabase/client";
 import { readArrivalIntent } from "@/lib/frassy/context";
 import { appendTranscript } from "@/lib/frassy/transcript";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
