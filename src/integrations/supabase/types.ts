@@ -3127,6 +3127,7 @@ export type Database = {
           communication_style: string | null
           created_at: string
           created_by: string
+          creative_projects: Json
           daily_priorities: string[]
           financial_urgency: string | null
           hours_per_day: number | null
@@ -3154,6 +3155,7 @@ export type Database = {
           communication_style?: string | null
           created_at?: string
           created_by: string
+          creative_projects?: Json
           daily_priorities?: string[]
           financial_urgency?: string | null
           hours_per_day?: number | null
@@ -3181,6 +3183,7 @@ export type Database = {
           communication_style?: string | null
           created_at?: string
           created_by?: string
+          creative_projects?: Json
           daily_priorities?: string[]
           financial_urgency?: string | null
           hours_per_day?: number | null
