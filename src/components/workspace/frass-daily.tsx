@@ -25,6 +25,7 @@ import { isKankoDaily } from "@/lib/daily/kanko";
 import { isMotherDaily } from "@/lib/daily/mother";
 import { isTradespersonDaily } from "@/lib/daily/tradesperson";
 import { CreativeProjectProgress } from "@/components/workspace/creative-project-progress";
+import { LegacyPublicationProgress } from "@/components/workspace/legacy-publication-progress";
 import {
   FrassyDoesTheTech,
   TradespersonFrassyNote,
