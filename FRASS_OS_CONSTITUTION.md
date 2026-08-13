@@ -2303,3 +2303,44 @@ their original identifiers; only the governance language changed.
   through the service-role admin path.
 - `live_gifts`: column-level grants keep money out of anonymous reach, per
   FRASS-0535.
+
+---
+
+## FRASS-0536 — Public Data Boundary
+Status: Constitutional Amendment · Priority: P0
+
+**Vision.** No internal database identifier is ever exposed unless the experience
+genuinely cannot exist without it.
+
+**Constitutional Rule.** A public endpoint returns only what the experience needs.
+
+Allowed publicly: display name, public avatar, achievement, gift icon,
+celebration message, timestamp.
+
+Never public unless explicitly required: internal IDs, user IDs, database keys,
+Founder notes, private comments, internal financial values, internal metadata,
+permission flags.
+
+**Founder Principle.** The public interface should describe people, never expose
+their internal identity. Frass shares experiences — not database structure.
+
+### Enforcement (database layer, verified)
+- `founder_notes` is a separate Founder-only table. Private Founder commentary is
+  never stored in a publicly queryable table again. `anon` and `authenticated`
+  have no grants on it; only server-side Founder tooling reads or writes it.
+- `founding_partners` no longer has a `note` column, and `user_id` / `invited_by`
+  are not readable by signed-out visitors.
+- `live_broadcasts.host_id`, `live_comments.author_id`, and
+  `live_gifts.sender_id / credits / amount / currency / note` are not readable by
+  signed-out visitors. Column grants — not UI code — enforce this.
+- `daily_layout_presets.owner_id` is readable by nobody through the Data API.
+
+### SECURITY DEFINER audit (reviewed individually)
+Exactly one `SECURITY DEFINER` function is executable by signed-in members:
+`public.is_founding_partner()`. It exists because the First Partner access rules
+would otherwise recurse on their own table. It takes no arguments and can only
+answer about `auth.uid()`, so it cannot be used to probe another member. It has a
+fixed `search_path` and `EXECUTE` is revoked from `anon`. It cannot become
+`SECURITY INVOKER` without reintroducing the recursion. Reviewed and accepted.
+Every other `SECURITY DEFINER` function in `public` is a trigger or job function
+with `EXECUTE` revoked from both `anon` and `authenticated`.
