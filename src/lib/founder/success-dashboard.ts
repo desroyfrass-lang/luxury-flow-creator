@@ -159,7 +159,19 @@ export type MemberProgress = {
   archetypeReason: string;
   /** The single thing the Founder should do about this member today. */
   recommendedAction: string;
+  /* ── FRASS-0550 — Founder Coaching Engine. The five questions. ────────── */
+  /** 📈 Why — observable behaviours only, never vague AI statements. */
+  observedBehaviours: string[];
+  /** ❤️ What do they need — the member's current opportunity. */
+  need: MemberNeed;
+  /** 🎯 What should the Founder do — recommendations, never instructions. */
+  founderActions: FounderAction[];
+  /** 🌱 What is the likely outcome — why Frassy suggested that action. */
+  likelyOutcome: string;
+  /** Ordering weight so the Founder never has to hunt for who needs them. */
+  coachingPriority: number;
 };
+
 
 const clamp = (n: number) => Math.max(0, Math.min(100, Math.round(n)));
 
