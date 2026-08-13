@@ -2125,6 +2125,60 @@ export type Database = {
           },
         ]
       }
+      founder_seed_vaults: {
+        Row: {
+          academy_path_title: string | null
+          created_at: string
+          id: string
+          kind: string
+          notes: string | null
+          origin_persona: string | null
+          origin_session: string | null
+          price_cents: number | null
+          protected: boolean
+          status: string
+          summary: string | null
+          title: string
+          transferred_to: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          academy_path_title?: string | null
+          created_at?: string
+          id?: string
+          kind?: string
+          notes?: string | null
+          origin_persona?: string | null
+          origin_session?: string | null
+          price_cents?: number | null
+          protected?: boolean
+          status?: string
+          summary?: string | null
+          title: string
+          transferred_to?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          academy_path_title?: string | null
+          created_at?: string
+          id?: string
+          kind?: string
+          notes?: string | null
+          origin_persona?: string | null
+          origin_session?: string | null
+          price_cents?: number | null
+          protected?: boolean
+          status?: string
+          summary?: string | null
+          title?: string
+          transferred_to?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       founder_sessions: {
         Row: {
           checklist: Json

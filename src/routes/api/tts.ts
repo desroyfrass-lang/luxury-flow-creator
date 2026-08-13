@@ -9,6 +9,7 @@
 // may only ask for a tone (how she feels), never for a different voice — that
 // is what keeps her the same person in every district. The single exception is
 // an explicit Founder preview from the Voice Studio.
+import { primaryProvider } from "@/lib/ai/providers";
 import { createFileRoute } from "@tanstack/react-router";
 import {
   VOICE_CANDIDATE_IDS,
@@ -78,7 +79,7 @@ export const Route = createFileRoute("/api/tts")({
               Authorization: `Bearer ${key}`,
             },
             body: JSON.stringify({
-              model: "openai/gpt-4o-mini-tts",
+              model: primaryProvider("speech-out"),
               input: text,
               voice: identity.voiceId,
               speed: identity.speed,

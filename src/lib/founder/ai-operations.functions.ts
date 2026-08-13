@@ -30,7 +30,7 @@ export const aiOperationsSnapshot = createServerFn({ method: "GET" })
       await Promise.all([
         sb
           .from("ai_credit_ledger")
-          .select("amount, direction, label, processing_ms, created_at, metadata")
+          .select("amount, direction, label, processing_ms, created_at, metadata, user_id")
           .gte("created_at", daysAgo(30))
           .order("created_at", { ascending: false })
           .limit(5000),

@@ -3,6 +3,7 @@
 // to openai/gpt-4o-transcribe with a Frass vocabulary prompt so platform names
 // ("Frassy", "FrassKicks", "Builder Vault", "Executive Tower") are never misheard.
 
+import { primaryProvider } from "@/lib/ai/providers";
 import { createFileRoute } from "@tanstack/react-router";
 
 const FRASS_VOCABULARY = [
@@ -58,7 +59,7 @@ export const Route = createFileRoute("/api/stt")({
         }
 
         const upstreamForm = new FormData();
-        upstreamForm.append("model", "openai/gpt-4o-transcribe");
+        upstreamForm.append("model", primaryProvider("speech-in"));
         upstreamForm.append("file", audio, audio.name || "recording.wav");
         upstreamForm.append("prompt", PROMPT);
 
