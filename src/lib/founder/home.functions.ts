@@ -47,7 +47,7 @@ export type ReleaseApprovalRow = {
   note: string;
   outstanding: string[];
   invitation_verdict: string | null;
-  summary: Record<string, unknown>;
+  summary: string;
   created_at: string;
 };
 
@@ -97,8 +97,8 @@ export const founderSnapshot = createServerFn({ method: "GET" })
       sb.from("card_orders").select("id", count).gte("created_at", daysAgo(30)),
       sb
         .from("repair_patterns")
-        .select("pattern_signature, occurrences")
-        .order("occurrences", { ascending: false })
+        .select("signature, symptom, times_seen")
+        .order("times_seen", { ascending: false })
         .limit(3),
       sb
         .from("platform_audits")
@@ -157,9 +157,9 @@ export const founderSnapshot = createServerFn({ method: "GET" })
       },
       intelligence: {
         topPatterns: (patterns.data ?? []).map(
-          (p: { pattern_signature: string; occurrences: number }) => ({
-            signature: p.pattern_signature,
-            occurrences: p.occurrences,
+          (p: { signature: string; symptom: string; times_seen: number }) => ({
+            signature: p.symptom || p.signature,
+            occurrences: p.times_seen,
           }),
         ),
       },
@@ -186,7 +186,15 @@ export const recentReleaseApprovals = createServerFn({ method: "GET" })
       .select("id, decision, note, outstanding, invitation_verdict, summary, created_at")
       .order("created_at", { ascending: false })
       .limit(8);
-    return (data ?? []) as ReleaseApprovalRow[];
+    return ((data ?? []) as Array<Record<string, unknown>>).map((r) => ({
+      id: String(r.id),
+      decision: r.decision as ReleaseApprovalRow["decision"],
+      note: String(r.note ?? ""),
+      outstanding: (r.outstanding as string[] | null) ?? [],
+      invitation_verdict: (r.invitation_verdict as string | null) ?? null,
+      summary: String((r.summary as { text?: string } | null)?.text ?? ""),
+      created_at: String(r.created_at),
+    }));
   });
 
 export const recordReleaseApproval = createServerFn({ method: "POST" })
@@ -198,7 +206,7 @@ export const recordReleaseApproval = createServerFn({ method: "POST" })
         note: z.string().max(2000).default(""),
         outstanding: z.array(z.string().max(400)).max(50).default([]),
         invitationVerdict: z.string().max(40).nullable().default(null),
-        summary: z.record(z.string(), z.unknown()).default({}),
+        summary: z.string().max(6000).default(""),
       })
       .parse(i),
   )
@@ -210,7 +218,7 @@ export const recordReleaseApproval = createServerFn({ method: "POST" })
       note: data.note,
       outstanding: data.outstanding,
       invitation_verdict: data.invitationVerdict,
-      summary: data.summary,
+      summary: { text: data.summary },
     });
     if (error) throw new Error(error.message);
     return { ok: true as const };
