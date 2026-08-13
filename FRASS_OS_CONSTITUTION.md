@@ -1864,3 +1864,75 @@ marketing.
 - `src/routes/_authenticated/admin.audit.tsx` — the Founder Audit desk.
 - Frassy tool `platform_audit` — she guides the walk from anywhere on the
   platform.
+
+---
+
+## FRASS-0518-A — Constitution Effectiveness Review
+### The Constitution Must Prove Itself
+
+Platform Intelligence learns from technical issues. This amendment makes it
+learn from our own decisions. A rule that cannot be measured is an opinion.
+
+**For every amendment, Frassy must be able to answer**
+1. Was this amendment implemented?
+2. Did it reduce the intended issue?
+3. Did it create unintended consequences?
+4. How many support incidents occurred before implementation?
+5. How many occurred afterward?
+6. Should it be revised, expanded or retired?
+
+**Rules**
+- **Register or it does not exist.** Every amendment recorded here is registered
+  in `src/lib/constitution/registry.ts` the same day, with its intent, the
+  problem it targets, the date it shipped, and the files that prove it exists.
+- **An amendment with no implementation date is an intention, not a rule.**
+- **Rates, not raw counts.** Before/after is compared per month so a long
+  history never flatters a weak amendment.
+- **Honesty over comfort.** Where evidence is thin, the verdict is "too early",
+  never "working".
+- **Analysis never amends.** The engine reports; the Founder alone decides.
+
+**Constitution Health** in the Founder Daily and Command Center shows the most
+effective amendments, those under review, those with recurring issues, and
+evidence-based recommendations for future constitutional updates.
+
+This closes the loop: problem discovered → repair completed → pattern learned →
+amendment created → amendment implemented → the platform measures whether the
+amendment actually improved anything. The Constitution evolves on evidence.
+
+**Implementation**
+- `src/lib/constitution/registry.ts` — the measured Constitution.
+- `src/lib/constitution/effectiveness.ts` — the six questions, answered.
+- `src/lib/constitution/constitution.functions.ts` — Founder-verified read.
+- `src/components/founder/constitution-health.tsx` — full and compact views.
+- Frassy tool `constitution_health`.
+
+---
+
+## FRASS-0525 — Founder Command Center
+### One Headquarters, Not Twenty Doors
+
+Founder instruments are never scattered. `/command` is the single operational
+headquarters, grouped by what the Founder is trying to do:
+
+- **🧭 Platform** — Founder Path, Guided Platform Audit, Platform Intelligence,
+  Repair History.
+- **🎨 Design** — Design Authority, navigation management, Simplified View
+  testing, words and imagery.
+- **🤖 Frassy** — Voice Studio, personality, pronunciation, Knowledge Vault.
+- **📊 Operations** — Founder Daily, platform health, deployment observation,
+  Security Center, Financial Sustainability, Business Vault health.
+- **💡 Innovation** — Constitution Health, Change Advisor queue, drafts and
+  pending specifications.
+
+**Rules**
+- A Founder tool is registered in `src/lib/founder/command-center.ts` or it does
+  not exist.
+- The Command Center adds no capability of its own — it mounts the same panels
+  the platform already uses. Nothing is forked or duplicated.
+- Where a tool lived in two places, the Command Center is the one that stays.
+
+**Implementation**
+- `src/lib/founder/command-center.ts` — the registry of every Founder tool.
+- `src/routes/_authenticated/command.tsx` — the headquarters, behind the
+  identity gate.
