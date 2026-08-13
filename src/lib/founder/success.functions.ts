@@ -6,11 +6,17 @@ import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import {
   archetypeReason,
   buildRadar,
+  coachingPriority,
+  founderActions,
+  likelyOutcome,
+  memberNeed,
+  observedBehaviours,
   recommendedAction,
   memberInsight,
   progressScore,
   revenueBand,
   toneFor,
+  type MemberNeed,
   type MemberProgress,
   type RadarBucket,
 } from "./success-dashboard";
@@ -53,16 +59,19 @@ export const founderSuccessOverview = createServerFn({ method: "GET" })
     await assertFounder(context);
     const sb = context.supabase;
 
-    const [profiles, journeys, opps, launches, books] = await Promise.all([
+    const [profiles, journeys, opps, launches, books, vaults] = await Promise.all([
       sb
         .from("profiles")
-        .select("id, display_name, full_name, email, preferences, last_seen_at")
+        .select(
+          "id, display_name, full_name, email, preferences, last_seen_at, handle, builder_stage",
+        )
         .order("created_at", { ascending: false })
         .limit(500),
       sb.from("builder_journeys").select("user_id, status, last_active_at, stage_progress"),
       sb.from("builder_opportunities").select("user_id, stage, potential_value"),
       sb.from("partner_launch_state").select("user_id, state, updated_at"),
       sb.from("legacy_publications").select("owner_id, status"),
+      sb.from("future_business_vaults").select("user_id, label, status"),
     ]);
 
     const journeyBy = new Map<string, any>();
@@ -88,6 +97,15 @@ export const founderSuccessOverview = createServerFn({ method: "GET" })
       if (b.status === "published") row.published += 1;
       else row.progress += 1;
       bookBy.set(b.owner_id, row);
+    }
+
+    // FRASS-0550 — 👤 Who: active Business Vault names only, never contents.
+    const vaultBy = new Map<string, string[]>();
+    for (const v of vaults.data ?? []) {
+      if (v.status === "shelved") continue;
+      const list = vaultBy.get(v.user_id) ?? [];
+      list.push(v.label as string);
+      vaultBy.set(v.user_id, list);
     }
 
     const members: MemberProgress[] = (profiles.data ?? []).map((p: any) => {
@@ -135,7 +153,14 @@ export const founderSuccessOverview = createServerFn({ method: "GET" })
         // Only ever a band. The underlying figure stays on the server.
         revenue: revenueBand(opp.earned),
         coachingOptIn: prefs.founder_coaching === true,
+        handle: (p.handle as string) ?? null,
+        builderStage: (p.builder_stage as string) ?? null,
+        learningLevel: (prefs.learning_level as string) ?? null,
+        vaults: (vaultBy.get(p.id) ?? []).slice(0, 6),
       };
+
+      // FRASS-0550 — the five questions, answered for every member.
+      const need: MemberNeed = memberNeed(base, tone);
 
       return {
         ...base,
@@ -143,6 +168,11 @@ export const founderSuccessOverview = createServerFn({ method: "GET" })
         insight: memberInsight(base, tone),
         archetypeReason: archetypeReason(base, tone),
         recommendedAction: recommendedAction(base, tone),
+        observedBehaviours: observedBehaviours(base),
+        need,
+        founderActions: founderActions(base, need),
+        likelyOutcome: likelyOutcome(base, need),
+        coachingPriority: coachingPriority(base, need, tone),
       };
     });
 
@@ -160,7 +190,10 @@ export const founderSuccessOverview = createServerFn({ method: "GET" })
         support,
       },
       radar: buildRadar(members),
-      members: members.sort((a, b) => b.daysQuiet - a.daysQuiet || b.progress - a.progress),
+      // FRASS-0550 — highest coaching impact first, so the Founder never hunts.
+      members: members.sort(
+        (a, b) => b.coachingPriority - a.coachingPriority || b.daysQuiet - a.daysQuiet,
+      ),
       sentence: !members.length
         ? "No members yet. The first one is the one that matters most."
         : support

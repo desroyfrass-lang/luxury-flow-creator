@@ -138,6 +138,12 @@ export type MemberProgress = {
   progress: number;
   achievementStyle: string | null;
   momentumLevel: string | null;
+  /** FRASS-0550 — 👤 Who: the member's public Frass Card handle, if claimed. */
+  handle: string | null;
+  builderStage: string | null;
+  learningLevel: string | null;
+  /** Active Business Vaults, by name. Never their contents. */
+  vaults: string[];
   dailyStreak: number;
   daysQuiet: number;
   blueprintProgress: number;
@@ -153,7 +159,19 @@ export type MemberProgress = {
   archetypeReason: string;
   /** The single thing the Founder should do about this member today. */
   recommendedAction: string;
+  /* ── FRASS-0550 — Founder Coaching Engine. The five questions. ────────── */
+  /** 📈 Why — observable behaviours only, never vague AI statements. */
+  observedBehaviours: string[];
+  /** ❤️ What do they need — the member's current opportunity. */
+  need: MemberNeed;
+  /** 🎯 What should the Founder do — recommendations, never instructions. */
+  founderActions: FounderAction[];
+  /** 🌱 What is the likely outcome — why Frassy suggested that action. */
+  likelyOutcome: string;
+  /** Ordering weight so the Founder never has to hunt for who needs them. */
+  coachingPriority: number;
 };
+
 
 const clamp = (n: number) => Math.max(0, Math.min(100, Math.round(n)));
 
@@ -189,7 +207,15 @@ export function progressScore(p: {
 /** The raw signals every derived read is computed from. */
 export type MemberSignals = Omit<
   MemberProgress,
-  "insight" | "tone" | "archetypeReason" | "recommendedAction"
+  | "insight"
+  | "tone"
+  | "archetypeReason"
+  | "recommendedAction"
+  | "observedBehaviours"
+  | "need"
+  | "founderActions"
+  | "likelyOutcome"
+  | "coachingPriority"
 >;
 
 /**
@@ -320,4 +346,203 @@ export function journeyFill(progress: number, stageAt: number): number {
   if (progress <= stageAt) return 0;
   if (progress >= next) return 100;
   return Math.round(((progress - stageAt) / (next - stageAt)) * 100);
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+ * FRASS-0550 — Founder Coaching Engine.  "Lead people, not dashboards."
+ *
+ * Every member insight must answer five questions: Who? Why? What do they
+ * need? What should the Founder do? What is the likely outcome?
+ * Frassy recommends. The Founder decides — always.
+ * ═══════════════════════════════════════════════════════════════════════════ */
+
+export const FOUNDER_COACHING_PRINCIPLE =
+  "The purpose of leadership is not to measure people. It is to help people become more than they believed possible. Every insight in Frass should ultimately lead to encouragement, opportunity, or growth.";
+
+export const FOUNDER_COACHING_QUESTIONS = [
+  { id: "who", glyph: "👤", label: "Who?", guide: "Who is this member — card, vaults, learning style, momentum." },
+  { id: "why", glyph: "📈", label: "Why?", guide: "Observable behaviours only. Never vague AI statements." },
+  { id: "need", glyph: "❤️", label: "What do they need?", guide: "Their current opportunity, in one word." },
+  { id: "action", glyph: "🎯", label: "What should the Founder do?", guide: "One recommended action. Editable, ignorable." },
+  { id: "outcome", glyph: "🌱", label: "What is the likely outcome?", guide: "Why Frassy suggested it." },
+] as const;
+
+export const FOUNDER_DECIDES_NOTE =
+  "Frassy recommends. You decide. Every suggestion can be edited or ignored.";
+
+/* ── ❤️ What do they need ───────────────────────────────────────────────── */
+
+export type MemberNeed =
+  | "encouragement"
+  | "recognition"
+  | "guidance"
+  | "accountability"
+  | "celebration"
+  | "rest"
+  | "resources";
+
+export const NEED_META: Record<MemberNeed, { glyph: string; label: string; plain: string }> = {
+  encouragement: { glyph: "💬", label: "Encouragement", plain: "A kind word, with no task attached." },
+  recognition: { glyph: "👀", label: "Recognition", plain: "To be seen. Quiet consistency is easy to miss." },
+  guidance: { glyph: "🧭", label: "Guidance", plain: "Direction on what to do next." },
+  accountability: { glyph: "🤝", label: "Accountability", plain: "Someone expecting them to finish." },
+  celebration: { glyph: "🎉", label: "Celebration", plain: "A real milestone deserves a real moment." },
+  rest: { glyph: "🌙", label: "Rest", plain: "They are pushing hard. Protect them from more pressure." },
+  resources: { glyph: "🧰", label: "Resources", plain: "Tools, credits or a vault they don't have yet." },
+};
+
+/** Frassy's read on the member's current opportunity. */
+export function memberNeed(m: MemberSignals, tone: SuccessTone): MemberNeed {
+  if (m.booksPublished > 0 || m.revenue === "first") return "celebration";
+  if (m.daysQuiet >= 14) return "encouragement";
+  if (m.daysQuiet >= 7) return "encouragement";
+  if (m.moneyMovesActive >= 3 && m.moneyMovesCompleted === 0) return "guidance";
+  if (m.moneyMovesActive > 0 && m.moneyMovesCompleted === 0) return "accountability";
+  if (m.dailyStreak >= 21 && m.progress < 50) return "recognition";
+  if (m.dailyStreak >= 30 && m.moneyMovesActive >= 2) return "rest";
+  if (m.blueprintProgress < 25 && !m.vaults.length) return "resources";
+  if (tone === "thriving") return "recognition";
+  if (tone === "encouragement") return "encouragement";
+  return "recognition";
+}
+
+/* ── 📈 Why: observable behaviours only ─────────────────────────────────── */
+
+export function observedBehaviours(m: MemberSignals): string[] {
+  const out: string[] = [];
+  if (m.dailyStreak > 0)
+    out.push(`Completed ${m.dailyStreak} Daily session${m.dailyStreak === 1 ? "" : "s"} consecutively.`);
+  if (m.daysQuiet >= 3)
+    out.push(`Hasn't opened their Daily in ${m.daysQuiet} day${m.daysQuiet === 1 ? "" : "s"}.`);
+  if (m.moneyMovesCompleted > 0)
+    out.push(`Completed ${m.moneyMovesCompleted} Money Move${m.moneyMovesCompleted === 1 ? "" : "s"}.`);
+  if (m.moneyMovesActive > 0)
+    out.push(`${m.moneyMovesActive} Money Move${m.moneyMovesActive === 1 ? " is" : "s are"} still open.`);
+  if (m.projectsCompleted > 0)
+    out.push(`Finished ${m.projectsCompleted} project${m.projectsCompleted === 1 ? "" : "s"}.`);
+  if (m.booksPublished > 0)
+    out.push(`Published ${m.booksPublished} book${m.booksPublished === 1 ? "" : "s"} from their journey.`);
+  if (m.booksInProgress > 0)
+    out.push(`${m.booksInProgress} book${m.booksInProgress === 1 ? " is" : "s are"} in progress.`);
+  if (m.revenue === "first") out.push("Reached their first online income milestone.");
+  else if (m.revenue !== "none") out.push(`Earned in the ${revenueBandLabel(m.revenue)} range.`);
+  if (m.blueprintProgress > 0) out.push(`Business blueprint is ${m.blueprintProgress}% complete.`);
+  if (m.vaults.length) out.push(`Active Business Vaults: ${m.vaults.join(", ")}.`);
+  return out.length ? out : ["No activity recorded yet — this member has not started."];
+}
+
+/* ── 🎯 What should the Founder do ──────────────────────────────────────── */
+
+export type FounderAction = {
+  id: "celebrate" | "encourage" | "credits" | "vault" | "conversation" | "note";
+  glyph: string;
+  label: string;
+  detail: string;
+};
+
+const ACTION = {
+  celebrate: (detail: string): FounderAction => ({ id: "celebrate", glyph: "👏", label: "Celebrate a milestone", detail }),
+  encourage: (detail: string): FounderAction => ({ id: "encourage", glyph: "💬", label: "Send encouragement", detail }),
+  credits: (detail: string): FounderAction => ({ id: "credits", glyph: "🎁", label: "Award bonus credits", detail }),
+  vault: (detail: string): FounderAction => ({ id: "vault", glyph: "📚", label: "Recommend a Business Vault", detail }),
+  conversation: (detail: string): FounderAction => ({ id: "conversation", glyph: "🤝", label: "Schedule a Founder conversation", detail }),
+  note: (detail: string): FounderAction => ({ id: "note", glyph: "📝", label: "Leave a personal note", detail }),
+};
+
+/**
+ * Up to three recommendations, best first. Frassy never assumes the Founder
+ * wants to intervene — these are offers, not instructions.
+ */
+export function founderActions(m: MemberSignals, need: MemberNeed): FounderAction[] {
+  const first = m.name.split(" ")[0] || m.name;
+  switch (need) {
+    case "celebration":
+      return [
+        ACTION.celebrate(
+          m.booksPublished > 0
+            ? `${first} published a book. Celebrate it publicly, with their permission.`
+            : `${first} earned their first income. First money deserves a real message.`,
+        ),
+        ACTION.note(`Write ${first} a short personal note about what this milestone means.`),
+        ACTION.credits("Award bonus credits so the next build starts with momentum."),
+      ];
+    case "encouragement":
+      return [
+        ACTION.encourage(
+          m.daysQuiet >= 14
+            ? `${first} has been quiet for ${m.daysQuiet} days. One warm message, no task attached.`
+            : `A short encouraging message would likely restart ${first}.`,
+        ),
+        ACTION.note(`Leave ${first} a personal note they'll see on their next Daily.`),
+        ACTION.conversation(`Offer ${first} fifteen minutes with you.`),
+      ];
+    case "accountability":
+      return [
+        ACTION.conversation(`Ask ${first} which single Money Move they'll finish this week.`),
+        ACTION.encourage("Finishing one thing matters more than starting another."),
+      ];
+    case "guidance":
+      return [
+        ACTION.vault(`${first} has several things open at once. Point them at one vault and one path.`),
+        ACTION.conversation(`Help ${first} choose what to drop, not what to add.`),
+      ];
+    case "recognition":
+      return [
+        ACTION.note(`Tell ${first} you noticed their consistency. Steady members are easy to overlook.`),
+        ACTION.celebrate(`Recognise ${first}'s ${m.dailyStreak}-day streak.`),
+      ];
+    case "rest":
+      return [
+        ACTION.note(`Tell ${first} it's fine to pause. Protect them from more pressure this week.`),
+        ACTION.encourage("Acknowledge the effort without adding another goal."),
+      ];
+    case "resources":
+    default:
+      return [
+        ACTION.vault(`${first} is early. Recommend one Business Vault that fits what they already know.`),
+        ACTION.credits("Award starter credits so the first build costs them nothing."),
+      ];
+  }
+}
+
+/* ── 🌱 What is the likely outcome ──────────────────────────────────────── */
+
+export function likelyOutcome(m: MemberSignals, need: MemberNeed): string {
+  switch (need) {
+    case "celebration":
+      return "Recognising this achievement now is likely to reinforce consistent publishing and selling habits.";
+    case "encouragement":
+      return m.daysQuiet >= 14
+        ? "This member has drifted rather than quit. A personal message now measurably reduces the risk of them leaving for good."
+        : "This member has remained engaged despite slow progress. Encouragement now may reduce the risk of disengagement.";
+    case "accountability":
+      return "Work is started but unfinished. A named commitment usually converts one open Money Move into a completed one.";
+    case "guidance":
+      return "Too many open threads is the most common cause of stalling. Narrowing focus usually restores completion.";
+    case "recognition":
+      return "Consistency without visible reward fades. Being noticed by you tends to extend the streak.";
+    case "rest":
+      return "Protecting a hard-working member from more pressure prevents the burnout drop-off that usually follows.";
+    case "resources":
+    default:
+      return "Early members stall on the first step, not the hard ones. Removing cost and choice usually produces a first build.";
+  }
+}
+
+/**
+ * Ordering weight. The Founder should never have to search for opportunities
+ * to make a positive impact — the highest-impact people rise to the top.
+ */
+export function coachingPriority(m: MemberSignals, need: MemberNeed, tone: SuccessTone): number {
+  let score = 0;
+  if (tone === "support") score += 100;
+  if (need === "celebration") score += 90;
+  if (m.daysQuiet >= 21) score += 60;
+  else if (m.daysQuiet >= 7) score += 40;
+  if (need === "accountability") score += 35;
+  if (m.progress >= 55 && m.progress < 75) score += 30; // close to a milestone
+  if (m.dailyStreak >= 21) score += 25; // exceptional consistency
+  if (need === "guidance") score += 20;
+  if (need === "resources") score += 15;
+  return score;
 }

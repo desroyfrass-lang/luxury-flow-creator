@@ -7,10 +7,14 @@ import { founderSuccessOverview } from "@/lib/founder/success.functions";
 import {
   FOUNDER_CONFIDENTIAL_BANNER,
   FOUNDER_CONFIDENTIAL_LABEL,
+  FOUNDER_COACHING_PRINCIPLE,
+  FOUNDER_COACHING_QUESTIONS,
+  FOUNDER_DECIDES_NOTE,
   FOUNDER_MAY_VIEW,
   FOUNDER_RESPONSIBILITY,
   FOUNDER_VISIBILITY_PRINCIPLE,
   JOURNEY_STAGES,
+  NEED_META,
   NEVER_VISIBLE_TO_FOUNDER,
   TONE_META,
   journeyFill,
@@ -41,29 +45,93 @@ function Journey({ progress }: { progress: number }) {
 function MemberRow({ m }: { m: MemberProgress }) {
   const [open, setOpen] = useState(false);
   const tone = TONE_META[m.tone];
+  const need = NEED_META[m.need];
+  const primary = m.founderActions[0];
   return (
     <li className="rounded-xl border border-border/70 p-3">
+      {/* 👤 Who */}
       <button onClick={() => setOpen((o) => !o)} className="flex w-full items-start justify-between gap-3 text-left">
         <span>
           <span className="text-sm font-semibold">
             {tone.glyph} {m.name}
           </span>
-          <span className="mt-0.5 block text-xs text-muted-foreground">{m.insight}</span>
+          <span className="mt-0.5 block text-[11px] text-muted-foreground">
+            {[
+              m.handle ? `Frass Card @${m.handle}` : "Frass Card not claimed",
+              m.builderStage ?? null,
+              m.achievementStyle ? `${m.achievementStyle} style` : null,
+              m.learningLevel ? `Learns: ${m.learningLevel}` : null,
+              m.momentumLevel ? `Momentum: ${m.momentumLevel}` : null,
+            ]
+              .filter(Boolean)
+              .join(" · ")}
+          </span>
+          {m.vaults.length ? (
+            <span className="mt-1 flex flex-wrap gap-1">
+              {m.vaults.map((v) => (
+                <span key={v} className="rounded-full border border-border px-2 py-0.5 text-[10px] text-muted-foreground">
+                  📦 {v}
+                </span>
+              ))}
+            </span>
+          ) : null}
+          <span className="mt-1 block text-xs text-muted-foreground">{m.insight}</span>
         </span>
         <span className="shrink-0 text-[11px] text-muted-foreground">{m.progress}%</span>
       </button>
 
-      <p className="mt-2 rounded-lg border border-[color:var(--gold)]/40 bg-[color:var(--gold)]/5 px-3 py-2 text-xs">
-        <span className="font-bold uppercase tracking-wide text-[color:var(--gold)]">
-          Recommended action
-        </span>
-        <span className="mt-0.5 block text-muted-foreground">{m.recommendedAction}</span>
+      {/* ❤️ What do they need */}
+      <p className="mt-2 text-xs">
+        <span className="font-semibold">
+          {need.glyph} Needs {need.label.toLowerCase()}
+        </span>{" "}
+        <span className="text-muted-foreground">— {need.plain}</span>
       </p>
 
+      {/* 🎯 What should the Founder do */}
+      {primary ? (
+        <p className="mt-2 rounded-lg border border-[color:var(--gold)]/40 bg-[color:var(--gold)]/5 px-3 py-2 text-xs">
+          <span className="font-bold uppercase tracking-wide text-[color:var(--gold)]">
+            {primary.glyph} {primary.label}
+          </span>
+          <span className="mt-0.5 block text-muted-foreground">{primary.detail}</span>
+        </p>
+      ) : null}
+
+      {/* 🌱 What is the likely outcome */}
+      <p className="mt-1.5 text-[11px] italic text-muted-foreground">🌱 {m.likelyOutcome}</p>
 
       {open ? (
         <div className="mt-3 space-y-3">
           <Journey progress={m.progress} />
+
+          {/* 📈 Why — observable behaviours only */}
+          <div className="rounded-lg border border-border/60 p-3">
+            <p className="text-[11px] font-bold uppercase tracking-wide">📈 Why Frassy reads them this way</p>
+            <ul className="mt-1 space-y-0.5 text-xs text-muted-foreground">
+              {m.observedBehaviours.map((b) => (
+                <li key={b}>• {b}</li>
+              ))}
+            </ul>
+          </div>
+
+          {m.founderActions.length > 1 ? (
+            <div className="rounded-lg border border-border/60 p-3">
+              <p className="text-[11px] font-bold uppercase tracking-wide">🎯 Other things you could do</p>
+              <ul className="mt-1 space-y-1 text-xs text-muted-foreground">
+                {m.founderActions.slice(1).map((a) => (
+                  <li key={a.id}>
+                    <span className="font-semibold text-foreground">
+                      {a.glyph} {a.label}
+                    </span>{" "}
+                    — {a.detail}
+                  </li>
+                ))}
+              </ul>
+              <p className="mt-2 text-[10px] italic text-muted-foreground">{FOUNDER_DECIDES_NOTE}</p>
+            </div>
+          ) : null}
+
           <dl className="grid gap-x-4 gap-y-1 text-xs sm:grid-cols-2">
             <Line label="Momentum" value={tone.label} />
             <Line label="Achievement style" value={m.achievementStyle ?? "Not chosen yet"} />
@@ -82,7 +150,7 @@ function MemberRow({ m }: { m: MemberProgress }) {
             <Line label="Revenue range" value={revenueBandLabel(m.revenue)} />
           </dl>
           <div className="rounded-lg border border-border/60 bg-muted/30 p-3">
-            <p className="text-[11px] font-bold uppercase tracking-wide">Why Frassy reads them this way</p>
+            <p className="text-[11px] font-bold uppercase tracking-wide">Frassy's reasoning</p>
             <p className="mt-1 text-xs text-muted-foreground">{m.archetypeReason}</p>
           </div>
           <p className="text-[11px] text-muted-foreground">
@@ -95,6 +163,7 @@ function MemberRow({ m }: { m: MemberProgress }) {
     </li>
   );
 }
+
 
 function Line({ label, value }: { label: string; value: string }) {
   return (
@@ -123,16 +192,30 @@ export function FounderSuccessPanel() {
 
       <header>
         <p className="text-xs uppercase tracking-[0.3em] text-[color:var(--gold)]">
-          FRASS-0547 · FRASS-0548
+          FRASS-0547 · FRASS-0548 · FRASS-0550
         </p>
         <h2 className="mt-2 text-2xl font-black uppercase tracking-tight">
           Member Progress Radar
         </h2>
         <p className="mt-2 text-sm text-muted-foreground">
-          Measure progress. Protect privacy. You see how members are doing — never their bank
-          accounts.
+          Measure progress. Protect privacy. Lead people, not dashboards. You see how members are
+          doing — never their bank accounts.
         </p>
       </header>
+
+      <div className="rounded-2xl border border-border/70 p-4">
+        <p className="text-xs font-bold uppercase tracking-wide">
+          Every member answers five questions
+        </p>
+        <ul className="mt-2 grid gap-1 text-xs text-muted-foreground sm:grid-cols-2">
+          {FOUNDER_COACHING_QUESTIONS.map((q) => (
+            <li key={q.id}>
+              {q.glyph} <span className="font-semibold text-foreground">{q.label}</span> {q.guide}
+            </li>
+          ))}
+        </ul>
+        <p className="mt-2 text-[11px] italic text-muted-foreground">{FOUNDER_DECIDES_NOTE}</p>
+      </div>
 
       <div className="rounded-2xl border border-[color:var(--gold)]/50 bg-[color:var(--gold)]/5 p-4">
         <p className="text-xs font-bold uppercase tracking-wide text-[color:var(--gold)]">
@@ -248,6 +331,7 @@ export function FounderSuccessPanel() {
       </div>
 
       <p className="text-xs italic text-muted-foreground">{FOUNDER_VISIBILITY_PRINCIPLE}</p>
+      <p className="text-xs italic text-muted-foreground">{FOUNDER_COACHING_PRINCIPLE}</p>
 
     </section>
   );
