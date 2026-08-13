@@ -1,6 +1,7 @@
 // Frass Trail — every page keeps a footprint home.
 // Renders a back arrow plus a clickable breadcrumb trail on every route,
 // so no page in Frass District or Frass Hill is ever a dead end.
+import { useEffect, useState } from "react";
 import { Link, useRouter, useRouterState } from "@tanstack/react-router";
 import { ArrowLeft, Home } from "lucide-react";
 
@@ -98,6 +99,26 @@ function labelFor(segment: string) {
 export function FrassTrail() {
   const router = useRouter();
   const pathname = useRouterState({ select: (s) => s.location.pathname });
+  // FRASS-0553 — the trail sits under the site header, never behind it, so the
+  // Conversation Dock can stay vertically aligned directly beneath it.
+  const [top, setTop] = useState(84);
+
+  useEffect(() => {
+    const measure = () => {
+      const header = document.querySelector("header");
+      const bottom = header ? header.getBoundingClientRect().bottom : 0;
+      setTop(Math.round(Math.max(84, bottom + 8)));
+    };
+    measure();
+    const t = window.setTimeout(measure, 400);
+    window.addEventListener("resize", measure);
+    window.addEventListener("scroll", measure, { passive: true });
+    return () => {
+      window.clearTimeout(t);
+      window.removeEventListener("resize", measure);
+      window.removeEventListener("scroll", measure);
+    };
+  }, [pathname]);
 
   if (pathname === "/" || HIDDEN_PREFIXES.some((p) => pathname === p || pathname.startsWith(p + "/") || pathname.startsWith(p))) {
     return null;
@@ -125,7 +146,8 @@ export function FrassTrail() {
   return (
     <nav
       aria-label="Breadcrumb"
-      className="pointer-events-none fixed left-0 right-0 top-[84px] z-40 px-3 sm:px-6 lg:px-12"
+      style={{ top }}
+      className="pointer-events-none fixed left-0 right-0 z-40 px-3 sm:px-6 lg:px-12"
     >
       <div className="pointer-events-auto mx-auto flex max-w-[1600px] items-center gap-1.5 overflow-x-auto rounded-full border border-border/60 bg-background/75 px-2 py-1.5 text-[10px] uppercase tracking-[0.18em] text-muted-foreground shadow-lg backdrop-blur-xl sm:w-fit sm:text-[11px]">
         <button

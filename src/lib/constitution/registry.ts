@@ -348,7 +348,26 @@ export const AMENDMENTS: Amendment[] = [
     ],
     extends: ["FRASS-0547", "FRASS-0548", "FRASS-0549"],
   },
+  {
+    ref: "FRASS-0553",
+    title: "Frassy Conversation Dock",
+    intent:
+      "One place, every conversation. Every conversational page in Frass shows the same Conversation Dock, fixed in the top-right corner directly beneath the navigation chip: Talk to Frassy (always the primary action), Pause, Resume, Stop, a voice animation and a status indicator reading Listening, Thinking, Speaking or Idle. It belongs to the page chrome — it never overlaps logos, headings, content or mobile navigation, and wraps gracefully on every screen size.",
+    targetProblem:
+      "Voice controls appeared in different places on different pages, so members had to hunt for the microphone and it never felt like the same Frassy everywhere. Conversation is the primary way people experience Frass; it cannot be hidden inside the interface.",
+    areas: ["Frassy", "Platform"],
+    categories: ["usability", "accessibility"],
+    implementedAt: "2026-08-13",
+    evidence: [
+      "src/components/voice/frassy-conversation-dock.tsx",
+      "src/lib/voice/dock-bus.ts",
+      "src/components/frassy-chat.tsx",
+      "src/routes/__root.tsx",
+    ],
+    extends: ["FRASS-0551"],
+  },
 ];
+
 
 export function amendmentByRef(ref: string): Amendment | undefined {
   const needle = ref.trim().toUpperCase();

@@ -23,6 +23,7 @@ import { useFrassyContext } from "@/hooks/use-frassy-context";
 import { useIsAdminStatus } from "@/hooks/use-is-admin";
 import { FrassyComposer } from "@/components/workspace/frassy-composer";
 import { usePushToTalk } from "@/hooks/use-push-to-talk";
+import { onTalkRequest } from "@/lib/voice/dock-bus";
 import { SpeechControls } from "@/components/voice/speech-controls";
 import { VoiceFeedbackButton } from "@/components/feedback/voice-feedback";
 import { useFrassyStartup } from "@/hooks/use-frassy-startup";
@@ -74,6 +75,10 @@ type Msg = {
   // FRASS-0513 — where Frassy just took them (or is offering to take them).
   place?: { key: string; label: string; path: string } | null;
 };
+
+// FRASS-0553 — when a page embeds Frassy inline (The Daily, Workshop), the
+// embedded surface owns the dock microphone; otherwise the floating panel does.
+let embeddedSurfaces = 0;
 
 let seq = 0;
 const nextId = () => `m${++seq}-${Date.now()}`;
@@ -156,6 +161,25 @@ export function FrassyChat({
     window.addEventListener("frassy-voice-enable", enableVoice);
     return () => window.removeEventListener("frassy-voice-enable", enableVoice);
   }, [startup]);
+
+  // FRASS-0553 — dock microphone → this conversation. The ref keeps the
+  // listener bound to the current turn state without re-subscribing.
+  const micHandlerRef = useRef<() => void>(() => {});
+  useEffect(() => {
+    if (embedded) embeddedSurfaces += 1;
+    return () => {
+      if (embedded) embeddedSurfaces -= 1;
+    };
+  }, [embedded]);
+  useEffect(
+    () =>
+      onTalkRequest(() => {
+        if (!embedded && embeddedSurfaces > 0) return;
+        micHandlerRef.current();
+      }),
+    [embedded],
+  );
+
 
   useEffect(() => {
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" });
@@ -372,6 +396,15 @@ export function FrassyChat({
     }
     if (voice.phase === "idle" && !loading) await voice.startRecording();
   }
+
+  // FRASS-0553 — the Conversation Dock is the one place members reach for
+  // Frassy. Its microphone drives this single conversation surface.
+  micHandlerRef.current = () => {
+    if (!open && !embedded) setOpen(true);
+    void toggleMic();
+  };
+
+
 
   if (!open && !embedded) {
     return (
