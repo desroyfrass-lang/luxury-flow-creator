@@ -1630,3 +1630,26 @@ route list, diagnosis, incident records, pattern learning, safe repair execution
 (`diagnose_issue`, `apply_safe_repair`, `repair_authority_info`), the constitutional prompt
 layer in `src/lib/repair/prompt.ts`, and the Repair Center inside the Founder Security Center
 (`src/components/founder/repair-center.tsx`). Records: `repair_incidents`, `repair_patterns`.
+
+## FRASS-0513 — Welcome Hall Owns Onboarding
+
+No member is ever instructed to type, guess or edit a URL. Paths such as
+`/onboarding`, `/room`, `/daily`, `/money-moves` and `/marketplace` are
+implementation details, never member-facing instructions.
+
+- Welcome Hall carries one prominent, always-visible **Start My Journey**
+  action. Signed out, it routes through sign-in and returns to onboarding.
+- Frassy navigates on the member's behalf via the `open_place` tool. Any reply
+  that quotes a slash-path to a member is a UX defect.
+- Core destinations are declared once in `src/lib/navigation/core-routes.ts`.
+  Navigation tools, spoken matching and the audit all read from that registry.
+
+**In plain English:** the member should never need to know the address of a
+room in their own house. Frassy opens the door.
+
+## FRASS-0514 — Core Route Audit (Launch Blocking)
+
+Every core destination is verified against the live route table before any
+production publish (Founder console → Link & card checker → Core route audit).
+A broken ordinary link is cosmetic; a core route that does not resolve blocks
+the publish, because it breaks a member's first journey.
