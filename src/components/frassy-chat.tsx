@@ -83,6 +83,22 @@ let embeddedSurfaces = 0;
 let seq = 0;
 const nextId = () => `m${++seq}-${Date.now()}`;
 
+// FRASS-0557 §3 — Context Awareness. The beacon knows which room you are in,
+// so members never get a shopping prompt while they are working in the Daily.
+const BEACON_INVITES: Array<[RegExp, string]> = [
+  [/^\/(daily|room)/, "Let's finish today's Daily together."],
+  [/^\/(workshop|creation|studio|business-builder)/, "Ready to build? Tell me what you're creating."],
+  [/^\/(money-moves|first-30-days|financial-center)/, "Let's find your next income opportunity."],
+  [/^\/(marketplace|shop|frass-district|frass-kicks|frass-drip|product|collection|cart)/, "Looking for something to buy — or something to sell?"],
+  [/^\/(founder|command|admin)/, "Founder Mode active. What would you like to review?"],
+  [/^\/academy/, "What would you like to learn today?"],
+];
+
+function beaconInviteFor(pathname: string): string {
+  for (const [pattern, line] of BEACON_INVITES) if (pattern.test(pathname)) return line;
+  return "I'm right here. Tap to talk with me.";
+}
+
 export function FrassyChat({
   embedded = false,
   tone,
@@ -118,6 +134,7 @@ export function FrassyChat({
   const ctx = useFrassyContext();
   const { isAdmin } = useIsAdminStatus();
   const voice = usePushToTalk();
+  const beaconInvite = beaconInviteFor(ctx.pathname ?? "/");
 
   // Welcome Hall is Frassy's front desk. Open the one shared panel there;
   // every other public page keeps the unobtrusive companion beacon.
