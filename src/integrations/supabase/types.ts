@@ -4137,6 +4137,8 @@ export type Database = {
       }
       repair_incidents: {
         Row: {
+          amendment_note: string | null
+          amendment_ref: string | null
           blocking_launch: boolean
           category: string
           context_path: string | null
@@ -4148,6 +4150,10 @@ export type Database = {
           pattern_signature: string | null
           repairs_applied: Json
           reported_text: string
+          resolution_mode: string | null
+          resolution_note: string | null
+          resolved_at: string | null
+          resolved_by: string | null
           root_cause: string | null
           severity: string
           status: string
@@ -4155,6 +4161,8 @@ export type Database = {
           user_id: string | null
         }
         Insert: {
+          amendment_note?: string | null
+          amendment_ref?: string | null
           blocking_launch?: boolean
           category?: string
           context_path?: string | null
@@ -4166,6 +4174,10 @@ export type Database = {
           pattern_signature?: string | null
           repairs_applied?: Json
           reported_text: string
+          resolution_mode?: string | null
+          resolution_note?: string | null
+          resolved_at?: string | null
+          resolved_by?: string | null
           root_cause?: string | null
           severity?: string
           status?: string
@@ -4173,6 +4185,8 @@ export type Database = {
           user_id?: string | null
         }
         Update: {
+          amendment_note?: string | null
+          amendment_ref?: string | null
           blocking_launch?: boolean
           category?: string
           context_path?: string | null
@@ -4184,6 +4198,10 @@ export type Database = {
           pattern_signature?: string | null
           repairs_applied?: Json
           reported_text?: string
+          resolution_mode?: string | null
+          resolution_note?: string | null
+          resolved_at?: string | null
+          resolved_by?: string | null
           root_cause?: string | null
           severity?: string
           status?: string
