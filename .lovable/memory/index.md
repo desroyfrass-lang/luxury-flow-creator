@@ -167,3 +167,4 @@ Creative series are intellectual property produced by Frassy from a Blueprint, n
 - [FRASS-0537/0538 Frassy Everywhere & Content Manager](mem://features/frass-0537-0538-channels-and-content-manager) — WhatsApp-first multi-channel Frassy, honesty boundary on calls, content-by-conversation vs engineering split
 - [FRASS-0544 Plain English Translation Engine](mem://features/frass-0544-plain-english-engine) — Five-step explanation structure, Technical vs Explain Like I'm New toggle, tone rules
 - [FRASS-0545 Adaptive Learning Levels](mem://features/frass-0545-adaptive-learning-levels) — Four learning depths, remembered default in Settings, per-answer switching, Frassy recommends only
+- [FRASS-0546 Adaptive Momentum Engine](mem://features/frass-0546-adaptive-momentum) — Four earned momentum levels, five achievement styles, optional dated challenges, automatic pressure release
