@@ -6,6 +6,7 @@ import { tool } from "ai";
 import { z } from "zod";
 import { fetchProducts, storefrontApiRequest } from "@/lib/shopify";
 import { buildRepairTools, type RepairToolContext } from "@/lib/frassy-repair-tools.server";
+import { buildBlueprintTools } from "@/lib/frassy-blueprint-tools.server";
 import { buildFounderTools } from "@/lib/frassy-founder-tools.server";
 import { buildNavigationTools } from "@/lib/frassy-navigation-tools.server";
 
@@ -220,7 +221,9 @@ export const lookupOrder = tool({
 
 // ------- Registry -------
 
-export function buildFrassyTools(ctx: RepairToolContext & { founder?: boolean } = {}) {
+export function buildFrassyTools(
+  ctx: RepairToolContext & { founder?: boolean; accessToken?: string | null } = {},
+) {
   return {
     search_products: searchProducts,
     list_trending: listTrending,
@@ -230,6 +233,9 @@ export function buildFrassyTools(ctx: RepairToolContext & { founder?: boolean } 
     ...buildNavigationTools(),
     // FRASS-0515 — Frass Repair Engine.
     ...buildRepairTools(ctx),
+    // FRASS-0532-B — Member Success Blueprints. Personalization by conversation
+    // instead of engineering. Only attached for a verified session.
+    ...buildBlueprintTools({ accessToken: ctx.accessToken }),
     // FRASS-0520/0521 — Founder Design Authority and Change Advisor.
     // Only ever attached when the server has verified the caller is the Founder.
     ...(ctx.founder ? buildFounderTools() : {}),

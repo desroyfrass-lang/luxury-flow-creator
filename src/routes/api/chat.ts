@@ -3,6 +3,7 @@ import { convertToModelMessages, generateText, stepCountIs } from "ai";
 import { createLovableAiGatewayProvider } from "@/lib/ai-gateway.server";
 import { buildFrassyTools } from "@/lib/frassy-tools.server";
 import { isFounderIdentityDiscovery } from "@/lib/journey-prompts.server";
+import { ONLINE_FIRST_PROMPT } from "@/lib/business/online-first";
 import {
   FRASSY_VOICE_CONSTITUTION,
   frassyAuthorizationLayer,
@@ -666,6 +667,9 @@ export const Route = createFileRoute("/api/chat")({
         // validated session (and, for Founder, a verified admin role) grants it.
         const requested = body.experienceContext;
         let experienceContext: "founder" | "builder" | "storefront" = "storefront";
+        // FRASS-0532-B — only a token the server has just validated may reach
+        // the Blueprint tools; RLS then decides what it can touch.
+        let verifiedToken: string | null = null;
         if (requested === "founder" || requested === "builder") {
           const authHeader = request.headers.get("authorization") ?? "";
           const token = authHeader.startsWith("Bearer ") ? authHeader.slice(7).trim() : "";
@@ -683,6 +687,7 @@ export const Route = createFileRoute("/api/chat")({
               const { data: claims } = await supa.auth.getClaims(token);
               const userId = claims?.claims?.sub;
               if (userId) {
+                verifiedToken = token;
                 if (requested === "builder") {
                   experienceContext = "builder";
                 } else {
@@ -787,11 +792,26 @@ export const Route = createFileRoute("/api/chat")({
           ? `\n\n${KANKO_MEMBER_DNA}`
           : "";
 
+        const BLUEPRINT_WORKFLOW = `━━━ FRASS-0532-B — MEMBER SUCCESS BLUEPRINTS ━━━
+Personalization is knowledge, not code. Each member has a Blueprint: who they are,
+their financial urgency, long-term vision, strengths, technology comfort,
+communication style, Daily priorities, Money Moves philosophy, Business Vaults,
+learning style, motivation style, Simplified View preference and accessibility
+needs. Read the Blueprint, then generate their experience from it.
+When asked to create or change someone's Daily, Money Moves, pace or tone, use the
+Blueprint tools — that is configuration, not engineering. Never say something must
+be built when a Blueprint change would do it.
+Founder workflow: Idea → Frassy → 🟢 I can do this now · 🟡 I can configure this ·
+🟠 I need your approval · 🔴 This needs engineering. Only 🔴 becomes an engineering
+request, and only after analyze_change_request.
+A Blueprint may change words, order and pace — never architecture, never security
+or legal notices, never a member's capability.`;
+
         const basePrompt =
           experienceContext === "founder"
-            ? `${SYSTEM_PROMPT}\n\n${FRASS_LINK}\n\n${FOUNDER_CONTEXT}\n\n${CURATION_BRIEF}\n\n${GLOBAL_COMMERCE}\n\n${FOR_US_COMMUNITY}\n\n${STORYTELLING_ENGINE}\n\n${PLAIN_LANGUAGE_PROTOCOL}\n\n${FRASS_PLATFORM_ATLAS}\n\n${FIRST_PARTNER_PROTOCOL}\n\n${FRASS_ECONOMY}\n\n${FRASS_SERVICES_MARKETPLACE}\n\n${FRASS_COMPLIANCE}\n\n${FRASS_EMPLOYMENT_PHILOSOPHY}\n\n${FRASS_THREE_LAYERS}\n\n${FRASS_DAILY_BLUEPRINTS}\n\n${FRASS_HIDDEN_ASSETS}\n\n${FRASS_FOUNDING_PARTNERS}\n\n${FRASS_RIGHTS_AND_TRUST}\n\n${FRASS_CREATIVE_IDENTITY}\n\n${FRASS_REPAIR_ENGINE}\n\n${FRASS_REPAIR_FOUNDER}${kankoDna}`
+            ? `${SYSTEM_PROMPT}\n\n${FRASS_LINK}\n\n${FOUNDER_CONTEXT}\n\n${CURATION_BRIEF}\n\n${GLOBAL_COMMERCE}\n\n${FOR_US_COMMUNITY}\n\n${STORYTELLING_ENGINE}\n\n${PLAIN_LANGUAGE_PROTOCOL}\n\n${FRASS_PLATFORM_ATLAS}\n\n${FIRST_PARTNER_PROTOCOL}\n\n${FRASS_ECONOMY}\n\n${FRASS_SERVICES_MARKETPLACE}\n\n${FRASS_COMPLIANCE}\n\n${FRASS_EMPLOYMENT_PHILOSOPHY}\n\n${ONLINE_FIRST_PROMPT}\n\n${BLUEPRINT_WORKFLOW}\n\n${FRASS_THREE_LAYERS}\n\n${FRASS_DAILY_BLUEPRINTS}\n\n${FRASS_HIDDEN_ASSETS}\n\n${FRASS_FOUNDING_PARTNERS}\n\n${FRASS_RIGHTS_AND_TRUST}\n\n${FRASS_CREATIVE_IDENTITY}\n\n${FRASS_REPAIR_ENGINE}\n\n${FRASS_REPAIR_FOUNDER}${kankoDna}`
             : experienceContext === "builder"
-              ? `${SYSTEM_PROMPT}\n\n${FRASS_LINK}\n\n${CURATION_BRIEF}\n\n${GLOBAL_COMMERCE}\n\n${FOR_US_COMMUNITY}\n\n${PLAIN_LANGUAGE_PROTOCOL}\n\n${FRASS_PLATFORM_ATLAS}\n\n${FIRST_PARTNER_PROTOCOL}\n\n${FRASS_ECONOMY}\n\n${FRASS_SERVICES_MARKETPLACE}\n\n${FRASS_COMPLIANCE}\n\n${FRASS_EMPLOYMENT_PHILOSOPHY}\n\n${FRASS_THREE_LAYERS}\n\n${FRASS_DAILY_BLUEPRINTS}\n\n${FRASS_HIDDEN_ASSETS}\n\n${FRASS_FOUNDING_PARTNERS}\n\n${FRASS_RIGHTS_AND_TRUST}\n\n${FRASS_CREATIVE_IDENTITY}\n\n${FRASS_REPAIR_ENGINE}${kankoDna}`
+              ? `${SYSTEM_PROMPT}\n\n${FRASS_LINK}\n\n${CURATION_BRIEF}\n\n${GLOBAL_COMMERCE}\n\n${FOR_US_COMMUNITY}\n\n${PLAIN_LANGUAGE_PROTOCOL}\n\n${FRASS_PLATFORM_ATLAS}\n\n${FIRST_PARTNER_PROTOCOL}\n\n${FRASS_ECONOMY}\n\n${FRASS_SERVICES_MARKETPLACE}\n\n${FRASS_COMPLIANCE}\n\n${FRASS_EMPLOYMENT_PHILOSOPHY}\n\n${ONLINE_FIRST_PROMPT}\n\n${BLUEPRINT_WORKFLOW}\n\n${FRASS_THREE_LAYERS}\n\n${FRASS_DAILY_BLUEPRINTS}\n\n${FRASS_HIDDEN_ASSETS}\n\n${FRASS_FOUNDING_PARTNERS}\n\n${FRASS_RIGHTS_AND_TRUST}\n\n${FRASS_CREATIVE_IDENTITY}\n\n${FRASS_REPAIR_ENGINE}${kankoDna}`
 
               : `${SYSTEM_PROMPT}\n\n${FOR_US_COMMUNITY}\n\n${FRASS_ECONOMY}\n\n${FRASS_SERVICES_MARKETPLACE}\n\n${FRASS_COMPLIANCE}\n\n${FRASS_REPAIR_ENGINE}`;
 
@@ -856,6 +876,7 @@ export const Route = createFileRoute("/api/chat")({
               // device-specific problems become visible over time.
               client: clientHintFrom(request.headers.get("user-agent")),
               founder: experienceContext === "founder",
+              accessToken: verifiedToken,
             }),
             stopWhen: stepCountIs(6),
           });

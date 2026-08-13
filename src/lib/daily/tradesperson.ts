@@ -16,6 +16,11 @@
 
 import { ENTREPRENEURIAL_BLUEPRINT } from "./blueprints";
 import type { LayerId } from "@/lib/business/financial-layers";
+import {
+  rankOnlineFirst,
+  type EarningShape,
+  type OnlineFirstContext,
+} from "@/lib/business/online-first";
 
 export const TRADESPERSON_BLUEPRINT = ENTREPRENEURIAL_BLUEPRINT;
 
@@ -52,11 +57,14 @@ export function isTradespersonDaily(
 }
 
 /** The one question every interaction answers. */
-export const TRADESPERSON_QUESTION = "What's the easiest way to make money today?";
+// FRASS-0532-A — the question changed. It is no longer "the fastest way to make
+// money"; it is "the fastest way to financial freedom through online income."
+export const TRADESPERSON_QUESTION =
+  "What's the easiest way to earn online today — without picking up a tool?";
 
 export const TRADESPERSON_VISION =
-  "Your skill is already worth money. Frassy handles the computer part so people can find you, " +
-  "trust you, and pay you properly.";
+  "Your experience is already worth money. My job is to turn it into something that keeps earning " +
+  "online — guides, videos, recommendations and advice people pay for — while you enjoy your time.";
 
 /**
  * Certification honesty (Jamaica and everywhere else). Many excellent
@@ -99,65 +107,89 @@ export type TradeMove = {
   layer: LayerId;
   minutes: number;
   href: string;
+  /** FRASS-0532-A — how this move earns. Online and scalable comes first. */
+  shape: EarningShape;
 };
 
-/** Immediate income first, always. One at a time. */
+/**
+ * FRASS-0532-A — ONLINE-FIRST. These moves turn a lifetime of skill into
+ * digital assets, content, recommendations and remote advice. Hands-on work is
+ * listed last and only ever appears when the member asks for it or their
+ * situation requires it.
+ */
 export const TRADESPERSON_MOVES: TradeMove[] = [
   {
-    label: "Answer today's job enquiries",
-    why: "Fastest money on the table. I'll write the replies; you just say yes or no.",
-    layer: "immediate-income",
-    minutes: 10,
-    href: "/money-moves",
-  },
-  {
-    label: "Send one estimate you've been meaning to send",
-    why: "An estimate sitting in your head earns nothing. I'll write it out properly.",
-    layer: "immediate-income",
-    minutes: 15,
-    href: "/services",
-  },
-  {
-    label: "List one service people can book",
-    why: "Small repairs, call-outs, renovations — one clear service beats a long list.",
-    layer: "immediate-income",
-    minutes: 15,
-    href: "/services",
-  },
-  {
-    label: "Add photos of one finished job",
-    why: "Before and after pictures sell your work better than any advert.",
-    layer: "business-builder",
-    minutes: 15,
-    href: "/workspace/card",
-  },
-  {
-    label: "Ask one past customer for a review",
-    why: "One honest review from a real job is worth more than a certificate.",
-    layer: "business-builder",
-    minutes: 10,
-    href: "/workspace/card",
-  },
-  {
-    label: "Send the invoice for the last job",
-    why: "Work you already did should already be paid. I'll prepare it; you approve it.",
-    layer: "immediate-income",
-    minutes: 10,
-    href: "/financial-center",
-  },
-  {
-    label: "Record one thing you know, in your own voice",
-    why: "A safety check, a maintenance tip, a way to do it right. Later this can be sold.",
+    label: "Turn one thing you know into a guide people can buy",
+    why: "A safety checklist, a maintenance guide, an inspection form. Made once, sold many times.",
     layer: "financial-freedom",
     minutes: 15,
     href: "/vault",
+    shape: "digital-asset",
   },
   {
-    label: "Pass on a job you can't take — to someone you trust",
-    why: "You still benefit from work you send to a good tradesperson.",
+    label: "Record two minutes of advice in your own voice",
+    why: "You talk, I turn it into a video, an article and a post. Your face is optional.",
+    layer: "business-builder",
+    minutes: 10,
+    href: "/workspace/composer",
+    shape: "digital-asset",
+  },
+  {
+    label: "Recommend the tools you actually trust",
+    why: "Tools, safety gear, materials. You get paid when people buy on your word — no lifting.",
+    layer: "immediate-income",
+    minutes: 15,
+    href: "/affiliate",
+    shape: "leveraged",
+  },
+  {
+    label: "Open one paid online consultation slot",
+    why: "People pay for thirty minutes of your judgement, by video or voice. No travel, no site.",
+    layer: "immediate-income",
+    minutes: 15,
+    href: "/services",
+    shape: "online-service",
+  },
+  {
+    label: "Package what you know into a small course or membership",
+    why: "The step after guides: it keeps earning every month without you starting over.",
+    layer: "financial-freedom",
+    minutes: 20,
+    href: "/business-vaults",
+    shape: "recurring",
+  },
+  {
+    label: "Pass a job you don't want to a tradesperson you trust",
+    why: "You still benefit from work you send on — without picking up a tool.",
     layer: "business-builder",
     minutes: 10,
     href: "/services",
+    shape: "leveraged",
+  },
+  {
+    label: "Put your finished work where people can see it",
+    why: "Before-and-after photos are what make strangers trust you online.",
+    layer: "business-builder",
+    minutes: 15,
+    href: "/workspace/card",
+    shape: "digital-asset",
+  },
+  // ── Hands-on work. Hidden unless the member asks, or the day requires it.
+  {
+    label: "Answer today's job enquiries",
+    why: "Real money on the table. I'll write the replies; you just say yes or no.",
+    layer: "immediate-income",
+    minutes: 10,
+    href: "/money-moves",
+    shape: "offline-service",
+  },
+  {
+    label: "Send the invoice for the last job",
+    why: "Work you already did should already be paid. I prepare it, you approve it.",
+    layer: "immediate-income",
+    minutes: 10,
+    href: "/financial-center",
+    shape: "offline-service",
   },
 ];
 
@@ -165,21 +197,48 @@ export const TRADESPERSON_MOVES: TradeMove[] = [
 export const TRADESPERSON_MOVE_LIMIT = 3;
 export const TRADESPERSON_MINUTES_PER_DAY = 45;
 
-export function todaysTradeMoves(all: TradeMove[] = TRADESPERSON_MOVES): TradeMove[] {
-  const income = all.filter((m) => m.layer === "immediate-income");
-  const rest = all.filter((m) => m.layer !== "immediate-income");
-  return [...income, ...rest].slice(0, TRADESPERSON_MOVE_LIMIT);
+/**
+ * FRASS-0532-A — the constitutional order. Digital assets, recurring income and
+ * leveraged income first; hands-on work only by request or necessity.
+ */
+export function todaysTradeMoves(
+  ctxOrMoves: OnlineFirstContext | TradeMove[] = {},
+  maybeCtx: OnlineFirstContext = {},
+): TradeMove[] {
+  const all = Array.isArray(ctxOrMoves) ? ctxOrMoves : TRADESPERSON_MOVES;
+  const ctx = Array.isArray(ctxOrMoves) ? maybeCtx : ctxOrMoves;
+  return rankOnlineFirst(all, ctx).slice(0, TRADESPERSON_MOVE_LIMIT);
 }
+
+/** Unless asked, these never appear on this Daily (FRASS-0532-A). */
+export const TRADESPERSON_AVOID = [
+  "Local job boards",
+  "Construction contracts",
+  "Renovation projects",
+  "Manual electrical work",
+  "Physical labour",
+  "Daily commuting",
+];
 
 /** Knowledge-based income — expertise beyond physical labour. */
 export const KNOWLEDGE_PRODUCTS = [
-  "Home maintenance guides",
-  "Electrical and site safety checklists",
-  "Renovation planning consultations",
-  "Simple DIY courses",
-  "Video demonstrations",
-  "Voice coaching sessions for younger tradespeople",
+  "Electrical and site safety guides",
+  "Homeowner maintenance checklists",
+  "Renovation planning resources",
+  "Printable inspection forms",
+  "Digital reference manuals",
+  "Short educational videos and voice recordings",
+  "E-books and answers to the questions people always ask",
+  "Small courses, memberships and downloadable resources",
 ];
+
+/** He teaches. Frassy produces. His face is optional. */
+export const CONTENT_PARTNERSHIP = {
+  member: "You talk. You explain it the way you'd explain it on a job site.",
+  frassy:
+    "I write it, record it, edit it, post it and keep it selling — videos, articles, posts, e-books.",
+  facelessOk: true,
+} as const;
 
 /** Digital presence, built for them — never by them. */
 export const DIGITAL_PRESENCE = [
@@ -193,9 +252,11 @@ export const DIGITAL_PRESENCE = [
 
 /** Long term: less dependence on the body, more on the knowledge. */
 export const LONG_TERM_SHIFT = {
-  priority: "Immediate income stays the priority. Always.",
+  priority: "Income today still matters — it just doesn't have to come from your back.",
   direction:
-    "Slowly, Frassy builds things that keep earning when the hands rest — guides, courses, referrals and a reputation people come to.",
+    "Everything we build is meant to keep earning when the hands rest: guides, courses, recommendations, memberships and a reputation people come to.",
+  question:
+    "How do we turn a lifetime of experience into an online business that keeps earning while you enjoy your time?",
 } as const;
 
 export const TRADESPERSON_ENCOURAGEMENTS = [

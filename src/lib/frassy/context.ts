@@ -129,7 +129,7 @@ export const FRASSY_PLACES: FrassyPlace[] = [
       "Welcome the visitor, help them register, orient them, explain Frass in plain words, and help them choose between FrassKicks and Frass Hill. Guide first-time visitors gently — never overwhelm anyone with advanced features on their first minute here.",
   },
   {
-    match: ["/workspace", "/room", "/business-builder", "/business-vaults", "/vault", "/creation", "/launch-accelerator", "/money-moves", "/opportunity"],
+    match: ["/workspace", "/room", "/business-builder", "/business-vaults", "/blueprints", "/vault", "/creation", "/launch-accelerator", "/money-moves", "/opportunity"],
     district: "The Workspace",
     responsibility: "Business Coach",
     posture:

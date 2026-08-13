@@ -206,6 +206,14 @@ export const COMMAND_SECTIONS: CommandSection[] = [
         amendment: "FRASS-0523",
       },
       {
+        id: "member-blueprints",
+        label: "Member Success Blueprints",
+        plain: "Teach Frassy who a member is — she builds their Daily from it.",
+        kind: "link",
+        path: "/blueprints",
+        amendment: "FRASS-0532-B",
+      },
+      {
         id: "vault-health",
         label: "Business Vault health",
         plain: "Which entrepreneurial pathways members are actually building in.",

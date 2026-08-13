@@ -6,6 +6,7 @@
 import { useMemo } from "react";
 import { ArrowRight } from "lucide-react";
 import { LAYER_BY_ID } from "@/lib/business/financial-layers";
+import { SHAPE_META, whyThisOrder } from "@/lib/business/online-first";
 import {
   CERTIFICATION_STANCE,
   DIGITAL_PRESENCE,
@@ -31,10 +32,14 @@ function Move({ move, onNavigate }: { move: TradeMove; onNavigate?: (href: strin
         <span className="ws-chip">
           {layer?.dot} {layer?.label}
         </span>
+        <span className="ws-chip">
+          {SHAPE_META[move.shape].emoji} {SHAPE_META[move.shape].label}
+        </span>
         <span className="ws-meta">{move.minutes} min</span>
       </div>
       <p className="mt-2 text-base font-medium">{move.label}</p>
       <p className="ws-meta mt-1 text-sm">{move.why}</p>
+      <p className="ws-meta mt-1 text-xs italic">{whyThisOrder(move.shape)}</p>
       <button type="button" className="ws-chip mt-3" onClick={() => onNavigate?.(move.href)}>
         Start this <ArrowRight className="ml-1 h-3.5 w-3.5" />
       </button>
@@ -62,7 +67,10 @@ export function TradespersonMoneyMoves({ onNavigate }: { onNavigate?: (href: str
       {moves.map((m) => (
         <Move key={m.label} move={m} onNavigate={onNavigate} />
       ))}
-      <p className="ws-meta text-sm">One at a time. Anything you don't get to simply waits.</p>
+      <p className="ws-meta text-sm">
+        One at a time. Anything you don't get to simply waits. If you'd rather take a hands-on
+        job today, just say so and I'll bring those forward.
+      </p>
     </div>
   );
 }
