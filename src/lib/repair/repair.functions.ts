@@ -92,8 +92,16 @@ export const runRepair = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((d) => z.object({ action: z.string().max(60) }).parse(d))
   .handler(async ({ data, context }) => {
-    const { runSafeRepair } = await import("./repair.server");
-    return runSafeRepair(data.action, { userId: context.userId });
+    const { runSafeRepair, recordManualRepair } = await import("./repair.server");
+    const result = await runSafeRepair(data.action, { userId: context.userId });
+    // FRASS-0515-H — quietly log it to Repair History.
+    await recordManualRepair({
+      userId: context.userId,
+      action: data.action,
+      message: result.message,
+      ok: result.ok,
+    });
+    return result;
   });
 
 /** Founder view: every incident, with its engineering report. */
