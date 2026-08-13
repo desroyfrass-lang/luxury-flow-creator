@@ -6,6 +6,8 @@ import { useState } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { IdentityGate } from "@/components/security/identity-gate";
 import { COMMAND_SECTIONS, type CommandSectionId } from "@/lib/founder/command-center";
+import { FounderWorkflowPanel } from "@/components/founder/founder-workflow-panel";
+import { BrandPersonalityPanel } from "@/components/founder/brand-personality-panel";
 import { GuidedAuditPanel } from "@/components/founder/guided-audit-panel";
 import { FinancialSustainabilityPanel } from "@/components/founder/financial-sustainability-panel";
 import { ConstitutionHealthPanel } from "@/components/founder/constitution-health";
@@ -101,6 +103,7 @@ function CommandCenter() {
       <div className="mt-10 space-y-12">
         {active === "platform" && (
           <>
+            <FounderWorkflowPanel />
             <GuidedAuditPanel />
             <PlatformIntelligencePanel />
             <RepairCenter />
@@ -115,10 +118,13 @@ function CommandCenter() {
         )}
 
         {active === "frassy" && (
-          <p className="text-sm text-muted-foreground">
-            Frassy's identity is managed in the Voice Studio above — one voice, one personality, one
-            Frassy, everywhere on the platform.
-          </p>
+          <>
+            <p className="text-sm text-muted-foreground">
+              Frassy's voice is managed in the Voice Studio above. Her character is below — one
+              voice, one personality, one Frassy, everywhere on the platform.
+            </p>
+            <BrandPersonalityPanel />
+          </>
         )}
 
         {active === "operations" && (
