@@ -138,6 +138,12 @@ export type MemberProgress = {
   progress: number;
   achievementStyle: string | null;
   momentumLevel: string | null;
+  /** FRASS-0550 — 👤 Who: the member's public Frass Card handle, if claimed. */
+  handle: string | null;
+  builderStage: string | null;
+  learningLevel: string | null;
+  /** Active Business Vaults, by name. Never their contents. */
+  vaults: string[];
   dailyStreak: number;
   daysQuiet: number;
   blueprintProgress: number;
