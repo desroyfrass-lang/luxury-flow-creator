@@ -2766,3 +2766,19 @@ asset the Founder owns, which may become a course, an e-book, a Builder Path, a
 Blueprint, a manufacturing offer or a business handed to a partner. Resetting a
 simulation clears visitor-shaped local state only; Vaults, notes and past
 sessions are never deleted. Nothing created inside Frass is ever "just practice."
+
+## FRASS-0555 — AI Provider Independence & Cost Telemetry
+Status: Constitutional Amendment.
+
+Frass is never owned by one AI company. Every intelligence capability —
+conversation, reasoning, vision, Frassy's voice, and listening — is declared in
+`src/lib/ai/providers.ts` as a capability with a first choice and named backups.
+Application code asks for a capability, never for a vendor. Replacing a supplier
+is a one-line change in that file.
+
+Cost is never a mystery. The Command Center → AI Operations shows live telemetry:
+cost per conversation, cost per active member, total compute spend today, and the
+average daily spend, all drawn from the platform's own records.
+
+Plain English: the AI companies are plugs; Frass owns the socket. And the Founder
+always knows what a conversation costs before the bill arrives.
