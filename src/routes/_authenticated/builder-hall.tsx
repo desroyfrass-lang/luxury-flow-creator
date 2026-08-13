@@ -83,7 +83,16 @@ function WelcomeHallPage() {
           </p>
         </header>
 
-        {/* Next step — the single most important thing on this page */}
+        {/* FRASS-0551 — Conversation first. Frassy is the front gate, not a
+            settings screen: you arrive and she is already talking with you. */}
+        <section className="mt-10">
+          <FrassyChat embedded />
+          <p className="mt-3 text-center text-xs text-muted-foreground">
+            Talk or type — Frassy takes you wherever you need to go.
+          </p>
+        </section>
+
+
         <section className="mt-12 rounded-2xl border border-[color:var(--gold)]/40 bg-background/70 p-8 backdrop-blur">
           <div className="text-[10px] uppercase tracking-[0.3em] text-[color:var(--gold)]">
             Your next step
