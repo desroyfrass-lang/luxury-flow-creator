@@ -109,7 +109,6 @@ export function FrassyConversationDock() {
           </span>
         </div>
       )}
-
     </div>
   );
 }

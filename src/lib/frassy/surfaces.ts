@@ -52,10 +52,20 @@ const QUIET_PREFIXES = [
 ];
 
 /** Surfaces that own their own exits: sign-in, payment, checkout, machinery. */
-const SILENT_PREFIXES = ["/auth", "/reset-password", "/signed-out", "/pay/", "/checkout", "/api", "/mcp"];
+const SILENT_PREFIXES = [
+  "/auth",
+  "/reset-password",
+  "/signed-out",
+  "/pay/",
+  "/checkout",
+  "/api",
+  "/mcp",
+];
 
 function matches(pathname: string, prefixes: string[]) {
-  return prefixes.some((p) => pathname === p || pathname === p.replace(/\/$/, "") || pathname.startsWith(p));
+  return prefixes.some(
+    (p) => pathname === p || pathname === p.replace(/\/$/, "") || pathname.startsWith(p),
+  );
 }
 
 export function frassySurface(pathname: string): FrassySurface {

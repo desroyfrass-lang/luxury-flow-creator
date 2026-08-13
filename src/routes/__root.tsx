@@ -26,7 +26,6 @@ import { RewardsRibbon } from "@/components/rewards-ribbon";
 import { FrassTrail } from "@/components/frass-trail";
 import { ViewModeProvider } from "@/lib/view-mode/view-mode";
 
-
 function NotFoundComponent() {
   return (
     <div className="flex min-h-screen items-center justify-center bg-background px-4">
@@ -142,21 +141,20 @@ function RootComponent() {
   return (
     <QueryClientProvider client={queryClient}>
       <ViewModeProvider>
-      <RewardsRibbon />
-      <FrassTrail />
-      <Outlet />
-      <WelcomeLinkClaim />
-      <Toaster position="top-center" />
-      {/* FRASS-0558 — one Frassy. She only floats where the page has no conversation of its own. */}
-      <FrassyCompanion />
-      <FrassyHost />
-      <DailyGate />
-      <ConstructionMode />
+        <RewardsRibbon />
+        <FrassTrail />
+        <Outlet />
+        <WelcomeLinkClaim />
+        <Toaster position="top-center" />
+        {/* FRASS-0558 — one Frassy. She only floats where the page has no conversation of its own. */}
+        <FrassyCompanion />
+        <FrassyHost />
+        <DailyGate />
+        <ConstructionMode />
 
-
-      {/* FRASS-0553 — one dock, one place, every conversation. */}
-      <FrassyConversationDock />
-      <VoiceStateOverlay />
+        {/* FRASS-0553 — one dock, one place, every conversation. */}
+        <FrassyConversationDock />
+        <VoiceStateOverlay />
       </ViewModeProvider>
     </QueryClientProvider>
   );
