@@ -27,6 +27,8 @@ import {
   updateVoiceFeedback,
 } from "@/lib/launch-feedback.functions";
 import { PlatformIntelligencePanel } from "@/components/founder/platform-intelligence";
+import { ChangeAdvisorPanel } from "@/components/founder/change-advisor-panel";
+import { DesignAuthorityPanel } from "@/components/founder/design-authority-panel";
 
 export const Route = createFileRoute("/_authenticated/admin/launch-feedback")({
   component: LaunchFeedbackCenter,
@@ -114,6 +116,12 @@ function LaunchFeedbackCenter() {
 
       {/* FRASS-0474 — blocked financial attempts sit beside launch feedback. */}
       <div className="mb-8 space-y-6">
+        {/* FRASS-0521 — think it through with Frassy before it becomes engineering. */}
+        <ChangeAdvisorPanel />
+
+        {/* FRASS-0520 — Founder Design Authority: preview, approve, revert. */}
+        <DesignAuthorityPanel />
+
         <PlatformHealthPanel />
         {/* FRASS-0506 — the latest release stays under observation until it proves stable. */}
         <ObservationWindowPanel />

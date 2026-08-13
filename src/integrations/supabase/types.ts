@@ -1989,6 +1989,152 @@ export type Database = {
         }
         Relationships: []
       }
+      founder_design_changes: {
+        Row: {
+          after_state: Json | null
+          approved_at: string | null
+          before_state: Json | null
+          change_type: string
+          created_at: string
+          id: string
+          instruction: string
+          reason: string | null
+          reverted_at: string | null
+          status: string
+          surface: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          after_state?: Json | null
+          approved_at?: string | null
+          before_state?: Json | null
+          change_type: string
+          created_at?: string
+          id?: string
+          instruction: string
+          reason?: string | null
+          reverted_at?: string | null
+          status?: string
+          surface: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          after_state?: Json | null
+          approved_at?: string | null
+          before_state?: Json | null
+          change_type?: string
+          created_at?: string
+          id?: string
+          instruction?: string
+          reason?: string | null
+          reverted_at?: string | null
+          status?: string
+          surface?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      founder_observations: {
+        Row: {
+          amendment_ref: string | null
+          area: string | null
+          created_at: string
+          id: string
+          kind: string
+          note: string
+          session_id: string | null
+          signal: string
+          step_id: string | null
+          step_label: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          amendment_ref?: string | null
+          area?: string | null
+          created_at?: string
+          id?: string
+          kind?: string
+          note: string
+          session_id?: string | null
+          signal?: string
+          step_id?: string | null
+          step_label?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          amendment_ref?: string | null
+          area?: string | null
+          created_at?: string
+          id?: string
+          kind?: string
+          note?: string
+          session_id?: string | null
+          signal?: string
+          step_id?: string | null
+          step_label?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "founder_observations_session_id_fkey"
+            columns: ["session_id"]
+            isOneToOne: false
+            referencedRelation: "founder_sessions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      founder_sessions: {
+        Row: {
+          checklist: Json
+          completed_at: string | null
+          created_at: string
+          duration_seconds: number | null
+          id: string
+          label: string
+          release_ref: string | null
+          report: Json | null
+          started_at: string
+          status: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          checklist?: Json
+          completed_at?: string | null
+          created_at?: string
+          duration_seconds?: number | null
+          id?: string
+          label?: string
+          release_ref?: string | null
+          report?: Json | null
+          started_at?: string
+          status?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          checklist?: Json
+          completed_at?: string | null
+          created_at?: string
+          duration_seconds?: number | null
+          id?: string
+          label?: string
+          release_ref?: string | null
+          report?: Json | null
+          started_at?: string
+          status?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       founding_partners: {
         Row: {
           accepted_at: string | null
