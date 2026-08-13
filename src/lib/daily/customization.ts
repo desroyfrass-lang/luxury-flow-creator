@@ -344,6 +344,12 @@ export const DAILY_SECTIONS: SectionMeta[] = [
     plain: "Where this week's episode of your series stands.",
     aliases: ["episode", "series", "youtube", "show", "creative project"],
   },
+  {
+    id: "legacy-publication",
+    label: "Legacy Publication",
+    plain: "Turning a finished journey into a book — and the same knowledge into an audiobook, a course and more.",
+    aliases: ["book", "manuscript", "e-book", "publish", "legacy publication", "my book"],
+  },
 ];
 
 export const SECTION_BY_ID = Object.fromEntries(
