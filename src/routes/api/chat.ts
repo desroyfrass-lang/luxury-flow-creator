@@ -765,9 +765,13 @@ export const Route = createFileRoute("/api/chat")({
             : experienceContext === "builder"
               ? "builder"
               : "storefront";
+        const defaultRelationship: FrassyRelationship =
+          audience === "founder" ? "founder" : audience === "builder" ? "builder" : "visitor";
+        // A client-supplied relationship can never escalate above the verified audience.
         const relationship: FrassyRelationship =
-          body.relationship ??
-          (audience === "founder" ? "founder" : audience === "builder" ? "builder" : "visitor");
+          body.relationship && !(body.relationship === "founder" && audience !== "founder")
+            ? body.relationship
+            : defaultRelationship;
         // FRASS-0451: one Frassy everywhere — personality first, then the hat she
         // wears in this district (FRASS-0451A), then the keys she is entrusted with.
         const voiceConstitution = `${FRASSY_VOICE_CONSTITUTION}\n\n${frassyContextLayer({
