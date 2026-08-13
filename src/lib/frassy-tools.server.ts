@@ -220,7 +220,7 @@ export const lookupOrder = tool({
 
 // ------- Registry -------
 
-export function buildFrassyTools(ctx: RepairToolContext = {}) {
+export function buildFrassyTools(ctx: RepairToolContext & { founder?: boolean } = {}) {
   return {
     search_products: searchProducts,
     list_trending: listTrending,
@@ -231,7 +231,8 @@ export function buildFrassyTools(ctx: RepairToolContext = {}) {
     // FRASS-0515 — Frass Repair Engine.
     ...buildRepairTools(ctx),
     // FRASS-0520/0521 — Founder Design Authority and Change Advisor.
-    ...buildFounderTools(),
+    // Only ever attached when the server has verified the caller is the Founder.
+    ...(ctx.founder ? buildFounderTools() : {}),
   };
 }
 
