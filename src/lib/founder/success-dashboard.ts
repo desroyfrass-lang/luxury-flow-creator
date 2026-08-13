@@ -149,6 +149,10 @@ export type MemberProgress = {
   revenue: RevenueBand;
   coachingOptIn: boolean;
   insight: string;
+  /** Why Frassy classified this member's achievement style the way she did. */
+  archetypeReason: string;
+  /** The single thing the Founder should do about this member today. */
+  recommendedAction: string;
 };
 
 const clamp = (n: number) => Math.max(0, Math.min(100, Math.round(n)));
