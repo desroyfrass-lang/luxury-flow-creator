@@ -276,7 +276,14 @@ function BroadcastRoom() {
               <ul className="mt-4 space-y-1 border-t border-border pt-3">
                 {gifts.slice(0, 6).map((g) => (
                   <li key={g.id} className="text-xs text-muted-foreground">
-                    <MemberName handle={g.sender_handle} name={g.sender_name} className="hover:underline" /> sent {g.gift_key.replace("_", " ")}
+                    {canSeeGiftDetail ? (
+                      <>
+                        <MemberName handle={g.sender_handle} name={g.sender_name} className="hover:underline" /> sent{" "}
+                        {g.gift_key.replace("_", " ")}
+                      </>
+                    ) : (
+                      celebrationLine("gift")
+                    )}
                   </li>
                 ))}
               </ul>
