@@ -1,6 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { convertToModelMessages, generateText, stepCountIs } from "ai";
 import { createLovableAiGatewayProvider } from "@/lib/ai-gateway.server";
+// FRASS-0556 — one Frassy, many brains.
+import { routeRequest, ruleFirstAnswer } from "@/lib/ai/intelligence-router";
 import { buildFrassyTools } from "@/lib/frassy-tools.server";
 import { isFounderIdentityDiscovery } from "@/lib/journey-prompts.server";
 import { ONLINE_FIRST_PROMPT } from "@/lib/business/online-first";
@@ -890,23 +892,63 @@ the next move toward Legacy is. Never stop at helping someone earn a living.`;
           }
         })();
 
+        // FRASS-0556 Step 0 — if Frass already knows the answer, no AI is billed.
+        const freeAnswer = ruleFirstAnswer(lastMessage.content);
+        if (freeAnswer) {
+          return Response.json({
+            reply: freeAnswer.reply,
+            cards: { products: [], order: null },
+            navigate: {
+              key: freeAnswer.route.key,
+              label: freeAnswer.route.label,
+              path: freeAnswer.route.redirectsTo ?? freeAnswer.route.path,
+              requiresAuth: freeAnswer.route.requiresAuth,
+            },
+            router: { task: "navigation", provider: "frass-rules", cost: "none" },
+          });
+        }
+
+        // FRASS-0556 Steps 1–4 — understand, choose the cheapest capable brain,
+        // and keep a fallback chain so one provider outage never reaches a member.
+        const decision = routeRequest({
+          text: lastMessage.content,
+          hasAttachments: attachments.length > 0,
+          audience,
+          districtPath: body.districtPath ?? null,
+        });
+
         try {
           const gateway = createLovableAiGatewayProvider(key);
-          const model = gateway("google/gemini-3.5-flash");
+          const chain = decision.chain.length ? decision.chain : ["google/gemini-3.5-flash"];
 
-          const result = await generateText({
-            model,
-            system,
-            messages: await convertToModelMessages(uiMessages),
-            tools: buildFrassyTools({
-              // FRASS-0518 — coarse browser/device only, so recurring
-              // device-specific problems become visible over time.
-              client: clientHintFrom(request.headers.get("user-agent")),
-              founder: experienceContext === "founder",
-              accessToken: verifiedToken,
-            }),
-            stopWhen: stepCountIs(6),
-          });
+          const modelMessages = await convertToModelMessages(uiMessages);
+          const call = (modelId: string) =>
+            generateText({
+              model: gateway(modelId),
+              system,
+              messages: modelMessages,
+              tools: buildFrassyTools({
+                client: clientHintFrom(request.headers.get("user-agent")),
+                founder: experienceContext === "founder",
+                accessToken: verifiedToken,
+              }),
+              stopWhen: stepCountIs(6),
+            });
+
+          let result: Awaited<ReturnType<typeof call>> | null = null;
+          let usedModel = chain[0]!;
+          let lastError: unknown = null;
+          for (const modelId of chain) {
+            try {
+              result = await call(modelId);
+              usedModel = modelId;
+              break;
+            } catch (chainErr) {
+              lastError = chainErr;
+            }
+          }
+          if (!result) throw lastError ?? new Error("No AI provider answered.");
+
 
           // Extract products, order cards and navigation from tool results.
           const products: ProductCard[] = [];
@@ -959,6 +1001,8 @@ the next move toward Legacy is. Never stop at helping someone earn a living.`;
               order,
             },
             navigate,
+            // FRASS-0556 — which brain answered, and why.
+            router: { task: decision.task, provider: usedModel, why: decision.why },
             ...(experienceContext === "founder"
               ? {
                   diagnostics: {
