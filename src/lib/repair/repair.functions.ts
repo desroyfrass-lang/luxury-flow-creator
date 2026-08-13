@@ -3,6 +3,7 @@ import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import type { RepairDiagnosis } from "./engine";
+import type { IntelligenceIncident, PlatformIntelligence } from "./intelligence";
 
 export type RepairIncident = {
   id: string;
@@ -38,6 +39,12 @@ export const reportProblem = createServerFn({ method: "POST" })
         text: z.string().min(3).max(2000),
         path: z.string().max(300).nullable().default(null),
         autoRepair: z.boolean().default(true),
+        // FRASS-0518 — coarse client hint only (browser family + device kind).
+        // Never a user agent string, never anything identifying.
+        client: z
+          .object({ browser: z.string().max(40), device: z.string().max(20) })
+          .nullable()
+          .default(null),
       })
       .parse(d),
   )
@@ -47,6 +54,12 @@ export const reportProblem = createServerFn({ method: "POST" })
       reportedText: data.text,
       contextPath: data.path,
     });
+
+    if (data.client) {
+      // Carried into the incident so the Platform Intelligence Engine can see
+      // "this only happens on one browser" without storing anything personal.
+      diagnosis.evidence = { ...(diagnosis.evidence ?? {}), client: data.client };
+    }
 
     const applied: Array<{ action: string; message: string }> = [];
     if (data.autoRepair && !diagnosis.requiresEngineering) {
@@ -203,4 +216,34 @@ export const annotateRepairIncident = createServerFn({ method: "POST" })
       .eq("id", data.id);
     if (error) throw error;
     return { ok: true };
+  });
+
+/**
+ * FRASS-0518 — Platform Intelligence.
+ *
+ * Reads the Repair History and returns what the platform should learn from it:
+ * what keeps coming back, what is calm, what is generating support, which
+ * amendments actually ended a problem, and what Frassy recommends next.
+ * The Founder always decides whether to act on it.
+ */
+export const platformIntelligence = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }): Promise<PlatformIntelligence> => {
+    const { data: isAdmin } = await context.supabase.rpc("has_role", {
+      _user_id: context.userId,
+      _role: "admin",
+    });
+    if (!isAdmin) throw new Error("Forbidden");
+
+    const { data, error } = await context.supabase
+      .from("repair_incidents")
+      .select(
+        "id, category, severity, status, context_path, reported_text, root_cause, created_at, pattern_signature, resolution_mode, amendment_ref, evidence",
+      )
+      .order("created_at", { ascending: false })
+      .limit(500);
+    if (error) throw error;
+
+    const { analyzePlatform } = await import("./intelligence");
+    return analyzePlatform((data ?? []) as unknown as IntelligenceIncident[]);
   });
