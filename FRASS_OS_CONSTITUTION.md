@@ -2456,3 +2456,38 @@ to adapt to the education.
 Implementation: `src/lib/frassy/learning-levels.ts`, `src/hooks/use-learning-level.ts`,
 `src/components/frassy/learning-level-picker.tsx`,
 `src/components/frassy/learning-preferences-card.tsx`, composed into every Frassy prompt.
+
+## FRASS-0546 — Adaptive Momentum Engine (P0)
+Every member progresses differently. Some thrive with complete freedom; others perform
+best when challenged. Frassy recognises a member's natural working style and increases
+accountability only as the member demonstrates readiness. **Deadlines are earned — not
+imposed.**
+
+- 🌱 **Explorer** — no deadlines, gentle encouragement, confidence first, every small win celebrated.
+- 🚀 **Builder** — one weekly goal, a flexible target date, visible progress, gentle reminders.
+- 🦈 **Momentum Builder** — optional Momentum Challenges with real completion dates
+  ("Earn your next $100 this week", "Publish your first product by Friday").
+- 👑 **High Performer** — the member writes their own challenges, or lets Frassy raise the bar.
+  Rewards grow because the impact grows.
+
+**Achievement styles.** The member chooses how they like to make progress — 🦈 Shark,
+🏔️ Climber, 🚀 Sprinter, 🌳 Gardener, 🌊 Navigator. The engine shapes the challenge
+differently for each; the destination — financial freedom — is identical.
+
+**Rewards.** Frass Credits, Founder badges, marketplace promotion, featured member
+opportunities, Blueprint achievements, new Business Vault capabilities and community
+recognition (always at the member's chosen privacy level). The greatest reward remains
+the member's own financial progress.
+
+**Adaptive intelligence.** Frassy continuously reads completion rate, consistency,
+stress and burnout signals, member preference and financial progress. If a member looks
+overwhelmed, pressure is reduced automatically and the member returns to a supportive
+pace — this is protection, never demotion, and is never described as one. Any challenge
+may be declined, and challenges may be switched off permanently.
+
+**Founder Principle.** Growth should be encouraged, never forced. Frass challenges
+members only after they have demonstrated readiness, so accountability becomes
+empowering rather than overwhelming.
+
+Implementation: `src/lib/frassy/momentum.ts`, `src/hooks/use-momentum.ts`,
+`src/components/frassy/momentum-card.tsx`, composed into every Frassy prompt.

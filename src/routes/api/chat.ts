@@ -13,6 +13,7 @@ import { FRASS_PLATFORM_ATLAS, FIRST_PARTNER_PROTOCOL } from "@/lib/frassy/platf
 import { FRASS_REPAIR_ENGINE, FRASS_REPAIR_FOUNDER } from "@/lib/repair/prompt";
 import { PLAIN_ENGLISH_ENGINE } from "@/lib/frassy/plain-english";
 import { LEARNING_LEVELS_ENGINE } from "@/lib/frassy/learning-levels";
+import { MOMENTUM_ENGINE } from "@/lib/frassy/momentum";
 import { clientHintFrom } from "@/lib/frassy-repair-tools.server";
 
 const FRASS_LINK = `FRASS LINK (FRASS-0428)
@@ -657,6 +658,8 @@ export const Route = createFileRoute("/api/chat")({
           partnerContext?: string;
           // FRASS-0479A — Human Balance: pace, coaching adjustment, milestones to celebrate.
           balanceContext?: string;
+          // FRASS-0546 — earned momentum level and achievement style.
+          momentumContext?: string;
           stream?: boolean;
           attachments?: Array<{
             name: string;
@@ -764,6 +767,7 @@ export const Route = createFileRoute("/api/chat")({
           body.learningLevelContext,
           body.partnerContext,
           body.balanceContext,
+          body.momentumContext,
           attachmentContext,
         ]
           .filter(Boolean)
@@ -831,9 +835,9 @@ the next move toward Legacy is. Never stop at helping someone earn a living.`;
 
         const basePrompt =
           experienceContext === "founder"
-            ? `${SYSTEM_PROMPT}\n\n${FRASS_LINK}\n\n${FOUNDER_CONTEXT}\n\n${CURATION_BRIEF}\n\n${GLOBAL_COMMERCE}\n\n${FOR_US_COMMUNITY}\n\n${STORYTELLING_ENGINE}\n\n${PLAIN_LANGUAGE_PROTOCOL}\n\n${PLAIN_ENGLISH_ENGINE}\n\n${LEARNING_LEVELS_ENGINE}\n\n${FRASS_PLATFORM_ATLAS}\n\n${FIRST_PARTNER_PROTOCOL}\n\n${FRASS_ECONOMY}\n\n${FRASS_SERVICES_MARKETPLACE}\n\n${FRASS_COMPLIANCE}\n\n${FRASS_EMPLOYMENT_PHILOSOPHY}\n\n${ONLINE_FIRST_PROMPT}\n\n${BLUEPRINT_WORKFLOW}\n\n${CREATIVE_PRODUCER}\n\n${FRASS_THREE_LAYERS}\n\n${FRASS_DAILY_BLUEPRINTS}\n\n${FRASS_HIDDEN_ASSETS}\n\n${FRASS_FOUNDING_PARTNERS}\n\n${FRASS_RIGHTS_AND_TRUST}\n\n${FRASS_CREATIVE_IDENTITY}\n\n${FRASS_REPAIR_ENGINE}\n\n${FRASS_REPAIR_FOUNDER}${kankoDna}`
+            ? `${SYSTEM_PROMPT}\n\n${FRASS_LINK}\n\n${FOUNDER_CONTEXT}\n\n${CURATION_BRIEF}\n\n${GLOBAL_COMMERCE}\n\n${FOR_US_COMMUNITY}\n\n${STORYTELLING_ENGINE}\n\n${PLAIN_LANGUAGE_PROTOCOL}\n\n${PLAIN_ENGLISH_ENGINE}\n\n${LEARNING_LEVELS_ENGINE}\n\n${MOMENTUM_ENGINE}\n\n${FRASS_PLATFORM_ATLAS}\n\n${FIRST_PARTNER_PROTOCOL}\n\n${FRASS_ECONOMY}\n\n${FRASS_SERVICES_MARKETPLACE}\n\n${FRASS_COMPLIANCE}\n\n${FRASS_EMPLOYMENT_PHILOSOPHY}\n\n${ONLINE_FIRST_PROMPT}\n\n${BLUEPRINT_WORKFLOW}\n\n${CREATIVE_PRODUCER}\n\n${FRASS_THREE_LAYERS}\n\n${FRASS_DAILY_BLUEPRINTS}\n\n${FRASS_HIDDEN_ASSETS}\n\n${FRASS_FOUNDING_PARTNERS}\n\n${FRASS_RIGHTS_AND_TRUST}\n\n${FRASS_CREATIVE_IDENTITY}\n\n${FRASS_REPAIR_ENGINE}\n\n${FRASS_REPAIR_FOUNDER}${kankoDna}`
             : experienceContext === "builder"
-              ? `${SYSTEM_PROMPT}\n\n${FRASS_LINK}\n\n${CURATION_BRIEF}\n\n${GLOBAL_COMMERCE}\n\n${FOR_US_COMMUNITY}\n\n${PLAIN_LANGUAGE_PROTOCOL}\n\n${PLAIN_ENGLISH_ENGINE}\n\n${LEARNING_LEVELS_ENGINE}\n\n${FRASS_PLATFORM_ATLAS}\n\n${FIRST_PARTNER_PROTOCOL}\n\n${FRASS_ECONOMY}\n\n${FRASS_SERVICES_MARKETPLACE}\n\n${FRASS_COMPLIANCE}\n\n${FRASS_EMPLOYMENT_PHILOSOPHY}\n\n${ONLINE_FIRST_PROMPT}\n\n${BLUEPRINT_WORKFLOW}\n\n${CREATIVE_PRODUCER}\n\n${FRASS_THREE_LAYERS}\n\n${FRASS_DAILY_BLUEPRINTS}\n\n${FRASS_HIDDEN_ASSETS}\n\n${FRASS_FOUNDING_PARTNERS}\n\n${FRASS_RIGHTS_AND_TRUST}\n\n${FRASS_CREATIVE_IDENTITY}\n\n${FRASS_REPAIR_ENGINE}${kankoDna}`
+              ? `${SYSTEM_PROMPT}\n\n${FRASS_LINK}\n\n${CURATION_BRIEF}\n\n${GLOBAL_COMMERCE}\n\n${FOR_US_COMMUNITY}\n\n${PLAIN_LANGUAGE_PROTOCOL}\n\n${PLAIN_ENGLISH_ENGINE}\n\n${LEARNING_LEVELS_ENGINE}\n\n${MOMENTUM_ENGINE}\n\n${FRASS_PLATFORM_ATLAS}\n\n${FIRST_PARTNER_PROTOCOL}\n\n${FRASS_ECONOMY}\n\n${FRASS_SERVICES_MARKETPLACE}\n\n${FRASS_COMPLIANCE}\n\n${FRASS_EMPLOYMENT_PHILOSOPHY}\n\n${ONLINE_FIRST_PROMPT}\n\n${BLUEPRINT_WORKFLOW}\n\n${CREATIVE_PRODUCER}\n\n${FRASS_THREE_LAYERS}\n\n${FRASS_DAILY_BLUEPRINTS}\n\n${FRASS_HIDDEN_ASSETS}\n\n${FRASS_FOUNDING_PARTNERS}\n\n${FRASS_RIGHTS_AND_TRUST}\n\n${FRASS_CREATIVE_IDENTITY}\n\n${FRASS_REPAIR_ENGINE}${kankoDna}`
 
               : `${SYSTEM_PROMPT}\n\n${FOR_US_COMMUNITY}\n\n${FRASS_ECONOMY}\n\n${FRASS_SERVICES_MARKETPLACE}\n\n${FRASS_COMPLIANCE}\n\n${FRASS_REPAIR_ENGINE}`;
 
