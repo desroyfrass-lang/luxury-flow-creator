@@ -1,6 +1,8 @@
 # Project Memory
 
 ## Core
+Command Center opens on Founder Home ("How is Frass doing today?") — platform/member/business/intelligence health + Today (FRASS-0528).
+Never recommend publishing to production until a Release Approval decision is recorded (Approve / Delay / Request Changes) (FRASS-0529).
 Every Founder Platform Audit ends with one question: "Are you comfortable inviting a new member onto Frass?" (Yes / Yes with known issues / Not yet); anything but Yes keeps findings visible (FRASS-0528).
 Kids pages are never black: bright age-tinted .kids-zone theme, rounded kid-friendly fonts (Fredoka/Nunito).
 FRASS-0491 (FOR ME architecture freeze) is PINNED — do not execute until the current constitutional roadmap is done.

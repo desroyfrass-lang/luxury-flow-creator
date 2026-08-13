@@ -4358,6 +4358,50 @@ export type Database = {
           },
         ]
       }
+      release_approvals: {
+        Row: {
+          audit_id: string | null
+          created_at: string
+          decision: string
+          id: string
+          invitation_verdict: string | null
+          note: string
+          outstanding: string[]
+          summary: Json
+          user_id: string
+        }
+        Insert: {
+          audit_id?: string | null
+          created_at?: string
+          decision: string
+          id?: string
+          invitation_verdict?: string | null
+          note?: string
+          outstanding?: string[]
+          summary?: Json
+          user_id: string
+        }
+        Update: {
+          audit_id?: string | null
+          created_at?: string
+          decision?: string
+          id?: string
+          invitation_verdict?: string | null
+          note?: string
+          outstanding?: string[]
+          summary?: Json
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "release_approvals_audit_id_fkey"
+            columns: ["audit_id"]
+            isOneToOne: false
+            referencedRelation: "platform_audits"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       repair_incidents: {
         Row: {
           amendment_note: string | null

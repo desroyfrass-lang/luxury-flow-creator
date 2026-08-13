@@ -8,7 +8,7 @@
 // Rule: a Founder tool is registered here or it does not exist. If it lives in
 // two places, the Command Center is the one that stays.
 
-export type CommandSectionId = "platform" | "design" | "frassy" | "operations" | "innovation";
+export type CommandSectionId = "home" | "platform" | "design" | "frassy" | "operations" | "innovation";
 
 export type CommandTool = {
   id: string;
@@ -31,6 +31,28 @@ export type CommandSection = {
 };
 
 export const COMMAND_SECTIONS: CommandSection[] = [
+  {
+    id: "home",
+    icon: "🏠",
+    label: "Home",
+    purpose: "How is Frass doing today? One page, five honest answers.",
+    tools: [
+      {
+        id: "founder-home",
+        label: "Founder Home",
+        plain: "Platform, member, business and intelligence health, plus what's waiting on you.",
+        kind: "panel",
+        amendment: "FRASS-0528",
+      },
+      {
+        id: "release-approval",
+        label: "Release Approval",
+        plain: "The final go/no-go before anything reaches production.",
+        kind: "panel",
+        amendment: "FRASS-0529",
+      },
+    ],
+  },
   {
     id: "platform",
     icon: "🧭",
