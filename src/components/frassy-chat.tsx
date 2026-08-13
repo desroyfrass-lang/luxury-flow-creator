@@ -616,11 +616,32 @@ export function FrassyChat({
         )}
       </div>
 
+      {/* FRASS-0551 — Voice confidence: the member always knows where the
+          conversation is. Listening · Transcribing · Thinking · Speaking. */}
+      {(voice.phase !== "idle" || loading) && (
+        <div
+          className="frassy-state shrink-0"
+          style={{ color: "var(--gold)" }}
+          role="status"
+          aria-live="polite"
+        >
+          <span className="frassy-state-dot" aria-hidden />
+          {voice.phase === "recording"
+            ? "🎤 Listening"
+            : voice.phase === "transcribing"
+              ? "✍️ Catching your words"
+              : voice.phase === "speaking"
+                ? "🗣️ Speaking"
+                : "🧠 Thinking"}
+        </div>
+      )}
+
       {voice.isSpeaking || voice.isPaused ? (
         <div className="shrink-0 border-t border-[color:var(--ws-line)] px-3 py-2">
           <SpeechControls />
         </div>
       ) : null}
+
 
       {/* FRASS-0412 — temporary launch feedback program */}
       <div className="shrink-0 border-t border-[color:var(--ws-line)] px-3 py-2">
