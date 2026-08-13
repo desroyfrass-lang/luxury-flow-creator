@@ -2357,3 +2357,45 @@ One place to see credits remaining and burn rate, requests by feature, success r
 
 ## FRASS-0541 — Founder Platform Analytics & Return on Intelligence (P0)
 AI is measured as an investment, not an expense. Alongside cost, the dashboard reports member outcomes: businesses started, books published and in progress, products created, Money Moves completed, active member blueprints and member revenue influenced. Website traffic is context; member outcomes are the measure of Frass.
+
+## FRASS-0537 — Meet Members Where They Are (Frassy Everywhere) (P0)
+Members must never be required to learn new technology to use Frass. Frassy reaches
+the member through channels they already trust: the Frass website, the Frass mobile
+app, WhatsApp, ChatGPT, Claude, email, SMS where appropriate, and supported voice
+integrations. One identity, one memory, one member experience across every channel.
+
+**WhatsApp is a first-class channel, not an afterthought** — it is the primary
+communication platform for many members, especially in the Caribbean. Where
+technically supported, a member can receive their Daily, talk to Frassy by text,
+send voice notes and receive voice replies, review Money Moves, update Blueprints,
+get reminders, continue Business Vault work and be onboarded — entirely inside
+WhatsApp.
+
+**Honesty boundary.** Frass cannot bypass telecom systems and must never promise
+free or guaranteed telephone connectivity (for example free WhatsApp calls to a
+landline). What Frassy does instead: help the member prepare for the call, find the
+correct number, draft what to say, open or initiate communication through supported
+channels, and track the conversation and next steps.
+
+**Founder Principle.** Frass adapts to the member's preferred way of communicating.
+No member is excluded because of the device, app or interface they use.
+
+## FRASS-0538 — Frassy Content Manager (P0)
+Website content is maintained by conversation with Frassy, not by engineering work.
+
+Frassy may manage (subject to FRASS-0539 approval): text, images, collections,
+capsules, marketing copy, landing pages, Welcome Hall content, Daily messages and
+knowledge articles.
+
+Engineering is required only for: application logic, database structure,
+authentication, security, APIs, business rules and performance.
+
+Intended expansion, each under Founder approval: marketing (publish blogs, schedule
+newsletters, announcements), marketplace (add/remove products, pricing changes,
+featured items), Knowledge Vault (organise articles, tutorials, FAQs), Business
+Vaults (lessons, templates, checklists) and Founder Mode (page order, navigation,
+onboarding, Blueprint templates).
+
+**Founder Principle.** Content should be editable through conversation. Engineering
+should be reserved for software. Lovable is the software engineer; Frassy is the
+operations manager.
