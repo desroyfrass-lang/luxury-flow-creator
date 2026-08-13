@@ -136,6 +136,7 @@ import { getPlatformProtection } from "@/lib/platform-protection.functions";
 import { securityBriefing } from "@/lib/security/briefing";
 import { observeDeployment } from "@/lib/deploy/observation";
 import { usePlatformIntelligence } from "@/components/founder/platform-intelligence";
+import { ConstitutionHealthPanel } from "@/components/founder/constitution-health";
 import { CURRENT_DEPLOYMENT } from "@/lib/deploy/current";
 
 import type { TieredEvent } from "@/lib/security/triage";

@@ -138,11 +138,45 @@ export const costImpactTool = tool({
   },
 });
 
+// FRASS-0518-A — does the Constitution actually work?
+export const constitutionHealthTool = tool({
+  description:
+    "CONSTITUTION EFFECTIVENESS REVIEW (FRASS-0518-A). Use when the Founder asks whether an amendment worked, whether a rule should be revised, expanded or retired, or how healthy the Constitution is. Reports incidents before and after each amendment, unintended consequences, and evidence-based recommendations. Analysis only — the Founder alone amends.",
+  inputSchema: z.object({
+    ref: z
+      .string()
+      .nullable()
+      .default(null)
+      .describe("A specific amendment reference like FRASS-0517. Null reviews the whole Constitution."),
+  }),
+  execute: async ({ ref }) => {
+    const { AMENDMENTS, amendmentByRef } = await import("@/lib/constitution/registry");
+    if (ref) {
+      const a = amendmentByRef(ref);
+      if (!a) return { error: `No registered amendment ${ref}.`, known: AMENDMENTS.map((x) => x.ref) };
+      return {
+        amendment: a,
+        note: "Live before/after incident counts are shown in the Founder Command Center under Innovation.",
+      };
+    }
+    return {
+      registered: AMENDMENTS.map((a) => ({
+        ref: a.ref,
+        title: a.title,
+        intent: a.intent,
+        implemented: Boolean(a.implementedAt),
+      })),
+      where_to_review: "/command (Innovation → Constitution Health)",
+    };
+  },
+});
+
 export function buildFounderTools() {
   return {
     analyze_change_request: analyzeChangeRequestTool,
     design_authority_scope: designAuthorityScope,
     platform_audit: platformAuditTool,
     cost_impact: costImpactTool,
+    constitution_health: constitutionHealthTool,
   };
 }

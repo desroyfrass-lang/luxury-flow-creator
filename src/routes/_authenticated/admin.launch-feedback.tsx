@@ -8,12 +8,7 @@ import { useServerFn } from "@tanstack/react-start";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Loader2, MessageSquare, Power } from "lucide-react";
 import { toast } from "sonner";
-import { SecurityAlertsPanel } from "@/components/finance/security-alerts-panel";
-import { PlatformHealthPanel } from "@/components/finance/platform-health-panel";
-import { ObservationWindowPanel } from "@/components/finance/observation-window-panel";
-import { RepairCenter } from "@/components/founder/repair-center";
 
-import { PlatformProtectionSwitch } from "@/components/founder/platform-protection-switch";
 
 import {
   categoryLabel,
@@ -26,9 +21,6 @@ import {
   setFeedbackProgramEnabled,
   updateVoiceFeedback,
 } from "@/lib/launch-feedback.functions";
-import { PlatformIntelligencePanel } from "@/components/founder/platform-intelligence";
-import { ChangeAdvisorPanel } from "@/components/founder/change-advisor-panel";
-import { DesignAuthorityPanel } from "@/components/founder/design-authority-panel";
 
 export const Route = createFileRoute("/_authenticated/admin/launch-feedback")({
   component: LaunchFeedbackCenter,
@@ -114,30 +106,18 @@ function LaunchFeedbackCenter() {
         </button>
       </div>
 
-      {/* FRASS-0474 — blocked financial attempts sit beside launch feedback. */}
-      <div className="mb-8 space-y-6">
-        {/* FRASS-0521 — think it through with Frassy before it becomes engineering. */}
-        <ChangeAdvisorPanel />
-
-        {/* FRASS-0520 — Founder Design Authority: preview, approve, revert. */}
-        <DesignAuthorityPanel />
-
-        <PlatformHealthPanel />
-        {/* FRASS-0506 — the latest release stays under observation until it proves stable. */}
-        <ObservationWindowPanel />
-        {/* FRASS-0515 — Frass Repair Engine incidents and engineering tickets. */}
-        <RepairCenter />
-
-        {/* FRASS-0518 — repairs remember; this learns from them. */}
-        <PlatformIntelligencePanel />
-
-        <SecurityAlertsPanel />
-        {/* FRASS-0476 — the emergency control lives with the intelligence it protects. */}
-        <PlatformProtectionSwitch />
+      {/* FRASS-0525 — the Founder instruments moved to one headquarters.
+          This page keeps only launch feedback. */}
+      <div className="mb-8 rounded-xl border border-white/10 p-4">
+        <p className="text-sm">
+          Platform health, repairs, intelligence, security, design authority and the Change Advisor
+          now live together in the{" "}
+          <Link to="/command" className="underline text-[color:var(--gold)]">
+            Founder Command Center
+          </Link>
+          .
+        </p>
       </div>
-
-
-
 
       {themeCounts.length > 0 && (
         <div className="mb-6 flex flex-wrap gap-2">
