@@ -23,6 +23,17 @@ import {
 import type { SectionId } from "@/lib/daily/customization";
 import { isKankoDaily } from "@/lib/daily/kanko";
 import { isMotherDaily } from "@/lib/daily/mother";
+import { isTradespersonDaily } from "@/lib/daily/tradesperson";
+import {
+  FrassyDoesTheTech,
+  TradespersonFrassyNote,
+  TradespersonKnowledgeIncome,
+  TradespersonMoneyMoves,
+  TradespersonOutcomes,
+  TradespersonPresence,
+  TradespersonReputation,
+  TradespersonWelcome,
+} from "@/components/workspace/tradesperson-daily";
 import {
   MotherBalanceOfDay,
   MotherBusinessDevelopment,
@@ -150,6 +161,8 @@ const ORDER: DailyPriority[] = ["critical", "important", "optional", "completed"
 export function FrassDaily(props: {
   audience: DailyAudience;
   name?: string;
+  /** FRASS-0532 — the member's trade, when they work with their hands. */
+  trade?: string;
   onDismiss: () => void;
   onOpenProject?: (projectId: string) => void;
   onNavigate?: (href: string) => void;
@@ -180,12 +193,14 @@ export function FrassDaily(props: {
 function FrassDailyBody({
   audience,
   name,
+  trade,
   onDismiss,
   onOpenProject,
   onNavigate,
 }: {
   audience: DailyAudience;
   name?: string;
+  trade?: string;
   onDismiss: () => void;
   onOpenProject?: (projectId: string) => void;
   onNavigate?: (href: string) => void;
@@ -197,6 +212,8 @@ function FrassDailyBody({
   const isKanko = !isFounder && isKankoDaily(name);
   /** FRASS-P002-Z — the knowledge-economy blueprint. */
   const isMother = !isFounder && !isKanko && isMotherDaily(name);
+  /** FRASS-0532 — the tradesperson blueprint (builders, contractors, masons…). */
+  const isTradesperson = !isFounder && !isKanko && !isMother && isTradespersonDaily(trade);
   const [tab, setTab] = useState<FounderTabId>("today");
   const base = useMemo(() => dailyFor(audience), [audience]);
 
@@ -792,6 +809,36 @@ function FrassDailyBody({
             </Section>
             <Section id="frassy-note" title="❤️ Frassy" note="One message. Not ten.">
               <MotherFrassyNote day={history.length} />
+            </Section>
+          </>
+        )}
+
+        {/* FRASS-0532 — The Tradesperson's Daily. Skill first, technology handled. */}
+        {isTradesperson && (
+          <>
+            <Section id="personal-welcome" title="Morning" note="What's the easiest way to make money today?">
+              <TradespersonWelcome name={name ?? "Boss"} />
+            </Section>
+            <Section id="money-moves-today" title="💰 Today's Money Moves" note="Income first. One at a time.">
+              <TradespersonMoneyMoves onNavigate={onNavigate} />
+            </Section>
+            <Section id="frassy-handles-tech" title="🤝 I'll handle the computer part" note="You bring the knowledge.">
+              <FrassyDoesTheTech />
+            </Section>
+            <Section id="proof-of-work" title="⭐ Your proof of work" note="Papers help. Proof of work wins jobs.">
+              <TradespersonReputation />
+            </Section>
+            <Section id="digital-presence" title="📇 Where people find you" note="Built for you, not by you.">
+              <TradespersonPresence onNavigate={onNavigate} />
+            </Section>
+            <Section id="knowledge-preservation" title="📚 Income beyond the tools" note="What you know is worth money too.">
+              <TradespersonKnowledgeIncome onNavigate={onNavigate} />
+            </Section>
+            <Section id="success-dashboard" title="📊 What actually changed" note="Outcomes, not activity.">
+              <TradespersonOutcomes />
+            </Section>
+            <Section id="frassy-note" title="❤️ Frassy" note="One message. Not ten.">
+              <TradespersonFrassyNote day={history.length} />
             </Section>
           </>
         )}

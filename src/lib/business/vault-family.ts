@@ -347,7 +347,52 @@ export const BUSINESS_VAULTS: BusinessVault[] = [
     ],
     monetizationOutcome: "A priced technical offer or product live in the Marketplace.",
   },
+
+  // FRASS-0532 — the Tradesperson Vault. Built for skilled hands: builders,
+  // contractors, masons, electricians, carpenters, plumbers and every other
+  // trade — including the many excellent tradespeople who never got the paper.
+  {
+    key: "tradesperson",
+    emoji: "🔨",
+    label: "Tradesperson Vault",
+    summary: "Turn a skilled trade into a real business — jobs, quotes, invoices and a reputation people can find.",
+    forWho:
+      "Builders, contractors, masons, electricians, carpenters, plumbers, HVAC technicians, roofers, painters, welders, drywall installers, tile setters, handymen and renovation specialists — certified or not.",
+    paths: [
+      "Local service jobs",
+      "Emergency call-outs",
+      "Renovation projects",
+      "Maintenance contracts",
+      "Subcontracting for larger builds",
+      "Trusted referrals",
+      "Consultations and site advice",
+      "Guides, checklists and DIY courses",
+    ],
+    moves: [
+      { title: "Name the trade and the jobs you take", stage: "discover", minutes: 15 },
+      { title: "Set the area you cover and your call-out terms", stage: "discover", minutes: 15 },
+      { title: "Show your experience honestly — years, jobs, any certification you hold", stage: "discover", minutes: 15 },
+      { title: "Photograph one finished job, before and after", stage: "build", minutes: 20, to: "/vault" },
+      { title: "Let Frassy write your service listing for you", stage: "build", minutes: 15, to: "/services" },
+      { title: "Set your prices and a standard quote template", stage: "build", minutes: 25, to: "/money-moves" },
+      { title: "Ask two past customers for a review", stage: "build", minutes: 15, to: "/workspace/card" },
+      { title: "Turn on invoices so every job gets paid properly", stage: "build", minutes: 15, to: "/financial-center" },
+      { title: "List the service so people can book you", stage: "monetize", minutes: 20, to: "/services" },
+      { title: "Put the business on your Frass Card", stage: "monetize", minutes: 15, to: "/workspace/card" },
+      { title: "Record one thing you know and turn it into a paid guide or course", stage: "monetize", minutes: 25, to: "/vault" },
+      { title: "Set up trusted referrals for the jobs you can't take", stage: "monetize", minutes: 15, to: "/services" },
+    ],
+    monetizationOutcome:
+      "A bookable trade service in the Frass Services Marketplace with real job photos, reviews, quotes and invoices — plus at least one knowledge product earning beyond the tools.",
+    showcase: {
+      label: "Frass Services",
+      to: "/services",
+      note: "Your work is presented as a bookable service — one listing, one reputation, no second profile.",
+    },
+    craft: "your trade",
+  },
 ];
+
 
 export function vaultByKey(key: string): BusinessVault | undefined {
   return BUSINESS_VAULTS.find((v) => v.key === key);

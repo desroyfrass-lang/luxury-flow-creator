@@ -12,6 +12,8 @@ import {
   recordReleaseApproval,
 } from "@/lib/founder/home.functions";
 import { invitationLabel, type InvitationVerdict } from "@/lib/founder/platform-audit";
+import { RegressionPanel } from "@/components/founder/regression-panel";
+import { loadSweep, sweepComplete } from "@/lib/security/regressions";
 
 const DECISIONS = [
   {
@@ -59,6 +61,8 @@ export function ReleaseApprovalPanel() {
     [snapshot?.today.unresolvedFindings],
   );
 
+  const regressionsVerified = sweepComplete(loadSweep());
+
   const summaryLines = useMemo(() => {
     if (!snapshot) return [] as string[];
     return [
@@ -68,12 +72,18 @@ export function ReleaseApprovalPanel() {
       `Platform status: ${snapshot.platform.statusPlain}`,
       `Invitation readiness: ${readiness ? invitationLabel(readiness as InvitationVerdict) : "not answered"}`,
       `Outstanding known issues: ${outstanding.length}`,
+      `Security regression sweep: ${regressionsVerified ? "complete" : "incomplete"}`,
     ];
-  }, [snapshot, changes, readiness, outstanding]);
+  }, [snapshot, changes, readiness, outstanding, regressionsVerified]);
 
   const mutation = useMutation({
     mutationFn: () => {
       if (!decision) throw new Error("Choose a decision first.");
+      if (decision === "approved" && !regressionsVerified) {
+        throw new Error(
+          "Finish the FRASS-0531 security regression sweep before approving a release.",
+        );
+      }
       return record({
         data: {
           decision,
@@ -109,6 +119,11 @@ export function ReleaseApprovalPanel() {
           you answer.
         </p>
       </header>
+
+      {/* FRASS-0531 — no release is approved without the regression sweep. */}
+      <div className="rounded-2xl border border-border/70 p-5">
+        <RegressionPanel compact />
+      </div>
 
       <div className="space-y-4 rounded-2xl border border-border/70 p-5">
         <div className="space-y-2">

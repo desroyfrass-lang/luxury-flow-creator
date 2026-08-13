@@ -2084,3 +2084,86 @@ before Founder personality or tools), `src/lib/frassy-tools.server.ts`
 
 **Launch requirement** — independent penetration testing before public launch
 (DEPLOYMENT_CHECKLIST section 10). Automated scanners do not replace it.
+
+---
+
+## FRASS-0531 — Security Regression Protection
+*Constitutional Amendment · P0 · Approved*
+
+**Vision** — a security issue that has already been solved must never quietly
+return in a future release.
+
+**Rule** — whenever a vulnerability is fixed, Frass permanently records: root
+cause · resolution · test case · affected systems · security classification.
+Every fixed issue becomes a permanent regression test. Entries are append-only:
+a solved issue is never deleted, because deleting it deletes the memory of how
+it was solved.
+
+**Before every deployment** the Security Center walks the registry and confirms
+each previously fixed vulnerability is still closed. Release Approval
+(FRASS-0529) refuses an "Approve" while the sweep is incomplete.
+
+**Permanent regression areas** — Founder authorization · hidden administrative
+routes · payment authorization · file uploads and server-side fetches · role
+permissions · Frassy tool access · financial withdrawals and receipt
+immutability · Knowledge Vault privacy · commission bounds · PII exposure.
+
+**Founder Principle**
+> Every security issue should strengthen Frass permanently. Once a vulnerability
+> has been eliminated, future releases automatically verify it has not returned.
+
+**Implementation** — `src/lib/security/regressions.ts` (the registry),
+`src/components/founder/regression-panel.tsx` (the sweep),
+`src/components/founder/release-approval-panel.tsx` (the gate).
+
+---
+
+## FRASS-0532 — Personalized Daily · The Tradesperson
+*Constitutional Personalization · P0 · Approved (scope amended)*
+
+**Scope amendment** — this Daily is for tradespeople, not one person: builders,
+contractors, masons, electricians, carpenters, plumbers, HVAC technicians,
+roofers, painters, welders, drywall installers, tile setters, handymen and
+renovation specialists — including the many highly skilled Jamaican tradespeople
+who are not formally certified. "Builder" here means someone who builds with
+their hands, not an online builder.
+
+**Vision** — their challenge is never expertise; it is technology. Frassy removes
+technology as a barrier and helps decades of skill become income.
+
+**Daily philosophy** — every interaction answers one question: *"What's the
+easiest way to make money today?"* Never overwhelming.
+
+**Technology First Principle** — Frassy does the technology (forms, adverts,
+invoices, job organisation, scheduling, estimates, customer management); the
+member provides the knowledge.
+
+**Simplified View (FRASS-0517) is the default** — voice, large readable text, one
+task at a time, clear Approve and Next. No dashboards, no clutter.
+
+**Money Moves order** — immediate local service income first; then reputation and
+digital presence; then knowledge-based income (guides, checklists, consultations,
+DIY courses, demonstrations, coaching); then trusted referrals for work they
+cannot take.
+
+**Certification honesty** — experience is shown honestly; certification is shown
+only when real. Frass never claims a licence the member does not hold, never
+treats an uncertified tradesperson as unskilled, and always says plainly when a
+job legally requires a licence.
+
+**Pace** — one recommendation, one decision, one clear next step. ~45 minutes.
+
+**Encouragement** — "Your experience is your greatest asset."
+
+**Founder Principle**
+> A lifetime of experience should never be limited by unfamiliar technology.
+
+**Tradesperson Vault (FRASS-0532-V)** — a full member of the FRASS-0503 family,
+same Discover → Build → Monetize constitution: professional profile, quotes,
+invoices, project organisation, before-and-after galleries, reputation,
+referrals and passive income from expertise. Selling flows through the existing
+Frass Services Marketplace and Frass Card — never a parallel system.
+
+**Implementation** — `src/lib/daily/tradesperson.ts`,
+`src/components/workspace/tradesperson-daily.tsx`, `tradesperson` entry in
+`src/lib/business/vault-family.ts`.
