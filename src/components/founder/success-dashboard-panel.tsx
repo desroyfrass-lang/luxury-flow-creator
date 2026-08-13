@@ -115,11 +115,19 @@ export function FounderSuccessPanel() {
 
   return (
     <section className="space-y-5">
+      <div className="sticky top-0 z-10 -mx-1 rounded-b-xl border-b border-[color:var(--gold)]/50 bg-background/95 px-4 py-2 backdrop-blur">
+        <p className="text-[11px] font-bold uppercase tracking-wide text-[color:var(--gold)]">
+          {FOUNDER_CONFIDENTIAL_LABEL}
+        </p>
+      </div>
+
       <header>
         <p className="text-xs uppercase tracking-[0.3em] text-[color:var(--gold)]">
           FRASS-0547 · FRASS-0548
         </p>
-        <h2 className="mt-2 text-2xl font-black uppercase tracking-tight">Founder Success Dashboard</h2>
+        <h2 className="mt-2 text-2xl font-black uppercase tracking-tight">
+          Member Progress Radar
+        </h2>
         <p className="mt-2 text-sm text-muted-foreground">
           Measure progress. Protect privacy. You see how members are doing — never their bank
           accounts.
@@ -132,6 +140,7 @@ export function FounderSuccessPanel() {
         </p>
         <p className="mt-1 text-xs text-muted-foreground">{FOUNDER_CONFIDENTIAL_BANNER}</p>
       </div>
+
 
       {isLoading ? (
         <p className="text-sm text-muted-foreground">Reading how everyone is progressing…</p>
