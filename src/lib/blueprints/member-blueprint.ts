@@ -43,6 +43,22 @@ export type CreativeProject = {
   notes?: string | null;
 };
 
+/**
+ * FRASS-0534 — a lightweight pointer from a Blueprint to a book project. The
+ * manuscript itself (chapters, versions, amendments) lives in the
+ * `legacy_publications` table; this is just so Frassy knows, from the Blueprint,
+ * that the member is writing a book.
+ */
+export type LegacyPublicationPointer = {
+  title: string;
+  /** "new-book" — written from a completed journey. "republish" — reclaiming existing work. */
+  kind: "new-book" | "republish";
+  /** The legacy_publications row id, when one exists. */
+  publication_id?: string | null;
+  /** outline | drafting | editing | review | published */
+  status?: string | null;
+};
+
 export type MemberBlueprint = {
   id: string;
   user_id: string | null;
@@ -60,6 +76,8 @@ export type MemberBlueprint = {
   business_vaults: string[];
   /** FRASS-0533 — recurring creative projects Frassy produces alongside them. */
   creative_projects: CreativeProject[];
+  /** FRASS-0534 — pointers to the member's book projects (manuscript lives in legacy_publications). */
+  legacy_publications: LegacyPublicationPointer[];
   learning_style: string | null;
   motivation_style: string | null;
   simplified_view: boolean;
@@ -86,6 +104,7 @@ export const BLUEPRINT_FIELDS = [
   { key: "money_moves_philosophy", label: "Money Moves philosophy", plain: "What kind of income fits their life." },
   { key: "business_vaults", label: "Business Vaults", plain: "Which trades or pathways apply to them." },
   { key: "creative_projects", label: "Creative projects", plain: "Recurring projects Frassy produces with them each week." },
+  { key: "legacy_publications", label: "Book projects", plain: "Books Frassy is editing from their completed journeys (FRASS-0534)." },
 
   { key: "learning_style", label: "Learning style", plain: "How they take in something new." },
   { key: "motivation_style", label: "Motivation style", plain: "What keeps them going." },
@@ -128,6 +147,7 @@ export const BLANK_BLUEPRINT: Omit<
   business_vaults: [],
   creative_projects: [],
 
+  legacy_publications: [],
   learning_style: null,
   motivation_style: null,
   simplified_view: false,
@@ -190,6 +210,23 @@ export function blueprintToPrompt(b: MemberBlueprint): string {
         "They remain the creator — never take the creative decision away from them."
       : null,
 
+    // FRASS-0534 — book projects. Frassy is the editor, never the author; the
+    // member reviews and approves every draft. The manuscript lives in
+    // legacy_publications; this is just so Frassy knows the book exists.
+    (b.legacy_publications ?? []).length
+      ? "Book projects (FRASS-0534):\n" +
+        (b.legacy_publications ?? [])
+          .map(
+            (p) =>
+              `· ${p.title} (${p.kind === "republish" ? "republishing" : "new book"}${
+                p.status ? `, ${p.status}` : ""
+              })`,
+          )
+          .join("\n") +
+        "\nYou are the editor, never the author. Improve clarity, organise chapters, write introductions and " +
+        "summaries, format consistently — but the voice is always theirs. They review and approve every draft."
+      : null,
+
     b.learning_style ? `Learning style: ${b.learning_style}` : null,
     b.motivation_style ? `Motivation: ${b.motivation_style}` : null,
     b.hours_per_day != null ? `Available time: about ${b.hours_per_day} hours a day. Never plan more.` : null,
@@ -219,4 +256,30 @@ export function blueprintGaps(b: MemberBlueprint): string[] {
 export function blueprintCompleteness(b: MemberBlueprint): number {
   const total = 6;
   return Math.round(((total - blueprintGaps(b).length) / total) * 100);
+}
+
+/**
+ * Supabase returns JSON columns (creative_projects, legacy_publications) as
+ * opaque `Json`. This normaliser casts them back to their typed shapes so the
+ * rest of the app can use them safely. It is the single place that knows the
+ * DB row is not yet a clean MemberBlueprint.
+ */
+export function normalizeBlueprint(row: Record<string, unknown>): MemberBlueprint {
+  const r = row as Record<string, unknown>;
+  return {
+    ...(r as unknown as Omit<
+      MemberBlueprint,
+      "creative_projects" | "legacy_publications" | "business_vaults" | "strengths" | "daily_priorities" | "avoid"
+    >),
+    creative_projects: Array.isArray(r.creative_projects)
+      ? (r.creative_projects as CreativeProject[])
+      : [],
+    legacy_publications: Array.isArray(r.legacy_publications)
+      ? (r.legacy_publications as LegacyPublicationPointer[])
+      : [],
+    business_vaults: Array.isArray(r.business_vaults) ? (r.business_vaults as string[]) : [],
+    strengths: Array.isArray(r.strengths) ? (r.strengths as string[]) : [],
+    daily_priorities: Array.isArray(r.daily_priorities) ? (r.daily_priorities as string[]) : [],
+    avoid: Array.isArray(r.avoid) ? (r.avoid as string[]) : [],
+  };
 }

@@ -2766,6 +2766,59 @@ export type Database = {
           },
         ]
       }
+      legacy_publications: {
+        Row: {
+          amendments: Json
+          blueprint_id: string | null
+          chapters: Json
+          created_at: string
+          formats: Json
+          id: string
+          kind: string
+          owner_id: string
+          status: string
+          title: string
+          updated_at: string
+          versions: Json
+        }
+        Insert: {
+          amendments?: Json
+          blueprint_id?: string | null
+          chapters?: Json
+          created_at?: string
+          formats?: Json
+          id?: string
+          kind?: string
+          owner_id: string
+          status?: string
+          title: string
+          updated_at?: string
+          versions?: Json
+        }
+        Update: {
+          amendments?: Json
+          blueprint_id?: string | null
+          chapters?: Json
+          created_at?: string
+          formats?: Json
+          id?: string
+          kind?: string
+          owner_id?: string
+          status?: string
+          title?: string
+          updated_at?: string
+          versions?: Json
+        }
+        Relationships: [
+          {
+            foreignKeyName: "legacy_publications_blueprint_id_fkey"
+            columns: ["blueprint_id"]
+            isOneToOne: false
+            referencedRelation: "member_success_blueprints"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       link_referrals: {
         Row: {
           business_launched_at: string | null
@@ -3133,6 +3186,7 @@ export type Database = {
           hours_per_day: number | null
           id: string
           learning_style: string | null
+          legacy_publications: Json | null
           long_term_vision: string | null
           member_name: string
           money_moves_philosophy: string | null
@@ -3161,6 +3215,7 @@ export type Database = {
           hours_per_day?: number | null
           id?: string
           learning_style?: string | null
+          legacy_publications?: Json | null
           long_term_vision?: string | null
           member_name: string
           money_moves_philosophy?: string | null
@@ -3189,6 +3244,7 @@ export type Database = {
           hours_per_day?: number | null
           id?: string
           learning_style?: string | null
+          legacy_publications?: Json | null
           long_term_vision?: string | null
           member_name?: string
           money_moves_philosophy?: string | null

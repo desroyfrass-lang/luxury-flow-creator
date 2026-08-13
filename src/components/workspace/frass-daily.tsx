@@ -25,6 +25,7 @@ import { isKankoDaily } from "@/lib/daily/kanko";
 import { isMotherDaily } from "@/lib/daily/mother";
 import { isTradespersonDaily } from "@/lib/daily/tradesperson";
 import { CreativeProjectProgress } from "@/components/workspace/creative-project-progress";
+import { LegacyPublicationProgress } from "@/components/workspace/legacy-publication-progress";
 import {
   FrassyDoesTheTech,
   TradespersonFrassyNote,
@@ -872,6 +873,17 @@ function FrassDailyBody({
           note="Your recurring creative projects. You're the creator; I'm the production partner."
         >
           <CreativeProjectProgress name={name} />
+        </Section>
+
+        {/* FRASS-0534 — Legacy Publication. Blueprint-driven: only appears when
+            the member has a book project (newbook or republish). Frassy is the
+            editor, never the author. */}
+        <Section
+          id="legacy-publication"
+          title="📖 Legacy Publication"
+          note="A finished journey becoming a book — and the same knowledge becoming an audiobook, a course and more. I'm the editor; you're the author."
+        >
+          <LegacyPublicationProgress name={name} />
         </Section>
 
         {/* 1 — Celebrate first */}

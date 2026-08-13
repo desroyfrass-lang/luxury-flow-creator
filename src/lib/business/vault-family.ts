@@ -454,6 +454,62 @@ export const BUSINESS_VAULTS: BusinessVault[] = [
     },
     craft: "storytelling",
   },
+
+  // FRASS-0534 — the Author Vault. Every completed journey can become a book.
+  // This Vault is the engine behind the Legacy Publication Engine: it walks a
+  // member from "I finished something" to "people can buy my book." Flagship:
+  // the Founder republishing "My Different Shades of Black" and Mother's first
+  // book. Frassy is the editor, never the author.
+  {
+    key: "author",
+    emoji: "✒️",
+    label: "Author Vault",
+    summary:
+      "Turn a finished journey into a book — and the same knowledge into an audiobook, a course and more. Create once, earn for years.",
+    forWho:
+      "Anyone who has completed a Business Vault or a creative project, and anyone republishing work they already wrote. Writers, memoirists, teachers, founders reclaiming their own books.",
+    paths: [
+      "E-book",
+      "Audiobook",
+      "Printable workbook",
+      "Online course",
+      "Video course",
+      "Podcast series",
+      "Email course",
+      "Blog series",
+      "Downloadable guide",
+      "Knowledge Hub",
+    ],
+    designSupport: [
+      "Gather everything the journey already produced",
+      "Propose a chapter outline from a completed Vault",
+      "Frassy edits for clarity — you approve every draft",
+      "Version control — nothing is ever lost",
+      "Handwritten amendments become typed corrections",
+      "Publish in multiple formats from one manuscript",
+    ],
+    moves: [
+      { title: "Pick the journey to turn into a book", stage: "discover", minutes: 15 },
+      { title: "Gather everything the journey produced — goals, lessons, photos, milestones", stage: "discover", minutes: 30 },
+      { title: "Name the book and write the one-sentence promise", stage: "discover", minutes: 20 },
+      { title: "Approve the chapter outline Frassy proposes", stage: "discover", minutes: 20 },
+      { title: "Tell the story of chapter one (by voice or typing)", stage: "build", minutes: 40 },
+      { title: "Review Frassy's edit of chapter one and approve it", stage: "build", minutes: 25 },
+      { title: "Draft the remaining chapters", stage: "build", minutes: 60 },
+      { title: "Add handwritten amendments and let Frassy apply them", stage: "build", minutes: 30 },
+      { title: "Approve the full manuscript review", stage: "monetize", minutes: 30 },
+      { title: "Pick the formats — e-book, audiobook, course, workbook", stage: "monetize", minutes: 20 },
+      ...MARKETPLACE_CLOSE,
+    ],
+    monetizationOutcome:
+      "An approved manuscript published as an e-book in the Marketplace, with at least one additional format (audiobook, course or workbook) prepared from the same knowledge.",
+    showcase: {
+      label: "Legacy Publications",
+      to: "/workspace",
+      note: "Manuscripts, chapters and amendments are managed in your Workspace; published formats sell through the Marketplace on your Frass Card.",
+    },
+    craft: "writing",
+  },
 ];
 
 

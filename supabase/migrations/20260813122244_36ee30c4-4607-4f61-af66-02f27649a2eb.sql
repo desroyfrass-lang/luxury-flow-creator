@@ -1,0 +1,1 @@
+create or replace function public.touch_legacy_publication() returns trigger language plpgsql security invoker set search_path = public as $$ begin new.updated_at := now(); return new; end; $$; revoke execute on function public.touch_legacy_publication() from public, anon, authenticated;

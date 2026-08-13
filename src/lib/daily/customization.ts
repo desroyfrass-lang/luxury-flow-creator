@@ -57,7 +57,9 @@ export type SectionId =
   // FRASS-0532-C — Digital Legacy: preserve a lifetime of knowledge as assets.
   | "digital-legacy"
   // FRASS-0533 — recurring creative projects (a series, a channel, a book).
-  | "episode-progress";
+  | "episode-progress"
+  // FRASS-0534 — Legacy Publication Engine: a completed journey becoming a book.
+  | "legacy-publication";
 
 export type SectionMeta = {
   id: SectionId;
@@ -342,6 +344,12 @@ export const DAILY_SECTIONS: SectionMeta[] = [
     plain: "Where this week's episode of your series stands.",
     aliases: ["episode", "series", "youtube", "show", "creative project"],
   },
+  {
+    id: "legacy-publication",
+    label: "Legacy Publication",
+    plain: "Turning a finished journey into a book — and the same knowledge into an audiobook, a course and more.",
+    aliases: ["book", "manuscript", "e-book", "publish", "legacy publication", "my book"],
+  },
 ];
 
 export const SECTION_BY_ID = Object.fromEntries(
@@ -380,6 +388,7 @@ export const RECOMMENDED_ORDER: SectionId[] = [
   "digital-presence",
   "digital-legacy",
   "episode-progress",
+  "legacy-publication",
   "frassy-note",
   "since-last",
   "financial-snapshot",
