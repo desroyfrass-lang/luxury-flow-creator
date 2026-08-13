@@ -40,6 +40,8 @@ import { loadProfile, noticeAssets, partnerContext } from "@/lib/business/partne
 // FRASS-0479A — Human Balance Layer: achievement balanced with wellbeing.
 import { balanceBriefing, NO_SIGNALS, readBalance, readBalanceSignals } from "@/lib/frassy/balance-signals";
 import { PlainEnglishMessage } from "@/components/frassy/plain-english-toggle";
+import { useLearningLevel } from "@/hooks/use-learning-level";
+import { learningLevelContext, levelMeta, type LearningLevel } from "@/lib/frassy/learning-levels";
 
 
 type ProductCard = {
@@ -158,6 +160,9 @@ export function FrassyChat({ embedded = false }: { embedded?: boolean } = {}) {
   // Abort any in-flight turn when the widget unmounts.
   useEffect(() => () => abortRef.current?.abort(), []);
 
+  // FRASS-0545 — Adaptive Learning Levels.
+  const learning = useLearningLevel();
+
   const cartContext = items.length
     ? items
         .map((i) => `${i.quantity}× ${i.product.node.title} (${i.variantTitle})`)
@@ -241,6 +246,8 @@ export function FrassyChat({ embedded = false }: { embedded?: boolean } = {}) {
           interactionMode: spoken ? "voice_and_text" : "text",
           voiceAvailable: voice.voiceAvailable,
           workingStyleContext: workingStyleContext(style) || undefined,
+          // FRASS-0545 — the depth this member wants right now.
+          learningLevelContext: learningLevelContext(learning.level),
           // FRASS-0482 — Frassy plans around the business already inside the person.
           partnerContext: partnerContext(loadProfile()) || undefined,
           // FRASS-0479A — how hard this week has been, and what deserves celebrating.
@@ -487,7 +494,12 @@ export function FrassyChat({ embedded = false }: { embedded?: boolean } = {}) {
               }
             >
               {m.role === "assistant" ? (
-                <PlainEnglishMessage content={m.content} />
+                <PlainEnglishMessage
+                  content={m.content}
+                  onRequestLevel={(next: LearningLevel) =>
+                    void send(`Explain that again at the "${levelMeta(next).label}" level.`)
+                  }
+                />
               ) : (
                 <p className="whitespace-pre-wrap">{m.content}</p>
               )}
