@@ -1,6 +1,8 @@
 # Project Memory
 
 ## Core
+FRASS-0556: Frassy is never tied to one AI provider — every request is routed to the cheapest capable brain, and answered with no AI at all when Frass's own rules, data or routes can do it.
+FRASS-0557: one Frassy Beacon on every page (idle/listening/thinking/speaking), one tap to talk, context aware, never touching screen edges; every chat has Expand/Restore.
 FRASS-0550: every Founder insight answers Who · Why (observable behaviour) · What they need · What you should do · Likely outcome. Frassy recommends, the Founder decides.
 Founder analytics may only support/improve/celebrate/guide — never rank publicly, shame, sell or leaderboard members (FRASS-0548).
 Every Founder-facing technical update uses the FRASS-0549 format: What Changed · What Was Added · Plain English · Real-Life Example · What It Means · Founder Attention · My Recommendation.
@@ -172,3 +174,4 @@ Creative series are intellectual property produced by Frassy from a Blueprint, n
 - [FRASS-0545 Adaptive Learning Levels](mem://features/frass-0545-adaptive-learning-levels) — Four learning depths, remembered default in Settings, per-answer switching, Frassy recommends only
 - [FRASS-0546 Adaptive Momentum Engine](mem://features/frass-0546-adaptive-momentum) — Four earned momentum levels, five achievement styles, optional dated challenges, automatic pressure release
 - [FRASS-0547/0548 Founder Success Dashboard & Visibility](mem://features/frass-0547-0548-founder-visibility) — FRASS-0550 Coaching Engine five questions; Progress vs financial data split, revenue ranges, Founder Radar, Founder-only enforcement
+- [FRASS-0556/0557 AI Router + Frassy Beacon](mem://features/frass-0556-0557-ai-router-and-beacon) — Provider-independent routing with a no-AI first step, and the persistent context-aware Frassy companion
