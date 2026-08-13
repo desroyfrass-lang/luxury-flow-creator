@@ -144,10 +144,10 @@ export function usePushToTalk(owner = "frassy") {
    * stream is ever audible.
    */
   const speak = useCallback(
-    async (text: string) => {
+    async (text: string, tone?: VoiceTone) => {
       speakingRef.current = true;
       setPhase("speaking");
-      const result = await speakText(text, { owner });
+      const result = await speakText(text, { owner, tone });
       speakingRef.current = false;
       if (result === "blocked") {
         setVoiceAvailable(false);

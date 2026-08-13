@@ -13,19 +13,20 @@ import {
   setVoiceTier,
   type VoiceTier,
 } from "@/lib/voice/voice-tier";
+import type { VoiceTone } from "@/lib/voice/frassy-voice";
 
 export async function speakWithGuarantee(
   text: string,
-  opts: { owner?: string; allowed?: boolean } = {},
+  opts: { owner?: string; allowed?: boolean; tone?: VoiceTone } = {},
 ): Promise<{ spoke: boolean; notice: string | null; tier: VoiceTier }> {
   if (opts.allowed === false) return { spoke: false, notice: null, tier: getVoiceTier() };
   let attempts = 0;
-  let result = await speakText(text, { owner: opts.owner ?? "frassy" }).catch(
+  let result = await speakText(text, { owner: opts.owner ?? "frassy", tone: opts.tone }).catch(
     () => "failed" as const,
   );
   while (attempts < VOICE_RETRY_LIMIT && (result === "failed" || result === "blocked")) {
     attempts += 1;
-    result = await speakText(text, { owner: opts.owner ?? "frassy" }).catch(
+    result = await speakText(text, { owner: opts.owner ?? "frassy", tone: opts.tone }).catch(
       () => "failed" as const,
     );
   }

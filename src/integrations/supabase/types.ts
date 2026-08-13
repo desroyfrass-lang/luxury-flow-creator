@@ -5179,6 +5179,45 @@ export type Database = {
         }
         Relationships: []
       }
+      voice_identity: {
+        Row: {
+          approved_at: string | null
+          approved_by: string | null
+          created_at: string
+          id: string
+          note: string | null
+          pronunciation: Json
+          speed: number
+          status: string
+          voice_id: string
+          warmth: number
+        }
+        Insert: {
+          approved_at?: string | null
+          approved_by?: string | null
+          created_at?: string
+          id?: string
+          note?: string | null
+          pronunciation?: Json
+          speed?: number
+          status?: string
+          voice_id: string
+          warmth?: number
+        }
+        Update: {
+          approved_at?: string | null
+          approved_by?: string | null
+          created_at?: string
+          id?: string
+          note?: string | null
+          pronunciation?: Json
+          speed?: number
+          status?: string
+          voice_id?: string
+          warmth?: number
+        }
+        Relationships: []
+      }
       webauthn_challenges: {
         Row: {
           challenge: string
