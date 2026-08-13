@@ -385,6 +385,17 @@ export function FrassyChat({
     }
   }
 
+  // FRASS-0558 §9/§10 — is a conversation actually live right now?
+  const conversationLive =
+    voice.phase === "recording" || voice.phase === "transcribing" || voice.phase === "speaking" || loading;
+
+  /** One tap ends it: voice stops, the mic closes, the history stays saved. */
+  function endConversation() {
+    stopTurn();
+    if (voice.phase === "speaking") voice.stopSpeaking();
+    if (voice.phase === "recording") void voice.stopRecording();
+  }
+
   // Push-to-talk: press → record, press again → transcribe → one spoken turn.
   async function toggleMic() {
     if (voice.phase === "speaking") {
