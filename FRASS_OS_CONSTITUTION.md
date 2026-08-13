@@ -2004,3 +2004,17 @@ platform change follows this sequence:
 - `src/lib/founder/workflow.ts` — the sequence, and how each classification enters it.
 - `src/components/founder/founder-workflow-panel.tsx` — Command Center → Platform.
 - `src/lib/frassy/personality.ts` — the standard inside Frassy's Founder layer.
+
+## FRASS-0528 — Invitation Readiness (Audit Closing Question)
+
+Every Founder Platform Audit ends with one question from Frassy:
+
+> "Based on today's audit, are you comfortable inviting a new member onto Frass?"
+
+Answers: ✅ Yes · ⚠️ Yes, with known issues · ❌ Not yet.
+
+- The audit cannot be archived until the question is answered.
+- Any answer other than "Yes" attaches every finding from that audit as
+  unresolved; they stay visible at the top of the Audit Desk until a later
+  audit ends with "Yes".
+- The audit is judged by the member experience, not by boxes checked.
