@@ -2344,3 +2344,16 @@ fixed `search_path` and `EXECUTE` is revoked from `anon`. It cannot become
 `SECURITY INVOKER` without reintroducing the recursion. Reviewed and accepted.
 Every other `SECURITY DEFINER` function in `public` is a trigger or job function
 with `EXECUTE` revoked from both `anon` and `authenticated`.
+
+## FRASS-0539 — AI Approval Rule (P0)
+Frassy may inspect anything and change nothing on her own.
+- **Read** — automatic. Nothing changes.
+- **Write** — she prepares the change, previews it, and waits for Founder approval ("I've prepared an updated Welcome Hall greeting. Would you like to apply it?").
+- **Delete** — Founder approval plus a second explicit confirmation.
+Enforced in `src/lib/founder/ai-approval.ts` (`approvalPolicy`, `assertAiActionAllowed`). No surface may grant Frassy more authority than this.
+
+## FRASS-0540 — Founder AI Operations Dashboard (P0)
+One place to see credits remaining and burn rate, requests by feature, success rate, response times, cost by feature, 14-day trends, alerts (low credits, cost spikes, slow responses, falling success rate) and Frassy's optimisation suggestions. Lives in the Command Center under **AI Operations**. The Founder should never be surprised by AI costs or performance.
+
+## FRASS-0541 — Founder Platform Analytics & Return on Intelligence (P0)
+AI is measured as an investment, not an expense. Alongside cost, the dashboard reports member outcomes: businesses started, books published and in progress, products created, Money Moves completed, active member blueprints and member revenue influenced. Website traffic is context; member outcomes are the measure of Frass.
