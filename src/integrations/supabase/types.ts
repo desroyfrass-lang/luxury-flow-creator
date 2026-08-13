@@ -4135,6 +4135,102 @@ export type Database = {
           },
         ]
       }
+      repair_incidents: {
+        Row: {
+          blocking_launch: boolean
+          category: string
+          context_path: string | null
+          created_at: string
+          diagnosis: string | null
+          engineering_report: string | null
+          evidence: Json
+          id: string
+          pattern_signature: string | null
+          repairs_applied: Json
+          reported_text: string
+          root_cause: string | null
+          severity: string
+          status: string
+          updated_at: string
+          user_id: string | null
+        }
+        Insert: {
+          blocking_launch?: boolean
+          category?: string
+          context_path?: string | null
+          created_at?: string
+          diagnosis?: string | null
+          engineering_report?: string | null
+          evidence?: Json
+          id?: string
+          pattern_signature?: string | null
+          repairs_applied?: Json
+          reported_text: string
+          root_cause?: string | null
+          severity?: string
+          status?: string
+          updated_at?: string
+          user_id?: string | null
+        }
+        Update: {
+          blocking_launch?: boolean
+          category?: string
+          context_path?: string | null
+          created_at?: string
+          diagnosis?: string | null
+          engineering_report?: string | null
+          evidence?: Json
+          id?: string
+          pattern_signature?: string | null
+          repairs_applied?: Json
+          reported_text?: string
+          root_cause?: string | null
+          severity?: string
+          status?: string
+          updated_at?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      repair_patterns: {
+        Row: {
+          category: string
+          created_at: string
+          guidance: string | null
+          id: string
+          last_seen_at: string
+          repair_action: string | null
+          root_cause: string | null
+          signature: string
+          symptom: string
+          times_seen: number
+        }
+        Insert: {
+          category?: string
+          created_at?: string
+          guidance?: string | null
+          id?: string
+          last_seen_at?: string
+          repair_action?: string | null
+          root_cause?: string | null
+          signature: string
+          symptom: string
+          times_seen?: number
+        }
+        Update: {
+          category?: string
+          created_at?: string
+          guidance?: string | null
+          id?: string
+          last_seen_at?: string
+          repair_action?: string | null
+          root_cause?: string | null
+          signature?: string
+          symptom?: string
+          times_seen?: number
+        }
+        Relationships: []
+      }
       reward_coupons: {
         Row: {
           code: string
