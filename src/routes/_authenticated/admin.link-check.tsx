@@ -4,6 +4,7 @@ import { useMutation } from "@tanstack/react-query";
 import { useState, useEffect } from "react";
 import { Loader2, AlertTriangle, CheckCircle2, CornerDownRight, ExternalLink } from "lucide-react";
 import { runLinkCheck, type LinkCheckReport } from "@/lib/link-check.functions";
+import { CoreRouteAuditPanel } from "@/components/founder/core-route-audit";
 
 export const Route = createFileRoute("/_authenticated/admin/link-check")({
   component: LinkCheckPage,
@@ -41,6 +42,11 @@ function LinkCheckPage() {
           and reports anything broken or redirecting. This is a temporary diagnostic tool — remove it
           once the walkthrough is complete.
         </p>
+      </div>
+
+      {/* FRASS-0514 — core routes are audited first: they are launch blocking. */}
+      <div className="mb-10">
+        <CoreRouteAuditPanel />
       </div>
 
       <div className="flex flex-wrap items-center gap-3 rounded-sm border border-border/60 bg-card/40 p-4">
