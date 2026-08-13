@@ -1,6 +1,8 @@
 # Project Memory
 
 ## Core
+Founder analytics may only support/improve/celebrate/guide — never rank publicly, shame, sell or leaderboard members (FRASS-0548).
+Every Founder-facing technical update uses the FRASS-0549 format: What Changed · What Was Added · Plain English · Real-Life Example · What It Means · Founder Attention · My Recommendation.
 FRASS-0537: Frassy meets members on the channels they already use (WhatsApp first-class); one identity everywhere; never promise free telecom/landline calls.
 FRASS-0538: content (text, images, capsules, copy, Daily messages) is edited by conversation with Frassy; engineering only for logic, data, auth, security, APIs, performance.
 Command Center opens on Founder Home ("How is Frass doing today?") — platform/member/business/intelligence health + Today (FRASS-0528).

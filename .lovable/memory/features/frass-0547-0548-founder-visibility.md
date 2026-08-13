@@ -1,5 +1,5 @@
 ---
-name: FRASS-0547 / FRASS-0548 Founder Success Dashboard & Founder Visibility
+name: FRASS-0547 / FRASS-0548 / FRASS-0549 Founder Success Dashboard, Visibility & Explanation Standard
 description: Founder sees member progress (momentum, blueprint, Money Moves, legacy) and revenue ranges only — never balances; Founder analytics are Founder-only and fail closed
 type: feature
 ---
@@ -42,6 +42,22 @@ under FRASS-0535). Enforcement is required at database, API, application, Frassy
 AI channel (ChatGPT, Claude, WhatsApp, future). Unauthorised requests fail closed.
 
 A **Founder Confidential banner** must always appear on the dashboard.
+
+**Founder Responsibility:** analytics may only support members, improve the platform,
+celebrate achievements and offer guidance. Never rank members publicly, shame members,
+sell analytics, or create public leaderboards without member consent.
+
+**Why + Recommended Action:** every classification shows Frassy's reasoning (the behaviour
+behind the label) and one Recommended Founder Action. Banner reads "Founder Confidential —
+Support & Mentorship Only". Non-Founder reads fail closed with HTTP 403.
+
+# FRASS-0549 — Founder Explanation Standard (P0)
+
+Every technical update in a Founder-only surface uses one fixed structure: 🛠️ What Changed ·
+📋 What Was Added · 😊 In Plain English · 🏡 Real-Life Example · 🎯 What This Means for Frass ·
+⚠️ Founder Attention · 💡 My Recommendation. Depth follows the Learning Level (FRASS-0545);
+the structure never changes. Frassy briefs like a Chief of Staff, not an engineer.
+Implementation: `src/lib/founder/explanation-standard.ts`, composed into the Founder chat prompt.
 
 Implementation: `src/lib/founder/success-dashboard.ts`,
 `src/lib/founder/success.functions.ts` (server-verified admin role, FRASS-0530),
