@@ -90,7 +90,7 @@ export function visibilityMeta(id: string | null | undefined) {
 export const FOUNDING_BADGE = {
   glyph: "◈",
   label: "First Partner",
-  short: "Founding",
+  short: "First Partner",
 } as const;
 
 export function foundingTitle(sequence: number | null | undefined): string {
@@ -100,12 +100,12 @@ export function foundingTitle(sequence: number | null | undefined): string {
 }
 
 /**
- * The Kanko Principle — the very first First Partner is welcomed once, and
+ * The Kanko Principle — the very first First Partner (No. 1) is welcomed once, and
  * only once. After that they are simply a builder like everyone else.
  */
 export function kankoWelcome(name: string): string[] {
   return [
-    `${name}. You are the first First Partner of Frass.`,
+    `${name}. You are the First Partner of Frass.`,
     "There was no proof this would work when you said yes. That's the part being remembered — not the timing, the trust.",
     "Nothing about your tools or your earnings changes today. What changes is the record: your name sits at the front of it for as long as Frass exists.",
   ];
