@@ -2491,3 +2491,60 @@ empowering rather than overwhelming.
 
 Implementation: `src/lib/frassy/momentum.ts`, `src/hooks/use-momentum.ts`,
 `src/components/frassy/momentum-card.tsx`, composed into every Frassy prompt.
+
+
+## FRASS-0547 — Founder Success Dashboard (Measure Progress. Protect Privacy.)
+
+**Status: Constitutional Amendment · Priority P0**
+
+The Founder may understand how members are progressing without exposing private
+financial information. Financial data belongs to the member. Progress data belongs to
+the platform.
+
+**The Founder may see** overall momentum (🟢 Thriving, 🟡 Growing, 🟠 Needs
+encouragement, 🔴 Needs support), achievement style, blueprint progress, Business Vault
+completion, Daily streak, Money Move completion, projects completed, digital legacy and
+book progress, engagement trends, milestones, and Frassy's coaching recommendations.
+
+**The Founder never sees** bank balances, credit card balances, exact personal income,
+tax records or personal financial accounts. Earnings appear only as a **range** — Not
+yet earning · First income earned · $100+ · $500+ · $1,000+ · $5,000+ · $10,000+ ·
+$50,000+ — unless a member explicitly opts into Founder Coaching, which is an invitation
+the member extends and may withdraw.
+
+**Founder Radar.** Each morning Frassy replaces the roster with an attention list: who
+needs encouragement, who is close to a milestone, who launched, who published, who
+reached independence. The Founder spends their time where it has the most impact.
+
+**Founder Principle.** The Founder should have visibility into member progress to better
+support the community, but never more visibility than is necessary to fulfil that
+responsibility. Member dignity, privacy and trust always come first.
+
+## FRASS-0548 — Founder Visibility (Support Requires Insight. Privacy Requires Boundaries.)
+
+**Status: Constitutional Amendment · Priority P0**
+
+The Founder Success Dashboard is a **Founder-only system**. No other member, partner,
+administrator, moderator, employee, contractor or AI agent may access Founder analytics
+unless explicitly authorised by the Founder under a future constitutional amendment.
+
+- **Members** may view only their own progress, goals, momentum, revenue, Money Moves,
+  Business Vaults, analytics, achievements and learning preferences.
+- **Public visitors** may never see individual progress, revenue ranges, Daily
+  completion, momentum level, learning style, Business Vault completion, blueprint
+  information, Founder insights or internal coaching recommendations. Public achievements
+  remain governed by FRASS-0535 — Progress Without Exposure.
+- **Enforcement** is required at the database layer (RLS and column permissions), the API
+  layer, the application layer, inside Frassy, and inside every AI integration
+  (ChatGPT, Claude, WhatsApp and future channels). Unauthorised requests fail closed.
+- **Founder Confidential banner.** The dashboard always states, on screen, that the
+  information exists to support members and is never publicly visible.
+
+**Founder Principle.** The Founder is entrusted with greater visibility solely to better
+serve the community. Insight is a responsibility, not a privilege. Privacy is a right,
+not an option.
+
+Implementation: `src/lib/founder/success-dashboard.ts`,
+`src/lib/founder/success.functions.ts`,
+`src/components/founder/success-dashboard-panel.tsx`, surfaced in the Command Center
+under Operations.

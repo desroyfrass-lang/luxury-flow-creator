@@ -282,6 +282,39 @@ export const AMENDMENTS: Amendment[] = [
     ],
     extends: ["FRASS-0479A"],
   },
+  {
+    ref: "FRASS-0547",
+    title: "Founder Success Dashboard",
+    intent:
+      "The Founder sees how members are progressing — momentum, blueprint, Money Moves, legacy, milestones — and money only as a range. Frass supports members; it never surveils them.",
+    targetProblem:
+      "A Founder cannot help people they cannot see, but progress oversight must never become financial surveillance.",
+    areas: ["Command Center"],
+    categories: ["governance", "privacy", "motivation"],
+    implementedAt: "2026-08-13",
+    evidence: [
+      "src/lib/founder/success-dashboard.ts",
+      "src/lib/founder/success.functions.ts",
+      "src/components/founder/success-dashboard-panel.tsx",
+    ],
+    extends: ["FRASS-0535"],
+  },
+  {
+    ref: "FRASS-0548",
+    title: "Founder Visibility",
+    intent:
+      "Founder analytics are Founder-only, enforced at the database, API, application and AI layers, failing closed. Members see only their own progress; the public sees none of it.",
+    targetProblem:
+      "Progress insight leaking to other members, staff, agents or the public would destroy member trust.",
+    areas: ["Command Center", "Security"],
+    categories: ["security", "privacy", "governance"],
+    implementedAt: "2026-08-13",
+    evidence: [
+      "src/lib/founder/success.functions.ts",
+      "src/lib/founder/success-dashboard.ts",
+    ],
+    extends: ["FRASS-0530", "FRASS-0536"],
+  },
 ];
 
 export function amendmentByRef(ref: string): Amendment | undefined {
