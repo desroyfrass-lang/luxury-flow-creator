@@ -16,6 +16,7 @@ import { Toaster } from "@/components/ui/sonner";
 import { WelcomeLinkClaim } from "@/components/link/welcome-link-claim";
 import { VoiceStateOverlay } from "@/components/voice-state-overlay";
 import { FrassyConversationDock } from "@/components/voice/frassy-conversation-dock";
+import { FounderPreviewReset } from "@/components/founder/preview-reset";
 import { FrassyChat } from "@/components/frassy-chat";
 import { frassySurface } from "@/lib/frassy/surfaces";
 import { FrassyHost } from "@/components/frassy-host";
@@ -149,6 +150,8 @@ function RootComponent() {
         {/* FRASS-0558 — one Frassy. She only floats where the page has no conversation of its own. */}
         <FrassyCompanion />
         <FrassyHost />
+        {/* FRASS-0560 — every build begins at the front door. */}
+        <FounderPreviewReset />
         <DailyGate />
         <ConstructionMode />
 

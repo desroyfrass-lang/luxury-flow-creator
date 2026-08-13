@@ -21,6 +21,7 @@ import { CoreRouteAuditPanel } from "@/components/founder/core-route-audit";
 import { PlatformProtectionSwitch } from "@/components/founder/platform-protection-switch";
 import { AiOperationsPanel } from "@/components/founder/ai-operations-panel";
 import { FounderSuccessPanel } from "@/components/founder/success-dashboard-panel";
+import { ExperienceSimulator } from "@/components/founder/experience-simulator";
 import { PlatformHealthPanel } from "@/components/finance/platform-health-panel";
 import { ObservationWindowPanel } from "@/components/finance/observation-window-panel";
 import { SecurityAlertsPanel } from "@/components/finance/security-alerts-panel";
@@ -150,6 +151,8 @@ function CommandCenter() {
             <FinancialSustainabilityPanel />
           </>
         )}
+
+        {active === "simulator" && <ExperienceSimulator />}
 
         {active === "innovation" && (
           <>

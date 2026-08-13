@@ -176,3 +176,4 @@ Creative series are intellectual property produced by Frassy from a Blueprint, n
 - [FRASS-0546 Adaptive Momentum Engine](mem://features/frass-0546-adaptive-momentum) — Four earned momentum levels, five achievement styles, optional dated challenges, automatic pressure release
 - [FRASS-0547/0548 Founder Success Dashboard & Visibility](mem://features/frass-0547-0548-founder-visibility) — FRASS-0550 Coaching Engine five questions; Progress vs financial data split, revenue ranges, Founder Radar, Founder-only enforcement
 - [FRASS-0556/0557 AI Router + Frassy Beacon](mem://features/frass-0556-0557-ai-router-and-beacon) — Provider-independent routing with a no-AI first step, and the persistent context-aware Frassy companion
+- [FRASS-0559/0560/0561 Experience Simulator](mem://features/frass-0559-0561-experience-simulator) — Persona simulator in Command Center, front-door preview reset, Founder Seed Vaults

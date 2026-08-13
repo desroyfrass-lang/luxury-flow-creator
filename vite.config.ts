@@ -21,6 +21,9 @@ export default defineConfig({
     server: { entry: "server" },
   },
   vite: {
+    // FRASS-0560 — a stamp that changes on every build, so the Founder's
+    // preview can return to the front door when a new build lands.
+    define: { __FRASS_BUILD_ID__: JSON.stringify(Date.now().toString(36)) },
     plugins: [mcpPlugin()],
     resolve: {
       alias: {
