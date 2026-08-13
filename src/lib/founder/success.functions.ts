@@ -126,7 +126,13 @@ export const founderSuccessOverview = createServerFn({ method: "GET" })
         coachingOptIn: prefs.founder_coaching === true,
       };
 
-      return { ...base, tone, insight: memberInsight(base, tone) };
+      return {
+        ...base,
+        tone,
+        insight: memberInsight(base, tone),
+        archetypeReason: archetypeReason(base, tone),
+        recommendedAction: recommendedAction(base, tone),
+      };
     });
 
     const count = (t: MemberProgress["tone"]) => members.filter((m) => m.tone === t).length;
