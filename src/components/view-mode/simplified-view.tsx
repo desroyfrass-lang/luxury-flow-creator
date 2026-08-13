@@ -80,8 +80,8 @@ export function SimplifiedView({
             <div className="text-[10px] uppercase tracking-[0.3em] text-[color:var(--gold)]/80">
               Right now
             </div>
-            <h2 className="mt-2 text-base font-medium text-white">{task.title}</h2>
-            {task.detail && <p className="mt-1 text-sm text-white/60">{task.detail}</p>}
+            <h2 className="mt-2 text-base font-medium text-[color:var(--ws-ink)]">{task.title}</h2>
+            {task.detail && <p className="mt-1 text-sm text-[color:var(--ws-soft)]">{task.detail}</p>}
             {(task.onApprove || task.onNext) && (
               <div className="mt-4 flex flex-wrap gap-2">
                 {task.onApprove && (
@@ -97,7 +97,7 @@ export function SimplifiedView({
                   <button
                     type="button"
                     onClick={task.onNext}
-                    className="inline-flex items-center gap-2 rounded-full border border-white/25 px-5 py-2 text-[11px] uppercase tracking-[0.28em] text-white/80"
+                    className="inline-flex items-center gap-2 rounded-full border border-[color:var(--ws-line)] px-5 py-2 text-[11px] uppercase tracking-[0.28em] text-[color:var(--ws-ink)]"
                   >
                     {task.nextLabel ?? "Next"} <ArrowRight className="h-3.5 w-3.5" />
                   </button>
