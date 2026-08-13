@@ -6,6 +6,7 @@ import { useServerFn } from "@tanstack/react-start";
 import { useQuery } from "@tanstack/react-query";
 import { useMemo } from "react";
 import { SiteShell } from "@/components/site-shell";
+import { FrassyChat } from "@/components/frassy-chat";
 import { PageFeedback } from "@/components/page-feedback";
 import { getWelcomeHall, type HallMemory } from "@/lib/welcome-hall.functions";
 import { DISTRICTS, HALL_SECTIONS } from "@/lib/districts";
