@@ -142,9 +142,9 @@ export const SECURITY_REGRESSIONS: RegressionTest[] = [
     rootCause:
       "Public read policies exposed columns containing contact emails and private Founder notes.",
     resolution: "Column-level access was restricted and public reads narrowed to safe fields.",
-    testCase: "Read artist galleries and founding partners as an anonymous visitor.",
+    testCase: "Read artist galleries and first partners as an anonymous visitor.",
     expected: "No contact email and no private note is returned.",
-    affects: ["Artist galleries", "Founding partners", "Public profiles"],
+    affects: ["Artist galleries", "First Partners", "Public profiles"],
     enforcedIn: ["RLS policies and restricted views"],
     fixedOn: "2026-08-02",
   },

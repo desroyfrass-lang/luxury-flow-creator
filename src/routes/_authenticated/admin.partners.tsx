@@ -10,7 +10,7 @@ import {
   listPartnerInvitations,
   revokePartnerInvitation,
 } from "@/lib/partners.functions";
-// FRASS-0490 — Founding Partner Program shares this desk; it is not a second partner system.
+// FRASS-0490 — First Partner Program shares this desk; it is not a second partner system.
 import { FOUNDING_PLAIN_ENGLISH, FOUNDING_PRINCIPLE } from "@/lib/founding";
 import { FoundingBadge } from "@/components/founding/founding-badge";
 import {
@@ -184,7 +184,7 @@ function AdminPartners() {
 
 
 /**
- * FRASS-0490 — Founding Partner Program.
+ * FRASS-0490 — First Partner Program.
  * Only the Founder can open this desk, and only from here can recognition begin.
  */
 function FoundingDesk() {
@@ -203,7 +203,7 @@ function FoundingDesk() {
   const grant = useMutation({
     mutationFn: () => grantFn({ data: { email, note: note || undefined } }),
     onSuccess: () => {
-      toast.success("Founding Partner recognised. This is permanent.");
+      toast.success("First Partner recognised. This is permanent.");
       setEmail("");
       setNote("");
       refresh();
@@ -233,7 +233,7 @@ function FoundingDesk() {
       <div className="text-[11px] uppercase tracking-[0.32em] text-[color:var(--gold)]">
         FRASS-0490
       </div>
-      <h2 className="mt-3 font-display text-4xl">Founding Partners</h2>
+      <h2 className="mt-3 font-display text-4xl">First Partners</h2>
       <p className="mt-4 max-w-2xl text-sm leading-relaxed text-muted-foreground">
         {FOUNDING_PRINCIPLE}
       </p>
@@ -248,8 +248,8 @@ function FoundingDesk() {
           </div>
           <div className="text-xs text-muted-foreground">
             {open
-              ? "You can recognise new Founding Partners right now."
-              : "No new Founding Partners can be created until you reopen it."}
+              ? "You can recognise new First Partners right now."
+              : "No new First Partners can be created until you reopen it."}
           </div>
         </div>
         <button
@@ -294,7 +294,7 @@ function FoundingDesk() {
       <div className="mt-10 space-y-3">
         {roster.data?.partners.length === 0 && (
           <p className="text-sm text-muted-foreground">
-            No Founding Partners yet. The first one recognised becomes No. 1 forever.
+            No First Partners yet. The first one recognised becomes No. 1 forever.
           </p>
         )}
         {roster.data?.partners.map((p) => (

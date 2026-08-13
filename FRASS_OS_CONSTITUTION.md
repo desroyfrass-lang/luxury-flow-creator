@@ -786,9 +786,9 @@ keeps going past the job offer into relocation, settling in, and turning that pa
 
 ---
 
-## FRASS-0490 — Founding Partner Program (Constitutional Amendment, P0)
+## FRASS-0490 — First Partner Program (Constitutional Amendment, P0)
 
-**The First Builders of Frass.** Founding Partners are not early users. They are the
+**The First Builders of Frass.** First Partners are not early users. They are the
 people who chose to help build something before its success was certain.
 
 1. **Granted by the Founder alone.** Recognition cannot be earned, purchased or
@@ -796,7 +796,7 @@ people who chose to help build something before its success was certain.
 2. **Permanent for life.** The designation, the founding sequence, the date invited,
    the date accepted and the Founder who invited them are preserved permanently as the
    historical record of the platform's earliest builders.
-3. **Recognition is not authority.** Founding Partner status grants no Founder
+3. **Recognition is not authority.** First Partner status grants no Founder
    permissions, no financial permissions, no administrative access and no security
    privileges. Permissions live in roles; honour lives in the founding record, and the
    two never touch.
@@ -808,14 +808,14 @@ people who chose to help build something before its success was certain.
    even when hidden.
 6. **Frassy acknowledges it rarely.** Genuine milestones only, roughly once a month at
    most. Recognition repeated becomes noise, and noise is not honour.
-7. **The Kanko Principle.** The very first Founding Partner receives one unique welcome,
+7. **The Kanko Principle.** The very first First Partner receives one unique welcome,
    once, during onboarding — celebrating the moment without creating any permanent
    difference in platform privileges.
-8. **Founding Stories.** Every Founding Partner may record why they joined, what they
+8. **Founding Stories.** Every First Partner may record why they joined, what they
    hoped to build, their early journey and lessons learned, and may choose to make that
    story public. The founding generation becomes living history, not a badge.
-9. **The founding period.** The Founder may invite new Founding Partners while the
-   period remains open. When closed, no further Founding Partners can be created unless
+9. **The founding period.** The Founder may invite new First Partners while the
+   period remains open. When closed, no further First Partners can be created unless
    the Founder explicitly reopens the program.
 
 **Architecture:** this amendment extends the existing Partner architecture. There is no
@@ -825,7 +825,7 @@ the authority in `src/lib/founding.functions.ts`, the single badge in
 `src/components/founding/founding-badge.tsx`, the member's controls inside the Frass
 Card, and the Founder's desk inside `/admin/partners`.
 
-**Founder Principle:** Founding Partners are remembered not because they arrived first,
+**Founder Principle:** First Partners are remembered not because they arrived first,
 but because they chose to help build something before its success was certain.
 
 ---
@@ -884,7 +884,7 @@ social rating system.
    never increase trust — not directly, not indirectly.
 3. **Trust is a profile, not a score.** No "92/100", no leaderboard, no stars out of
    five. Verified accomplishments are shown as facts: Identity Verified · 48 Successful
-   Transactions · 100% of Commitments Met · Certified Esthetician · Founding Partner ·
+   Transactions · 100% of Commitments Met · Certified Esthetician · First Partner ·
    Trusted by 27 Verified Customers.
 4. **Only genuine counterparties may leave feedback** — someone who purchased a product,
    used a service, completed a shipping transaction or collaborated on a verified

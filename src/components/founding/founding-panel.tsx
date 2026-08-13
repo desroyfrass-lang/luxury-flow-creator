@@ -25,7 +25,7 @@ import {
 const KANKO_SEEN_KEY = "frass.founding.kanko.seen";
 
 /**
- * FRASS-0490 — the Founding Partner panel. It lives inside the Frass Card,
+ * FRASS-0490 — the First Partner panel. It lives inside the Frass Card,
  * because Builder Identity already lives there. No second identity page.
  */
 export function FoundingPanel({ name }: { name: string }) {
@@ -50,7 +50,7 @@ export function FoundingPanel({ name }: { name: string }) {
       story_journey: record.story.story_journey ?? "",
       story_lessons: record.story.story_lessons ?? "",
     });
-    // Kanko Principle: the first Founding Partner is welcomed once, ever.
+    // Kanko Principle: the first First Partner is welcomed once, ever.
     if (record.sequence === 1 && typeof window !== "undefined") {
       if (!window.localStorage.getItem(KANKO_SEEN_KEY)) setKanko(true);
     }
@@ -94,7 +94,7 @@ export function FoundingPanel({ name }: { name: string }) {
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div className="space-y-2">
           <p className="text-xs uppercase tracking-[0.25em] text-muted-foreground">
-            FRASS-0490 · Founding Partner Program
+            FRASS-0490 · First Partner Program
           </p>
           <FoundingBadge sequence={record.sequence} />
         </div>

@@ -1,7 +1,7 @@
 import { FOUNDING_BADGE, foundingTitle } from "@/lib/founding";
 
 /**
- * FRASS-0490 — the one Founding Partner mark. Every surface renders this exact
+ * FRASS-0490 — the one First Partner mark. Every surface renders this exact
  * component; there is no second badge design anywhere in Frass.
  */
 export function FoundingBadge({
@@ -16,7 +16,7 @@ export function FoundingBadge({
   const label = foundingTitle(sequence);
   return (
     <span
-      title="Founding Partner — honorary lifetime recognition. It grants no extra permissions."
+      title="First Partner — honorary lifetime recognition. It grants no extra permissions."
       className={[
         "inline-flex items-center gap-2 rounded-full border border-[color:var(--gold)]/50",
         "bg-[color:var(--gold)]/10 font-medium uppercase tracking-[0.18em] text-[color:var(--gold)]",
