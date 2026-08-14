@@ -129,7 +129,7 @@ export const AUDIT_PAGES: AuditPage[] = [
     purpose: "Every dollar traceable, explainable and auditable.",
     promises: ["Transparent pricing", "No surprise charges", "No hidden costs"],
     features: [
-      { name: "Financial timeline", status: "active", memberCost: "free", plain: "Plain-English receipts, immutable once written." },
+      { name: "Financial timeline", status: "active", memberCost: "free", plain: "Everyday-language receipts, immutable once written." },
       { name: "Credit balance", status: "active", memberCost: "free", plain: "What's left, what it costs, how to earn more." },
       { name: "Payment requests", status: "active", memberCost: "free", plain: "The customer always pays on their own trusted device." },
       { name: "Tax & tariff intelligence", status: "active", memberCost: "free", plain: "Records and configured rules, clearly labelled — never invented advice." },

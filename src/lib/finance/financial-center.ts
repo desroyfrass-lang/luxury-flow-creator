@@ -65,7 +65,7 @@ export function allocate(gross: number): Allocation {
   };
 }
 
-/** Plain-English statement of the constitutional split, used everywhere. */
+/** Everyday-language statement of the constitutional split, used everywhere. */
 export const CONSTITUTIONAL_SPLIT_NOTE =
   `${PLATFORM_ALLOCATION.creator}% creator · ${PLATFORM_ALLOCATION.total}% Frass ecosystem ` +
   `(${PLATFORM_ALLOCATION.infrastructure}% infrastructure · ${PLATFORM_ALLOCATION.reserve}% reserve · ` +

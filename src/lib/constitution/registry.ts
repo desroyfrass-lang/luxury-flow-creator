@@ -243,7 +243,7 @@ export const AMENDMENTS: Amendment[] = [
     categories: ["confusion", "usability", "content"],
     implementedAt: "2026-08-13",
     evidence: [
-      "src/lib/frassy/plain-english.ts",
+      "src/lib/frassy/everyday-language.ts",
       "src/components/frassy/everyday-language-toggle.tsx",
     ],
     extends: ["FRASS-0522-A"],

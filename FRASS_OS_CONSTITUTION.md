@@ -2425,7 +2425,7 @@ curiosity is encouraged. If someone asks twice, the explanation failed, not the 
 
 **Founder Principle.** Knowledge isn't valuable until it's understood.
 
-Implementation: `src/lib/frassy/plain-english.ts`,
+Implementation: `src/lib/frassy/everyday-language.ts`,
 `src/components/frassy/everyday-language-toggle.tsx`, composed into every Frassy prompt.
 
 ## FRASS-0545 — Adaptive Learning Levels (P0)

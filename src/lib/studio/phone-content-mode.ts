@@ -197,7 +197,7 @@ export function detectPhoneMedia(probe: MediaProbe): Detection {
 export type Enhancement = {
   key: string;
   label: string;
-  /** Plain-English: what this actually does to the recording. */
+  /** Everyday-language: what this actually does to the recording. */
   plain: string;
   lane: "video" | "audio" | "music";
   /** The Frass AI Credit operation this bills against. */

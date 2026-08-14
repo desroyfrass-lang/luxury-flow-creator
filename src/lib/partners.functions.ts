@@ -39,7 +39,7 @@ export const getMyPartnerStatus = createServerFn({ method: "GET" })
 export type ProvisionResult = {
   designation: string | null;
   displayName: string | null;
-  /** Plain-English list of what was made ready, in the order Frassy narrates it. */
+  /** Everyday-language list of what was made ready, in the order Frassy narrates it. */
   provisioned: { key: string; label: string; detail: string; created: boolean }[];
 };
 

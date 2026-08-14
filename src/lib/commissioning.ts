@@ -28,7 +28,7 @@ export const COMMISSIONING_PHASES: CommissioningPhase[] = (() => {
 export type ReadinessItem = {
   id: string;
   label: string;
-  /** Plain-English note about what "complete" means here. */
+  /** Everyday-language note about what "complete" means here. */
   note: string;
   /** Commissioning stages that settle this item. */
   stageIds?: string[];

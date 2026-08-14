@@ -468,7 +468,7 @@ export function reconcile(receipts: Receipt[]): ReceiptTotals {
   };
 }
 
-/** Plain-English proof that a balance is nothing more than its receipts. */
+/** Everyday-language proof that a balance is nothing more than its receipts. */
 export function reconciliationStatement(t: ReceiptTotals): string {
   return `${t.count} receipt${t.count === 1 ? "" : "s"} add up to ${money(t.available, t.currency)} available and ${money(
     t.pending,

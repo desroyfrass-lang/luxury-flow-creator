@@ -147,7 +147,7 @@ export function rankOnlineFirst<T>(
     .sort((a, b) => SHAPE_RANK[a.shape] - SHAPE_RANK[b.shape]);
 }
 
-/** Plain-English explanation of why a move is where it is. */
+/** Everyday-language explanation of why a move is where it is. */
 export function whyThisOrder(shape: EarningShape): string {
   const m = SHAPE_META[shape];
   if (m.scalable) return `${m.plain} That's why it comes first.`;

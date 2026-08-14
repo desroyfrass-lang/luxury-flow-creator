@@ -267,7 +267,7 @@ export function workingStyleContext(style: WorkingStyle): string {
     .join("\n")}`;
 }
 
-/** Plain-English summary for the member's own settings screen. */
+/** Everyday-language summary for the member's own settings screen. */
 export function describeWorkingStyle(style: WorkingStyle): string {
   const p = deriveProfile(style);
   if (!p.confident) return "Frassy is still getting to know how you like to work.";

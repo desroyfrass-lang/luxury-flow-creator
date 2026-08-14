@@ -83,7 +83,7 @@ export type DiscoveryOffer = {
   destination: Destination;
   /** Frassy's spoken-style line. */
   line: string;
-  /** Plain-English reason this is worth money. */
+  /** Everyday-language reason this is worth money. */
   worth: string;
 };
 

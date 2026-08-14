@@ -17,7 +17,7 @@ export type DesignationMeta = {
   id: PartnerDesignation;
   badge: string;
   label: string;
-  /** Plain-English meaning — the Founder's second-explanation rule. */
+  /** Everyday-language meaning — the Founder's second-explanation rule. */
   plainEnglish: string;
   /** How Frassy greets this arrival at the gate. */
   greeting: (name: string) => string;

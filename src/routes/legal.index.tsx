@@ -12,7 +12,7 @@ export const Route = createFileRoute("/legal/")({
           "The two agreements that govern Frass: the FrassKicks Visitor Agreement for shoppers, and the Frass Hill Builder Agreement for Builders and Partners. everyday language first.",
       },
       { property: "og:title", content: "Agreements, Privacy & Security — Frass" },
-      { property: "og:description", content: "Plain-English privacy, security and community agreements." },
+      { property: "og:description", content: "Everyday-language privacy, security and community agreements." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
     ],

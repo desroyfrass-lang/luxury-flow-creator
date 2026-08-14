@@ -12,7 +12,7 @@ export type WatermarkOption = {
   label: string;
   /** The literal text burned into the export. */
   mark: string | null;
-  /** Plain-English explanation for the export dialog. */
+  /** Everyday-language explanation for the export dialog. */
   plain: string;
   /** Percentage discount applied to the AI credit cost of qualifying exports. */
   creditDiscountPct: number;

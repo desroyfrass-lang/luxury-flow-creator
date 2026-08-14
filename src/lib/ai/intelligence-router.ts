@@ -30,7 +30,7 @@ export type RouteChoice = {
   chain: string[];
   /** Relative cost tier of the chosen brain (1 = cheapest). */
   tier: 1 | 2 | 3;
-  /** Plain-English reason, shown to the Founder — never to members. */
+  /** Everyday-language reason, shown to the Founder — never to members. */
   why: string;
 };
 

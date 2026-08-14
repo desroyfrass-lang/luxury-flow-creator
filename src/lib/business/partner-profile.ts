@@ -35,7 +35,7 @@ export type HiddenAsset = {
   id: string;
   emoji: string;
   label: string;
-  /** Plain-English proof that this is worth money. */
+  /** Everyday-language proof that this is worth money. */
   worth: string;
   /** Existing Business Builder journeys this strengthens (accelerator ids). */
   businesses: string[];
