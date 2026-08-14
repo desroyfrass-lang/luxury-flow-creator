@@ -56,6 +56,8 @@ export function ExperienceSimulator() {
   const [note, setNote] = useState("");
   const [score, setScore] = useState<ExperienceScore | null>(null);
   const [resetOn, setResetOn] = useState<boolean>(() => previewResetEnabled());
+  // FRASS-0562 — simulate the STATE of a member, not just the interface.
+  const [fresh, setFresh] = useState(true);
 
   const { data } = useQuery({ queryKey: ["founder", "session"], queryFn: () => loadActive() });
   const { data: past } = useQuery({ queryKey: ["founder", "sessions"], queryFn: () => loadPast() });
@@ -84,6 +86,7 @@ export function ExperienceSimulator() {
         sessionId: s.id,
         startedAt: s.started_at,
         stage: "landing",
+        freshMember: fresh && p.id !== "founder",
       });
       return s;
     },
@@ -157,8 +160,10 @@ export function ExperienceSimulator() {
         <h2 className="mt-2 text-2xl font-black uppercase tracking-tight">🧪 Experience Simulator</h2>
         <p className="mt-2 text-sm text-muted-foreground">
           Your private testing laboratory. Step into the shoes of any member and experience Frass
-          exactly as they would — from the very first visit. Never approve an experience you have
-          not personally walked through.
+          exactly as they would — from the very first visit. No second email, no second account, no
+          fake data: one button in, one button out. The Founder is never unintentionally gated, but
+          may voluntarily enter the complete onboarding journey from here. Never approve an
+          experience you have not personally walked through.
         </p>
       </header>
 
@@ -201,6 +206,22 @@ export function ExperienceSimulator() {
             ))}
           </ul>
         </div>
+
+        <label className="mt-4 flex items-start gap-2 text-xs">
+          <input
+            type="checkbox"
+            checked={fresh}
+            onChange={(e) => setFresh(e.target.checked)}
+            className="mt-0.5"
+          />
+          <span>
+            <span className="font-semibold">Pretend I have never been here before</span>
+            <span className="block text-muted-foreground">
+              Frass treats you as a brand-new member for the whole simulation — every gate they meet,
+              you meet. Untick this to walk the same pages with your Founder access intact.
+            </span>
+          </span>
+        </label>
 
         <div className="mt-4 flex flex-wrap gap-2">
           <button
