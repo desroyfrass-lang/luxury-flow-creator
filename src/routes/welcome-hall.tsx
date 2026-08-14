@@ -312,6 +312,28 @@ function WelcomeHallPage() {
 
 
       <main className="mx-auto max-w-[1200px] px-6 pb-24 lg:px-10">
+        {/* FRASS-0569 — the Welcome Hall serves three different people. */}
+        <section className="mt-14">
+          <h2 className="text-xl font-black uppercase tracking-tight md:text-2xl">
+            Three ways through this Hall
+          </h2>
+          <div className="mt-6 grid gap-4 md:grid-cols-3">
+            {WELCOME_HALL_PURPOSES.map((p) => (
+              <article key={p.id} className="rounded-2xl border border-border/70 bg-card/50 p-6">
+                <span aria-hidden className="text-2xl">{p.glyph}</span>
+                <h3 className="mt-4 text-base font-bold">{p.title}</h3>
+                <p className="mt-1 text-[10px] uppercase tracking-[0.25em] text-muted-foreground">{p.when}</p>
+                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{p.line}</p>
+              </article>
+            ))}
+          </div>
+          <p className="mt-4 max-w-2xl text-xs leading-relaxed text-muted-foreground">
+            Here's what that means: the Daily is your desk. This Hall is the front door. You always
+            come through the door first — you may walk straight past the welcome, but Frass will
+            never skip it for you.
+          </p>
+        </section>
+
         <section className="mt-14">
           <h2 className="text-xl font-black uppercase tracking-tight md:text-2xl">
             What you're walking into
