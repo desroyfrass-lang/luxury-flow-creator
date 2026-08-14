@@ -2837,3 +2837,48 @@ only the presentation changes.
 Implementation: `src/lib/frassy/everyday-language.ts`,
 `src/components/frassy/everyday-language-toggle.tsx`, `src/lib/frassy/learning-levels.ts`,
 `src/lib/founder/explanation-standard.ts`, and every surface string across the platform.
+
+## FRASS-0565 — Public Data Boundary & Zero-Trust Privacy (P0)
+*Constitutional Amendment · Private by Default. Public by Design.*
+
+**Vision** — Frass never relies on anyone remembering which columns are safe to
+expose. Everything is private until it is intentionally made public.
+
+**Rule** — whenever Frass creates a public-facing table, API, feed, report,
+broadcast, marketplace, leaderboard, community feature or social experience, the
+public must never receive internal identifiers or sensitive platform data.
+
+**Never exposed publicly**
+- *Internal identifiers* — user_id, owner_id, host_id, sender_id, author_id,
+  partner_id, builder_id, or any database identifier.
+- *Financial information* — credits, balances, payment amounts, gift values,
+  currencies, commission percentages, internal pricing, platform revenue —
+  unless the viewer is explicitly authorized.
+- *Internal metadata* — audit fields, internal notes, moderation flags, security
+  classifications, system identifiers, implementation metadata, database references.
+
+**Public views only** — public information is served from a dedicated public view
+or equivalent safe API response containing only the fields designed for public
+viewing. Never a raw table. `live_gifts` becomes `public_live_gifts`: display
+name, gift icon, gift type, timestamp. Nothing else.
+
+**Security-by-construction** — before any public feature is released it answers:
+who can see this (Founder · Member · Connections · Partners · Public), and what is
+the minimum they need? Only that is exposed.
+
+**Regression protection** — FRASS-0531 expands: every scan verifies no internal
+IDs, no financial values, no owner identifiers, no raw public tables and no
+anonymous access beyond constitutional limits. A regression fails Release
+Approval (FRASS-0529) automatically until corrected.
+
+**Deprecated** — exposing raw public tables and deciding field-by-field what to
+hide. Public features use intentionally designed public views.
+
+**Founder Principle**
+> Privacy is not added after a feature is built. Privacy is part of the feature's
+> design. Every public experience reveals only what is necessary to create trust,
+> never what is merely available.
+
+**Implementation** — `src/lib/security/public-data-boundary.ts` (the boundary,
+audience projection and guard), `src/lib/security/regressions.ts` (four permanent
+public-boundary regression tests), `SECURITY_REVIEW_STANDARD.md` section 10.

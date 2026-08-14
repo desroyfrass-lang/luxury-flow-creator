@@ -199,7 +199,68 @@ export const SECURITY_REGRESSIONS: RegressionTest[] = [
     enforcedIn: ["Authenticated server functions", "financial_receipts"],
     fixedOn: "2026-07-10",
   },
+  {
+    id: "public-internal-identifiers",
+    title: "Public surfaces never carry internal identifiers",
+    classification: "data-exposure",
+    rootCause:
+      "Public feeds read raw tables, so account identifiers (host_id, author_id, sender_id, owner_id) travelled with the display data.",
+    resolution:
+      "FRASS-0565 Public Data Boundary: anonymous access is granted column-by-column on display fields only, and public reads project through an allow-list.",
+    testCase:
+      "As a signed-out visitor, read every public feed (broadcasts, comments, gifts, layouts, marketplace) and inspect the returned fields.",
+    expected: "Display name, title, timestamp and imagery only. No account identifier of any kind.",
+    affects: ["Live broadcasts", "Live comments", "Gift Wall", "Daily layout presets", "Marketplace", "Community"],
+    enforcedIn: ["src/lib/security/public-data-boundary.ts", "database column grants"],
+    fixedOn: "2026-08-14",
+  },
+  {
+    id: "public-financial-values",
+    title: "Money is never visible to the public",
+    classification: "data-exposure",
+    rootCause:
+      "Gift and commission rows exposed credits, amounts and currencies to anyone reading the public feed.",
+    resolution:
+      "Financial columns are revoked from the anonymous role and blocked by the Public Data Boundary allow-list; amounts render only for authorized viewers.",
+    testCase:
+      "As a signed-out visitor, read the Gift Wall and any public commission or marketplace surface.",
+    expected: "Gift type, icon and sender display name only. No credits, amounts, currencies or rates.",
+    affects: ["Gift Wall", "Live gifts", "Commissions", "Marketplace pricing", "Affiliate surfaces"],
+    enforcedIn: ["src/lib/security/public-data-boundary.ts", "database column grants"],
+    fixedOn: "2026-08-14",
+  },
+  {
+    id: "public-raw-tables",
+    title: "The public reads dedicated public views, never raw tables",
+    classification: "data-exposure",
+    rootCause:
+      "Public features were built on raw tables, then hardened field-by-field — so every new column started life exposed.",
+    resolution:
+      "New public surfaces must expose a purpose-built public view or safe API response containing only display fields.",
+    testCase:
+      "Review every public-facing read added since the last release and confirm each one names an intentional public projection.",
+    expected: "No public surface selects * from a raw table; every field is deliberately listed.",
+    affects: ["All public feeds, reports, leaderboards and community surfaces"],
+    enforcedIn: ["src/lib/security/public-data-boundary.ts"],
+    fixedOn: "2026-08-14",
+  },
+  {
+    id: "public-internal-metadata",
+    title: "Internal notes, moderation flags and audit fields stay internal",
+    classification: "data-exposure",
+    rootCause:
+      "Notes and moderation metadata lived on the same rows as public display data and inherited the same access.",
+    resolution:
+      "Founder and moderation metadata is separated or blocked by the boundary allow-list; anonymous grants exclude it entirely.",
+    testCase:
+      "As a signed-out visitor, read any moderated public surface and look for notes, flags, scores or audit fields.",
+    expected: "None returned.",
+    affects: ["Community stories", "Gift Wall", "Broadcasts", "Founder notes", "Verified feedback"],
+    enforcedIn: ["src/lib/security/public-data-boundary.ts", "database column grants"],
+    fixedOn: "2026-08-14",
+  },
 ];
+
 
 export function regressionsByClass(): { classification: SecurityClass; tests: RegressionTest[] }[] {
   const order = Object.keys(SECURITY_CLASS_LABEL) as SecurityClass[];
