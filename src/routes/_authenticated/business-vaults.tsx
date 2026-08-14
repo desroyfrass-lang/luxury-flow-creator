@@ -48,6 +48,7 @@ import {
   saveFutureVault,
   updateFutureVaultNotes,
 } from "@/lib/business/future-vaults.functions";
+import { VaultPriorityTag } from "@/components/builder-os/vault-priority-tag";
 import { ViewModeFrame } from "@/components/view-mode/simplified-view";
 import { ViewModeToggle } from "@/components/view-mode/view-mode-toggle";
 

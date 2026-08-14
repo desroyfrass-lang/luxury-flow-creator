@@ -62,6 +62,8 @@ function loadLast(key: string, fallback: string): string {
 }
 
 import { FrassLinkWidget } from "@/components/link/frass-link-widget";
+import { WorkshopEnvironmentBanner } from "@/components/workspace/workshop-environment";
+import { environmentFor } from "@/lib/builder-os/workshop-environments";
 
 export function WorkspaceRoom({
   roomName = "My Workspace",
