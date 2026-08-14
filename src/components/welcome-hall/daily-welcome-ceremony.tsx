@@ -36,9 +36,13 @@ export function DailyWelcomeCeremony({ next = "/room" }: { next?: string }) {
   const [answered, setAnswered] = useState<string[]>([]);
   const spoken = useRef<string | null>(null);
 
+  const [mounted, setMounted] = useState(false);
+
   useEffect(() => {
+    setMounted(true);
     setTier(getWelcomeTier());
   }, []);
+
 
   useEffect(() => {
     let alive = true;
@@ -131,7 +135,7 @@ export function DailyWelcomeCeremony({ next = "/room" }: { next?: string }) {
           className="h-20 w-20 shrink-0 rounded-full object-cover"
         />
         <div className="space-y-4">
-          {script.lines.slice(0, line + 1).map((l, i) => (
+          {(mounted ? script.lines.slice(0, line + 1) : []).map((l, i) => (
             <p
               key={i}
               className={
