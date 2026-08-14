@@ -120,6 +120,7 @@ function useArrivalStage() {
 
 function WelcomeHallPage() {
   const stage = useArrivalStage();
+  const search = Route.useSearch();
   const [sound, setSound] = useState(false);
 
   useEffect(() => {
@@ -149,6 +150,13 @@ function WelcomeHallPage() {
     <div className="min-h-screen bg-background text-foreground">
       {/* FRASS-0517 — choose how Frass feels before you even begin. */}
       <ViewModeToggle className="fixed right-4 top-4 z-40" />
+
+      {/* FRASS-0569 — 🌅 Welcome Hall One. Frassy greets first; the Daily follows. */}
+      {search.welcome === "daily" && (
+        <div className="mx-auto max-w-[1100px] px-6 pt-24 lg:px-10">
+          <DailyWelcomeCeremony next={search.next ?? "/room"} />
+        </div>
+      )}
       {/* The gates */}
       <header
         className="relative min-h-[86vh] overflow-hidden"
