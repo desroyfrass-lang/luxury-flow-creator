@@ -12,7 +12,7 @@ export type AtlasEntry = { name: string; path: string; purpose: string };
 export const PLATFORM_ATLAS: AtlasEntry[] = [
   // Daily operating surfaces
   { name: "The Daily", path: "overlay — the Sun button in the top bar", purpose: "Today's execution desk — lanes, focus modes, widgets, the Frassy composer. It opens over whatever page you are on; it is not a separate page." },
-  { name: "Control Room / Founder Daily", path: "/founder", purpose: "Founder-only building and oversight — Partner Progress, Platform Audit, Financial Audit, Registry. Never shown to Partners." },
+  { name: "Control Room / Founder Daily", path: "/control-room", purpose: "Founder-only building and oversight — Partner Progress, Platform Audit, Financial Audit, Registry. Never shown to Partners." },
   { name: "My Workspace", path: "/room", purpose: "Personal work hub — vault, uploads, projects, tools, and the left rail to every Builder surface." },
   { name: "Frass Card", path: "/workspace/card", purpose: "Universal identity, storefront, QR and payment surface in one link." },
   { name: "Wallet", path: "/workspace/wallet", purpose: "Quick Sell, invoices, payment requests, earnings and receipts." },

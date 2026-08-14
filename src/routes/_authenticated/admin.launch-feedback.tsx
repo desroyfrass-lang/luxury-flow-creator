@@ -112,8 +112,8 @@ function LaunchFeedbackCenter() {
         <p className="text-sm">
           Platform health, repairs, intelligence, security, design authority and the Change Advisor
           now live together in the{" "}
-          <Link to="/command" className="underline text-[color:var(--gold)]">
-            Founder Command Center
+          <Link to="/control-room" className="underline text-[color:var(--gold)]">
+            Founder Control Room
           </Link>
           .
         </p>

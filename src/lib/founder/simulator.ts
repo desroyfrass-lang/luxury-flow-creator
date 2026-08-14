@@ -135,8 +135,8 @@ export const PERSONAS: Persona[] = [
     emoji: "🏢",
     label: "Founder",
     plain: "You, with full administrative tools.",
-    behaviour: ["Everything visible.", "Command Center reachable.", "Nothing hidden."],
-    destination: "/command",
+    behaviour: ["Everything visible.", "Control Room reachable.", "Nothing hidden."],
+    destination: "/control-room",
     required: true,
   },
 ];

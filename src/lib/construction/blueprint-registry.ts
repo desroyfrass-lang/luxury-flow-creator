@@ -114,7 +114,7 @@ export const BLUEPRINT_COMPONENTS: BlueprintComponent[] = [
     id: "daily",
     label: "The Frass Daily",
     purpose: "Executive daily command center — one Daily across the entire ecosystem, adapted to role.",
-    registry: ["FRASS-0200", "The Frass Daily (Universal Daily Command Center)"],
+    registry: ["FRASS-0200", "The Frass Daily (Universal Daily Control Room)"],
     connectedSystems: ["My Workspace", "Tasks", "Marketplace", "Foundation", "Academy"],
     dependencies: ["Notifications", "Projects", "Vision Maps", "Roles"],
     usersAffected: ["Founder", "Partners", "Builders", "Affiliates"],

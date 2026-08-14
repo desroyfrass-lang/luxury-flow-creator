@@ -27,6 +27,7 @@ const WORKSPACE_PREFIXES = [
   "/room",
   "/workspace",
   "/founder",
+  "/control-room",
   "/command",
   "/builder-hall",
   "/frassy",

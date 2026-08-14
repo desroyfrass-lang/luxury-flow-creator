@@ -292,7 +292,7 @@ function OnboardingPage() {
 
           {isOwnerTrack && (
             <Link
-              to="/founder"
+              to="/control-room"
               className="mt-8 block rounded-sm border border-border px-4 py-3 text-center text-[11px] font-bold uppercase tracking-[0.28em] text-muted-foreground hover:border-[color:var(--gold)] hover:text-[color:var(--gold)]"
             >
               Founder Mode

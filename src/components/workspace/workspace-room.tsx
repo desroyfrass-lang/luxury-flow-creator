@@ -91,7 +91,7 @@ export function WorkspaceRoom({
   const roleLinks: RoleLink[] = useMemo(() => {
     const links: RoleLink[] = [];
     if (isAdmin) {
-      links.push({ to: "/founder", label: "Founder Dashboard", emoji: "🏛" });
+      links.push({ to: "/control-room", label: "Founder Dashboard", emoji: "🏛" });
       links.push({ to: "/admin", label: "Admin", emoji: "🛠" });
       links.push({ to: "/admin/affiliate-policy", label: "Governance", emoji: "⚖️" });
     }

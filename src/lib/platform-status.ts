@@ -172,7 +172,7 @@ export function platformStatus(input: StatusInputs): StatusRow[] {
           ? "No balance recorded"
           : `${budget.balance} recorded · ${spentThisMonth()} forecast spend this month`,
       source: "Founder-recorded balance (Development Credits)",
-      to: "/founder",
+      to: "/control-room",
     },
     {
       id: "backup",

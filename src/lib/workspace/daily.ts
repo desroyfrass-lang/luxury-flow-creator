@@ -1,5 +1,5 @@
 // ─────────────────────────────────────────────────────────────────────────────
-// FRASS MASTER REGISTRY — The Frass Daily (Universal Daily Command Center)
+// FRASS MASTER REGISTRY — The Frass Daily (Universal Daily Control Room)
 //
 // One Daily across the entire ecosystem. Content adapts to the Builder's roles,
 // projects and active work; the framework never changes.
@@ -371,7 +371,7 @@ const FOUNDER: DailyModel = {
   ],
   goals: [
     { id: "g1", label: "Catalog to 250 products", pct: 34, note: "86 live", status: "sample", projectId: "product-population" },
-    { id: "g2", label: "Launch readiness", pct: 62, note: "Phase 3 of 5", status: "live", href: "/founder" },
+    { id: "g2", label: "Launch readiness", pct: 62, note: "Phase 3 of 5", status: "live", href: "/control-room" },
     { id: "g3", label: "Foundation pledge", pct: 41, note: "On pace", status: "projected", projectId: "foundation" },
   ],
   performance: [
@@ -434,7 +434,7 @@ const FOUNDER: DailyModel = {
       label: "Launch readiness",
       value: "Phase 3 of 5",
       status: "live",
-      href: "/founder",
+      href: "/control-room",
       explain: "How much of the platform is commissioned and approved. Tracked inside the Founder Dashboard.",
     },
     {

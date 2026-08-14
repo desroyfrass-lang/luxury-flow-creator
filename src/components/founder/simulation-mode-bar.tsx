@@ -91,7 +91,7 @@ export function SimulationModeBar() {
         type="button"
         onClick={() => {
           exitSimulation();
-          void navigate({ to: "/command" });
+          void navigate({ to: "/control-room" });
         }}
         className="rounded-full bg-black px-3 py-1 text-[10px] font-bold uppercase tracking-wide text-white"
       >

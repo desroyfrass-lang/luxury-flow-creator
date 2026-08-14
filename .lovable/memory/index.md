@@ -18,6 +18,7 @@ Kids pages are never black: bright age-tinted .kids-zone theme, rounded kid-frie
 FRASS-0491 (FOR ME architecture freeze) is PINNED — do not execute until the current constitutional roadmap is done.
 Brand name is always "Frass" (two s's) — never "Fras". Applies to Frass Hill, Frass Kicks, Frass Drip.
 FRASS-0564: never write "in plain English" anywhere; vary lead-ins ("Here's what this means…"). Level 🔵 is "Guided Walkthrough".
+FRASS-0568: one Founder headquarters — 🎛️ Founder Control Room at /control-room; /command and /founder redirect there. Never build a second Founder dashboard.
 Stay true to the original Frass Kicks aesthetic.
 Frass Hill imagery is photorealistic and cinematic — no cartoon art (except the husband hero, Bob Marley graffiti, and kids sections).
 Creator platform is "Frass Vision Studios" (shorthand "FV Studios") — never "Frassy Studio".
@@ -183,3 +184,4 @@ Creative series are intellectual property produced by Frassy from a Blueprint, n
 - [FRASS-0564 Adaptive Explanation Language](mem://constraints/frass-0564-adaptive-explanation-language) — Banned "plain English" phrasing, approved lead-ins, Guided Walkthrough label, Simulation Bar progress + Restart
 - [FRASS-0565 Public Data Boundary & Zero-Trust Privacy](mem://features/frass-0565-public-data-boundary) — Private by default, public views only, expanded FRASS-0531 regression checks blocking Release Approval
 - [FRASS-0566 Protected Contact Boundary](mem://features/frass-0566-protected-contact-boundary) — Public profiles never show email/phone/private contact; secure Contact Builder flow; galleries, commission requests, link checker hardened
+- [FRASS-0568 Founder Control Room](mem://features/frass-0568-founder-control-room) — Unified Founder headquarters, migrated legacy Control Room tools, redirects, retired "Command Center" wording

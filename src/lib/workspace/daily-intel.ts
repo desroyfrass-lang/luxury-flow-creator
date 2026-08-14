@@ -199,7 +199,7 @@ export function resolveDailyCommand(rawInput: string, model: DailyModel): DailyC
     { keys: /foundation/, label: "Foundation", target: { projectId: "foundation" } },
     { keys: /product|catalog|population|sourcing/, label: "Product Population", target: { projectId: "product-population" } },
     { keys: /approval|waiting on me/, label: "Approvals", target: { href: "/admin/approvals" } },
-    { keys: /founder|dashboard|launch/, label: "Founder Dashboard", target: { href: "/founder" } },
+    { keys: /founder|dashboard|launch/, label: "Founder Dashboard", target: { href: "/control-room" } },
     { keys: /message|inbox|notification/, label: "Messages", target: { href: "/notifications" } },
     { keys: /kids/, label: "Kids World", target: { projectId: "kids-world" } },
     { keys: /luxury|bridal/, label: "Luxury House", target: { projectId: "luxury-house" } },

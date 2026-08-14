@@ -2914,3 +2914,38 @@ analytics · member profiles.
 (allow-list, guard and projection), column-scoped anonymous grants on
 `artist_galleries`, four permanent regression tests in
 `src/lib/security/regressions.ts`, `SECURITY_REVIEW_STANDARD.md` section 11.
+
+---
+
+## FRASS-0568 — Founder Control Room Consolidation
+**Status:** Constitutional Amendment · **Priority:** P0
+*One Headquarters. One Name. One Experience.*
+
+The Founder has exactly one operational headquarters: **🎛️ Founder Control
+Room**. The Command Center interface — its layout, navigation and organisation
+— becomes the permanent Founder experience, carrying the Control Room name.
+
+**Migrated, never removed** — Founder conversations · Founder AI tools ·
+analytics · Member Progress Radar · Release Approval · Security Regression
+Protection · AI Operations · Experience Simulator · Founder Notes · Innovation ·
+Seed Vaults · AI Cost Telemetry · Platform Health · Operations · Commissioning ·
+Launch Readiness · Districts · Development Credits · Platform Status ·
+Architectural Health · Payment Provider Center · Global Operations.
+
+**Navigation** — `/control-room` is the headquarters. `/command` and `/founder`
+permanently redirect to it. No Founder link may point anywhere else.
+
+**Access control** — Founder-only, behind the identity gate, `noindex,nofollow`.
+Non-Founder accounts never render the page; they are securely redirected.
+
+**Deprecated** — the legacy Control Room interface and any duplicate Founder
+dashboard experience.
+
+**Founder Principle**
+> The Founder should never wonder where to manage Frass. One headquarters, one
+> operational interface, one source of truth for governing the platform.
+
+**Implementation** — `src/routes/_authenticated/control-room.tsx` (unified
+page), `src/components/founder/commissioning-panel.tsx` (migrated legacy
+capabilities), `src/lib/founder/command-center.ts` (Conversation and
+Commissioning sections), redirect stubs at `/command` and `/founder`.

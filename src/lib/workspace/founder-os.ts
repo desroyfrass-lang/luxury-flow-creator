@@ -37,7 +37,7 @@ export const FOUNDER_TABS: FounderTab[] = [
   { id: "today", label: "Today's Daily", icon: "☀", blurb: "What needs you today, in order." },
   { id: "continue", label: "Continue Working", icon: "▶", blurb: "Pick up exactly where you stopped." },
   { id: "goals", label: "Goals & Vision", icon: "🎯", blurb: "Where this is all going." },
-  { id: "command", label: "Founder Command Center", icon: "⌘", blurb: "Run the platform's control surfaces." },
+  { id: "command", label: "Founder Control Room", icon: "⌘", blurb: "Run the platform's control surfaces." },
   { id: "approvals", label: "Pending Approvals", icon: "✔", blurb: "Things waiting on your word." },
   { id: "opportunities", label: "Opportunities", icon: "✦", blurb: "What's worth your attention next." },
   { id: "feedback", label: "Launch Feedback", icon: "💬", blurb: "What people are telling us." },
@@ -69,11 +69,11 @@ export const FOUNDER_TABS: FounderTab[] = [
 export const FOUNDER_LAUNCHERS: Record<string, { label: string; href: string; plain: string }[]> = {
   continue: [
     { label: "My Workspace", href: "/room", plain: "Reopens on your last mode and project." },
-    { label: "Control Room", href: "/founder", plain: "Mission control for building." },
+    { label: "Control Room", href: "/control-room", plain: "Mission control for building." },
     { label: "Frassy", href: "/frassy", plain: "Pick up the last conversation." },
   ],
   goals: [
-    { label: "Control Room", href: "/founder", plain: "Goals, vision maps and construction." },
+    { label: "Control Room", href: "/control-room", plain: "Goals, vision maps and construction." },
     { label: "Insights", href: "/workspace/insights", plain: "How close the numbers are to the goal." },
     { label: "Business Builder", href: "/business-builder", plain: "Turn a goal into a plan." },
     { label: "Launch Accelerator", href: "/launch-accelerator", plain: "Today's fastest route to income." },
@@ -117,7 +117,7 @@ export const FOUNDER_LAUNCHERS: Record<string, { label: string; href: string; pl
   ],
   world: [
     { label: "Frass Hill", href: "/frass-hill", plain: "The town itself." },
-    { label: "Control Room", href: "/founder", plain: "Blueprint mode and construction." },
+    { label: "Control Room", href: "/control-room", plain: "Blueprint mode and construction." },
     { label: "The Walk", href: "/frass-hill-journey", plain: "The animated arrival." },
   ],
 };

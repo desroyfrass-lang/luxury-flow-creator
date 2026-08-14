@@ -597,7 +597,7 @@ function FrassDailyBody({
                     type="button"
                     className="ws-chip mt-2"
                     onClick={() => {
-                      onNavigate?.("/command");
+                      onNavigate?.("/control-room");
                       onDismiss();
                     }}
                   >
@@ -616,11 +616,11 @@ function FrassDailyBody({
                   type="button"
                   className="ws-chip mt-2"
                   onClick={() => {
-                    onNavigate?.("/command");
+                    onNavigate?.("/control-room");
                     onDismiss();
                   }}
                 >
-                  Open the Command Center
+                  Open the Control Room
                 </button>
               </div>
             )}
@@ -1074,7 +1074,7 @@ function FrassDailyBody({
 
         {/* Founder-only executive panels */}
         {model.executive.length > 0 && (
-          <Section id="founder-command" title="Founder Command Center" status={statuses["founder-command"]} note="The executive view. Everything here opens the Founder Dashboard or the records behind it.">
+          <Section id="founder-command" title="Founder Control Room" status={statuses["founder-command"]} note="The executive view. Everything here opens the Founder Dashboard or the records behind it.">
             <div className="daily-grid">
               {model.executive.map((m) => (
                 <MetricCard

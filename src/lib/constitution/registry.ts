@@ -195,7 +195,7 @@ export const AMENDMENTS: Amendment[] = [
   },
   {
     ref: "FRASS-0525",
-    title: "Founder Command Center",
+    title: "Founder Control Room",
     intent: "One operational headquarters instead of Founder tools scattered across the platform.",
     targetProblem: "The Founder hunting for his own instruments.",
     areas: ["Founder Console"],
@@ -289,7 +289,7 @@ export const AMENDMENTS: Amendment[] = [
       "The Founder sees how members are progressing — momentum, blueprint, Money Moves, legacy, milestones — and money only as a range. Frass supports members; it never surveils them.",
     targetProblem:
       "A Founder cannot help people they cannot see, but progress oversight must never become financial surveillance.",
-    areas: ["Command Center"],
+    areas: ["Control Room"],
     categories: ["governance", "privacy", "motivation"],
     implementedAt: "2026-08-13",
     evidence: [
@@ -306,7 +306,7 @@ export const AMENDMENTS: Amendment[] = [
       "Founder analytics are Founder-only, enforced at the database, API, application and AI layers, failing closed. Members see only their own progress; the public sees none of it.",
     targetProblem:
       "Progress insight leaking to other members, staff, agents or the public would destroy member trust.",
-    areas: ["Command Center", "Security"],
+    areas: ["Control Room", "Security"],
     categories: ["security", "privacy", "governance"],
     implementedAt: "2026-08-13",
     evidence: [
@@ -322,7 +322,7 @@ export const AMENDMENTS: Amendment[] = [
       "Every technical update in a Founder-only surface follows one fixed structure: What Changed, What Was Added, in practical terms, Real-Life Example, What This Means for Frass, Founder Attention, My Recommendation. Depth follows the Learning Level; the structure never changes.",
     targetProblem:
       "A Founder forced to decode engineering language spends time deciphering reports instead of making decisions.",
-    areas: ["Command Center", "Frassy"],
+    areas: ["Control Room", "Frassy"],
     categories: ["usability", "governance"],
     implementedAt: "2026-08-13",
     evidence: [
@@ -338,7 +338,7 @@ export const AMENDMENTS: Amendment[] = [
       "Lead people, not dashboards. Every member insight in the Member Progress Radar answers five questions — Who, Why (observable behaviours only), What do they need, What should the Founder do, and What is the likely outcome — and members are ordered by coaching impact so the Founder never has to search for a chance to help. Frassy recommends; the Founder decides.",
     targetProblem:
       "Numbers alone never change lives. A dashboard that only measures people produces monitoring, not mentorship.",
-    areas: ["Command Center", "Frassy"],
+    areas: ["Control Room", "Frassy"],
     categories: ["governance", "usability", "privacy"],
     implementedAt: "2026-08-13",
     evidence: [

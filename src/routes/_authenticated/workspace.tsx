@@ -32,7 +32,7 @@ function WorkspaceRoute() {
 }
 
 const ROLE_META: Record<BusinessRole, { label: string; blurb: string; to?: string }> = {
-  super_admin: { label: "Executive Command Center", blurb: "Full platform authority.", to: "/admin" },
+  super_admin: { label: "Executive Control Room", blurb: "Full platform authority.", to: "/admin" },
   admin: { label: "Administration Console", blurb: "Manage the platform end-to-end.", to: "/admin" },
   staff: { label: "Operations Dashboard", blurb: "Approvals, content, and daily ops.", to: "/admin/approvals" },
   moderator: { label: "Moderation Desk", blurb: "Review and safeguard content.", to: "/admin/approvals" },
