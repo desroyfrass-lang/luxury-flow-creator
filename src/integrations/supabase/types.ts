@@ -357,6 +357,7 @@ export type Database = {
       artist_galleries: {
         Row: {
           accent: string
+          accepts_frass_messages: boolean
           artist_statement: string | null
           avatar_url: string | null
           biography: string | null
@@ -380,6 +381,7 @@ export type Database = {
         }
         Insert: {
           accent?: string
+          accepts_frass_messages?: boolean
           artist_statement?: string | null
           avatar_url?: string | null
           biography?: string | null
@@ -403,6 +405,7 @@ export type Database = {
         }
         Update: {
           accent?: string
+          accepts_frass_messages?: boolean
           artist_statement?: string | null
           avatar_url?: string | null
           biography?: string | null
