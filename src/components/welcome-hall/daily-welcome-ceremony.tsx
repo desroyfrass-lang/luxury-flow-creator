@@ -90,7 +90,7 @@ export function DailyWelcomeCeremony({ next = "/room" }: { next?: string }) {
   const leave = (to: string) => {
     markWelcomedToday();
     stopSpeech("welcome hall concluded");
-    navigate({ to, replace: true });
+    navigate({ href: to, replace: true });
   };
 
   const meta = TIER_BY_ID[tier];
