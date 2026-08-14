@@ -1,6 +1,8 @@
 # Project Memory
 
 ## Core
+FRASS-0562: the Founder is never unintentionally gated, but may voluntarily enter the full onboarding journey through the Experience Simulator.
+FRASS-0562: Simulation Mode simulates a member's STATE, not just the UI — no second email/account; one real test account kept only for release validation (signup, verification, reset, login/logout).
 FRASS-0558: there is only ONE Frassy and one conversation — src/lib/frassy/surfaces.ts decides workspace/beacon/none per page; never add another chat surface, and never show Frassy in social, kids or entertainment spaces by default.
 FRASS-0556: Frassy is never tied to one AI provider — every request is routed to the cheapest capable brain, and answered with no AI at all when Frass's own rules, data or routes can do it.
 FRASS-0557: one Frassy Beacon on every page (idle/listening/thinking/speaking), one tap to talk, context aware, never touching screen edges; every chat has Expand/Restore.
@@ -176,4 +178,4 @@ Creative series are intellectual property produced by Frassy from a Blueprint, n
 - [FRASS-0546 Adaptive Momentum Engine](mem://features/frass-0546-adaptive-momentum) — Four earned momentum levels, five achievement styles, optional dated challenges, automatic pressure release
 - [FRASS-0547/0548 Founder Success Dashboard & Visibility](mem://features/frass-0547-0548-founder-visibility) — FRASS-0550 Coaching Engine five questions; Progress vs financial data split, revenue ranges, Founder Radar, Founder-only enforcement
 - [FRASS-0556/0557 AI Router + Frassy Beacon](mem://features/frass-0556-0557-ai-router-and-beacon) — Provider-independent routing with a no-AI first step, and the persistent context-aware Frassy companion
-- [FRASS-0559/0560/0561 Experience Simulator](mem://features/frass-0559-0561-experience-simulator) — Persona simulator in Command Center, front-door preview reset, Founder Seed Vaults
+- [FRASS-0559/0560/0561/0562 Experience Simulator](mem://features/frass-0559-0561-experience-simulator) — Persona simulator, Simulation Mode (member state, voluntary Founder gating, exit bar), front-door preview reset, Founder Seed Vaults

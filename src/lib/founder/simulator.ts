@@ -281,11 +281,21 @@ const SIM_KEY = "frass.founder.simulation";
 const RESET_KEY = "frass.founder.previewReset";
 const BUILD_KEY = "frass.founder.buildStamp";
 
+/** Fired whenever a simulation starts, changes or ends, so live UI can react. */
+export const SIMULATION_EVENT = "frass:simulation-changed";
+
 export type SimulationState = {
   personaId: PersonaId;
   sessionId: string | null;
   startedAt: string;
   stage: string;
+  /**
+   * FRASS-0562 — simulate the STATE of a member, not just the interface.
+   * When true, Frass behaves as though this person has never been here before:
+   * every gate a new member meets, the Founder meets too. No second email,
+   * no second account — one controlled environment.
+   */
+  freshMember?: boolean;
 };
 
 export function loadSimulation(): SimulationState | null {
@@ -306,7 +316,24 @@ export function saveSimulation(state: SimulationState | null) {
   } catch {
     /* storage blocked — the simulation still runs for this session */
   }
+  window.dispatchEvent(new Event(SIMULATION_EVENT));
 }
+
+/**
+ * FRASS-0562 — The Founder is never *unintentionally* gated, but may
+ * voluntarily enter the complete onboarding journey through the Experience
+ * Simulator. True while a member persona is being simulated as brand new.
+ */
+export function simulatingNewMember(): boolean {
+  const sim = loadSimulation();
+  return Boolean(sim && sim.freshMember !== false && sim.personaId !== "founder");
+}
+
+/** Ends the simulation immediately and returns the Founder to full privileges. */
+export function exitSimulation() {
+  saveSimulation(null);
+}
+
 
 /**
  * FRASS-0559 — Reset Simulation. Clears the member-shaped local state a

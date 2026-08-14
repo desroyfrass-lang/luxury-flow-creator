@@ -37,3 +37,18 @@ type: feature
 - Reset clears visitor-shaped local state only; Vaults, notes and sessions are
   preserved. Every Founder Vault is a 🌱 Seed Vault the Founder owns and may turn
   into a course, book, Builder Path, Blueprint, manufacturing offer or business.
+
+# FRASS-0562 — Simulation Mode (state, not just interface)
+
+- Constitutional clarification: **the Founder is never *unintentionally* gated,
+  but may voluntarily enter the complete onboarding journey through the
+  Experience Simulator.** A gate met on purpose keeps testing honest.
+- The simulator simulates the **state of a member**, not only the interface.
+  "Pretend I have never been here before" is on by default; while it is on the
+  Founder meets every new-member gate (`WelcomeGate` ignores admin bypass).
+- One controlled environment: no second email, no second account, no fake data.
+  `SimulationModeBar` (mounted in `__root.tsx`) shows the active persona on every
+  page and exits in one tap back to full Founder privileges.
+- Daily development and UX testing use Simulation Mode. **One real test account
+  is still kept for release validation only** — signup, email verification,
+  password reset, login/logout must be proven on the real path.

@@ -2792,3 +2792,25 @@ average daily spend, all drawn from the platform's own records.
 
 Plain English: the AI companies are plugs; Frass owns the socket. And the Founder
 always knows what a conversation costs before the bill arrives.
+
+## FRASS-0562 — Voluntary Gating & Simulation Mode
+
+**Clarification of FRASS-0563.** The Founder is never *unintentionally* gated,
+but may voluntarily enter the complete onboarding journey through the
+Experience Simulator. A gate met on purpose is what keeps testing honest.
+
+**The simulator simulates the state of a member, not just the interface.**
+"Pretend I have never been here before" is the default. While it is on, the
+Founder meets every gate a brand-new member meets — Welcome Hall first, Daily
+locked until Frassy has met them.
+
+**One controlled environment.** No second email. No second account. No fake
+data. One button in (persona), one button out (Exit Simulation, always visible
+at the top of every page).
+
+**Release validation stays real.** One real test account is kept for final
+release testing only: account creation, email verification, password reset,
+login and logout must be proven on the exact path a member takes.
+
+**Acceptance is the experience, not the report.** A build is accepted when the
+walkthrough makes the Founder feel welcomed — not when the checklist is ticked.

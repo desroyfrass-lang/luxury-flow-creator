@@ -2,22 +2,40 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "@tanstack/react-router";
 import { fetchJourneyStatus } from "@/hooks/use-journey-status";
 import { useIsAdminStatus } from "@/hooks/use-is-admin";
+import { SIMULATION_EVENT, simulatingNewMember } from "@/lib/founder/simulator";
 
 /**
  * FRASS-0563 — Nobody reaches the Daily before Frassy has met them.
  *
  * The Daily is the desk, not the front door. A member who has never answered
  * Frassy once is walked back to the Welcome Hall conversation instead of being
- * dropped inside their workspace in silence. The Founder is never gated.
+ * dropped inside their workspace in silence.
+ *
+ * FRASS-0562 — The Founder is never *unintentionally* gated, but may
+ * voluntarily enter the complete onboarding journey through the Experience
+ * Simulator. While a member persona is being simulated, the Founder meets
+ * every gate a brand-new member meets — that is what keeps testing honest.
  */
 export function WelcomeGate({ children }: { children: React.ReactNode }) {
   const navigate = useNavigate();
   const { isAdmin, loading: roleLoading } = useIsAdminStatus();
   const [allowed, setAllowed] = useState<boolean | null>(null);
+  const [simulating, setSimulating] = useState(false);
+
+  useEffect(() => {
+    const sync = () => setSimulating(simulatingNewMember());
+    sync();
+    window.addEventListener(SIMULATION_EVENT, sync);
+    window.addEventListener("storage", sync);
+    return () => {
+      window.removeEventListener(SIMULATION_EVENT, sync);
+      window.removeEventListener("storage", sync);
+    };
+  }, []);
 
   useEffect(() => {
     if (roleLoading) return;
-    if (isAdmin) {
+    if (isAdmin && !simulating) {
       setAllowed(true);
       return;
     }
@@ -25,7 +43,8 @@ export function WelcomeGate({ children }: { children: React.ReactNode }) {
     void fetchJourneyStatus()
       .then((status) => {
         if (!alive) return;
-        if (!status.signedIn || status.metFrassy) {
+        // In a simulation the Founder is treated as brand new on purpose.
+        if (!simulating && (!status.signedIn || status.metFrassy)) {
           setAllowed(true);
           return;
         }
@@ -39,7 +58,7 @@ export function WelcomeGate({ children }: { children: React.ReactNode }) {
     return () => {
       alive = false;
     };
-  }, [isAdmin, roleLoading, navigate]);
+  }, [isAdmin, roleLoading, simulating, navigate]);
 
   if (allowed === null) {
     return (
