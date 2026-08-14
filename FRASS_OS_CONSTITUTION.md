@@ -2814,3 +2814,26 @@ login and logout must be proven on the exact path a member takes.
 
 **Acceptance is the experience, not the report.** A build is accepted when the
 walkthrough makes the Founder feel welcomed — not when the checklist is ticked.
+
+## FRASS-0564 — Adaptive Explanation Language (P0)
+
+**Meet members where they are.** The phrase "in plain English" is retired everywhere in
+Frass — Welcome Hall, Daily, Workshop, Founder Mode, Control Room, Business Vaults, Money
+Moves, knowledge articles, system, implementation and security reports, and Learning
+Preferences. It implies the member could not handle the real version.
+
+Approved lead-ins, varied naturally, never repeated mechanically: "Here's what this means…",
+"Here's the idea…", "Here's what's happening…", "Let's break it down…", "A simple way to think
+about it…", "Here's the practical version…", "Here's how it works…", "What this means for
+you…", "The short version…", "Here's the takeaway…".
+
+Learning level 🔵 **Explain Like I'm New** is renamed 🔵 **Guided Walkthrough** — the label
+describes how Frassy explains, not who the member is.
+
+**Founder Principle:** Frassy adapts her explanations to the member's preferred learning
+style, never to their perceived intelligence. Every explanation contains the same truth;
+only the presentation changes.
+
+Implementation: `src/lib/frassy/everyday-language.ts`,
+`src/components/frassy/everyday-language-toggle.tsx`, `src/lib/frassy/learning-levels.ts`,
+`src/lib/founder/explanation-standard.ts`, and every surface string across the platform.
