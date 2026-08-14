@@ -1,0 +1,1 @@
+REVOKE ALL ON FUNCTION public.validate_commission_request() FROM PUBLIC, anon, authenticated;
