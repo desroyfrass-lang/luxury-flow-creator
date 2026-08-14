@@ -118,11 +118,11 @@ export const CORE_ROUTES: CoreRoute[] = [
   },
   {
     key: "founder",
-    label: "Founder Mode",
+    label: "Founder Control Room",
     path: "/control-room",
     requiresAuth: true,
     founderOnly: true,
-    spoken: ["founder mode", "control room", "founder hall"],
+    spoken: ["founder mode", "control room", "founder hall", "headquarters", "command center"],
   },
 ];
 
