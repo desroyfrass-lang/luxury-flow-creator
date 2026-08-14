@@ -36,9 +36,13 @@ export function DailyWelcomeCeremony({ next = "/room" }: { next?: string }) {
   const [answered, setAnswered] = useState<string[]>([]);
   const spoken = useRef<string | null>(null);
 
+  const [mounted, setMounted] = useState(false);
+
   useEffect(() => {
+    setMounted(true);
     setTier(getWelcomeTier());
   }, []);
+
 
   useEffect(() => {
     let alive = true;
