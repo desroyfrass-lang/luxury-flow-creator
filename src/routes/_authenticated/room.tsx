@@ -4,6 +4,7 @@ import { WorkspaceRoom } from "@/components/workspace/workspace-room";
 import { openTheDaily } from "@/components/workspace/daily-gate";
 import { ViewModeFrame } from "@/components/view-mode/simplified-view";
 import { WelcomeGate } from "@/components/welcome-gate";
+import { DailyWelcomeGate } from "@/components/welcome-hall/daily-welcome-gate";
 
 function RoomScreen() {
   const { daily } = Route.useSearch();
@@ -11,12 +12,15 @@ function RoomScreen() {
     if (daily) openTheDaily();
   }, [daily]);
   return (
+    // FRASS-0569 — the Daily is never the first experience of the day.
     // FRASS-0517 — the same workspace, presented the member's way.
-    <WelcomeGate>
-      <ViewModeFrame place="My Workspace">
-        <WorkspaceRoom />
-      </ViewModeFrame>
-    </WelcomeGate>
+    <DailyWelcomeGate>
+      <WelcomeGate>
+        <ViewModeFrame place="My Workspace">
+          <WorkspaceRoom />
+        </ViewModeFrame>
+      </WelcomeGate>
+    </DailyWelcomeGate>
   );
 }
 

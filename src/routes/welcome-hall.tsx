@@ -9,6 +9,8 @@ import { AgreementGate } from "@/components/legal/agreement-gate";
 import { supabase } from "@/integrations/supabase/client";
 import { onboardingDestination } from "@/lib/navigation/core-routes";
 import { ViewModeToggle } from "@/components/view-mode/view-mode-toggle";
+import { DailyWelcomeCeremony } from "@/components/welcome-hall/daily-welcome-ceremony";
+import { WELCOME_HALL_PURPOSES } from "@/lib/welcome-hall/daily-welcome";
 
 
 /**
@@ -19,6 +21,12 @@ import { ViewModeToggle } from "@/components/view-mode/view-mode-toggle";
  * registers, and chooses their entrance — Frass Hill or Kids Valley.
  */
 export const Route = createFileRoute("/welcome-hall")({
+  validateSearch: (search: Record<string, unknown>): { welcome?: "daily"; next?: string } => ({
+    ...(search["welcome"] === "daily" ? { welcome: "daily" as const } : {}),
+    ...(typeof search["next"] === "string" && search["next"].startsWith("/")
+      ? { next: search["next"] }
+      : {}),
+  }),
   head: () => ({
     meta: [
       { title: "Welcome Hall — Arrive at Frass Hill" },
