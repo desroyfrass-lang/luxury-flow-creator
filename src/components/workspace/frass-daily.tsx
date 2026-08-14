@@ -597,7 +597,7 @@ function FrassDailyBody({
                     type="button"
                     className="ws-chip mt-2"
                     onClick={() => {
-                      onNavigate?.("/command");
+                      onNavigate?.("/control-room");
                       onDismiss();
                     }}
                   >
@@ -616,7 +616,7 @@ function FrassDailyBody({
                   type="button"
                   className="ws-chip mt-2"
                   onClick={() => {
-                    onNavigate?.("/command");
+                    onNavigate?.("/control-room");
                     onDismiss();
                   }}
                 >

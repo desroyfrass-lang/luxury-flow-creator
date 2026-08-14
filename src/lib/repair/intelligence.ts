@@ -125,7 +125,7 @@ const AREA_LABELS: Record<string, string> = {
   "/money-moves": "Money Moves",
   "/manufacturing": "Manufacturing Network",
   "/workspace": "Workspace tools",
-  "/founder": "Founder Console",
+  "/control-room": "Founder Console",
   "/shop": "Shop",
   "/pay": "Payments",
 };

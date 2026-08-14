@@ -103,7 +103,7 @@ export function PartnerProgressCenter({ onNavigate }: { onNavigate?: (href: stri
         <p className="ws-meta mt-3">{weekly.note}</p>
       </div>
 
-      <button type="button" className="daily-link" onClick={() => onNavigate?.("/founder")}>
+      <button type="button" className="daily-link" onClick={() => onNavigate?.("/control-room")}>
         Open Partner Progress in the Control Room →
       </button>
     </div>

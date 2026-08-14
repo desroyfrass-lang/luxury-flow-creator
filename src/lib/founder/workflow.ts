@@ -49,7 +49,7 @@ export const FOUNDER_WORKFLOW: WorkflowStep[] = [
       "The Change Advisor sorts it: already possible, Founder-editable, engineering, or constitutional — with a cost of change.",
     owner: "Founder Change Advisor",
     amendment: "FRASS-0521",
-    path: "/command",
+    path: "/control-room",
   },
   {
     id: "edit",
@@ -59,7 +59,7 @@ export const FOUNDER_WORKFLOW: WorkflowStep[] = [
       "If it can be done inside Frass, Design Authority prepares and previews the change conversationally.",
     owner: "Founder Design Authority",
     amendment: "FRASS-0520",
-    path: "/command",
+    path: "/control-room",
   },
   {
     id: "approve",
@@ -96,7 +96,7 @@ export const FOUNDER_WORKFLOW: WorkflowStep[] = [
       "Platform Intelligence records the outcome, and Constitution Health measures whether it helped.",
     owner: "Platform Intelligence",
     amendment: "FRASS-0518",
-    path: "/command",
+    path: "/control-room",
   },
 ];
 

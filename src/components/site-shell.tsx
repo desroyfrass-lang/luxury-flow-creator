@@ -300,7 +300,7 @@ function BuilderAccountMenu({ hasWorkspace, isAdmin }: { hasWorkspace: boolean; 
 
         {isAdmin && (
           <DropdownMenuItem asChild className="rounded-xl cursor-pointer">
-            <Link to="/founder" className="flex items-center gap-2 text-xs uppercase tracking-[0.2em]">
+            <Link to="/control-room" className="flex items-center gap-2 text-xs uppercase tracking-[0.2em]">
               <Sparkles className="h-4 w-4" />
               Founder Mode
             </Link>
@@ -412,7 +412,7 @@ function MobileAccountLinks({ hasWorkspace, isAdmin }: { hasWorkspace: boolean; 
 
       {isAdmin && (
         <Link
-          to="/founder"
+          to="/control-room"
           className="nav-glow block rounded-xl px-4 py-3 text-xs uppercase tracking-[0.25em] text-muted-foreground transition-colors hover:bg-foreground/5"
           activeProps={{ className: "text-foreground bg-foreground/5" }}
         >

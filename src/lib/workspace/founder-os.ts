@@ -69,11 +69,11 @@ export const FOUNDER_TABS: FounderTab[] = [
 export const FOUNDER_LAUNCHERS: Record<string, { label: string; href: string; plain: string }[]> = {
   continue: [
     { label: "My Workspace", href: "/room", plain: "Reopens on your last mode and project." },
-    { label: "Control Room", href: "/founder", plain: "Mission control for building." },
+    { label: "Control Room", href: "/control-room", plain: "Mission control for building." },
     { label: "Frassy", href: "/frassy", plain: "Pick up the last conversation." },
   ],
   goals: [
-    { label: "Control Room", href: "/founder", plain: "Goals, vision maps and construction." },
+    { label: "Control Room", href: "/control-room", plain: "Goals, vision maps and construction." },
     { label: "Insights", href: "/workspace/insights", plain: "How close the numbers are to the goal." },
     { label: "Business Builder", href: "/business-builder", plain: "Turn a goal into a plan." },
     { label: "Launch Accelerator", href: "/launch-accelerator", plain: "Today's fastest route to income." },
@@ -117,7 +117,7 @@ export const FOUNDER_LAUNCHERS: Record<string, { label: string; href: string; pl
   ],
   world: [
     { label: "Frass Hill", href: "/frass-hill", plain: "The town itself." },
-    { label: "Control Room", href: "/founder", plain: "Blueprint mode and construction." },
+    { label: "Control Room", href: "/control-room", plain: "Blueprint mode and construction." },
     { label: "The Walk", href: "/frass-hill-journey", plain: "The animated arrival." },
   ],
 };

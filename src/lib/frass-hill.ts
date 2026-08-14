@@ -333,7 +333,7 @@ export const HILL_DISTRICTS: HillDistrict[] = [
     contribution: "Keeps the whole town aligned to one vision.",
     legacy: "The Constitution and the permanent record of every decision.",
     venues: [
-      { name: "The Chamber", does: "Founder communications and major announcements.", to: "/founder" },
+      { name: "The Chamber", does: "Founder communications and major announcements.", to: "/control-room" },
       { name: "The Constitution", does: "Five volumes. The rules the town is built on." },
       { name: "Platform History", does: "Every decision, dated, with the reason it was made." },
       { name: "Roadmap Room", does: "What is being built next, and in what order." },
@@ -343,7 +343,7 @@ export const HILL_DISTRICTS: HillDistrict[] = [
     connected: ["Town Square", "Frass Luxury House", "Studio District"],
     success: "Members understand the direction of Frass without having to ask.",
     status: "open",
-    to: "/founder",
+    to: "/control-room",
     image: "founder",
   },
 ];

@@ -162,7 +162,7 @@ export const AUDIT_PAGES: AuditPage[] = [
   {
     id: "founder-mode",
     label: "Founder Mode",
-    path: "/founder",
+    path: "/control-room",
     purpose: "Oversight without a parallel platform: the Founder walks the same front door.",
     promises: ["Transparency", "Simplicity"],
     features: [

@@ -136,7 +136,7 @@ export const PERSONAS: Persona[] = [
     label: "Founder",
     plain: "You, with full administrative tools.",
     behaviour: ["Everything visible.", "Command Center reachable.", "Nothing hidden."],
-    destination: "/command",
+    destination: "/control-room",
     required: true,
   },
 ];

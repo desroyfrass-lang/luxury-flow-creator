@@ -469,7 +469,7 @@ const CONTEXTS: { match: (path: string) => boolean; context: ForUsContext }[] = 
     context: { label: "My Workspace", priority: ["projects", "business", "opportunity", "mentorship"] },
   },
   {
-    match: (p) => p.startsWith("/founder"),
+    match: (p) => p.startsWith("/control-room"),
     context: { label: "Founder Hall", priority: ["business", "foundation", "community", "marketplace"] },
   },
   {
@@ -577,7 +577,7 @@ export const HALL_EXHIBITS: HallExhibit[] = [
     glyph: "🎙️",
     name: "Founder Announcement",
     showing: "A short message from the Founder, playing quietly in the corner by the coffee.",
-    to: "/founder",
+    to: "/control-room",
     cta: "Founder Hall",
     tags: ["business", "history", "platform development"],
   },

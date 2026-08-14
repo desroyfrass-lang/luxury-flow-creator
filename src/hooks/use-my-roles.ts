@@ -61,7 +61,7 @@ export function useAccountSection(): AccountSection | null {
       to: "/frassy",
       items: [
         { label: "Frassy OS", to: "/frassy", note: "Command center" },
-        { label: "Founder Control Room", to: "/founder" },
+        { label: "Founder Control Room", to: "/control-room" },
         { label: "Admin Console", to: "/admin" },
         { label: "Roles & Access", to: "/admin/roles" },
         { label: "My Archive", to: "/try-on", note: "Try-on hauls" },
