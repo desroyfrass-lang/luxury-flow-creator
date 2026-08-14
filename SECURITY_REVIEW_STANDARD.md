@@ -116,3 +116,23 @@ Triggered automatically by any major release, whether or not anything is broken:
 
 Each review runs the eight questions in section 2 and is recorded in the release's
 Deployment Report (`deployments/REPORT_TEMPLATE.md`).
+
+---
+
+## 10. FRASS-0565 — Public Data Boundary check (every release)
+
+Run against every public-facing surface added or changed since the last release:
+
+- [ ] No internal identifiers returned to anonymous visitors (user_id, owner_id,
+      host_id, sender_id, author_id, partner_id, builder_id, email, phone)
+- [ ] No financial values returned publicly (credits, balances, amounts, gift
+      values, currencies, commission percentages, internal pricing, revenue)
+- [ ] No internal metadata returned publicly (audit fields, internal or Founder
+      notes, moderation flags, risk scores, system references)
+- [ ] Every public read is a dedicated public view or explicit field allow-list —
+      never a raw table, never `select *`
+- [ ] Anonymous grants are column-scoped and no wider than the constitution allows
+- [ ] The four boundary questions answered for each new surface
+      (`BOUNDARY_QUESTIONS` in `src/lib/security/public-data-boundary.ts`)
+
+Any failure blocks Release Approval (FRASS-0529) until corrected.
