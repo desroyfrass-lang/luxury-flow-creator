@@ -141,6 +141,8 @@ export const runLinkCheck = createServerFn({ method: "POST" })
       try {
         const u = new URL(href, from);
         if (u.protocol !== "http:" && u.protocol !== "https:") return null;
+        if (isBlockedHost(u.hostname)) return null;
+
         u.hash = "";
         return u.toString();
       } catch {
