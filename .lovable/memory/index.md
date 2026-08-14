@@ -1,6 +1,10 @@
 # Project Memory
 
 ## Core
+The Daily is where Builders think. The Workshop is where Builders build. Never blur the two.
+Money Moves always nest their Fast Tracks inside the card; never a separate step list.
+Every Business Vault carries one priority: Active, Growing, Future or Archived — it drives Daily, Workshop and fund allocation.
+Never say "deprecated" to a member — say "Retired Systems" or "Legacy Systems".
 FRASS-0569: the Welcome Hall is Frass Hill's mandatory front entrance — the Daily never comes first; only the member may skip the welcome.
 FRASS-0562: the Founder is never unintentionally gated, but may voluntarily enter the full onboarding journey through the Experience Simulator.
 FRASS-0562: Simulation Mode simulates a member's STATE, not just the UI — no second email/account; one real test account kept only for release validation (signup, verification, reset, login/logout).
@@ -63,6 +67,7 @@ Every Business Vault runs three stages — Earn → Scale → Legacy (FRASS-0533
 Creative series are intellectual property produced by Frassy from a Blueprint, never hardcoded into a Daily (FRASS-0533).
 
 ## Memories
+- [SPEC-BLUEPRINT-001 Builder OS](mem://features/spec-blueprint-001-builder-os) — Daily vs Workshop rule, Money Move lifecycle with nested Fast Tracks, adaptive Workshop environments, Vault Priority, Builder Rhythm, glossary
 - [FRASS-0569 Welcome Hall Experience](mem://features/frass-0569-welcome-hall-experience) — Mandatory Frass Hill front entrance, three experiences, four Daily Welcome tiers
 - [FRASS-0477 Frassy Presence](mem://features/frass-0477-frassy-presence) — Arrival/returning/working/idle etiquette, Focus Mode silence, cloud→device→text voice hierarchy with indicator
 - [The Daily philosophy FRASS-0425](mem://features/frass-0425-daily-philosophy) — Daily's constitutional purpose + Morning Briefing, End of Day, time estimates, Focus Mode, consistency, health, Close My Day
