@@ -372,6 +372,10 @@ export function WorkspaceRoom({
                 onAsk={(prompt) => void send(prompt)}
                 pulse={awarenessPulse}
               />
+              {/* SPEC-BLUEPRINT-001-FINAL §3 — the Workshop adapts to the craft. */}
+              <WorkshopEnvironmentBanner
+                env={environmentFor({ modeId, projectId: activeProjectId })}
+              />
               {note && <p className="ws-note">{note}</p>}
             </>
           }
