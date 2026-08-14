@@ -16,7 +16,9 @@ export type CommandSectionId =
   | "ai"
   | "operations"
   | "simulator"
-  | "innovation";
+  | "innovation"
+  | "conversation"
+  | "commissioning";
 
 export type CommandTool = {
   id: string;
@@ -322,6 +324,66 @@ export const COMMAND_SECTIONS: CommandSection[] = [
         plain: "Sort every idea before it becomes engineering. Drafts and specifications live here.",
         kind: "panel",
         amendment: "FRASS-0521",
+      },
+    ],
+  },
+  {
+    id: "conversation",
+    icon: "🎙️",
+    label: "Conversation",
+    purpose: "Your direct line to Frassy — the first place to think out loud before anything is built.",
+    tools: [
+      {
+        id: "founder-frassy",
+        label: "Talk to Frassy",
+        plain: "She knows the districts, the catalog and where commissioning stands. Type or speak.",
+        kind: "panel",
+        amendment: "FRASS-0568",
+      },
+      {
+        id: "founder-workspace",
+        label: "My Workspace",
+        plain: "Where the work itself happens — projects, studios, the Daily.",
+        kind: "link",
+        path: "/room",
+      },
+    ],
+  },
+  {
+    id: "commissioning",
+    icon: "🏗️",
+    label: "Commissioning",
+    purpose: "Bring Frass to launch: readiness, districts, credits, payments and platform status.",
+    tools: [
+      {
+        id: "commissioning-journey",
+        label: "Commissioning Journey",
+        plain: "The five phases that take Frass from build to open doors.",
+        kind: "panel",
+        amendment: "FRASS-0568",
+      },
+      {
+        id: "payment-providers",
+        label: "Payment Provider Center",
+        plain: "Providers per market, owner compensation, margin floor and the ten-step pipeline.",
+        kind: "link",
+        path: "/payment-providers",
+        amendment: "FRASS-0303",
+      },
+      {
+        id: "global-operations",
+        label: "Global Operations",
+        plain: "Canada, United Kingdom and United States — capability, campaigns and analytics.",
+        kind: "link",
+        path: "/global-operations",
+        amendment: "FRASS-0305",
+      },
+      {
+        id: "financial-center",
+        label: "Financial Center",
+        plain: "Every receipt, ledger and payout in one audited place.",
+        kind: "link",
+        path: "/financial-center",
       },
     ],
   },
