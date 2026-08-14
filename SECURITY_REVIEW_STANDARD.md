@@ -136,3 +136,18 @@ Run against every public-facing surface added or changed since the last release:
       (`BOUNDARY_QUESTIONS` in `src/lib/security/public-data-boundary.ts`)
 
 Any failure blocks Release Approval (FRASS-0529) until corrected.
+
+---
+
+## 11. FRASS-0566 — Protected Contact Boundary check (every release)
+
+- [ ] No email address, phone number or postal address is readable by an
+      anonymous visitor on any public profile or gallery
+- [ ] Anonymous grants on profile-style tables are column-scoped and exclude
+      contact columns
+- [ ] Every public profile offers 📨 Contact Builder instead of a published address
+- [ ] Requests submitted by signed-out visitors cannot claim a member's account
+- [ ] Any server-side fetch of a user-supplied URL screens the host against the
+      private / loopback / link-local / cloud-metadata denylist
+
+Any failure blocks Release Approval (FRASS-0529) until corrected.

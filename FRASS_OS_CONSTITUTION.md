@@ -2882,3 +2882,35 @@ hide. Public features use intentionally designed public views.
 **Implementation** — `src/lib/security/public-data-boundary.ts` (the boundary,
 audience projection and guard), `src/lib/security/regressions.ts` (four permanent
 public-boundary regression tests), `SECURITY_REVIEW_STANDARD.md` section 10.
+
+---
+
+## FRASS-0566 — Protected Contact Boundary
+
+**Vision** — members should be discoverable; their private contact information
+should not be.
+
+**A public profile may display** — Builder name · business name · portfolio ·
+products · public social links · public website.
+
+**A public profile never exposes** — email address · phone number · internal
+identifiers · any private contact detail.
+
+**Instead** — every public surface offers a secure **📨 Contact Builder** flow.
+Messages pass through Frass. The member chooses whether to reply.
+
+**Deprecated** — publishing a personal email address anywhere a secure contact
+flow is available.
+
+**Systems updated** — Artist Galleries · Commission Requests · Link Checker.
+**Unchanged** — Marketplace · First Partner privacy · Gift Wall · Founder
+analytics · member profiles.
+
+**Founder Principle**
+> Frass helps Builders connect without requiring them to expose their personal
+> contact information.
+
+**Implementation** — `src/lib/security/protected-contact-boundary.ts`
+(allow-list, guard and projection), column-scoped anonymous grants on
+`artist_galleries`, four permanent regression tests in
+`src/lib/security/regressions.ts`, `SECURITY_REVIEW_STANDARD.md` section 11.
