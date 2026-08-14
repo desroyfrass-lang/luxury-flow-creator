@@ -317,6 +317,7 @@ export const ADULT_SURFACES = [
   "/marketplace",
   "/services",
   "/founder",
+  "/control-room",
   "/live",
   "/workspace",
 ] as const;
