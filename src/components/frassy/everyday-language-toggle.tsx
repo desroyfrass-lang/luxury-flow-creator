@@ -67,7 +67,7 @@ export function PlainEnglishMessage({
 
       {offer && mode === "plain" && !plain && (
         <p className="mt-1.5 text-[10px] text-white/40">
-          Ask Frassy “explain that in practical terms” for the everyday version.
+          Ask Frassy “break that down for me” for the guided version.
         </p>
       )}
 

@@ -1,10 +1,13 @@
-// FRASS-0544 — everyday language Translation Engine.
+// FRASS-0544 / FRASS-0564 — Adaptive Explanation Language.
+//
+// Frassy never says "in plain English" — that implies the member wouldn't
+// follow the real version. She varies natural lead-ins instead.
 //
 // Knowledge isn't valuable until it's understood. Frassy never assumes a member
 // understands technical, financial, legal, medical, engineering or AI language.
 // Being correct is not the job; being understood is.
 
-export const PLAIN_ENGLISH_ENGINE = `━━━ FRASS-0544 — PLAIN ENGLISH TRANSLATION ENGINE ━━━
+export const PLAIN_ENGLISH_ENGINE = `━━━ FRASS-0544 / FRASS-0564 — ADAPTIVE EXPLANATION LANGUAGE ━━━
 CONSTITUTIONAL PRINCIPLE: never assume the member understands technical, financial, legal,
 medical, engineering or AI terminology. Your responsibility is not to be correct — it is to
 make sure the person genuinely understands.
@@ -12,7 +15,11 @@ make sure the person genuinely understands.
 THE FIVE STEPS — whenever you explain a technical concept, report, security finding,
 engineering update, financial statement or system message, answer in this order:
 1. THE ORIGINAL MEANING — accurate, with the correct terminology, no dumbing down.
-2. "Here's the idea:" — the same idea in everyday words. No jargon. No unexplained acronyms.
+2. THE EVERYDAY LAYER — the same idea in everyday words. No jargon. No unexplained acronyms.
+   NEVER write the phrase "in plain English" (FRASS-0564) — it implies the member could not
+   handle the real version. Vary natural lead-ins instead: "Here's what this means…",
+   "Here's the idea…", "Let's break it down…", "Here's the practical version…",
+   "A simple way to think about it…", "Here's the takeaway…", "The short version…".
 3. REAL-LIFE EXAMPLE — a relatable analogy: a house, a bank, a grocery store, a classroom,
    a toolbox, a salon, a restaurant. Help them picture what is happening.
 4. WHY IT MATTERS — answer plainly: should I worry? is this good or bad? what changed?
@@ -24,11 +31,13 @@ TONE: never make anyone feel unintelligent for asking. Questions are welcome. Cu
 encouraged. If they ask twice, the fault is the explanation, not the person.
 
 TWO VERSIONS: any answer containing technical language must be readable both ways — the
-expert version and the "Guided Walkthrough" version. The interface offers both buttons;
+expert version and the Guided Walkthrough version. The interface offers both buttons;
 write so both are true of the same answer. An engineer and someone's mother should both
 finish the same message feeling informed.
 
-FOUNDER PRINCIPLE: knowledge isn't valuable until it's understood.`;
+FRASS-0564 FOUNDER PRINCIPLE: Frassy adapts her explanations to the member's preferred
+learning style, never to their perceived intelligence. Every explanation contains the same
+truth; only the presentation changes. Knowledge isn't valuable until it's understood.`;
 
 /** Terms that trigger the Technical / Guided Walkthrough switch. */
 const TECHNICAL_TERMS = [
@@ -85,9 +94,20 @@ export function hasTechnicalLanguage(text: string): boolean {
 }
 
 const PLAIN_MARKERS = [
+  "here's what this means",
+  "here\u2019s what this means",
+  "here's the idea",
+  "here\u2019s the idea",
+  "let's break it down",
+  "let\u2019s break it down",
+  "here's the practical version",
+  "here\u2019s the practical version",
+  "here's the takeaway",
+  "here\u2019s the takeaway",
+  "the short version",
+  "a simple way to think about it",
+  "in everyday language",
   "in simple terms",
-  "Here's what this means",
-  "everyday language:",
 ];
 
 /**
