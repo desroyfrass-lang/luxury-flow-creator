@@ -259,7 +259,71 @@ export const SECURITY_REGRESSIONS: RegressionTest[] = [
     enforcedIn: ["src/lib/security/public-data-boundary.ts", "database column grants"],
     fixedOn: "2026-08-14",
   },
+  {
+    id: "protected-contact-email",
+    title: "Personal contact details never appear on a public profile",
+    classification: "data-exposure",
+    rootCause:
+      "Published artist galleries were readable in full by signed-out visitors, so contact_email could be harvested straight from the data API.",
+    resolution:
+      "Anonymous access to artist_galleries is column-scoped and excludes contact_email; the Protected Contact Boundary rejects any public projection carrying an email, phone or address field.",
+    testCase:
+      "As a signed-out visitor, read a published gallery or public profile and look for an email address, phone number or postal address.",
+    expected: "None returned — only identity, story, work and public links.",
+    affects: ["Artist Galleries", "Public profiles", "Frass Cards", "Marketplace storefronts"],
+    enforcedIn: [
+      "src/lib/security/protected-contact-boundary.ts",
+      "artist_galleries column grants (anon)",
+    ],
+    fixedOn: "2026-08-14",
+  },
+  {
+    id: "contact-through-frass",
+    title: "Contacting a Builder goes through Frass, never a published address",
+    classification: "data-exposure",
+    rootCause:
+      "Public features reached for a published email as the simplest way to let someone make contact.",
+    resolution:
+      "Every public surface offers 📨 Contact Builder; the message passes through Frass and the Builder decides whether to reply.",
+    testCase:
+      "Open any public profile and attempt to contact the Builder; inspect the page source and network responses for a personal address.",
+    expected: "Contact Builder is the only route; no personal address is present in the payload.",
+    affects: ["Artist Galleries", "Commission Requests", "Public profiles", "Services Marketplace"],
+    enforcedIn: ["src/lib/security/protected-contact-boundary.ts"],
+    fixedOn: "2026-08-14",
+  },
+  {
+    id: "commission-request-identity",
+    title: "A commission request can never be filed in someone else's name",
+    classification: "authorization",
+    rootCause:
+      "The insert rule allowed a null requester or the caller's own id, which needed confirming for signed-out submissions.",
+    resolution:
+      "The insert policy requires either a signed-out visitor with no account attached, or a signed-in member attaching exactly their own account; validation of name, email and brief runs in a database trigger.",
+    testCase:
+      "Attempt to submit a commission request carrying another member's account id, signed in and signed out.",
+    expected: "Rejected in both cases.",
+    affects: ["Artist Galleries", "Commission Requests"],
+    enforcedIn: ["commission_requests insert policy", "validate_commission_request trigger"],
+    fixedOn: "2026-08-14",
+  },
+  {
+    id: "link-checker-private-network",
+    title: "Admin tools never reach private or cloud-metadata addresses",
+    classification: "ssrf",
+    rootCause:
+      "The link checker followed any http/https link discovered on a crawled page, so a planted link could aim the server at an internal address.",
+    resolution:
+      "Every URL is screened against a loopback, link-local, private, carrier-grade-NAT, multicast and cloud-metadata denylist before any request is made; blocked links are reported, never fetched.",
+    testCase:
+      "Add a link to http://169.254.169.254/ or http://127.0.0.1/ on a crawled page and run the link checker.",
+    expected: "Reported as blocked; no outbound request is made.",
+    affects: ["Admin link checker", "Any server-side fetch of a user-supplied URL"],
+    enforcedIn: ["src/lib/link-check.functions.ts (isBlockedHost)"],
+    fixedOn: "2026-08-14",
+  },
 ];
+
 
 
 export function regressionsByClass(): { classification: SecurityClass; tests: RegressionTest[] }[] {

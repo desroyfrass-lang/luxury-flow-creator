@@ -36,6 +36,55 @@ export type LinkCheckReport = {
 
 const SKIP_PREFIXES = ["mailto:", "tel:", "javascript:", "#", "data:", "blob:"];
 
+/**
+ * FRASS-0566 — the checker may never wander into a private network. Any host
+ * that resolves to loopback, link-local, private or cloud-metadata space is
+ * refused before a request is made.
+ */
+const BLOCKED_HOSTNAMES = new Set([
+  "localhost",
+  "localhost.localdomain",
+  "metadata",
+  "metadata.google.internal",
+  "instance-data",
+]);
+
+function isBlockedIpv4(host: string): boolean {
+  const parts = host.split(".");
+  if (parts.length !== 4) return false;
+  const nums = parts.map((p) => Number(p));
+  if (nums.some((n) => !Number.isInteger(n) || n < 0 || n > 255)) return false;
+  const [a, b] = nums as [number, number, number, number];
+  if (a === 0 || a === 10 || a === 127) return true; // this-network, private, loopback
+  if (a === 169 && b === 254) return true; // link-local + cloud metadata (169.254.169.254)
+  if (a === 172 && b >= 16 && b <= 31) return true; // private
+  if (a === 192 && b === 168) return true; // private
+  if (a === 100 && b >= 64 && b <= 127) return true; // carrier-grade NAT
+  if (a === 198 && (b === 18 || b === 19)) return true; // benchmarking
+  if (a >= 224) return true; // multicast + reserved
+  return false;
+}
+
+export function isBlockedHost(hostname: string): boolean {
+  const host = hostname.trim().toLowerCase().replace(/\.$/, "");
+  if (!host) return true;
+  if (BLOCKED_HOSTNAMES.has(host)) return true;
+  if (host.endsWith(".localhost") || host.endsWith(".internal") || host.endsWith(".local")) return true;
+  if (host.startsWith("[") || host.includes(":")) {
+    // IPv6 literal — allow only clearly public addresses.
+    const v6 = host.replace(/^\[|\]$/g, "");
+    if (v6 === "::1" || v6 === "::" ) return true;
+    if (/^f[cd][0-9a-f]{2}:/i.test(v6)) return true; // unique local
+    if (/^fe[89ab][0-9a-f]:/i.test(v6)) return true; // link-local
+    if (/^::ffff:/i.test(v6)) return isBlockedIpv4(v6.replace(/^::ffff:/i, ""));
+    return false;
+  }
+  if (/^\d+\.\d+\.\d+\.\d+$/.test(host)) return isBlockedIpv4(host);
+  if (/^\d+$/.test(host)) return true; // decimal-encoded IP form
+  return false;
+}
+
+
 function extractLinks(html: string): string[] {
   const out: string[] = [];
   const re = /<a\b[^>]*?href\s*=\s*["']([^"']+)["'][^>]*>/gi;
@@ -92,6 +141,8 @@ export const runLinkCheck = createServerFn({ method: "POST" })
       try {
         const u = new URL(href, from);
         if (u.protocol !== "http:" && u.protocol !== "https:") return null;
+        if (isBlockedHost(u.hostname)) return null;
+
         u.hash = "";
         return u.toString();
       } catch {
@@ -134,7 +185,19 @@ export const runLinkCheck = createServerFn({ method: "POST" })
     const results = await mapLimit(links, 6, async (url): Promise<LinkCheckResult> => {
       const external = !url.startsWith(origin);
       const foundOn = [...(found.get(url) ?? [])].slice(0, 5);
+      if (isBlockedHost(new URL(url).hostname)) {
+        return {
+          url,
+          status: null,
+          ok: false,
+          redirectedTo: null,
+          external,
+          error: "Blocked: private or internal network address (FRASS-0566)",
+          foundOn,
+        };
+      }
       try {
+
         const res = await fetch(url, {
           method: external ? "HEAD" : "GET",
           redirect: "manual",
