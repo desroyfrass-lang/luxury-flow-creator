@@ -48,6 +48,7 @@ import {
   saveFutureVault,
   updateFutureVaultNotes,
 } from "@/lib/business/future-vaults.functions";
+import { VaultPriorityTag } from "@/components/builder-os/vault-priority-tag";
 import { ViewModeFrame } from "@/components/view-mode/simplified-view";
 import { ViewModeToggle } from "@/components/view-mode/view-mode-toggle";
 
@@ -193,6 +194,10 @@ function FutureVaultsPage() {
                       </h3>
                       <p className="mt-1 text-sm text-muted-foreground">{v.summary}</p>
                       <p className="mt-1 text-xs text-muted-foreground">{v.forWho}</p>
+                      {/* SPEC-BLUEPRINT-001-FINAL §4 — every Vault carries one classification. */}
+                      <div className="mt-3">
+                        <VaultPriorityTag vaultKey={v.key} />
+                      </div>
                     </div>
                     <div className="flex flex-wrap gap-2">
                       <button

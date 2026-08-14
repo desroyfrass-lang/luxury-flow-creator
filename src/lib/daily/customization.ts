@@ -59,7 +59,10 @@ export type SectionId =
   // FRASS-0533 — recurring creative projects (a series, a channel, a book).
   | "episode-progress"
   // FRASS-0534 — Legacy Publication Engine: a completed journey becoming a book.
-  | "legacy-publication";
+  | "legacy-publication"
+  // SPEC-BLUEPRINT-001-FINAL — Builder Operating System.
+  | "money-move-stack"
+  | "builder-rhythm";
 
 export type SectionMeta = {
   id: SectionId;
@@ -80,6 +83,18 @@ export type SectionMeta = {
  * in The Daily and are not arrangeable, which is the strongest guarantee.
  */
 export const DAILY_SECTIONS: SectionMeta[] = [
+  {
+    id: "money-move-stack",
+    label: "Money Moves",
+    plain: "Each business goal, with its guided steps folded inside it.",
+    aliases: ["money move", "money moves", "objectives", "fast tracks"],
+  },
+  {
+    id: "builder-rhythm",
+    label: "Builder Rhythm",
+    plain: "Today in order of feeling: urgent, decisions, growth, celebration, then the door to the Workshop.",
+    aliases: ["rhythm", "flow", "emotional flow", "my day"],
+  },
   {
     id: "celebrate-first",
     label: "Celebrate first",

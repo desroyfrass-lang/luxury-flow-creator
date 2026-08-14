@@ -132,6 +132,9 @@ import {
   setDemoData,
   setRitualEnabled,
 } from "@/lib/workspace/daily-intel";
+import { MoneyMoveStack } from "@/components/builder-os/money-move-stack";
+import { BuilderRhythmFeed } from "@/components/builder-os/builder-rhythm-feed";
+import { DAILY_WORKSHOP_RULE } from "@/lib/builder-os/glossary";
 import { ViewModeFrame } from "@/components/view-mode/simplified-view";
 import { ViewModeToggle } from "@/components/view-mode/view-mode-toggle";
 import { Amount } from "@/components/finance/amount";
@@ -936,6 +939,24 @@ function FrassDailyBody({
         </Section>
 
 
+
+        {/* SPEC-BLUEPRINT-001-FINAL §2 — one nested Money Move component */}
+        <Section
+          id="money-move-stack"
+          title="💰 Money Moves"
+          note="Each business goal, with its Fast Tracks folded inside it. Open one to see the steps."
+        >
+          <MoneyMoveStack onNavigate={onNavigate} />
+        </Section>
+
+        {/* SPEC-BLUEPRINT-001-FINAL §5 — the Extended Builder Rhythm */}
+        <Section
+          id="builder-rhythm"
+          title="🎶 Builder Rhythm"
+          note={DAILY_WORKSHOP_RULE}
+        >
+          <BuilderRhythmFeed steps={steps} name={name} onOpenStep={go} onNavigate={onNavigate} />
+        </Section>
 
         {/* 3 — The numbered workday (FRASS-0425) */}
         <Section

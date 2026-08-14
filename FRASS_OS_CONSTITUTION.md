@@ -2567,7 +2567,7 @@ Control Room, Founder Console or any Founder-only interface, she uses this struc
 
 1. 🛠️ **What Changed** — one sentence describing exactly what was built or changed.
 2. 📋 **What Was Added** — the major additions as short bullets.
-3. 🧩 **Existing Systems Updated** — an instant mental map in four labelled lists: **Updated** (existing systems extended), **New** (built from scratch), **Unchanged** (touched nothing), **Deprecated** (retired). Empty lists say "None". This is the section that enforces **FRASS-0549A — Extend, don't duplicate** (below).
+3. 🧩 **Existing Systems Updated** — an instant mental map in four labelled lists: **Updated** (existing systems extended), **New** (built from scratch), **Unchanged** (touched nothing), **Retired Systems** (switched off). Empty lists say "None". This is the section that enforces **FRASS-0549A — Extend, don't duplicate** (below).
 4. 😊 **in everyday language** — everyday language, no engineering terminology.
 5. 🏡 **Real-Life Example** — an analogy: a school, a bank, a coach, a toolbox, a doctor's office.
 6. 🎯 **What This Means for Frass** — why it was worth building, and who benefits.
@@ -2871,7 +2871,7 @@ IDs, no financial values, no owner identifiers, no raw public tables and no
 anonymous access beyond constitutional limits. A regression fails Release
 Approval (FRASS-0529) automatically until corrected.
 
-**Deprecated** — exposing raw public tables and deciding field-by-field what to
+**Retired Systems** — exposing raw public tables and deciding field-by-field what to
 hide. Public features use intentionally designed public views.
 
 **Founder Principle**
@@ -2899,7 +2899,7 @@ identifiers · any private contact detail.
 **Instead** — every public surface offers a secure **📨 Contact Builder** flow.
 Messages pass through Frass. The member chooses whether to reply.
 
-**Deprecated** — publishing a personal email address anywhere a secure contact
+**Retired Systems** — publishing a personal email address anywhere a secure contact
 flow is available.
 
 **Systems updated** — Artist Galleries · Commission Requests · Link Checker.
@@ -2938,7 +2938,7 @@ permanently redirect to it. No Founder link may point anywhere else.
 **Access control** — Founder-only, behind the identity gate, `noindex,nofollow`.
 Non-Founder accounts never render the page; they are securely redirected.
 
-**Deprecated** — the legacy Control Room interface and any duplicate Founder
+**Retired Systems** — the legacy Control Room interface and any duplicate Founder
 dashboard experience.
 
 **Founder Principle**
@@ -2980,7 +2980,7 @@ experience of the day — the Welcome Hall always is.
 anticipation. The Daily never performs these duties; it assumes the Builder has
 already been welcomed.
 
-**Deprecated** — Any routing that sends a Builder into the Daily without first
+**Retired Systems** — Any routing that sends a Builder into the Daily without first
 entering the Welcome Hall; treating the Welcome Hall as just another page.
 
 **Implementation** — `src/lib/welcome-hall/daily-welcome.ts` (tiers, scripts,
@@ -2989,3 +2989,31 @@ once-per-day record), `src/components/welcome-hall/daily-welcome-ceremony.tsx`
 `src/components/welcome-hall/daily-welcome-gate.tsx` (mandatory gateway on
 `/room` and `/frass-hill`), `src/components/welcome-hall/welcome-tier-picker.tsx`
 (Daily settings), `src/routes/welcome-hall.tsx`.
+
+
+---
+
+## SPEC-BLUEPRINT-001-FINAL — Builder Operating System
+
+**Rule.** The Daily is where Builders think. The Workshop is where Builders build.
+
+**Money Move Lifecycle.** Money Move → Fast Tracks → Ready to Build → Workshop
+→ Monetization. Fast Tracks are always nested inside their Money Move; standalone
+step lists are Retired Systems.
+
+**Adaptive Workshop Environments.** Music → FV Studios · Bridal → Bridal Boutique
+· Art/Fashion → Frass Gallery · Culinary → Kitchen Studio · everything else →
+default Workshop. The room adapts; the Universal OS backend and Universal Upload
+Manager (FRASS-0400) never do.
+
+**Vault Priority.** Every Business Vault carries one classification — Active,
+Growing, Future or Archived. Priority decides Daily recommendations, Workshop
+defaults and Project Fund allocation. Future and Archived schedule nothing
+(FRASS-0469 stands).
+
+**Extended Builder Rhythm.** 🔴 Urgent → 🟡 Decisions → 🔵 Growth → 🟢 Celebration
+→ 🌸 Beautiful Ending → 🚪 Ready to Build. No Daily starts or ends badly.
+
+**Builder Language.** Daily, Workshop, Vault, Money Move, Fast Track, Ready to
+Build, Builder Rhythm, Universal Upload Manager. "Deprecated" is never shown to a
+member — it is "Retired Systems" or "Legacy Systems".
