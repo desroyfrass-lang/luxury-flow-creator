@@ -313,3 +313,95 @@ export const startJourneyTrack = createServerFn({ method: "POST" })
     if (error) throw new Error(error.message);
     return { ok: true, stageId };
   });
+
+/**
+ * FRASS-0563 — The Welcome Hall is a conversation, not a page.
+ *
+ * Frassy always speaks first. This returns (and records, once) her opening
+ * words for the member's current stage, so nobody ever arrives in silence
+ * waiting to be asked "what do I do now?".
+ */
+export const journeyOpening = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }) => {
+    const sb = context.supabase as unknown as JourneyDatabase;
+    const userId = context.userId;
+    const state = await loadJourneyState(sb, userId);
+
+    const { data: isAdmin, error: roleError } = await context.supabase.rpc("has_role", {
+      _user_id: userId,
+      _role: "admin",
+    });
+    if (roleError) throw new Error(roleError.message);
+    const activeTrack: "owner" | "builder" = isAdmin ? "owner" : "builder";
+
+    const stage = stageById(
+      trackOf(state.currentStage) === activeTrack
+        ? state.currentStage
+        : activeTrack === "owner"
+          ? FIRST_OWNER_STAGE
+          : FIRST_STAGE,
+    );
+
+    // Already talking? Never re-introduce herself.
+    const existing = state.messages.filter((m) => trackOf(m.stage) === activeTrack);
+    if (existing.length) {
+      const lastAssistant = [...existing].reverse().find((m) => m.role === "assistant");
+      return { reply: lastAssistant?.content ?? "", alreadyOpened: true, stageId: stage.id };
+    }
+
+    const { data: profile } = await sb
+      .from("profiles")
+      .select("display_name, full_name")
+      .eq("id", userId)
+      .maybeSingle();
+    const displayName: string | null =
+      activeTrack === "owner" ? "Nicky" : profile?.display_name ?? profile?.full_name ?? null;
+
+    const who = displayName ? ` ${displayName}` : "";
+    let reply =
+      activeTrack === "owner"
+        ? `Welcome back${who}. This is the Control Room. We're on "${stage.title}" — tell me where you want to start and I'll keep the record.`
+        : `Hi${who} — I'm Frassy, and I host this place. I'm glad you're here. Before anything else I'd like to know you a little: what are you building, or hoping to build? Take your time, there's no wrong answer.`;
+
+    const apiKey = process.env["LOVABLE_API_KEY"];
+    if (apiKey) {
+      try {
+        const { createLovableAiGatewayProvider } = await import("@/lib/ai-gateway.server");
+        const { streamText } = await import("ai");
+        const gateway = createLovableAiGatewayProvider(apiKey);
+        const system =
+          activeTrack === "owner"
+            ? buildFounderSystemPrompt(stage.id, state.memory, displayName)
+            : buildBuilderSystemPrompt(stage.id, state.memory, displayName);
+        const result = streamText({
+          model: gateway("google/gemini-3.6-flash"),
+          system,
+          messages: [
+            {
+              role: "user" as const,
+              content:
+                "[SYSTEM: The member has just arrived and has said nothing yet. Speak first. Greet them warmly by name if you know it, introduce yourself in one line, and ask your first question for this stage. Two or three short sentences, no lists, no markers.]",
+            },
+          ],
+        });
+        const raw = await result.text;
+        const text = parseJourneyMarkers(raw).text.trim();
+        const safe = activeTrack === "owner" && isFounderIdentityDiscovery(text);
+        if (text && !safe) reply = text;
+      } catch {
+        /* Frassy still speaks — the scripted greeting stands in. */
+      }
+    }
+
+    await sb
+      .from("builder_journey_messages")
+      .insert({ user_id: userId, stage: stage.id, role: "assistant", content: reply });
+
+    await sb
+      .from("builder_journeys")
+      .update({ status: "in_progress", last_active_at: new Date().toISOString() })
+      .eq("user_id", userId);
+
+    return { reply, alreadyOpened: false, stageId: stage.id };
+  });

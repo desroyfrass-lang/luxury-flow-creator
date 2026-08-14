@@ -3,6 +3,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { WorkspaceRoom } from "@/components/workspace/workspace-room";
 import { openTheDaily } from "@/components/workspace/daily-gate";
 import { ViewModeFrame } from "@/components/view-mode/simplified-view";
+import { WelcomeGate } from "@/components/welcome-gate";
 
 function RoomScreen() {
   const { daily } = Route.useSearch();
@@ -11,9 +12,11 @@ function RoomScreen() {
   }, [daily]);
   return (
     // FRASS-0517 — the same workspace, presented the member's way.
-    <ViewModeFrame place="My Workspace">
-      <WorkspaceRoom />
-    </ViewModeFrame>
+    <WelcomeGate>
+      <ViewModeFrame place="My Workspace">
+        <WorkspaceRoom />
+      </ViewModeFrame>
+    </WelcomeGate>
   );
 }
 

@@ -11,6 +11,7 @@ import {
   journeyTurn,
   setJourneyStage,
   startJourneyTrack,
+  journeyOpening,
   type ConversationDiagnostics,
   type JourneyMessage,
 } from "@/lib/journey.functions";
@@ -52,6 +53,7 @@ function OnboardingPage() {
   const jumpStage = useServerFn(setJourneyStage);
   const takeTurn = useServerFn(journeyTurn);
   const switchTrack = useServerFn(startJourneyTrack);
+  const openConversation = useServerFn(journeyOpening);
   const { isAdmin, loading: roleLoading } = useIsAdminStatus();
 
   const { data, isLoading, refetch } = useQuery({
@@ -69,6 +71,7 @@ function OnboardingPage() {
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const endRef = useRef<HTMLDivElement>(null);
   const founderRef = useRef(false);
+  const openedRef = useRef(false);
 
   const stage = stageById(data?.currentStage ?? "mission");
   const idx = stageIndex(stage.id);
@@ -119,6 +122,30 @@ function OnboardingPage() {
       await refetch();
     })();
   }, [isLoading, roleLoading, data, isAdmin, switchTrack, refetch]);
+
+  // FRASS-0563 — Frassy always speaks first. If this conversation has no
+  // messages yet, she opens it herself (aloud when voice is permitted) rather
+  // than leaving a new member staring at an empty box.
+  useEffect(() => {
+    if (isLoading || roleLoading || !data || openedRef.current) return;
+    if (messages.length > 0) return;
+    openedRef.current = true;
+    setBusy(true);
+    void openConversation()
+      .then(async (res) => {
+        if (!res?.reply) return;
+        setLocal([{ role: "assistant", content: res.reply }]);
+        if (speakReplies && voice.voiceAvailable) void voice.speak(res.reply);
+        await refetch();
+        setLocal([]);
+      })
+      .catch(() => {
+        openedRef.current = false;
+      })
+      .finally(() => setBusy(false));
+  }, [isLoading, roleLoading, data, messages.length, openConversation, refetch, speakReplies, voice]);
+
+
 
   async function send(text: string) {
     const message = text.trim();
