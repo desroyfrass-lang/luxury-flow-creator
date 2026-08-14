@@ -181,3 +181,4 @@ Creative series are intellectual property produced by Frassy from a Blueprint, n
 - [FRASS-0556/0557 AI Router + Frassy Beacon](mem://features/frass-0556-0557-ai-router-and-beacon) — Provider-independent routing with a no-AI first step, and the persistent context-aware Frassy companion
 - [FRASS-0559/0560/0561/0562 Experience Simulator](mem://features/frass-0559-0561-experience-simulator) — Persona simulator, Simulation Mode (member state, voluntary Founder gating, exit bar), front-door preview reset, Founder Seed Vaults
 - [FRASS-0564 Adaptive Explanation Language](mem://constraints/frass-0564-adaptive-explanation-language) — Banned "plain English" phrasing, approved lead-ins, Guided Walkthrough label, Simulation Bar progress + Restart
+- [FRASS-0565 Public Data Boundary & Zero-Trust Privacy](mem://features/frass-0565-public-data-boundary) — Private by default, public views only, expanded FRASS-0531 regression checks blocking Release Approval
