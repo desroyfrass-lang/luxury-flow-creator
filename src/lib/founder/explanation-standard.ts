@@ -24,7 +24,7 @@ export const EXPLANATION_SECTIONS = [
     id: "systems-map",
     heading: "🧩 Existing Systems Updated",
     guide:
-      "An instant mental map of what changed and what did not, in four labelled lists: Updated (existing systems extended), New (built from scratch), Unchanged (touched nothing), Deprecated (retired). If a list is empty, write 'None'. This enforces 'Extend, don't duplicate' (FRASS-0549A).",
+      "An instant mental map of what changed and what did not, in four labelled lists: Updated (existing systems extended), New (built from scratch), Unchanged (touched nothing), Retired Systems (switched off). If a list is empty, write 'None'. This enforces 'Extend, don't duplicate' (FRASS-0549A).",
   },
   {
     id: "everyday-language",
