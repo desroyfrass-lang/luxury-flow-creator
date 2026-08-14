@@ -140,6 +140,7 @@ import { Route as AuthenticatedFounderRouteImport } from './routes/_authenticate
 import { Route as AuthenticatedFirst30DaysRouteImport } from './routes/_authenticated/first-30-days'
 import { Route as AuthenticatedFinancialCenterRouteImport } from './routes/_authenticated/financial-center'
 import { Route as AuthenticatedCreationRouteImport } from './routes/_authenticated/creation'
+import { Route as AuthenticatedControlRoomRouteImport } from './routes/_authenticated/control-room'
 import { Route as AuthenticatedCommerceSimulationRouteImport } from './routes/_authenticated/commerce-simulation'
 import { Route as AuthenticatedCommandRouteImport } from './routes/_authenticated/command'
 import { Route as AuthenticatedCollectionRouteImport } from './routes/_authenticated/collection'
@@ -883,6 +884,12 @@ const AuthenticatedCreationRoute = AuthenticatedCreationRouteImport.update({
   path: '/creation',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedControlRoomRoute =
+  AuthenticatedControlRoomRouteImport.update({
+    id: '/control-room',
+    path: '/control-room',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedCommerceSimulationRoute =
   AuthenticatedCommerceSimulationRouteImport.update({
     id: '/commerce-simulation',
@@ -1379,6 +1386,7 @@ export interface FileRoutesByFullPath {
   '/collection': typeof AuthenticatedCollectionRoute
   '/command': typeof AuthenticatedCommandRoute
   '/commerce-simulation': typeof AuthenticatedCommerceSimulationRoute
+  '/control-room': typeof AuthenticatedControlRoomRoute
   '/creation': typeof AuthenticatedCreationRoute
   '/financial-center': typeof AuthenticatedFinancialCenterRoute
   '/first-30-days': typeof AuthenticatedFirst30DaysRoute
@@ -1572,6 +1580,7 @@ export interface FileRoutesByTo {
   '/collection': typeof AuthenticatedCollectionRoute
   '/command': typeof AuthenticatedCommandRoute
   '/commerce-simulation': typeof AuthenticatedCommerceSimulationRoute
+  '/control-room': typeof AuthenticatedControlRoomRoute
   '/creation': typeof AuthenticatedCreationRoute
   '/financial-center': typeof AuthenticatedFinancialCenterRoute
   '/first-30-days': typeof AuthenticatedFirst30DaysRoute
@@ -1779,6 +1788,7 @@ export interface FileRoutesById {
   '/_authenticated/collection': typeof AuthenticatedCollectionRoute
   '/_authenticated/command': typeof AuthenticatedCommandRoute
   '/_authenticated/commerce-simulation': typeof AuthenticatedCommerceSimulationRoute
+  '/_authenticated/control-room': typeof AuthenticatedControlRoomRoute
   '/_authenticated/creation': typeof AuthenticatedCreationRoute
   '/_authenticated/financial-center': typeof AuthenticatedFinancialCenterRoute
   '/_authenticated/first-30-days': typeof AuthenticatedFirst30DaysRoute
@@ -1991,6 +2001,7 @@ export interface FileRouteTypes {
     | '/collection'
     | '/command'
     | '/commerce-simulation'
+    | '/control-room'
     | '/creation'
     | '/financial-center'
     | '/first-30-days'
@@ -2184,6 +2195,7 @@ export interface FileRouteTypes {
     | '/collection'
     | '/command'
     | '/commerce-simulation'
+    | '/control-room'
     | '/creation'
     | '/financial-center'
     | '/first-30-days'
@@ -2390,6 +2402,7 @@ export interface FileRouteTypes {
     | '/_authenticated/collection'
     | '/_authenticated/command'
     | '/_authenticated/commerce-simulation'
+    | '/_authenticated/control-room'
     | '/_authenticated/creation'
     | '/_authenticated/financial-center'
     | '/_authenticated/first-30-days'
@@ -3536,6 +3549,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedCreationRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/control-room': {
+      id: '/_authenticated/control-room'
+      path: '/control-room'
+      fullPath: '/control-room'
+      preLoaderRoute: typeof AuthenticatedControlRoomRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/commerce-simulation': {
       id: '/_authenticated/commerce-simulation'
       path: '/commerce-simulation'
@@ -4187,6 +4207,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedCollectionRoute: typeof AuthenticatedCollectionRoute
   AuthenticatedCommandRoute: typeof AuthenticatedCommandRoute
   AuthenticatedCommerceSimulationRoute: typeof AuthenticatedCommerceSimulationRoute
+  AuthenticatedControlRoomRoute: typeof AuthenticatedControlRoomRoute
   AuthenticatedCreationRoute: typeof AuthenticatedCreationRoute
   AuthenticatedFinancialCenterRoute: typeof AuthenticatedFinancialCenterRoute
   AuthenticatedFirst30DaysRoute: typeof AuthenticatedFirst30DaysRoute
@@ -4219,6 +4240,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedCollectionRoute: AuthenticatedCollectionRoute,
   AuthenticatedCommandRoute: AuthenticatedCommandRoute,
   AuthenticatedCommerceSimulationRoute: AuthenticatedCommerceSimulationRoute,
+  AuthenticatedControlRoomRoute: AuthenticatedControlRoomRoute,
   AuthenticatedCreationRoute: AuthenticatedCreationRoute,
   AuthenticatedFinancialCenterRoute: AuthenticatedFinancialCenterRoute,
   AuthenticatedFirst30DaysRoute: AuthenticatedFirst30DaysRoute,
