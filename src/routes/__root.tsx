@@ -17,6 +17,7 @@ import { WelcomeLinkClaim } from "@/components/link/welcome-link-claim";
 import { VoiceStateOverlay } from "@/components/voice-state-overlay";
 import { FrassyConversationDock } from "@/components/voice/frassy-conversation-dock";
 import { FounderPreviewReset } from "@/components/founder/preview-reset";
+import { SimulationModeBar } from "@/components/founder/simulation-mode-bar";
 import { FrassyChat } from "@/components/frassy-chat";
 import { frassySurface } from "@/lib/frassy/surfaces";
 import { FrassyHost } from "@/components/frassy-host";
@@ -152,6 +153,8 @@ function RootComponent() {
         <FrassyHost />
         {/* FRASS-0560 — every build begins at the front door. */}
         <FounderPreviewReset />
+        {/* FRASS-0562 — simulate the state of a member, never a second account. */}
+        <SimulationModeBar />
         <DailyGate />
         <ConstructionMode />
 
