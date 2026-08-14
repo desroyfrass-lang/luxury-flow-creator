@@ -80,7 +80,7 @@ function LaunchFeedbackCenter() {
           <h2 className="mt-2 font-display text-4xl">Launch Feedback Center</h2>
           <p className="mt-2 max-w-2xl text-sm text-muted-foreground">
             Voice notes, screenshots and screen recordings sent during launch. Frassy transcribes
-            each one, writes a plain-English summary and tags the themes.{" "}
+            each one, writes a everyday-language summary and tags the themes.{" "}
             <Link to="/admin/feedback" className="underline">
               Page feedback lives here
             </Link>

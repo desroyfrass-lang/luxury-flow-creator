@@ -17,7 +17,7 @@ export const Route = createFileRoute("/legal/$level")({
       return { meta: [{ title: "Agreement not found — Frass" }, { name: "robots", content: "noindex" }] };
     }
     const a = AGREEMENTS[loaderData.level];
-    const description = `${a.title} (v${a.version}) — ${a.who} Plain English first, full terms underneath.`;
+    const description = `${a.title} (v${a.version}) — ${a.who} everyday language first, full terms underneath.`;
     return {
       meta: [
         { title: `${a.title} — Frass` },
@@ -57,7 +57,7 @@ function AgreementPage() {
               <h2 className="font-display text-lg uppercase tracking-[0.05em]">{s.heading}</h2>
               <p className="mt-2 rounded-2xl bg-white/[0.04] p-4 text-sm leading-relaxed">
                 <span className="mr-2 text-[11px] uppercase tracking-[0.2em] text-[color:var(--gold,#d4af37)]">
-                  Plain English
+                  everyday language
                 </span>
                 {s.plain}
               </p>

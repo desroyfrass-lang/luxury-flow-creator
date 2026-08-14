@@ -12,7 +12,7 @@
 //  · No duplicate commerce: selling always flows through the existing
 //    Marketplace, Frass Card and Money Moves architecture.
 //
-// Plain English: pick the thing you already know how to do. Frass walks you
+// Here's the practical version: pick the thing you already know how to do. Frass walks you
 // from "I can do this" to "people can buy this from me."
 // ─────────────────────────────────────────────────────────────────────────────
 
@@ -342,7 +342,7 @@ export const BUSINESS_VAULTS: BusinessVault[] = [
       { title: "Pick the problem you solve fastest", stage: "discover", minutes: 20 },
       { title: "Scope a first paid deliverable", stage: "discover", minutes: 25 },
       { title: "Ship the first working version", stage: "build", minutes: 60 },
-      { title: "Write the offer in plain English", stage: "build", minutes: 20 },
+      { title: "Write the offer in simple terms", stage: "build", minutes: 20 },
       ...MARKETPLACE_CLOSE,
     ],
     monetizationOutcome: "A priced technical offer or product live in the Marketplace.",
@@ -530,5 +530,5 @@ export function pathwayMinutes(vault: BusinessVault): number {
 export const FAMILY_PRINCIPLE = {
   headline: "Every skilled craft deserves the opportunity to become a business.",
   plain:
-    "What this means in plain English: whatever you already know how to do — sew, cook, cut hair, code, drive freight — there's a Vault for it, and every Vault ends the same way: something real that people can pay you for.",
+    "Let's break it down: whatever you already know how to do — sew, cook, cut hair, code, drive freight — there's a Vault for it, and every Vault ends the same way: something real that people can pay you for.",
 };

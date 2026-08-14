@@ -73,7 +73,7 @@ function FreshStart() {
             : "One moment — ending the session and clearing anything this browser remembered."}
         </p>
         <p className="mt-4 text-xs leading-relaxed text-muted-foreground">
-          <span className="text-[color:var(--gold)]">What this means in plain English: </span>
+          <span className="text-[color:var(--gold)]">Here's what this means: </span>
           it's like handing someone a brand-new phone before they visit the site — no history, no
           shortcuts, no half-finished setup.
         </p>

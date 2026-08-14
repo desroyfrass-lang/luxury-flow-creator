@@ -24,7 +24,7 @@ export function WorkingStyleCard() {
       </div>
       <p className="mt-3 text-sm leading-relaxed">{describeWorkingStyle(style)}</p>
       <p className="mt-2 text-xs text-muted-foreground">
-        In plain English: Frassy quietly notices your rhythm — voice or typing, short answers or
+        Here's the takeaway: Frassy quietly notices your rhythm — voice or typing, short answers or
         full walkthroughs, morning or evening — so she fits the way you work. It never leaves this
         device, and it never changes who she is.
       </p>

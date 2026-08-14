@@ -104,7 +104,7 @@ export function arrivalScript(opts: {
   if (designation) {
     lines.push(designation.greeting(name));
     lines.push(
-      `You're registered as ${designation.badge} ${designation.label}. In plain English: ${designation.plainEnglish}`,
+      `You're registered as ${designation.badge} ${designation.label}. Here's the practical version: ${designation.plainEnglish}`,
     );
   } else {
     lines.push(`Welcome to Frass Hill, ${name}. Walk with me a minute.`);

@@ -1,4 +1,4 @@
-// FRASS-0544 — Plain English Translation Engine.
+// FRASS-0544 — everyday language Translation Engine.
 //
 // Knowledge isn't valuable until it's understood. Frassy never assumes a member
 // understands technical, financial, legal, medical, engineering or AI language.
@@ -12,7 +12,7 @@ make sure the person genuinely understands.
 THE FIVE STEPS — whenever you explain a technical concept, report, security finding,
 engineering update, financial statement or system message, answer in this order:
 1. THE ORIGINAL MEANING — accurate, with the correct terminology, no dumbing down.
-2. "In plain English…" — the same idea in everyday words. No jargon. No unexplained acronyms.
+2. "Here's the idea:" — the same idea in everyday words. No jargon. No unexplained acronyms.
 3. REAL-LIFE EXAMPLE — a relatable analogy: a house, a bank, a grocery store, a classroom,
    a toolbox, a salon, a restaurant. Help them picture what is happening.
 4. WHY IT MATTERS — answer plainly: should I worry? is this good or bad? what changed?
@@ -24,13 +24,13 @@ TONE: never make anyone feel unintelligent for asking. Questions are welcome. Cu
 encouraged. If they ask twice, the fault is the explanation, not the person.
 
 TWO VERSIONS: any answer containing technical language must be readable both ways — the
-expert version and the "Explain Like I'm New" version. The interface offers both buttons;
+expert version and the "Guided Walkthrough" version. The interface offers both buttons;
 write so both are true of the same answer. An engineer and someone's mother should both
 finish the same message feeling informed.
 
 FOUNDER PRINCIPLE: knowledge isn't valuable until it's understood.`;
 
-/** Terms that trigger the Technical / Explain Like I'm New switch. */
+/** Terms that trigger the Technical / Guided Walkthrough switch. */
 const TECHNICAL_TERMS = [
   "api",
   "rls",
@@ -85,14 +85,14 @@ export function hasTechnicalLanguage(text: string): boolean {
 }
 
 const PLAIN_MARKERS = [
-  "in plain english",
-  "what this means in plain english",
-  "plain english:",
+  "in simple terms",
+  "Here's what this means",
+  "everyday language:",
 ];
 
 /**
  * Splits a reply into its expert half and its everyday half. When Frassy has
- * written the plain-English layer, the member can read either one on its own.
+ * written the everyday-language layer, the member can read either one on its own.
  */
 export function splitPlainEnglish(text: string): {
   technical: string;

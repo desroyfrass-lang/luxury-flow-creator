@@ -3,7 +3,7 @@
  *
  * The arrival signature and the optional ambience are generated with the Web
  * Audio API rather than shipped as media files: no download, no autoplay of a
- * heavy asset, and it can be stopped instantly. Plain English: the page hums a
+ * heavy asset, and it can be stopped instantly. Here's the practical version: the page hums a
  * five-second welcome the way a hotel lobby chime greets you at the door, and
  * the sea only keeps playing if you ask it to.
  */

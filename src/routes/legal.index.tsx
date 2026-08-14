@@ -9,7 +9,7 @@ export const Route = createFileRoute("/legal/")({
       {
         name: "description",
         content:
-          "The two agreements that govern Frass: the FrassKicks Visitor Agreement for shoppers, and the Frass Hill Builder Agreement for Builders and Partners. Plain English first.",
+          "The two agreements that govern Frass: the FrassKicks Visitor Agreement for shoppers, and the Frass Hill Builder Agreement for Builders and Partners. everyday language first.",
       },
       { property: "og:title", content: "Agreements, Privacy & Security — Frass" },
       { property: "og:description", content: "Plain-English privacy, security and community agreements." },

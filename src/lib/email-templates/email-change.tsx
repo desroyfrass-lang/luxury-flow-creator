@@ -24,7 +24,7 @@ export const EmailChangeEmail = ({ oldEmail, newEmail, confirmationUrl }: EmailC
       Confirm the change
     </Button>
     <Text style={plain}>
-      What this means in plain English: we ask both addresses to agree before moving your account — like changing
+      Here's what this means: we ask both addresses to agree before moving your account — like changing
       your mailing address in person rather than by note.
     </Text>
     <Text style={footer}>If you didn't request this change, ignore this email and nothing will move.</Text>

@@ -5,7 +5,7 @@
 // no per-page password form, no bespoke Founder prompt. Strongest method first
 // (device biometrics / passkey), password always available as the fallback.
 //
-// Plain English: one guard, one desk, one procedure — wherever the safe is.
+// Here's the idea: one guard, one desk, one procedure — wherever the safe is.
 // ─────────────────────────────────────────────────────────────────────────────
 
 import { useEffect, useState } from "react";

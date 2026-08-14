@@ -57,7 +57,7 @@ export const PERSONAS: Persona[] = [
     behaviour: [
       "Prefers Simplified View.",
       "Moves slowly; one action at a time.",
-      "Needs plain English and an analogy for every term.",
+      "Needs everyday language and an analogy for every term.",
     ],
     destination: "/room",
     required: true,

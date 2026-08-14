@@ -7,7 +7,7 @@
 // affected systems and classification. Before every deployment the Security
 // Center walks this registry and confirms nothing has come back.
 //
-// Plain English: once we lock a door, Frass checks that same door before every
+// Here's the takeaway: once we lock a door, Frass checks that same door before every
 // release — forever. Locks don't get forgotten just because the break-in was
 // last year.
 // ─────────────────────────────────────────────────────────────────────────────
@@ -25,7 +25,7 @@ export type RegressionTest = {
   id: string;
   title: string;
   classification: SecurityClass;
-  /** Why it happened, in plain English. */
+  /** Why it happened, in simple terms. */
   rootCause: string;
   /** What we changed so it can't happen again. */
   resolution: string;

@@ -9,7 +9,7 @@
 // accounting knowledge: where did it come from, why did I receive it, where did
 // it go, and why was it deducted.
 //
-// What this means in plain English: every movement of money leaves a paper
+// Here's the practical version: every movement of money leaves a paper
 // trail, written in words a person can read — not a bank statement code.
 // ─────────────────────────────────────────────────────────────────────────────
 

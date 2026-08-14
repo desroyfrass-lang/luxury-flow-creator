@@ -9,7 +9,7 @@
 // help them build assets, businesses and intellectual property that keep
 // creating value for them, their family and the generations after them.
 //
-// Plain English: first get paid for what you do. Then package what you know so
+// Here's how it works: first get paid for what you do. Then package what you know so
 // it sells while you sleep. Then own things — a channel, a library, a brand —
 // that keep paying long after you stop working.
 // ─────────────────────────────────────────────────────────────────────────────
@@ -99,7 +99,7 @@ export const THREE_LEVELS_PRINCIPLE = {
     "Its purpose is to help members build assets, businesses and legacies that continue creating value " +
     "for themselves, their families and future generations.",
   plain:
-    "What this means in plain English: a plumber with forty years of experience should not retire with nothing " +
+    "Here's the idea: a plumber with forty years of experience should not retire with nothing " +
     "but worn-out tools. A hairstylist should not retire with decades of technique disappearing with her. " +
     "Frass is the bridge between a lifetime of experience and something that keeps earning.",
   question:

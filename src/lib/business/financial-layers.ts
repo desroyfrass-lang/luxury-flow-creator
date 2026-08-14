@@ -131,7 +131,7 @@ export type DailyBalance = {
   pressure: FinancialPressure;
   availableMinutes: number;
   allocation: LayerAllocation[];
-  /** Plain English: why today looks the way it does. */
+  /** Here's how it works: why today looks the way it does. */
   explanation: string;
 };
 

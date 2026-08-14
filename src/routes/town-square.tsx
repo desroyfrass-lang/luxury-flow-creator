@@ -262,7 +262,7 @@ function TownSquarePage() {
         </section>
 
         <p className="mt-16 max-w-2xl text-sm leading-relaxed text-muted-foreground">
-          <strong className="text-foreground">What this means in plain English:</strong> most social
+          <strong className="text-foreground">Here's how it works:</strong> most social
           apps only show you people. The square shows you the town — the shop that just opened, the
           farmer selling today, the band playing tonight, the notice the town posted this morning.
           You walk through it the way you would walk through a real square at home.

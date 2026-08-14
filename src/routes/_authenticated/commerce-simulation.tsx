@@ -51,7 +51,7 @@ function CommerceSimulationPage() {
           <h1 className="mt-2 text-4xl font-black uppercase tracking-tight">Day-in-the-life simulation</h1>
           <p className="mt-3 max-w-2xl text-sm text-muted-foreground">{ZERO_FRICTION_PRINCIPLE}</p>
           <p className="mt-2 max-w-2xl text-sm text-muted-foreground">
-            <strong>What this means in plain English:</strong> we walked nine ordinary sales all the
+            <strong>Here's the practical version:</strong> we walked nine ordinary sales all the
             way through — a watermelon, a painting, a tour tee, a gift, a bonus, a payout — and
             checked that the money, the receipt and the customer's privacy all landed where they
             should. Like a dress rehearsal with real staging instead of a checklist.

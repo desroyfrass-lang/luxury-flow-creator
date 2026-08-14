@@ -107,7 +107,7 @@ function WalletHub() {
         <h1 className="mt-2 text-3xl font-black uppercase tracking-tight">Your counter</h1>
         <p className="mt-2 max-w-2xl text-sm text-muted-foreground">{WALLET_PRINCIPLE}</p>
         <p className="mt-1 max-w-2xl text-xs text-muted-foreground">
-          <strong>What this means in plain English:</strong> your Frass Card is the shopfront window;
+          <strong>Here's how it works:</strong> your Frass Card is the shopfront window;
           the Wallet is the counter behind it. Everything financial lives here — nothing financial
           lives on the card itself.
         </p>
@@ -230,7 +230,7 @@ function WalletHub() {
               : "Deposits arrive the moment someone uses the Pay, Gift, Tip or Shop doors on your Frass Card. Each one is recorded here as it happens."}
           </p>
           <p className="mt-1 text-xs text-muted-foreground">
-            <strong>What this means in plain English:</strong> Frass is the market stall and the
+            <strong>Let's break it down:</strong> Frass is the market stall and the
             receipt book, never the cash box.
           </p>
           <a

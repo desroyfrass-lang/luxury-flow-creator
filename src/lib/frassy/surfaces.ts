@@ -12,7 +12,7 @@
 //   "none"      — social, play and entertainment surfaces. Conversation never
 //                 interrupts them; members summon Frassy deliberately.
 //
-// Plain English: this is the guest list that stops six different Frassys from
+// Let's break it down: this is the guest list that stops six different Frassys from
 // showing up to the same party.
 // ─────────────────────────────────────────────────────────────────────────────
 

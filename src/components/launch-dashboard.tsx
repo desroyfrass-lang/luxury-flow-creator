@@ -81,7 +81,7 @@ export function LaunchDashboard({
           </p>
           <p className="mt-1 text-sm">{promise.promise}</p>
           <p className="mt-1 text-xs text-muted-foreground">
-            What this means in plain English: {promise.plain}
+            Here's the practical version: {promise.plain}
           </p>
         </div>
       )}

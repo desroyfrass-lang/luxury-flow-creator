@@ -286,7 +286,7 @@ export const FINANCE_TABS: FinanceTab[] = [
     id: "audit",
     label: "Receipts & Audit",
     icon: "🧾",
-    blurb: "FRASS-0433 — every dollar in and out, with a receipt and a plain-English explanation.",
+    blurb: "FRASS-0433 — every dollar in and out, with a receipt and a everyday-language explanation.",
     sections: [
       "Financial timeline",
       "Receipt detail",

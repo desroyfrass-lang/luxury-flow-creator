@@ -10,7 +10,7 @@
 // Coaching. Bank balances, cards, tax records and personal accounts are never
 // available to the Founder at all, under any condition.
 //
-// Plain English: you can see who is thriving and who needs a hand. You cannot
+// Here's the idea: you can see who is thriving and who needs a hand. You cannot
 // see anybody's bank account. Those are two different things on purpose.
 // ─────────────────────────────────────────────────────────────────────────────
 

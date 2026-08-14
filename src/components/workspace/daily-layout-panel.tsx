@@ -1,4 +1,4 @@
-// FRASS-5P000 — the plain-English layout controls.
+// FRASS-5P000 — the everyday-language layout controls.
 // A member never has to use this: they can just tell Frassy. It exists for the
 // people who prefer buttons, and every control here says what it does.
 

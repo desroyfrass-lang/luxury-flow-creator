@@ -206,7 +206,7 @@ export function DiscoveryInterview({
                 comfort === "plain" ? "border-[color:var(--gold,#d4af37)] bg-[color:var(--gold,#d4af37)]/10" : "border-white/20"
               }`}
             >
-              Plain English, one step at a time
+              everyday language, one step at a time
             </button>
             <button
               onClick={() => setComfort("standard")}
@@ -298,7 +298,7 @@ export function PartnerStrengthsCard({
       <p className="mt-4 text-xs text-muted-foreground">
         Time you gave me: {profile.hoursPerDay} hour(s) a day
         {profile.monthlyGoal > 0 ? ` · Goal: $${profile.monthlyGoal.toLocaleString()} a month` : ""} ·{" "}
-        {profile.comfort === "plain" ? "Plain English explanations" : "Detailed explanations"}
+        {profile.comfort === "plain" ? "everyday language explanations" : "Detailed explanations"}
       </p>
       <button
         onClick={() => {

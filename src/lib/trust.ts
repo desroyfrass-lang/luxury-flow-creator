@@ -7,7 +7,7 @@
 // Frass is designed so fraud is extremely difficult to commit, quick to detect,
 // and fast to resolve.
 //
-// What this means in plain English: we build the shop like a bank branch, not
+// Here's the practical version: we build the shop like a bank branch, not
 // like a market stall with a cash box. The money passes through an armoured
 // channel, the cameras are always on, and every receipt is filed — so if
 // something goes wrong, we can see exactly what happened and fix it quickly.

@@ -5,7 +5,7 @@ Constitutional. Founder approved. This file is the working checklist that FRASS-
 > The client may request. The server verifies. The payment processor confirms.
 > Only then does money move.
 >
-> Plain English: the till can only print a ticket marked *unpaid* — the bank stamps it,
+> Let's break it down: the till can only print a ticket marked *unpaid* — the bank stamps it,
 > not the shopkeeper.
 
 ## 1. When a review is required
@@ -52,7 +52,7 @@ Run these against every system under review. A "yes" blocks launch.
 
 ## 4. Founder report format
 
-Every review returns these five sections, in plain English as well as technical detail:
+Every review returns these five sections, in simple terms as well as technical detail:
 
 1. What was tested
 2. What passed

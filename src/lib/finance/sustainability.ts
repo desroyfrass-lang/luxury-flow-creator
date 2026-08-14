@@ -2,7 +2,7 @@
 // FRASS-0523 — Financial Sustainability Audit.
 // "Free to Build. Sustainable to Operate."
 //
-// Plain English: this file is the platform's grocery bill. Before Frass adds
+// Here's the takeaway: this file is the platform's grocery bill. Before Frass adds
 // anything new, we work out what it costs us to run, what (if anything) it
 // costs the member, who pays for it, and whether the sums still work when a
 // hundred members become a million. A feature that is brilliant but ruinous is
@@ -403,7 +403,7 @@ export type FeatureAudit = {
   perMemberMonth: number;
   projections: ScaleProjection[];
   verdict: SustainabilityVerdict;
-  /** The four constitutional questions, answered in plain English. */
+  /** The four constitutional questions, answered in simple terms. */
   answers: {
     costsFrass: string;
     costsMember: string;

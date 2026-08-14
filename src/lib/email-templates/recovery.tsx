@@ -16,7 +16,7 @@ export const RecoveryEmail = ({ confirmationUrl }: RecoveryEmailProps) => (
       Set a new password
     </Button>
     <Text style={plain}>
-      What this means in plain English: we never see or send your password. This link simply lets you set a new one
+      Here's the practical version: we never see or send your password. This link simply lets you set a new one
       yourself, like changing the lock rather than being mailed the old key.
     </Text>
     <Text style={footer}>

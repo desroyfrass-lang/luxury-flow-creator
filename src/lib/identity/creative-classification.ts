@@ -17,7 +17,7 @@ export const CLASSIFICATION_PRINCIPLE =
   "Frass recognizes creators by the work they bring into the world. Clear identity creates better guidance, better businesses, and better experiences.";
 
 export const CLASSIFICATION_PLAIN_ENGLISH =
-  "What this means in plain English: 'artist' is like saying 'I work with my hands' — true, but it doesn't tell anybody which door to open. A painter needs a gallery. A producer needs a studio. Same respect, different building.";
+  "Let's break it down: 'artist' is like saying 'I work with my hands' — true, but it doesn't tell anybody which door to open. A painter needs a gallery. A producer needs a studio. Same respect, different building.";
 
 export const CLASSIFICATION_LAW =
   "The generic term 'Artist' is never used as a primary member classification when a more specific discipline exists. Members are identified by what they create.";

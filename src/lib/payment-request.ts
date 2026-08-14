@@ -9,7 +9,7 @@
 // credentials are never entered into another member's device, and the seller
 // never sees a card number, a bank number, an expiry date or a security code.
 //
-// What this means in plain English: instead of handing over your phone or
+// Here's the takeaway: instead of handing over your phone or
 // typing your card into someone else's tablet, the seller taps "Request
 // payment" and a clean request lands on your own phone. You look at it, you
 // approve it with the payment method you already trust, and you are done —

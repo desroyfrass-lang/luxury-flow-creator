@@ -21,7 +21,7 @@ export const SERVICES_PRINCIPLE =
   "Frass doesn't just sell products — it connects people with trusted products, trusted services and trusted opportunities. Every legitimate skill deserves a place in the Frass economy, and every service needs a clear path from discovery to delivery to monetization.";
 
 export const SERVICES_PLAIN_ENGLISH =
-  "What this means in plain English: the same shop that sells you a jacket can also send someone to pack your house, clean it after, ship the barrel and meet it at the other end. One place, one conversation, many trusted people doing the work — like a good hotel concierge who knows everybody on the island.";
+  "Here's how it works: the same shop that sells you a jacket can also send someone to pack your house, clean it after, ship the barrel and meet it at the other end. One place, one conversation, many trusted people doing the work — like a good hotel concierge who knows everybody on the island.";
 
 export const SERVICES_RULE =
   "If a member needs a service, Frassy checks Frass first. A qualified Frass Partner is recommended before anyone outside — but never a weaker option just because it lives on Frass.";

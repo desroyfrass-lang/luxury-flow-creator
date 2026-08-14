@@ -32,7 +32,7 @@ export function CoreRouteAuditPanel() {
           <p className="mt-2 max-w-2xl text-sm text-muted-foreground">
             Every place a member can be sent to — Welcome Hall, Onboarding, Workspace, The Daily,
             Money Moves, Marketplace, Financial Center, Builder Vault, FOR ME, Frass Card and Founder
-            Mode — checked against the live route table. In plain English: nobody's first journey
+            Mode — checked against the live route table. Here's how it works: nobody's first journey
             should end at a dead link.
           </p>
         </div>

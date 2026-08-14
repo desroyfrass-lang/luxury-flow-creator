@@ -42,7 +42,7 @@ export function statusLabel(id: string): string {
   return FEEDBACK_STATUSES.find((s) => s.id === id)?.label ?? id;
 }
 
-/** Consent copy shown before the mic ever opens. Plain English, on purpose. */
+/** Consent copy shown before the mic ever opens. everyday language, on purpose. */
 export const CONSENT_POINTS = [
   "Your recording is used only to improve Frass during the launch program.",
   "Nothing you send is published anywhere without your explicit permission.",

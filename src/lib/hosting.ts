@@ -12,7 +12,7 @@
 //   team can focus on creating exceptional products. Infrastructure should
 //   never become a distraction from innovation.
 //
-// Plain English: when you buy Shopify you never ask who Shopify's cloud
+// Here's the takeaway: when you buy Shopify you never ask who Shopify's cloud
 // provider is. You just buy Shopify. That is exactly the experience Frass gives.
 // ─────────────────────────────────────────────────────────────────────────────
 
@@ -20,7 +20,7 @@ export const FRASS_0420_PRINCIPLE =
   "Frass may provide hosting as a paid platform service. The cost of hosting is covered by the customer purchasing the hosting plan. Frass prices its hosting sustainably so that infrastructure costs are covered and the platform earns a reasonable operating margin.";
 
 export const FRASS_0420_PLAIN =
-  "What this means in plain English: yes, Frass offers hosting. No, Frass does not give it away or quietly absorb the ongoing cost. You buy a hosting plan from Frass, Frass runs the service and pays whatever infrastructure sits underneath, and keeps a fair margin to operate and improve the platform.";
+  "Here's the idea: yes, Frass offers hosting. No, Frass does not give it away or quietly absorb the ongoing cost. You buy a hosting plan from Frass, Frass runs the service and pays whatever infrastructure sits underneath, and keeps a fair margin to operate and improve the platform.";
 
 // ── What happens when someone clicks Publish ────────────────────────────────
 
@@ -45,7 +45,7 @@ export const PUBLISH_OPTIONS: PublishOption[] = [
     recommended: true,
     tagline: "One click. Your business is live.",
     plain:
-      "What this means in plain English: Frass keeps your website switched on, safe and fast, and you pay Frass one monthly price for it — like paying rent on a shop that someone else maintains.",
+      "Here's how it works: Frass keeps your website switched on, safe and fast, and you pay Frass one monthly price for it — like paying rent on a shop that someone else maintains.",
     includes: [
       "Fast setup",
       "Automatic SSL",
@@ -64,7 +64,7 @@ export const PUBLISH_OPTIONS: PublishOption[] = [
     label: "Connect your own hosting",
     tagline: "Point Frass at infrastructure you already pay for.",
     plain:
-      "What this means in plain English: you already rent space somewhere else, so Frass just delivers the building to that address. Frass charges nothing, and your provider bills you directly.",
+      "Let's break it down: you already rent space somewhere else, so Frass just delivers the building to that address. Frass charges nothing, and your provider bills you directly.",
     includes: ["Deployment guide", "Domain configuration help", "Frassy walks you through it"],
     who: "Advanced builders and existing agencies.",
   },
@@ -74,7 +74,7 @@ export const PUBLISH_OPTIONS: PublishOption[] = [
     label: "Export your website",
     tagline: "Download everything and host it yourself.",
     plain:
-      "What this means in plain English: you take the keys and the blueprints with you. Nothing is locked inside Frass.",
+      "Here's the practical version: you take the keys and the blueprints with you. Nothing is locked inside Frass.",
     includes: ["Full source export", "Assets and brand kit", "No lock-in, ever"],
     who: "Builders who want total control.",
   },

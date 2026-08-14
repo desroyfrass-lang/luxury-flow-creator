@@ -72,7 +72,7 @@ function DesignLibrary() {
         Pick one, then make it yours.
       </p>
       <p className="mt-2 max-w-2xl text-sm text-muted-foreground">
-        <strong className="text-foreground">In plain English:</strong> this is like rearranging the furniture. It's
+        <strong className="text-foreground">Here's the practical version:</strong> this is like rearranging the furniture. It's
         the same house, the same doors, the same everything — it just sits where you like it.
       </p>
 

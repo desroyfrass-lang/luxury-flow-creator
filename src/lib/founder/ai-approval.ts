@@ -20,7 +20,7 @@ export type AiApprovalPolicy = {
   requiresPreview: boolean;
   /** Must the Founder confirm a second time (delete only)? */
   requiresConfirmation: boolean;
-  /** Plain English, shown to the Founder. */
+  /** everyday language, shown to the Founder. */
   plain: string;
 };
 

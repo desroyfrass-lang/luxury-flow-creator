@@ -42,7 +42,7 @@ export function CommerceHealth() {
           outcomes.
         </p>
         <p className="mt-1 text-xs text-muted-foreground">
-          <strong>What this means in plain English:</strong> think of it as the pulse of the shop
+          <strong>Let's break it down:</strong> think of it as the pulse of the shop
           till. A healthy pulse means money is landing cleanly. A weak one means Builders are being
           let down somewhere, and it tells you exactly where.
         </p>

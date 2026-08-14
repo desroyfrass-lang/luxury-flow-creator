@@ -17,7 +17,7 @@ export const STUDIO_PRINCIPLE =
   "Frass Gallery is more than a place to sell art. It is also a place to create it. Members should be able to begin with a blank canvas and finish with a monetized work of art.";
 
 export const STUDIO_PLAIN_ENGLISH =
-  "What this means in plain English: it's a real painting program, not a doodle box — and when you put the brush down, the picture is already standing in your own gallery with a price beside it.";
+  "Here's how it works: it's a real painting program, not a doodle box — and when you put the brush down, the picture is already standing in your own gallery with a price beside it.";
 
 export const STUDIO_AI_RULE =
   "Frassy organises, titles, describes, tags, groups and prices. Frassy never paints. The artist remains the creator.";

@@ -147,6 +147,6 @@ export const ADAPTIVE_PRINCIPLE = {
   headline:
     "Great businesses are built by people at every skill level.",
   plain:
-    "What this means in plain English: Frass never assumes you already know how. It asks, then meets you exactly where you are — and you can always ask for the full professional toolkit right away.",
+    "Here's what this means: Frass never assumes you already know how. It asks, then meets you exactly where you are — and you can always ask for the full professional toolkit right away.",
   rule: "Progression unlocks tools as confidence grows. Hidden never means deleted — advanced members may open everything on day one.",
 };

@@ -8,7 +8,7 @@
 export type CoreRoute = {
   /** Stable key used by Frassy's navigation tool. */
   key: string;
-  /** What a member calls it, in plain English. */
+  /** What a member calls it, in everyday language. */
   label: string;
   /** The internal path — an implementation detail members never see. */
   path: string;

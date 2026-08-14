@@ -12,7 +12,7 @@ export const ONE_WORLD_PRINCIPLE =
   "Frass is not a collection of pages. It is one living world. Every room should feel connected to the next, so members can focus on building their future instead of figuring out the software.";
 
 export const ONE_WORLD_PLAIN_ENGLISH =
-  "What this means in plain English: walking from your kitchen to your living room shouldn't feel like moving house. Different room, same home, same light switches in the same places.";
+  "Here's the idea: walking from your kitchen to your living room shouldn't feel like moving house. Different room, same home, same light switches in the same places.";
 
 /** The design question every future feature must pass. */
 export const CLOSED_EYES_TEST =

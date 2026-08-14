@@ -12,7 +12,7 @@
 //
 // She adjusts her coaching style. She never adjusts the member's freedom.
 //
-// Plain English: a good coach doesn't shout the same thing at every player on
+// Let's break it down: a good coach doesn't shout the same thing at every player on
 // every day. Same coach, same plan — different volume depending on how tired
 // you look.
 // ─────────────────────────────────────────────────────────────────────────────
@@ -58,7 +58,7 @@ export type Balance = {
   suggestedFocus: number;
   /** Her coaching adjustment, in her own voice. */
   coaching: string;
-  /** What she is noticing, in plain English, if the member asks. */
+  /** What she is noticing, in practical terms, if the member asks. */
   plain: string;
   /** Should she hold back opportunity suggestions today? */
   holdOpportunities: boolean;

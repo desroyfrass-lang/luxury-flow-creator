@@ -14,7 +14,7 @@
 //
 // Focus Mode narrows her to task, progress, completion and emergencies only.
 //
-// Plain English: it's the difference between a good assistant and a talkative
+// Here's how it works: it's the difference between a good assistant and a talkative
 // one. She's always in the room; she just knows when to speak.
 // ─────────────────────────────────────────────────────────────────────────────
 

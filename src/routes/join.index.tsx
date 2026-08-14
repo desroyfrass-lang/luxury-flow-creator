@@ -61,7 +61,7 @@ function JoinChooser() {
                 <h2 className="mt-3 font-display text-4xl">{door.title}</h2>
                 <p className="mt-4 text-sm text-foreground/85">{door.line}</p>
                 <p className="mt-5 border-l border-[color:var(--gold)]/40 pl-4 text-xs leading-relaxed text-muted-foreground">
-                  <span className="text-[color:var(--gold)]">What this means in plain English: </span>
+                  <span className="text-[color:var(--gold)]">Here's the practical version: </span>
                   {door.plainEnglish}
                 </p>
                 <div className="mt-8 inline-flex items-center gap-2 text-[11px] font-bold uppercase tracking-[0.3em] text-[color:var(--gold)]">

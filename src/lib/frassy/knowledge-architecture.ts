@@ -16,7 +16,7 @@ export const KNOWLEDGE_PRINCIPLE =
   "Frass grows by teaching one trusted assistant new skills, not by creating a collection of disconnected assistants. Members build trust through familiarity, and familiarity comes from one consistent companion who grows alongside the platform.";
 
 export const KNOWLEDGE_PLAIN_ENGLISH =
-  "What this means in plain English: it's the difference between one doctor who keeps studying and a waiting room full of strangers. You keep talking to the same person; she just knows more this year than she did last year.";
+  "Here's the practical version: it's the difference between one doctor who keeps studying and a waiting room full of strangers. You keep talking to the same person; she just knows more this year than she did last year.";
 
 export const FIRST_QUESTION_RULE =
   "When a new department is proposed, the first architectural question is: what does Frassy need to learn? Never: do we need another AI?";

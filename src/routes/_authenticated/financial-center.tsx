@@ -317,7 +317,7 @@ function TabBody({
                 <p className="text-sm">{p.title}</p>
                 <p className="mt-1 text-xs text-[oklch(0.72_0.01_80)]">{p.explain}</p>
                 <p className="mt-1 text-xs text-[oklch(0.62_0.01_80)]">
-                  <strong>In plain English:</strong> {p.plain}
+                  <strong>Here's the takeaway:</strong> {p.plain}
                 </p>
               </li>
             ))}

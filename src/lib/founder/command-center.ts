@@ -21,7 +21,7 @@ export type CommandSectionId =
 export type CommandTool = {
   id: string;
   label: string;
-  /** Plain English — what this actually does for the Founder. */
+  /** everyday language — what this actually does for the Founder. */
   plain: string;
   /** Rendered inline in the Command Center, or a destination elsewhere. */
   kind: "panel" | "link";

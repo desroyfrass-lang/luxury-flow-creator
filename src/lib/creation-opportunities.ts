@@ -6,7 +6,7 @@
 // in the ecosystem. This module turns a creation into the honest list of
 // pathways already built in Frass — no invented destinations, no hype.
 //
-// Plain English: when you finish something, Frass shows you every real door
+// Let's break it down: when you finish something, Frass shows you every real door
 // that thing can walk through next.
 // ─────────────────────────────────────────────────────────────────────────────
 
@@ -24,7 +24,7 @@ export type OpportunityPathway = {
   title: string;
   /** Expert framing. */
   what: string;
-  /** "What this means in plain English" — always required. */
+  /** "Here's how it works" — always required. */
   plain: string;
   /** Where this actually happens today. */
   to: string;

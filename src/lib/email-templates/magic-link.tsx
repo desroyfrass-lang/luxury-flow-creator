@@ -16,7 +16,7 @@ export const MagicLinkEmail = ({ confirmationUrl }: MagicLinkEmailProps) => (
       Sign in to Frass
     </Button>
     <Text style={plain}>
-      What this means in plain English: no password needed this time — the link itself is the key, which is why it
+      Here's how it works: no password needed this time — the link itself is the key, which is why it
       only opens the door once.
     </Text>
     <Text style={footer}>If you didn't ask to sign in, ignore this email and nothing will happen.</Text>

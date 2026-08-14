@@ -62,7 +62,7 @@ export function formatEta(seconds: number | null) {
   return `${m}m ${s}s`;
 }
 
-/** Frassy's plain-English read on what she just received. */
+/** Frassy's everyday-language read on what she just received. */
 export function describeIntake(items: UploadItem[]): string {
   if (!items.length) return "";
   const byKind = items.reduce<Record<string, number>>((acc, i) => {

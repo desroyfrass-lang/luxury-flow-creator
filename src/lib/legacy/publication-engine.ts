@@ -183,7 +183,7 @@ export type GatheredMaterial = {
   outcome: string;
   /** The moves the member actually completed — each can become a chapter. */
   moves: { title: string; stage: string; minutes: number }[];
-  /** A plain-English summary of what the journey produced. */
+  /** A everyday-language summary of what the journey produced. */
   summary: string;
 };
 
@@ -232,7 +232,7 @@ export const PUBLICATION_PRINCIPLE = {
   id: "FRASS-0534",
   headline: "Never let knowledge end with the project.",
   plain:
-    "What this means in plain English: when you finish a Business Vault, that's not the end — it's raw material " +
+    "Here's the takeaway: when you finish a Business Vault, that's not the end — it's raw material " +
     "for a book, a course, an audiobook. Frassy gathers everything you already built, organises it into chapters, " +
     "edits it with you (never for you), and helps you publish it in as many formats as you want. You create the " +
     "knowledge once; it keeps earning for years.",

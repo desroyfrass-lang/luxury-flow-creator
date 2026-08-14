@@ -6,7 +6,7 @@
 //   2. device — the browser's built-in voice, used automatically, no interruption.
 //   3. text   — the greeting is shown in words. Silence is never acceptable.
 //
-// Plain English: if her real voice can't come through, she borrows your
+// Here's the practical version: if her real voice can't come through, she borrows your
 // device's voice, and if that fails too she writes it out — and she always
 // tells you which one you're hearing, so the change never feels like a fault.
 // ─────────────────────────────────────────────────────────────────────────────

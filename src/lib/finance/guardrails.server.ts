@@ -6,7 +6,7 @@
  *   2. When it had to be clamped, write a security alert the Founder can read
  *      and — for anything that moves money — halt the transaction.
  *
- * In plain English: if someone hands the till a made-up price, the till refuses
+ * Here's how it works: if someone hands the till a made-up price, the till refuses
  * the sale AND leaves a note in the manager's book saying who tried it.
  */
 

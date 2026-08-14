@@ -320,7 +320,7 @@ function WelcomeHallPage() {
           </h2>
           <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted-foreground">
             Two agreements govern the whole of Frass. Shoppers accept the Visitor Agreement. Anyone entering
-            Frass Hill to build accepts the Builder Agreement as well. Both are written in plain English first.
+            Frass Hill to build accepts the Builder Agreement as well. Both are written in everyday language first.
           </p>
           <div className="mt-6 grid gap-4 lg:grid-cols-2">
             <AgreementGate level="visitor" />
@@ -384,7 +384,7 @@ function WelcomeHallPage() {
         </section>
 
         <p className="mt-14 max-w-2xl text-sm leading-relaxed text-muted-foreground">
-          <strong className="text-foreground">What this means in plain English:</strong> most sites
+          <strong className="text-foreground">Let's break it down:</strong> most sites
           drop you on a home page with a menu. Frass Hill has a front gate. You stand at it, look out
           over the town, decide which road you want, and then walk in — the same way you'd arrive
           somewhere real.
@@ -436,7 +436,7 @@ function StartMyJourney() {
       <p className="mt-3 text-xs text-muted-foreground">
         {signedIn === false
           ? "You'll sign in first — then Frassy picks up exactly here."
-          : "In plain English: one button. Frassy takes you the rest of the way."}
+          : "Here's the practical version: one button. Frassy takes you the rest of the way."}
       </p>
     </div>
   );

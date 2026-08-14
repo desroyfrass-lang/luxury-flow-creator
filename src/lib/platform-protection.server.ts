@@ -26,7 +26,7 @@ export async function readProtection(sb: Sb): Promise<ProtectionState> {
   };
 }
 
-/** Throws a plain-English error when the Founder has frozen this part of Frass. */
+/** Throws a everyday-language error when the Founder has frozen this part of Frass. */
 export async function assertPlatformOpen(sb: Sb, domain: ProtectionDomain): Promise<void> {
   const state = await readProtection(sb);
   if (isPaused(state, domain)) throw new Error(pausedMessage(domain));

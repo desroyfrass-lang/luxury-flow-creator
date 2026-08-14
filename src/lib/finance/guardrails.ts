@@ -5,7 +5,7 @@
  * here. Server code clamps against these numbers; the browser is never asked
  * what a percentage or a charge should be.
  *
- * In plain English: the price list is nailed to the wall behind the counter.
+ * Let's break it down: the price list is nailed to the wall behind the counter.
  * A customer can point at it, but they can't rewrite it on the way to the till.
  */
 

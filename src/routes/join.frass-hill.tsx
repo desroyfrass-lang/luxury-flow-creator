@@ -150,7 +150,7 @@ function JoinHill() {
               signup, ever.
             </p>
             <p className="mt-2">
-              <span className="text-[color:var(--gold)]">What this means in plain English: </span>
+              <span className="text-[color:var(--gold)]">Let's break it down: </span>
               you can shop the store and build your business with the same email and password — like
               one key that opens both the shop door and the house door.
             </p>

@@ -55,7 +55,7 @@ function LinkDashboard() {
         <h1 className="text-3xl font-black uppercase tracking-tight">My Frass Link</h1>
         <p className="max-w-2xl text-sm text-muted-foreground">{CONNECTION_PRINCIPLE}</p>
         <p className="max-w-2xl text-sm text-muted-foreground">
-          <strong>What this means in plain English:</strong> one address for life. Like a street address
+          <strong>Here's the takeaway:</strong> one address for life. Like a street address
           — the house can be repainted or turned into a shop, but anyone who ever wrote the address down
           can still find you.
         </p>
@@ -122,7 +122,7 @@ function LinkDashboard() {
           </div>
         )}
         <p className="mt-3 text-xs text-muted-foreground">
-          <strong>What this means in plain English:</strong> this is a guest book for the people you
+          <strong>Here's what this means:</strong> this is a guest book for the people you
           brought through the door — who arrived, who settled in, and what that earned you once.
         </p>
       </section>

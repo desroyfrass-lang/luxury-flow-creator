@@ -32,7 +32,7 @@ export type RoiPlan = {
   leftoverMinutes: number;
   /** Value produced per hour of the member's life spent. Higher is better. */
   returnPerHour: number;
-  /** Plain English so the member understands the shape of the day. */
+  /** everyday language so the member understands the shape of the day. */
   explanation: string;
 };
 

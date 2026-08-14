@@ -48,7 +48,7 @@ export const FIRST_WEEK_PROMISE: WeekPromise[] = [
   { day: 3, promise: "Your businesses are set up, not just imagined.", plain: "Each one has a home inside Frass instead of living in your head." },
   { day: 4, promise: "You published something real.", plain: "A post, a listing, a page — something a stranger could actually see." },
   { day: 5, promise: "You know what today's highest value work is, without asking.", plain: "Money Moves tells you the one thing most likely to earn, and why." },
-  { day: 6, promise: "You know how money will reach you at launch.", plain: "Wallet, receipts and the 90/10 split explained in plain English." },
+  { day: 6, promise: "You know how money will reach you at launch.", plain: "Wallet, receipts and the 90/10 split explained in practical terms." },
   { day: 7, promise: "You can say: this just made sense.", plain: "Seven days in, the system should feel obvious — that is the whole promise." },
 ];
 

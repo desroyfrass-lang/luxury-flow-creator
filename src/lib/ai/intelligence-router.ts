@@ -141,7 +141,7 @@ export function routeRequest(input: {
   return { task, ...base };
 }
 
-/** Founder-facing summary of the router, in plain English. */
+/** Founder-facing summary of the router, in everyday language. */
 export const ROUTER_SUMMARY = [
   "Frassy is never tied to one AI company.",
   "Every request is understood first, then sent to the cheapest brain that can do the job well.",

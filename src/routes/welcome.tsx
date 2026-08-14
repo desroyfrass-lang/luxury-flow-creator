@@ -216,7 +216,7 @@ function WelcomePage() {
       </div>
 
       <p className="mt-6 text-xs leading-relaxed text-muted-foreground">
-        In plain English: this page only ever happens once. Next time you sign in, you'll go
+        Here's the takeaway: this page only ever happens once. Next time you sign in, you'll go
         straight back to your own work.
       </p>
     </Shell>

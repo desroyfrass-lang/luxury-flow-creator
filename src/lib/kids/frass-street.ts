@@ -26,7 +26,7 @@ export const STREET_PRINCIPLE =
   "FRASS STREET is the children's neighborhood inside Frass — a living world where children learn, laugh, create, imagine and grow life skills through stories, characters, games and exploration.";
 
 export const STREET_PLAIN_ENGLISH =
-  "What this means in plain English: it's a street a child wants to walk down, not a class they have to sit through. Every door opens onto something to make, not something to watch.";
+  "Here's the practical version: it's a street a child wants to walk down, not a class they have to sit through. Every door opens onto something to make, not something to watch.";
 
 export const STREET_FOUNDER_PRINCIPLE =
   "Every child should leave having learned something, created something, or smiled.";

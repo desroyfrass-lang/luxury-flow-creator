@@ -285,7 +285,7 @@ function ForMePage() {
         </section>
 
         <p className="mt-10 max-w-2xl text-sm leading-relaxed text-white/70">
-          <strong className="text-white">What this means in plain English:</strong> this page is
+          <strong className="text-white">Here's what this means:</strong> this page is
           yours the way a room in your house is yours. Nothing is here because software decided you
           would like it — everything here is something you made, kept or earned.
         </p>

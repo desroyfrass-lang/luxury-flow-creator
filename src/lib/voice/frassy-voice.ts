@@ -1,7 +1,7 @@
 // ─────────────────────────────────────────────────────────────────────────────
 // FRASS-0522 — Frassy Voice Identity. One voice. One personality. One Frassy.
 //
-// Plain English: Frassy is one person, so she gets one voice everywhere in
+// Let's break it down: Frassy is one person, so she gets one voice everywhere in
 // Frass — the same pitch, pace and warmth in the Daily, in Workshops, in Money
 // Moves, in a Business Vault, in Founder Mode and on the very first hello.
 // Her feeling changes with the moment; her identity never does.

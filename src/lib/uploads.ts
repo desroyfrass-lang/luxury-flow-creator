@@ -42,8 +42,8 @@ export function isAllowedMime(mime: string | null | undefined, allowed: readonly
 }
 
 /**
- * Throws a plain-English error when a file is the wrong kind or too big.
- * In plain English: we check the label and the weight before it goes in the van.
+ * Throws a everyday-language error when a file is the wrong kind or too big.
+ * Here's the takeaway: we check the label and the weight before it goes in the van.
  */
 export function assertImageFile(file: File, maxBytes = MAX_IMAGE_BYTES) {
   if (!isAllowedMime(file.type, IMAGE_MIME_TYPES)) {

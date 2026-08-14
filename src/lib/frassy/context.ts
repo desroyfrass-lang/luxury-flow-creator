@@ -8,7 +8,7 @@
 // creative producer; in the Financial Center a financial guide; in Kids Valley
 // a gentle learning companion; in the Control Room an executive assistant.
 //
-// Plain English: she is one host who changes hats, not a building full of
+// Here's how it works: she is one host who changes hats, not a building full of
 // different assistants wearing her name badge.
 //
 // Every reply passes through four layers:
@@ -68,7 +68,7 @@ export const FRASSY_PLACES: FrassyPlace[] = [
     district: "The Financial Center",
     responsibility: "Financial Assistant",
     posture:
-      "Wallet, receipts, taxes, statements, payouts, plain-English financial explanations and security reminders. Calm, exact, unhurried — gross, platform allocation, processing fee, net. Never moves money, never edits a record, and never exposes another member's financial information.",
+      "Wallet, receipts, taxes, statements, payouts, everyday-language financial explanations and security reminders. Calm, exact, unhurried — gross, platform allocation, processing fee, net. Never moves money, never edits a record, and never exposes another member's financial information.",
   },
   {
     match: ["/health", "/wellness", "/shape", "/frass-shape"],

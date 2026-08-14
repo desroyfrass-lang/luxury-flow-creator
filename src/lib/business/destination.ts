@@ -21,7 +21,7 @@ export const DESTINATION_RULE =
   "Frassy never asks members what kind of financial future they want. She asks who they are, what they've mastered, what resources they have, and how much time they can realistically invest. From there she builds the most effective path to the financial freedom Frass is designed to help every member pursue.";
 
 export const DESTINATION_PLAIN_ENGLISH =
-  "What this means in plain English: you don't have to tell Frassy you want to make money or stop working for someone else. That's already the job. She only needs to know your life — your skills, your time, what you've got to work with — so she can pick the shortest honest road.";
+  "Here's what this means: you don't have to tell Frassy you want to make money or stop working for someone else. That's already the job. She only needs to know your life — your skills, your time, what you've got to work with — so she can pick the shortest honest road.";
 
 /** The outcomes every member is already working toward the moment they join. */
 export const FIXED_DESTINATION: { label: string; plain: string }[] = [

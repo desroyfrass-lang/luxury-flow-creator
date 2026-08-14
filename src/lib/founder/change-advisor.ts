@@ -24,7 +24,7 @@ export type AnalyzedChange = {
   text: string;
   bucket: ChangeBucket;
   cost: ChangeCost;
-  /** Plain English — why it landed in this bucket. */
+  /** everyday language — why it landed in this bucket. */
   why: string;
   /** What Frassy can do right now, if anything. */
   action: string | null;

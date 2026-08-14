@@ -133,4 +133,4 @@ export function countsTowardLaunchReadiness(): false {
 }
 
 export const PLAIN_ENGLISH =
-  "What this means in plain English: this is a shelf, not a to-do list. Ideas sit here safely so they're never lost — and Frassy won't mention them again until you say you're ready.";
+  "Let's break it down: this is a shelf, not a to-do list. Ideas sit here safely so they're never lost — and Frassy won't mention them again until you say you're ready.";

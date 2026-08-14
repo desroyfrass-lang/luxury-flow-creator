@@ -50,7 +50,7 @@ export type DesignProposal = {
   allowed: boolean;
   surface: DesignSurface;
   changeType: DesignChangeType | null;
-  /** Plain English of what will happen. Always shown before anything is applied. */
+  /** everyday language of what will happen. Always shown before anything is applied. */
   plain: string;
   /** Why Frassy refused, when she did. */
   refusal: string | null;

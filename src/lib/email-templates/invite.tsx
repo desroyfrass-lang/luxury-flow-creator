@@ -21,7 +21,7 @@ export const InviteEmail = ({ siteUrl, confirmationUrl }: InviteEmailProps) => (
       Accept your invitation
     </Button>
     <Text style={plain}>
-      What this means in plain English: this invitation is tied to your address only. It's your name on the guest
+      Here's the idea: this invitation is tied to your address only. It's your name on the guest
       list, not a public door.
     </Text>
     <Text style={footer}>If you weren't expecting this invitation, you can safely ignore it.</Text>

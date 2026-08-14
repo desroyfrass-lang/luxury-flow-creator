@@ -539,7 +539,7 @@ inside them and helps them Build It. Monetize It.
 7. **Daily integration.** No two Dailies are identical unless two members genuinely share experience
    and goals.
 
-*What this means in plain English:* Frassy keeps listening. When you mention something you used to do,
+*Here's what this means:* Frassy keeps listening. When you mention something you used to do,
 she offers to turn it into a business Frass already knows how to run — like a friend who remembers you
 used to bake and finally says, "you know people would pay for that."
 
@@ -577,7 +577,7 @@ service platform, no second payment system, no second wallet, no second receipt.
 trusted services and trusted opportunities. Every legitimate skill deserves a place in the Frass economy,
 and every service needs a clear path from discovery to delivery to monetization.
 
-*What this means in plain English:* the same shop that sells you a jacket can also send someone to pack
+*Here's the idea:* the same shop that sells you a jacket can also send someone to pack
 your house, clean it after, ship the barrel, and meet it at the other end — one conversation, many trusted
 people doing the work, like a good hotel concierge who knows everybody on the island.
 
@@ -644,7 +644,7 @@ Taxes, tariffs, customs, financial reporting, compliance reminders, business reg
 renewals and regulatory deadlines are one intelligent compliance layer, each area living where it already
 belongs — never eight separate systems.
 
-*What this means in plain English:* Frassy is the bookkeeper who quietly files everything as it happens, so
+*Here's how it works:* Frassy is the bookkeeper who quietly files everything as it happens, so
 when tax time comes there's nothing to hunt for — and when you ship something across a border, she tells you
 what the border will ask for before you get there. She never makes up an answer about the law; she tells you
 what your own records say, what rule she's using, and when you need a real professional.
@@ -705,7 +705,7 @@ No duplicate identity systems. No duplicate profile systems. No duplicate creato
 **Founder Principle.** FOR ME is the member's home inside Frass — where identity, reputation, creativity,
 business presence and personal journey come together. Every member should always know: *"This is my place."*
 
-*What this means in plain English:* FOR ME is the member's house. Before we nail the walls shut, we walk
+*Let's break it down:* FOR ME is the member's house. Before we nail the walls shut, we walk
 every room once, make sure nothing was built twice, and confirm every hallway leads somewhere sensible.
 
 ---
@@ -778,7 +778,7 @@ destination — every employment path is wired back into the Learn → Build →
 opportunity hierarchy, so a job is always a means toward financial independence, never the end of the
 journey.
 
-*What this means in plain English:* Frass is not a job site. It is a wealth-building platform. Frassy
+*Here's the practical version:* Frass is not a job site. It is a wealth-building platform. Frassy
 will always push you toward owning something — a business, a skill you can sell, an income stream —
 before she helps you find a boss. But if a job is the right next step right now (you need income while
 you build, or a specific career moves you closer to your bigger goal), she helps with that too — and
@@ -1085,7 +1085,7 @@ of design, never a badge of sophistication.
 2. **Progressive disclosure.** Show the next step. Depth appears only when it is
    asked for.
 3. **Plain language first.** Every expert term is followed by "what this means in
-   plain English", with an analogy.
+   everyday language", with an analogy.
 4. **Momentum over completeness.** A member should always be able to do one thing
    right now without reading anything.
 5. **No dead ends.** Every number, badge and warning opens the record behind it.
@@ -1514,7 +1514,7 @@ that it can be safely **undone**. Before every production deployment, verify:
 
 If rollback cannot be completed safely, **the deployment does not proceed**.
 
-Plain English: never step onto a ledge you can't step back off.
+Here's the idea: never step onto a ledge you can't step back off.
 
 ## FRASS-0505 — Security Review Cycle
 
@@ -1644,7 +1644,7 @@ implementation details, never member-facing instructions.
 - Core destinations are declared once in `src/lib/navigation/core-routes.ts`.
   Navigation tools, spoken matching and the audit all read from that registry.
 
-**In plain English:** the member should never need to know the address of a
+**Here's the takeaway:** the member should never need to know the address of a
 room in their own house. Frassy opens the door.
 
 ## FRASS-0514 — Core Route Audit (Launch Blocking)
@@ -2400,7 +2400,7 @@ onboarding, Blueprint templates).
 should be reserved for software. Lovable is the software engineer; Frassy is the
 operations manager.
 
-## FRASS-0544 — Plain English Translation Engine (P0)
+## FRASS-0544 — everyday language Translation Engine (P0)
 Frassy never assumes a member understands technical, financial, legal, medical,
 engineering or AI terminology. Her responsibility is not to be correct — it is to
 make sure the member truly understands.
@@ -2408,7 +2408,7 @@ make sure the member truly understands.
 Every explanation of a technical concept, report, security finding, engineering
 update, financial statement or system message follows five steps:
 1. **The original meaning** — accurate, correct terminology.
-2. **"In plain English…"** — the same idea in everyday words, no unexplained jargon.
+2. **"Here's what this means:"** — the same idea in everyday words, no unexplained jargon.
 3. **Real-life example** — a house, a bank, a grocery store, a classroom, a toolbox,
    a salon, a restaurant.
 4. **Why it matters** — should I worry, is this good or bad, what changed, do I need
@@ -2416,7 +2416,7 @@ update, financial statement or system message follows five steps:
 5. **Next step** — one clear recommendation.
 
 Interface rule: whenever technical language is detected, Frassy offers two readings
-of the same answer — **Technical Version** and **Explain Like I'm New** — switchable
+of the same answer — **Technical Version** and **Guided Walkthrough** — switchable
 instantly. An engineer and a complete beginner receive the same information in the
 style that makes sense to them.
 
@@ -2426,7 +2426,7 @@ curiosity is encouraged. If someone asks twice, the explanation failed, not the 
 **Founder Principle.** Knowledge isn't valuable until it's understood.
 
 Implementation: `src/lib/frassy/plain-english.ts`,
-`src/components/frassy/plain-english-toggle.tsx`, composed into every Frassy prompt.
+`src/components/frassy/everyday-language-toggle.tsx`, composed into every Frassy prompt.
 
 ## FRASS-0545 — Adaptive Learning Levels (P0)
 Every member learns differently. Whenever Frassy provides information, the member
@@ -2434,7 +2434,7 @@ may instantly choose how deeply to explore it. The information never changes —
 the depth of the explanation changes.
 
 - 🟢 **One Sentence** — the conclusion only. "Just tell me the answer."
-- 🔵 **Explain Like I'm New** — no prior knowledge assumed; everyday language,
+- 🔵 **Guided Walkthrough** — no prior knowledge assumed; everyday language,
   analogies, step by step, no jargon.
 - 🟣 **Detailed** — background, context, why it happens, trade-offs, practical example.
 - ⚫ **Expert** — full technical depth: architecture, data, APIs, performance,
@@ -2447,7 +2447,7 @@ Room, security, financial, analytics and AI reports, and Blueprint discussions. 
 member never has to leave their preferred learning style.
 
 **Accessibility.** Frassy may *recommend* a different level ("This has a lot of
-technical terminology — would you like Explain Like I'm New?" / "You seem comfortable
+technical terminology — would you like Guided Walkthrough?" / "You seem comfortable
 now — want more detail?"). She never switches on her own. The member always chooses.
 
 **Founder Principle.** Education should adapt to the learner, not force the learner
@@ -2568,14 +2568,14 @@ Control Room, Founder Console or any Founder-only interface, she uses this struc
 1. 🛠️ **What Changed** — one sentence describing exactly what was built or changed.
 2. 📋 **What Was Added** — the major additions as short bullets.
 3. 🧩 **Existing Systems Updated** — an instant mental map in four labelled lists: **Updated** (existing systems extended), **New** (built from scratch), **Unchanged** (touched nothing), **Deprecated** (retired). Empty lists say "None". This is the section that enforces **FRASS-0549A — Extend, don't duplicate** (below).
-4. 😊 **In Plain English** — everyday language, no engineering terminology.
+4. 😊 **in everyday language** — everyday language, no engineering terminology.
 5. 🏡 **Real-Life Example** — an analogy: a school, a bank, a coach, a toolbox, a doctor's office.
 6. 🎯 **What This Means for Frass** — why it was worth building, and who benefits.
 7. ⚠️ **Founder Attention** — what the Founder must do, or "Nothing needs your attention."
 8. 💡 **My Recommendation** — Frassy's own reasoned opinion, never a restatement of facts.
 
 **Adaptive depth.** The structure is identical at every Learning Level (FRASS-0545). One
-Sentence compresses each section; Explain Like I'm New expands Plain English and the
+Sentence compresses each section; Guided Walkthrough expands everyday language and the
 Real-Life Example; Detailed adds implementation context; Expert adds architecture,
 security, APIs, database design and engineering rationale. Only the depth changes.
 
@@ -2790,7 +2790,7 @@ Cost is never a mystery. The Command Center → AI Operations shows live telemet
 cost per conversation, cost per active member, total compute spend today, and the
 average daily spend, all drawn from the platform's own records.
 
-Plain English: the AI companies are plugs; Frass owns the socket. And the Founder
+Here's how it works: the AI companies are plugs; Frass owns the socket. And the Founder
 always knows what a conversation costs before the bill arrives.
 
 ## FRASS-0562 — Voluntary Gating & Simulation Mode
