@@ -9,6 +9,8 @@ import { AgreementGate } from "@/components/legal/agreement-gate";
 import { supabase } from "@/integrations/supabase/client";
 import { onboardingDestination } from "@/lib/navigation/core-routes";
 import { ViewModeToggle } from "@/components/view-mode/view-mode-toggle";
+import { DailyWelcomeCeremony } from "@/components/welcome-hall/daily-welcome-ceremony";
+import { WELCOME_HALL_PURPOSES } from "@/lib/welcome-hall/daily-welcome";
 
 
 /**
@@ -19,6 +21,12 @@ import { ViewModeToggle } from "@/components/view-mode/view-mode-toggle";
  * registers, and chooses their entrance — Frass Hill or Kids Valley.
  */
 export const Route = createFileRoute("/welcome-hall")({
+  validateSearch: (search: Record<string, unknown>): { welcome?: "daily"; next?: string } => ({
+    ...(search["welcome"] === "daily" ? { welcome: "daily" as const } : {}),
+    ...(typeof search["next"] === "string" && search["next"].startsWith("/")
+      ? { next: search["next"] }
+      : {}),
+  }),
   head: () => ({
     meta: [
       { title: "Welcome Hall — Arrive at Frass Hill" },
@@ -112,6 +120,7 @@ function useArrivalStage() {
 
 function WelcomeHallPage() {
   const stage = useArrivalStage();
+  const search = Route.useSearch();
   const [sound, setSound] = useState(false);
 
   useEffect(() => {
@@ -141,6 +150,13 @@ function WelcomeHallPage() {
     <div className="min-h-screen bg-background text-foreground">
       {/* FRASS-0517 — choose how Frass feels before you even begin. */}
       <ViewModeToggle className="fixed right-4 top-4 z-40" />
+
+      {/* FRASS-0569 — 🌅 Welcome Hall One. Frassy greets first; the Daily follows. */}
+      {search.welcome === "daily" && (
+        <div className="mx-auto max-w-[1100px] px-6 pt-24 lg:px-10">
+          <DailyWelcomeCeremony next={search.next ?? "/room"} />
+        </div>
+      )}
       {/* The gates */}
       <header
         className="relative min-h-[86vh] overflow-hidden"
@@ -296,6 +312,28 @@ function WelcomeHallPage() {
 
 
       <main className="mx-auto max-w-[1200px] px-6 pb-24 lg:px-10">
+        {/* FRASS-0569 — the Welcome Hall serves three different people. */}
+        <section className="mt-14">
+          <h2 className="text-xl font-black uppercase tracking-tight md:text-2xl">
+            Three ways through this Hall
+          </h2>
+          <div className="mt-6 grid gap-4 md:grid-cols-3">
+            {WELCOME_HALL_PURPOSES.map((p) => (
+              <article key={p.id} className="rounded-2xl border border-border/70 bg-card/50 p-6">
+                <span aria-hidden className="text-2xl">{p.glyph}</span>
+                <h3 className="mt-4 text-base font-bold">{p.title}</h3>
+                <p className="mt-1 text-[10px] uppercase tracking-[0.25em] text-muted-foreground">{p.when}</p>
+                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{p.line}</p>
+              </article>
+            ))}
+          </div>
+          <p className="mt-4 max-w-2xl text-xs leading-relaxed text-muted-foreground">
+            Here's what that means: the Daily is your desk. This Hall is the front door. You always
+            come through the door first — you may walk straight past the welcome, but Frass will
+            never skip it for you.
+          </p>
+        </section>
+
         <section className="mt-14">
           <h2 className="text-xl font-black uppercase tracking-tight md:text-2xl">
             What you're walking into

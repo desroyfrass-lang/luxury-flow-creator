@@ -2949,3 +2949,43 @@ dashboard experience.
 page), `src/components/founder/commissioning-panel.tsx` (migrated legacy
 capabilities), `src/lib/founder/command-center.ts` (Conversation and
 Commissioning sections), redirect stubs at `/command` and `/founder`.
+
+## FRASS-0569 — The Welcome Hall Constitutional Experience
+
+**Status** — Constitutional Amendment · P0
+
+The Welcome Hall is not a page. It is the front entrance to Frass Hill. Every
+journey into Frass Hill passes through it. The member may skip it after
+arriving; the platform may never bypass it. The Daily is never the first
+experience of the day — the Welcome Hall always is.
+
+**Three Welcome Hall experiences**
+
+1. 🌅 **Daily Welcome** — once per calendar day, before the Daily. Prepares the
+   Builder emotionally and mentally. Continue, or skip to the Daily.
+2. 🏗️ **First-Time Builder Orientation** — exactly once. A conversation, not a
+   form. The Daily, Workshop, Blueprint, Vault recommendations, Money Moves and
+   Learning Path exist only after Frassy understands the Builder.
+3. 🛍️ **Shopper Welcome** — retail hospitality in Frass District. No onboarding,
+   no Daily, no Workshop, no Builder interview.
+
+**Four Daily Welcome tiers** (member's choice, stored in Daily settings)
+
+- 🌱 Quick Welcome — 10–15s greeting.
+- 💬 Motivational Welcome — 20–30s greeting, thought, encouragement.
+- ❤️ Conversation Welcome — interactive back-and-forth before work begins.
+- 🎥 Celebration Welcome — ~1 minute, personalised milestones and wins.
+
+**Responsibilities** — The Welcome Hall prepares, resets, celebrates and creates
+anticipation. The Daily never performs these duties; it assumes the Builder has
+already been welcomed.
+
+**Deprecated** — Any routing that sends a Builder into the Daily without first
+entering the Welcome Hall; treating the Welcome Hall as just another page.
+
+**Implementation** — `src/lib/welcome-hall/daily-welcome.ts` (tiers, scripts,
+once-per-day record), `src/components/welcome-hall/daily-welcome-ceremony.tsx`
+(the ceremony, with Frassy's guaranteed voice),
+`src/components/welcome-hall/daily-welcome-gate.tsx` (mandatory gateway on
+`/room` and `/frass-hill`), `src/components/welcome-hall/welcome-tier-picker.tsx`
+(Daily settings), `src/routes/welcome-hall.tsx`.

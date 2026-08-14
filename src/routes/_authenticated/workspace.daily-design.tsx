@@ -19,6 +19,7 @@ import {
   useDailyCustomization,
 } from "@/components/workspace/daily-customization";
 import { listSavedLayouts, saveLayoutPreset } from "@/lib/daily/customization.functions";
+import { WelcomeTierPicker } from "@/components/welcome-hall/welcome-tier-picker";
 
 export const Route = createFileRoute("/_authenticated/workspace/daily-design")({
   head: () => ({
@@ -40,6 +41,9 @@ export const Route = createFileRoute("/_authenticated/workspace/daily-design")({
   }),
   component: () => (
     <DailyCustomizationProvider>
+      <div className="mx-auto max-w-[1200px] px-6 pt-10 lg:px-10">
+        <WelcomeTierPicker />
+      </div>
       <DesignLibrary />
     </DailyCustomizationProvider>
   ),

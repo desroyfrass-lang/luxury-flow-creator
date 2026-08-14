@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { GatewayNav } from "@/components/gateway-nav";
+import { DailyWelcomeGate } from "@/components/welcome-hall/daily-welcome-gate";
 import { HillSightlines } from "@/components/hill-sightlines";
 import { StudioEntryCard } from "@/components/studio-entry-card";
 import {
@@ -71,7 +72,12 @@ export const Route = createFileRoute("/frass-hill")({
       { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
-  component: FrassHillPage,
+  // FRASS-0569 — every journey into Frass Hill passes through the Welcome Hall.
+  component: () => (
+    <DailyWelcomeGate>
+      <FrassHillPage />
+    </DailyWelcomeGate>
+  ),
 });
 
 function FrassHillPage() {
