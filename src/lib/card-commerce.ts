@@ -9,7 +9,7 @@
 //   record. Frass never takes custody of the money for a Frass Card sale; it
 //   records the sale, the constitutional allocation and the tax position.
 //
-// What that means in plain English: Frass is the market stall and the receipt
+// What that means in practical terms: Frass is the market stall and the receipt
 // book, not the cashier's till. The money goes straight into the seller's own
 // account, the same way a market vendor keeps their own cash box.
 // ─────────────────────────────────────────────────────────────────────────────

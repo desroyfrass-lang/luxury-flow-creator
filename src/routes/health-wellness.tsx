@@ -109,7 +109,7 @@ function WellnessCentre() {
                 <p className="mt-4 text-sm text-[oklch(0.84_0.01_120)]">{arm.what}</p>
                 <p className="mt-4 border-t border-white/10 pt-4 text-sm text-[oklch(0.92_0.01_120)]">
                   <span className="text-[10px] uppercase tracking-[0.22em] text-[oklch(0.66_0.01_120)]">
-                    What this means in plain English
+                    Here's how it works
                   </span>
                   <span className="mt-1 block">{arm.plain}</span>
                 </p>

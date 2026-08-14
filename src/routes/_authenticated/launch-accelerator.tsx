@@ -454,7 +454,7 @@ function LaunchAcceleratorPage() {
           <Link to="/business-vaults" className="underline">Future Business Vaults</Link>
         </p>
         <p className="mt-2 text-xs text-muted-foreground">
-          What this means in plain English: this page is your coach, not your filing cabinet. It already knows what
+          Here's what this means: this page is your coach, not your filing cabinet. It already knows what
           matters most today, so you never have to decide where to start.
         </p>
       </div>

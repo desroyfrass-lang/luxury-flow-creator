@@ -17,7 +17,7 @@ export type ShareCardSpec = {
   /** Small line above the headline — "Frass Card", "Milestone", "Verified". */
   eyebrow: string;
   headline: string;
-  /** Up to three supporting lines of plain English. */
+  /** Up to three supporting lines of everyday language. */
   lines?: string[];
   /** Optional image (avatar, product, watermarked artwork preview). */
   imageUrl?: string | null;

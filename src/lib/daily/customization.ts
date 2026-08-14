@@ -65,7 +65,7 @@ export type SectionMeta = {
   id: SectionId;
   /** The words the member sees and speaks. */
   label: string;
-  /** Plain English — what this block is for. No jargon. */
+  /** everyday language — what this block is for. No jargon. */
   plain: string;
   /** Other things a member might call it, for conversational customization. */
   aliases: string[];

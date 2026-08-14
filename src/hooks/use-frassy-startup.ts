@@ -45,7 +45,7 @@ export type FrassyStartupState = {
   missing: string[];
   /** The greeting Frassy has for this destination, once she is allowed to give it. */
   greeting: string | null;
-  /** A plain-English line shown when voice could not start. Never silence. */
+  /** A everyday-language line shown when voice could not start. Never silence. */
   notice: string | null;
   /** Layout faults found by the watchdog on the most recent sweep. */
   faults: LayoutFault[];

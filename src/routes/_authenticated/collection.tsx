@@ -216,7 +216,7 @@ function CollectionBuilderPage() {
             />
           </div>
           <p className="mt-3 text-xs text-muted-foreground">
-            <strong>What this means in plain English:</strong> like a shop window you dress two garments
+            <strong>Let's break it down:</strong> like a shop window you dress two garments
             at a time — by launch day the whole window is done, and none of it felt like admin.
           </p>
         </section>

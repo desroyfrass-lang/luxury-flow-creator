@@ -350,7 +350,7 @@ function PaymentRequestScreen() {
         <p className="mt-1 text-xs text-muted-foreground">{SELLER_NEVER_PROMISE}</p>
         <p className="mt-1 text-xs text-muted-foreground">{RECOVERY_PROMISE}</p>
         <p className="mt-1 text-xs text-muted-foreground">
-          <strong>What this means in plain English:</strong> you are approving a bill on your own
+          <strong>Here's the idea:</strong> you are approving a bill on your own
           phone. Your card never leaves your hands, the seller only ever hears "paid", and if your
           signal drops we go and find out what happened instead of asking you to guess.
         </p>

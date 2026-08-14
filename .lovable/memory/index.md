@@ -17,6 +17,7 @@ Every Founder Platform Audit ends with one question: "Are you comfortable inviti
 Kids pages are never black: bright age-tinted .kids-zone theme, rounded kid-friendly fonts (Fredoka/Nunito).
 FRASS-0491 (FOR ME architecture freeze) is PINNED — do not execute until the current constitutional roadmap is done.
 Brand name is always "Frass" (two s's) — never "Fras". Applies to Frass Hill, Frass Kicks, Frass Drip.
+FRASS-0564: never write "in plain English" anywhere; vary lead-ins ("Here's what this means…"). Level 🔵 is "Guided Walkthrough".
 Stay true to the original Frass Kicks aesthetic.
 Frass Hill imagery is photorealistic and cinematic — no cartoon art (except the husband hero, Bob Marley graffiti, and kids sections).
 Creator platform is "Frass Vision Studios" (shorthand "FV Studios") — never "Frassy Studio".
@@ -179,3 +180,4 @@ Creative series are intellectual property produced by Frassy from a Blueprint, n
 - [FRASS-0547/0548 Founder Success Dashboard & Visibility](mem://features/frass-0547-0548-founder-visibility) — FRASS-0550 Coaching Engine five questions; Progress vs financial data split, revenue ranges, Founder Radar, Founder-only enforcement
 - [FRASS-0556/0557 AI Router + Frassy Beacon](mem://features/frass-0556-0557-ai-router-and-beacon) — Provider-independent routing with a no-AI first step, and the persistent context-aware Frassy companion
 - [FRASS-0559/0560/0561/0562 Experience Simulator](mem://features/frass-0559-0561-experience-simulator) — Persona simulator, Simulation Mode (member state, voluntary Founder gating, exit bar), front-door preview reset, Founder Seed Vaults
+- [FRASS-0564 Adaptive Explanation Language](mem://constraints/frass-0564-adaptive-explanation-language) — Banned "plain English" phrasing, approved lead-ins, Guided Walkthrough label, Simulation Bar progress + Restart

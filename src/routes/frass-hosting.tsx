@@ -58,7 +58,7 @@ function FrassHostingPage() {
               live. No second company to sign up with, no server to configure.
             </p>
             <p className="mt-3 max-w-2xl text-sm text-white/50">
-              <strong className="text-white/75">What this means in plain English:</strong> when you
+              <strong className="text-white/75">Here's how it works:</strong> when you
               buy Shopify you never ask who Shopify&apos;s cloud provider is. You just buy Shopify.
               That is exactly how Frass Hosting works.
             </p>
@@ -149,7 +149,7 @@ function FrassHostingPage() {
               ))}
             </div>
             <p className="mt-4 rounded-xl border border-white/10 bg-black/40 p-4 text-sm text-white/55">
-              <strong className="text-white/75">Plain English:</strong> one price, paid to Frass.
+              <strong className="text-white/75">Let's break it down:</strong> one price, paid to Frass.
               Frass keeps the site running and covers whatever the infrastructure costs out of that
               plan. You never get a second bill from somebody you&apos;ve never heard of.
             </p>

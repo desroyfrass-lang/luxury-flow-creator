@@ -29,7 +29,7 @@ export const SignupEmail = ({ siteUrl, recipient, confirmationUrl }: SignupEmail
       Confirm &amp; enter Frass
     </Button>
     <Text style={plain}>
-      What this means in plain English: this is the key to your front door. Clicking it proves the address is yours —
+      Here's the takeaway: this is the key to your front door. Clicking it proves the address is yours —
       like showing ID at reception before you're handed the room key.
     </Text>
     <Text style={footer}>If you didn't create a Frass account, you can safely ignore this email.</Text>

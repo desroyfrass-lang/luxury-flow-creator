@@ -103,7 +103,7 @@ function FvStudiosPage() {
               ))}
             </div>
             <p className="mt-4 rounded-xl border border-white/10 bg-black/40 p-4 text-sm text-white/55">
-              <strong className="text-white/75">Plain English:</strong> nothing is being split into
+              <strong className="text-white/75">Here's the idea:</strong> nothing is being split into
               two businesses. Same owner, same logo, same building. One name is for the world, one
               name is for us.
             </p>

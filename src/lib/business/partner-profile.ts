@@ -25,7 +25,7 @@ export const FOUNDER_PRINCIPLE =
   "Frass should discover the business already inside the person — not force the person into a business.";
 
 export const PLAIN_ENGLISH =
-  "What this means in plain English: before Frassy hands you any work, she asks about your life — what you know, what you're certified in, what people already come to you for. Then your daily tasks are built from that, not from a template someone else uses.";
+  "Here's the takeaway: before Frassy hands you any work, she asks about your life — what you know, what you're certified in, what people already come to you for. Then your daily tasks are built from that, not from a template someone else uses.";
 
 // ── Hidden assets ────────────────────────────────────────────────────────────
 // Each asset is something a person already has. Every one of them maps to
@@ -35,7 +35,7 @@ export type HiddenAsset = {
   id: string;
   emoji: string;
   label: string;
-  /** Plain-English proof that this is worth money. */
+  /** Everyday-language proof that this is worth money. */
   worth: string;
   /** Existing Business Builder journeys this strengthens (accelerator ids). */
   businesses: string[];

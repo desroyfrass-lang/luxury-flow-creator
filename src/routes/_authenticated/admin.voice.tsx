@@ -171,7 +171,7 @@ function VoiceStudioPage() {
           </p>
           <p className="rounded-lg border border-border/60 bg-muted/30 p-4 text-xs leading-relaxed text-muted-foreground">
             <span className="font-semibold text-foreground">
-              What this means in plain English:
+              Here's the idea:
             </span>{" "}
             Frassy is one person, not a set of robot voices. Think of hiring a single host for your
             whole hotel instead of a different greeter behind every door — guests recognise her

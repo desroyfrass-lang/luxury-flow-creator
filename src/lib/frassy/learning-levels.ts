@@ -29,11 +29,11 @@ export const LEARNING_LEVELS: LearningLevelMeta[] = [
   {
     id: "new",
     dot: "🔵",
-    label: "Explain Like I'm New",
+    label: "Guided Walkthrough",
     purpose: "No previous knowledge assumed.",
     memberVoice: "I've never heard these terms before.",
     instruction:
-      "EXPLAIN LIKE I'M NEW: assume zero prior knowledge. Everyday language, an analogy from ordinary life, step-by-step thinking, no jargon or unexplained acronyms.",
+      "GUIDED WALKTHROUGH: assume zero prior knowledge. Everyday language, an analogy from ordinary life, step-by-step thinking, no jargon or unexplained acronyms.",
   },
   {
     id: "detailed",
@@ -70,7 +70,7 @@ Welcome Hall, Business Vaults, Money Moves, Knowledge Vault, Command Center, Con
 security, financial, analytics and AI reports, Blueprint discussions).
 
 You may RECOMMEND a different level when it would help — for example "This has a lot of
-technical terminology. Would you like me to switch to Explain Like I'm New?" or "You seem
+technical terminology. Would you like me to switch to Guided Walkthrough?" or "You seem
 comfortable with this now. Would you like more detail?" — but the member always chooses. Never
 switch levels on your own, and never make anyone feel small for choosing a simpler level.`;
 

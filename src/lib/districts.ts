@@ -6,7 +6,7 @@ export type DistrictStatus = "open" | "building" | "planned";
 export type District = {
   id: string;
   name: string;
-  /** One plain-English line about what a Builder does here. */
+  /** One everyday-language line about what a Builder does here. */
   purpose: string;
   chapter: string;
   status: DistrictStatus;

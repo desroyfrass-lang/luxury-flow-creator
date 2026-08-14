@@ -14,7 +14,7 @@ export type Amendment = {
   /** FRASS-0518, FRASS-0522, … */
   ref: string;
   title: string;
-  /** Plain English — what this amendment promised to change. */
+  /** everyday language — what this amendment promised to change. */
   intent: string;
   /** The problem it was written to reduce, in the Founder's language. */
   targetProblem: string;
@@ -235,16 +235,16 @@ export const AMENDMENTS: Amendment[] = [
   },
   {
     ref: "FRASS-0544",
-    title: "Plain English Translation Engine",
+    title: "everyday language Translation Engine",
     intent:
-      "Every technical answer is also delivered in everyday language, with an analogy, why it matters and one next step — switchable between Technical Version and Explain Like I'm New.",
+      "Every technical answer is also delivered in everyday language, with an analogy, why it matters and one next step — switchable between Technical Version and Guided Walkthrough.",
     targetProblem: "Members receiving correct answers they cannot actually understand.",
     areas: [],
     categories: ["confusion", "usability", "content"],
     implementedAt: "2026-08-13",
     evidence: [
-      "src/lib/frassy/plain-english.ts",
-      "src/components/frassy/plain-english-toggle.tsx",
+      "src/lib/frassy/everyday-language.ts",
+      "src/components/frassy/everyday-language-toggle.tsx",
     ],
     extends: ["FRASS-0522-A"],
   },
@@ -252,7 +252,7 @@ export const AMENDMENTS: Amendment[] = [
     ref: "FRASS-0545",
     title: "Adaptive Learning Levels",
     intent:
-      "Every explanation is available at four depths — One Sentence, Explain Like I'm New, Detailed, Expert — with a remembered default the member can change instantly.",
+      "Every explanation is available at four depths — One Sentence, Guided Walkthrough, Detailed, Expert — with a remembered default the member can change instantly.",
     targetProblem:
       "Members overwhelmed by unnecessary complexity, or underserved by explanations that are too simple.",
     areas: [],
@@ -319,7 +319,7 @@ export const AMENDMENTS: Amendment[] = [
     ref: "FRASS-0549",
     title: "Founder Explanation Standard",
     intent:
-      "Every technical update in a Founder-only surface follows one fixed structure: What Changed, What Was Added, In Plain English, Real-Life Example, What This Means for Frass, Founder Attention, My Recommendation. Depth follows the Learning Level; the structure never changes.",
+      "Every technical update in a Founder-only surface follows one fixed structure: What Changed, What Was Added, in practical terms, Real-Life Example, What This Means for Frass, Founder Attention, My Recommendation. Depth follows the Learning Level; the structure never changes.",
     targetProblem:
       "A Founder forced to decode engineering language spends time deciphering reports instead of making decisions.",
     areas: ["Command Center", "Frassy"],

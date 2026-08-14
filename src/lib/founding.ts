@@ -12,7 +12,7 @@ export const FOUNDING_PRINCIPLE =
   "First Partners are remembered not because they arrived first, but because they chose to help build something before its success was certain. Their contribution becomes part of the history of Frass and is honoured with lifelong recognition.";
 
 export const FOUNDING_PLAIN_ENGLISH =
-  "What this means in plain English: this is the platform's wall of names. It is a thank-you carved in stone, not a key to a locked door. It never changes what you earn, what you can approve, or what you can see — think of a founder's plaque in the lobby of a building: everyone reads it, nobody uses it to get into the vault.";
+  "Here's the takeaway: this is the platform's wall of names. It is a thank-you carved in stone, not a key to a locked door. It never changes what you earn, what you can approve, or what you can see — think of a founder's plaque in the lobby of a building: everyone reads it, nobody uses it to get into the vault.";
 
 /** The rules that can never be softened by a later feature. */
 export const FOUNDING_RULES = [

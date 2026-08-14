@@ -122,7 +122,7 @@ export function RequestPaymentPanel({
         </h2>
         <p className="mt-2 text-sm text-muted-foreground">{PAYMENT_REQUEST_PRINCIPLE}</p>
         <p className="mt-1 text-xs text-muted-foreground">
-          <strong>What this means in plain English:</strong> you never ask to borrow their phone and
+          <strong>Here's what this means:</strong> you never ask to borrow their phone and
           they never type a card into yours. You name the sale, they approve it on their own device —
           like approving a bill that pops up on their screen.
         </p>

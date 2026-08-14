@@ -12,7 +12,7 @@ export const PROGRESS_WITHOUT_EXPOSURE_PRINCIPLE =
   "Celebrate the achievement, protect the individual. Frass inspires through success stories while preserving every member's privacy and financial dignity.";
 
 export const PROGRESS_WITHOUT_EXPOSURE_PLAIN_ENGLISH =
-  "What this means in plain English: the community can see that something good happened — a gift was sent, a book was published, a first product launched — the same way you'd hear applause from another room. You hear the celebration; you don't see anybody's bank statement.";
+  "Here's how it works: the community can see that something good happened — a gift was sent, a book was published, a first product launched — the same way you'd hear applause from another room. You hear the celebration; you don't see anybody's bank statement.";
 
 /** Who is allowed to see a community event. The member chooses whenever appropriate. */
 export type ProgressAudience = "private" | "connections" | "partners" | "public";

@@ -32,7 +32,7 @@ export const BUILD_PATHS: BuildPath[] = [
     detail:
       "Your business gets a home inside Frass — shop.frass, creator.frass, portfolio.frass — wired into the marketplace, wallet, affiliate system and community from the first day.",
     plain:
-      "What this means in plain English: it's like opening a store inside a busy shopping centre. The building, the traffic and the till are already there.",
+      "Here's the takeaway: it's like opening a store inside a busy shopping centre. The building, the traffic and the till are already there.",
     connects: [
       "Marketplace",
       "Frass Wallet",
@@ -53,7 +53,7 @@ export const BUILD_PATHS: BuildPath[] = [
     detail:
       "Frassy generates a complete standalone website you can point at your own domain, host with Frass, host elsewhere, or export entirely. You keep control of where it lives.",
     plain:
-      "What this means in plain English: it's like building your own shop on your own street. More freedom, and the rent is yours.",
+      "Here's what this means: it's like building your own shop on your own street. More freedom, and the rent is yours.",
     connects: ["Frass Wallet (optional)", "Marketplace (optional)", "Affiliate System (optional)"],
   },
 ];

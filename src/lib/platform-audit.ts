@@ -15,7 +15,7 @@ export type PlatformAuditCheck = {
   label: string;
   level: StatusLevel;
   detail: string;
-  /** Plain English, always. */
+  /** everyday language, always. */
   plain: string;
   source: string;
   to?: string;

@@ -23,7 +23,7 @@ export type WorkflowStep = {
   id: WorkflowStepId;
   n: number;
   label: string;
-  /** What actually happens, in plain English. */
+  /** What actually happens, in simple terms. */
   plain: string;
   /** Which system owns this step. */
   owner: string;

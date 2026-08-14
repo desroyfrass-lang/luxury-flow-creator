@@ -6,7 +6,7 @@
 //   "Any action that could expose, transfer, delete or permanently change
 //    sensitive information or assets requires identity verification."
 //
-// Plain English: walking around the house needs no key. Opening the safe,
+// Here's what this means: walking around the house needs no key. Opening the safe,
 // changing the locks, or moving the deeds does. Frass asks who you are at the
 // safe door — never in the hallway.
 //

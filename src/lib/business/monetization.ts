@@ -133,7 +133,7 @@ export type MonetizationTrack = {
   nextStep: string | null;
   /** Set when an external dependency blocks earning — productive work instead. */
   preparation: string | null;
-  /** Plain-English sentence for the Daily. */
+  /** Everyday-language sentence for the Daily. */
   line: string;
 };
 

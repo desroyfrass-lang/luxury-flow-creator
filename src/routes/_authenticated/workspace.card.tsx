@@ -116,7 +116,7 @@ function CardStudio() {
         <h1 className="text-3xl font-black uppercase tracking-tight">Frass Card</h1>
         <p className="max-w-2xl text-sm text-muted-foreground">{CARD_PRINCIPLE}</p>
         <p className="max-w-2xl text-sm text-muted-foreground">
-          <strong>What this means in plain English:</strong> this is a business card that updates itself.
+          <strong>Here's the idea:</strong> this is a business card that updates itself.
           Everyone has a Frass Card, and it now stands in for the old idea of a "profile" — anywhere
           someone taps your name or picture on Frass, this is the page that opens.
           Print the QR on a box today, change your phone number next year, and the box still works — like a
@@ -233,7 +233,7 @@ function CardStudio() {
         <h2 className={heading}>FRASS-0427 · Payments</h2>
         <p className="mt-2 text-sm text-muted-foreground">{CARD_COMMERCE_PRINCIPLE}</p>
         <p className="mt-1 text-sm text-muted-foreground">
-          <strong>What this means in plain English:</strong> your card becomes a till you carry in your
+          <strong>Here's how it works:</strong> your card becomes a till you carry in your
           pocket. The money lands in your own account — Frass keeps the receipt book so your income,
           allocation and taxes stay in one place.
         </p>
@@ -310,7 +310,7 @@ function CardStudio() {
           Card Wallet.
         </p>
         <p className="mt-1 text-xs text-muted-foreground">
-          <strong>What this means in plain English:</strong> this page is the shopfront window. The
+          <strong>Let's break it down:</strong> this page is the shopfront window. The
           Wallet is the counter behind it.
         </p>
         <Link className="ws-chip mt-4 inline-flex" to="/workspace/wallet">

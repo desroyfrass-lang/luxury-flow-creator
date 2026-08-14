@@ -23,7 +23,7 @@ export const GALLERY_LEGACY_LINE =
   "Every brushstroke should have the opportunity to become both a legacy and a livelihood.";
 
 export const GALLERY_PLAIN_ENGLISH =
-  "What this means in plain English: instead of squeezing a painting into a shop listing beside a t-shirt, you get your own gallery — walls, rooms, a story beside every piece — and the till is quietly at the door.";
+  "Here's what this means: instead of squeezing a painting into a shop listing beside a t-shirt, you get your own gallery — walls, rooms, a story beside every piece — and the till is quietly at the door.";
 
 export const GALLERY_NO_DUPLICATE_RULE =
   "Frass Gallery is part of the Marketplace. It uses the existing checkout, Financial Center, receipts, shipping and Frass Cards. No duplicate commerce systems.";
@@ -265,7 +265,7 @@ export const STORY_WALL_PRINCIPLE =
   "Every artwork may carry the artist's own voice. Collectors connect with artists, not just images.";
 
 export const STORY_WALL_PLAIN_ENGLISH =
-  "What this means in plain English: instead of reading “acrylic on canvas, 2026”, you hear the artist say why they painted it — and that's usually the moment somebody decides to buy.";
+  "Here's the idea: instead of reading “acrylic on canvas, 2026”, you hear the artist say why they painted it — and that's usually the moment somebody decides to buy.";
 
 export const STORY_WALL_PROMPTS = [
   "Where were you when this started?",

@@ -27,8 +27,8 @@ export const EXPLANATION_SECTIONS = [
       "An instant mental map of what changed and what did not, in four labelled lists: Updated (existing systems extended), New (built from scratch), Unchanged (touched nothing), Deprecated (retired). If a list is empty, write 'None'. This enforces 'Extend, don't duplicate' (FRASS-0549A).",
   },
   {
-    id: "plain-english",
-    heading: "😊 In Plain English",
+    id: "everyday-language",
+    heading: "😊 in practical terms",
     guide: "Everyday language only. Assume the Founder has never heard the technical words.",
   },
   {
@@ -68,7 +68,7 @@ ${EXPLANATION_SECTIONS.map((s) => `${s.heading} — ${s.guide}`).join("\n")}
 
 DEPTH FOLLOWS THE LEARNING LEVEL (FRASS-0545). The structure is identical at every level.
 - One Sentence → compress each section to a single concise sentence.
-- Explain Like I'm New → expand Plain English and Real-Life Example.
+- Guided Walkthrough → expand everyday language and Real-Life Example.
 - Detailed → add implementation context.
 - Expert → add architecture, security, APIs, database design and engineering rationale.
 

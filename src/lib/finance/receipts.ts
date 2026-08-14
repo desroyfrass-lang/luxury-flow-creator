@@ -9,7 +9,7 @@
 // accounting knowledge: where did it come from, why did I receive it, where did
 // it go, and why was it deducted.
 //
-// What this means in plain English: every movement of money leaves a paper
+// Here's the practical version: every movement of money leaves a paper
 // trail, written in words a person can read — not a bank statement code.
 // ─────────────────────────────────────────────────────────────────────────────
 
@@ -468,7 +468,7 @@ export function reconcile(receipts: Receipt[]): ReceiptTotals {
   };
 }
 
-/** Plain-English proof that a balance is nothing more than its receipts. */
+/** Everyday-language proof that a balance is nothing more than its receipts. */
 export function reconciliationStatement(t: ReceiptTotals): string {
   return `${t.count} receipt${t.count === 1 ? "" : "s"} add up to ${money(t.available, t.currency)} available and ${money(
     t.pending,

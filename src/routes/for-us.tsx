@@ -39,7 +39,7 @@ import {
  * FRASS-0418 — For Us is a living Caribbean destination, not a dashboard.
  * The scenery stays behind everything; community stories drift over it. The
  * interface is deliberately faint so the place, not the software, is what you
- * notice. In plain English: this page is the holiday of Frass — everywhere else
+ * notice. Here's the idea: this page is the holiday of Frass — everywhere else
  * is where you work.
  */
 

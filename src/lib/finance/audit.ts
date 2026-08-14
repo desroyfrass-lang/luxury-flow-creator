@@ -5,7 +5,7 @@
 // payment requests and financial receipts. Nothing here can be edited — the
 // audit view only reads, reconciles and explains.
 //
-// In plain English: this is the accountant's binder. Every page is a photocopy
+// Here's the idea: this is the accountant's binder. Every page is a photocopy
 // of an original that can never be changed, and beside each page we write
 // whether the numbers add up.
 // ─────────────────────────────────────────────────────────────────────────────

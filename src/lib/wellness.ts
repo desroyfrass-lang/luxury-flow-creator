@@ -11,7 +11,7 @@
 // A place up the hill where the air is cooler and someone knows what the leaves
 // are for.
 //
-// Plain English: the free side is "what grandma and good habits give you".
+// Here's what this means: the free side is "what grandma and good habits give you".
 // The paid side is "when you need someone qualified, here's how to find them".
 
 export type WellnessArmId = "wellness" | "care_network";
@@ -22,7 +22,7 @@ export type WellnessArm = {
   tagline: string;
   /** Expert framing. */
   what: string;
-  /** The plain-English translation. Never leave the expert line alone. */
+  /** The everyday-language translation. Never leave the expert line alone. */
   plain: string;
   access: "Free for everyone" | "Book & pay the professional";
   glyph: string;

@@ -20,7 +20,7 @@ import {
 
 export type CustomizationResult = {
   prefs: DailyPrefs;
-  /** What Frassy says back — plain English, always confirming the change. */
+  /** What Frassy says back — everyday language, always confirming the change. */
   say: string;
 };
 
@@ -59,7 +59,7 @@ function moveTo(order: SectionId[], id: SectionId, position: "top" | "bottom" | 
 }
 
 /**
- * Interpret a member's plain-English request about their own Daily.
+ * Interpret a member's everyday-language request about their own Daily.
  * Returns null when the sentence isn't about layout at all, so the caller can
  * fall through to the normal Daily commands.
  */

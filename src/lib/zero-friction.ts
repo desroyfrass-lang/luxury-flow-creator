@@ -8,7 +8,7 @@
 // banking information. Every purchase is the approval of a simple payment
 // request, completed on the customer's own trusted device.
 //
-// What this means in plain English: paying someone on Frass should feel like
+// Here's the idea: paying someone on Frass should feel like
 // approving a bill on your own phone. The seller writes the ticket; you say
 // yes on your own screen. Like a restaurant bringing the card machine to the
 // table — except the machine is the phone already in your pocket.
@@ -74,4 +74,4 @@ export const SECURITY_CONFIRMATION_LINES = [
 ] as const;
 
 export const SECURITY_CONFIRMATION_PLAIN =
-  "In plain English: the money moved through the payment network, not through the seller's hands, and there is now a permanent receipt you can look up any time.";
+  "Here's how it works: the money moved through the payment network, not through the seller's hands, and there is now a permanent receipt you can look up any time.";

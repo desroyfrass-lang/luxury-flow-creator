@@ -208,22 +208,22 @@ export const SHAPE_EDUCATION = [
   {
     title: "Compression levels, explained",
     body: "Light control smooths. Medium control shapes. Firm control sculpts. Pick the lightest level that gives you the line you want — comfort is what makes you wear it twice.",
-    plain: "In plain English: light is for comfort, firm is for a big night. Start light.",
+    plain: "Here's what this means: light is for comfort, firm is for a big night. Start light.",
   },
   {
     title: "How it should fit",
     body: "Shapewear should feel like a firm hug, never a squeeze. If it rolls, digs or leaves marks after ten minutes, it's a size too small — sizing up usually gives a smoother line, not a looser one.",
-    plain: "In plain English: too tight actually looks worse. Size up if it digs.",
+    plain: "Here's the idea: too tight actually looks worse. Size up if it digs.",
   },
   {
     title: "Fabric & care",
     body: "Sculpting knits rely on elastane memory. Wash cool, never wring, air dry flat. Heat is the one thing that permanently kills compression.",
-    plain: "In plain English: cold wash, no dryer — heat ruins the stretch.",
+    plain: "Here's how it works: cold wash, no dryer — heat ruins the stretch.",
   },
   {
     title: "Wellness first",
     body: "Shape is a styling tool, not a shortcut. Never wear firm compression while sleeping, and loosen it if you feel numbness or shortness of breath.",
-    plain: "In plain English: it's clothing, not a treatment. Take it off if it hurts.",
+    plain: "Let's break it down: it's clothing, not a treatment. Take it off if it hurts.",
   },
 ] as const;
 

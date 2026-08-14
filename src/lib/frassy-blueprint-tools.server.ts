@@ -104,7 +104,7 @@ export function buildBlueprintTools(ctx: BlueprintToolContext = {}) {
 
   const saveBlueprint = tool({
     description:
-      "CREATE OR UPDATE a Member Success Blueprint (FRASS-0532-B). This is how a member's whole experience is personalized — Daily sections, Money Moves order, pace, tone, view mode — WITHOUT engineering. Use it when asked to create a Daily for someone, change their priorities, adjust their available hours, or record who they are. Pass an id to update; omit it to create. Always confirm the change back in plain English.",
+      "CREATE OR UPDATE a Member Success Blueprint (FRASS-0532-B). This is how a member's whole experience is personalized — Daily sections, Money Moves order, pace, tone, view mode — WITHOUT engineering. Use it when asked to create a Daily for someone, change their priorities, adjust their available hours, or record who they are. Pass an id to update; omit it to create. Always confirm the change back in simple terms.",
     inputSchema: z.object({
       id: z.string().nullable().default(null).describe("Existing Blueprint id, or null to create."),
       ...fields,

@@ -26,7 +26,7 @@ export type FinancialLayer = {
   /** The question this layer answers, in the member's own words. */
   question: string;
   purpose: string;
-  /** Plain-English line shown on a Money Move card so the member knows WHY it appeared. */
+  /** Everyday-language line shown on a Money Move card so the member knows WHY it appeared. */
   because: string;
   examples: string[];
 };
@@ -131,7 +131,7 @@ export type DailyBalance = {
   pressure: FinancialPressure;
   availableMinutes: number;
   allocation: LayerAllocation[];
-  /** Plain English: why today looks the way it does. */
+  /** Here's how it works: why today looks the way it does. */
   explanation: string;
 };
 

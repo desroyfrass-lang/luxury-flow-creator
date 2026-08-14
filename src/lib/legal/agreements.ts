@@ -6,7 +6,7 @@
 //   Level 1 · FrassKicks Visitor Agreement  — visitors, shoppers, customers.
 //   Level 2 · Frass Hill Builder Agreement  — Builders, Partners, creators.
 //
-// Plain English first, full legal text always available underneath. Versioned,
+// everyday language first, full legal text always available underneath. Versioned,
 // so a material change can be re-presented for acceptance.
 // ─────────────────────────────────────────────────────────────────────────────
 
@@ -14,7 +14,7 @@ export type AgreementLevel = "visitor" | "builder";
 
 export type AgreementSection = {
   heading: string;
-  /** The plain-English promise, read first. */
+  /** The everyday-language promise, read first. */
   plain: string;
   /** The formal terms, always available underneath. */
   legal: string[];

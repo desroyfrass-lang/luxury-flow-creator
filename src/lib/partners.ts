@@ -17,7 +17,7 @@ export type DesignationMeta = {
   id: PartnerDesignation;
   badge: string;
   label: string;
-  /** Plain-English meaning — the Founder's second-explanation rule. */
+  /** Everyday-language meaning — the Founder's second-explanation rule. */
   plainEnglish: string;
   /** How Frassy greets this arrival at the gate. */
   greeting: (name: string) => string;
@@ -104,7 +104,7 @@ export function arrivalScript(opts: {
   if (designation) {
     lines.push(designation.greeting(name));
     lines.push(
-      `You're registered as ${designation.badge} ${designation.label}. In plain English: ${designation.plainEnglish}`,
+      `You're registered as ${designation.badge} ${designation.label}. Here's the practical version: ${designation.plainEnglish}`,
     );
   } else {
     lines.push(`Welcome to Frass Hill, ${name}. Walk with me a minute.`);

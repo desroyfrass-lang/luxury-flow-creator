@@ -32,7 +32,7 @@ export type RepairActionId =
 export type SafeRepair = {
   id: RepairActionId;
   label: string;
-  /** Plain English, member-facing. */
+  /** everyday language, member-facing. */
   plain: string;
   categories: RepairCategory[];
   /** Requires the caller to be the owner of the data being repaired. */

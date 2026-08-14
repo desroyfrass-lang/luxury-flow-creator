@@ -141,7 +141,7 @@ export const IP_PRINCIPLE = {
   id: "FRASS-0533",
   headline: "A series is intellectual property, not content.",
   plain:
-    "What this means in plain English: people come back for the characters, not the hair tips. Once they love " +
+    "Here's the takeaway: people come back for the characters, not the hair tips. Once they love " +
     "the characters, the same story can become books, merch, specials and licensing — that's a franchise, and a " +
     "franchise is something you can leave behind.",
 } as const;

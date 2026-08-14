@@ -124,7 +124,7 @@ export function QuickSellPanel({
           checkout for that item.
         </p>
         <p className="mt-1 text-xs text-muted-foreground">
-          <strong>What this means in plain English:</strong> it is a market stall you can open in ten
+          <strong>Here's the takeaway:</strong> it is a market stall you can open in ten
           seconds and close when the last one is gone.
         </p>
 

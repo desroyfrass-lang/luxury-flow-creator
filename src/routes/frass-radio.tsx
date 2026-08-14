@@ -70,7 +70,7 @@ function FrassRadioPage() {
               spontaneous. Community streaming lives somewhere else on purpose.
             </p>
             <p className="mt-3 text-sm leading-relaxed text-white/45">
-              <strong className="text-white/70">What this means in plain English:</strong> Radio is a show
+              <strong className="text-white/70">Here's the practical version:</strong> Radio is a show
               with a time slot. For Us Live is standing up in the community hall and saying "come see this".
             </p>
             {radioLive.length > 0 && (
@@ -202,7 +202,7 @@ function FrassRadioPage() {
               </div>
               <p className="mt-4 max-w-3xl text-sm leading-relaxed text-white/70">{ORIGINALS_RULE}</p>
               <p className="mt-2 text-xs text-white/45">
-                <strong className="text-white/65">Plain English:</strong> the Originals badge is like
+                <strong className="text-white/65">Here's the takeaway:</strong> the Originals badge is like
                 &ldquo;A Netflix Original&rdquo;. It only goes on work we actually made or paid to have made.
               </p>
             </div>

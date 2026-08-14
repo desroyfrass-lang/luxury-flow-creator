@@ -5,7 +5,7 @@
  * into one of four tiers so the Founder can see at a glance whether something
  * needs attention now or is simply worth knowing.
  *
- * In plain English: this is the difference between a shop diary that says
+ * Here's the idea: this is the difference between a shop diary that says
  * "someone came in" and one that says "someone tried the safe three times".
  */
 

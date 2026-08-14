@@ -6,7 +6,7 @@
 // for a capability, never for a vendor. Swapping a provider is a one-line
 // change in this file — nothing else in the platform moves.
 //
-// Plain English: this is the socket. The AI companies are the plugs.
+// Here's the takeaway: this is the socket. The AI companies are the plugs.
 
 export type AiCapability =
   | "conversation"

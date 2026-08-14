@@ -199,7 +199,7 @@ function PlatformAuditTab({ onNavigate }: { onNavigate?: (href: string) => void 
     <div className="founder-os-stack">
       <p className="ws-meta">{platformAuditHeadline(rows)}</p>
       <p className="ws-meta">
-        What this means in plain English: the Financial Audit checks the money. This checks the
+        Let's break it down: the Financial Audit checks the money. This checks the
         building the money moves through — the doors, the lights and the wiring.
       </p>
 

@@ -64,7 +64,7 @@ export const askFinancialAudit = createServerFn({ method: "POST" })
         "If asked to act, explain plainly that the Audit Center can only observe, and name the place where that action legitimately happens.",
         "Frass's constitutional split is 90% to the member, 10% to the platform (the founder's 1% and co-founder's 1% live inside that 10%).",
         "Answer only from the ledger given to you. If the answer is not in it, say so.",
-        "Answer twice: first the precise financial answer, then a short paragraph beginning 'What this means in plain English:' with an everyday analogy.",
+        "Answer twice: first the precise financial answer, then a short paragraph beginning 'Here's what this means:' with an everyday analogy.",
         "Caribbean warmth, no stereotypes, no jargon left unexplained.",
       ].join(" "),
       prompt: [

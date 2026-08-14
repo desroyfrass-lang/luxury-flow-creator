@@ -29,7 +29,7 @@ export type PipelineStage = {
   key: PipelineStageKey;
   emoji: string;
   label: string;
-  /** Plain English — a kindergartener could follow it. */
+  /** everyday language — a kindergartener could follow it. */
   plain: string;
   /** Where in Frass this actually happens today. */
   to?: string;
@@ -280,6 +280,6 @@ export const MANUFACTURING_PRINCIPLE = {
   headline:
     "Creativity should never be limited by manufacturing, inventory or logistics.",
   plain:
-    "What this means in plain English: you draw it, Frass finds someone who can build it, they make one so you can check it, and after you say yes they only make more when somebody buys. You never buy stock and you never own a factory.",
+    "Here's what this means: you draw it, Frass finds someone who can build it, they make one so you can check it, and after you say yes they only make more when somebody buys. You never buy stock and you never own a factory.",
   ip: "You own your designs. Frass helps you organise and document them — it never claims them.",
 };

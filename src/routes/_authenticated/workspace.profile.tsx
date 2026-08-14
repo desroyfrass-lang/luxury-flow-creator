@@ -406,7 +406,7 @@ function SecurityTab({ email, lastSignInAt }: { email: string | null; lastSignIn
           one below and use the eye to reveal exactly what you are typing.
         </p>
         <p className="mt-2 text-xs text-muted-foreground">
-          <span className="text-[color:var(--gold)]">In plain English:</span> a password is kept like
+          <span className="text-[color:var(--gold)]">Here's the idea:</span> a password is kept like
           a fingerprint smudge, not a photo — we can check a match, but we can't read it back. If you
           forgot yours, email yourself a recovery link below.
         </p>

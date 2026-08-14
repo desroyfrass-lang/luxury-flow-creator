@@ -41,7 +41,7 @@ export const HILL_STOPS: HillStop[] = [
     eyebrow: "You have arrived",
     line: "The arch, the fountain, the first view of everything waiting past it.",
     plain:
-      "What this means in plain English: this is the front door. You stop here once, you're welcomed, and then the whole town is open to you.",
+      "Here's what this means: this is the front door. You stop here once, you're welcomed, and then the whole town is open to you.",
     image: archImg,
     life: ["clouds", "birds", "leaves", "water"],
     origin: "50% 55%",
@@ -57,7 +57,7 @@ export const HILL_STOPS: HillStop[] = [
     eyebrow: "Down in the valley",
     line: "The waterfall, the learning gardens, the pavilions where the children are.",
     plain:
-      "What this means in plain English: everything made for kids lives down here — things to do, and things to buy.",
+      "Here's the idea: everything made for kids lives down here — things to do, and things to buy.",
     image: valleyImg,
     life: ["water", "leaves", "birds", "haze"],
     origin: "45% 60%",
@@ -74,7 +74,7 @@ export const HILL_STOPS: HillStop[] = [
     eyebrow: "Where the town meets",
     line: "Market awnings, jerk smoke drifting, the fountain, somebody always talking.",
     plain:
-      "What this means in plain English: this is the community centre — people, stories, and what's happening today.",
+      "Here's how it works: this is the community centre — people, stories, and what's happening today.",
     image: squareImg,
     life: ["smoke", "clouds", "leaves"],
     origin: "50% 62%",
@@ -91,7 +91,7 @@ export const HILL_STOPS: HillStop[] = [
     eyebrow: "Walking past the studio",
     line: "Records on the wall, the red light on, somebody carrying a guitar case in.",
     plain:
-      "What this means in plain English: this is where music, video and radio get made and played.",
+      "Let's break it down: this is where music, video and radio get made and played.",
     image: studiosImg,
     life: ["lights", "haze"],
     origin: "58% 55%",
@@ -108,7 +108,7 @@ export const HILL_STOPS: HillStop[] = [
     eyebrow: "Standing on the hill",
     line: "From up here you can see the square, the valley, the district and the sea.",
     plain:
-      "What this means in plain English: the map view. Everywhere you've been and everywhere left to go.",
+      "Here's the practical version: the map view. Everywhere you've been and everywhere left to go.",
     image: overlookImg,
     life: ["clouds", "birds", "leaves"],
     origin: "50% 50%",
@@ -125,7 +125,7 @@ export const HILL_STOPS: HillStop[] = [
     eyebrow: "Through the garden, to the doors",
     line: "The reflecting channel, the orchids, the tall glass doors held open for you.",
     plain:
-      "What this means in plain English: the flagship house — the most considered pieces in the whole town.",
+      "Here's the takeaway: the flagship house — the most considered pieces in the whole town.",
     image: luxuryImg,
     life: ["leaves", "clouds", "lights"],
     origin: "50% 58%",
@@ -142,7 +142,7 @@ export const HILL_STOPS: HillStop[] = [
     eyebrow: "Round the back, quietly",
     line: "The flower arbour, the candles, the conservatory set for a wedding.",
     plain:
-      "What this means in plain English: the bridal world — the whole wedding, not just the dress.",
+      "Here's what this means: the bridal world — the whole wedding, not just the dress.",
     image: bridalImg,
     life: ["lights", "haze", "leaves"],
     origin: "42% 55%",

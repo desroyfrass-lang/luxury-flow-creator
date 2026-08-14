@@ -30,7 +30,7 @@ import {
 export type FoundationTask = {
   id: string;
   label: string;
-  /** Plain English: why this matters before any money move. */
+  /** Here's the practical version: why this matters before any money move. */
   why: string;
   minutes: number;
   href: string;

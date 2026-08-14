@@ -187,7 +187,7 @@ export function streamById(id: string): IncomeStream | undefined {
   return INCOME_STREAMS.find((s) => s.id === id);
 }
 
-/** Plain-English reason a move helps more than one business at once. */
+/** Everyday-language reason a move helps more than one business at once. */
 export function crossBenefit(streamId: string): string | null {
   const s = streamById(streamId);
   if (!s || !s.reinforces.length) return null;

@@ -103,7 +103,7 @@ export type Analysis = {
   maxRate: number;
   viable: boolean;
   breakEvenRate: number;
-  /** Plain-English reasoning the Builder sees. */
+  /** Everyday-language reasoning the Builder sees. */
   explanation: string[];
 };
 

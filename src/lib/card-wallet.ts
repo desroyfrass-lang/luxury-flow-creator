@@ -10,7 +10,7 @@
 // scattered panels. The public card is the buyer's side: a single row of
 // unmistakable actions.
 //
-// What this means in plain English: the card is the shopfront window, the
+// Here's the idea: the card is the shopfront window, the
 // wallet is the counter behind it. Same building, two doors.
 // ─────────────────────────────────────────────────────────────────────────────
 

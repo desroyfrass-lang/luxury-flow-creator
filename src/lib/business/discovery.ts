@@ -26,7 +26,7 @@ export const DISCOVERY_PRINCIPLE =
   "Frass does not give people businesses. Frass discovers the businesses already inside them and helps them Build It. Monetize It.";
 
 export const DISCOVERY_PLAIN_ENGLISH =
-  "What this means in plain English: Frassy keeps listening. If you mention something you used to do — teaching aerobics, packing houses, painting — she offers to turn it into a business you already know how to run, using rooms Frass has already built.";
+  "Here's the idea: Frassy keeps listening. If you mention something you used to do — teaching aerobics, packing houses, painting — she offers to turn it into a business you already know how to run, using rooms Frass has already built.";
 
 /** Where a discovered asset lands. Every destination is an existing surface. */
 export type Destination = {
@@ -83,7 +83,7 @@ export type DiscoveryOffer = {
   destination: Destination;
   /** Frassy's spoken-style line. */
   line: string;
-  /** Plain-English reason this is worth money. */
+  /** Everyday-language reason this is worth money. */
   worth: string;
 };
 

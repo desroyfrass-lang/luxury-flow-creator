@@ -10,7 +10,7 @@
 // directness. It is learned quietly through observation — never configured,
 // never a personality change.
 //
-// Plain English: an assistant who has worked with you for a month stops asking
+// Here's the takeaway: an assistant who has worked with you for a month stops asking
 // how you like your coffee. Same person, better fit. Everything here lives in
 // this browser only, and the member can wipe it in one call.
 // ─────────────────────────────────────────────────────────────────────────────
@@ -67,7 +67,7 @@ const DETAIL_HINTS = [
   "how does",
   "why does",
   "step by step",
-  "in plain english",
+  "in practical terms",
   "teach me",
   "i don't understand",
 ];
@@ -267,7 +267,7 @@ export function workingStyleContext(style: WorkingStyle): string {
     .join("\n")}`;
 }
 
-/** Plain-English summary for the member's own settings screen. */
+/** Everyday-language summary for the member's own settings screen. */
 export function describeWorkingStyle(style: WorkingStyle): string {
   const p = deriveProfile(style);
   if (!p.confident) return "Frassy is still getting to know how you like to work.";

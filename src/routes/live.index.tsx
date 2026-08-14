@@ -116,7 +116,7 @@ function LiveDirectory() {
               <h2 className="mt-2 text-xl font-bold uppercase tracking-[0.14em]">{d.name}</h2>
               <p className="mt-3 text-sm leading-relaxed text-muted-foreground">{d.purpose}</p>
               <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
-                <strong className="text-foreground">What this means in plain English:</strong> {d.plain}
+                <strong className="text-foreground">Here's what this means:</strong> {d.plain}
               </p>
               <ul className="mt-4 flex flex-wrap gap-2">
                 {d.examples.map((e) => (

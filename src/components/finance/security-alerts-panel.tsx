@@ -151,7 +151,7 @@ export function SecurityAlertsPanel() {
         <div className="min-w-[220px] flex-1">
           <p className="text-sm text-foreground">{score.summary}</p>
           <p className="mt-1 text-xs text-muted-foreground">
-            <strong className="text-foreground">In plain English:</strong> {score.plainEnglish}
+            <strong className="text-foreground">Here's the takeaway:</strong> {score.plainEnglish}
           </p>
           {score.deductions.length > 0 && (
             <ul className="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-[11px] text-muted-foreground">
@@ -232,7 +232,7 @@ export function SecurityAlertsPanel() {
           ))}
         </div>
         <p className="mt-2 text-[11px] text-muted-foreground">
-          <strong className="text-foreground">In plain English:</strong> one event is noise; the same
+          <strong className="text-foreground">Here's what this means:</strong> one event is noise; the same
           thing three days running is a pattern. This is the shape, not the list.
         </p>
       </div>
@@ -307,7 +307,7 @@ export function SecurityAlertsPanel() {
                       <p className="mt-2 text-sm text-foreground">{a.detail}</p>
                       {a.plain_english && (
                         <p className="mt-1 text-xs text-muted-foreground">
-                          <strong className="text-foreground">Plain English:</strong>{" "}
+                          <strong className="text-foreground">Here's the idea:</strong>{" "}
                           {a.plain_english}
                         </p>
                       )}

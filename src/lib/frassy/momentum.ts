@@ -8,7 +8,7 @@
 // completion dates. The member may accept or decline any challenge, always.
 // If the pace turns heavy, the engine steps back down on its own.
 //
-// Plain English: a good coach doesn't hand a beginner a stopwatch. She waits
+// Here's the takeaway: a good coach doesn't hand a beginner a stopwatch. She waits
 // until you're running well, then asks if you'd like to time yourself.
 // ─────────────────────────────────────────────────────────────────────────────
 
@@ -197,7 +197,7 @@ export type Momentum = {
   mayChallenge: boolean;
   /** True when the engine stepped back down to protect the member. */
   easedOff: boolean;
-  /** What the member sees, in plain English. */
+  /** What the member sees, in everyday language. */
   plain: string;
   /** What unlocks the next level, if anything. */
   nextUnlock: string | null;

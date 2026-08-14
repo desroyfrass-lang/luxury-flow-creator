@@ -103,7 +103,7 @@ function BusinessBuilderPage() {
             brand, the customers and the money in one place.
           </p>
           <p className="mt-2 max-w-2xl text-sm leading-relaxed text-[oklch(0.66_0.01_80)]">
-            What this means in plain English: you describe the business the way you'd describe it to
+            Here's how it works: you describe the business the way you'd describe it to
             a friend, and Frassy opens the doors, prints the signs and sets up the till.
           </p>
 

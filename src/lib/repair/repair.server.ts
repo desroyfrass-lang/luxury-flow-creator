@@ -123,8 +123,8 @@ export async function diagnose(input: {
     rootCause,
     plainEnglish:
       requiresEngineering
-        ? "In plain English: I've found the cause, but fixing it needs a code change, so I've written the full report for engineering."
-        : "In plain English: I've found the cause, and it's something I'm allowed to fix here.",
+        ? "Let's break it down: I've found the cause, but fixing it needs a code change, so I've written the full report for engineering."
+        : "Here's the practical version: I've found the cause, and it's something I'm allowed to fix here.",
     evidence,
     suggestedRepairs,
     requiresEngineering: requiresEngineering && suggestedRepairs.length === 0 ? true : requiresEngineering,

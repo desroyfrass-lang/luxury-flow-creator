@@ -39,7 +39,7 @@ export const getMyPartnerStatus = createServerFn({ method: "GET" })
 export type ProvisionResult = {
   designation: string | null;
   displayName: string | null;
-  /** Plain-English list of what was made ready, in the order Frassy narrates it. */
+  /** Everyday-language list of what was made ready, in the order Frassy narrates it. */
   provisioned: { key: string; label: string; detail: string; created: boolean }[];
 };
 
@@ -127,7 +127,7 @@ export const provisionFrassHill = createServerFn({ method: "POST" })
       key: "kicks-profile",
       label: "Your FrassKicks customer profile",
       detail:
-        "Your shopping identity uses this same account for saved fits and orders. In plain English: one key opens both Frass Hill and the store.",
+        "Your shopping identity uses this same account for saved fits and orders. Here's what this means: one key opens both Frass Hill and the store.",
       created: !profile,
     });
 
@@ -144,7 +144,7 @@ export const provisionFrassHill = createServerFn({ method: "POST" })
       key: "card",
       label: "Your Frass Card",
       detail:
-        "One permanent identity page that is yours for life. In plain English: it's your address on the Hill — people can find you, pay you, and follow your work from it.",
+        "One permanent identity page that is yours for life. Here's the idea: it's your address on the Hill — people can find you, pay you, and follow your work from it.",
       created: !card,
     });
 
@@ -157,7 +157,7 @@ export const provisionFrassHill = createServerFn({ method: "POST" })
       key: "vault",
       label: "Your Builder Vault",
       detail:
-        "A private place to keep everything you make. In plain English: a drawer that never loses anything, and nobody else can open it.",
+        "A private place to keep everything you make. Here's how it works: a drawer that never loses anything, and nobody else can open it.",
       created: (count ?? 0) === 0,
     });
 
@@ -166,7 +166,7 @@ export const provisionFrassHill = createServerFn({ method: "POST" })
       key: "daily",
       label: "Your Daily",
       detail:
-        "A short, honest plan each morning. In plain English: instead of a hundred things, you get the few that actually move you forward today.",
+        "A short, honest plan each morning. Let's break it down: instead of a hundred things, you get the few that actually move you forward today.",
       created: true,
     });
 

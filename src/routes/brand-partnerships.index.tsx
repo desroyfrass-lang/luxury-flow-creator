@@ -90,7 +90,7 @@ function BrandPartnershipsPage() {
             </h1>
             <p className="mt-6 max-w-3xl text-base leading-relaxed text-white/70">{BP_PRINCIPLE}</p>
             <p className="mt-3 max-w-3xl text-sm text-white/45">
-              <strong className="text-white/70">What this means in plain English:</strong> think of a
+              <strong className="text-white/70">Let's break it down:</strong> think of a
               talent agency, a production house, an accountant and a job board living in one building.
               A brand puts money on the table, you make the work, Frass makes sure everybody keeps
               their word and gets paid.
@@ -488,7 +488,7 @@ function HowTab() {
           <Wallet className="h-5 w-5 text-amber-300" /> Money held safely until the work is approved
         </h2>
         <p className="mt-2 max-w-3xl text-sm text-white/60">
-          <strong className="text-white/80">Plain English:</strong> escrow is a locked drawer. The brand
+          <strong className="text-white/80">Here's the practical version:</strong> escrow is a locked drawer. The brand
           puts the money in before you start, so the funds are proven to exist. Nobody can take it out
           until the brand approves your work — then it opens automatically.
         </p>
@@ -560,7 +560,7 @@ function RevenueTab() {
         ))}
       </div>
       <p className="mt-8 max-w-3xl text-sm text-white/45">
-        <strong className="text-white/70">Plain English:</strong> Frass never earns in the dark. If a
+        <strong className="text-white/70">Here's the takeaway:</strong> Frass never earns in the dark. If a
         percentage is taken, it is printed on the receipt both sides can read.
       </p>
     </section>

@@ -56,7 +56,7 @@ export function FinancialAuditDashboard() {
             Every order, payment request and receipt in one ledger, with the event history behind it
             and whether the numbers reconcile.{" "}
             <span className="text-foreground/80">
-              What this means in plain English: this is the accountant's binder — photocopies of
+              Here's how it works: this is the accountant's binder — photocopies of
               records that can never be edited, with a note beside each one saying whether it adds up.
             </span>
           </p>

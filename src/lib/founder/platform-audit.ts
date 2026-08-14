@@ -2,7 +2,7 @@
 // FRASS-0524 — Founder Guided Platform Audit.
 // "Every Page. Every Feature. Every Promise."
 //
-// Plain English: the Founder says "Frassy, let's audit Frass" and the two of
+// Here's what this means: the Founder says "Frassy, let's audit Frass" and the two of
 // them walk the platform together, one page at a time — does it work, what does
 // it do, what does it cost, and does it still keep the promises we made? This
 // is not a separate app; it extends Founder Mode and Frassy.
@@ -43,7 +43,7 @@ export const AUDIT_PAGES: AuditPage[] = [
     promises: ["Free to build", "Simplicity", "Accessibility", "No surprise charges"],
     features: [
       { name: "Start My Journey", status: "active", memberCost: "free", plain: "One prominent button into onboarding." },
-      { name: "The Frass Promise", status: "active", memberCost: "free", plain: "What we commit to, in plain English." },
+      { name: "The Frass Promise", status: "active", memberCost: "free", plain: "What we commit to, in everyday language." },
       { name: "Visitor agreement", status: "active", memberCost: "free", plain: "Level 1 agreement before anything is stored." },
       { name: "Frassy greeting", status: "active", costId: "frassy-voice", memberCost: "free", plain: "She speaks only once the page is genuinely ready." },
     ],
@@ -56,7 +56,7 @@ export const AUDIT_PAGES: AuditPage[] = [
     promises: ["Free to build", "Build before monetize", "Simplicity"],
     features: [
       { name: "Discovery Interview", status: "active", costId: "frassy-conversation", memberCost: "free", plain: "Frassy finds the business already inside the person." },
-      { name: "Builder agreement", status: "active", memberCost: "free", plain: "Level 2 agreement, plain English first." },
+      { name: "Builder agreement", status: "active", memberCost: "free", plain: "Level 2 agreement, everyday language first." },
       { name: "Blueprint assignment", status: "active", memberCost: "free", plain: "Entrepreneurial or knowledge-economy Daily." },
     ],
   },
@@ -129,7 +129,7 @@ export const AUDIT_PAGES: AuditPage[] = [
     purpose: "Every dollar traceable, explainable and auditable.",
     promises: ["Transparent pricing", "No surprise charges", "No hidden costs"],
     features: [
-      { name: "Financial timeline", status: "active", memberCost: "free", plain: "Plain-English receipts, immutable once written." },
+      { name: "Financial timeline", status: "active", memberCost: "free", plain: "Everyday-language receipts, immutable once written." },
       { name: "Credit balance", status: "active", memberCost: "free", plain: "What's left, what it costs, how to earn more." },
       { name: "Payment requests", status: "active", memberCost: "free", plain: "The customer always pays on their own trusted device." },
       { name: "Tax & tariff intelligence", status: "active", memberCost: "free", plain: "Records and configured rules, clearly labelled — never invented advice." },

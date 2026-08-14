@@ -1,6 +1,6 @@
 // ─────────────────────────────────────────────────────────────────────────────
 // FRASS-0499 — the Welcome Hall agreement moment.
-// Plain English first, the full text one tap away, then one honest acceptance.
+// everyday language first, the full text one tap away, then one honest acceptance.
 // One component for both levels — there is no second agreement system.
 // ─────────────────────────────────────────────────────────────────────────────
 
@@ -75,7 +75,7 @@ export function AgreementGate({
         onClick={() => setOpen((o) => !o)}
         className="mt-4 text-xs underline text-muted-foreground"
       >
-        {open ? "Hide the plain-English summary" : "Read the plain-English summary"}
+        {open ? "Hide the everyday-language summary" : "Read the everyday-language summary"}
       </button>
 
       {open && (
@@ -141,7 +141,7 @@ export function AgreementGate({
         </p>
       )}
       <p className="mt-3 text-xs text-muted-foreground">
-        In plain English: you can reopen this any time to see exactly what you agreed to and when. If we
+        Here's what this means: you can reopen this any time to see exactly what you agreed to and when. If we
         change something important, I'll bring it back to you before you carry on.
       </p>
     </section>

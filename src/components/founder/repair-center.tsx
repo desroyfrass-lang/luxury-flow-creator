@@ -62,7 +62,7 @@ export function RepairCenter() {
             <Wrench className="h-5 w-5" /> Repair Center
           </h2>
           <p className="mt-1 text-sm text-white/50">
-            What this means in plain English: Frassy is the first person on the scene when something
+            Here's the practical version: Frassy is the first person on the scene when something
             breaks. She fixes what's safe, and writes the engineering ticket when it isn't.
           </p>
         </div>

@@ -6,7 +6,7 @@
 //
 // This module is pure logic: given the current deployment and the signals the
 // Founder Security Center already collects (health checks, security events,
-// worker/API/console errors), it answers one question in plain English —
+// worker/API/console errors), it answers one question in everyday language —
 // 🟢 Stable · 🟡 Monitoring · 🔴 Action Required.
 // ─────────────────────────────────────────────────────────────────────────────
 

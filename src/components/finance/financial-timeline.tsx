@@ -58,7 +58,7 @@ export function ReceiptDetail({ receipt }: { receipt: Receipt }) {
       </dl>
 
       <p className="mt-3 text-xs leading-relaxed text-muted-foreground">
-        <strong>What this means in plain English:</strong> {explainReceipt(receipt)}
+        <strong>Here's the practical version:</strong> {explainReceipt(receipt)}
       </p>
       <p className="mt-2 text-[11px] text-muted-foreground/80">
         Receipt {receipt.id} · {new Date(receipt.occurredAt).toLocaleString()} ·{" "}

@@ -62,7 +62,7 @@ async function analyse(transcript: string, key: string): Promise<Analysis> {
           role: "system",
           content:
             "You triage launch feedback for the Frass platform. Reply with JSON only: " +
-            '{"summary": "one or two plain-English sentences", "themes": ["short topic tags"], ' +
+            '{"summary": "one or two everyday-language sentences", "themes": ["short topic tags"], ' +
             '"sentiment": "positive|neutral|negative|mixed", ' +
             '"category": "feature|bug|general|experience|performance|idea|compliment|other"}',
         },

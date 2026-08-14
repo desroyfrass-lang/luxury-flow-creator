@@ -56,7 +56,7 @@ export function CreationOpportunities({
                   <p className="text-white/75">{p.what}</p>
                   <p className="text-white/55">
                     <span className="text-[color:var(--gold)]/80">
-                      What this means in plain English:{" "}
+                      Here's the idea:{" "}
                     </span>
                     {p.plain}
                   </p>

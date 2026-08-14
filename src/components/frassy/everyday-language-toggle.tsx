@@ -1,10 +1,10 @@
-// FRASS-0544 — Technical Version / Explain Like I'm New.
+// FRASS-0544 — Technical Version / Guided Walkthrough.
 // FRASS-0545 — Adaptive Learning Levels: the same answer at four depths.
 //
 // Nobody has to admit they didn't follow.
 
 import { useState } from "react";
-import { hasTechnicalLanguage, splitPlainEnglish } from "@/lib/frassy/plain-english";
+import { hasTechnicalLanguage, splitPlainEnglish } from "@/lib/frassy/everyday-language";
 import { LearningLevelPicker } from "@/components/frassy/learning-level-picker";
 import { useLearningLevel } from "@/hooks/use-learning-level";
 import { levelMeta, recommendLevel, type LearningLevel } from "@/lib/frassy/learning-levels";
@@ -60,14 +60,14 @@ export function PlainEnglishMessage({
                 : "border-white/15 text-white/50 hover:text-white/80"
             }`}
           >
-            Explain like I&apos;m new
+            Guided walkthrough
           </button>
         </div>
       )}
 
       {offer && mode === "plain" && !plain && (
         <p className="mt-1.5 text-[10px] text-white/40">
-          Ask Frassy “explain that in plain English” for the everyday version.
+          Ask Frassy “break that down for me” for the guided version.
         </p>
       )}
 

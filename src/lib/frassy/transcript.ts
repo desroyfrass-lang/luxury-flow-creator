@@ -5,7 +5,7 @@
 // single shared transcript every Frassy surface reads from and writes to, so a
 // refresh or a change of district picks up exactly where the member left off.
 //
-// Plain English: it's Frassy's short-term memory of *this visit*, kept in one
+// Here's the practical version: it's Frassy's short-term memory of *this visit*, kept in one
 // place instead of one copy per page.
 // ─────────────────────────────────────────────────────────────────────────────
 

@@ -9,7 +9,7 @@
 // link, welcome link, QR code, commerce link and creator link. It never changes,
 // even as the member grows.
 //
-// What that means in plain English: it is a street address for a person. The
+// What that means in everyday language: it is a street address for a person. The
 // house can be repainted, extended, or turned into a shop — the address on the
 // gate stays the same, so anyone who ever wrote it down can still find you.
 // ─────────────────────────────────────────────────────────────────────────────

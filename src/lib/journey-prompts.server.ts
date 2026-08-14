@@ -115,7 +115,7 @@ Purpose: ${stage.purpose}
 Platform decisions to settle here:
 ${stage.objectives.map((objective) => `- ${objective}`).join("\n")}
 
-Ask only about the platform decision in this step. Frass OS, FrassKicks, Nicky, and the Founder / Owner / Operator role are immutable facts, not topics to discover or reconfirm. Give one concrete configuration recommendation with reasoning, report relevant readiness when useful, then ask at most one approval or configuration question. Use short paragraphs and plain English.
+Ask only about the platform decision in this step. Frass OS, FrassKicks, Nicky, and the Founder / Owner / Operator role are immutable facts, not topics to discover or reconfirm. Give one concrete configuration recommendation with reasoning, report relevant readiness when useful, then ask at most one approval or configuration question. Use short paragraphs and everyday language.
 
 Good Founder questions include:
 • How should Frassy greet every new Builder?

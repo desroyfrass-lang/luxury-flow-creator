@@ -67,7 +67,7 @@ export type TaxCategory = {
   id: string;
   label: string;
   flow: TaxFlow;
-  /** Plain-English description shown to the member. */
+  /** Everyday-language description shown to the member. */
   plain: string;
   /** Receipt kinds that map here automatically. */
   kinds: string[];

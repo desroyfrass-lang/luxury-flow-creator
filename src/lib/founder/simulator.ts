@@ -57,7 +57,7 @@ export const PERSONAS: Persona[] = [
     behaviour: [
       "Prefers Simplified View.",
       "Moves slowly; one action at a time.",
-      "Needs plain English and an analogy for every term.",
+      "Needs everyday language and an analogy for every term.",
     ],
     destination: "/room",
     required: true,
@@ -327,6 +327,53 @@ export function saveSimulation(state: SimulationState | null) {
 export function simulatingNewMember(): boolean {
   const sim = loadSimulation();
   return Boolean(sim && sim.freshMember !== false && sim.personaId !== "founder");
+}
+
+/**
+ * FRASS-0562 — where the Founder currently stands in the walkthrough.
+ * Matches the live path against the testing sequence so the Simulation Bar can
+ * always answer "am I supposed to be here?" without the Founder guessing.
+ */
+export function simulationProgress(pathname: string): {
+  index: number;
+  total: number;
+  current: (typeof TESTING_SEQUENCE)[number] | null;
+  next: (typeof TESTING_SEQUENCE)[number] | null;
+} {
+  const total = TESTING_SEQUENCE.length;
+  let index = -1;
+  let best = -1;
+  TESTING_SEQUENCE.forEach((step, i) => {
+    const exact = step.path === pathname;
+    const nested = step.path !== "/" && pathname.startsWith(step.path);
+    if ((exact || nested) && step.path.length > best) {
+      best = step.path.length;
+      index = i;
+    }
+  });
+  return {
+    index,
+    total,
+    current: index >= 0 ? TESTING_SEQUENCE[index] : null,
+    next: index >= 0 ? (TESTING_SEQUENCE[index + 1] ?? null) : TESTING_SEQUENCE[0],
+  };
+}
+
+/**
+ * FRASS-0562 — Restart, not Exit. Fix a bug, run the exact same journey again
+ * in one click: member-shaped state is cleared, the persona stays.
+ */
+export function restartSimulation(): SimulationState | null {
+  const sim = loadSimulation();
+  if (!sim) return null;
+  resetSimulationState();
+  const fresh: SimulationState = {
+    ...sim,
+    startedAt: new Date().toISOString(),
+    stage: TESTING_SEQUENCE[0].id,
+  };
+  saveSimulation(fresh);
+  return fresh;
 }
 
 /** Ends the simulation immediately and returns the Founder to full privileges. */

@@ -64,7 +64,7 @@ export type RecommendationKind =
 export type Recommendation = {
   id: string;
   kind: RecommendationKind;
-  /** Plain English, written for the Founder, not for an engineer. */
+  /** everyday language, written for the Founder, not for an engineer. */
   title: string;
   why: string;
   /** What we would actually do. */

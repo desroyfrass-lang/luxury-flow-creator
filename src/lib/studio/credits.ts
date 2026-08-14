@@ -17,7 +17,7 @@ export type CreditUnit = "second" | "minute" | "image" | "job" | "1k-chars";
 export type StudioOperation = {
   key: string;
   label: string;
-  /** Plain-English description shown in the forecast. */
+  /** Everyday-language description shown in the forecast. */
   what: string;
   group: "generation" | "editing" | "audio" | "language" | "delivery" | "intelligence";
   unit: CreditUnit;

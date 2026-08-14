@@ -68,7 +68,7 @@ export function TrustCenter() {
         </div>
         <p className="mt-2 text-sm">{FRAUD_POSTURE}</p>
         <p className={`mt-2 ${dim}`}>
-          <strong>What this means in plain English:</strong> we don't promise a lock that can never be
+          <strong>Here's how it works:</strong> we don't promise a lock that can never be
           picked. We build the door so it's hard to force, wire an alarm to it, and keep a spare key
           with someone who answers the phone.
         </p>

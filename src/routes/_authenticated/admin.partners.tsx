@@ -130,7 +130,7 @@ function AdminPartners() {
           />
           <div className="sm:col-span-2">
             <p className="mb-4 text-xs leading-relaxed text-muted-foreground">
-              <span className="text-[color:var(--gold)]">In plain English: </span>
+              <span className="text-[color:var(--gold)]">Here's what this means: </span>
               {designationMeta(designation)?.plainEnglish}
             </p>
             <button

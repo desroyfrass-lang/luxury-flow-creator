@@ -144,7 +144,7 @@ function KidsValleyPage() {
         </section>
 
         <p className="mt-14 max-w-2xl text-sm leading-relaxed text-muted-foreground">
-          <strong className="text-foreground">What this means in plain English:</strong> think of a
+          <strong className="text-foreground">Here's the takeaway:</strong> think of a
           school with its own driveway instead of a door onto a busy market street. Children arrive
           somewhere quiet and age-appropriate, and only step into the wider town when they're old
           enough for it.

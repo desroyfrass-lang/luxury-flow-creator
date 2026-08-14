@@ -74,7 +74,7 @@ export function PlatformProtectionSwitch() {
             {isLoading ? "Checking the switch…" : protectionHeadline(data ?? { active: false, paused: [], updatedAt: null })}
           </p>
           <p className="mt-2 max-w-xl text-xs text-muted-foreground/80">
-            <strong>What this means in plain English:</strong> it's the shop shutter. The lights stay
+            <strong>Let's break it down:</strong> it's the shop shutter. The lights stay
             on and people can still look around — but nothing is sold, joined, paid or withdrawn
             until you lift it again.
           </p>

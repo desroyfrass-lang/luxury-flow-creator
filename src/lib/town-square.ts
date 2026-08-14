@@ -29,7 +29,7 @@ export type PresenceLens = {
   id: PresenceKind | "all";
   label: string;
   glyph: string;
-  /** One plain-English line: what stands here. */
+  /** One everyday-language line: what stands here. */
   blurb: string;
 };
 

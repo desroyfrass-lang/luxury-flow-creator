@@ -57,7 +57,7 @@ import {
   readBalanceSignals,
 } from "@/lib/frassy/balance-signals";
 import { loadMomentum, momentumContext, readMomentum } from "@/lib/frassy/momentum";
-import { PlainEnglishMessage } from "@/components/frassy/plain-english-toggle";
+import { PlainEnglishMessage } from "@/components/frassy/everyday-language-toggle";
 import { useLearningLevel } from "@/hooks/use-learning-level";
 import { learningLevelContext, levelMeta, type LearningLevel } from "@/lib/frassy/learning-levels";
 
