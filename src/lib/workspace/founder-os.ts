@@ -37,7 +37,7 @@ export const FOUNDER_TABS: FounderTab[] = [
   { id: "today", label: "Today's Daily", icon: "☀", blurb: "What needs you today, in order." },
   { id: "continue", label: "Continue Working", icon: "▶", blurb: "Pick up exactly where you stopped." },
   { id: "goals", label: "Goals & Vision", icon: "🎯", blurb: "Where this is all going." },
-  { id: "command", label: "Founder Command Center", icon: "⌘", blurb: "Run the platform's control surfaces." },
+  { id: "command", label: "Founder Control Room", icon: "⌘", blurb: "Run the platform's control surfaces." },
   { id: "approvals", label: "Pending Approvals", icon: "✔", blurb: "Things waiting on your word." },
   { id: "opportunities", label: "Opportunities", icon: "✦", blurb: "What's worth your attention next." },
   { id: "feedback", label: "Launch Feedback", icon: "💬", blurb: "What people are telling us." },

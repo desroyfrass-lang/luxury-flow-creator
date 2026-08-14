@@ -156,7 +156,7 @@ export const constitutionHealthTool = tool({
       if (!a) return { error: `No registered amendment ${ref}.`, known: AMENDMENTS.map((x) => x.ref) };
       return {
         amendment: a,
-        note: "Live before/after incident counts are shown in the Founder Command Center under Innovation.",
+        note: "Live before/after incident counts are shown in the Founder Control Room under Innovation.",
       };
     }
     return {

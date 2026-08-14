@@ -44,7 +44,7 @@ export const BRIEFING_ORDER: { id: string; title: string; note: string; href?: s
   { id: "continue-working", title: "Continue Working", note: "Exactly where you stopped." },
   { id: "fv-studios", title: "FV Studios", note: "Creative work in production.", href: "/studio" },
   { id: "launch-feedback", title: "Launch Feedback", note: "What members told us today." },
-  { id: "founder-command", title: "Founder Command Center", note: "The executive view." },
+  { id: "founder-command", title: "Founder Control Room", note: "The executive view." },
   { id: "daily-performance", title: "Daily Performance", note: "How the day actually went." },
   { id: "goals", title: "Goals & Vision Map", note: "Distance to each goal." },
   { id: "opportunities", title: "Opportunities", note: "What I don't want you to miss." },

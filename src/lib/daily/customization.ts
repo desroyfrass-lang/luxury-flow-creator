@@ -130,7 +130,7 @@ export const DAILY_SECTIONS: SectionMeta[] = [
   },
   {
     id: "founder-command",
-    label: "Founder Command Center",
+    label: "Founder Control Room",
     plain: "The executive view of the whole platform.",
     aliases: ["founder", "command center", "executive"],
   },

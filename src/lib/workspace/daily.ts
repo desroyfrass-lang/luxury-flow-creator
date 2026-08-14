@@ -1,5 +1,5 @@
 // ─────────────────────────────────────────────────────────────────────────────
-// FRASS MASTER REGISTRY — The Frass Daily (Universal Daily Command Center)
+// FRASS MASTER REGISTRY — The Frass Daily (Universal Daily Control Room)
 //
 // One Daily across the entire ecosystem. Content adapts to the Builder's roles,
 // projects and active work; the framework never changes.

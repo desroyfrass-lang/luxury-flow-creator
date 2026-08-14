@@ -65,7 +65,7 @@ export const SECURITY_REGRESSIONS: RegressionTest[] = [
     testCase:
       "Send a chat request with a Founder flag and no verified admin session.",
     expected: "Treated as an ordinary visitor. No Founder tools, no Founder personality.",
-    affects: ["Frassy chat", "Founder Command Center", "Construction Mode", "Blueprint Mode"],
+    affects: ["Frassy chat", "Founder Control Room", "Construction Mode", "Blueprint Mode"],
     enforcedIn: ["src/routes/api/chat.ts", "src/lib/frassy-tools.server.ts"],
     fixedOn: "2026-08-12",
   },
@@ -157,7 +157,7 @@ export const SECURITY_REGRESSIONS: RegressionTest[] = [
       "Roles live only in public.user_roles and are checked through the security-definer has_role function.",
     testCase: "Set an admin flag in browser storage and reload a Founder route.",
     expected: "Access denied. The server does not read that flag.",
-    affects: ["Admin routes", "Founder Command Center", "Role management"],
+    affects: ["Admin routes", "Founder Control Room", "Role management"],
     enforcedIn: ["public.has_role", "src/hooks/use-is-admin.ts (display only)"],
     fixedOn: "2026-08-12",
   },

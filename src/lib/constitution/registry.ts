@@ -195,7 +195,7 @@ export const AMENDMENTS: Amendment[] = [
   },
   {
     ref: "FRASS-0525",
-    title: "Founder Command Center",
+    title: "Founder Control Room",
     intent: "One operational headquarters instead of Founder tools scattered across the platform.",
     targetProblem: "The Founder hunting for his own instruments.",
     areas: ["Founder Console"],

@@ -113,7 +113,7 @@ function LaunchFeedbackCenter() {
           Platform health, repairs, intelligence, security, design authority and the Change Advisor
           now live together in the{" "}
           <Link to="/control-room" className="underline text-[color:var(--gold)]">
-            Founder Command Center
+            Founder Control Room
           </Link>
           .
         </p>

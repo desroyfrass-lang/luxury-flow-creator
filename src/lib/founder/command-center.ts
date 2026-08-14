@@ -1,4 +1,4 @@
-// FRASS-0525 — Founder Command Center.
+// FRASS-0525 — Founder Control Room.
 //
 // The Founder's instruments were scattered across the platform: some on the
 // launch feedback page, some under admin, some inside the Daily. This registry
