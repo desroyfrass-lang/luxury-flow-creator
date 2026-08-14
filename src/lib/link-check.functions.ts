@@ -185,7 +185,19 @@ export const runLinkCheck = createServerFn({ method: "POST" })
     const results = await mapLimit(links, 6, async (url): Promise<LinkCheckResult> => {
       const external = !url.startsWith(origin);
       const foundOn = [...(found.get(url) ?? [])].slice(0, 5);
+      if (isBlockedHost(new URL(url).hostname)) {
+        return {
+          url,
+          status: null,
+          ok: false,
+          redirectedTo: null,
+          external,
+          error: "Blocked: private or internal network address (FRASS-0566)",
+          foundOn,
+        };
+      }
       try {
+
         const res = await fetch(url, {
           method: external ? "HEAD" : "GET",
           redirect: "manual",
