@@ -67,7 +67,7 @@ Every Business Vault runs three stages — Earn → Scale → Legacy (FRASS-0533
 Creative series are intellectual property produced by Frassy from a Blueprint, never hardcoded into a Daily (FRASS-0533).
 
 ## Memories
-- [SPEC-BLUEPRINT-001 Builder OS](mem://features/spec-blueprint-001-builder-os) — Daily vs Workshop rule, Money Move lifecycle with nested Fast Tracks, adaptive Workshop environments, Vault Priority, Builder Rhythm, glossary
+- [SPEC-BLUEPRINT-001-FROZEN-v1.0 Builder Operating System](mem://features/spec-blueprint-001-builder-os) — FROZEN v1.0: Daily vs Workshop, Money Move lifecycle with nested Fast Tracks, adaptive Workshop environments, Vault Priority, Builder Rhythm, glossary, Simplified mode, Out of Scope boundaries, Founder Walkthrough checklist
 - [FRASS-0569 Welcome Hall Experience](mem://features/frass-0569-welcome-hall-experience) — Mandatory Frass Hill front entrance, three experiences, four Daily Welcome tiers
 - [FRASS-0477 Frassy Presence](mem://features/frass-0477-frassy-presence) — Arrival/returning/working/idle etiquette, Focus Mode silence, cloud→device→text voice hierarchy with indicator
 - [The Daily philosophy FRASS-0425](mem://features/frass-0425-daily-philosophy) — Daily's constitutional purpose + Morning Briefing, End of Day, time estimates, Focus Mode, consistency, health, Close My Day
