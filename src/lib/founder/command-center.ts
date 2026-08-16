@@ -43,6 +43,22 @@ export type CommandSection = {
 
 export const COMMAND_SECTIONS: CommandSection[] = [
   {
+    id: "world-teleporter",
+    icon: "\u{1F5FA}\uFE0F",
+    label: "World Teleporter",
+    purpose:
+      "Every page that exists in Frass, whether it can be reached, and a one-tap door into each. Inspection only \u2014 nothing here changes the application.",
+    tools: [
+      {
+        id: "world-teleporter",
+        label: "World Teleporter",
+        plain: "See live pages, built-but-unlinked pages and legacy doors, then visit any of them.",
+        kind: "panel",
+        amendment: "FRASS-0570",
+      },
+    ],
+  },
+  {
     id: "home",
     icon: "🏠",
     label: "Home",
@@ -385,22 +401,6 @@ export const COMMAND_SECTIONS: CommandSection[] = [
         plain: "Every receipt, ledger and payout in one audited place.",
         kind: "link",
         path: "/financial-center",
-      },
-    ],
-  },
-  {
-    id: "world-teleporter",
-    icon: "\u{1F5FA}\uFE0F",
-    label: "World Teleporter",
-    purpose:
-      "Every page that exists in Frass, whether it can be reached, and a one-tap door into each. Inspection only \u2014 nothing here changes the application.",
-    tools: [
-      {
-        id: "world-teleporter",
-        label: "World Teleporter",
-        plain: "See live pages, built-but-unlinked pages and legacy doors, then visit any of them.",
-        kind: "panel",
-        amendment: "FRASS-0570",
       },
     ],
   },
