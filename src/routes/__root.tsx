@@ -19,6 +19,7 @@ import { FrassyConversationDock } from "@/components/voice/frassy-conversation-d
 import { FounderPreviewReset } from "@/components/founder/preview-reset";
 import { SimulationModeBar } from "@/components/founder/simulation-mode-bar";
 import { FrassyChat } from "@/components/frassy-chat";
+import { TeleportReturnChip } from "@/components/founder/teleport-return-chip";
 import { frassySurface } from "@/lib/frassy/surfaces";
 import { FrassyHost } from "@/components/frassy-host";
 import { DailyGate } from "@/components/workspace/daily-gate";
@@ -161,6 +162,8 @@ function RootComponent() {
         {/* FRASS-0553 — one dock, one place, every conversation. */}
         <FrassyConversationDock />
         <VoiceStateOverlay />
+        {/* FRASS-0570 — the way back from a Founder inspection trip. */}
+        <TeleportReturnChip />
       </ViewModeProvider>
     </QueryClientProvider>
   );
