@@ -192,3 +192,4 @@ Creative series are intellectual property produced by Frassy from a Blueprint, n
 - [FRASS-0565 Public Data Boundary & Zero-Trust Privacy](mem://features/frass-0565-public-data-boundary) — Private by default, public views only, expanded FRASS-0531 regression checks blocking Release Approval
 - [FRASS-0566 Protected Contact Boundary](mem://features/frass-0566-protected-contact-boundary) — Public profiles never show email/phone/private contact; secure Contact Builder flow; galleries, commission requests, link checker hardened
 - [FRASS-0568 Founder Control Room](mem://features/frass-0568-founder-control-room) — Unified Founder headquarters, migrated legacy Control Room tools, redirects, retired "Command Center" wording
+- [FRASS-0570 World Teleporter](mem://features/frass-0570-world-teleporter) — Founder-only read-only route inspection tab in the Control Room, teleport + return chip
