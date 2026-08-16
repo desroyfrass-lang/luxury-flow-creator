@@ -1,7 +1,7 @@
 // FRASS-0570 — World Teleporter registry (read-only architectural survey).
 //
-// Generated from the real route tree and a source-wide link scan. Inspection
-// only: nothing here changes the application. Regenerate when routes change.
+// Generated from the real route tree plus a source-wide navigation-link scan.
+// Inspection only: nothing here changes the application.
 
 export type WorldStatus = "live" | "built" | "legacy" | "unknown";
 
@@ -12,7 +12,7 @@ export type WorldRoute = {
   file: string;
   district: string;
   status: WorldStatus;
-  /** How many other source files link to this route. -1 = dynamic route. */
+  /** How many source files link to this route. -1 = dynamic route. */
   refs: number;
   redirect: boolean;
 };
@@ -20,23 +20,23 @@ export type WorldRoute = {
 export const WORLD_ROUTES: WorldRoute[] = [
   {
     "path": "/",
+    "title": "Welcome to Frass \u2014 Shop Frass or Enter Frass Hill",
+    "component": "EntrancePage",
+    "file": "index.tsx",
+    "district": "Arrival & Welcome",
+    "status": "live",
+    "refs": 51,
+    "redirect": false
+  },
+  {
+    "path": "/",
     "title": "",
     "component": "",
     "file": "_authenticated/route.tsx",
     "district": "Arrival & Welcome",
     "status": "legacy",
-    "refs": 62,
+    "refs": 51,
     "redirect": true
-  },
-  {
-    "path": "/",
-    "title": "Welcome to Frass — Shop Frass or Enter Frass Hill",
-    "component": "EntrancePage",
-    "file": "index.tsx",
-    "district": "Arrival & Welcome",
-    "status": "live",
-    "refs": 61,
-    "redirect": false
   },
   {
     "path": "/.well-known/oauth-protected-resource",
@@ -44,18 +44,18 @@ export const WORLD_ROUTES: WorldRoute[] = [
     "component": "",
     "file": "[.well-known]/oauth-protected-resource.ts",
     "district": "Frass District",
-    "status": "live",
-    "refs": 3,
+    "status": "built",
+    "refs": 0,
     "redirect": false
   },
   {
     "path": "/academy",
-    "title": "Academy District — Frass Operating System",
+    "title": "Academy District \u2014 Frass Operating System",
     "component": "AcademyPage",
     "file": "_authenticated/academy.tsx",
     "district": "Frass Hill",
     "status": "live",
-    "refs": 16,
+    "refs": 14,
     "redirect": false
   },
   {
@@ -65,7 +65,7 @@ export const WORLD_ROUTES: WorldRoute[] = [
     "file": "_authenticated/admin.index.tsx",
     "district": "Founder Hall",
     "status": "legacy",
-    "refs": 11,
+    "refs": 9,
     "redirect": true
   },
   {
@@ -75,7 +75,7 @@ export const WORLD_ROUTES: WorldRoute[] = [
     "file": "_authenticated/admin.tsx",
     "district": "Founder Hall",
     "status": "live",
-    "refs": 11,
+    "refs": 9,
     "redirect": false
   },
   {
@@ -90,7 +90,7 @@ export const WORLD_ROUTES: WorldRoute[] = [
   },
   {
     "path": "/admin/affiliate-policy",
-    "title": "Affiliate Governance — Frass Founder Controls",
+    "title": "Affiliate Governance \u2014 Frass Founder Controls",
     "component": "AffiliatePolicyPage",
     "file": "_authenticated/admin.affiliate-policy.tsx",
     "district": "Founder Hall",
@@ -100,7 +100,7 @@ export const WORLD_ROUTES: WorldRoute[] = [
   },
   {
     "path": "/admin/ai-credits",
-    "title": "AI Credit Center — Frass Founder Controls",
+    "title": "AI Credit Center \u2014 Frass Founder Controls",
     "component": "CreditCenter",
     "file": "_authenticated/admin.ai-credits.tsx",
     "district": "Founder Hall",
@@ -110,7 +110,7 @@ export const WORLD_ROUTES: WorldRoute[] = [
   },
   {
     "path": "/admin/approvals",
-    "title": "Approval Queue — Frass Hill Admin",
+    "title": "Approval Queue \u2014 Frass Hill Admin",
     "component": "ApprovalsPage",
     "file": "_authenticated/admin.approvals.tsx",
     "district": "Founder Hall",
@@ -125,7 +125,7 @@ export const WORLD_ROUTES: WorldRoute[] = [
     "file": "_authenticated/admin.audit.tsx",
     "district": "Founder Hall",
     "status": "live",
-    "refs": 2,
+    "refs": 1,
     "redirect": false
   },
   {
@@ -135,7 +135,7 @@ export const WORLD_ROUTES: WorldRoute[] = [
     "file": "_authenticated/admin.blog.tsx",
     "district": "Founder Hall",
     "status": "live",
-    "refs": 3,
+    "refs": 2,
     "redirect": false
   },
   {
@@ -145,7 +145,7 @@ export const WORLD_ROUTES: WorldRoute[] = [
     "file": "_authenticated/admin.capsules.tsx",
     "district": "Founder Hall",
     "status": "live",
-    "refs": 3,
+    "refs": 2,
     "redirect": false
   },
   {
@@ -155,7 +155,7 @@ export const WORLD_ROUTES: WorldRoute[] = [
     "file": "_authenticated/admin.cj-import.tsx",
     "district": "Founder Hall",
     "status": "live",
-    "refs": 3,
+    "refs": 2,
     "redirect": false
   },
   {
@@ -175,7 +175,7 @@ export const WORLD_ROUTES: WorldRoute[] = [
     "file": "_authenticated/admin.financial-audit.tsx",
     "district": "Founder Hall",
     "status": "live",
-    "refs": 3,
+    "refs": 2,
     "redirect": false
   },
   {
@@ -185,7 +185,7 @@ export const WORLD_ROUTES: WorldRoute[] = [
     "file": "_authenticated/admin.images.tsx",
     "district": "Founder Hall",
     "status": "live",
-    "refs": 6,
+    "refs": 5,
     "redirect": false
   },
   {
@@ -195,12 +195,12 @@ export const WORLD_ROUTES: WorldRoute[] = [
     "file": "_authenticated/admin.launch-feedback.tsx",
     "district": "Founder Hall",
     "status": "live",
-    "refs": 5,
+    "refs": 4,
     "redirect": false
   },
   {
     "path": "/admin/launch-partners",
-    "title": "Partner Launch Progress — Frass Founder Desk",
+    "title": "Partner Launch Progress \u2014 Frass Founder Desk",
     "component": "PartnerOversightPage",
     "file": "_authenticated/admin.launch-partners.tsx",
     "district": "Founder Hall",
@@ -275,7 +275,7 @@ export const WORLD_ROUTES: WorldRoute[] = [
     "file": "_authenticated/admin.text.tsx",
     "district": "Founder Hall",
     "status": "live",
-    "refs": 4,
+    "refs": 3,
     "redirect": false
   },
   {
@@ -285,7 +285,7 @@ export const WORLD_ROUTES: WorldRoute[] = [
     "file": "_authenticated/admin.virals.tsx",
     "district": "Founder Hall",
     "status": "live",
-    "refs": 3,
+    "refs": 2,
     "redirect": false
   },
   {
@@ -300,7 +300,7 @@ export const WORLD_ROUTES: WorldRoute[] = [
   },
   {
     "path": "/admin/voice",
-    "title": "Frassy Voice Studio — Frass Founder Controls",
+    "title": "Frassy Voice Studio \u2014 Frass Founder Controls",
     "component": "VoiceStudioPage",
     "file": "_authenticated/admin.voice.tsx",
     "district": "Founder Hall",
@@ -310,12 +310,12 @@ export const WORLD_ROUTES: WorldRoute[] = [
   },
   {
     "path": "/afro-designers",
-    "title": "Afro Designers — Where Culture Meets Luxury | Frass Kicks",
+    "title": "Afro Designers \u2014 Where Culture Meets Luxury | Frass Kicks",
     "component": "AfroLanding",
     "file": "afro-designers.index.tsx",
     "district": "Frass District",
     "status": "live",
-    "refs": 13,
+    "refs": 10,
     "redirect": false
   },
   {
@@ -325,12 +325,12 @@ export const WORLD_ROUTES: WorldRoute[] = [
     "file": "afro-designers.tsx",
     "district": "Frass District",
     "status": "live",
-    "refs": 12,
+    "refs": 10,
     "redirect": false
   },
   {
     "path": "/afro-designers/collections/$slug",
-    "title": "Collection not found — Afro Designers",
+    "title": "Collection not found \u2014 Afro Designers",
     "component": "RegionPage",
     "file": "afro-designers.collections.$slug.tsx",
     "district": "Frass District",
@@ -340,7 +340,7 @@ export const WORLD_ROUTES: WorldRoute[] = [
   },
   {
     "path": "/afro-designers/designers",
-    "title": "All Designers — Afro Designers | Frass Kicks",
+    "title": "All Designers \u2014 Afro Designers | Frass Kicks",
     "component": "DesignersIndex",
     "file": "afro-designers.designers.tsx",
     "district": "Frass District",
@@ -350,7 +350,7 @@ export const WORLD_ROUTES: WorldRoute[] = [
   },
   {
     "path": "/afro-designers/designers/$slug",
-    "title": "Designer not found — Afro Designers",
+    "title": "Designer not found \u2014 Afro Designers",
     "component": "DesignerProfile",
     "file": "afro-designers.designers.$slug.tsx",
     "district": "Frass District",
@@ -360,7 +360,7 @@ export const WORLD_ROUTES: WorldRoute[] = [
   },
   {
     "path": "/afro-designers/join",
-    "title": "Become a Designer — Afro Designers | Frass Kicks",
+    "title": "Become a Designer \u2014 Afro Designers | Frass Kicks",
     "component": "JoinPage",
     "file": "afro-designers.join.tsx",
     "district": "Frass District",
@@ -370,22 +370,22 @@ export const WORLD_ROUTES: WorldRoute[] = [
   },
   {
     "path": "/arrival",
-    "title": "The Arrival — Journey Into Frass Hill",
+    "title": "The Arrival \u2014 Journey Into Frass Hill",
     "component": "ArrivalPage",
     "file": "arrival.tsx",
     "district": "Arrival & Welcome",
-    "status": "live",
-    "refs": 3,
+    "status": "built",
+    "refs": 0,
     "redirect": false
   },
   {
     "path": "/auth",
-    "title": "Sign in — Frass",
+    "title": "Sign in \u2014 Frass",
     "component": "AuthPage",
     "file": "auth.tsx",
     "district": "Arrival & Welcome",
     "status": "live",
-    "refs": 19,
+    "refs": 15,
     "redirect": false
   },
   {
@@ -395,7 +395,7 @@ export const WORLD_ROUTES: WorldRoute[] = [
     "file": "bare-drip.index.tsx",
     "district": "Frass District",
     "status": "legacy",
-    "refs": 10,
+    "refs": 5,
     "redirect": true
   },
   {
@@ -405,7 +405,7 @@ export const WORLD_ROUTES: WorldRoute[] = [
     "file": "bare-drip.tsx",
     "district": "Frass District",
     "status": "live",
-    "refs": 9,
+    "refs": 5,
     "redirect": false
   },
   {
@@ -415,7 +415,7 @@ export const WORLD_ROUTES: WorldRoute[] = [
     "file": "bare-drip.men.index.tsx",
     "district": "Frass District",
     "status": "live",
-    "refs": 4,
+    "refs": 3,
     "redirect": false
   },
   {
@@ -445,7 +445,7 @@ export const WORLD_ROUTES: WorldRoute[] = [
     "file": "bare-drip.women.index.tsx",
     "district": "Frass District",
     "status": "live",
-    "refs": 4,
+    "refs": 3,
     "redirect": false
   },
   {
@@ -470,12 +470,12 @@ export const WORLD_ROUTES: WorldRoute[] = [
   },
   {
     "path": "/blog",
-    "title": "Journal — Frass",
+    "title": "Journal \u2014 Frass",
     "component": "BlogIndex",
     "file": "blog.index.tsx",
     "district": "Town Square",
     "status": "live",
-    "refs": 6,
+    "refs": 4,
     "redirect": false
   },
   {
@@ -485,7 +485,7 @@ export const WORLD_ROUTES: WorldRoute[] = [
     "file": "blog.tsx",
     "district": "Town Square",
     "status": "live",
-    "refs": 5,
+    "refs": 4,
     "redirect": false
   },
   {
@@ -500,22 +500,22 @@ export const WORLD_ROUTES: WorldRoute[] = [
   },
   {
     "path": "/blueprints",
-    "title": "Member Success Blueprints — Frass",
+    "title": "Member Success Blueprints \u2014 Frass",
     "component": "BlueprintsPage",
     "file": "_authenticated/blueprints.tsx",
     "district": "Frass District",
     "status": "live",
-    "refs": 2,
+    "refs": 1,
     "redirect": false
   },
   {
     "path": "/brand-partnerships",
-    "title": "Frass Brand Partnerships Network — Paid Creator Campaigns",
+    "title": "Frass Brand Partnerships Network \u2014 Paid Creator Campaigns",
     "component": "BrandPartnershipsPage",
     "file": "brand-partnerships.index.tsx",
     "district": "Frass District",
     "status": "live",
-    "refs": 13,
+    "refs": 12,
     "redirect": false
   },
   {
@@ -530,7 +530,7 @@ export const WORLD_ROUTES: WorldRoute[] = [
   },
   {
     "path": "/brand-partnerships/brands/$brand",
-    "title": "Brand unavailable — Frass",
+    "title": "Brand unavailable \u2014 Frass",
     "component": "BrandPage",
     "file": "brand-partnerships.brands.$brand.tsx",
     "district": "Frass District",
@@ -540,7 +540,7 @@ export const WORLD_ROUTES: WorldRoute[] = [
   },
   {
     "path": "/brand-partnerships/campaigns/$campaign",
-    "title": "Campaign unavailable — Frass",
+    "title": "Campaign unavailable \u2014 Frass",
     "component": "CampaignPage",
     "file": "brand-partnerships.campaigns.$campaign.tsx",
     "district": "Frass District",
@@ -550,7 +550,7 @@ export const WORLD_ROUTES: WorldRoute[] = [
   },
   {
     "path": "/brand-partnerships/creators/$creator",
-    "title": "Creator unavailable — Frass",
+    "title": "Creator unavailable \u2014 Frass",
     "component": "CreatorPage",
     "file": "brand-partnerships.creators.$creator.tsx",
     "district": "Frass District",
@@ -560,12 +560,12 @@ export const WORLD_ROUTES: WorldRoute[] = [
   },
   {
     "path": "/bridal",
-    "title": "Frass Bridal — The Wedding District of Frass Hill",
+    "title": "Frass Bridal \u2014 The Wedding District of Frass Hill",
     "component": "BridalDistrict",
     "file": "bridal.index.tsx",
     "district": "Bridal",
     "status": "live",
-    "refs": 12,
+    "refs": 11,
     "redirect": false
   },
   {
@@ -580,7 +580,7 @@ export const WORLD_ROUTES: WorldRoute[] = [
   },
   {
     "path": "/bridal-boutique",
-    "title": "Frass Bridal Boutique — Frass District",
+    "title": "Frass Bridal Boutique \u2014 Frass District",
     "component": "BridalBoutique",
     "file": "bridal-boutique.tsx",
     "district": "Bridal",
@@ -590,7 +590,7 @@ export const WORLD_ROUTES: WorldRoute[] = [
   },
   {
     "path": "/bridal/collections",
-    "title": "Dress Collaboration — Frass Bridal",
+    "title": "Dress Collaboration \u2014 Frass Bridal",
     "component": "CollectionsPage",
     "file": "bridal.collections.tsx",
     "district": "Bridal",
@@ -600,7 +600,7 @@ export const WORLD_ROUTES: WorldRoute[] = [
   },
   {
     "path": "/bridal/journey",
-    "title": "The Wedding Journey — Frass Bridal",
+    "title": "The Wedding Journey \u2014 Frass Bridal",
     "component": "JourneyPage",
     "file": "bridal.journey.tsx",
     "district": "Bridal",
@@ -610,7 +610,7 @@ export const WORLD_ROUTES: WorldRoute[] = [
   },
   {
     "path": "/bridal/marketplace",
-    "title": "Wedding Marketplace — Frass Bridal",
+    "title": "Wedding Marketplace \u2014 Frass Bridal",
     "component": "MarketplacePage",
     "file": "bridal.marketplace.tsx",
     "district": "Bridal",
@@ -620,7 +620,7 @@ export const WORLD_ROUTES: WorldRoute[] = [
   },
   {
     "path": "/bridal/sourcing",
-    "title": "The Sourcing Desk — Frass Bridal",
+    "title": "The Sourcing Desk \u2014 Frass Bridal",
     "component": "SourcingPage",
     "file": "bridal.sourcing.tsx",
     "district": "Bridal",
@@ -630,7 +630,7 @@ export const WORLD_ROUTES: WorldRoute[] = [
   },
   {
     "path": "/bridal/vault",
-    "title": "The Wedding Vault — Frass Bridal",
+    "title": "The Wedding Vault \u2014 Frass Bridal",
     "component": "VaultPage",
     "file": "bridal.vault.tsx",
     "district": "Bridal",
@@ -640,7 +640,7 @@ export const WORLD_ROUTES: WorldRoute[] = [
   },
   {
     "path": "/bridal/walk",
-    "title": "The Garden Walk & The Promise Arch — Frass Bridal",
+    "title": "The Garden Walk & The Promise Arch \u2014 Frass Bridal",
     "component": "GardenWalk",
     "file": "bridal.walk.tsx",
     "district": "Bridal",
@@ -650,12 +650,12 @@ export const WORLD_ROUTES: WorldRoute[] = [
   },
   {
     "path": "/builder-hall",
-    "title": "Welcome Hall — Frass Operating System",
+    "title": "Welcome Hall \u2014 Frass Operating System",
     "component": "WelcomeHallPage",
     "file": "_authenticated/builder-hall.tsx",
     "district": "Frass District",
     "status": "legacy",
-    "refs": 11,
+    "refs": 9,
     "redirect": false
   },
   {
@@ -670,32 +670,32 @@ export const WORLD_ROUTES: WorldRoute[] = [
   },
   {
     "path": "/business-builder",
-    "title": "Frass Business Builder — Build a business, not just a website",
+    "title": "Frass Business Builder \u2014 Build a business, not just a website",
     "component": "BusinessBuilderPage",
     "file": "_authenticated/business-builder.tsx",
     "district": "Frass Hill",
     "status": "live",
-    "refs": 15,
+    "refs": 13,
     "redirect": false
   },
   {
     "path": "/business-vaults",
-    "title": "Future Business Vaults — Frass Business Builder",
+    "title": "Future Business Vaults \u2014 Frass Business Builder",
     "component": "FutureVaultsPage",
     "file": "_authenticated/business-vaults.tsx",
     "district": "Frass Hill",
     "status": "live",
-    "refs": 12,
+    "refs": 9,
     "redirect": false
   },
   {
     "path": "/capsules",
-    "title": "Lookbooks & Capsules — Frass",
+    "title": "Lookbooks & Capsules \u2014 Frass",
     "component": "CapsulesLanding",
     "file": "capsules.index.tsx",
     "district": "Frass District",
     "status": "live",
-    "refs": 12,
+    "refs": 9,
     "redirect": false
   },
   {
@@ -705,7 +705,7 @@ export const WORLD_ROUTES: WorldRoute[] = [
     "file": "capsules.tsx",
     "district": "Frass District",
     "status": "live",
-    "refs": 11,
+    "refs": 9,
     "redirect": false
   },
   {
@@ -730,27 +730,27 @@ export const WORLD_ROUTES: WorldRoute[] = [
   },
   {
     "path": "/checkout",
-    "title": "Checkout — Frass Kicks",
+    "title": "Checkout \u2014 Frass Kicks",
     "component": "CheckoutPage",
     "file": "checkout.tsx",
     "district": "Frass District",
     "status": "live",
-    "refs": 6,
+    "refs": 2,
     "redirect": false
   },
   {
     "path": "/collection",
-    "title": "Coco Vintage Collection Builder — One Piece at a Time",
+    "title": "Coco Vintage Collection Builder \u2014 One Piece at a Time",
     "component": "CollectionBuilderPage",
     "file": "_authenticated/collection.tsx",
     "district": "Frass District",
     "status": "live",
-    "refs": 5,
+    "refs": 4,
     "redirect": false
   },
   {
     "path": "/collection/$handle",
-    "title": "${title} — Frass Kicks",
+    "title": "${title} \u2014 Frass Kicks",
     "component": "CollectionPage",
     "file": "collection.$handle.tsx",
     "district": "Frass District",
@@ -765,12 +765,12 @@ export const WORLD_ROUTES: WorldRoute[] = [
     "file": "_authenticated/command.tsx",
     "district": "Founder Hall",
     "status": "legacy",
-    "refs": 2,
+    "refs": 0,
     "redirect": true
   },
   {
     "path": "/commerce-simulation",
-    "title": "Zero-Friction Commerce Simulation — Frass",
+    "title": "Zero-Friction Commerce Simulation \u2014 Frass",
     "component": "CommerceSimulationPage",
     "file": "_authenticated/commerce-simulation.tsx",
     "district": "Frass District",
@@ -785,17 +785,17 @@ export const WORLD_ROUTES: WorldRoute[] = [
     "file": "_authenticated/control-room.tsx",
     "district": "Founder Hall",
     "status": "live",
-    "refs": 26,
+    "refs": 19,
     "redirect": false
   },
   {
     "path": "/creation",
-    "title": "Creation District — Frass Operating System",
+    "title": "Creation District \u2014 Frass Operating System",
     "component": "CreationPage",
     "file": "_authenticated/creation.tsx",
     "district": "Frass Hill",
     "status": "live",
-    "refs": 11,
+    "refs": 7,
     "redirect": false
   },
   {
@@ -803,24 +803,24 @@ export const WORLD_ROUTES: WorldRoute[] = [
     "title": "",
     "component": "",
     "file": "daily.tsx",
-    "district": "Frass District",
+    "district": "Frass Hill",
     "status": "legacy",
-    "refs": 3,
+    "refs": 1,
     "redirect": true
   },
   {
     "path": "/financial-center",
-    "title": "Frass Financial Center — Wallet, Gifts, Credits & Earnings",
+    "title": "Frass Financial Center \u2014 Wallet, Gifts, Credits & Earnings",
     "component": "FinancialCenter",
     "file": "_authenticated/financial-center.tsx",
     "district": "Frass District",
     "status": "live",
-    "refs": 23,
+    "refs": 21,
     "redirect": false
   },
   {
     "path": "/first-30-days",
-    "title": "First 30 Days — Frass Partner Launch Program",
+    "title": "First 30 Days \u2014 Frass Partner Launch Program",
     "component": "First30DaysPage",
     "file": "_authenticated/first-30-days.tsx",
     "district": "Frass Hill",
@@ -830,22 +830,22 @@ export const WORLD_ROUTES: WorldRoute[] = [
   },
   {
     "path": "/for-me",
-    "title": "For Me — Your Corner of Frass Hill",
+    "title": "For Me \u2014 Your Corner of Frass Hill",
     "component": "ForMePage",
     "file": "for-me.tsx",
     "district": "Town Square",
     "status": "live",
-    "refs": 12,
+    "refs": 9,
     "redirect": false
   },
   {
     "path": "/for-us",
-    "title": "For Us — A Living Caribbean Destination",
+    "title": "For Us \u2014 A Living Caribbean Destination",
     "component": "ForUsPage",
     "file": "for-us.tsx",
     "district": "Town Square",
     "status": "live",
-    "refs": 17,
+    "refs": 14,
     "redirect": false
   },
   {
@@ -855,17 +855,17 @@ export const WORLD_ROUTES: WorldRoute[] = [
     "file": "_authenticated/founder.tsx",
     "district": "Founder Hall",
     "status": "legacy",
-    "refs": 4,
+    "refs": 0,
     "redirect": true
   },
   {
     "path": "/frass-district",
-    "title": "Frass District — Shop Every Frass Store",
+    "title": "Frass District \u2014 Shop Every Frass Store",
     "component": "FrassDistrictHome",
     "file": "frass-district.tsx",
     "district": "Frass District",
     "status": "live",
-    "refs": 17,
+    "refs": 14,
     "redirect": false
   },
   {
@@ -875,7 +875,7 @@ export const WORLD_ROUTES: WorldRoute[] = [
     "file": "frass-drip.index.tsx",
     "district": "Frass District",
     "status": "legacy",
-    "refs": 12,
+    "refs": 7,
     "redirect": true
   },
   {
@@ -885,7 +885,7 @@ export const WORLD_ROUTES: WorldRoute[] = [
     "file": "frass-drip.tsx",
     "district": "Frass District",
     "status": "live",
-    "refs": 11,
+    "refs": 7,
     "redirect": false
   },
   {
@@ -895,7 +895,7 @@ export const WORLD_ROUTES: WorldRoute[] = [
     "file": "frass-drip.men.index.tsx",
     "district": "Frass District",
     "status": "live",
-    "refs": 4,
+    "refs": 3,
     "redirect": false
   },
   {
@@ -925,7 +925,7 @@ export const WORLD_ROUTES: WorldRoute[] = [
     "file": "frass-drip.women.index.tsx",
     "district": "Frass District",
     "status": "live",
-    "refs": 4,
+    "refs": 3,
     "redirect": false
   },
   {
@@ -950,27 +950,27 @@ export const WORLD_ROUTES: WorldRoute[] = [
   },
   {
     "path": "/frass-hill",
-    "title": "Frass Hill — The Town Plan",
+    "title": "Frass Hill \u2014 The Town Plan",
     "component": "FrassHillPage",
     "file": "frass-hill.tsx",
     "district": "Frass Hill",
     "status": "live",
-    "refs": 19,
+    "refs": 16,
     "redirect": false
   },
   {
     "path": "/frass-hill-journey",
-    "title": "The Frass Hill Walk — Enter Frass Hill",
+    "title": "The Frass Hill Walk \u2014 Enter Frass Hill",
     "component": "HillWalkPage",
     "file": "frass-hill-journey.tsx",
     "district": "Frass Hill",
     "status": "live",
-    "refs": 4,
+    "refs": 3,
     "redirect": false
   },
   {
     "path": "/frass-hosting",
-    "title": "Frass Hosting — Your whole business, live in one click",
+    "title": "Frass Hosting \u2014 Your whole business, live in one click",
     "component": "FrassHostingPage",
     "file": "frass-hosting.tsx",
     "district": "Frass District",
@@ -985,7 +985,7 @@ export const WORLD_ROUTES: WorldRoute[] = [
     "file": "frass-kicks.index.tsx",
     "district": "Frass District",
     "status": "legacy",
-    "refs": 13,
+    "refs": 8,
     "redirect": true
   },
   {
@@ -995,7 +995,7 @@ export const WORLD_ROUTES: WorldRoute[] = [
     "file": "frass-kicks.tsx",
     "district": "Frass District",
     "status": "live",
-    "refs": 12,
+    "refs": 8,
     "redirect": false
   },
   {
@@ -1025,7 +1025,7 @@ export const WORLD_ROUTES: WorldRoute[] = [
     "file": "frass-kids.index.tsx",
     "district": "Kids Valley",
     "status": "live",
-    "refs": 18,
+    "refs": 15,
     "redirect": false
   },
   {
@@ -1035,7 +1035,7 @@ export const WORLD_ROUTES: WorldRoute[] = [
     "file": "frass-kids.tsx",
     "district": "Kids Valley",
     "status": "live",
-    "refs": 17,
+    "refs": 15,
     "redirect": false
   },
   {
@@ -1090,12 +1090,12 @@ export const WORLD_ROUTES: WorldRoute[] = [
   },
   {
     "path": "/frass-luxury-house",
-    "title": "Frass Luxury House — Timeless Elegance, Exceptional Craft",
+    "title": "Frass Luxury House \u2014 Timeless Elegance, Exceptional Craft",
     "component": "LuxuryHouse",
     "file": "frass-luxury-house.index.tsx",
     "district": "Luxury House",
     "status": "live",
-    "refs": 14,
+    "refs": 11,
     "redirect": false
   },
   {
@@ -1105,12 +1105,12 @@ export const WORLD_ROUTES: WorldRoute[] = [
     "file": "frass-luxury-house.tsx",
     "district": "Luxury House",
     "status": "live",
-    "refs": 13,
+    "refs": 11,
     "redirect": false
   },
   {
     "path": "/frass-luxury-house/men",
-    "title": "The East Wing — Gentlemen",
+    "title": "The East Wing \u2014 Gentlemen",
     "component": "EastWing",
     "file": "frass-luxury-house.men.tsx",
     "district": "Luxury House",
@@ -1120,7 +1120,7 @@ export const WORLD_ROUTES: WorldRoute[] = [
   },
   {
     "path": "/frass-luxury-house/women",
-    "title": "The West Wing — Ladies",
+    "title": "The West Wing \u2014 Ladies",
     "component": "WestWing",
     "file": "frass-luxury-house.women.tsx",
     "district": "Luxury House",
@@ -1135,7 +1135,7 @@ export const WORLD_ROUTES: WorldRoute[] = [
     "file": "frass-plus.index.tsx",
     "district": "Frass District",
     "status": "live",
-    "refs": 11,
+    "refs": 8,
     "redirect": false
   },
   {
@@ -1145,7 +1145,7 @@ export const WORLD_ROUTES: WorldRoute[] = [
     "file": "frass-plus.tsx",
     "district": "Frass District",
     "status": "live",
-    "refs": 10,
+    "refs": 8,
     "redirect": false
   },
   {
@@ -1200,22 +1200,22 @@ export const WORLD_ROUTES: WorldRoute[] = [
   },
   {
     "path": "/frass-radio",
-    "title": "Frass Radio — The Audio Home of Frass",
+    "title": "Frass Radio \u2014 The Audio Home of Frass",
     "component": "FrassRadioPage",
     "file": "frass-radio.tsx",
     "district": "Frass District",
     "status": "live",
-    "refs": 12,
+    "refs": 9,
     "redirect": false
   },
   {
     "path": "/frass-shape",
-    "title": "Frass Shape — Women",
+    "title": "Frass Shape \u2014 Women",
     "component": "ShapeStorefront",
     "file": "frass-shape.index.tsx",
     "district": "Frass District",
     "status": "live",
-    "refs": 7,
+    "refs": 5,
     "redirect": false
   },
   {
@@ -1225,12 +1225,12 @@ export const WORLD_ROUTES: WorldRoute[] = [
     "file": "frass-shape.tsx",
     "district": "Frass District",
     "status": "live",
-    "refs": 6,
+    "refs": 5,
     "redirect": false
   },
   {
     "path": "/frass-shape/$gender",
-    "title": "Frass Shape for ${label} — Shape, Compression & Support",
+    "title": "Frass Shape for ${label} \u2014 Shape, Compression & Support",
     "component": "ShapeWing",
     "file": "frass-shape.$gender.index.tsx",
     "district": "Frass District",
@@ -1273,9 +1273,9 @@ export const WORLD_ROUTES: WorldRoute[] = [
     "title": "",
     "component": "",
     "file": "frass-world.tsx",
-    "district": "Frass District",
+    "district": "Arrival & Welcome",
     "status": "legacy",
-    "refs": 2,
+    "refs": 1,
     "redirect": true
   },
   {
@@ -1285,12 +1285,12 @@ export const WORLD_ROUTES: WorldRoute[] = [
     "file": "_authenticated/frassy.tsx",
     "district": "Frass Hill",
     "status": "live",
-    "refs": 13,
+    "refs": 10,
     "redirect": false
   },
   {
     "path": "/fresh-start",
-    "title": "Fresh start — arrive at Frass as a stranger",
+    "title": "Fresh start \u2014 arrive at Frass as a stranger",
     "component": "FreshStart",
     "file": "fresh-start.tsx",
     "district": "Frass District",
@@ -1300,17 +1300,17 @@ export const WORLD_ROUTES: WorldRoute[] = [
   },
   {
     "path": "/fv-studios",
-    "title": "Frass Vision Studios — The Creator Company",
+    "title": "Frass Vision Studios \u2014 The Creator Company",
     "component": "FvStudiosPage",
     "file": "fv-studios.tsx",
     "district": "Frass District",
     "status": "live",
-    "refs": 10,
+    "refs": 8,
     "redirect": false
   },
   {
     "path": "/gallery/studio",
-    "title": "Gallery Studio — Frass Gallery",
+    "title": "Gallery Studio \u2014 Frass Gallery",
     "component": "StudioPage",
     "file": "gallery.studio.tsx",
     "district": "Frass District",
@@ -1323,69 +1323,69 @@ export const WORLD_ROUTES: WorldRoute[] = [
     "title": "",
     "component": "",
     "file": "gateway.tsx",
-    "district": "Frass District",
+    "district": "Arrival & Welcome",
     "status": "legacy",
-    "refs": 4,
+    "refs": 1,
     "redirect": true
   },
   {
     "path": "/global-operations",
-    "title": "Global Operations — Frass Regional Commerce",
+    "title": "Global Operations \u2014 Frass Regional Commerce",
     "component": "GlobalOperations",
     "file": "_authenticated/global-operations.tsx",
-    "district": "Frass District",
-    "status": "live",
-    "refs": 3,
-    "redirect": false
-  },
-  {
-    "path": "/health-wellness",
-    "title": "Frass Health & Wellness Centre — The Mountain Sanctuary",
-    "component": "WellnessCentre",
-    "file": "health-wellness.tsx",
-    "district": "Frass District",
-    "status": "live",
-    "refs": 6,
-    "redirect": false
-  },
-  {
-    "path": "/join",
-    "title": "Choose your entrance — Frass",
-    "component": "JoinChooser",
-    "file": "join.index.tsx",
     "district": "Frass District",
     "status": "live",
     "refs": 2,
     "redirect": false
   },
   {
-    "path": "/join/frass-hill",
-    "title": "Arrive at Frass Hill — register and meet Frassy",
-    "component": "JoinHill",
-    "file": "join.frass-hill.tsx",
+    "path": "/health-wellness",
+    "title": "Frass Health & Wellness Centre \u2014 The Mountain Sanctuary",
+    "component": "WellnessCentre",
+    "file": "health-wellness.tsx",
     "district": "Frass District",
     "status": "live",
-    "refs": 3,
+    "refs": 5,
+    "redirect": false
+  },
+  {
+    "path": "/join",
+    "title": "Choose your entrance \u2014 Frass",
+    "component": "JoinChooser",
+    "file": "join.index.tsx",
+    "district": "Arrival & Welcome",
+    "status": "live",
+    "refs": 1,
+    "redirect": false
+  },
+  {
+    "path": "/join/frass-hill",
+    "title": "Arrive at Frass Hill \u2014 register and meet Frassy",
+    "component": "JoinHill",
+    "file": "join.frass-hill.tsx",
+    "district": "Arrival & Welcome",
+    "status": "live",
+    "refs": 2,
     "redirect": false
   },
   {
     "path": "/join/frasskicks",
-    "title": "Join Frass Kicks — shop with your fits saved",
+    "title": "Join Frass Kicks \u2014 shop with your fits saved",
     "component": "JoinKicks",
     "file": "join.frasskicks.tsx",
-    "district": "Frass District",
+    "district": "Arrival & Welcome",
     "status": "live",
-    "refs": 3,
+    "refs": 2,
     "redirect": false
   },
   {
     "path": "/journal",
-    "title": "Partner Journal — Frass",
+    "title": "Partner Journal \u2014 Frass",
     "component": "JournalPage",
     "file": "_authenticated/journal.tsx",
     "district": "Frass District",
     "status": "live",
-    "refs": 6,
+    "refs": 5,
     "redirect": false
   },
   {
@@ -1395,17 +1395,17 @@ export const WORLD_ROUTES: WorldRoute[] = [
     "file": "kicks-district.tsx",
     "district": "Frass District",
     "status": "legacy",
-    "refs": 2,
+    "refs": 1,
     "redirect": true
   },
   {
     "path": "/kids-valley",
-    "title": "Kids Valley — The Children",
+    "title": "Kids Valley \u2014 The Children",
     "component": "KidsValleyPage",
     "file": "kids-valley.tsx",
     "district": "Kids Valley",
     "status": "live",
-    "refs": 7,
+    "refs": 6,
     "redirect": false
   },
   {
@@ -1415,7 +1415,7 @@ export const WORLD_ROUTES: WorldRoute[] = [
     "file": "kids-world.index.tsx",
     "district": "Kids Valley",
     "status": "live",
-    "refs": 17,
+    "refs": 15,
     "redirect": false
   },
   {
@@ -1425,7 +1425,7 @@ export const WORLD_ROUTES: WorldRoute[] = [
     "file": "kids-world.tsx",
     "district": "Kids Valley",
     "status": "live",
-    "refs": 16,
+    "refs": 15,
     "redirect": false
   },
   {
@@ -1490,17 +1490,17 @@ export const WORLD_ROUTES: WorldRoute[] = [
   },
   {
     "path": "/launch-accelerator",
-    "title": "Launch Accelerator — Frass Business Builder",
+    "title": "Launch Accelerator \u2014 Frass Business Builder",
     "component": "LaunchAcceleratorPage",
     "file": "_authenticated/launch-accelerator.tsx",
     "district": "Frass Hill",
     "status": "live",
-    "refs": 9,
+    "refs": 8,
     "redirect": false
   },
   {
     "path": "/legal",
-    "title": "Agreements, Privacy & Security — Frass",
+    "title": "Agreements, Privacy & Security \u2014 Frass",
     "component": "LegalIndex",
     "file": "legal.index.tsx",
     "district": "Frass District",
@@ -1510,7 +1510,7 @@ export const WORLD_ROUTES: WorldRoute[] = [
   },
   {
     "path": "/legal/$level",
-    "title": "Agreement not found — Frass",
+    "title": "Agreement not found \u2014 Frass",
     "component": "AgreementPage",
     "file": "legal.$level.tsx",
     "district": "Frass District",
@@ -1530,12 +1530,12 @@ export const WORLD_ROUTES: WorldRoute[] = [
   },
   {
     "path": "/live",
-    "title": "Live in Frass — For Us Live & Frass Radio Live",
+    "title": "Live in Frass \u2014 For Us Live & Frass Radio Live",
     "component": "LiveDirectory",
     "file": "live.index.tsx",
     "district": "Town Square",
     "status": "live",
-    "refs": 12,
+    "refs": 8,
     "redirect": false
   },
   {
@@ -1545,12 +1545,12 @@ export const WORLD_ROUTES: WorldRoute[] = [
     "file": "live.tsx",
     "district": "Town Square",
     "status": "live",
-    "refs": 11,
+    "refs": 8,
     "redirect": false
   },
   {
     "path": "/live/$broadcastId",
-    "title": "Live Broadcast — Frass",
+    "title": "Live Broadcast \u2014 Frass",
     "component": "BroadcastRoom",
     "file": "live.$broadcastId.tsx",
     "district": "Town Square",
@@ -1560,22 +1560,22 @@ export const WORLD_ROUTES: WorldRoute[] = [
   },
   {
     "path": "/live/go",
-    "title": "Go Live — Share Your Story With Frass",
+    "title": "Go Live \u2014 Share Your Story With Frass",
     "component": "GoLivePage",
     "file": "live.go.tsx",
     "district": "Town Square",
     "status": "live",
-    "refs": 5,
+    "refs": 4,
     "redirect": false
   },
   {
     "path": "/lookbook",
-    "title": "Lookbook — Frass",
+    "title": "Lookbook \u2014 Frass",
     "component": "LookbookIndex",
     "file": "lookbook.index.tsx",
     "district": "Frass District",
     "status": "live",
-    "refs": 8,
+    "refs": 6,
     "redirect": false
   },
   {
@@ -1585,12 +1585,12 @@ export const WORLD_ROUTES: WorldRoute[] = [
     "file": "lookbook.tsx",
     "district": "Frass District",
     "status": "live",
-    "refs": 7,
+    "refs": 6,
     "redirect": false
   },
   {
     "path": "/lookbook/$story",
-    "title": "Lookbook — Frass",
+    "title": "Lookbook \u2014 Frass",
     "component": "StoryPage",
     "file": "lookbook.$story.tsx",
     "district": "Frass District",
@@ -1600,12 +1600,12 @@ export const WORLD_ROUTES: WorldRoute[] = [
   },
   {
     "path": "/manufacturing",
-    "title": "Creator Manufacturing Network — Frass",
+    "title": "Creator Manufacturing Network \u2014 Frass",
     "component": "ManufacturingPage",
     "file": "_authenticated/manufacturing.tsx",
     "district": "Frass District",
     "status": "live",
-    "refs": 7,
+    "refs": 5,
     "redirect": false
   },
   {
@@ -1614,33 +1614,33 @@ export const WORLD_ROUTES: WorldRoute[] = [
     "component": "",
     "file": "mcp.ts",
     "district": "Frass District",
-    "status": "live",
-    "refs": 4,
+    "status": "built",
+    "refs": 0,
     "redirect": false
   },
   {
     "path": "/money-moves",
-    "title": "Money Moves — Your Personal Income Operating System",
+    "title": "Money Moves \u2014 Your Personal Income Operating System",
     "component": "MoneyMovesPage",
     "file": "_authenticated/money-moves.tsx",
     "district": "Frass Hill",
     "status": "live",
-    "refs": 20,
+    "refs": 15,
     "redirect": false
   },
   {
     "path": "/music-media",
-    "title": "Music & Media — Frass Hill",
+    "title": "Music & Media \u2014 Frass Hill",
     "component": "MusicMedia",
     "file": "music-media.tsx",
     "district": "Frass District",
     "status": "live",
-    "refs": 12,
+    "refs": 8,
     "redirect": false
   },
   {
     "path": "/notifications",
-    "title": "Notifications — Frass Hill",
+    "title": "Notifications \u2014 Frass Hill",
     "component": "NotificationsPage",
     "file": "_authenticated/notifications.tsx",
     "district": "Frass District",
@@ -1655,22 +1655,22 @@ export const WORLD_ROUTES: WorldRoute[] = [
     "file": "_authenticated/onboarding.tsx",
     "district": "Arrival & Welcome",
     "status": "live",
-    "refs": 14,
-    "redirect": false
-  },
-  {
-    "path": "/opportunity",
-    "title": "Opportunity Center — Frass Operating System",
-    "component": "OpportunityPage",
-    "file": "_authenticated/opportunity.tsx",
-    "district": "Frass Hill",
-    "status": "live",
     "refs": 11,
     "redirect": false
   },
   {
+    "path": "/opportunity",
+    "title": "Opportunity Center \u2014 Frass Operating System",
+    "component": "OpportunityPage",
+    "file": "_authenticated/opportunity.tsx",
+    "district": "Frass Hill",
+    "status": "live",
+    "refs": 9,
+    "redirect": false
+  },
+  {
     "path": "/pay/$token",
-    "title": "Secure Frass Checkout — Approve your payment request",
+    "title": "Secure Frass Checkout \u2014 Approve your payment request",
     "component": "PaymentRequestScreen",
     "file": "pay.$token.tsx",
     "district": "Frass District",
@@ -1680,7 +1680,7 @@ export const WORLD_ROUTES: WorldRoute[] = [
   },
   {
     "path": "/payment-providers",
-    "title": "Payment Provider Center — Frass Commerce Pipeline",
+    "title": "Payment Provider Center \u2014 Frass Commerce Pipeline",
     "component": "PaymentProviderCenter",
     "file": "_authenticated/payment-providers.tsx",
     "district": "Frass District",
@@ -1720,52 +1720,52 @@ export const WORLD_ROUTES: WorldRoute[] = [
   },
   {
     "path": "/reset-password",
-    "title": "Reset your password — Frass",
+    "title": "Reset your password \u2014 Frass",
     "component": "ResetPasswordPage",
     "file": "reset-password.tsx",
     "district": "Frass District",
-    "status": "live",
-    "refs": 3,
+    "status": "built",
+    "refs": 0,
     "redirect": false
   },
   {
     "path": "/rewards",
-    "title": "Unlock 40% OFF — Frass Kicks Rewards",
+    "title": "Unlock 40% OFF \u2014 Frass Kicks Rewards",
     "component": "RewardsPage",
     "file": "rewards.tsx",
     "district": "Frass District",
     "status": "live",
-    "refs": 6,
+    "refs": 5,
     "redirect": false
   },
   {
     "path": "/room",
-    "title": "My Workspace — Frass Operating System",
+    "title": "My Workspace \u2014 Frass Operating System",
     "component": "RoomScreen",
     "file": "_authenticated/room.tsx",
     "district": "Frass Hill",
     "status": "live",
-    "refs": 31,
+    "refs": 19,
     "redirect": false
   },
   {
     "path": "/sales-clearance",
-    "title": "The Liquidation Room — Luxury Finds, Extraordinary Prices",
+    "title": "The Liquidation Room \u2014 Luxury Finds, Extraordinary Prices",
     "component": "LiquidationRoomPage",
     "file": "sales-clearance.tsx",
     "district": "Frass District",
     "status": "live",
-    "refs": 9,
+    "refs": 7,
     "redirect": false
   },
   {
     "path": "/services",
-    "title": "Frass Services Marketplace — One Platform. Every Service.",
+    "title": "Frass Services Marketplace \u2014 One Platform. Every Service.",
     "component": "ServicesMarketplace",
     "file": "services.tsx",
     "district": "Frass District",
     "status": "live",
-    "refs": 5,
+    "refs": 4,
     "redirect": false
   },
   {
@@ -1775,27 +1775,27 @@ export const WORLD_ROUTES: WorldRoute[] = [
     "file": "shop-frass.tsx",
     "district": "Frass District",
     "status": "legacy",
-    "refs": 18,
+    "refs": 17,
     "redirect": true
   },
   {
     "path": "/signed-out",
-    "title": "Signed out securely — Frass",
+    "title": "Signed out securely \u2014 Frass",
     "component": "SignedOutPage",
     "file": "signed-out.tsx",
     "district": "Frass District",
     "status": "live",
-    "refs": 2,
+    "refs": 1,
     "redirect": false
   },
   {
     "path": "/social-media-virals",
-    "title": "Social Media Virals — TikTok Shop | Frass",
+    "title": "Social Media Virals \u2014 TikTok Shop | Frass",
     "component": "SocialViralsIndex",
     "file": "social-media-virals.index.tsx",
     "district": "Frass District",
     "status": "live",
-    "refs": 12,
+    "refs": 8,
     "redirect": false
   },
   {
@@ -1805,7 +1805,7 @@ export const WORLD_ROUTES: WorldRoute[] = [
     "file": "social-media-virals.tsx",
     "district": "Frass District",
     "status": "live",
-    "refs": 11,
+    "refs": 8,
     "redirect": false
   },
   {
@@ -1840,47 +1840,47 @@ export const WORLD_ROUTES: WorldRoute[] = [
   },
   {
     "path": "/studio",
-    "title": "Frass Vision Studios (FV Studios) — Frass Hill",
+    "title": "Frass Vision Studios (FV Studios) \u2014 Frass Hill",
     "component": "StudioPage",
     "file": "_authenticated/studio.tsx",
     "district": "Frass District",
     "status": "live",
-    "refs": 27,
+    "refs": 22,
     "redirect": false
   },
   {
     "path": "/town-square",
-    "title": "Town Square — The Heart of Frass Hill",
+    "title": "Town Square \u2014 The Heart of Frass Hill",
     "component": "TownSquarePage",
     "file": "town-square.tsx",
     "district": "Town Square",
-    "status": "live",
-    "refs": 8,
-    "redirect": false
-  },
-  {
-    "path": "/try-on",
-    "title": "Fitting Room — Frass",
-    "component": "TryOnPage",
-    "file": "_authenticated/try-on.tsx",
-    "district": "Frass District",
     "status": "live",
     "refs": 6,
     "redirect": false
   },
   {
+    "path": "/try-on",
+    "title": "Fitting Room \u2014 Frass",
+    "component": "TryOnPage",
+    "file": "_authenticated/try-on.tsx",
+    "district": "Frass District",
+    "status": "live",
+    "refs": 5,
+    "redirect": false
+  },
+  {
     "path": "/vault",
-    "title": "Builder Vault — Frass Operating System",
+    "title": "Builder Vault \u2014 Frass Operating System",
     "component": "VaultPage",
     "file": "_authenticated/vault.tsx",
     "district": "Frass District",
     "status": "live",
-    "refs": 25,
+    "refs": 21,
     "redirect": false
   },
   {
     "path": "/visual-review",
-    "title": "Visual Excellence Review — Founder Daily",
+    "title": "Visual Excellence Review \u2014 Founder Daily",
     "component": "VisualReviewPage",
     "file": "_authenticated/visual-review.tsx",
     "district": "Frass District",
@@ -1890,7 +1890,7 @@ export const WORLD_ROUTES: WorldRoute[] = [
   },
   {
     "path": "/visual-search",
-    "title": "Visual Discovery · Frass Hill",
+    "title": "Visual Discovery \u00b7 Frass Hill",
     "component": "VisualSearchPage",
     "file": "visual-search.tsx",
     "district": "Frass District",
@@ -1900,22 +1900,22 @@ export const WORLD_ROUTES: WorldRoute[] = [
   },
   {
     "path": "/welcome",
-    "title": "Welcome to Frass — your first arrival",
+    "title": "Welcome to Frass \u2014 your first arrival",
     "component": "WelcomePage",
     "file": "welcome.tsx",
     "district": "Arrival & Welcome",
     "status": "legacy",
-    "refs": 6,
+    "refs": 2,
     "redirect": false
   },
   {
     "path": "/welcome-hall",
-    "title": "Welcome Hall — Arrive at Frass Hill",
+    "title": "Welcome Hall \u2014 Arrive at Frass Hill",
     "component": "WelcomeHallPage",
     "file": "welcome-hall.tsx",
     "district": "Arrival & Welcome",
     "status": "legacy",
-    "refs": 19,
+    "refs": 10,
     "redirect": false
   },
   {
@@ -1925,12 +1925,12 @@ export const WORLD_ROUTES: WorldRoute[] = [
     "file": "_authenticated/workspace.tsx",
     "district": "Frass Hill",
     "status": "live",
-    "refs": 14,
+    "refs": 9,
     "redirect": false
   },
   {
     "path": "/workspace/affiliate",
-    "title": "Affiliate Intelligence — Frass Workspace",
+    "title": "Affiliate Intelligence \u2014 Frass Workspace",
     "component": "AffiliateIntelligencePage",
     "file": "_authenticated/workspace.affiliate.tsx",
     "district": "Frass Hill",
@@ -1940,17 +1940,17 @@ export const WORLD_ROUTES: WorldRoute[] = [
   },
   {
     "path": "/workspace/card",
-    "title": "Frass Card — Identity & Point of Sale",
+    "title": "Frass Card \u2014 Identity & Point of Sale",
     "component": "CardStudio",
     "file": "_authenticated/workspace.card.tsx",
     "district": "Frass Hill",
     "status": "live",
-    "refs": 17,
+    "refs": 16,
     "redirect": false
   },
   {
     "path": "/workspace/daily-design",
-    "title": "Daily Design Library — Choose how your Daily is organised",
+    "title": "Daily Design Library \u2014 Choose how your Daily is organised",
     "component": "DesignLibrary",
     "file": "_authenticated/workspace.daily-design.tsx",
     "district": "Frass Hill",
@@ -1960,17 +1960,17 @@ export const WORLD_ROUTES: WorldRoute[] = [
   },
   {
     "path": "/workspace/first-venture",
-    "title": "First Business Venture — Turn What You Own Into Income",
+    "title": "First Business Venture \u2014 Turn What You Own Into Income",
     "component": "FirstVenturePage",
     "file": "_authenticated/workspace.first-venture.tsx",
     "district": "Frass Hill",
     "status": "live",
-    "refs": 3,
+    "refs": 2,
     "redirect": false
   },
   {
     "path": "/workspace/insights",
-    "title": "Builder Insights — Frass Hill",
+    "title": "Builder Insights \u2014 Frass Hill",
     "component": "InsightsPage",
     "file": "_authenticated/workspace.insights.tsx",
     "district": "Frass Hill",
@@ -1990,7 +1990,7 @@ export const WORLD_ROUTES: WorldRoute[] = [
   },
   {
     "path": "/workspace/link",
-    "title": "My Frass Link — Identity, Recruitment & Rewards",
+    "title": "My Frass Link \u2014 Identity, Recruitment & Rewards",
     "component": "LinkDashboard",
     "file": "_authenticated/workspace.link.tsx",
     "district": "Frass Hill",
@@ -2010,31 +2010,31 @@ export const WORLD_ROUTES: WorldRoute[] = [
   },
   {
     "path": "/workspace/profile",
-    "title": "Builder Profile — Frass OS",
+    "title": "Builder Profile \u2014 Frass OS",
     "component": "ProfilePage",
     "file": "_authenticated/workspace.profile.tsx",
     "district": "Frass Hill",
     "status": "live",
-    "refs": 7,
+    "refs": 6,
     "redirect": false
   },
   {
     "path": "/workspace/wallet",
-    "title": "Frass Wallet — Balance, Quick Sell, Invoices, Statements",
+    "title": "Frass Wallet \u2014 Balance, Quick Sell, Invoices, Statements",
     "component": "WalletHub",
     "file": "_authenticated/workspace.wallet.tsx",
     "district": "Frass Hill",
     "status": "live",
-    "refs": 12,
+    "refs": 11,
     "redirect": false
   }
 ];
 
 export const STATUS_META: Record<WorldStatus, { icon: string; label: string; plain: string }> = {
-  live: { icon: "✅", label: "Live & Linked", plain: "Reachable through normal navigation today." },
-  built: { icon: "🟡", label: "Built but Unlinked", plain: "The page exists and works, but nothing links to it yet." },
-  legacy: { icon: "🔴", label: "Legacy / Duplicate Candidate", plain: "Older or redirecting door onto something that already exists. Nothing is changed here." },
-  unknown: { icon: "⚪", label: "Unknown", plain: "Not yet classified." },
+  live: { icon: "\u2705", label: "Live & Linked", plain: "Reachable through normal navigation today." },
+  built: { icon: "\ud83d\udfe1", label: "Built but Unlinked", plain: "The page exists and works, but nothing links to it yet." },
+  legacy: { icon: "\ud83d\udd34", label: "Legacy / Duplicate Candidate", plain: "An older or redirecting door onto something that already exists. Nothing is changed here." },
+  unknown: { icon: "\u26aa", label: "Unknown", plain: "Not yet classified." },
 };
 
-export const WORLD_DISTRICTS: string[] = ["Arrival & Welcome","Frass District","Frass Hill","Founder Hall","Town Square","Bridal","Kids Valley","Luxury House"];
+export const WORLD_DISTRICTS: string[] = ["Arrival & Welcome", "Bridal", "Founder Hall", "Frass District", "Frass Hill", "Kids Valley", "Luxury House", "Town Square"];
