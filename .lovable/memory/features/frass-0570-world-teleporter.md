@@ -10,3 +10,11 @@ type: feature
 - Return chip: `src/components/founder/teleport-return-chip.tsx` + `src/lib/founder/teleport-session.ts`,
   mounted in `__root.tsx`, Founder-only, returns to the teleporter tab.
 - Inspection sprint only: it must never rename routes, wire navigation or remove duplicates.
+
+## FRASS-0570A — Audit progress tracking
+- Every card has a permanent audit number from a stable sort of the registry
+  (`src/lib/founder/teleporter-audit.ts`); numbers never change when cards move.
+- Statuses: ⚪ Not Reviewed, 🟡 In Progress, 🟢 Reviewed, 🔄 Consolidated, 🔴 Retired.
+- Stored per Founder in `teleporter_audit` (Founder/Admin-only RLS), with one short private note per card.
+- Panel adds progress counter, resume banner, "Resume audit" (first unreviewed card) and quick filters.
+- Still inspection only: tracking review state never changes routes or navigation.
