@@ -5128,6 +5128,39 @@ export type Database = {
         }
         Relationships: []
       }
+      teleporter_audit: {
+        Row: {
+          card_key: string
+          card_number: number
+          created_at: string
+          id: string
+          note: string
+          status: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          card_key: string
+          card_number: number
+          created_at?: string
+          id?: string
+          note?: string
+          status?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          card_key?: string
+          card_number?: number
+          created_at?: string
+          id?: string
+          note?: string
+          status?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       trust_verifications: {
         Row: {
           badge: string
