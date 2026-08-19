@@ -750,10 +750,15 @@ export const Route = createFileRoute("/api/chat")({
         // Teleporter card while the request comes from another page. This is a
         // workflow integrity check, not a model instruction: the wrong audit is
         // never allowed to reach AI or enter the permanent review trail.
-        if (
-          body.auditContext &&
-          (!body.districtPath || body.auditContext.path !== body.districtPath)
-        ) {
+        const samePath = (a?: string | null, b?: string | null) => {
+          const norm = (v?: string | null) => {
+            if (!v) return "";
+            const clean = v.split("?")[0].split("#")[0];
+            return (clean.length > 1 ? clean.replace(/\/+$/, "") : clean).toLowerCase();
+          };
+          return Boolean(norm(a)) && norm(a) === norm(b);
+        };
+        if (body.auditContext && !samePath(body.auditContext.path, body.districtPath)) {
           return Response.json(
             {
               error:
