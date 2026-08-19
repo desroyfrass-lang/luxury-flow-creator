@@ -164,6 +164,20 @@ export function FrassyChat({
       );
   }, [messages, transcriptScope]);
 
+  // FRASS-0572A — say out loud which engine is answering here.
+  useEffect(() => {
+    publishEngineDiagnostics({
+      pipeline: "shared",
+      mode: auditCard ? "audit" : "builder",
+      historySource: auditCard ? "clean_room" : "shared_transcript",
+      historyTurns: auditCard ? 0 : messages.length,
+      auditTurnsFiltered: 0,
+      cardLabel: auditCard ? `Card #${String(auditCard.number).padStart(3, "0")}` : undefined,
+      path: ctx.pathname,
+    });
+  }, [auditCard, messages.length, ctx.pathname]);
+
+
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
