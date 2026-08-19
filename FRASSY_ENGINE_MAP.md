@@ -41,3 +41,17 @@ Fixes applied in this pass:
 Collapse Journey Mode onto the shared pipeline so there is one orchestration and
 one memory layer, with stage state as workflow data rather than a second engine.
 Until then, this map is the contract.
+
+## Constitutional principle — engine boundaries are sacred
+
+Journey, Founder, Builder, Customer and Teleporter Audit modes never share
+conversational history unless that sharing is deliberately designed and written
+down here. Cross-mode memory bleed is the root of this whole family of bugs.
+
+## FRASS-0572A — Frassy Engine badge (Founder only)
+
+A small badge (bottom-left, dismissible) shows, live: pipeline, mode, history
+source, turns loaded, audit turns filtered, active card, and path.
+Code: `src/components/founder/frassy-engine-badge.tsx`, fed by
+`src/lib/frassy/engine-diagnostics.ts`. Surfaces publish what they actually
+loaded, so the badge reports reality, not intent.

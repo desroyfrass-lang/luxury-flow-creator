@@ -23,3 +23,10 @@ Constitutional rules:
 
 Open milestone: collapse Journey Mode onto the shared pipeline so stage state is
 workflow data, not a second engine.
+
+FRASS-0572A: Founder-only Frassy Engine badge (bottom-left, dismissible, stored
+in `frass.frassy.engine-badge`) shows pipeline, mode, history source, turns
+loaded, audit turns filtered, active card and path. Constitutional principle:
+engine boundaries are sacred — Journey, Founder, Builder, Customer and
+Teleporter Audit modes never share conversational history unless deliberately
+designed and documented.
