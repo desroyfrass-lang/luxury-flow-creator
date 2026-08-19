@@ -723,11 +723,22 @@ export const Route = createFileRoute("/api/chat")({
         }
 
         const attachments = Array.isArray(body.attachments) ? body.attachments : [];
+        // A Teleporter review is isolated to one card. Any earlier turn that
+        // names a DIFFERENT card is dropped before the model reads it, so a past
+        // audit can never be replayed as if it were the page in front of us.
+        const activeCardNumber = body.auditContext?.number;
+        const namesAnotherCard = (content: string) => {
+          if (!activeCardNumber) return false;
+          const mentioned = [...content.matchAll(/card\s*#?\s*(\d{1,3})/gi)].map((m) =>
+            Number(m[1]),
+          );
+          return mentioned.length > 0 && mentioned.every((n) => n !== activeCardNumber);
+        };
         const clientMessages = (Array.isArray(body.messages) ? body.messages : []).filter(
           (message) =>
-            experienceContext !== "founder" ||
-            message.role !== "assistant" ||
-            !isFounderIdentityDiscovery(message.content),
+            (experienceContext !== "founder" ||
+              message.role !== "assistant" ||
+              !isFounderIdentityDiscovery(message.content)) && !namesAnotherCard(message.content),
         );
 
         // Emergency containment: only a fresh, explicit, non-empty user text
