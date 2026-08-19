@@ -746,6 +746,30 @@ export const Route = createFileRoute("/api/chat")({
           );
         }
 
+        // FRASS-0571A — fail closed when a stale browser session claims one
+        // Teleporter card while the request comes from another page. This is a
+        // workflow integrity check, not a model instruction: the wrong audit is
+        // never allowed to reach AI or enter the permanent review trail.
+        if (
+          body.auditContext &&
+          (!body.districtPath || body.auditContext.path !== body.districtPath)
+        ) {
+          return Response.json(
+            {
+              error:
+                "This page does not match the active Teleporter card. Return to the World Teleporter and open the card again before recording an audit.",
+              diagnostics: {
+                activeCardNumber: body.auditContext.number,
+                activeCardTitle: body.auditContext.title,
+                activeCardPath: body.auditContext.path,
+                requestPath: body.districtPath ?? null,
+                promptPreview: lastMessage.content.slice(0, 500),
+              },
+            },
+            { status: 409 },
+          );
+        }
+
         const key = process.env.LOVABLE_API_KEY;
         if (!key) {
           return Response.json({ error: "AI is not configured." }, { status: 500 });
@@ -778,7 +802,7 @@ Route: ${body.auditContext.path}
 Component: ${body.auditContext.component || "Not named"}
 Source file: ${body.auditContext.file}
 District: ${body.auditContext.district}
-This active card is the single source of truth for this review. Begin by naming Card #${String(body.auditContext.number).padStart(3, "0")} and this route. Ignore every card number, route, verification, ledger record, and "ready for next card" instruction from prior conversation history. Never mention Card #011 or Card #012 unless this active card is actually that number. Review only this card; do not infer the next card.`
+This active card is the single source of truth for this review. Begin by naming Card #${String(body.auditContext.number).padStart(3, "0")} and this route. Ignore every different card number, route, verification, ledger record, and "ready for next card" instruction from prior conversation history. Review only this card; do not infer the next card.`
             : undefined,
           body.modeContext && `Current context: ${body.modeContext}`,
           body.seasonContext && `Season accent: ${body.seasonContext}`,
@@ -903,6 +927,15 @@ the next move toward Legacy is. Never stop at helping someone earn a living.`;
                 mode: body.modeContext ?? null,
                 cart: body.cartContext ?? null,
                 q: (lastUser?.content ?? "").slice(0, 500),
+                 ...(body.auditContext
+                   ? {
+                       teleporter_card_number: body.auditContext.number,
+                       teleporter_card_title: body.auditContext.title,
+                       teleporter_card_path: body.auditContext.path,
+                       request_path: body.districtPath ?? null,
+                       prompt_preview: (lastUser?.content ?? "").slice(0, 500),
+                     }
+                   : {}),
               },
             });
           } catch {
@@ -1007,10 +1040,17 @@ the next move toward Legacy is. Never stop at helping someone earn a living.`;
           const founderFallback =
             "Let's stay with the platform decision in front of us. What would you like Frass OS to configure next?";
 
-          const reply =
+          const modelReply =
             experienceContext === "founder" && isFounderIdentityDiscovery(result.text)
               ? founderFallback
               : result.text || "…";
+          // FRASS-0571A — the active Teleporter card, not conversation history,
+          // owns the first line of every review. This deterministic label makes
+          // stale-card regressions immediately visible to the Founder and keeps
+          // the model from choosing an earlier card as the response heading.
+          const reply = body.auditContext
+            ? `### 🏛️ VISUAL VERIFICATION: CARD #${String(body.auditContext.number).padStart(3, "0")} (${body.auditContext.path})\n\n${modelReply}`
+            : modelReply;
 
           return Response.json({
             reply,
