@@ -2,7 +2,10 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { toActivity, type LearningActivity } from "@/lib/content-engine";
 
-const SELECT = "*";
+// Public-safe columns only — internal staff identifiers (created_by, reviewed_by)
+// are never exposed to signed-out visitors.
+const SELECT =
+  "id, slug, title, district, age_group, place_slug, category, difficulty, duration_minutes, learning_objective, description, hero_image, thumbnail, video_url, audio_url, story, instructions, materials, parent_guide, teacher_guide, discussion_questions, reflection_questions, worksheets, coloring_pages, downloads, slides, quiz, badge, skills, follow_up_slugs, related_slugs, seasonal_tags, themes, extras, status, version, position, featured, published_at, reviewed_at, created_at, updated_at";
 
 export interface ActivityFilter {
   district?: string;
