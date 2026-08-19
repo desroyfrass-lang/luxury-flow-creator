@@ -723,11 +723,22 @@ export const Route = createFileRoute("/api/chat")({
         }
 
         const attachments = Array.isArray(body.attachments) ? body.attachments : [];
+        // A Teleporter review is isolated to one card. Any earlier turn that
+        // names a DIFFERENT card is dropped before the model reads it, so a past
+        // audit can never be replayed as if it were the page in front of us.
+        const activeCardNumber = body.auditContext?.number;
+        const namesAnotherCard = (content: string) => {
+          if (!activeCardNumber) return false;
+          const mentioned = [...content.matchAll(/card\s*#?\s*(\d{1,3})/gi)].map((m) =>
+            Number(m[1]),
+          );
+          return mentioned.length > 0 && mentioned.every((n) => n !== activeCardNumber);
+        };
         const clientMessages = (Array.isArray(body.messages) ? body.messages : []).filter(
           (message) =>
-            experienceContext !== "founder" ||
-            message.role !== "assistant" ||
-            !isFounderIdentityDiscovery(message.content),
+            (experienceContext !== "founder" ||
+              message.role !== "assistant" ||
+              !isFounderIdentityDiscovery(message.content)) && !namesAnotherCard(message.content),
         );
 
         // Emergency containment: only a fresh, explicit, non-empty user text
@@ -750,10 +761,15 @@ export const Route = createFileRoute("/api/chat")({
         // Teleporter card while the request comes from another page. This is a
         // workflow integrity check, not a model instruction: the wrong audit is
         // never allowed to reach AI or enter the permanent review trail.
-        if (
-          body.auditContext &&
-          (!body.districtPath || body.auditContext.path !== body.districtPath)
-        ) {
+        const samePath = (a?: string | null, b?: string | null) => {
+          const norm = (v?: string | null) => {
+            if (!v) return "";
+            const clean = v.split("?")[0].split("#")[0];
+            return (clean.length > 1 ? clean.replace(/\/+$/, "") : clean).toLowerCase();
+          };
+          return Boolean(norm(a)) && norm(a) === norm(b);
+        };
+        if (body.auditContext && !samePath(body.auditContext.path, body.districtPath)) {
           return Response.json(
             {
               error:

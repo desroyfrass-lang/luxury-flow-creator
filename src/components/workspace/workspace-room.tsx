@@ -6,7 +6,7 @@
 import { supabase } from "@/integrations/supabase/client";
 import { readArrivalIntent } from "@/lib/frassy/context";
 import { loadTranscript, saveTranscript } from "@/lib/frassy/transcript";
-import { readActiveTeleport } from "@/lib/founder/teleport-session";
+import { resolveAuditCard } from "@/lib/founder/teleport-session";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { ChevronDown, ChevronRight } from "lucide-react";
 import { WorkspaceShell, type IndexEntry, type RoleLink } from "@/components/workspace/workspace-shell";
@@ -220,8 +220,8 @@ export function WorkspaceRoom({
     abortRef.current = controller;
     try {
       const currentPath = typeof window !== "undefined" ? window.location.pathname : undefined;
-      const activeTeleport = readActiveTeleport();
-      const auditCard = activeTeleport?.path === currentPath ? activeTeleport : null;
+      const auditCard = resolveAuditCard(currentPath);
+
       const transcriptScope = auditCard ? `teleporter.${auditCard.key}` : undefined;
       const { data: sessionData } = await supabase.auth.getSession();
       const accessToken = sessionData.session?.access_token;

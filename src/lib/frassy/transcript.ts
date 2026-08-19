@@ -25,11 +25,18 @@ export function loadTranscript(scope?: string): FrassyTurn[] {
     const raw = window.sessionStorage.getItem(storageKey(scope));
     if (!raw) return [];
     const parsed = JSON.parse(raw) as FrassyTurn[];
-    return Array.isArray(parsed) ? parsed.slice(-MAX_TURNS) : [];
+    if (!Array.isArray(parsed)) return [];
+    // The shared history never carries a past Teleporter verification: those
+    // belong to their own card and must never be replayed on another page.
+    const clean = scope
+      ? parsed
+      : parsed.filter((t) => !/visual verification:\s*card/i.test(t?.content ?? ""));
+    return clean.slice(-MAX_TURNS);
   } catch {
     return [];
   }
 }
+
 
 export function saveTranscript(turns: FrassyTurn[], scope?: string) {
   if (typeof window === "undefined") return;
