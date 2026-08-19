@@ -165,13 +165,6 @@ export const journeyTurn = createServerFn({ method: "POST" })
 
     const history = state.messages
       .filter((message) => trackOf(message.stage) === activeTrack)
-      // Founder history created before the engines were separated can contain
-      // Builder-discovery questions. Never send that contamination back to the model.
-      .filter((message) =>
-        activeTrack !== "owner" ||
-        message.role !== "assistant" ||
-        !isFounderIdentityDiscovery(message.content),
-      )
       .slice(-40)
       .map((m) => ({ role: m.role, content: m.content }));
     history.push({ role: "user", content: userText });
@@ -192,8 +185,11 @@ export const journeyTurn = createServerFn({ method: "POST" })
 
     const raw = await result.text;
     const parsed = parseJourneyMarkers(raw);
-    const rejectedFounderReply = activeTrack === "owner" && isFounderIdentityDiscovery(parsed.text);
-    const text = rejectedFounderReply ? founderSafetyReply(stage.id, displayName) : parsed.text;
+    // Identity-drift detection is now advisory only. It is reported in the
+    // diagnostics strip, but it NEVER rewrites, replaces or discards what
+    // Frassy actually said — that substitution was the repeating generic line.
+    const identityDrift = activeTrack === "owner" && isFounderIdentityDiscovery(parsed.text);
+    const text = parsed.text;
 
     // ── WORKFLOW ENGINE (independent of the conversation engine) ───────────────
     // Progress moves only on an explicit instruction from the Founder/Builder.
@@ -203,11 +199,13 @@ export const journeyTurn = createServerFn({ method: "POST" })
     // never restarts or rewinds the workflow.
     const advanceWord = /^(next|continue|proceed|move on|skip)(\b|[.!,])/i.test(userText.trim());
     const stageComplete =
-      advanceWord || (isExplicitStageApproval(userText) && parsed.stageComplete && !rejectedFounderReply);
-    const memory = rejectedFounderReply ? [] : parsed.memory;
+      advanceWord || (isExplicitStageApproval(userText) && parsed.stageComplete);
+    // Everything she learns is recorded, every turn.
+    const memory = parsed.memory;
     const reply = text || (activeTrack === "owner"
       ? founderSafetyReply(stage.id, displayName)
       : "I'm here. Take your time — tell me a little more.");
+
 
 
     await sb
