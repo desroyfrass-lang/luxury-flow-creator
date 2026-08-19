@@ -43,6 +43,14 @@ export type SpeechSnapshot = {
   turnId: string | null;
   /** Identifies which surface asked for this speech. */
   owner: string | null;
+  /**
+   * Teleprompter: the exact words this run will speak, in order, plus the index
+   * of the chunk currently audible. Nothing is ever trimmed — this is a
+   * verbatim record of what leaves Frassy's mouth.
+   */
+  chunks: string[];
+  activeChunk: number;
+  fullText: string;
 };
 
 const IDLE: SpeechSnapshot = {
@@ -52,7 +60,11 @@ const IDLE: SpeechSnapshot = {
   chunksSpoken: 0,
   turnId: null,
   owner: null,
+  chunks: [],
+  activeChunk: -1,
+  fullText: "",
 };
+
 
 let snapshot: SpeechSnapshot = IDLE;
 const listeners = new Set<() => void>();
@@ -82,7 +94,24 @@ export function getSpeechSnapshot(): SpeechSnapshot {
   return snapshot;
 }
 
+/**
+ * Returns Frassy to idle WITHOUT erasing the teleprompter transcript, so the
+ * Founder can still read the last thing she said after she stops speaking.
+ */
+function idleKeepingTranscript(runId: number): SpeechSnapshot {
+  return {
+    ...IDLE,
+    runId,
+    chunks: snapshot.chunks,
+    fullText: snapshot.fullText,
+    chunksTotal: snapshot.chunksTotal,
+    chunksSpoken: snapshot.chunksSpoken,
+    activeChunk: -1,
+  };
+}
+
 /** Hard-kill every audio element this module has ever created. */
+
 function sweepAudio() {
   for (const el of liveElements) {
     try {
@@ -305,7 +334,11 @@ export async function speakText(
     chunksSpoken: 0,
     turnId,
     owner: opts.owner ?? null,
+    chunks,
+    activeChunk: 0,
+    fullText: clean,
   };
+
   emit();
 
   const tone: VoiceTone = opts.tone ?? "neutral";
@@ -326,7 +359,7 @@ export async function speakText(
       if (runId !== runCounter) return "interrupted";
       if (ok) anyPlayed = true;
       conversation.chunkSpoken(turnId, i);
-      patch({ chunksSpoken: i + 1 });
+      patch({ chunksSpoken: i + 1, activeChunk: i + 1 < chunks.length ? i + 1 : i });
 
       if (!ok && !anyPlayed) {
         // FRASS-0477 — tier 2 before we ever admit defeat.
@@ -334,13 +367,13 @@ export async function speakText(
         if (viaDevice && runId === runCounter) {
           setVoiceTier("device");
           conversation.playbackComplete(turnId);
-          snapshot = { ...IDLE, runId };
+          snapshot = idleKeepingTranscript(runId);
           emit();
           return "complete";
         }
         setVoiceTier("text");
         conversation.playbackFailed(turnId, "browser blocked audio");
-        snapshot = { ...IDLE, runId };
+        snapshot = idleKeepingTranscript(runId);
         emit();
         return "blocked";
       }
@@ -348,7 +381,7 @@ export async function speakText(
 
     setVoiceTier("cloud");
     conversation.playbackComplete(turnId);
-    snapshot = { ...IDLE, runId };
+    snapshot = idleKeepingTranscript(runId);
     emit();
     return "complete";
   } catch (err) {
@@ -356,13 +389,13 @@ export async function speakText(
     if (fallbackPlayed && runId === runCounter) {
       setVoiceTier("device");
       conversation.playbackComplete(turnId);
-      snapshot = { ...IDLE, runId };
+      snapshot = idleKeepingTranscript(runId);
       emit();
       return "complete";
     }
     setVoiceTier("text");
     conversation.playbackFailed(turnId, err instanceof Error ? err.message : "tts failed");
-    snapshot = { ...IDLE, runId };
+    snapshot = idleKeepingTranscript(runId);
     emit();
     return "failed";
   } finally {
