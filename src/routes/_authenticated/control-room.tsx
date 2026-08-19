@@ -167,6 +167,7 @@ function ControlRoom() {
 
         {active === "frassy" && (
           <>
+            <FounderAiStatusPanel />
             <p className="text-sm text-muted-foreground">
               Frassy's voice is managed in the Voice Studio above. Her character is below — one
               voice, one personality, one Frassy, everywhere on the platform.
