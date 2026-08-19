@@ -377,8 +377,8 @@ export const journeyOpening = createServerFn({ method: "POST" })
         });
         const raw = await result.text;
         const text = parseJourneyMarkers(raw).text.trim();
-        const safe = activeTrack === "owner" && isFounderIdentityDiscovery(text);
-        if (text && !safe) reply = text;
+        if (text) reply = text;
+
       } catch {
         /* Frassy still speaks — the scripted greeting stands in. */
       }
