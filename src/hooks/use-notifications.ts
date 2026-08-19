@@ -49,8 +49,11 @@ export function useNotifications() {
 
   useEffect(() => {
     if (!userId) return;
-    const channel = supabase
-      .channel(`notifications:${userId}`)
+    // Unique topic per mount: reusing a topic returns an already-subscribed
+    // channel and throws "cannot add postgres_changes callbacks ... after subscribe()".
+    const topic = `notifications:${userId}:${Math.random().toString(36).slice(2)}`;
+    const channel = supabase.channel(topic);
+    channel
       .on(
         "postgres_changes",
         { event: "*", schema: "public", table: "notifications", filter: `user_id=eq.${userId}` },
@@ -61,6 +64,7 @@ export function useNotifications() {
       supabase.removeChannel(channel);
     };
   }, [userId, qc]);
+
 
   const items = query.data ?? [];
   const unreadCount = items.filter((n) => !n.read_at).length;
