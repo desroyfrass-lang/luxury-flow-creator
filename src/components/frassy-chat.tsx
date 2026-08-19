@@ -40,6 +40,8 @@ import { VoiceFeedbackButton } from "@/components/feedback/voice-feedback";
 import { useFrassyStartup } from "@/hooks/use-frassy-startup";
 import { loadTranscript, saveTranscript, type FrassyTurn } from "@/lib/frassy/transcript";
 import { resolveAuditCard, isStaleTeleport } from "@/lib/founder/teleport-session";
+import { publishEngineDiagnostics } from "@/lib/frassy/engine-diagnostics";
+
 import { VOICE_TIER_LABELS } from "@/lib/voice/voice-tier";
 // FRASS-0478 — she learns how you like to work, never who you are.
 import {
