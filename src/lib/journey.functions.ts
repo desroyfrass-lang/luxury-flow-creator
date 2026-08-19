@@ -395,3 +395,63 @@ export const journeyOpening = createServerFn({ method: "POST" })
 
     return { reply, alreadyOpened: false, stageId: stage.id };
   });
+
+/**
+ * FRASS-0571 — Founder AI Status.
+ *
+ * A single honest read-out of the three things that can quietly break Frassy:
+ * whether she is recording memory, whether anything is rewriting her words,
+ * and which step of the journey she is actually standing on. Read-only.
+ */
+export const founderAiStatus = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }) => {
+    const { data: isAdmin, error: roleError } = await context.supabase.rpc("has_role", {
+      _user_id: context.userId,
+      _role: "admin",
+    });
+    if (roleError) throw new Error(roleError.message);
+    if (!isAdmin) throw new Error("Founder AI Status is restricted to the Founder.");
+
+    const sb = context.supabase as unknown as JourneyDatabase;
+    const state = await loadJourneyState(sb, context.userId);
+    const stage = stageById(state.currentStage);
+    const track = trackOf(stage.id);
+    const stages = stagesFor(stage.id);
+    const stepNumber = stageIndex(stage.id) + 1;
+
+    const { data: memoryRows } = await context.supabase
+      .from("builder_memory")
+      .select("updated_at, category")
+      .eq("user_id", context.userId)
+      .order("updated_at", { ascending: false })
+      .limit(200);
+
+    const rows = memoryRows ?? [];
+    const namespace = track === "owner" ? PLATFORM_MEMORY_PREFIX : "";
+    const inNamespace = rows.filter((r) =>
+      namespace ? String(r.category).startsWith(namespace) : !String(r.category).startsWith(PLATFORM_MEMORY_PREFIX),
+    );
+    const lastMemoryAt = (inNamespace[0]?.updated_at as string | undefined) ?? null;
+
+    const trackMessages = state.messages.filter((m) => trackOf(m.stage) === track);
+    const lastAssistant = [...trackMessages].reverse().find((m) => m.role === "assistant");
+
+    return {
+      memoryRecording: "active" as const,
+      memoryNamespace: track === "owner" ? ("platform" as const) : ("builder" as const),
+      memoryEntries: inNamespace.length,
+      lastMemoryAt,
+      responseFilter: "advisory_only" as const,
+      safetyOverride: "inactive" as const,
+      conversationMode: track === "owner" ? ("Founder" as const) : ("Builder" as const),
+      stageId: stage.id,
+      stageTitle: stage.title,
+      stepNumber,
+      stepTotal: stages.length,
+      transcriptMessages: trackMessages.length,
+      lastReplyAt: lastAssistant?.created_at ?? null,
+      lastReplyPreview: lastAssistant ? lastAssistant.content.slice(0, 160) : null,
+      checkedAt: new Date().toISOString(),
+    };
+  });
