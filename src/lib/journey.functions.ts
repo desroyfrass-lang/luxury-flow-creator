@@ -457,3 +457,91 @@ export const founderAiStatus = createServerFn({ method: "GET" })
       checkedAt: new Date().toISOString(),
     };
   });
+
+/**
+ * FRASS-0571A — Founder AI Timeline.
+ *
+ * A plain, time-ordered log of what Frassy actually did: what she heard, what
+ * she said, when a step advanced, and when memory was committed. Derived from
+ * the real records, so it works retroactively. Read-only, Founder only.
+ */
+export type FounderAiEvent = {
+  at: string;
+  kind: "message_received" | "response_delivered" | "journey_advanced" | "memory_saved" | "safety_override";
+  title: string;
+  detail: string | null;
+};
+
+export const founderAiTimeline = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }) => {
+    const { data: isAdmin, error: roleError } = await context.supabase.rpc("has_role", {
+      _user_id: context.userId,
+      _role: "admin",
+    });
+    if (roleError) throw new Error(roleError.message);
+    if (!isAdmin) throw new Error("Founder AI Timeline is restricted to the Founder.");
+
+    const sb = context.supabase as unknown as JourneyDatabase;
+    const state = await loadJourneyState(sb, context.userId);
+
+    const events: FounderAiEvent[] = [];
+    let previousStage: string | null = null;
+
+    for (const message of [...state.messages].sort(
+      (a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime(),
+    )) {
+      if (previousStage && message.stage !== previousStage) {
+        const from = stageIndex(previousStage as never) + 1;
+        const to = stageIndex(message.stage as never) + 1;
+        events.push({
+          at: message.created_at,
+          kind: "journey_advanced",
+          title: "Journey Advanced",
+          detail: `Step ${from} → ${to} · ${stageById(message.stage as never).title}`,
+        });
+      }
+      previousStage = message.stage;
+
+      const preview = message.content.replace(/\s+/g, " ").slice(0, 120);
+      if (message.role === "user") {
+        events.push({
+          at: message.created_at,
+          kind: "message_received",
+          title: "Message Received",
+          detail: preview,
+        });
+      } else {
+        const overridden = message.content.startsWith(founderSafetyReply().slice(0, 40));
+        events.push({
+          at: message.created_at,
+          kind: overridden ? "safety_override" : "response_delivered",
+          title: overridden ? "Safety Override Used" : "Response Delivered",
+          detail: preview,
+        });
+      }
+    }
+
+    const { data: memoryRows } = await context.supabase
+      .from("builder_memory")
+      .select("category, key, updated_at")
+      .eq("user_id", context.userId)
+      .order("updated_at", { ascending: false })
+      .limit(100);
+
+    for (const row of memoryRows ?? []) {
+      events.push({
+        at: row.updated_at as string,
+        kind: "memory_saved",
+        title: "Memory Saved",
+        detail: `${String(row.category).replace(PLATFORM_MEMORY_PREFIX, "")} · ${String(row.key)}`,
+      });
+    }
+
+    events.sort((a, b) => new Date(b.at).getTime() - new Date(a.at).getTime());
+
+    return {
+      events: events.slice(0, 120),
+      generatedAt: new Date().toISOString(),
+    };
+  });
