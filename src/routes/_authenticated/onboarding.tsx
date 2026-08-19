@@ -16,6 +16,11 @@ import {
   type JourneyMessage,
 } from "@/lib/journey.functions";
 import { isTeleporterAuditTurn } from "@/lib/frassy/engine-registry";
+import {
+  publishEngineDiagnostics,
+  clearEngineDiagnostics,
+} from "@/lib/frassy/engine-diagnostics";
+
 
 import { stageById, stageIndex, stagesFor, trackMinutes, trackOf } from "@/lib/journey";
 import { useIsAdminStatus } from "@/hooks/use-is-admin";
