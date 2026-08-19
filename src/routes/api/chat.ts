@@ -913,13 +913,18 @@ the next move toward Legacy is. Never stop at helping someone earn a living.`;
         type UiPart =
           | { type: "text"; text: string }
           | { type: "file"; mediaType: string; url: string; filename?: string };
-        const uiMessages = clientMessages
+        // A Teleporter audit is a clean-room review: the model sees ONLY the
+        // Founder's current request plus the authoritative card block above, so
+        // no earlier card review can ever be replayed.
+        const modelSource = body.auditContext ? [lastMessage] : clientMessages;
+        const uiMessages = modelSource
           .filter((m) => m.role === "user" || m.role === "assistant")
           .map((m, i) => ({
             id: `m-${i}`,
             role: m.role,
             parts: [{ type: "text" as const, text: m.content }] as UiPart[],
           }));
+
 
         // Inline analyzable assets (images, PDFs) onto the latest user turn.
         const lastUserIdx = uiMessages.map((m) => m.role).lastIndexOf("user");
