@@ -727,11 +727,14 @@ export const Route = createFileRoute("/api/chat")({
         // names a DIFFERENT card is dropped before the model reads it, so a past
         // audit can never be replayed as if it were the page in front of us.
         const activeCardNumber = body.auditContext?.number;
+        const isAuditTurn = (content: string) =>
+          /visual verification\s*:\s*card|ready for card|teleporter card/i.test(content);
         const namesAnotherCard = (content: string) => {
-          if (!activeCardNumber) return false;
           const mentioned = [...content.matchAll(/card\s*#?\s*(\d{1,3})/gi)].map((m) =>
             Number(m[1]),
           );
+          // With no active card, ANY past audit turn is foreign history.
+          if (!activeCardNumber) return isAuditTurn(content) || mentioned.length > 0;
           return mentioned.length > 0 && mentioned.every((n) => n !== activeCardNumber);
         };
         const clientMessages = (Array.isArray(body.messages) ? body.messages : []).filter(
@@ -740,6 +743,7 @@ export const Route = createFileRoute("/api/chat")({
               message.role !== "assistant" ||
               !isFounderIdentityDiscovery(message.content)) && !namesAnotherCard(message.content),
         );
+
 
         // Emergency containment: only a fresh, explicit, non-empty user text
         // submission may create a Frassy turn. Legacy streaming/background
@@ -909,13 +913,18 @@ the next move toward Legacy is. Never stop at helping someone earn a living.`;
         type UiPart =
           | { type: "text"; text: string }
           | { type: "file"; mediaType: string; url: string; filename?: string };
-        const uiMessages = clientMessages
+        // A Teleporter audit is a clean-room review: the model sees ONLY the
+        // Founder's current request plus the authoritative card block above, so
+        // no earlier card review can ever be replayed.
+        const modelSource = body.auditContext ? [lastMessage] : clientMessages;
+        const uiMessages = modelSource
           .filter((m) => m.role === "user" || m.role === "assistant")
           .map((m, i) => ({
             id: `m-${i}`,
             role: m.role,
             parts: [{ type: "text" as const, text: m.content }] as UiPart[],
           }));
+
 
         // Inline analyzable assets (images, PDFs) onto the latest user turn.
         const lastUserIdx = uiMessages.map((m) => m.role).lastIndexOf("user");
@@ -1064,9 +1073,13 @@ the next move toward Legacy is. Never stop at helping someone earn a living.`;
           // owns the first line of every review. This deterministic label makes
           // stale-card regressions immediately visible to the Founder and keeps
           // the model from choosing an earlier card as the response heading.
+          const auditFooter = body.auditContext
+            ? `\n\n---\nAudit context received by Frassy: Card #${String(body.auditContext.number).padStart(3, "0")} · ${body.auditContext.path} · history: clean-room (0 prior turns).`
+            : "";
           const reply = body.auditContext
-            ? `### 🏛️ VISUAL VERIFICATION: CARD #${String(body.auditContext.number).padStart(3, "0")} (${body.auditContext.path})\n\n${modelReply}`
+            ? `### 🏛️ VISUAL VERIFICATION: CARD #${String(body.auditContext.number).padStart(3, "0")} (${body.auditContext.path})\n\n${modelReply}${auditFooter}`
             : modelReply;
+
 
           return Response.json({
             reply,
