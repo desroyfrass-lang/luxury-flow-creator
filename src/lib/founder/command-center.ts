@@ -168,6 +168,13 @@ export const COMMAND_SECTIONS: CommandSection[] = [
     purpose: "One voice, one personality, one Frassy.",
     tools: [
       {
+        id: "founder-ai-status",
+        label: "Founder AI Status",
+        plain: "Is her memory recording, is anything rewriting her words, and which step is she on?",
+        kind: "panel",
+        amendment: "FRASS-0571",
+      },
+      {
         id: "voice-studio",
         label: "Voice Studio",
         plain: "Audition, tune and approve the official voice. Personality and pronunciation live here too.",

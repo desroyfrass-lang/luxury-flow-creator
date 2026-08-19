@@ -27,6 +27,7 @@ import { ExperienceSimulator } from "@/components/founder/experience-simulator";
 import { SeedVaultsPanel } from "@/components/founder/seed-vaults-panel";
 import { CommissioningPanel } from "@/components/founder/commissioning-panel";
 import { WorldTeleporterPanel } from "@/components/founder/world-teleporter-panel";
+import { FounderAiStatusPanel } from "@/components/founder/founder-ai-status-panel";
 import { endTeleport } from "@/lib/founder/teleport-session";
 import { FrassyChat } from "@/components/frassy-chat";
 import { PlatformHealthPanel } from "@/components/finance/platform-health-panel";
