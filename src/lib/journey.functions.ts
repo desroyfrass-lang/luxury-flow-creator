@@ -266,7 +266,7 @@ export const journeyTurn = createServerFn({ method: "POST" })
           ? "authenticated admin → owner track"
           : "authenticated participant → builder track",
         historySource: activeTrack === "owner" ? "platform_session" : "builder_session",
-        fallback: rejectedFounderReply ? "founder_safety_interceptor" : "disabled",
+        fallback: identityDrift ? "founder_safety_interceptor" : "disabled",
         identityDiscovery: activeTrack === "owner" ? "disabled" : "enabled",
         stageId: stage.id,
         historyMessages: history.length,
