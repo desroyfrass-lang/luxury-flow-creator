@@ -189,9 +189,22 @@ export const journeyTurn = createServerFn({ method: "POST" })
     const { streamText } = await import("ai");
 
     const gateway = createLovableAiGatewayProvider(apiKey);
-    const system = activeTrack === "owner"
+    const basePrompt = activeTrack === "owner"
       ? buildFounderSystemPrompt(stage.id, state.memory, displayName)
       : buildBuilderSystemPrompt(stage.id, state.memory, displayName);
+    // FRASS-0572 — Journey Mode boundary. She is the same Frassy, but this room
+    // does not run Teleporter audits.
+    const system = `${basePrompt}
+
+━━━ MODE: JOURNEY (FRASS-0572) ━━━
+This conversation is the stage-driven journey. You are NOT in Teleporter Audit Mode here.
+Never open with "VISUAL VERIFICATION", never name a Teleporter card number, never say "ready for the next card".${
+      auditRequested
+        ? `
+The person just asked about a Teleporter card review. Answer in one short line: card reviews happen in the Founder Control Room → World Teleporter, where the active card is read from the page itself. Then continue this journey step.`
+        : ""
+    }`;
+
     const result = streamText({
       model: gateway("google/gemini-3.6-flash"),
       system,
