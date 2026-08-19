@@ -1,6 +1,7 @@
 # Project Memory
 
 ## Core
+FRASS-0572: one Frassy intelligence layer. Only two pipelines (shared /api/chat, Journey). Journey Mode never audits. New surfaces pick a mode, never a new engine.
 The Daily is where Builders think. The Workshop is where Builders build. Never blur the two.
 Money Moves always nest their Fast Tracks inside the card; never a separate step list.
 Every Business Vault carries one priority: Active, Growing, Future or Archived — it drives Daily, Workshop and fund allocation.
@@ -67,6 +68,7 @@ Every Business Vault runs three stages — Earn → Scale → Legacy (FRASS-0533
 Creative series are intellectual property produced by Frassy from a Blueprint, never hardcoded into a Daily (FRASS-0533).
 
 ## Memories
+- [FRASS-0572 Frassy Engine Map](mem://features/frass-0572-frassy-engine-map) — Only two conversation pipelines; Journey Mode never runs or replays Teleporter audits; surfaces pick a mode not an engine
 - [SPEC-BLUEPRINT-001-FROZEN-v1.0 Builder Operating System](mem://features/spec-blueprint-001-builder-os) — FROZEN v1.0: Daily vs Workshop, Money Move lifecycle with nested Fast Tracks, adaptive Workshop environments, Vault Priority, Builder Rhythm, glossary, Simplified mode, Out of Scope boundaries, Founder Walkthrough checklist
 - [FRASS-0569 Welcome Hall Experience](mem://features/frass-0569-welcome-hall-experience) — Mandatory Frass Hill front entrance, three experiences, four Daily Welcome tiers
 - [FRASS-0477 Frassy Presence](mem://features/frass-0477-frassy-presence) — Arrival/returning/working/idle etiquette, Focus Mode silence, cloud→device→text voice hierarchy with indicator
