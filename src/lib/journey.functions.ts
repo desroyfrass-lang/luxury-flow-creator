@@ -512,7 +512,7 @@ export const founderAiTimeline = createServerFn({ method: "GET" })
           detail: preview,
         });
       } else {
-        const overridden = message.content.startsWith(founderSafetyReply().slice(0, 40));
+        const overridden = message.content.startsWith(founderSafetyReply(message.stage).slice(0, 40));
         events.push({
           at: message.created_at,
           kind: overridden ? "safety_override" : "response_delivered",
