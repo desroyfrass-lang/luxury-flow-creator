@@ -583,6 +583,14 @@ export function FrassyChat({
                         ? "Nearby"
                         : "Waiting"}
             </div>
+            {auditCard ? (
+              <div
+                data-teleporter-active-card={auditCard.number}
+                className="mt-1 text-[9px] font-semibold uppercase tracking-[0.12em] text-[color:var(--gold)]"
+              >
+                Reviewing Card #{String(auditCard.number).padStart(3, "0")} · {auditCard.path}
+              </div>
+            ) : null}
             {/* FRASS-0477 — never make the member guess which voice they hear. */}
             {speakReplies && startup.voiceTier !== "unknown" && (
               <div

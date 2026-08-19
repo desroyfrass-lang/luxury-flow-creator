@@ -1040,10 +1040,17 @@ the next move toward Legacy is. Never stop at helping someone earn a living.`;
           const founderFallback =
             "Let's stay with the platform decision in front of us. What would you like Frass OS to configure next?";
 
-          const reply =
+          const modelReply =
             experienceContext === "founder" && isFounderIdentityDiscovery(result.text)
               ? founderFallback
               : result.text || "…";
+          // FRASS-0571A — the active Teleporter card, not conversation history,
+          // owns the first line of every review. This deterministic label makes
+          // stale-card regressions immediately visible to the Founder and keeps
+          // the model from choosing an earlier card as the response heading.
+          const reply = body.auditContext
+            ? `### 🏛️ VISUAL VERIFICATION: CARD #${String(body.auditContext.number).padStart(3, "0")} (${body.auditContext.path})\n\n${modelReply}`
+            : modelReply;
 
           return Response.json({
             reply,
