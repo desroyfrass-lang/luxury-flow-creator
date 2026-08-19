@@ -346,13 +346,13 @@ export async function speakText(
         if (viaDevice && runId === runCounter) {
           setVoiceTier("device");
           conversation.playbackComplete(turnId);
-          snapshot = { ...IDLE, runId };
+          snapshot = idleKeepingTranscript(runId);
           emit();
           return "complete";
         }
         setVoiceTier("text");
         conversation.playbackFailed(turnId, "browser blocked audio");
-        snapshot = { ...IDLE, runId };
+        snapshot = idleKeepingTranscript(runId);
         emit();
         return "blocked";
       }
@@ -360,7 +360,7 @@ export async function speakText(
 
     setVoiceTier("cloud");
     conversation.playbackComplete(turnId);
-    snapshot = { ...IDLE, runId };
+    snapshot = idleKeepingTranscript(runId);
     emit();
     return "complete";
   } catch (err) {
@@ -368,13 +368,13 @@ export async function speakText(
     if (fallbackPlayed && runId === runCounter) {
       setVoiceTier("device");
       conversation.playbackComplete(turnId);
-      snapshot = { ...IDLE, runId };
+      snapshot = idleKeepingTranscript(runId);
       emit();
       return "complete";
     }
     setVoiceTier("text");
     conversation.playbackFailed(turnId, err instanceof Error ? err.message : "tts failed");
-    snapshot = { ...IDLE, runId };
+    snapshot = idleKeepingTranscript(runId);
     emit();
     return "failed";
   } finally {
