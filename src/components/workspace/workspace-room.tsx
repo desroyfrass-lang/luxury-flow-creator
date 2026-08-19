@@ -6,7 +6,7 @@
 import { supabase } from "@/integrations/supabase/client";
 import { readArrivalIntent } from "@/lib/frassy/context";
 import { loadTranscript, saveTranscript } from "@/lib/frassy/transcript";
-import { readActiveTeleport } from "@/lib/founder/teleport-session";
+import { resolveAuditCard } from "@/lib/founder/teleport-session";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { ChevronDown, ChevronRight } from "lucide-react";
 import { WorkspaceShell, type IndexEntry, type RoleLink } from "@/components/workspace/workspace-shell";

@@ -39,7 +39,7 @@ import { SpeechControls } from "@/components/voice/speech-controls";
 import { VoiceFeedbackButton } from "@/components/feedback/voice-feedback";
 import { useFrassyStartup } from "@/hooks/use-frassy-startup";
 import { loadTranscript, saveTranscript, type FrassyTurn } from "@/lib/frassy/transcript";
-import { readActiveTeleport } from "@/lib/founder/teleport-session";
+import { resolveAuditCard, isStaleTeleport } from "@/lib/founder/teleport-session";
 import { VOICE_TIER_LABELS } from "@/lib/voice/voice-tier";
 // FRASS-0478 — she learns how you like to work, never who you are.
 import {
@@ -136,13 +136,12 @@ export function FrassyChat({
   // A Teleporter review is isolated by card. Re-resolve it whenever the route
   // changes: the root Frassy component survives client-side navigation, so a
   // one-time state initializer can otherwise keep the previous card forever.
-  const [auditCard, setAuditCard] = useState<ReturnType<typeof readActiveTeleport>>(null);
+  const [auditCard, setAuditCard] = useState<ReturnType<typeof resolveAuditCard>>(null);
   const [auditContextMismatch, setAuditContextMismatch] = useState(false);
   useEffect(() => {
-    const active = readActiveTeleport();
-    const matchesCurrentPage = active?.path === ctx.pathname;
-    setAuditCard(matchesCurrentPage ? active : null);
-    setAuditContextMismatch(Boolean(active && !matchesCurrentPage));
+    const active = resolveAuditCard(ctx.pathname);
+    setAuditCard(active);
+    setAuditContextMismatch(isStaleTeleport(ctx.pathname));
   }, [ctx.pathname]);
   const transcriptScope = auditCard ? `teleporter.${auditCard.key}` : undefined;
 
