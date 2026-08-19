@@ -802,7 +802,7 @@ Route: ${body.auditContext.path}
 Component: ${body.auditContext.component || "Not named"}
 Source file: ${body.auditContext.file}
 District: ${body.auditContext.district}
-This active card is the single source of truth for this review. Begin by naming Card #${String(body.auditContext.number).padStart(3, "0")} and this route. Ignore every card number, route, verification, ledger record, and "ready for next card" instruction from prior conversation history. Never mention Card #011 or Card #012 unless this active card is actually that number. Review only this card; do not infer the next card.`
+This active card is the single source of truth for this review. Begin by naming Card #${String(body.auditContext.number).padStart(3, "0")} and this route. Ignore every different card number, route, verification, ledger record, and "ready for next card" instruction from prior conversation history. Review only this card; do not infer the next card.`
             : undefined,
           body.modeContext && `Current context: ${body.modeContext}`,
           body.seasonContext && `Season accent: ${body.seasonContext}`,

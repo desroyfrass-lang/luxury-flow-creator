@@ -5,7 +5,8 @@
 
 import { supabase } from "@/integrations/supabase/client";
 import { readArrivalIntent } from "@/lib/frassy/context";
-import { appendTranscript } from "@/lib/frassy/transcript";
+import { loadTranscript, saveTranscript } from "@/lib/frassy/transcript";
+import { readActiveTeleport } from "@/lib/founder/teleport-session";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { ChevronDown, ChevronRight } from "lucide-react";
 import { WorkspaceShell, type IndexEntry, type RoleLink } from "@/components/workspace/workspace-shell";
@@ -218,6 +219,10 @@ export function WorkspaceRoom({
     const controller = new AbortController();
     abortRef.current = controller;
     try {
+      const currentPath = typeof window !== "undefined" ? window.location.pathname : undefined;
+      const activeTeleport = readActiveTeleport();
+      const auditCard = activeTeleport?.path === currentPath ? activeTeleport : null;
+      const transcriptScope = auditCard ? `teleporter.${auditCard.key}` : undefined;
       const { data: sessionData } = await supabase.auth.getSession();
       const accessToken = sessionData.session?.access_token;
       const res = await fetch("/api/chat", {
@@ -238,7 +243,17 @@ export function WorkspaceRoom({
           modeContext: "workspace",
           experienceContext: isAdmin ? "founder" : "builder",
           // FRASS-0451A — where we are, and why they came.
-          districtPath: typeof window !== "undefined" ? window.location.pathname : undefined,
+          districtPath: currentPath,
+          auditContext: auditCard
+            ? {
+                number: auditCard.number,
+                title: auditCard.title,
+                path: auditCard.path,
+                component: auditCard.component,
+                file: auditCard.file,
+                district: auditCard.district,
+              }
+            : undefined,
           arrivalIntent: readArrivalIntent() ?? undefined,
           interactionMode: spoken ? "voice_and_text" : "text",
           voiceAvailable: voice.voiceAvailable,
@@ -253,8 +268,16 @@ export function WorkspaceRoom({
       }
       const reply = data.reply?.trim() || "…";
       push(sectionId, { id: nid("m"), role: "assistant", content: reply });
-      // FRASS-0476B — one shared conversation history across every room.
-      appendTranscript({ role: "user", content: text }, { role: "assistant", content: reply });
+      // FRASS-0571A — every Frassy surface respects the active Teleporter card's
+      // isolated history. A card review can never leak into the ordinary transcript.
+      saveTranscript(
+        [
+          ...loadTranscript(transcriptScope),
+          { role: "user", content: text },
+          { role: "assistant", content: reply },
+        ],
+        transcriptScope,
+      );
       // Workspace Awareness — real work, recorded honestly.
       recordActivity(activeProjectId);
       setAwarenessPulse((n) => n + 1);
