@@ -96,9 +96,29 @@ function OnboardingPage() {
     return [...saved, ...local];
   }, [data?.messages, local, track]);
 
+  // FRASS-0572A — publish which engine is answering, so the Founder can see it.
+  const auditTurnsFiltered = useMemo(
+    () =>
+      (data?.messages ?? []).filter(
+        (m: JourneyMessage) => trackOf(m.stage) === track && isTeleporterAuditTurn(m.content),
+      ).length,
+    [data?.messages, track],
+  );
+  useEffect(() => {
+    publishEngineDiagnostics({
+      pipeline: "journey",
+      mode: "journey",
+      historySource: "builder_journey_messages",
+      historyTurns: messages.length,
+      auditTurnsFiltered,
+      path: "/onboarding",
+    });
+    return () => clearEngineDiagnostics();
+  }, [messages.length, auditTurnsFiltered]);
 
   const messagesRef = useRef<LocalMessage[]>(messages);
   messagesRef.current = messages;
+
 
   // Founder decisions are Platform Memory, kept separate from Builder memory.
   const platformMemory = useMemo(
