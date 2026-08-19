@@ -39,6 +39,7 @@ import { SpeechControls } from "@/components/voice/speech-controls";
 import { VoiceFeedbackButton } from "@/components/feedback/voice-feedback";
 import { useFrassyStartup } from "@/hooks/use-frassy-startup";
 import { loadTranscript, saveTranscript, type FrassyTurn } from "@/lib/frassy/transcript";
+import { readActiveTeleport } from "@/lib/founder/teleport-session";
 import { VOICE_TIER_LABELS } from "@/lib/voice/voice-tier";
 // FRASS-0478 — she learns how you like to work, never who you are.
 import {
@@ -131,22 +132,29 @@ export function FrassyChat({
   const [open, setOpen] = useState(embedded);
   // FRASS-0557 §5 — every conversation can be expanded or restored.
   const [expanded, setExpanded] = useState(false);
+  // A Teleporter review is isolated by card. The card that opened this page is
+  // authoritative; Card #011 can never leak into Card #025 through chat history.
+  const [auditCard] = useState(() => readActiveTeleport());
+  const transcriptScope = auditCard ? `teleporter.${auditCard.key}` : undefined;
 
   // FRASS-0476B — one shared conversation history. A refresh or a change of
   // district continues the same conversation instead of restarting it.
   const [messages, setMessages] = useState<Msg[]>([]);
   useEffect(() => {
-    const prior = loadTranscript();
+    const prior = loadTranscript(transcriptScope);
     if (prior.length) {
       setMessages(
         prior.map((t: FrassyTurn) => ({ id: nextId(), role: t.role, content: t.content })),
       );
     }
-  }, []);
+  }, [transcriptScope]);
   useEffect(() => {
     if (messages.length)
-      saveTranscript(messages.map((m) => ({ role: m.role, content: m.content })));
-  }, [messages]);
+      saveTranscript(
+        messages.map((m) => ({ role: m.role, content: m.content })),
+        transcriptScope,
+      );
+  }, [messages, transcriptScope]);
 
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
@@ -315,6 +323,16 @@ export function FrassyChat({
           experienceContext: isAdmin ? "founder" : "storefront",
           // FRASS-0451A — where we are, and why they came.
           districtPath: ctx.pathname,
+           auditContext: auditCard
+             ? {
+                 number: auditCard.number,
+                 title: auditCard.title,
+                 path: auditCard.path,
+                 component: auditCard.component,
+                 file: auditCard.file,
+                 district: auditCard.district,
+               }
+             : undefined,
           arrivalIntent: readArrivalIntent() ?? undefined,
           // Actual runtime interaction mode, so Frassy never misstates her capabilities.
           interactionMode: spoken ? "voice_and_text" : "text",

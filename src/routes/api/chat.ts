@@ -650,6 +650,14 @@ export const Route = createFileRoute("/api/chat")({
           experienceContext?: "founder" | "builder" | "storefront";
           relationship?: FrassyRelationship;
           districtPath?: string;
+          auditContext?: {
+            number: number;
+            title: string;
+            path: string;
+            component: string;
+            file: string;
+            district: string;
+          };
           arrivalIntent?: string;
           interactionMode?: "text" | "voice_and_text" | "voice_only";
           voiceAvailable?: boolean;
@@ -762,6 +770,16 @@ export const Route = createFileRoute("/api/chat")({
 
         const contextBlock = [
           modeLine,
+          experienceContext === "founder" && body.auditContext
+            ? `━━━ ACTIVE WORLD TELEPORTER AUDIT — AUTHORITATIVE ━━━
+The Founder is reviewing Teleporter Card #${String(body.auditContext.number).padStart(3, "0")}.
+Title: ${body.auditContext.title}
+Route: ${body.auditContext.path}
+Component: ${body.auditContext.component || "Not named"}
+Source file: ${body.auditContext.file}
+District: ${body.auditContext.district}
+This active card is the single source of truth for this review. Begin by naming Card #${String(body.auditContext.number).padStart(3, "0")} and this route. Ignore every card number, route, verification, ledger record, and "ready for next card" instruction from prior conversation history. Never mention Card #011 or Card #012 unless this active card is actually that number. Review only this card; do not infer the next card.`
+            : undefined,
           body.modeContext && `Current context: ${body.modeContext}`,
           body.seasonContext && `Season accent: ${body.seasonContext}`,
           body.memoryContext && `Shopper memory: ${body.memoryContext}`,

@@ -15,10 +15,14 @@ const KEY = "frass.frassy.transcript";
 /** Enough context to feel continuous, small enough to stay fast. */
 const MAX_TURNS = 40;
 
-export function loadTranscript(): FrassyTurn[] {
+function storageKey(scope?: string): string {
+  return scope ? `${KEY}.${scope}` : KEY;
+}
+
+export function loadTranscript(scope?: string): FrassyTurn[] {
   if (typeof window === "undefined") return [];
   try {
-    const raw = window.sessionStorage.getItem(KEY);
+    const raw = window.sessionStorage.getItem(storageKey(scope));
     if (!raw) return [];
     const parsed = JSON.parse(raw) as FrassyTurn[];
     return Array.isArray(parsed) ? parsed.slice(-MAX_TURNS) : [];
@@ -27,10 +31,10 @@ export function loadTranscript(): FrassyTurn[] {
   }
 }
 
-export function saveTranscript(turns: FrassyTurn[]) {
+export function saveTranscript(turns: FrassyTurn[], scope?: string) {
   if (typeof window === "undefined") return;
   try {
-    window.sessionStorage.setItem(KEY, JSON.stringify(turns.slice(-MAX_TURNS)));
+    window.sessionStorage.setItem(storageKey(scope), JSON.stringify(turns.slice(-MAX_TURNS)));
   } catch {
     /* private browsing — she simply starts fresh */
   }

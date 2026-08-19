@@ -18,3 +18,9 @@ type: feature
 - Stored per Founder in `teleporter_audit` (Founder/Admin-only RLS), with one short private note per card.
 - Panel adds progress counter, resume banner, "Resume audit" (first unreviewed card) and quick filters.
 - Still inspection only: tracking review state never changes routes or navigation.
+
+## FRASS-0571A — Active-card audit context
+- The Teleporter card that opens a route is the sole source of truth for Frassy's audit context.
+- The teleport session carries the active card number, title, route, component, source file and district.
+- Frassy chat history is isolated per Teleporter card, so an earlier review (especially Card #011) cannot replay inside a later card.
+- Every Founder audit request explicitly identifies the active card; prior card numbers and “ready for next card” instructions are ignored.
