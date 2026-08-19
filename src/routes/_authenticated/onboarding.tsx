@@ -15,6 +15,8 @@ import {
   type ConversationDiagnostics,
   type JourneyMessage,
 } from "@/lib/journey.functions";
+import { isTeleporterAuditTurn } from "@/lib/frassy/engine-registry";
+
 import { stageById, stageIndex, stagesFor, trackMinutes, trackOf } from "@/lib/journey";
 import { useIsAdminStatus } from "@/hooks/use-is-admin";
 import { LaunchReadiness } from "@/components/launch-readiness";
@@ -84,13 +86,16 @@ function OnboardingPage() {
   const pct = Math.round((completedCount / stages.length) * 100);
   const finished = data?.status === "complete";
 
-  // Only this track's conversation belongs on screen.
+  // Only this track's conversation belongs on screen. FRASS-0572: a Teleporter
+  // card review is a different mode of Frassy and never belongs in this room.
   const messages: LocalMessage[] = useMemo(() => {
     const saved = (data?.messages ?? [])
       .filter((m: JourneyMessage) => trackOf(m.stage) === track)
+      .filter((m: JourneyMessage) => !isTeleporterAuditTurn(m.content))
       .map((m: JourneyMessage) => ({ role: m.role, content: m.content }));
     return [...saved, ...local];
   }, [data?.messages, local, track]);
+
 
   const messagesRef = useRef<LocalMessage[]>(messages);
   messagesRef.current = messages;

@@ -23,6 +23,8 @@ import {
   parseJourneyMarkers,
   type JourneyDatabase,
 } from "@/lib/journey-state.server";
+import { isTeleporterAuditTurn } from "@/lib/frassy/engine-registry";
+
 
 export type JourneyMessage = {
   id: string;
@@ -165,20 +167,44 @@ export const journeyTurn = createServerFn({ method: "POST" })
         ? "Nicky"
         : profile?.display_name ?? profile?.full_name ?? null;
 
+    // FRASS-0572 — One intelligence layer, many modes.
+    // The Journey pipeline is Journey Mode only. Teleporter card reviews belong
+    // to the shared engine, so any audit turn that was ever recorded into this
+    // journey history is dropped before the model reads it. Without this, an old
+    // "Card #011" review keeps being replayed as if it were today's conversation.
     const history = state.messages
       .filter((message) => trackOf(message.stage) === activeTrack)
+      .filter((message) => !isTeleporterAuditTurn(message.content))
       .slice(-40)
       .map((m) => ({ role: m.role, content: m.content }));
     history.push({ role: "user", content: userText });
+
+    // If the Founder asks for a card review here, she says where it happens
+    // instead of inventing one from memory.
+    const auditRequested = isTeleporterAuditTurn(userText);
+
 
 
     const { createLovableAiGatewayProvider } = await import("@/lib/ai-gateway.server");
     const { streamText } = await import("ai");
 
     const gateway = createLovableAiGatewayProvider(apiKey);
-    const system = activeTrack === "owner"
+    const basePrompt = activeTrack === "owner"
       ? buildFounderSystemPrompt(stage.id, state.memory, displayName)
       : buildBuilderSystemPrompt(stage.id, state.memory, displayName);
+    // FRASS-0572 — Journey Mode boundary. She is the same Frassy, but this room
+    // does not run Teleporter audits.
+    const system = `${basePrompt}
+
+━━━ MODE: JOURNEY (FRASS-0572) ━━━
+This conversation is the stage-driven journey. You are NOT in Teleporter Audit Mode here.
+Never open with "VISUAL VERIFICATION", never name a Teleporter card number, never say "ready for the next card".${
+      auditRequested
+        ? `
+The person just asked about a Teleporter card review. Answer in one short line: card reviews happen in the Founder Control Room → World Teleporter, where the active card is read from the page itself. Then continue this journey step.`
+        : ""
+    }`;
+
     const result = streamText({
       model: gateway("google/gemini-3.6-flash"),
       system,
@@ -336,11 +362,18 @@ export const journeyOpening = createServerFn({ method: "POST" })
     );
 
     // Already talking? Never re-introduce herself.
-    const existing = state.messages.filter((m) => trackOf(m.stage) === activeTrack);
+    // FRASS-0572 — an old Teleporter audit turn is not this room's conversation,
+    // so it can never be re-served as Frassy's opening words here.
+    const existing = state.messages.filter(
+      (m) => trackOf(m.stage) === activeTrack && !isTeleporterAuditTurn(m.content),
+    );
     if (existing.length) {
       const lastAssistant = [...existing].reverse().find((m) => m.role === "assistant");
-      return { reply: lastAssistant?.content ?? "", alreadyOpened: true, stageId: stage.id };
+      if (lastAssistant?.content) {
+        return { reply: lastAssistant.content, alreadyOpened: true, stageId: stage.id };
+      }
     }
+
 
     const { data: profile } = await sb
       .from("profiles")
