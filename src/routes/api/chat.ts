@@ -1073,9 +1073,13 @@ the next move toward Legacy is. Never stop at helping someone earn a living.`;
           // owns the first line of every review. This deterministic label makes
           // stale-card regressions immediately visible to the Founder and keeps
           // the model from choosing an earlier card as the response heading.
+          const auditFooter = body.auditContext
+            ? `\n\n---\nAudit context received by Frassy: Card #${String(body.auditContext.number).padStart(3, "0")} · ${body.auditContext.path} · history: clean-room (0 prior turns).`
+            : "";
           const reply = body.auditContext
-            ? `### 🏛️ VISUAL VERIFICATION: CARD #${String(body.auditContext.number).padStart(3, "0")} (${body.auditContext.path})\n\n${modelReply}`
+            ? `### 🏛️ VISUAL VERIFICATION: CARD #${String(body.auditContext.number).padStart(3, "0")} (${body.auditContext.path})\n\n${modelReply}${auditFooter}`
             : modelReply;
+
 
           return Response.json({
             reply,
