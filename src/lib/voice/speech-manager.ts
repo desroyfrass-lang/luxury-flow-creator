@@ -94,7 +94,24 @@ export function getSpeechSnapshot(): SpeechSnapshot {
   return snapshot;
 }
 
+/**
+ * Returns Frassy to idle WITHOUT erasing the teleprompter transcript, so the
+ * Founder can still read the last thing she said after she stops speaking.
+ */
+function idleKeepingTranscript(runId: number): SpeechSnapshot {
+  return {
+    ...IDLE,
+    runId,
+    chunks: snapshot.chunks,
+    fullText: snapshot.fullText,
+    chunksTotal: snapshot.chunksTotal,
+    chunksSpoken: snapshot.chunksSpoken,
+    activeChunk: -1,
+  };
+}
+
 /** Hard-kill every audio element this module has ever created. */
+
 function sweepAudio() {
   for (const el of liveElements) {
     try {
