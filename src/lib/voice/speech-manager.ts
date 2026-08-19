@@ -359,7 +359,7 @@ export async function speakText(
       if (runId !== runCounter) return "interrupted";
       if (ok) anyPlayed = true;
       conversation.chunkSpoken(turnId, i);
-      patch({ chunksSpoken: i + 1 });
+      patch({ chunksSpoken: i + 1, activeChunk: i + 1 < chunks.length ? i + 1 : i });
 
       if (!ok && !anyPlayed) {
         // FRASS-0477 — tier 2 before we ever admit defeat.
