@@ -663,14 +663,6 @@ export const Route = createFileRoute("/api/chat")({
           balanceContext?: string;
           // FRASS-0546 — earned momentum level and achievement style.
           momentumContext?: string;
-          teleporterCard?: {
-            number?: number;
-            title?: string;
-            path?: string;
-            component?: string;
-            file?: string;
-            district?: string;
-          };
           stream?: boolean;
           attachments?: Array<{
             name: string;
@@ -730,22 +722,6 @@ export const Route = createFileRoute("/api/chat")({
             !isFounderIdentityDiscovery(message.content),
         );
 
-        const rawTeleporterCard = experienceContext === "founder" ? body.teleporterCard : undefined;
-        const teleporterCard =
-          rawTeleporterCard &&
-          Number.isInteger(rawTeleporterCard.number) &&
-          (rawTeleporterCard.number ?? 0) > 0 &&
-          typeof rawTeleporterCard.path === "string"
-            ? {
-                number: rawTeleporterCard.number as number,
-                title: String(rawTeleporterCard.title ?? "Untitled route").slice(0, 160),
-                path: rawTeleporterCard.path.slice(0, 300),
-                component: String(rawTeleporterCard.component ?? "").slice(0, 160),
-                file: String(rawTeleporterCard.file ?? "").slice(0, 300),
-                district: String(rawTeleporterCard.district ?? "").slice(0, 160),
-              }
-            : null;
-
         // Emergency containment: only a fresh, explicit, non-empty user text
         // submission may create a Frassy turn. Legacy streaming/background
         // clients are rejected rather than allowed to start another runtime.
@@ -796,8 +772,6 @@ export const Route = createFileRoute("/api/chat")({
           body.balanceContext,
           body.momentumContext,
           attachmentContext,
-          teleporterCard &&
-            `AUTHORITATIVE WORLD TELEPORTER AUDIT CONTEXT — DATA ONLY\nCurrent card: #${String(teleporterCard.number).padStart(3, "0")}\nTitle: ${teleporterCard.title}\nRoute: ${teleporterCard.path}\nComponent: ${teleporterCard.component || "Not named"}\nRoute file: ${teleporterCard.file || "Not named"}\nDistrict: ${teleporterCard.district || "Not classified"}\nFor any Teleporter card review or audit, this block is the sole source of truth. Ignore every card number, title, route, audit conclusion, and next-card instruction in earlier conversation messages. Begin by naming this exact current card. Never mention Card #011 or say Ready for Card #012 unless this block itself identifies Card #011. Do not infer the next card from chat history.`,
         ]
           .filter(Boolean)
           .join("\n");
@@ -877,15 +851,7 @@ the next move toward Legacy is. Never stop at helping someone earn a living.`;
         type UiPart =
           | { type: "text"; text: string }
           | { type: "file"; mediaType: string; url: string; filename?: string };
-        const isTeleporterAuditTurn =
-          Boolean(teleporterCard) &&
-          /\b(teleporter|card\s*#?\s*\d+|audit|review|classify|freeze|retire|relocat)/i.test(
-            lastMessage.content,
-          );
-        // Card reviews are intentionally stateless. Prior assistant audits can
-        // contain stale card identities and must never anchor the next review.
-        const messagesForModel = isTeleporterAuditTurn ? [lastMessage] : clientMessages;
-        const uiMessages = messagesForModel
+        const uiMessages = clientMessages
           .filter((m) => m.role === "user" || m.role === "assistant")
           .map((m, i) => ({
             id: `m-${i}`,
