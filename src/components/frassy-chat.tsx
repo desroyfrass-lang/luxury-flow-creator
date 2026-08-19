@@ -126,6 +126,7 @@ export function FrassyChat({
   tone,
 }: { embedded?: boolean; tone?: "light" | "dark" } = {}) {
   const navigate = useNavigate();
+  const ctx = useFrassyContext();
   // FRASS-0551 — only the Founder Control Room stays dark. Every member surface
   // (The Daily, the Workshop, Simplified View) inherits the warm ivory room.
   const dark = tone ? tone === "dark" : !embedded;
@@ -171,7 +172,6 @@ export function FrassyChat({
   const [speakReplies, setSpeakReplies] = useState(true);
 
   const items = useCartStore((s) => s.items);
-  const ctx = useFrassyContext();
   const { isAdmin } = useIsAdminStatus();
   const voice = usePushToTalk();
   const beaconInvite = beaconInviteFor(ctx.pathname ?? "/");
