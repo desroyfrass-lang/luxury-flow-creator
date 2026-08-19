@@ -5,6 +5,9 @@
 // also carried as read-only conversation context so Frassy never inherits the
 // identity of the previously inspected card.
 
+import { WORLD_ROUTES } from "./world-teleporter";
+import { cardKey, cardNumber } from "./teleporter-audit";
+
 const KEY = "frass.teleport.active";
 export const TELEPORT_HOME = "/control-room?tab=world-teleporter";
 
@@ -56,4 +59,40 @@ export function endTeleport() {
   } catch {
     /* nothing to clear */
   }
+}
+
+// The page you are standing on is the source of truth.
+//
+// The session record can go stale (an older card left behind, a path saved with
+// a query string, a trailing slash). Resolving the card from the live pathname
+// against the Teleporter registry means Frassy can never inherit the identity of
+// a previously inspected card.
+function normalizePath(p: string | null | undefined): string {
+  if (!p) return "";
+  const clean = p.split("?")[0].split("#")[0];
+  const trimmed = clean.length > 1 ? clean.replace(/\/+$/, "") : clean;
+  return trimmed.toLowerCase();
+}
+
+export function resolveAuditCard(pathname: string | null | undefined): ActiveTeleportCard | null {
+  const here = normalizePath(pathname);
+  if (!here) return null;
+  const active = readActiveTeleport();
+  if (active && normalizePath(active.path) === here) return active;
+  const route = WORLD_ROUTES.find((r) => normalizePath(r.path) === here);
+  if (!route) return null;
+  return {
+    key: cardKey(route),
+    number: cardNumber(route),
+    title: route.title,
+    path: route.path,
+    component: route.component,
+    file: route.file,
+    district: route.district,
+  };
+}
+
+/** True only when a teleport session is open on a page that has no card of its own. */
+export function isStaleTeleport(pathname: string | null | undefined): boolean {
+  return Boolean(readActiveTeleport()) && resolveAuditCard(pathname) === null;
 }
