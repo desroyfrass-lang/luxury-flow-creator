@@ -317,7 +317,11 @@ export async function speakText(
     chunksSpoken: 0,
     turnId,
     owner: opts.owner ?? null,
+    chunks,
+    activeChunk: 0,
+    fullText: clean,
   };
+
   emit();
 
   const tone: VoiceTone = opts.tone ?? "neutral";
