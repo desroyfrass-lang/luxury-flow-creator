@@ -132,9 +132,17 @@ export function FrassyChat({
   const [open, setOpen] = useState(embedded);
   // FRASS-0557 §5 — every conversation can be expanded or restored.
   const [expanded, setExpanded] = useState(false);
-  // A Teleporter review is isolated by card. The card that opened this page is
-  // authoritative; Card #011 can never leak into Card #025 through chat history.
-  const [auditCard] = useState(() => readActiveTeleport());
+  // A Teleporter review is isolated by card. Re-resolve it whenever the route
+  // changes: the root Frassy component survives client-side navigation, so a
+  // one-time state initializer can otherwise keep the previous card forever.
+  const [auditCard, setAuditCard] = useState<ReturnType<typeof readActiveTeleport>>(null);
+  const [auditContextMismatch, setAuditContextMismatch] = useState(false);
+  useEffect(() => {
+    const active = readActiveTeleport();
+    const matchesCurrentPage = active?.path === ctx.pathname;
+    setAuditCard(matchesCurrentPage ? active : null);
+    setAuditContextMismatch(Boolean(active && !matchesCurrentPage));
+  }, [ctx.pathname]);
   const transcriptScope = auditCard ? `teleporter.${auditCard.key}` : undefined;
 
   // FRASS-0476B — one shared conversation history. A refresh or a change of
@@ -142,11 +150,11 @@ export function FrassyChat({
   const [messages, setMessages] = useState<Msg[]>([]);
   useEffect(() => {
     const prior = loadTranscript(transcriptScope);
-    if (prior.length) {
-      setMessages(
-        prior.map((t: FrassyTurn) => ({ id: nextId(), role: t.role, content: t.content })),
-      );
-    }
+    // Empty is meaningful: it is a fresh card. Always replace the rendered
+    // transcript so the previous card can never remain visible or be resent.
+    setMessages(
+      prior.map((t: FrassyTurn) => ({ id: nextId(), role: t.role, content: t.content })),
+    );
   }, [transcriptScope]);
   useEffect(() => {
     if (messages.length)
@@ -271,6 +279,12 @@ export function FrassyChat({
     const before = input;
     const text = (override ?? before).trim();
     if (!text) return;
+    if (auditContextMismatch) {
+      setError(
+        "This page no longer matches the Teleporter card that opened it. Return to the World Teleporter and open the card again before recording an audit.",
+      );
+      return;
+    }
 
     const myTurn = ++turnRef.current;
     const userMsg: Msg = { id: nextId(), role: "user", content: text };
@@ -309,6 +323,15 @@ export function FrassyChat({
     try {
       const { data: sessionData } = await supabase.auth.getSession();
       const accessToken = sessionData.session?.access_token;
+      if (auditCard) {
+        console.info("[teleporter-audit-request]", {
+          cardNumber: auditCard.number,
+          cardTitle: auditCard.title,
+          cardPath: auditCard.path,
+          currentPath: ctx.pathname,
+          promptPreview: text.slice(0, 500),
+        });
+      }
       const res = await fetch("/api/chat", {
         method: "POST",
         headers: {

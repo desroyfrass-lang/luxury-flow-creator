@@ -746,6 +746,30 @@ export const Route = createFileRoute("/api/chat")({
           );
         }
 
+        // FRASS-0571A — fail closed when a stale browser session claims one
+        // Teleporter card while the request comes from another page. This is a
+        // workflow integrity check, not a model instruction: the wrong audit is
+        // never allowed to reach AI or enter the permanent review trail.
+        if (
+          body.auditContext &&
+          (!body.districtPath || body.auditContext.path !== body.districtPath)
+        ) {
+          return Response.json(
+            {
+              error:
+                "This page does not match the active Teleporter card. Return to the World Teleporter and open the card again before recording an audit.",
+              diagnostics: {
+                activeCardNumber: body.auditContext.number,
+                activeCardTitle: body.auditContext.title,
+                activeCardPath: body.auditContext.path,
+                requestPath: body.districtPath ?? null,
+                promptPreview: lastMessage.content.slice(0, 500),
+              },
+            },
+            { status: 409 },
+          );
+        }
+
         const key = process.env.LOVABLE_API_KEY;
         if (!key) {
           return Response.json({ error: "AI is not configured." }, { status: 500 });
@@ -903,6 +927,15 @@ the next move toward Legacy is. Never stop at helping someone earn a living.`;
                 mode: body.modeContext ?? null,
                 cart: body.cartContext ?? null,
                 q: (lastUser?.content ?? "").slice(0, 500),
+                 ...(body.auditContext
+                   ? {
+                       teleporter_card_number: body.auditContext.number,
+                       teleporter_card_title: body.auditContext.title,
+                       teleporter_card_path: body.auditContext.path,
+                       request_path: body.districtPath ?? null,
+                       prompt_preview: (lastUser?.content ?? "").slice(0, 500),
+                     }
+                   : {}),
               },
             });
           } catch {
