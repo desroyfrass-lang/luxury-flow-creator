@@ -60,6 +60,7 @@ import { loadMomentum, momentumContext, readMomentum } from "@/lib/frassy/moment
 import { PlainEnglishMessage } from "@/components/frassy/everyday-language-toggle";
 import { useLearningLevel } from "@/hooks/use-learning-level";
 import { learningLevelContext, levelMeta, type LearningLevel } from "@/lib/frassy/learning-levels";
+import { readActiveTeleporterCard } from "@/lib/founder/teleport-session";
 
 type ProductCard = {
   handle: string;
@@ -332,6 +333,9 @@ export function FrassyChat({
           momentumContext:
             momentumContext(readMomentum(readBalanceSignals() ?? NO_SIGNALS, loadMomentum())) ||
             undefined,
+          // FRASS-0570B — the opened Teleporter card, not chat history, is the
+          // source of truth for every Founder card review.
+          teleporterCard: isAdmin ? readActiveTeleporterCard() ?? undefined : undefined,
           stream: false,
         }),
       });
