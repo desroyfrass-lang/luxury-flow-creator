@@ -220,8 +220,8 @@ export function WorkspaceRoom({
     abortRef.current = controller;
     try {
       const currentPath = typeof window !== "undefined" ? window.location.pathname : undefined;
-      const activeTeleport = readActiveTeleport();
-      const auditCard = activeTeleport?.path === currentPath ? activeTeleport : null;
+      const auditCard = resolveAuditCard(currentPath);
+
       const transcriptScope = auditCard ? `teleporter.${auditCard.key}` : undefined;
       const { data: sessionData } = await supabase.auth.getSession();
       const accessToken = sessionData.session?.access_token;
