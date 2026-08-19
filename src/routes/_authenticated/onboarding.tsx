@@ -16,6 +16,11 @@ import {
   type JourneyMessage,
 } from "@/lib/journey.functions";
 import { isTeleporterAuditTurn } from "@/lib/frassy/engine-registry";
+import {
+  publishEngineDiagnostics,
+  clearEngineDiagnostics,
+} from "@/lib/frassy/engine-diagnostics";
+
 
 import { stageById, stageIndex, stagesFor, trackMinutes, trackOf } from "@/lib/journey";
 import { useIsAdminStatus } from "@/hooks/use-is-admin";
@@ -96,9 +101,29 @@ function OnboardingPage() {
     return [...saved, ...local];
   }, [data?.messages, local, track]);
 
+  // FRASS-0572A — publish which engine is answering, so the Founder can see it.
+  const auditTurnsFiltered = useMemo(
+    () =>
+      (data?.messages ?? []).filter(
+        (m: JourneyMessage) => trackOf(m.stage) === track && isTeleporterAuditTurn(m.content),
+      ).length,
+    [data?.messages, track],
+  );
+  useEffect(() => {
+    publishEngineDiagnostics({
+      pipeline: "journey",
+      mode: "journey",
+      historySource: "builder_journey_messages",
+      historyTurns: messages.length,
+      auditTurnsFiltered,
+      path: "/onboarding",
+    });
+    return () => clearEngineDiagnostics();
+  }, [messages.length, auditTurnsFiltered]);
 
   const messagesRef = useRef<LocalMessage[]>(messages);
   messagesRef.current = messages;
+
 
   // Founder decisions are Platform Memory, kept separate from Builder memory.
   const platformMemory = useMemo(

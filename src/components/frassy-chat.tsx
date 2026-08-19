@@ -40,6 +40,8 @@ import { VoiceFeedbackButton } from "@/components/feedback/voice-feedback";
 import { useFrassyStartup } from "@/hooks/use-frassy-startup";
 import { loadTranscript, saveTranscript, type FrassyTurn } from "@/lib/frassy/transcript";
 import { resolveAuditCard, isStaleTeleport } from "@/lib/founder/teleport-session";
+import { publishEngineDiagnostics } from "@/lib/frassy/engine-diagnostics";
+
 import { VOICE_TIER_LABELS } from "@/lib/voice/voice-tier";
 // FRASS-0478 — she learns how you like to work, never who you are.
 import {
@@ -163,6 +165,20 @@ export function FrassyChat({
         transcriptScope,
       );
   }, [messages, transcriptScope]);
+
+  // FRASS-0572A — say out loud which engine is answering here.
+  useEffect(() => {
+    publishEngineDiagnostics({
+      pipeline: "shared",
+      mode: auditCard ? "audit" : "builder",
+      historySource: auditCard ? "clean_room" : "shared_transcript",
+      historyTurns: auditCard ? 0 : messages.length,
+      auditTurnsFiltered: 0,
+      cardLabel: auditCard ? `Card #${String(auditCard.number).padStart(3, "0")}` : undefined,
+      path: ctx.pathname,
+    });
+  }, [auditCard, messages.length, ctx.pathname]);
+
 
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);

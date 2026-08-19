@@ -20,6 +20,8 @@ import { FounderPreviewReset } from "@/components/founder/preview-reset";
 import { SimulationModeBar } from "@/components/founder/simulation-mode-bar";
 import { FrassyChat } from "@/components/frassy-chat";
 import { TeleportReturnChip } from "@/components/founder/teleport-return-chip";
+import { FrassyEngineBadge } from "@/components/founder/frassy-engine-badge";
+
 import { frassySurface } from "@/lib/frassy/surfaces";
 import { FrassyHost } from "@/components/frassy-host";
 import { DailyGate } from "@/components/workspace/daily-gate";
@@ -164,6 +166,9 @@ function RootComponent() {
         <VoiceStateOverlay />
         {/* FRASS-0570 — the way back from a Founder inspection trip. */}
         <TeleportReturnChip />
+        {/* FRASS-0572A — which Frassy engine is answering (Founder only). */}
+        <FrassyEngineBadge />
+
       </ViewModeProvider>
     </QueryClientProvider>
   );
