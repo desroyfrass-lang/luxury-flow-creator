@@ -727,11 +727,14 @@ export const Route = createFileRoute("/api/chat")({
         // names a DIFFERENT card is dropped before the model reads it, so a past
         // audit can never be replayed as if it were the page in front of us.
         const activeCardNumber = body.auditContext?.number;
+        const isAuditTurn = (content: string) =>
+          /visual verification\s*:\s*card|ready for card|teleporter card/i.test(content);
         const namesAnotherCard = (content: string) => {
-          if (!activeCardNumber) return false;
           const mentioned = [...content.matchAll(/card\s*#?\s*(\d{1,3})/gi)].map((m) =>
             Number(m[1]),
           );
+          // With no active card, ANY past audit turn is foreign history.
+          if (!activeCardNumber) return isAuditTurn(content) || mentioned.length > 0;
           return mentioned.length > 0 && mentioned.every((n) => n !== activeCardNumber);
         };
         const clientMessages = (Array.isArray(body.messages) ? body.messages : []).filter(
@@ -740,6 +743,7 @@ export const Route = createFileRoute("/api/chat")({
               message.role !== "assistant" ||
               !isFounderIdentityDiscovery(message.content)) && !namesAnotherCard(message.content),
         );
+
 
         // Emergency containment: only a fresh, explicit, non-empty user text
         // submission may create a Frassy turn. Legacy streaming/background
