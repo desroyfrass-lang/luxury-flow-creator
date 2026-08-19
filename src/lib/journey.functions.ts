@@ -362,11 +362,18 @@ export const journeyOpening = createServerFn({ method: "POST" })
     );
 
     // Already talking? Never re-introduce herself.
-    const existing = state.messages.filter((m) => trackOf(m.stage) === activeTrack);
+    // FRASS-0572 — an old Teleporter audit turn is not this room's conversation,
+    // so it can never be re-served as Frassy's opening words here.
+    const existing = state.messages.filter(
+      (m) => trackOf(m.stage) === activeTrack && !isTeleporterAuditTurn(m.content),
+    );
     if (existing.length) {
       const lastAssistant = [...existing].reverse().find((m) => m.role === "assistant");
-      return { reply: lastAssistant?.content ?? "", alreadyOpened: true, stageId: stage.id };
+      if (lastAssistant?.content) {
+        return { reply: lastAssistant.content, alreadyOpened: true, stageId: stage.id };
+      }
     }
+
 
     const { data: profile } = await sb
       .from("profiles")
