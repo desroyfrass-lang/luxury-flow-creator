@@ -43,6 +43,14 @@ export type SpeechSnapshot = {
   turnId: string | null;
   /** Identifies which surface asked for this speech. */
   owner: string | null;
+  /**
+   * Teleprompter: the exact words this run will speak, in order, plus the index
+   * of the chunk currently audible. Nothing is ever trimmed — this is a
+   * verbatim record of what leaves Frassy's mouth.
+   */
+  chunks: string[];
+  activeChunk: number;
+  fullText: string;
 };
 
 const IDLE: SpeechSnapshot = {
@@ -52,7 +60,11 @@ const IDLE: SpeechSnapshot = {
   chunksSpoken: 0,
   turnId: null,
   owner: null,
+  chunks: [],
+  activeChunk: -1,
+  fullText: "",
 };
+
 
 let snapshot: SpeechSnapshot = IDLE;
 const listeners = new Set<() => void>();
