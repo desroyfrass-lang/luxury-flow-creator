@@ -165,11 +165,22 @@ export const journeyTurn = createServerFn({ method: "POST" })
         ? "Nicky"
         : profile?.display_name ?? profile?.full_name ?? null;
 
+    // FRASS-0572 — One intelligence layer, many modes.
+    // The Journey pipeline is Journey Mode only. Teleporter card reviews belong
+    // to the shared engine, so any audit turn that was ever recorded into this
+    // journey history is dropped before the model reads it. Without this, an old
+    // "Card #011" review keeps being replayed as if it were today's conversation.
     const history = state.messages
       .filter((message) => trackOf(message.stage) === activeTrack)
+      .filter((message) => !isTeleporterAuditTurn(message.content))
       .slice(-40)
       .map((m) => ({ role: m.role, content: m.content }));
     history.push({ role: "user", content: userText });
+
+    // If the Founder asks for a card review here, she says where it happens
+    // instead of inventing one from memory.
+    const auditRequested = isTeleporterAuditTurn(userText);
+
 
 
     const { createLovableAiGatewayProvider } = await import("@/lib/ai-gateway.server");
