@@ -23,6 +23,8 @@ import {
   parseJourneyMarkers,
   type JourneyDatabase,
 } from "@/lib/journey-state.server";
+import { isTeleporterAuditTurn } from "@/lib/frassy/engine-registry";
+
 
 export type JourneyMessage = {
   id: string;
