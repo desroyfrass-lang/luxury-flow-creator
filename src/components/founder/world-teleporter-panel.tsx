@@ -293,7 +293,17 @@ export function WorldTeleporterPanel() {
 
                       <button
                         type="button"
-                        onClick={() => beginTeleport(r.path)}
+                         onClick={() =>
+                           beginTeleport({
+                             key: r.key,
+                             number: r.num,
+                             title: r.title || r.component || r.path,
+                             path: r.path,
+                             component: r.component,
+                             file: r.file,
+                             district: r.district,
+                           })
+                         }
                         className="mt-1 block w-full text-left"
                       >
                         <span className="flex items-center gap-2">
