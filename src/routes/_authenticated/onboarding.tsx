@@ -53,7 +53,18 @@ export const Route = createFileRoute("/_authenticated/onboarding")({
   component: OnboardingPage,
 });
 
-type LocalMessage = { role: "user" | "assistant"; content: string; pending?: boolean };
+type ThreadMessage = {
+  key: string;
+  role: "user" | "assistant";
+  content: string;
+  at: string;
+  status: JournalStatus;
+  error?: string;
+  /** Present only for journal-owned messages, so a failed one can be retried. */
+  clientId?: string;
+};
+
+const JOURNAL_SCOPE = "journey";
 
 function OnboardingPage() {
   const loadJourney = useServerFn(getBuilderJourney);
