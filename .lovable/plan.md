@@ -10,16 +10,25 @@ Confirmed by reading the code, not guessed:
 
 Result: the reply appears (temporary copy), then is deleted (temporary copy cleared) while its permanent copy is either filtered out or was never written. That is the "pops up and then disappears" behaviour, and it is why the text can't be copied.
 
+## Scope note — two separate tickets
+
+- **Bug A (not this plan):** Frassy replaying stale audit context (the Card #11 loop). Stays open on its own ticket.
+- **Bug B (this plan):** replies disappear because the page clears temporary state before persistence is confirmed.
+
+Fixing B will not fix A, and neither is closed by the other.
+
 ## The fix
 
-### 1. Never delete a message that has not been proven saved
+### 1. Never delete a message that has not been acknowledged — and match by ID, never text
 - Remove the blind `setLocal([])`.
-- After the database reload, drop a temporary message only when the exact same text is present in the reloaded, *displayed* list. Anything unmatched stays on screen permanently.
+- Every message gets a client-generated `clientId` (uuid) the instant it is created, and carries the server row id once saved. The server insert echoes the `clientId` back.
+- A temporary copy is removed only when a message with that same `clientId` (or its known server id) is present in the reloaded, *actually displayed* list — never because a reload merely happened, and never because two messages share the same words.
 
-### 2. One append-only conversation record on the page
-- Keep a local append-only mirror of the whole conversation (per user, in browser storage), written the moment any Founder message is sent and the moment any Frassy reply arrives — including spoken greetings.
-- The page renders the union of saved-in-database and mirrored messages, de-duplicated by text. Nothing on screen is ever removed by a reload, a track switch, a refetch, voice playback, or a navigation back to the page.
-- Refresh restores the full thread from the mirror even if the server copy is missing.
+### 2. Append-only Conversation Journal
+- A per-member append-only journal is the display source of truth. Records carry: `clientId`, server id (when known), direction (Founder / Frassy), text, timestamp, and status — `pending`, `synced`, or `failed`.
+- Nothing is ever deleted from the journal. Only the status changes.
+- The page renders the journal merged with the server rows, keyed by id — so a reload, refetch, track switch, voice playback or navigation can change a badge, never remove a message.
+- Refresh restores the full thread from the journal even when the server copy is missing.
 
 ### 3. Stop the filters from hiding real conversation
 - The track filter no longer hides messages: everything belonging to this member's journey is shown. A track change reorders/labels, never deletes.
