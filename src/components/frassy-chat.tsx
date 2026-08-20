@@ -210,11 +210,17 @@ export function FrassyChat({
     if (auditCard) void syncAuditLedger();
   }, [auditCard]);
   const ledgerGroups = useMemo(
-    () =>
-      auditCard
-        ? groupLedgerByCard(ledger).filter((g) => g.cardKey !== auditCard.key)
-        : [],
+    () => (auditCard ? groupLedgerByCard(ledger) : []),
     [auditCard, ledger],
+  );
+  const currentLedgerTurns = useMemo(
+    () =>
+      new Set(
+        ledgerGroups
+          .find((group) => group.cardKey === auditCard?.key)
+          ?.entries.map((entry) => `${entry.role}\u0000${entry.content.trim()}`) ?? [],
+      ),
+    [auditCard?.key, ledgerGroups],
   );
 
 
@@ -518,6 +524,16 @@ export function FrassyChat({
       }
 
       const reply = data.reply?.trim() || "…";
+      // Flush the completed written turn before voice or navigation can change
+      // the mounted route. The ledger remains authoritative for audits, while
+      // this scoped transcript provides an immediate refresh-safe copy.
+      saveTranscript(
+        [...history, { role: "assistant" as const, content: reply }].map((message) => ({
+          role: message.role,
+          content: message.content,
+        })),
+        transcriptScope,
+      );
       setMessages((prev) => [
         ...prev,
         {
@@ -905,7 +921,13 @@ export function FrassyChat({
         ))}
 
 
-        {messages.map((m) => (
+        {messages
+          .filter(
+            (message) =>
+              !auditCard ||
+              !currentLedgerTurns.has(`${message.role}\u0000${message.content.trim()}`),
+          )
+          .map((m) => (
           <div key={m.id}>
             <div
               className={
@@ -1020,7 +1042,7 @@ export function FrassyChat({
               </div>
             )}
           </div>
-        ))}
+          ))}
 
         {loading && (
           <div className="w-fit rounded-lg bg-[color:var(--ws-accent-bg)] px-3 py-2 text-sm text-[color:var(--ws-soft)]">
