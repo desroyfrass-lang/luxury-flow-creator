@@ -29,28 +29,39 @@ const KEY = "frass.founder.audit-ledger.v1";
 /** Deep enough to hold a full world audit; nothing is trimmed inside a card. */
 const MAX_ENTRIES = 4000;
 
+// FRASS-0576 §1 — one stable in-memory snapshot so useSyncExternalStore
+// never sees a fresh array on every render (the cause of the Maximum update
+// depth loop). The snapshot is replaced only when data is appended, merged,
+// deleted, cleared, or synchronized — never on a plain read.
+let snapshot: AuditLedgerEntry[] | null = null;
+
 function read(): AuditLedgerEntry[] {
-  if (typeof window === "undefined") return [];
+  if (snapshot) return snapshot;
+  if (typeof window === "undefined") return (snapshot = []);
   try {
     const raw = window.localStorage.getItem(KEY);
-    if (!raw) return [];
-    const parsed = JSON.parse(raw) as AuditLedgerEntry[];
-    return Array.isArray(parsed) ? parsed : [];
+    const parsed = raw ? (JSON.parse(raw) as AuditLedgerEntry[]) : [];
+    snapshot = Array.isArray(parsed) ? parsed : [];
   } catch {
-    return [];
+    snapshot = [];
   }
+  return snapshot;
 }
 
 function write(entries: AuditLedgerEntry[]) {
+  const trimmed = entries.slice(-MAX_ENTRIES);
+  snapshot = trimmed;
   if (typeof window === "undefined") return;
   try {
-    window.localStorage.setItem(KEY, JSON.stringify(entries.slice(-MAX_ENTRIES)));
+    window.localStorage.setItem(KEY, JSON.stringify(trimmed));
   } catch {
     /* storage full or private mode — the database copy is still authoritative */
   }
 }
 
-/** Oldest first: Card #001 at the top, the newest review at the bottom. */
+/** Oldest first: Card #001 at the top, the newest review at the bottom.
+ *  Returns the stable cached snapshot so React's useSyncExternalStore does
+ *  not loop. */
 export function readAuditLedger(): AuditLedgerEntry[] {
   return read();
 }
