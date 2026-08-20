@@ -17,6 +17,14 @@ import {
 } from "@/lib/journey.functions";
 import { isTeleporterAuditTurn } from "@/lib/frassy/engine-registry";
 import {
+  appendEntry,
+  loadJournal,
+  newClientId,
+  updateEntry,
+  type JournalEntry,
+  type JournalStatus,
+} from "@/lib/frassy/conversation-journal";
+import {
   publishEngineDiagnostics,
   clearEngineDiagnostics,
 } from "@/lib/frassy/engine-diagnostics";
