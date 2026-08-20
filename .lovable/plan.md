@@ -18,46 +18,79 @@ Make one live Teleporter review provably return the card selected by the Founder
 - Update that snapshot only when ledger data is appended, merged, deleted, cleared, or synchronized.
 - Keep the permanent Founder Audit Ledger and its database synchronization.
 
-### 2. Make the server authoritative for card identity
-- Create one shared registry resolver that derives the canonical card from its route/file.
-- In `/api/chat`, ignore browser-supplied number, title, component, file, and district as authorities.
-- Resolve the canonical card from the shared registry using the route currently being rendered, verified server-side, not the route metadata the browser submits. Chain: Teleporter selection → router navigation → current page loads → server resolves current route → shared registry lookup → canonical card → AI prompt.
-- Require verified Founder access for audit mode; a client cannot create an audit response merely by adding `auditContext`.
+### 2. The route is the ONLY client authority
+- The server never trusts anything from the browser except the Current URL.
+- Not: card number, title, district, audit context, component, route metadata, file. Nothing.
+- The browser does not send "Card #025." It sends only: `I'm on /admin/visual-index`.
+- Everything else is derived server-side, every single time:
 
-### 2a. Hard fail before any AI call
-- If the active URL and the resolved registry entry disagree — or the route is unknown or duplicated — do not call the AI at all.
-- Return a visible Founder diagnostic instead, in this shape:
+```text
+Current URL
+    ↓
+Server Router
+    ↓
+Registry
+    ↓
+Canonical Card
+    ↓
+AI Prompt
+```
+
+- Create one shared registry resolver that derives the canonical card from its route/file.
+- Require verified Founder access for audit mode; a client cannot create an audit response merely by adding `auditContext`.
+- Version the registry. Every registry carries a `Registry Version` (e.g. `2026.08.19.01`). Every audit receipt includes it, so if production serves a stale registry it is visible instantly.
+
+### 2a. AI is impossible until validation succeeds
+- The pipeline is strictly ordered. The AI never receives a prompt until every prior step passes:
+
+```text
+Validate
+    ↓
+Resolve Card
+    ↓
+Lock Audit Context
+    ↓
+Generate Prompt
+    ↓
+AI
+```
+
+- If validation fails at any stage, the AI never even receives a prompt. This makes it impossible for the model to hallucinate Card #11.
+- If the active URL and the resolved registry entry disagree — or the route is unknown or duplicated — do not call the AI. Return a visible Founder diagnostic instead:
 
 ```text
 Audit blocked.
 Current URL:        /admin/visual-index
 Resolved Registry:  /admin/financial-audit
-Reason:             Registry mismatch.
+Reason:             Registry mismatch
 No AI call executed.
 ```
 
-- A blocked audit is never written to the Audit Ledger as a review.
+- A blocked audit is never written to the Audit Ledger. The ledger only ever contains successful audits. Failed validations are diagnostics, not audit history.
 
-### 2b. Audit Source diagnostic
-- Every audit response and every blocked attempt carries an Audit Source block:
+### 2b. Forensic Audit Source receipt
+- Every audit response and every blocked attempt carries an Audit Source block. It is a forensic receipt:
 
 ```text
 Audit Source
-Teleporter Card:
-Current URL:
-Registry Match:
+Engine:              TELEPORTER ENGINE v3
+Registry Version:
 Conversation ID:
+Request ID:
+Current URL:
+Resolved Card:
 History Count:
 Prompt Hash:
+Timestamp:
 ```
 
 - Shown with the live response and stored with the ledger entry so any future recurrence is diagnosable in seconds.
 
-
 ### 3. Remove stale session authority
-- Store only the selected card key/route needed for navigation.
+- Do not store any active card object.
+- Store only: Destination URL. That is it.
+- Everything else comes from the Registry. Every. Single. Time.
 - On every target page and every send, derive the complete active card from the current registry.
-- Never return a cached card object merely because its stored path matches.
 - Prevent sending until the destination visibly shows the canonical card and route selected in the Teleporter.
 
 ### 4. Add undeniable runtime provenance
