@@ -277,6 +277,29 @@ function OnboardingPage() {
     [takeTurn, refetch, speakReplies, voice],
   );
 
+  /** Sends a message again without ever creating a second copy of it. */
+  async function retry(clientId: string, content: string) {
+    if (busy) return;
+    setJournal(updateEntry(JOURNAL_SCOPE, clientId, { status: "pending", error: undefined }));
+    await deliver(clientId, content);
+  }
+
+  async function copyOne(text: string) {
+    try {
+      await navigator.clipboard.writeText(text);
+      toast.success("Copied.");
+    } catch {
+      toast.error("Your browser blocked the copy — select the text and copy it by hand.");
+    }
+  }
+
+  async function copyAll() {
+    const text = messagesRef.current
+      .map((m) => `${m.role === "user" ? "Founder" : "Frassy"}: ${m.content}`)
+      .join("\n\n");
+    await copyOne(text);
+  }
+
   async function send(text: string) {
     const message = text.trim();
     if (!message || busy) return;
