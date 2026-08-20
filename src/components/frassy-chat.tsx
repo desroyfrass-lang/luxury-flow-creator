@@ -334,6 +334,17 @@ export function FrassyChat({
 
     // Freeze + clear synchronously, before the request leaves.
     setMessages(history);
+    // FRASS-0573 — the Founder's own words are part of the permanent record too.
+    if (auditCard) {
+      commitAuditTurn({
+        cardKey: auditCard.key,
+        cardNumber: auditCard.number,
+        cardTitle: auditCard.title,
+        cardPath: auditCard.path,
+        role: "user",
+        content: text,
+      });
+    }
     setInput("");
     setError(null);
     setLoading(true);
