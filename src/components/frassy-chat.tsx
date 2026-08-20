@@ -106,6 +106,8 @@ type Msg = {
 // embedded surface owns the dock microphone; otherwise the floating panel does.
 let embeddedSurfaces = 0;
 
+const EMPTY_LEDGER: ReturnType<typeof readAuditLedger> = [];
+
 let seq = 0;
 const nextId = () => `m${++seq}-${Date.now()}`;
 
