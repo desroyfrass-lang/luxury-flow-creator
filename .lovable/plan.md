@@ -108,11 +108,12 @@ Timestamp:
 1. Open Production at `frasskicks.com` as the Founder and complete or skip the Daily Welcome gate.
 2. Open Founder Control Room → World Teleporter.
 3. Search for Card #025 and confirm its canonical route is `/admin/visual-index`.
-4. Click it and confirm the destination says `Reviewing Card #025 · /admin/visual-index` before sending.
+4. Click it and confirm the destination says `Reviewing Card #025 · /admin/visual-index` before sending. The browser sends only the Current URL — no card number, no metadata.
 5. Send a unique test sentence while recording the browser request and response.
-6. Confirm the request is `POST /api/chat` and the receipt says `TELEPORTER ENGINE v3`, Card #025, `/admin/visual-index`, with a fresh request ID and timestamp.
+6. Confirm the request is `POST /api/chat` and the forensic receipt shows `TELEPORTER ENGINE v3`, a `Registry Version`, Card #025, `/admin/visual-index`, a fresh Request ID, Prompt Hash, and Timestamp.
 7. Confirm the first response line is Card #025, it is stored once in the Audit Ledger, and no maximum-update-depth error appears.
 8. Repeat with Card #011 and confirm it independently resolves to `/admin/financial-audit`.
+9. Force a mismatch (e.g. navigate to `/admin/visual-index` but tamper so the registry disagrees) and confirm the AI is never called — the response is the `Audit blocked.` diagnostic and nothing is written to the ledger.
 
 ## Technical scope
 - Audit Ledger snapshot, Teleporter session resolver, shared card resolver, Frassy request construction, `/api/chat` server verification, hard-fail diagnostic, and audit receipt display/storage.
