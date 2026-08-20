@@ -173,7 +173,9 @@ export function FrassyChat({
   // FRASS-0476B — one shared conversation history. A refresh or a change of
   // district continues the same conversation instead of restarting it.
   const [messages, setMessages] = useState<Msg[]>([]);
+  const loadingTranscriptScope = useRef(false);
   useEffect(() => {
+    loadingTranscriptScope.current = true;
     const prior = loadTranscript(transcriptScope);
     // Empty is meaningful: it is a fresh card. Always replace the rendered
     // transcript so the previous card can never remain visible or be resent.
@@ -182,6 +184,13 @@ export function FrassyChat({
     );
   }, [transcriptScope]);
   useEffect(() => {
+    // Route changes and state updates finish in separate React passes. Without
+    // this guard, the previous card's messages can be written into the newly
+    // selected card before its own transcript has loaded.
+    if (loadingTranscriptScope.current) {
+      loadingTranscriptScope.current = false;
+      return;
+    }
     if (messages.length)
       saveTranscript(
         messages.map((m) => ({ role: m.role, content: m.content })),
@@ -696,7 +705,7 @@ export function FrassyChat({
           ? "fixed inset-3 z-[60] flex flex-col overflow-hidden rounded-lg border border-[color:var(--ws-line)] shadow-2xl sm:inset-6"
           : embedded || auditCard
             ? auditCard
-              ? "relative mx-auto mt-10 flex min-h-[520px] w-[min(100%-2rem,72rem)] max-w-full flex-col overflow-hidden rounded-lg border border-[color:var(--ws-line)]"
+              ? "relative mx-auto mt-10 flex min-h-[520px] w-[calc(100%-2rem)] max-w-6xl flex-col overflow-hidden rounded-lg border border-[color:var(--ws-line)]"
               : "flex h-[min(820px,86vh)] min-h-[520px] w-full max-w-full flex-col overflow-hidden rounded-lg border border-[color:var(--ws-line)]"
             : "fixed bottom-6 right-6 z-50 flex h-[min(620px,78vh)] w-[min(420px,calc(100vw-3rem))] max-w-full flex-col overflow-hidden rounded-lg border border-[color:var(--ws-line)] shadow-2xl"
       }`}
