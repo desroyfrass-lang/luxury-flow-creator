@@ -5681,6 +5681,10 @@ export type Database = {
       }
       expire_stale_payment_requests: { Args: never; Returns: number }
       gallery_is_public: { Args: { _gallery_id: string }; Returns: boolean }
+      gallery_own_contact_email: {
+        Args: { _gallery_id: string }
+        Returns: string
+      }
       get_active_partner_vendor_ids: {
         Args: { _user_id: string }
         Returns: string[]
