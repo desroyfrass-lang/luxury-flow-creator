@@ -41,6 +41,33 @@ Nothing downstream can mutate them. Not AI. Not middleware. Not React. Not memor
 
 The lock is created immediately after registry resolution, sealed (frozen) before the prompt is generated, and carried unchanged through the AI call, the server-rendered header, the receipt, and the ledger write. Every ledger entry therefore carries its own identity lock, so any entry can be re-verified against the registry long after the fact.
 
+The lock is a single immutable object, and it is the ONLY thing downstream code accepts. No loose `cardNumber`, `route`, `title`, or `auditContext` arguments anywhere:
+
+```text
+pathname
+    ↓
+registry
+    ↓
+canonical card
+    ↓
+Audit Identity Lock
+    ↓
+immutable object
+```
+
+```ts
+type AuditIdentity = {
+  id: 25;
+  route: "/admin/visual-index";
+  title: "Visual Index";
+  registryVersion: string;
+  registryHash: string;
+  frozen: true;
+};
+```
+
+Every prompt builder, header renderer, receipt, diagnostics entry and ledger write receives that exact frozen object. Nobody reconstructs it, nobody re-looks it up, nobody mutates it.
+
 ### FRASS-0576 — Single Canonical Registry
 There is exactly one registry in the entire codebase. No duplicated arrays, no JSON copies, no card constants inside components, no secondary lookup tables. Every card lookup — Teleporter panel, audit progress, chat handler, ledger, diagnostics — resolves through the one registry service.
 
