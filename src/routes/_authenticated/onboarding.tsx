@@ -160,7 +160,7 @@ function OnboardingPage() {
     return () => clearEngineDiagnostics();
   }, [messages.length, auditTurnsFiltered]);
 
-  const messagesRef = useRef<LocalMessage[]>(messages);
+  const messagesRef = useRef<ThreadMessage[]>(messages);
   messagesRef.current = messages;
 
 
