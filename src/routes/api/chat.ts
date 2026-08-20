@@ -1100,8 +1100,9 @@ the next move toward Legacy is. Never stop at helping someone earn a living.`;
         })();
 
         // FRASS-0556 Step 0 — if Frass already knows the answer, no AI is billed.
-        const freeAnswer = ruleFirstAnswer(lastMessage.content);
+        const freeAnswer = isAudit ? null : ruleFirstAnswer(lastMessage.content);
         if (freeAnswer) {
+
           return Response.json({
             reply: freeAnswer.reply,
             cards: { products: [], order: null },
