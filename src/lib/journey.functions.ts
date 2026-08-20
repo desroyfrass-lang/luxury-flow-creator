@@ -384,7 +384,12 @@ export const journeyOpening = createServerFn({ method: "POST" })
     if (existing.length) {
       const lastAssistant = [...existing].reverse().find((m) => m.role === "assistant");
       if (lastAssistant?.content) {
-        return { reply: lastAssistant.content, alreadyOpened: true, stageId: stage.id };
+        return {
+          reply: lastAssistant.content,
+          messageId: lastAssistant.id ?? null,
+          alreadyOpened: true,
+          stageId: stage.id,
+        };
       }
     }
 
