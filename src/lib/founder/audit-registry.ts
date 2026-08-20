@@ -199,7 +199,12 @@ export function formatCardNumber(n: number): string {
  *  AI again — a second call can re-hallucinate. */
 export function stripAuditIdentity(text: string, identity: AuditIdentity): string {
   if (!text) return "";
-  const routeRegex = new RegExp(`^\\s*${escapeRegex(identity.route)}\\s*$`, "i");
+  // Any standalone route line is identity — the server header already carries
+  // the canonical one, so the model never gets to state a route on its own.
+  const routeRegex = /^\s*\/[a-z0-9/_-]*\s*$/i;
+  void escapeRegex;
+  void identity;
+
   const headerRegex = /^#{0,6}\s*(card\s*#?\s*\d{1,3}|visual\s+verification)/i;
   // FRASS-0577 — the Teleporter is an inventory, never a wizard. Any sentence
   // that asks for, counts toward, or hands off to a "next card" is removed
