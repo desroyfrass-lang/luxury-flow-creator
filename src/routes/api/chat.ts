@@ -964,7 +964,7 @@ This is the single source of truth for this review. Analyze this page and recomm
 
 FRASS-0577 — THE TELEPORTER IS AN INVENTORY, NOT A WIZARD.
 Never ask for, name, count toward or hint at a "next card". Cards are reviewed in
-any order the Founder chooses. Never write "Ready for Card #12" or anything like it.
+any order the Founder chooses. Never write a "ready for the next card" line of any kind.
 Instead, every review updates one living Amendment Ledger. End each review with:
 "Amendments added to the ledger:" followed by short, concrete constitutional
 amendments, consolidations or retirements this page produces (or "No amendments —
