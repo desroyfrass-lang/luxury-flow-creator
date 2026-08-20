@@ -207,7 +207,12 @@ function ControlRoom() {
 
         {active === "commissioning" && <CommissioningPanel />}
 
-        {active === "world-teleporter" && <WorldTeleporterPanel />}
+        {active === "world-teleporter" && (
+          <div className="space-y-10">
+            <WorldTeleporterPanel />
+            <AuditLedgerPanel />
+          </div>
+        )}
       </div>
     </main>
   );
