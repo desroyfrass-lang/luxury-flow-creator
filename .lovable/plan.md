@@ -263,12 +263,14 @@ The issue stays open until every one of these passes in production. If even one 
 - [ ] Ledger receives zero blocked audits
 - [ ] `TELEPORTER ENGINE v3` receipt is visible
 - [ ] Registry Version and Registry Hash are present
+- [ ] Exactly one registry exists in the codebase (no duplicate card sources)
 - [ ] No React render loop
 - [ ] No stale Card #11 ever appears again
 
 ## Technical scope
-- Audit Ledger snapshot stabilization, zero-state Teleporter (pathname→registry→card), versioned + hashed shared registry with uniqueness validation, Frassy request construction (URL-only client payload), `/api/chat` validate→resolve→lock→generate→AI pipeline, immutable Audit Identity Lock, server-rendered audit header (AI emits analysis only), `AuditBlockedResponse`, Audit Diagnostics log, forensic Audit Source receipt, and receipt display/storage.
-- Codify FRASS-0574 — Canonical Audit Identity and FRASS-0575 — Audit Identity Lock in the Constitution.
+- Audit Ledger snapshot stabilization, zero-state Teleporter (pathname→registry→card), one canonical versioned + hashed registry service with uniqueness validation, Frassy request construction (URL-only client payload), `/api/chat` validate→resolve→lock→generate→AI pipeline, immutable Audit Identity Lock, server-rendered audit header with model-emitted identity stripped (AI emits analysis only), `AuditBlockedResponse`, Audit Diagnostics log, forensic Audit Source receipt, and receipt display/storage.
+- Delete every duplicate card list/lookup found and repoint its callers at the single registry service.
+- Codify FRASS-0574 — Canonical Audit Identity, FRASS-0575 — Audit Identity Lock, and FRASS-0576 — Single Canonical Registry in the Constitution.
 - No security-finding changes, onboarding changes, or unrelated feature work.
 
 ## Status
