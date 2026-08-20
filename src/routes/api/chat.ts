@@ -1120,6 +1120,7 @@ the next move toward Legacy is. Never stop at helping someone earn a living.`;
           }
           const fullPrompt = `${system}\n\n${lastMessage.content}`;
           auditPromptChars = fullPrompt.length;
+          auditPromptDump = fullPrompt.slice(0, 1000);
           // sha256 of the exact prompt handed to the model.
           try {
             const digest = await crypto.subtle.digest(
