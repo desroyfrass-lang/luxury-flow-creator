@@ -465,6 +465,19 @@ export function FrassyChat({
         },
       ]);
 
+      // FRASS-0573 — the completed reply is committed exactly as generated.
+      if (auditCard) {
+        commitAuditTurn({
+          cardKey: auditCard.key,
+          cardNumber: auditCard.number,
+          cardTitle: auditCard.title,
+          cardPath: auditCard.path,
+          role: "assistant",
+          content: reply,
+        });
+      }
+
+
       // FRASS-0513 — Frassy performs the navigation herself. A member is never
       // asked to type a path; if the place needs a session, she routes through
       // sign-in and comes straight back to it.
