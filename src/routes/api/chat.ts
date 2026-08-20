@@ -783,6 +783,12 @@ export const Route = createFileRoute("/api/chat")({
           sessionRoute && !pathIsAmbiguous ? resolveAuditIdentity(sessionRoute) : null;
         const isAudit = Boolean(auditIdentity && activeSession);
         const auditSessionId = activeSession?.auditSession ?? "";
+        // P0 runtime proof — one conversation id per invocation, echoed in the receipt.
+        const auditConversationId =
+          typeof crypto.randomUUID === "function"
+            ? crypto.randomUUID()
+            : `conv-${Math.random().toString(36).slice(2)}`;
+        const endpointTrace = `${request.method} /api/chat — engine TELEPORTER-ENGINE-V4`;
 
         const blockAudit = (reason: string) => {
           const blockedRequestId = Math.random().toString(36).slice(2, 10).toUpperCase();
@@ -805,9 +811,15 @@ export const Route = createFileRoute("/api/chat")({
                 blocked: true,
                 reason,
                 auditSession: auditSessionId,
+                conversationId: auditConversationId,
+                endpoint: endpointTrace,
+                errorCode: "AuditContextViolation",
                 currentUrl: body.districtPath ?? "",
                 resolvedRoute: sessionRoute,
                 requestId: blockedRequestId,
+                historyObjectsCount: Array.isArray(body.messages) ? body.messages.length : 0,
+                creditsUsed: 0,
+                modelId: null,
                 registryVersion: REGISTRY_VERSION,
                 registryHash: REGISTRY_HASH,
                 credits: 0,
@@ -952,7 +964,7 @@ This is the single source of truth for this review. Analyze this page and recomm
 
 FRASS-0577 — THE TELEPORTER IS AN INVENTORY, NOT A WIZARD.
 Never ask for, name, count toward or hint at a "next card". Cards are reviewed in
-any order the Founder chooses. Never write "Ready for Card #12" or anything like it.
+any order the Founder chooses. Never write a "ready for the next card" line of any kind.
 Instead, every review updates one living Amendment Ledger. End each review with:
 "Amendments added to the ledger:" followed by short, concrete constitutional
 amendments, consolidations or retirements this page produces (or "No amendments —
@@ -1046,7 +1058,13 @@ the next move toward Legacy is. Never stop at helping someone earn a living.`;
               : `${SYSTEM_PROMPT}\n\n${FOR_US_COMMUNITY}\n\n${FRASS_ECONOMY}\n\n${FRASS_SERVICES_MARKETPLACE}\n\n${FRASS_COMPLIANCE}\n\n${FRASS_REPAIR_ENGINE}`;
 
         const withVoice = `${basePrompt}\n\n${voiceConstitution}`;
-        const system = contextBlock ? `${withVoice}\n\n${contextBlock}` : withVoice;
+        // For a Teleporter audit the locked card block leads the prompt, so the
+        // active card is provable inside the first 1000 characters of the dump.
+        const system = contextBlock
+          ? isAudit
+            ? `${contextBlock}\n\n${withVoice}`
+            : `${withVoice}\n\n${contextBlock}`
+          : withVoice;
 
         // Convert simple {role, content} messages into UI-message shape for the SDK.
         type UiPart =
@@ -1070,6 +1088,8 @@ the next move toward Legacy is. Never stop at helping someone earn a living.`;
         // never reach the Founder and no credit is spent.
         let auditPromptHash = "";
         let auditPromptChars = 0;
+        // P0 runtime proof — the literal first 1000 chars handed to the model.
+        let auditPromptDump = "";
         if (isAudit && auditIdentity) {
           if (isAuditPaused()) {
             return blockAudit(
@@ -1100,6 +1120,7 @@ the next move toward Legacy is. Never stop at helping someone earn a living.`;
           }
           const fullPrompt = `${system}\n\n${lastMessage.content}`;
           auditPromptChars = fullPrompt.length;
+          auditPromptDump = fullPrompt.slice(0, 1000);
           // sha256 of the exact prompt handed to the model.
           try {
             const digest = await crypto.subtle.digest(
@@ -1304,15 +1325,28 @@ the next move toward Legacy is. Never stop at helping someone earn a living.`;
                   title: string;
                   route: string;
                   audit_context: "teleporter";
+                  conversation_id: string;
                   conversation_history_empty: boolean;
+                  history_objects_count: number;
+                  memory_objects_count: number;
+                  previous_audit_objects_count: number;
                   memory_injected: boolean;
                   previous_audit_injected: boolean;
                   prompt_length_chars: number;
                   prompt_hash: string;
+                  audit_session_id: string;
+                  timestamp: string;
+                  model_id: string;
+                  credits_used: number;
+                  endpoint: string;
+                  request_id: string;
                 };
                 model: string;
                 credits: number;
                 timestamp: string;
+                endpoint: string;
+                conversationId: string;
+                promptDump: string;
                 proof: {
                   promptIdentity: string;
                   rawModelReply: string;
@@ -1362,15 +1396,28 @@ the next move toward Legacy is. Never stop at helping someone earn a living.`;
                 title: auditIdentity.title,
                 route: auditIdentity.route,
                 audit_context: "teleporter",
+                conversation_id: auditConversationId,
                 conversation_history_empty: true,
+                history_objects_count: 0,
+                memory_objects_count: 0,
+                previous_audit_objects_count: 0,
                 memory_injected: false,
                 previous_audit_injected: false,
                 prompt_length_chars: auditPromptChars,
                 prompt_hash: auditPromptHash,
+                audit_session_id: auditSessionId,
+                timestamp: ts,
+                model_id: usedModel,
+                credits_used: aborted ? 0 : 1,
+                endpoint: endpointTrace,
+                request_id: requestId,
               },
               model: aborted ? `${usedModel} (aborted)` : usedModel,
               credits: aborted ? 0 : 1,
               timestamp: ts,
+              endpoint: endpointTrace,
+              conversationId: auditConversationId,
+              promptDump: auditPromptDump,
               // FRASS-0578 — proof, not assurance. This is the exact card payload
               // the model received and its raw reply before any cleanup, so the
               // Founder can verify the orchestration itself, not just the output.
@@ -1438,9 +1485,11 @@ the next move toward Legacy is. Never stop at helping someone earn a living.`;
               `Previous Audit Objects     0`,
               `Prompt Hash                ${auditPromptHash}`,
               `Prompt Size                ${auditPromptChars} chars`,
-              `Model                      ${auditReceipt.model}`,
-              `Credits                    ${auditReceipt.credits}`,
-              `Request                    ${auditReceipt.requestId}`,
+              `Conversation ID            ${auditConversationId}`,
+              `Endpoint                   ${endpointTrace}`,
+              `Model                      ${aborted ? `${usedModel} (aborted)` : usedModel}`,
+              `Credits                    ${aborted ? 0 : 1}`,
+              `Request                    ${requestId}`,
             ].join("\n");
 
             // Structured per-invocation audit log (P0 §5).
@@ -1456,8 +1505,11 @@ the next move toward Legacy is. Never stop at helping someone earn a living.`;
               prompt_hash: auditPromptHash,
               model_id: usedModel,
               aborted,
-              credits: auditReceipt.credits,
+              credits: aborted ? 0 : 1,
               request_id: requestId,
+              conversation_id: auditConversationId,
+              endpoint: endpointTrace,
+              prompt_dump_first_1000: auditPromptDump,
             });
 
           } else {
