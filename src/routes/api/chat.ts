@@ -862,7 +862,50 @@ export const Route = createFileRoute("/api/chat")({
         }
 
 
+        // FRASS-0579 §5 — Audit Lock. While a session is locked to a card, no
+        // message may move the review onto another card. No model call is made.
+        if (isAudit && auditIdentity) {
+          const asked = [...lastMessage.content.matchAll(/card\s*#?\s*(\d{1,3})\b/gi)]
+            .map((m) => Number(m[1]))
+            .filter((n) => Number.isFinite(n) && n !== auditIdentity.id);
+          if (asked.length) {
+            return Response.json(
+              {
+                reply: [
+                  `Current audit is locked to Card ${registryCardLabel(auditIdentity.id)} — ${auditIdentity.title}.`,
+                  ``,
+                  `Exit audit?  **YES / NO**`,
+                  ``,
+                  `To review Card #${String(asked[0]).padStart(3, "0")}, exit this audit and open that card from the World Teleporter. Nothing was sent to the model; credits spent: 0.`,
+                ].join("\n"),
+                cards: { products: [], order: null },
+                navigate: null,
+                router: { task: "audit-lock", provider: "frass-rules", cost: "none" },
+                auditReceipt: {
+                  engine: "TELEPORTER-ENGINE-V4",
+                  blocked: false,
+                  locked: true,
+                  auditSession: auditSessionId,
+                  cardNumber: auditIdentity.id,
+                  cardKey: auditIdentity.key,
+                  cardTitle: auditIdentity.title,
+                  cardPath: auditIdentity.route,
+                  registryVersion: auditIdentity.registryVersion,
+                  registryHash: auditIdentity.registryHash,
+                  requestId: Math.random().toString(36).slice(2, 10).toUpperCase(),
+                  history: 0,
+                  model: "none",
+                  credits: 0,
+                  timestamp: new Date().toISOString(),
+                },
+              },
+              { headers: { "X-Frass-Engine": "TELEPORTER-ENGINE-V4" } },
+            );
+          }
+        }
+
         const key = process.env.LOVABLE_API_KEY;
+
         if (!key) {
           return Response.json({ error: "AI is not configured." }, { status: 500 });
         }
