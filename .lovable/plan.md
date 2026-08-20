@@ -41,6 +41,33 @@ Nothing downstream can mutate them. Not AI. Not middleware. Not React. Not memor
 
 The lock is created immediately after registry resolution, sealed (frozen) before the prompt is generated, and carried unchanged through the AI call, the server-rendered header, the receipt, and the ledger write. Every ledger entry therefore carries its own identity lock, so any entry can be re-verified against the registry long after the fact.
 
+The lock is a single immutable object, and it is the ONLY thing downstream code accepts. No loose `cardNumber`, `route`, `title`, or `auditContext` arguments anywhere:
+
+```text
+pathname
+    ↓
+registry
+    ↓
+canonical card
+    ↓
+Audit Identity Lock
+    ↓
+immutable object
+```
+
+```ts
+type AuditIdentity = {
+  id: 25;
+  route: "/admin/visual-index";
+  title: "Visual Index";
+  registryVersion: string;
+  registryHash: string;
+  frozen: true;
+};
+```
+
+Every prompt builder, header renderer, receipt, diagnostics entry and ledger write receives that exact frozen object. Nobody reconstructs it, nobody re-looks it up, nobody mutates it.
+
 ### FRASS-0576 — Single Canonical Registry
 There is exactly one registry in the entire codebase. No duplicated arrays, no JSON copies, no card constants inside components, no secondary lookup tables. Every card lookup — Teleporter panel, audit progress, chat handler, ledger, diagnostics — resolves through the one registry service.
 
@@ -69,7 +96,12 @@ If `/admin/visual-index` is Card #025, there is literally nowhere else in the ap
 ### 2. The route is the ONLY client authority
 - The server never trusts anything from the browser except the Current URL.
 - Not: card number, title, district, audit context, component, route metadata, file. Nothing.
-- The browser does not send "Card #025." It sends only: `I'm on /admin/visual-index`.
+- The browser does not send "Card #025." The entire request payload's context is:
+
+```json
+{ "pathname": "/admin/visual-index" }
+```
+
 - Everything else is derived server-side, every single time:
 
 ```text
@@ -277,5 +309,7 @@ The issue stays open until every one of these passes in production. If even one 
 Status: Founder-blocking
 
 Build success, preview success, type checks, or unit tests do not satisfy acceptance. Only the production sign-off checklist above closes this issue.
+
+This will not be reported as fixed until every item in the production sign-off checklist has been completed in live production. A successful build, preview, or local test is explicitly not sufficient.
 
 Root Cause: The audit handler trusts browser card metadata, stale Teleporter session objects can remain authoritative, and the Audit Ledger snapshot can trigger the confirmed FrassyChat render loop.
