@@ -66,8 +66,9 @@ export function FrassyConversationDock() {
         : "idle";
   const copy = STATUS_COPY[status];
 
-  const transcript = speech.fullText.trim();
-  const showTeleprompter = transcript.length > 0 && (active || paused);
+  // FRASS-0579 — the floating teleprompter box is gone for good. Frassy's words
+  // live in one place only: the conversation thread itself, where they can be
+  // read back, copied and kept. Nothing she says appears in a box that vanishes.
 
   return (
     <div
@@ -76,43 +77,7 @@ export function FrassyConversationDock() {
       // above her with clear breathing room, never touching a screen edge.
       className="pointer-events-none fixed bottom-[6.25rem] right-6 z-50 flex max-w-[calc(100vw-3rem)] flex-col items-end gap-2"
     >
-      {/* Teleprompter — the exact words Frassy speaks, verbatim, as she says
-          them. The chunk currently audible is highlighted; nothing is trimmed. */}
-      {showTeleprompter && (
-        <div
-          role="log"
-          aria-live="polite"
-          aria-label="What Frassy is saying"
-          className="pointer-events-auto w-[min(26rem,calc(100vw-3rem))] max-h-40 overflow-y-auto rounded-2xl border border-border/60 bg-background/90 px-3 py-2 shadow-xl backdrop-blur-xl"
-        >
-          <p className="mb-1 text-[9px] uppercase tracking-[0.22em] text-muted-foreground">
-            Frassy is saying
-          </p>
-          <p className="text-[13px] leading-relaxed">
-            {speech.chunks.length > 0
-              ? speech.chunks.map((chunk, i) => (
-                  <span
-                    key={i}
-                    ref={
-                      i === speech.activeChunk
-                        ? (el) => el?.scrollIntoView({ block: "nearest" })
-                        : undefined
-                    }
-                    className={
-                      i === speech.activeChunk
-                        ? "text-foreground"
-                        : i < speech.activeChunk || speech.activeChunk === -1
-                          ? "text-muted-foreground"
-                          : "text-muted-foreground/60"
-                    }
-                  >
-                    {chunk}{" "}
-                  </span>
-                ))
-              : transcript}
-          </p>
-        </div>
-      )}
+
 
       {active && (
 

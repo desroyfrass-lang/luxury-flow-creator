@@ -731,54 +731,108 @@ export const Route = createFileRoute("/api/chat")({
 
         const attachments = Array.isArray(body.attachments) ? body.attachments : [];
 
-        // FRASS-0574/0576 — the server is the sole authority for audit identity.
-        // The browser sends only the Current URL (body.districtPath). Card number,
-        // title, district and every other identity field are derived here, never
-        // trusted from the client. Any incoming "auditContext" is ignored.
-        //
-        // A duplicate path (e.g. a layout+index pair sharing /blog) makes the
-        // identity ambiguous and blocks the audit of THAT path only. Other paths
-        // resolve normally — a stale registry on /blog never blocks /admin/visual-index.
-        const pathIsAmbiguous =
-          experienceContext === "founder" && Boolean(body.districtPath)
-            ? isPathAmbiguous(body.districtPath)
-            : false;
-        const auditIdentity: AuditIdentity | null =
-          experienceContext === "founder" && body.districtPath && !pathIsAmbiguous
-            ? resolveAuditIdentity(body.districtPath)
-            : null;
-        const isAudit = Boolean(auditIdentity);
+        // FRASS-0579 — the server-issued Teleporter session is the ONLY identity
+        // authority. Not body.card, not body.districtPath, not the referrer.
+        // Entering a card from the World Teleporter opens a locked session; this
+        // request reads that session back from the database.
+        type ActiveSession = {
+          auditSession: string;
+          cardNumber: number;
+          canonicalRoute: string;
+          locked: boolean;
+        };
+        let activeSession: ActiveSession | null = null;
+        if (experienceContext === "founder" && verifiedToken) {
+          try {
+            const { createClient } = await import("@supabase/supabase-js");
+            const supaSess = createClient(
+              process.env.SUPABASE_URL!,
+              process.env.SUPABASE_PUBLISHABLE_KEY!,
+              {
+                global: { headers: { Authorization: `Bearer ${verifiedToken}` } },
+                auth: { persistSession: false, autoRefreshToken: false },
+              },
+            );
+            const { data: row } = await supaSess
+              .from("teleporter_audit_sessions")
+              .select("audit_session, card_number, canonical_route, locked")
+              .is("closed_at", null)
+              .order("opened_at", { ascending: false })
+              .limit(1)
+              .maybeSingle();
+            if (row) {
+              activeSession = {
+                auditSession: row.audit_session as string,
+                cardNumber: row.card_number as number,
+                canonicalRoute: row.canonical_route as string,
+                locked: Boolean(row.locked),
+              };
+            }
+          } catch {
+            activeSession = null;
+          }
+        }
 
-        // FRASS-0576 §2a-iii — an ambiguous path is a hard block: no AI call, no
-        // ledger write. The Founder sees exactly which path is ambiguous and why.
-        if (pathIsAmbiguous && !auditIdentity) {
-          const blockedReason = `Ambiguous registry: two eligible routes share ${normalizePath(body.districtPath)}. Repair the registry before auditing this page.`;
+        const sessionRoute = activeSession?.canonicalRoute ?? null;
+        const pathIsAmbiguous = sessionRoute ? isPathAmbiguous(sessionRoute) : false;
+        const auditIdentity: AuditIdentity | null =
+          sessionRoute && !pathIsAmbiguous ? resolveAuditIdentity(sessionRoute) : null;
+        const isAudit = Boolean(auditIdentity && activeSession);
+        const auditSessionId = activeSession?.auditSession ?? "";
+
+        const blockAudit = (reason: string) => {
           const blockedRequestId = Math.random().toString(36).slice(2, 10).toUpperCase();
           logAuditBlock({
             requestId: blockedRequestId,
-            reason: blockedReason,
+            reason,
             currentUrl: body.districtPath ?? "",
-            resolvedRoute: null,
+            resolvedRoute: sessionRoute,
             registryVersion: REGISTRY_VERSION,
             registryHash: REGISTRY_HASH,
           });
           return Response.json(
             {
               auditReceipt: {
-                engine: "TELEPORTER-ENGINE-V3",
+                engine: "TELEPORTER-ENGINE-V4",
                 blocked: true,
-                reason: blockedReason,
+                reason,
+                auditSession: auditSessionId,
                 currentUrl: body.districtPath ?? "",
-                resolvedRoute: null,
+                resolvedRoute: sessionRoute,
                 requestId: blockedRequestId,
                 registryVersion: REGISTRY_VERSION,
                 registryHash: REGISTRY_HASH,
+                credits: 0,
                 timestamp: new Date().toISOString(),
               },
             },
-            { status: 409, headers: { "X-Frass-Engine": "TELEPORTER-ENGINE-V3" } },
+            { status: 409, headers: { "X-Frass-Engine": "TELEPORTER-ENGINE-V4" } },
+          );
+        };
+
+        // A session pointing at an ambiguous path is a hard block: no AI, no ledger.
+        if (activeSession && pathIsAmbiguous) {
+          return blockAudit(
+            `Ambiguous registry: two eligible routes share ${normalizePath(sessionRoute)}. Repair the registry before auditing this page.`,
           );
         }
+        if (activeSession && !auditIdentity) {
+          return blockAudit(
+            `The locked audit route ${normalizePath(sessionRoute)} is no longer in the canonical registry. Re-open the card from the World Teleporter.`,
+          );
+        }
+        // The browser-claimed route is a comparison value only. If it disagrees
+        // with the locked session, nothing runs and no credit is spent.
+        if (
+          isAudit &&
+          body.districtPath &&
+          normalizePath(body.districtPath) !== normalizePath(auditIdentity!.route)
+        ) {
+          return blockAudit(
+            `Audit identity mismatch — session Card ${registryCardLabel(auditIdentity!.id)} (${auditIdentity!.route}), request claimed ${normalizePath(body.districtPath)}. Credits spent: 0.`,
+          );
+        }
+
 
         // A Teleporter audit is a clean-room review: the model sees ONLY the
         // Founder's current request. Past turns are never replayed, so no earlier
@@ -808,7 +862,50 @@ export const Route = createFileRoute("/api/chat")({
         }
 
 
+        // FRASS-0579 §5 — Audit Lock. While a session is locked to a card, no
+        // message may move the review onto another card. No model call is made.
+        if (isAudit && auditIdentity) {
+          const asked = [...lastMessage.content.matchAll(/card\s*#?\s*(\d{1,3})\b/gi)]
+            .map((m) => Number(m[1]))
+            .filter((n) => Number.isFinite(n) && n !== auditIdentity.id);
+          if (asked.length) {
+            return Response.json(
+              {
+                reply: [
+                  `Current audit is locked to Card ${registryCardLabel(auditIdentity.id)} — ${auditIdentity.title}.`,
+                  ``,
+                  `Exit audit?  **YES / NO**`,
+                  ``,
+                  `To review Card #${String(asked[0]).padStart(3, "0")}, exit this audit and open that card from the World Teleporter. Nothing was sent to the model; credits spent: 0.`,
+                ].join("\n"),
+                cards: { products: [], order: null },
+                navigate: null,
+                router: { task: "audit-lock", provider: "frass-rules", cost: "none" },
+                auditReceipt: {
+                  engine: "TELEPORTER-ENGINE-V4",
+                  blocked: false,
+                  locked: true,
+                  auditSession: auditSessionId,
+                  cardNumber: auditIdentity.id,
+                  cardKey: auditIdentity.key,
+                  cardTitle: auditIdentity.title,
+                  cardPath: auditIdentity.route,
+                  registryVersion: auditIdentity.registryVersion,
+                  registryHash: auditIdentity.registryHash,
+                  requestId: Math.random().toString(36).slice(2, 10).toUpperCase(),
+                  history: 0,
+                  model: "none",
+                  credits: 0,
+                  timestamp: new Date().toISOString(),
+                },
+              },
+              { headers: { "X-Frass-Engine": "TELEPORTER-ENGINE-V4" } },
+            );
+          }
+        }
+
         const key = process.env.LOVABLE_API_KEY;
+
         if (!key) {
           return Response.json({ error: "AI is not configured." }, { status: 500 });
         }
@@ -1003,8 +1100,9 @@ the next move toward Legacy is. Never stop at helping someone earn a living.`;
         })();
 
         // FRASS-0556 Step 0 — if Frass already knows the answer, no AI is billed.
-        const freeAnswer = ruleFirstAnswer(lastMessage.content);
+        const freeAnswer = isAudit ? null : ruleFirstAnswer(lastMessage.content);
         if (freeAnswer) {
+
           return Response.json({
             reply: freeAnswer.reply,
             cards: { products: [], order: null },
@@ -1104,14 +1202,18 @@ the next move toward Legacy is. Never stop at helping someone earn a living.`;
               ? founderFallback
               : result.text || "…";
 
-          // FRASS-0574/0576 — the server renders identity; the AI only generates
-          // analysis. Any card number, route, or "Visual Verification" heading the
-          // model emits anyway is stripped — never regenerated by a second call.
+          // FRASS-0574/0576/0579 — the server renders identity; the AI only
+          // generates analysis. Any card number, route, or "Visual Verification"
+          // heading the model emits anyway is stripped — never regenerated by a
+          // second call — and a reply naming a FOREIGN card is aborted outright.
           let reply: string;
           let auditReceipt:
             | {
-                engine: "TELEPORTER-ENGINE-V3";
-                blocked: false;
+                engine: "TELEPORTER-ENGINE-V4";
+                blocked: boolean;
+                aborted?: boolean;
+                locked?: boolean;
+                auditSession: string;
                 cardNumber: number;
                 cardKey: string;
                 cardTitle: string;
@@ -1120,6 +1222,8 @@ the next move toward Legacy is. Never stop at helping someone earn a living.`;
                 registryHash: string;
                 requestId: string;
                 history: number;
+                model: string;
+                credits: number;
                 timestamp: string;
                 proof: {
                   promptIdentity: string;
@@ -1137,9 +1241,26 @@ the next move toward Legacy is. Never stop at helping someone earn a living.`;
             const requestId = Math.random().toString(36).slice(2, 10).toUpperCase();
             const historyCount = 0; // clean room — model saw only the current turn
             const ts = new Date().toISOString();
+
+            // FRASS-0579 §7 — output kill switch. If the model referenced any
+            // identity outside the locked audit, the Founder never sees it.
+            const foreignCard = [...(result.text ?? "").matchAll(/card\s*#?\s*(\d{1,3})\b/gi)]
+              .map((m) => Number(m[1]))
+              .find((n) => Number.isFinite(n) && n !== auditIdentity.id);
+            const foreignRoute = [...(result.text ?? "").matchAll(/(^|\s)(\/[a-z0-9/_-]{3,})/gi)]
+              .map((m) => normalizePath(m[2]))
+              .find(
+                (p) =>
+                  p !== normalizePath(auditIdentity.route) && Boolean(resolveCanonicalCard(p)),
+              );
+            const aborted = Boolean(foreignCard || foreignRoute);
+
             auditReceipt = {
-              engine: "TELEPORTER-ENGINE-V3",
+              engine: "TELEPORTER-ENGINE-V4",
               blocked: false,
+              aborted,
+              locked: true,
+              auditSession: auditSessionId,
               cardNumber: auditIdentity.id,
               cardKey: auditIdentity.key,
               cardTitle: auditIdentity.title,
@@ -1148,12 +1269,15 @@ the next move toward Legacy is. Never stop at helping someone earn a living.`;
               registryHash: auditIdentity.registryHash,
               requestId,
               history: historyCount,
+              model: aborted ? `${usedModel} (aborted)` : usedModel,
+              credits: aborted ? 0 : 1,
               timestamp: ts,
               // FRASS-0578 — proof, not assurance. This is the exact card payload
               // the model received and its raw reply before any cleanup, so the
               // Founder can verify the orchestration itself, not just the output.
               proof: {
                 promptIdentity: [
+                  `Audit Session ${auditSessionId}`,
                   `Card ${registryCardLabel(auditIdentity.id)}`,
                   `Title: ${auditIdentity.title}`,
                   `Route: ${auditIdentity.route}`,
@@ -1167,20 +1291,51 @@ the next move toward Legacy is. Never stop at helping someone earn a living.`;
                 strippedAnything: (result.text ?? "").trim() !== analysis.trim(),
               },
             };
-            reply = [
-              `### 🏛️ CARD ${registryCardLabel(auditIdentity.id)}`,
+
+            // The server-generated audit header — written from registry data
+            // BEFORE the model was called, so a hallucination cannot hide it.
+            const header = [
+              `══════════════════════`,
+              `**Teleporter Card ${registryCardLabel(auditIdentity.id)}**`,
+              `${auditIdentity.title}`,
               `${auditIdentity.route}`,
-              `Registry ${auditIdentity.registryVersion} · ${auditIdentity.registryHash}`,
+              `Audit Started  ${ts.slice(11, 19)}`,
+              `══════════════════════`,
               ``,
-              analysis,
+            ];
+
+            const body_ = aborted
+              ? [
+                  `**Audit aborted.**`,
+                  ``,
+                  `Reason: Model response referenced an identity outside the locked audit${
+                    foreignCard ? ` (Card #${String(foreignCard).padStart(3, "0")})` : ` (${foreignRoute})`
+                  }.`,
+                  `Credits refunded.`,
+                  `Please retry.`,
+                ]
+              : [analysis];
+
+            reply = [
+              ...header,
+              ...body_,
               ``,
               `---`,
-              `Audit Receipt · Engine ${auditReceipt.engine} · Card ${registryCardLabel(auditIdentity.id)} · ${auditIdentity.route} · Registry ${auditIdentity.registryVersion} · History ${historyCount} · Request ${requestId}`,
+              `**AUDIT RECEIPT**`,
+              `Audit Session   ${auditSessionId}`,
+              `Card            ${String(auditIdentity.id).padStart(3, "0")}`,
+              `Canonical Route ${auditIdentity.route}`,
+              `Registry Hash   ${auditIdentity.registryHash}`,
+              `Context         LOCKED`,
+              `History         EMPTY`,
+              `Model           ${auditReceipt.model}`,
+              `Credits         ${auditReceipt.credits}`,
             ].join("\n");
 
           } else {
             reply = modelReply;
           }
+
 
 
           return Response.json({
@@ -1205,7 +1360,7 @@ the next move toward Legacy is. Never stop at helping someone earn a living.`;
                       ? "server-resolved audit identity → clean room"
                       : "client admin signal → founder storefront context",
                     historySource: isAudit ? "clean_room_last_turn" : "floating_chat_client_state",
-                    auditEngine: isAudit ? "TELEPORTER-ENGINE-V3" : undefined,
+                    auditEngine: isAudit ? "TELEPORTER-ENGINE-V4" : undefined,
                     registryVersion: isAudit ? auditIdentity!.registryVersion : undefined,
                     registryHash: isAudit ? auditIdentity!.registryHash : undefined,
                     fallback: isFounderIdentityDiscovery(result.text)
@@ -1215,7 +1370,7 @@ the next move toward Legacy is. Never stop at helping someone earn a living.`;
                   },
                 }
               : {}),
-          }, isAudit ? { headers: { "X-Frass-Engine": "TELEPORTER-ENGINE-V3" } } : undefined);
+          }, isAudit ? { headers: { "X-Frass-Engine": "TELEPORTER-ENGINE-V4" } } : undefined);
         } catch (err) {
           const message = err instanceof Error ? err.message : "Unknown error";
           const status = /429|rate/i.test(message) ? 429 : /402|credit/i.test(message) ? 402 : 500;
