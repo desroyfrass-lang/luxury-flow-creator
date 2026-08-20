@@ -482,7 +482,9 @@ export const getMyTrustProfile = createServerFn({ method: "GET" })
     const monthsActive = monthsBetween(profile?.created_at);
     const stage = builderStage(completed.length, monthsActive);
 
-    const { data: feedback } = await context.supabase
+    // Internal subject UUID is server-only; scope strictly to the caller.
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { data: feedback } = await supabaseAdmin
       .from("verified_feedback")
       .select("id, experience, body, created_at, is_published")
       .eq("subject_id", context.userId)
