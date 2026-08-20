@@ -556,6 +556,13 @@ function OnboardingPage() {
                         ? "Frassy is speaking"
                         : "Type or hold the mic"}
                 </span>
+                <button
+                  type="button"
+                  onClick={() => void copyAll()}
+                  className="inline-flex items-center gap-2 rounded-full border border-border px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground transition hover:border-[color:var(--gold)] hover:text-[color:var(--gold)]"
+                >
+                  <Copy className="h-3 w-3" /> Copy whole conversation
+                </button>
               </div>
             </header>
 
