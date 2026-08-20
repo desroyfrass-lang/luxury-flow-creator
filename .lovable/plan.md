@@ -83,16 +83,17 @@ AI
 ```
 
 - If validation fails at any stage, the AI never even receives a prompt. This makes it impossible for the model to hallucinate Card #11.
-- Hard invariant — enforced as code, not convention:
+- Hard invariant — an explicit response, not an exception that something upstream could swallow:
 
 ```text
-if (resolved.route !== currentUrl) {
-    throw AuditBlockedError();
+if (resolved.route !== pathname) {
+    logAuditFailure()
+    return AuditBlockedResponse()
 }
 ```
 
-- No AI. No ledger. No retry. Abort.
-- If the active URL and the resolved registry entry disagree — or the route is unknown or duplicated — return a visible Founder diagnostic instead:
+- That guarantees: no AI call, no ledger write, no memory save.
+- If the active URL and the resolved registry entry disagree — or the route is unknown or duplicated — return a visible Founder diagnostic:
 
 ```text
 Audit blocked.
@@ -102,7 +103,37 @@ Reason:             Registry mismatch
 No AI call executed.
 ```
 
-- A blocked audit is never written to the Audit Ledger. The ledger only ever contains successful audits. Failed validations are diagnostics, not audit history.
+- A blocked audit is never written to the Audit Ledger. The ledger only ever contains successful audits.
+
+### 2a-ii. Registry integrity invariant
+Validate the registry itself, not just the lookup:
+
+```text
+Registry
+    ↓
+Unique Route
+    ↓
+Unique Card
+```
+
+- `/admin/visual-index` maps to exactly one card.
+- Card #025 maps to exactly one route.
+- If any duplicate route or duplicate card number exists, abort. No AI, no ledger.
+
+### 2a-iii. Blocked audits are logged in diagnostics
+Blocked audits stay out of the Founder Audit Ledger but are recorded in a separate Audit Diagnostics log:
+
+```text
+Audit Diagnostics
+21:04
+Blocked
+Reason           Registry mismatch
+AI called?       NO
+Ledger written?  NO
+```
+
+This is distinct from the Founder Audit Ledger and exists purely for debugging.
+
 
 ### 2b. Server renders the receipt; AI only generates the analysis
 - The AI never generates the audit header. It never knows how to format the receipt.
