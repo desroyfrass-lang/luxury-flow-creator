@@ -5197,6 +5197,51 @@ export type Database = {
         }
         Relationships: []
       }
+      teleporter_audit_sessions: {
+        Row: {
+          audit_session: string
+          canonical_route: string
+          card_key: string
+          card_number: number
+          card_title: string
+          closed_at: string | null
+          founder_id: string
+          id: string
+          locked: boolean
+          opened_at: string
+          registry_hash: string
+          registry_version: string
+        }
+        Insert: {
+          audit_session: string
+          canonical_route: string
+          card_key: string
+          card_number: number
+          card_title: string
+          closed_at?: string | null
+          founder_id: string
+          id?: string
+          locked?: boolean
+          opened_at?: string
+          registry_hash: string
+          registry_version: string
+        }
+        Update: {
+          audit_session?: string
+          canonical_route?: string
+          card_key?: string
+          card_number?: number
+          card_title?: string
+          closed_at?: string | null
+          founder_id?: string
+          id?: string
+          locked?: boolean
+          opened_at?: string
+          registry_hash?: string
+          registry_version?: string
+        }
+        Relationships: []
+      }
       trust_verifications: {
         Row: {
           badge: string
