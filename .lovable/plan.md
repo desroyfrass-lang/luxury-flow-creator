@@ -18,46 +18,79 @@ Make one live Teleporter review provably return the card selected by the Founder
 - Update that snapshot only when ledger data is appended, merged, deleted, cleared, or synchronized.
 - Keep the permanent Founder Audit Ledger and its database synchronization.
 
-### 2. Make the server authoritative for card identity
-- Create one shared registry resolver that derives the canonical card from its route/file.
-- In `/api/chat`, ignore browser-supplied number, title, component, file, and district as authorities.
-- Resolve the canonical card from the shared registry using the route currently being rendered, verified server-side, not the route metadata the browser submits. Chain: Teleporter selection → router navigation → current page loads → server resolves current route → shared registry lookup → canonical card → AI prompt.
-- Require verified Founder access for audit mode; a client cannot create an audit response merely by adding `auditContext`.
+### 2. The route is the ONLY client authority
+- The server never trusts anything from the browser except the Current URL.
+- Not: card number, title, district, audit context, component, route metadata, file. Nothing.
+- The browser does not send "Card #025." It sends only: `I'm on /admin/visual-index`.
+- Everything else is derived server-side, every single time:
 
-### 2a. Hard fail before any AI call
-- If the active URL and the resolved registry entry disagree — or the route is unknown or duplicated — do not call the AI at all.
-- Return a visible Founder diagnostic instead, in this shape:
+```text
+Current URL
+    ↓
+Server Router
+    ↓
+Registry
+    ↓
+Canonical Card
+    ↓
+AI Prompt
+```
+
+- Create one shared registry resolver that derives the canonical card from its route/file.
+- Require verified Founder access for audit mode; a client cannot create an audit response merely by adding `auditContext`.
+- Version the registry. Every registry carries a `Registry Version` (e.g. `2026.08.19.01`). Every audit receipt includes it, so if production serves a stale registry it is visible instantly.
+
+### 2a. AI is impossible until validation succeeds
+- The pipeline is strictly ordered. The AI never receives a prompt until every prior step passes:
+
+```text
+Validate
+    ↓
+Resolve Card
+    ↓
+Lock Audit Context
+    ↓
+Generate Prompt
+    ↓
+AI
+```
+
+- If validation fails at any stage, the AI never even receives a prompt. This makes it impossible for the model to hallucinate Card #11.
+- If the active URL and the resolved registry entry disagree — or the route is unknown or duplicated — do not call the AI. Return a visible Founder diagnostic instead:
 
 ```text
 Audit blocked.
 Current URL:        /admin/visual-index
 Resolved Registry:  /admin/financial-audit
-Reason:             Registry mismatch.
+Reason:             Registry mismatch
 No AI call executed.
 ```
 
-- A blocked audit is never written to the Audit Ledger as a review.
+- A blocked audit is never written to the Audit Ledger. The ledger only ever contains successful audits. Failed validations are diagnostics, not audit history.
 
-### 2b. Audit Source diagnostic
-- Every audit response and every blocked attempt carries an Audit Source block:
+### 2b. Forensic Audit Source receipt
+- Every audit response and every blocked attempt carries an Audit Source block. It is a forensic receipt:
 
 ```text
 Audit Source
-Teleporter Card:
-Current URL:
-Registry Match:
+Engine:              TELEPORTER ENGINE v3
+Registry Version:
 Conversation ID:
+Request ID:
+Current URL:
+Resolved Card:
 History Count:
 Prompt Hash:
+Timestamp:
 ```
 
 - Shown with the live response and stored with the ledger entry so any future recurrence is diagnosable in seconds.
 
-
 ### 3. Remove stale session authority
-- Store only the selected card key/route needed for navigation.
+- Do not store any active card object.
+- Store only: Destination URL. That is it.
+- Everything else comes from the Registry. Every. Single. Time.
 - On every target page and every send, derive the complete active card from the current registry.
-- Never return a cached card object merely because its stored path matches.
 - Prevent sending until the destination visibly shows the canonical card and route selected in the Teleporter.
 
 ### 4. Add undeniable runtime provenance
@@ -75,14 +108,15 @@ Prompt Hash:
 1. Open Production at `frasskicks.com` as the Founder and complete or skip the Daily Welcome gate.
 2. Open Founder Control Room → World Teleporter.
 3. Search for Card #025 and confirm its canonical route is `/admin/visual-index`.
-4. Click it and confirm the destination says `Reviewing Card #025 · /admin/visual-index` before sending.
+4. Click it and confirm the destination says `Reviewing Card #025 · /admin/visual-index` before sending. The browser sends only the Current URL — no card number, no metadata.
 5. Send a unique test sentence while recording the browser request and response.
-6. Confirm the request is `POST /api/chat` and the receipt says `TELEPORTER ENGINE v3`, Card #025, `/admin/visual-index`, with a fresh request ID and timestamp.
+6. Confirm the request is `POST /api/chat` and the forensic receipt shows `TELEPORTER ENGINE v3`, a `Registry Version`, Card #025, `/admin/visual-index`, a fresh Request ID, Prompt Hash, and Timestamp.
 7. Confirm the first response line is Card #025, it is stored once in the Audit Ledger, and no maximum-update-depth error appears.
 8. Repeat with Card #011 and confirm it independently resolves to `/admin/financial-audit`.
+9. Force a mismatch (e.g. navigate to `/admin/visual-index` but tamper so the registry disagrees) and confirm the AI is never called — the response is the `Audit blocked.` diagnostic and nothing is written to the ledger.
 
 ## Technical scope
-- Audit Ledger snapshot, Teleporter session resolver, shared card resolver, Frassy request construction, `/api/chat` server verification, hard-fail diagnostic, and audit receipt display/storage.
+- Audit Ledger snapshot stabilization, Teleporter session reduced to Destination URL only, versioned shared registry resolver, Frassy request construction (URL-only client payload), `/api/chat` server-side validate→resolve→lock→generate→AI pipeline, hard-fail diagnostic, forensic Audit Source receipt, and audit receipt display/storage.
 - No security-finding changes, onboarding changes, or unrelated feature work.
 
 ## Status
@@ -92,9 +126,11 @@ Status: Founder-blocking
 This issue cannot be marked fixed until a live production audit of Card #025 returns:
 - Card #025
 - `/admin/visual-index`
-- `TELEPORTER ENGINE v3` receipt
-- Correct ledger entry
+- `TELEPORTER ENGINE v3` receipt with a current Registry Version
+- A correct, single Audit Ledger entry
 - Zero runtime errors
+
+And a forced mismatch returns the `Audit blocked.` diagnostic with no AI call and no ledger write.
 
 Build success, preview success, type checks, or unit tests do not satisfy acceptance.
 
