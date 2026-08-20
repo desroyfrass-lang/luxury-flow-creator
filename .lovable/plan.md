@@ -96,7 +96,12 @@ If `/admin/visual-index` is Card #025, there is literally nowhere else in the ap
 ### 2. The route is the ONLY client authority
 - The server never trusts anything from the browser except the Current URL.
 - Not: card number, title, district, audit context, component, route metadata, file. Nothing.
-- The browser does not send "Card #025." It sends only: `I'm on /admin/visual-index`.
+- The browser does not send "Card #025." The entire request payload's context is:
+
+```json
+{ "pathname": "/admin/visual-index" }
+```
+
 - Everything else is derived server-side, every single time:
 
 ```text
