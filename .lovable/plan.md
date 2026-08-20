@@ -1,7 +1,34 @@
-# Founder Blocking Bug — Runtime-Verified Teleporter Repair
+# FRASS Constitutional Amendment — Canonical Teleporter Audit Engine (TELEPORTER ENGINE v3)
 
 ## Goal
-Make one live Teleporter review provably return the card selected by the Founder. Do not resume the audit until selecting Card #025 reaches `/admin/visual-index` and the response begins with Card #025.
+This is not a bug fix. It defines an audit engine where Card #11 can never accidentally appear again, because the AI is no longer responsible for identity. Identity becomes a server-side constitutional guarantee; the AI's only responsibility is to analyze the resolved card.
+
+Acceptance is a live production run: selecting Card #025 reaches `/admin/visual-index` and the response is Card #025.
+
+## Constitutional rule
+
+### FRASS-0574 — Canonical Audit Identity
+During Teleporter audits, the canonical identity of a page is derived exclusively from the current route.
+
+The client never supplies:
+- Card Number
+- Card Title
+- Audit Context
+- District
+- Registry Metadata
+
+The server resolves these from the registry.
+
+```text
+Current URL
+    ↓
+Registry
+    ↓
+Canonical Card
+```
+
+This is a permanent platform rule, not a one-off repair.
+
 
 ## Confirmed findings
 - The Teleporter click stores card context, navigates to the selected route, and the shared Frassy panel posts to `POST /api/chat`.
@@ -38,7 +65,14 @@ AI Prompt
 
 - Create one shared registry resolver that derives the canonical card from its route/file.
 - Require verified Founder access for audit mode; a client cannot create an audit response merely by adding `auditContext`.
-- Version the registry. Every registry carries a `Registry Version` (e.g. `2026.08.19.01`). Every audit receipt includes it, so if production serves a stale registry it is visible instantly.
+- Fingerprint the registry. Every registry carries both a `Registry Version` and a `Registry Hash`:
+
+```text
+Version    2026.08.19.01
+Hash       4E71A9...
+```
+
+Both appear on every audit receipt, so a stale registry in production is visible instantly.
 
 ### 2a. AI is impossible until validation succeeds
 - The pipeline is strictly ordered. The AI never receives a prompt until every prior step passes:
@@ -56,16 +90,17 @@ AI
 ```
 
 - If validation fails at any stage, the AI never even receives a prompt. This makes it impossible for the model to hallucinate Card #11.
-- Hard invariant — enforced as code, not convention:
+- Hard invariant — an explicit response, not an exception that something upstream could swallow:
 
 ```text
-if (resolved.route !== currentUrl) {
-    throw AuditBlockedError();
+if (resolved.route !== pathname) {
+    logAuditFailure()
+    return AuditBlockedResponse()
 }
 ```
 
-- No AI. No ledger. No retry. Abort.
-- If the active URL and the resolved registry entry disagree — or the route is unknown or duplicated — return a visible Founder diagnostic instead:
+- That guarantees: no AI call, no ledger write, no memory save.
+- If the active URL and the resolved registry entry disagree — or the route is unknown or duplicated — return a visible Founder diagnostic:
 
 ```text
 Audit blocked.
@@ -75,7 +110,37 @@ Reason:             Registry mismatch
 No AI call executed.
 ```
 
-- A blocked audit is never written to the Audit Ledger. The ledger only ever contains successful audits. Failed validations are diagnostics, not audit history.
+- A blocked audit is never written to the Audit Ledger. The ledger only ever contains successful audits.
+
+### 2a-ii. Registry integrity invariant
+Validate the registry itself, not just the lookup:
+
+```text
+Registry
+    ↓
+Unique Route
+    ↓
+Unique Card
+```
+
+- `/admin/visual-index` maps to exactly one card.
+- Card #025 maps to exactly one route.
+- If any duplicate route or duplicate card number exists, abort. No AI, no ledger.
+
+### 2a-iii. Blocked audits are logged in diagnostics
+Blocked audits stay out of the Founder Audit Ledger but are recorded in a separate Audit Diagnostics log:
+
+```text
+Audit Diagnostics
+21:04
+Blocked
+Reason           Registry mismatch
+AI called?       NO
+Ledger written?  NO
+```
+
+This is distinct from the Founder Audit Ledger and exists purely for debugging.
+
 
 ### 2b. Server renders the receipt; AI only generates the analysis
 - The AI never generates the audit header. It never knows how to format the receipt.
@@ -101,6 +166,7 @@ Server
 Audit Source
 Engine:              TELEPORTER ENGINE v3
 Registry Version:
+Registry Hash:
 Conversation ID:
 Request ID:
 Current URL:
@@ -146,13 +212,27 @@ Done
 3. Search for Card #025 and confirm its canonical route is `/admin/visual-index`.
 4. Click it and confirm the destination says `Reviewing Card #025 · /admin/visual-index` before sending. The browser sends only the Current URL — no card number, no metadata.
 5. Send a unique test sentence while recording the browser request and response.
-6. Confirm the request is `POST /api/chat` and the forensic receipt shows `TELEPORTER ENGINE v3`, a `Registry Version`, Card #025, `/admin/visual-index`, a fresh Request ID, History Count, and Timestamp. Confirm the header (Card #025 / route) was rendered by the server, not the AI.
+6. Confirm the request is `POST /api/chat` and the forensic receipt shows `TELEPORTER ENGINE v3`, `Registry Version`, `Registry Hash`, Card #025, `/admin/visual-index`, a fresh Request ID, History Count, and Timestamp. Confirm the header (Card #025 / route) was rendered by the server, not the AI.
 7. Confirm the first response line is Card #025, it is stored once in the Audit Ledger, and no maximum-update-depth error appears.
 8. Repeat with Card #011 and confirm it independently resolves to `/admin/financial-audit`.
-9. Force a mismatch (e.g. navigate to `/admin/visual-index` but tamper so the registry disagrees) and confirm the AI is never called — the response is the `Audit blocked.` diagnostic and nothing is written to the ledger.
+9. Force a mismatch (e.g. navigate to `/admin/visual-index` but tamper so the registry disagrees) and confirm the AI is never called — the response is the `Audit blocked.` diagnostic, nothing is written to the ledger, and the block appears in Audit Diagnostics.
+10. Refresh test — the strongest proof no hidden session state remains:
+
+```text
+Card #025
+    ↓
+Refresh browser
+    ↓
+Open Frassy
+    ↓
+Still Card #025
+```
+
+If the card changes after a refresh, hidden session state still exists and the work is not done.
 
 ## Technical scope
-- Audit Ledger snapshot stabilization, zero-state Teleporter (pathname→registry→card), versioned shared registry resolver, Frassy request construction (URL-only client payload), `/api/chat` server-side validate→resolve→lock→generate→AI pipeline, server-rendered audit receipt (AI emits analysis only), hard-fail diagnostic, forensic Audit Source receipt, and audit receipt display/storage.
+- Audit Ledger snapshot stabilization, zero-state Teleporter (pathname→registry→card), versioned + hashed shared registry with uniqueness validation, Frassy request construction (URL-only client payload), `/api/chat` validate→resolve→lock→generate→AI pipeline, server-rendered audit header (AI emits analysis only), `AuditBlockedResponse`, Audit Diagnostics log, forensic Audit Source receipt, and receipt display/storage.
+- Codify FRASS-0574 — Canonical Audit Identity in the Constitution.
 - No security-finding changes, onboarding changes, or unrelated feature work.
 
 ## Status
@@ -162,11 +242,12 @@ Status: Founder-blocking
 This issue cannot be marked fixed until a live production audit of Card #025 returns:
 - Card #025
 - `/admin/visual-index`
-- `TELEPORTER ENGINE v3` receipt with a current Registry Version
+- `TELEPORTER ENGINE v3` receipt with a current Registry Version and Registry Hash
 - A correct, single Audit Ledger entry
 - Zero runtime errors
+- The same card after a browser refresh
 
-And a forced mismatch returns the `Audit blocked.` diagnostic with no AI call and no ledger write.
+And a forced mismatch returns the `Audit blocked.` diagnostic with no AI call, no ledger write, and an Audit Diagnostics entry.
 
 Build success, preview success, type checks, or unit tests do not satisfy acceptance.
 
