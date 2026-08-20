@@ -29,6 +29,20 @@ Canonical Card
 
 This is a permanent platform rule, not a one-off repair.
 
+### FRASS-0575 — Audit Identity Lock
+Once an audit begins, these four values become immutable for the life of that audit:
+
+- Card ID
+- Route
+- Registry Version
+- Registry Hash
+
+Nothing downstream can mutate them. Not AI. Not middleware. Not React. Not memory. Nothing.
+
+The lock is created immediately after registry resolution, sealed (frozen) before the prompt is generated, and carried unchanged through the AI call, the server-rendered header, the receipt, and the ledger write. Every ledger entry therefore carries its own identity lock, so any entry can be re-verified against the registry long after the fact.
+
+
+
 
 ## Confirmed findings
 - The Teleporter click stores card context, navigates to the selected route, and the shared Frassy panel posts to `POST /api/chat`.
