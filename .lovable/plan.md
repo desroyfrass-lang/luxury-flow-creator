@@ -310,4 +310,6 @@ Status: Founder-blocking
 
 Build success, preview success, type checks, or unit tests do not satisfy acceptance. Only the production sign-off checklist above closes this issue.
 
+This will not be reported as fixed until every item in the production sign-off checklist has been completed in live production. A successful build, preview, or local test is explicitly not sufficient.
+
 Root Cause: The audit handler trusts browser card metadata, stale Teleporter session objects can remain authoritative, and the Audit Ledger snapshot can trigger the confirmed FrassyChat render loop.
