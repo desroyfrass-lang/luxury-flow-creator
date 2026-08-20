@@ -92,6 +92,12 @@ type OrderCard = {
   tracking: Array<{ number: string; url: string; company: string; eta: string | null }>;
 };
 
+type AuditProof = {
+  promptIdentity: string;
+  rawModelReply: string;
+  strippedAnything: boolean;
+};
+
 type Msg = {
   id: string;
   role: "user" | "assistant";
@@ -100,7 +106,11 @@ type Msg = {
   order?: OrderCard | null;
   // FRASS-0513 — where Frassy just took them (or is offering to take them).
   place?: { key: string; label: string; path: string } | null;
+  // FRASS-0578 — Founder proof: exactly what the model was told, and exactly
+  // what it said before any server cleanup.
+  proof?: AuditProof | null;
 };
+
 
 // FRASS-0553 — when a page embeds Frassy inline (The Daily, Workshop), the
 // embedded surface owns the dock microphone; otherwise the floating panel does.
