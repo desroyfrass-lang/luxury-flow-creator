@@ -570,12 +570,12 @@ function OnboardingPage() {
               {isLoading && (
                 <p className="text-sm text-muted-foreground">Bringing your journey back…</p>
               )}
-              {messages.map((m, i) => (
-                <div key={i} className={m.role === "user" ? "flex justify-end" : ""}>
+              {messages.map((m) => (
+                <div key={m.key} className={m.role === "user" ? "flex justify-end" : ""}>
                   <div
                     className={
                       m.role === "user"
-                        ? "max-w-[78%] rounded-sm bg-foreground/5 px-4 py-3 text-sm"
+                        ? "max-w-[78%] rounded-sm bg-foreground/5 px-4 py-3 text-sm whitespace-pre-wrap"
                         : "max-w-[78%] text-[15px] leading-relaxed whitespace-pre-wrap"
                     }
                   >
@@ -585,6 +585,41 @@ function OnboardingPage() {
                       </div>
                     )}
                     {m.content}
+                    <div className="mt-2 flex items-center gap-3 text-[10px] uppercase tracking-[0.18em]">
+                      <span
+                        className={
+                          m.status === "synced"
+                            ? "text-muted-foreground"
+                            : m.status === "pending"
+                              ? "text-amber-500"
+                              : "text-destructive"
+                        }
+                        title={m.error ?? undefined}
+                      >
+                        {m.status === "synced"
+                          ? "✓ Saved"
+                          : m.status === "pending"
+                            ? "⚠ Saving…"
+                            : "⚠ Saved on this device only"}
+                      </span>
+                      <button
+                        type="button"
+                        onClick={() => void copyOne(m.content)}
+                        className="inline-flex items-center gap-1 text-muted-foreground transition hover:text-[color:var(--gold)]"
+                      >
+                        <Copy className="h-3 w-3" /> Copy
+                      </button>
+                      {m.status === "failed" && m.role === "user" && m.clientId && (
+                        <button
+                          type="button"
+                          disabled={busy}
+                          onClick={() => void retry(m.clientId!, m.content)}
+                          className="text-[color:var(--gold)] transition hover:underline disabled:opacity-50"
+                        >
+                          Retry
+                        </button>
+                      )}
+                    </div>
                   </div>
                 </div>
               ))}
