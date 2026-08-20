@@ -212,10 +212,23 @@ Done
 3. Search for Card #025 and confirm its canonical route is `/admin/visual-index`.
 4. Click it and confirm the destination says `Reviewing Card #025 · /admin/visual-index` before sending. The browser sends only the Current URL — no card number, no metadata.
 5. Send a unique test sentence while recording the browser request and response.
-6. Confirm the request is `POST /api/chat` and the forensic receipt shows `TELEPORTER ENGINE v3`, a `Registry Version`, Card #025, `/admin/visual-index`, a fresh Request ID, History Count, and Timestamp. Confirm the header (Card #025 / route) was rendered by the server, not the AI.
+6. Confirm the request is `POST /api/chat` and the forensic receipt shows `TELEPORTER ENGINE v3`, `Registry Version`, `Registry Hash`, Card #025, `/admin/visual-index`, a fresh Request ID, History Count, and Timestamp. Confirm the header (Card #025 / route) was rendered by the server, not the AI.
 7. Confirm the first response line is Card #025, it is stored once in the Audit Ledger, and no maximum-update-depth error appears.
 8. Repeat with Card #011 and confirm it independently resolves to `/admin/financial-audit`.
-9. Force a mismatch (e.g. navigate to `/admin/visual-index` but tamper so the registry disagrees) and confirm the AI is never called — the response is the `Audit blocked.` diagnostic and nothing is written to the ledger.
+9. Force a mismatch (e.g. navigate to `/admin/visual-index` but tamper so the registry disagrees) and confirm the AI is never called — the response is the `Audit blocked.` diagnostic, nothing is written to the ledger, and the block appears in Audit Diagnostics.
+10. Refresh test — the strongest proof no hidden session state remains:
+
+```text
+Card #025
+    ↓
+Refresh browser
+    ↓
+Open Frassy
+    ↓
+Still Card #025
+```
+
+If the card changes after a refresh, hidden session state still exists and the work is not done.
 
 ## Technical scope
 - Audit Ledger snapshot stabilization, zero-state Teleporter (pathname→registry→card), versioned shared registry resolver, Frassy request construction (URL-only client payload), `/api/chat` server-side validate→resolve→lock→generate→AI pipeline, server-rendered audit receipt (AI emits analysis only), hard-fail diagnostic, forensic Audit Source receipt, and audit receipt display/storage.
