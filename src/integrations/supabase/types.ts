@@ -1992,6 +1992,42 @@ export type Database = {
         }
         Relationships: []
       }
+      founder_audit_ledger: {
+        Row: {
+          card_key: string
+          card_number: number
+          card_path: string
+          card_title: string
+          content: string
+          created_at: string
+          id: string
+          role: string
+          user_id: string
+        }
+        Insert: {
+          card_key: string
+          card_number?: number
+          card_path?: string
+          card_title?: string
+          content: string
+          created_at?: string
+          id?: string
+          role: string
+          user_id: string
+        }
+        Update: {
+          card_key?: string
+          card_number?: number
+          card_path?: string
+          card_title?: string
+          content?: string
+          created_at?: string
+          id?: string
+          role?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       founder_design_changes: {
         Row: {
           after_state: Json | null
