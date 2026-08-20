@@ -1098,20 +1098,34 @@ the next move toward Legacy is. Never stop at helping someone earn a living.`;
               `AuditContextViolation — assembled prompt referenced Card #${String(foreignInPrompt).padStart(3, "0")} while locked to ${registryCardLabel(auditIdentity.id)}.`,
             );
           }
-          auditPromptChars = system.length + lastMessage.content.length;
-          let h = 0;
-          for (const ch of system) h = (h * 31 + ch.charCodeAt(0)) >>> 0;
-          auditPromptHash = h.toString(16).toUpperCase().padStart(8, "0");
+          const fullPrompt = `${system}\n\n${lastMessage.content}`;
+          auditPromptChars = fullPrompt.length;
+          // sha256 of the exact prompt handed to the model.
+          try {
+            const digest = await crypto.subtle.digest(
+              "SHA-256",
+              new TextEncoder().encode(fullPrompt),
+            );
+            auditPromptHash = [...new Uint8Array(digest)]
+              .map((b) => b.toString(16).padStart(2, "0"))
+              .join("")
+              .slice(0, 32)
+              .toUpperCase();
+          } catch {
+            auditPromptHash = "UNAVAILABLE";
+          }
           console.info("[teleporter-clean-room]", {
-            auditSession: auditSessionId,
-            cardNumber: auditIdentity.id,
-            canonicalRoute: auditIdentity.route,
-            registryHash: auditIdentity.registryHash,
-            historyObjects: 0,
-            memoryObjects: 0,
-            previousAuditObjects: 0,
-            promptChars: auditPromptChars,
-            promptHash: auditPromptHash,
+            audit_session_id: auditSessionId,
+            timestamp: new Date().toISOString(),
+            active_teleporter_card_number: auditIdentity.id,
+            active_teleporter_route: auditIdentity.route,
+            prompt_length_chars: auditPromptChars,
+            history_object_count: 0,
+            memory_object_count: 0,
+            previous_audit_object_count: 0,
+            prompt_hash: auditPromptHash,
+            registry_version: auditIdentity.registryVersion,
+            registry_hash: auditIdentity.registryHash,
           });
         }
 
