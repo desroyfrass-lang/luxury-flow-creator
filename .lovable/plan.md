@@ -11,37 +11,83 @@ Stop spending credits on an audit experience that cannot be trusted. Remove the 
 
 ## Implementation
 
-### 1. Remove the transient box completely
+### 1. Remove the transient speech box
 - Delete the teleprompter rendering from the global Frassy Conversation Dock.
-- Keep only compact voice transport/status controls where needed; no spoken reply will appear in a separate temporary text surface.
-- Ensure no other overlay, toast, or speech component duplicates Frassy’s reply outside the canonical transcript.
+- Remove every duplicate speech overlay and duplicate rendered reply, so Frassy appears to speak in exactly one place.
+- Voice playback becomes only a way of hearing the transcript, never a second interface.
 
-### 2. Embed the Teleporter audit transcript into the audited page
-- When a page was opened from the World Teleporter, render one full-width Frassy audit conversation directly in the page flow, below the audited page content—not as a floating, disappearing panel.
-- Render the Founder’s pasted text immediately as a normal transcript message before the request is sent.
-- Render Frassy’s completed reply as the next normal message and preserve both through refresh using the existing Founder Audit Ledger.
-- Keep previous card reviews inline with thin card dividers, preserving the single continuous journal requirement.
-- Add a clear copy control to every Founder and Frassy message so the complete text can be copied into another AI provider without manual drag-selection.
-- Remove the collapsible “Developer details” mini-box. Put the audit identity receipt in the permanent transcript as compact selectable text; keep raw diagnostic evidence available in a persistent, copyable transcript entry only during Founder audit testing.
+### 2. Permanent Audit Journal
+- When a page was opened from the World Teleporter, render one full-width audit conversation directly in the page flow, below the audited page content—not as a floating panel.
+- The journal reads like a notebook: Founder message, Frassy response, thin card divider, next Founder message, next Frassy response.
+- Every message carries a timestamp, a copy button, and Founder-only expandable diagnostics.
+- Every message survives refresh and survives voice playback.
+- The Audit Receipt and the developer evidence live inside the same transcript, directly beneath the response they belong to. There is no separate conversation, timeline, and developer view.
 
-### 3. Make the request URL authoritative
-- On `/api/chat`, derive the audited pathname from the server-observed page referrer rather than accepting the browser body as authority.
-- Compare the referrer pathname with the body pathname. If they differ, block the AI call before credits are spent and show both values in a permanent diagnostic message.
-- Resolve the card only after that check. A request from `/admin/visual-index` must resolve to Card #025 or stop without calling the model.
-- Ensure audit requests cannot exit through the free navigation-answer path before an audit receipt is created.
-- Keep clean-room model history: only the current Founder message plus the server-resolved Card #025 identity reaches the model.
+### 3. Server-generated audit header before the AI is called
+- Before any model call, the server writes the header from resolved registry data:
 
-### 4. Prove the raw orchestration before calling the bug fixed
-- Add focused tests for:
-  - `/admin/visual-index` → Card #025.
-  - `/admin/financial-audit` → Card #011.
-  - referrer/body mismatch → blocked with zero AI call.
-  - an audit navigation-like message cannot bypass audit identity handling.
-  - pasted Founder text and Frassy replies remain in the permanent transcript after voice playback ends and after refresh.
-- In Preview, open Card #025 through the Teleporter and inspect the actual `/api/chat` exchange.
-- Verify the exact model input names Card #025 before cleanup and the raw model response analyzes the Visual Index page.
-- Verify there is no transient text box, no Card #011, no `/admin/financial-audit`, and no “Ready for Card #12.”
-- Do not mark Production resolved until the same clean-session test passes after publishing.
+```text
+══════════════════════
+Teleporter Card #025
+Visual Index
+/admin/visual-index
+Audit Started  09:42:18
+══════════════════════
+```
+
+- Frassy's analysis is rendered beneath that header. Even a total hallucination cannot hide what the server intended to audit.
+
+### 4. Server authority over identity
+- The server never trusts `body.card`, `body.route`, or `body.districtPath`.
+- Identity is resolved from the request the server itself observed:
+
+```text
+Observed Request → Observed Referrer → Resolve Card → Run AI
+```
+
+- The browser-claimed route is accepted as a comparison value only, never as authority.
+
+### 5. Hard stop on mismatch
+- If the observed route does not match the resolved card, the model is never called:
+
+```text
+Audit Blocked
+Observed        /admin/visual-index
+Body            /admin/financial-audit
+Reason          Audit identity mismatch
+Credits spent   0
+```
+
+- No retry, no guessing, no fallback, no model call, no ledger write.
+- Audit requests can no longer exit through the free navigation-answer path before identity is settled.
+- Clean-room history stays: only the current Founder message plus the server-resolved identity reaches the model.
+
+### 6. Permanent Audit Receipt
+- Every audit response permanently carries:
+
+```text
+AUDIT RECEIPT
+Audit Session      AF-10442
+Observed URL       /admin/visual-index
+Resolved Card      025
+History            EMPTY
+AI Credits         1
+Identity Verified  YES
+```
+
+- The receipt is stored with the journal entry, so any audit can be proven long after the fact.
+
+### 7. Tests, including sequential leakage
+- `/admin/visual-index` → Card #025.
+- `/admin/financial-audit` → Card #011.
+- Observed/body mismatch → blocked, zero AI call, zero credits.
+- A navigation-style audit message cannot bypass audit identity handling.
+- Founder text and Frassy replies persist after voice playback and after refresh.
+- Sequential audit test: open Card #011, then #025, then #018, then #032, then #005, and verify each response references only the current card. This is the cache-leak test.
+
+### 8. Production gate
+- Production is not marked complete until the Founder verifies, in a clean published session, that Card #011, Card #025, and Card #032 each audit correctly without ever mentioning another card.
+- No transient text box, no “Ready for Card #12,” no foreign route lines.
 
 ## Plain English
 The disappearing box will be removed, not patched. The conversation will become part of the page like a permanent written record, with a copy button on every message. Before Frassy is allowed to spend a credit, the server will check the page you are actually standing on; if anything says Card #011 while you are on Card #025, the request stops and costs nothing.
