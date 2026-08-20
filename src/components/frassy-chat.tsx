@@ -946,6 +946,26 @@ export function FrassyChat({
               </button>
             )}
 
+            {/* FRASS-0578 — Founder proof. Exactly what the model was told about
+                the card, and exactly what it replied BEFORE any server cleanup. */}
+            {m.proof && (
+              <details className="mt-3 rounded-sm border border-[color:var(--ws-line)] px-3 py-2 text-[11px] text-[color:var(--ws-soft)]">
+                <summary className="cursor-pointer text-[10px] font-bold uppercase tracking-[0.25em] text-[color:var(--ws-soft)]">
+                  Developer details · raw model input & output
+                  {m.proof.strippedAnything ? " · cleanup applied" : " · nothing stripped"}
+                </summary>
+                <div className="mt-2 text-[color:var(--ws-ink)]">Card payload sent to the model</div>
+                <pre className="mt-1 whitespace-pre-wrap break-words text-[10px] leading-relaxed">
+                  {m.proof.promptIdentity}
+                </pre>
+                <div className="mt-3 text-[color:var(--ws-ink)]">Raw model reply (unfiltered)</div>
+                <pre className="mt-1 whitespace-pre-wrap break-words text-[10px] leading-relaxed">
+                  {m.proof.rawModelReply}
+                </pre>
+              </details>
+            )}
+
+
             {m.order && (
               <div className="mt-3 rounded-sm border border-[color:var(--ws-line)] px-3 py-3 text-xs text-[color:var(--ws-soft)]">
                 <div className="text-[color:var(--ws-ink)]">{m.order.name}</div>
