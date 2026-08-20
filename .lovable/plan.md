@@ -81,13 +81,21 @@ Prompt Hash:
 7. Confirm the first response line is Card #025, it is stored once in the Audit Ledger, and no maximum-update-depth error appears.
 8. Repeat with Card #011 and confirm it independently resolves to `/admin/financial-audit`.
 
-The fix is complete only after these live runtime checks pass; source inspection, type checking, and build success alone do not count.
-
 ## Technical scope
-- Audit Ledger snapshot, Teleporter session resolver, shared card resolver, Frassy request construction, `/api/chat` server verification, and audit receipt display/storage.
+- Audit Ledger snapshot, Teleporter session resolver, shared card resolver, Frassy request construction, `/api/chat` server verification, hard-fail diagnostic, and audit receipt display/storage.
 - No security-finding changes, onboarding changes, or unrelated feature work.
 
-Implementation ⏳ / Type Check ⏳ / Build ⏳ / Preview ⏳ / Production ❌ / Constitution Updated ⏳ / Project Memory Updated ⏳ / Requires Founder Testing ⏳
+## Status
+
+Status: Founder-blocking
+
+This issue cannot be marked fixed until a live production audit of Card #025 returns:
+- Card #025
+- `/admin/visual-index`
+- `TELEPORTER ENGINE v3` receipt
+- Correct ledger entry
+- Zero runtime errors
+
+Build success, preview success, type checks, or unit tests do not satisfy acceptance.
 
 Root Cause: The audit handler trusts browser card metadata, stale Teleporter session objects can remain authoritative, and the Audit Ledger snapshot can trigger the confirmed FrassyChat render loop.
-Status: Founder-blocking; implementation is paused for approval and must be proven in the live runtime.
