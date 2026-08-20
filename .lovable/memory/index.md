@@ -67,6 +67,8 @@ Every major workspace supports Standard View and Simplified View (FRASS-0517) �
 Every Business Vault runs three stages — Earn → Scale → Legacy (FRASS-0533-A); never stop at helping someone earn a living.
 Creative series are intellectual property produced by Frassy from a Blueprint, never hardcoded into a Daily (FRASS-0533).
 
+FRASS-0573: every Frassy audit reply is permanently committed to the Founder Audit Ledger — no transient overlays, nothing disappears.
+
 ## Memories
 - [FRASS-0572 Frassy Engine Map](mem://features/frass-0572-frassy-engine-map) — Only two conversation pipelines; Journey Mode never runs or replays Teleporter audits; surfaces pick a mode not an engine
 - [SPEC-BLUEPRINT-001-FROZEN-v1.0 Builder Operating System](mem://features/spec-blueprint-001-builder-os) — FROZEN v1.0: Daily vs Workshop, Money Move lifecycle with nested Fast Tracks, adaptive Workshop environments, Vault Priority, Builder Rhythm, glossary, Simplified mode, Out of Scope boundaries, Founder Walkthrough checklist
@@ -195,3 +197,4 @@ Creative series are intellectual property produced by Frassy from a Blueprint, n
 - [FRASS-0566 Protected Contact Boundary](mem://features/frass-0566-protected-contact-boundary) — Public profiles never show email/phone/private contact; secure Contact Builder flow; galleries, commission requests, link checker hardened
 - [FRASS-0568 Founder Control Room](mem://features/frass-0568-founder-control-room) — Unified Founder headquarters, migrated legacy Control Room tools, redirects, retired "Command Center" wording
 - [FRASS-0570 World Teleporter](mem://features/frass-0570-world-teleporter) — Founder-only read-only route inspection tab in the Control Room, teleport + return chip
+- [FRASS-0573 Founder Audit Ledger](mem://features/frass-0573-founder-audit-ledger) — Persistent conversation log: card number, route, timestamp, searchable, Founder-delete only
