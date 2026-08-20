@@ -126,9 +126,11 @@ Status: Founder-blocking
 This issue cannot be marked fixed until a live production audit of Card #025 returns:
 - Card #025
 - `/admin/visual-index`
-- `TELEPORTER ENGINE v3` receipt
-- Correct ledger entry
+- `TELEPORTER ENGINE v3` receipt with a current Registry Version
+- A correct, single Audit Ledger entry
 - Zero runtime errors
+
+And a forced mismatch returns the `Audit blocked.` diagnostic with no AI call and no ledger write.
 
 Build success, preview success, type checks, or unit tests do not satisfy acceptance.
 
