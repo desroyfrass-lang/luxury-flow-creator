@@ -62,6 +62,8 @@ export function WorldTeleporterPanel() {
   const qc = useQueryClient();
   const listFn = useServerFn(listTeleporterAudit);
   const saveFn = useServerFn(saveTeleporterAudit);
+  const openAuditSessionFn = useServerFn(openAuditSession);
+
 
   const { data: audit = [] } = useQuery({
     queryKey: ["teleporter-audit"],
