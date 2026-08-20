@@ -241,9 +241,14 @@ The person just asked about a Teleporter card review. Answer in one short line: 
 
 
 
-    await sb
+    const assistantSave = await sb
       .from("builder_journey_messages")
-      .insert({ user_id: userId, stage: stage.id, role: "assistant", content: reply });
+      .insert({ user_id: userId, stage: stage.id, role: "assistant", content: reply })
+      .select("id")
+      .maybeSingle();
+    const assistantMessageId: string | null = assistantSave.error
+      ? null
+      : (assistantSave.data?.id ?? null);
 
     if (memory.length) {
       // Founder sessions write Platform Memory; Builder sessions write Builder Memory.
