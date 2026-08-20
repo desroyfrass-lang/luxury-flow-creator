@@ -92,6 +92,12 @@ type OrderCard = {
   tracking: Array<{ number: string; url: string; company: string; eta: string | null }>;
 };
 
+type AuditProof = {
+  promptIdentity: string;
+  rawModelReply: string;
+  strippedAnything: boolean;
+};
+
 type Msg = {
   id: string;
   role: "user" | "assistant";
@@ -100,7 +106,11 @@ type Msg = {
   order?: OrderCard | null;
   // FRASS-0513 — where Frassy just took them (or is offering to take them).
   place?: { key: string; label: string; path: string } | null;
+  // FRASS-0578 — Founder proof: exactly what the model was told, and exactly
+  // what it said before any server cleanup.
+  proof?: AuditProof | null;
 };
+
 
 // FRASS-0553 — when a page embeds Frassy inline (The Daily, Workshop), the
 // embedded surface owns the dock microphone; otherwise the floating panel does.
@@ -451,7 +461,9 @@ export function FrassyChat({
           requestId?: string;
           history?: number;
           timestamp?: string;
+          proof?: AuditProof;
         };
+
       };
 
       // Stale-turn guard: a superseded or stopped turn can never write to the UI.
@@ -484,6 +496,8 @@ export function FrassyChat({
           place: data.navigate
             ? { key: data.navigate.key, label: data.navigate.label, path: data.navigate.path }
             : null,
+          proof: data.auditReceipt?.proof ?? null,
+
         },
       ]);
 
@@ -931,6 +945,26 @@ export function FrassyChat({
                 Open {m.place.label} <ArrowRight className="h-3 w-3" />
               </button>
             )}
+
+            {/* FRASS-0578 — Founder proof. Exactly what the model was told about
+                the card, and exactly what it replied BEFORE any server cleanup. */}
+            {m.proof && (
+              <details className="mt-3 rounded-sm border border-[color:var(--ws-line)] px-3 py-2 text-[11px] text-[color:var(--ws-soft)]">
+                <summary className="cursor-pointer text-[10px] font-bold uppercase tracking-[0.25em] text-[color:var(--ws-soft)]">
+                  Developer details · raw model input & output
+                  {m.proof.strippedAnything ? " · cleanup applied" : " · nothing stripped"}
+                </summary>
+                <div className="mt-2 text-[color:var(--ws-ink)]">Card payload sent to the model</div>
+                <pre className="mt-1 whitespace-pre-wrap break-words text-[10px] leading-relaxed">
+                  {m.proof.promptIdentity}
+                </pre>
+                <div className="mt-3 text-[color:var(--ws-ink)]">Raw model reply (unfiltered)</div>
+                <pre className="mt-1 whitespace-pre-wrap break-words text-[10px] leading-relaxed">
+                  {m.proof.rawModelReply}
+                </pre>
+              </details>
+            )}
+
 
             {m.order && (
               <div className="mt-3 rounded-sm border border-[color:var(--ws-line)] px-3 py-3 text-xs text-[color:var(--ws-soft)]">

@@ -1121,6 +1121,11 @@ the next move toward Legacy is. Never stop at helping someone earn a living.`;
                 requestId: string;
                 history: number;
                 timestamp: string;
+                proof: {
+                  promptIdentity: string;
+                  rawModelReply: string;
+                  strippedAnything: boolean;
+                };
               }
             | undefined;
 
@@ -1144,6 +1149,23 @@ the next move toward Legacy is. Never stop at helping someone earn a living.`;
               requestId,
               history: historyCount,
               timestamp: ts,
+              // FRASS-0578 — proof, not assurance. This is the exact card payload
+              // the model received and its raw reply before any cleanup, so the
+              // Founder can verify the orchestration itself, not just the output.
+              proof: {
+                promptIdentity: [
+                  `Card ${registryCardLabel(auditIdentity.id)}`,
+                  `Title: ${auditIdentity.title}`,
+                  `Route: ${auditIdentity.route}`,
+                  `Component: ${auditIdentity.component || "Not named"}`,
+                  `Source file: ${auditIdentity.file}`,
+                  `District: ${auditIdentity.district}`,
+                  `Registry: ${auditIdentity.registryVersion} · ${auditIdentity.registryHash}`,
+                  `History replayed: ${historyCount} turns (clean room)`,
+                ].join("\n"),
+                rawModelReply: result.text ?? "",
+                strippedAnything: (result.text ?? "").trim() !== analysis.trim(),
+              },
             };
             reply = [
               `### 🏛️ CARD ${registryCardLabel(auditIdentity.id)}`,
@@ -1155,6 +1177,7 @@ the next move toward Legacy is. Never stop at helping someone earn a living.`;
               `---`,
               `Audit Receipt · Engine ${auditReceipt.engine} · Card ${registryCardLabel(auditIdentity.id)} · ${auditIdentity.route} · Registry ${auditIdentity.registryVersion} · History ${historyCount} · Request ${requestId}`,
             ].join("\n");
+
           } else {
             reply = modelReply;
           }
