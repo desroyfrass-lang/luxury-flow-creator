@@ -734,12 +734,46 @@ export const Route = createFileRoute("/api/chat")({
         // The browser sends only the Current URL (body.districtPath). Card number,
         // title, district and every other identity field are derived here, never
         // trusted from the client. Any incoming "auditContext" is ignored.
-        const registryViolations = validateRegistry();
+        //
+        // A duplicate path (e.g. a layout+index pair sharing /blog) makes the
+        // identity ambiguous and blocks the audit of THAT path only. Other paths
+        // resolve normally — a stale registry on /blog never blocks /admin/visual-index.
+        const pathIsAmbiguous =
+          experienceContext === "founder" && Boolean(body.districtPath)
+            ? isPathAmbiguous(body.districtPath)
+            : false;
         const auditIdentity: AuditIdentity | null =
-          experienceContext === "founder" && body.districtPath && registryViolations.length === 0
+          experienceContext === "founder" && body.districtPath && !pathIsAmbiguous
             ? resolveAuditIdentity(body.districtPath)
             : null;
         const isAudit = Boolean(auditIdentity);
+
+        // FRASS-0576 §2a-iii — an ambiguous path is a hard block: no AI call, no
+        // ledger write. The Founder sees exactly which path is ambiguous and why.
+        if (pathIsAmbiguous && !auditIdentity) {
+          const blockedReason = `Ambiguous registry: two eligible routes share ${normalizePath(body.districtPath)}. Repair the registry before auditing this page.`;
+          recordBlockedAudit({
+            reason: blockedReason,
+            currentUrl: body.districtPath ?? "",
+            resolvedRoute: null,
+            timestamp: new Date().toISOString(),
+          });
+          return Response.json(
+            {
+              auditReceipt: {
+                engine: "TELEPORTER-ENGINE-V3",
+                blocked: true,
+                reason: blockedReason,
+                currentUrl: body.districtPath ?? "",
+                resolvedRoute: null,
+                registryVersion: REGISTRY_VERSION,
+                registryHash: REGISTRY_HASH,
+                timestamp: new Date().toISOString(),
+              },
+            },
+            { status: 409, headers: { "X-Frass-Engine": "TELEPORTER-ENGINE-V3" } },
+          );
+        }
 
         // A Teleporter audit is a clean-room review: the model sees ONLY the
         // Founder's current request. Past turns are never replayed, so no earlier
