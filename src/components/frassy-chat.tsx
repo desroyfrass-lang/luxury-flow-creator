@@ -402,16 +402,9 @@ export function FrassyChat({
           experienceContext: isAdmin ? "founder" : "storefront",
           // FRASS-0451A — where we are, and why they came.
           districtPath: ctx.pathname,
-           auditContext: auditCard
-             ? {
-                 number: auditCard.number,
-                 title: auditCard.title,
-                 path: auditCard.path,
-                 component: auditCard.component,
-                 file: auditCard.file,
-                 district: auditCard.district,
-               }
-             : undefined,
+          // FRASS-0574 — the browser sends ONLY the Current URL. No card number,
+          // title, district or identity metadata leaves the client. The server
+          // resolves and returns the authoritative identity in auditReceipt.
           arrivalIntent: readArrivalIntent() ?? undefined,
           // Actual runtime interaction mode, so Frassy never misstates her capabilities.
           interactionMode: spoken ? "voice_and_text" : "text",
