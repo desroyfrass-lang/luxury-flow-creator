@@ -100,33 +100,51 @@ export function resolveCanonicalCard(pathname: string | null | undefined): Canon
 
 export type RegistryViolation = { kind: "duplicate_path" | "duplicate_number"; detail: string };
 
+/** All eligible routes grouped by normalized path. Used by both validateRegistry
+ *  and isPathAmbiguous so the two never disagree about what "duplicate" means. */
+function routesByPath(): Map<string, WorldRoute[]> {
+  const byPath = new Map<string, WorldRoute[]>();
+  for (const r of auditEligibleRoutes()) {
+    const p = normalizePath(r.path);
+    let arr = byPath.get(p);
+    if (!arr) { arr = []; byPath.set(p, arr); }
+    arr.push(r);
+  }
+  return byPath;
+}
+
 /** One route maps to exactly one card and vice versa. Returns violations;
- *  an empty array means the registry is sound. An unsound registry blocks
- *  every audit until it is repaired — no AI call, no ledger write. */
+ *  an empty array means the registry is sound. Violations are reported for
+ *  diagnosis — a duplicate on /blog does not block the audit of /admin/visual-index. */
 export function validateRegistry(): RegistryViolation[] {
   const violations: RegistryViolation[] = [];
-  const eligible = auditEligibleRoutes();
-  const byPath = new Map<string, WorldRoute[]>();
+  const byPath = routesByPath();
   const byNumber = new Map<number, WorldRoute[]>();
-  for (const r of eligible) {
-    const p = normalizePath(r.path);
-    let a1 = byPath.get(p);
-    if (!a1) { a1 = []; byPath.set(p, a1); }
-    a1.push(r);
+  for (const r of auditEligibleRoutes()) {
     const n = cardNumber(r);
-    let a2 = byNumber.get(n);
-    if (!a2) { a2 = []; byNumber.set(n, a2); }
-    a2.push(r);
+    let arr = byNumber.get(n);
+    if (!arr) { arr = []; byNumber.set(n, arr); }
+    arr.push(r);
   }
-  for (const [p, rs] of byPath) {
+  for (const [, rs] of byPath) {
     if (rs.length > 1)
-      violations.push({ kind: "duplicate_path", detail: `${rs.length} eligible routes on ${p}` });
+      violations.push({ kind: "duplicate_path", detail: `${rs.length} eligible routes on ${normalizePath(rs[0].path)}` });
   }
   for (const [n, rs] of byNumber) {
     if (rs.length > 1 && n !== 0)
       violations.push({ kind: "duplicate_number", detail: `${rs.length} eligible routes are Card #${n}` });
   }
   return violations;
+}
+
+/** True when two or more eligible routes share this pathname — the identity
+ *  is ambiguous and the audit must be blocked for THIS path only. */
+export function isPathAmbiguous(pathname: string | null | undefined): boolean {
+  const here = normalizePath(pathname);
+  if (!here) return false;
+  const byPath = routesByPath();
+  const rs = byPath.get(here);
+  return Boolean(rs && rs.length > 1);
 }
 
 // ── FRASS-0575 — Audit Identity Lock ──────────────────────────────────────
@@ -145,9 +163,13 @@ export type AuditIdentity = {
 };
 
 /** Resolve the canonical card from the pathname and seal it into an immutable
- *  Audit Identity Lock. Returns null when the route is not an audit page.
- *  The returned object is frozen — nothing downstream may mutate it. */
+ *  Audit Identity Lock. Returns null when the route is not an audit page OR
+ *  when the path is ambiguous (two eligible routes share it). The server
+ *  distinguishes the two cases with isPathAmbiguous to produce the right
+ *  blocked response. The returned object is frozen — nothing downstream
+ *  may mutate it. */
 export function resolveAuditIdentity(pathname: string | null | undefined): AuditIdentity | null {
+  if (isPathAmbiguous(pathname)) return null;
   const card = resolveCanonicalCard(pathname);
   if (!card) return null;
   return Object.freeze({
