@@ -1298,6 +1298,18 @@ the next move toward Legacy is. Never stop at helping someone earn a living.`;
                 registryHash: string;
                 requestId: string;
                 history: number;
+                /** Machine-readable receipt, per the P0 runtime contract. */
+                teleporter_receipt: {
+                  card: string;
+                  title: string;
+                  route: string;
+                  audit_context: "teleporter";
+                  conversation_history_empty: boolean;
+                  memory_injected: boolean;
+                  previous_audit_injected: boolean;
+                  prompt_length_chars: number;
+                  prompt_hash: string;
+                };
                 model: string;
                 credits: number;
                 timestamp: string;
