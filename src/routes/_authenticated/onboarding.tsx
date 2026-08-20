@@ -36,7 +36,7 @@ import { LaunchReadiness } from "@/components/launch-readiness";
 import { FounderWalkthrough } from "@/components/founder/founder-walkthrough";
 import { COMMISSIONING_PHASES } from "@/lib/commissioning";
 import { usePushToTalk } from "@/hooks/use-push-to-talk";
-import { Volume2, VolumeX } from "lucide-react";
+import { Copy, Volume2, VolumeX } from "lucide-react";
 
 export const Route = createFileRoute("/_authenticated/onboarding")({
   head: () => ({
