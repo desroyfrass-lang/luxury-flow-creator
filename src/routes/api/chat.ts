@@ -1179,7 +1179,7 @@ the next move toward Legacy is. Never stop at helping someone earn a living.`;
                   },
                 }
               : {}),
-          });
+          }, isAudit ? { headers: { "X-Frass-Engine": "TELEPORTER-ENGINE-V3" } } : undefined);
         } catch (err) {
           const message = err instanceof Error ? err.message : "Unknown error";
           const status = /429|rate/i.test(message) ? 429 : /402|credit/i.test(message) ? 402 : 500;
