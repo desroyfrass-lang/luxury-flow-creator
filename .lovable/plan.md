@@ -166,6 +166,7 @@ Server
 Audit Source
 Engine:              TELEPORTER ENGINE v3
 Registry Version:
+Registry Hash:
 Conversation ID:
 Request ID:
 Current URL:
