@@ -199,10 +199,36 @@ export function formatCardNumber(n: number): string {
  *  AI again — a second call can re-hallucinate. */
 export function stripAuditIdentity(text: string, identity: AuditIdentity): string {
   if (!text) return "";
-  const routeRegex = new RegExp(`^\\s*${escapeRegex(identity.route)}\\s*$`, "i");
+  // Any standalone route line is identity — the server header already carries
+  // the canonical one, so the model never gets to state a route on its own.
+  const routeRegex = /^\s*\/[a-z0-9/_-]*\s*$/i;
+  void escapeRegex;
+  void identity;
+
   const headerRegex = /^#{0,6}\s*(card\s*#?\s*\d{1,3}|visual\s+verification)/i;
+  // FRASS-0577 — the Teleporter is an inventory, never a wizard. Any sentence
+  // that asks for, counts toward, or hands off to a "next card" is removed
+  // server-side, whatever the model was told.
+  const sequenceRegex =
+    /(ready\s+for\s+(the\s+)?(next\s+)?card|next\s+card|paste\s+the\s+(next\s+)?card|on\s+to\s+card\s*#?\s*\d|move\s+on\s+to\s+card|card\s*#?\s*\d{1,3}\s+(is\s+)?(next|up next)|send\s+(me\s+)?(the\s+)?next\s+card|teleporter\s+queue)/i;
   const lines = text.split("\n");
-  const kept = lines.filter((line) => !headerRegex.test(line) && !routeRegex.test(line));
-  const result = kept.join("\n").trim();
+  const kept = lines
+    .map((line) =>
+      sequenceRegex.test(line)
+        ? line
+            .split(/(?<=[.!?])\s+/)
+            .filter((s) => !sequenceRegex.test(s))
+            .join(" ")
+            .trim()
+        : line,
+    )
+    .filter((line, i) => {
+      if (headerRegex.test(line) || routeRegex.test(line)) return false;
+      // Drop lines that became empty only because we removed sequence talk.
+      if (line.trim() === "" && lines[i].trim() !== "") return false;
+      return true;
+    });
+  const result = kept.join("\n").replace(/\n{3,}/g, "\n\n").trim();
   return result || text.trim();
 }
+
