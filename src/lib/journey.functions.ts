@@ -290,6 +290,10 @@ The person just asked about a Teleporter card review. Answer in one short line: 
 
     return {
       reply,
+      // Proof of persistence, per message. Null means "not saved" — the page
+      // keeps its own copy visible and says so, rather than losing the words.
+      userMessageId,
+      assistantMessageId,
       stageId: stage.id,
       movedTo,
       completed: stageComplete && !nextStage(stage.id),
