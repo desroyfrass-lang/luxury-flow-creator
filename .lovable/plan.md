@@ -116,7 +116,7 @@ Timestamp:
 9. Force a mismatch (e.g. navigate to `/admin/visual-index` but tamper so the registry disagrees) and confirm the AI is never called — the response is the `Audit blocked.` diagnostic and nothing is written to the ledger.
 
 ## Technical scope
-- Audit Ledger snapshot, Teleporter session resolver, shared card resolver, Frassy request construction, `/api/chat` server verification, hard-fail diagnostic, and audit receipt display/storage.
+- Audit Ledger snapshot stabilization, Teleporter session reduced to Destination URL only, versioned shared registry resolver, Frassy request construction (URL-only client payload), `/api/chat` server-side validate→resolve→lock→generate→AI pipeline, hard-fail diagnostic, forensic Audit Source receipt, and audit receipt display/storage.
 - No security-finding changes, onboarding changes, or unrelated feature work.
 
 ## Status
