@@ -39,6 +39,14 @@ import { SpeechControls } from "@/components/voice/speech-controls";
 import { VoiceFeedbackButton } from "@/components/feedback/voice-feedback";
 import { useFrassyStartup } from "@/hooks/use-frassy-startup";
 import { loadTranscript, saveTranscript, type FrassyTurn } from "@/lib/frassy/transcript";
+// FRASS-0573 — every audit turn is committed to the permanent Founder ledger.
+import {
+  formatCardNumber,
+  groupLedgerByCard,
+  readAuditLedger,
+  subscribeAuditLedger,
+} from "@/lib/founder/audit-ledger";
+import { commitAuditTurn, syncAuditLedger } from "@/lib/founder/audit-ledger-commit";
 import { resolveAuditCard, isStaleTeleport } from "@/lib/founder/teleport-session";
 import { publishEngineDiagnostics } from "@/lib/frassy/engine-diagnostics";
 
