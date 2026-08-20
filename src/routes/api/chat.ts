@@ -29,7 +29,11 @@ import {
   formatCardNumber as registryCardLabel,
   type AuditIdentity,
 } from "@/lib/founder/audit-registry";
-import { logAuditBlock } from "@/lib/founder/audit-diagnostics";
+import {
+  logAuditBlock,
+  recordAuditViolation,
+  isAuditPaused,
+} from "@/lib/founder/audit-diagnostics";
 
 const FRASS_LINK = `FRASS LINK (FRASS-0428)
 Every member owns ONE permanent Frass Link for life: frasskicks.com/link/<handle>. It is their identity,
@@ -790,6 +794,10 @@ export const Route = createFileRoute("/api/chat")({
             registryVersion: REGISTRY_VERSION,
             registryHash: REGISTRY_HASH,
           });
+          // P0 §6 — three violations pause Teleporter audits for manual review.
+          const guard = /AuditContextViolation/i.test(reason)
+            ? recordAuditViolation()
+            : { violations: 0, paused: isAuditPaused() };
           return Response.json(
             {
               auditReceipt: {
@@ -803,6 +811,8 @@ export const Route = createFileRoute("/api/chat")({
                 registryVersion: REGISTRY_VERSION,
                 registryHash: REGISTRY_HASH,
                 credits: 0,
+                violations: guard.violations,
+                auditsPaused: guard.paused,
                 timestamp: new Date().toISOString(),
               },
             },
@@ -1061,6 +1071,11 @@ the next move toward Legacy is. Never stop at helping someone earn a living.`;
         let auditPromptHash = "";
         let auditPromptChars = 0;
         if (isAudit && auditIdentity) {
+          if (isAuditPaused()) {
+            return blockAudit(
+              "Teleporter audits are paused after repeated AuditContextViolations. A Founder must resume them after manual review.",
+            );
+          }
           const historyObjects = uiMessages.length - 1; // only the current turn is allowed
           if (historyObjects > 0) {
             return blockAudit(
@@ -1083,20 +1098,34 @@ the next move toward Legacy is. Never stop at helping someone earn a living.`;
               `AuditContextViolation — assembled prompt referenced Card #${String(foreignInPrompt).padStart(3, "0")} while locked to ${registryCardLabel(auditIdentity.id)}.`,
             );
           }
-          auditPromptChars = system.length + lastMessage.content.length;
-          let h = 0;
-          for (const ch of system) h = (h * 31 + ch.charCodeAt(0)) >>> 0;
-          auditPromptHash = h.toString(16).toUpperCase().padStart(8, "0");
+          const fullPrompt = `${system}\n\n${lastMessage.content}`;
+          auditPromptChars = fullPrompt.length;
+          // sha256 of the exact prompt handed to the model.
+          try {
+            const digest = await crypto.subtle.digest(
+              "SHA-256",
+              new TextEncoder().encode(fullPrompt),
+            );
+            auditPromptHash = [...new Uint8Array(digest)]
+              .map((b) => b.toString(16).padStart(2, "0"))
+              .join("")
+              .slice(0, 32)
+              .toUpperCase();
+          } catch {
+            auditPromptHash = "UNAVAILABLE";
+          }
           console.info("[teleporter-clean-room]", {
-            auditSession: auditSessionId,
-            cardNumber: auditIdentity.id,
-            canonicalRoute: auditIdentity.route,
-            registryHash: auditIdentity.registryHash,
-            historyObjects: 0,
-            memoryObjects: 0,
-            previousAuditObjects: 0,
-            promptChars: auditPromptChars,
-            promptHash: auditPromptHash,
+            audit_session_id: auditSessionId,
+            timestamp: new Date().toISOString(),
+            active_teleporter_card_number: auditIdentity.id,
+            active_teleporter_route: auditIdentity.route,
+            prompt_length_chars: auditPromptChars,
+            history_object_count: 0,
+            memory_object_count: 0,
+            previous_audit_object_count: 0,
+            prompt_hash: auditPromptHash,
+            registry_version: auditIdentity.registryVersion,
+            registry_hash: auditIdentity.registryHash,
           });
         }
 
@@ -1269,6 +1298,18 @@ the next move toward Legacy is. Never stop at helping someone earn a living.`;
                 registryHash: string;
                 requestId: string;
                 history: number;
+                /** Machine-readable receipt, per the P0 runtime contract. */
+                teleporter_receipt: {
+                  card: string;
+                  title: string;
+                  route: string;
+                  audit_context: "teleporter";
+                  conversation_history_empty: boolean;
+                  memory_injected: boolean;
+                  previous_audit_injected: boolean;
+                  prompt_length_chars: number;
+                  prompt_hash: string;
+                };
                 model: string;
                 credits: number;
                 timestamp: string;
@@ -1316,6 +1357,17 @@ the next move toward Legacy is. Never stop at helping someone earn a living.`;
               registryHash: auditIdentity.registryHash,
               requestId,
               history: historyCount,
+              teleporter_receipt: {
+                card: String(auditIdentity.id).padStart(3, "0"),
+                title: auditIdentity.title,
+                route: auditIdentity.route,
+                audit_context: "teleporter",
+                conversation_history_empty: true,
+                memory_injected: false,
+                previous_audit_injected: false,
+                prompt_length_chars: auditPromptChars,
+                prompt_hash: auditPromptHash,
+              },
               model: aborted ? `${usedModel} (aborted)` : usedModel,
               credits: aborted ? 0 : 1,
               timestamp: ts,
@@ -1369,20 +1421,44 @@ the next move toward Legacy is. Never stop at helping someone earn a living.`;
               ``,
               `---`,
               `**TELEPORTER RECEIPT**`,
-              `Audit Session     ${auditSessionId}`,
-              `Card              ${String(auditIdentity.id).padStart(3, "0")} — ${auditIdentity.title}`,
-              `Canonical Route   ${auditIdentity.route}`,
-              `Source File       ${auditIdentity.file}`,
-              `Registry          ${auditIdentity.registryVersion} · ${auditIdentity.registryHash}`,
-              `Context           LOCKED`,
-              `History Objects   0`,
-              `Memory Objects    0`,
-              `Prompt Hash       ${auditPromptHash}`,
-              `Prompt Size       ${auditPromptChars} chars`,
-              `Model             ${auditReceipt.model}`,
-              `Credits           ${auditReceipt.credits}`,
-              `Request           ${auditReceipt.requestId}`,
+              `Card:                      ${String(auditIdentity.id).padStart(3, "0")}`,
+              `Title:                     ${auditIdentity.title}`,
+              `Route:                     ${auditIdentity.route}`,
+              `Audit Context:             Teleporter`,
+              `Conversation History:      EMPTY`,
+              `Memory Injected:           NO`,
+              `Previous Audit Injected:   NO`,
+              ``,
+              `Audit Session              ${auditSessionId}`,
+              `Source File                ${auditIdentity.file}`,
+              `Registry                   ${auditIdentity.registryVersion} · ${auditIdentity.registryHash}`,
+              `Context                    LOCKED`,
+              `History Objects            0`,
+              `Memory Objects             0`,
+              `Previous Audit Objects     0`,
+              `Prompt Hash                ${auditPromptHash}`,
+              `Prompt Size                ${auditPromptChars} chars`,
+              `Model                      ${auditReceipt.model}`,
+              `Credits                    ${auditReceipt.credits}`,
+              `Request                    ${auditReceipt.requestId}`,
             ].join("\n");
+
+            // Structured per-invocation audit log (P0 §5).
+            console.info("[teleporter-audit-run]", {
+              audit_session_id: auditSessionId,
+              timestamp: ts,
+              active_teleporter_card_number: auditIdentity.id,
+              active_teleporter_route: auditIdentity.route,
+              prompt_length_chars: auditPromptChars,
+              history_object_count: 0,
+              memory_object_count: 0,
+              previous_audit_object_count: 0,
+              prompt_hash: auditPromptHash,
+              model_id: usedModel,
+              aborted,
+              credits: auditReceipt.credits,
+              request_id: requestId,
+            });
 
           } else {
             reply = modelReply;
