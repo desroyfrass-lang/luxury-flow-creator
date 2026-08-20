@@ -1,7 +1,34 @@
-# Founder Blocking Bug — Runtime-Verified Teleporter Repair
+# FRASS Constitutional Amendment — Canonical Teleporter Audit Engine (TELEPORTER ENGINE v3)
 
 ## Goal
-Make one live Teleporter review provably return the card selected by the Founder. Do not resume the audit until selecting Card #025 reaches `/admin/visual-index` and the response begins with Card #025.
+This is not a bug fix. It defines an audit engine where Card #11 can never accidentally appear again, because the AI is no longer responsible for identity. Identity becomes a server-side constitutional guarantee; the AI's only responsibility is to analyze the resolved card.
+
+Acceptance is a live production run: selecting Card #025 reaches `/admin/visual-index` and the response is Card #025.
+
+## Constitutional rule
+
+### FRASS-0574 — Canonical Audit Identity
+During Teleporter audits, the canonical identity of a page is derived exclusively from the current route.
+
+The client never supplies:
+- Card Number
+- Card Title
+- Audit Context
+- District
+- Registry Metadata
+
+The server resolves these from the registry.
+
+```text
+Current URL
+    ↓
+Registry
+    ↓
+Canonical Card
+```
+
+This is a permanent platform rule, not a one-off repair.
+
 
 ## Confirmed findings
 - The Teleporter click stores card context, navigates to the selected route, and the shared Frassy panel posts to `POST /api/chat`.
