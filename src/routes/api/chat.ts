@@ -21,7 +21,8 @@ import { clientHintFrom } from "@/lib/frassy-repair-tools.server";
 import {
   resolveAuditIdentity,
   resolveCanonicalCard,
-  validateRegistry,
+  isPathAmbiguous,
+  normalizePath,
   stripAuditIdentity,
   REGISTRY_VERSION,
   REGISTRY_HASH,
@@ -752,11 +753,14 @@ export const Route = createFileRoute("/api/chat")({
         // ledger write. The Founder sees exactly which path is ambiguous and why.
         if (pathIsAmbiguous && !auditIdentity) {
           const blockedReason = `Ambiguous registry: two eligible routes share ${normalizePath(body.districtPath)}. Repair the registry before auditing this page.`;
-          recordBlockedAudit({
+          const blockedRequestId = Math.random().toString(36).slice(2, 10).toUpperCase();
+          logAuditBlock({
+            requestId: blockedRequestId,
             reason: blockedReason,
             currentUrl: body.districtPath ?? "",
             resolvedRoute: null,
-            timestamp: new Date().toISOString(),
+            registryVersion: REGISTRY_VERSION,
+            registryHash: REGISTRY_HASH,
           });
           return Response.json(
             {
@@ -766,6 +770,7 @@ export const Route = createFileRoute("/api/chat")({
                 reason: blockedReason,
                 currentUrl: body.districtPath ?? "",
                 resolvedRoute: null,
+                requestId: blockedRequestId,
                 registryVersion: REGISTRY_VERSION,
                 registryHash: REGISTRY_HASH,
                 timestamp: new Date().toISOString(),
@@ -802,48 +807,6 @@ export const Route = createFileRoute("/api/chat")({
           );
         }
 
-        // FRASS-0576 §2a — AI is impossible until validation succeeds. If the
-        // registry itself is broken (duplicate route or duplicate card), no audit
-        // may proceed: no AI call, no ledger write, no memory save. The block is
-        // recorded in the Audit Diagnostics log, never in the Audit Ledger.
-        if (
-          experienceContext === "founder" &&
-          body.districtPath &&
-          registryViolations.length > 0
-        ) {
-          const wouldResolve = resolveCanonicalCard(body.districtPath);
-          if (wouldResolve) {
-            const requestId = Math.random().toString(36).slice(2, 10).toUpperCase();
-            const record = logAuditBlock({
-              requestId,
-              currentUrl: body.districtPath,
-              resolvedRoute: wouldResolve.path,
-              reason: `Registry violation: ${registryViolations.map((v) => v.detail).join("; ")}`,
-              registryVersion: REGISTRY_VERSION,
-              registryHash: REGISTRY_HASH,
-            });
-            return Response.json(
-              {
-                error: "Audit blocked.",
-                auditReceipt: {
-                  engine: "TELEPORTER-ENGINE-V3",
-                  blocked: true,
-                  reason: record.reason,
-                  currentUrl: record.currentUrl,
-                  resolvedRoute: record.resolvedRoute,
-                  requestId,
-                  registryVersion: REGISTRY_VERSION,
-                  registryHash: REGISTRY_HASH,
-                  timestamp: record.timestamp,
-                },
-              },
-              {
-                status: 409,
-                headers: { "X-Frass-Engine": "TELEPORTER-ENGINE-V3" },
-              },
-            );
-          }
-        }
 
         const key = process.env.LOVABLE_API_KEY;
         if (!key) {
