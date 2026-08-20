@@ -107,23 +107,46 @@ function OnboardingPage() {
   const pct = Math.round((completedCount / stages.length) * 100);
   const finished = data?.status === "complete";
 
-  // Only this track's conversation belongs on screen. FRASS-0572: a Teleporter
-  // card review is a different mode of Frassy and never belongs in this room.
-  const messages: LocalMessage[] = useMemo(() => {
-    const saved = (data?.messages ?? [])
-      .filter((m: JourneyMessage) => trackOf(m.stage) === track)
-      .filter((m: JourneyMessage) => !isTeleporterAuditTurn(m.content))
-      .map((m: JourneyMessage) => ({ role: m.role, content: m.content }));
-    return [...saved, ...local];
-  }, [data?.messages, local, track]);
+  // The thread on screen is the union of what the database holds and what this
+  // device recorded. Messages are matched by id — never by their words — so two
+  // identical sentences can never cancel each other out, and nothing already
+  // shown is removed by a reload, a refetch or a change of track.
+  //
+  // FRASS-0572: a Teleporter card review is a different mode of Frassy and is
+  // the only thing still filtered out of this room.
+  const messages: ThreadMessage[] = useMemo(() => {
+    const saved = (data?.messages ?? []).filter(
+      (m: JourneyMessage) => !isTeleporterAuditTurn(m.content),
+    );
+    const savedIds = new Set(saved.map((m: JourneyMessage) => m.id));
+    const fromServer: ThreadMessage[] = saved.map((m: JourneyMessage) => ({
+      key: `s:${m.id}`,
+      role: m.role,
+      content: m.content,
+      at: m.created_at,
+      status: "synced" as const,
+    }));
+    const fromJournal: ThreadMessage[] = journal
+      .filter((e) => !(e.serverId && savedIds.has(e.serverId)))
+      .filter((e) => !isTeleporterAuditTurn(e.content))
+      .map((e) => ({
+        key: `j:${e.clientId}`,
+        role: e.role,
+        content: e.content,
+        at: e.at,
+        status: e.status,
+        error: e.error,
+        clientId: e.clientId,
+      }));
+    return [...fromServer, ...fromJournal].sort((a, b) => a.at.localeCompare(b.at));
+  }, [data?.messages, journal]);
 
   // FRASS-0572A — publish which engine is answering, so the Founder can see it.
   const auditTurnsFiltered = useMemo(
     () =>
-      (data?.messages ?? []).filter(
-        (m: JourneyMessage) => trackOf(m.stage) === track && isTeleporterAuditTurn(m.content),
-      ).length,
-    [data?.messages, track],
+      (data?.messages ?? []).filter((m: JourneyMessage) => isTeleporterAuditTurn(m.content))
+        .length,
+    [data?.messages],
   );
   useEffect(() => {
     publishEngineDiagnostics({
