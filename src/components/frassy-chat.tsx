@@ -496,6 +496,8 @@ export function FrassyChat({
           place: data.navigate
             ? { key: data.navigate.key, label: data.navigate.label, path: data.navigate.path }
             : null,
+          proof: data.auditReceipt?.proof ?? null,
+
         },
       ]);
 
