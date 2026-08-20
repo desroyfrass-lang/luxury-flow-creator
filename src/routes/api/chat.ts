@@ -661,14 +661,9 @@ export const Route = createFileRoute("/api/chat")({
           experienceContext?: "founder" | "builder" | "storefront";
           relationship?: FrassyRelationship;
           districtPath?: string;
-          auditContext?: {
-            number: number;
-            title: string;
-            path: string;
-            component: string;
-            file: string;
-            district: string;
-          };
+          // FRASS-0574 — the client sends ONLY the Current URL. Card number,
+          // title, district and all identity fields are derived server-side.
+          // Any incoming "auditContext" is ignored.
           arrivalIntent?: string;
           interactionMode?: "text" | "voice_and_text" | "voice_only";
           voiceAvailable?: boolean;
@@ -734,27 +729,28 @@ export const Route = createFileRoute("/api/chat")({
         }
 
         const attachments = Array.isArray(body.attachments) ? body.attachments : [];
-        // A Teleporter review is isolated to one card. Any earlier turn that
-        // names a DIFFERENT card is dropped before the model reads it, so a past
-        // audit can never be replayed as if it were the page in front of us.
-        const activeCardNumber = body.auditContext?.number;
-        const isAuditTurn = (content: string) =>
-          /visual verification\s*:\s*card|ready for card|teleporter card/i.test(content);
-        const namesAnotherCard = (content: string) => {
-          const mentioned = [...content.matchAll(/card\s*#?\s*(\d{1,3})/gi)].map((m) =>
-            Number(m[1]),
-          );
-          // With no active card, ANY past audit turn is foreign history.
-          if (!activeCardNumber) return isAuditTurn(content) || mentioned.length > 0;
-          return mentioned.length > 0 && mentioned.every((n) => n !== activeCardNumber);
-        };
+
+        // FRASS-0574/0576 — the server is the sole authority for audit identity.
+        // The browser sends only the Current URL (body.districtPath). Card number,
+        // title, district and every other identity field are derived here, never
+        // trusted from the client. Any incoming "auditContext" is ignored.
+        const registryViolations = validateRegistry();
+        const auditIdentity: AuditIdentity | null =
+          experienceContext === "founder" && body.districtPath && registryViolations.length === 0
+            ? resolveAuditIdentity(body.districtPath)
+            : null;
+        const isAudit = Boolean(auditIdentity);
+
+        // A Teleporter audit is a clean-room review: the model sees ONLY the
+        // Founder's current request. Past turns are never replayed, so no earlier
+        // card review can ever be echoed. Non-audit founder chat keeps the shared
+        // transcript but still drops identity-discovery assistant turns.
         const clientMessages = (Array.isArray(body.messages) ? body.messages : []).filter(
           (message) =>
-            (experienceContext !== "founder" ||
-              message.role !== "assistant" ||
-              !isFounderIdentityDiscovery(message.content)) && !namesAnotherCard(message.content),
+            experienceContext !== "founder" ||
+            message.role !== "assistant" ||
+            !isFounderIdentityDiscovery(message.content),
         );
-
 
         // Emergency containment: only a fresh, explicit, non-empty user text
         // submission may create a Frassy turn. Legacy streaming/background
@@ -772,33 +768,47 @@ export const Route = createFileRoute("/api/chat")({
           );
         }
 
-        // FRASS-0571A — fail closed when a stale browser session claims one
-        // Teleporter card while the request comes from another page. This is a
-        // workflow integrity check, not a model instruction: the wrong audit is
-        // never allowed to reach AI or enter the permanent review trail.
-        const samePath = (a?: string | null, b?: string | null) => {
-          const norm = (v?: string | null) => {
-            if (!v) return "";
-            const clean = v.split("?")[0].split("#")[0];
-            return (clean.length > 1 ? clean.replace(/\/+$/, "") : clean).toLowerCase();
-          };
-          return Boolean(norm(a)) && norm(a) === norm(b);
-        };
-        if (body.auditContext && !samePath(body.auditContext.path, body.districtPath)) {
-          return Response.json(
-            {
-              error:
-                "This page does not match the active Teleporter card. Return to the World Teleporter and open the card again before recording an audit.",
-              diagnostics: {
-                activeCardNumber: body.auditContext.number,
-                activeCardTitle: body.auditContext.title,
-                activeCardPath: body.auditContext.path,
-                requestPath: body.districtPath ?? null,
-                promptPreview: lastMessage.content.slice(0, 500),
+        // FRASS-0576 §2a — AI is impossible until validation succeeds. If the
+        // registry itself is broken (duplicate route or duplicate card), no audit
+        // may proceed: no AI call, no ledger write, no memory save. The block is
+        // recorded in the Audit Diagnostics log, never in the Audit Ledger.
+        if (
+          experienceContext === "founder" &&
+          body.districtPath &&
+          registryViolations.length > 0
+        ) {
+          const wouldResolve = resolveCanonicalCard(body.districtPath);
+          if (wouldResolve) {
+            const requestId = Math.random().toString(36).slice(2, 10).toUpperCase();
+            const record = logAuditBlock({
+              requestId,
+              currentUrl: body.districtPath,
+              resolvedRoute: wouldResolve.path,
+              reason: `Registry violation: ${registryViolations.map((v) => v.detail).join("; ")}`,
+              registryVersion: REGISTRY_VERSION,
+              registryHash: REGISTRY_HASH,
+            });
+            return Response.json(
+              {
+                error: "Audit blocked.",
+                auditReceipt: {
+                  engine: "TELEPORTER-ENGINE-V3",
+                  blocked: true,
+                  reason: record.reason,
+                  currentUrl: record.currentUrl,
+                  resolvedRoute: record.resolvedRoute,
+                  requestId,
+                  registryVersion: REGISTRY_VERSION,
+                  registryHash: REGISTRY_HASH,
+                  timestamp: record.timestamp,
+                },
               },
-            },
-            { status: 409 },
-          );
+              {
+                status: 409,
+                headers: { "X-Frass-Engine": "TELEPORTER-ENGINE-V3" },
+              },
+            );
+          }
         }
 
         const key = process.env.LOVABLE_API_KEY;
