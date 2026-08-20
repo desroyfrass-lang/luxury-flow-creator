@@ -783,6 +783,12 @@ export const Route = createFileRoute("/api/chat")({
           sessionRoute && !pathIsAmbiguous ? resolveAuditIdentity(sessionRoute) : null;
         const isAudit = Boolean(auditIdentity && activeSession);
         const auditSessionId = activeSession?.auditSession ?? "";
+        // P0 runtime proof — one conversation id per invocation, echoed in the receipt.
+        const auditConversationId =
+          typeof crypto.randomUUID === "function"
+            ? crypto.randomUUID()
+            : `conv-${Math.random().toString(36).slice(2)}`;
+        const endpointTrace = `${request.method} /api/chat — engine TELEPORTER-ENGINE-V4`;
 
         const blockAudit = (reason: string) => {
           const blockedRequestId = Math.random().toString(36).slice(2, 10).toUpperCase();
