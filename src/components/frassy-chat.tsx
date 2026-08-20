@@ -11,7 +11,7 @@
 // NOT wired here. They return only after Phase 2 acceptance testing.
 // ─────────────────────────────────────────────────────────────────────────────
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
 import {
   X,
   ShoppingBag,
