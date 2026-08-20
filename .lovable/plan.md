@@ -21,8 +21,38 @@ Make one live Teleporter review provably return the card selected by the Founder
 ### 2. Make the server authoritative for card identity
 - Create one shared registry resolver that derives the canonical card from its route/file.
 - In `/api/chat`, ignore browser-supplied number, title, component, file, and district as authorities.
-- Resolve those values server-side from the submitted route and reject unknown, duplicate, or mismatched routes before any AI call or ledger commit.
+- Resolve the canonical card from the shared registry using the route currently being rendered, verified server-side, not the route metadata the browser submits. Chain: Teleporter selection → router navigation → current page loads → server resolves current route → shared registry lookup → canonical card → AI prompt.
 - Require verified Founder access for audit mode; a client cannot create an audit response merely by adding `auditContext`.
+
+### 2a. Hard fail before any AI call
+- If the active URL and the resolved registry entry disagree — or the route is unknown or duplicated — do not call the AI at all.
+- Return a visible Founder diagnostic instead, in this shape:
+
+```text
+Audit blocked.
+Current URL:        /admin/visual-index
+Resolved Registry:  /admin/financial-audit
+Reason:             Registry mismatch.
+No AI call executed.
+```
+
+- A blocked audit is never written to the Audit Ledger as a review.
+
+### 2b. Audit Source diagnostic
+- Every audit response and every blocked attempt carries an Audit Source block:
+
+```text
+Audit Source
+Teleporter Card:
+Current URL:
+Registry Match:
+Conversation ID:
+History Count:
+Prompt Hash:
+```
+
+- Shown with the live response and stored with the ledger entry so any future recurrence is diagnosable in seconds.
+
 
 ### 3. Remove stale session authority
 - Store only the selected card key/route needed for navigation.
