@@ -15,7 +15,6 @@ import { reportLovableError } from "../lib/lovable-error-reporting";
 import { Toaster } from "@/components/ui/sonner";
 import { WelcomeLinkClaim } from "@/components/link/welcome-link-claim";
 import { VoiceStateOverlay } from "@/components/voice-state-overlay";
-import { FrassyConversationDock } from "@/components/voice/frassy-conversation-dock";
 import { FounderPreviewReset } from "@/components/founder/preview-reset";
 import { SimulationModeBar } from "@/components/founder/simulation-mode-bar";
 import { FrassyChat } from "@/components/frassy-chat";
@@ -161,8 +160,6 @@ function RootComponent() {
         <DailyGate />
         <ConstructionMode />
 
-        {/* FRASS-0553 — one dock, one place, every conversation. */}
-        <FrassyConversationDock />
         <VoiceStateOverlay />
         {/* FRASS-0570 — the way back from a Founder inspection trip. */}
         <TeleportReturnChip />
