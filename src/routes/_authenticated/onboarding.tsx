@@ -88,6 +88,8 @@ function OnboardingPage() {
   });
 
   const [busy, setBusy] = useState(false);
+  const busyRef = useRef(false);
+  busyRef.current = busy;
   // The append-only journal on this device. Nothing is ever deleted from it —
   // a message can only change status, never disappear.
   const [journal, setJournal] = useState<JournalEntry[]>([]);
