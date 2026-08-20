@@ -110,20 +110,22 @@ Credits         1
 - The registry hash proves exactly which registry version produced the audit.
 - The receipt is stored with the journal entry, so any audit can be proven long after the fact.
 
-### 7. Tests, including sequential leakage
-- `/admin/visual-index` → Card #025.
-- `/admin/financial-audit` → Card #011.
-- Observed/body mismatch → blocked, zero AI call, zero credits.
+### 9. Tests, including sequential leakage
+- Card #025 session → response is Card #025 only.
+- Card #011 session → response is Card #011 only.
+- Claimed identity that contradicts the locked session → blocked, zero AI call, zero credits.
+- Mid-stream "switch to Card 11" request → lock notice, no switch, no model call.
+- Model output naming a foreign card → aborted before display, credits refunded.
 - A navigation-style audit message cannot bypass audit identity handling.
 - Founder text and Frassy replies persist after voice playback and after refresh.
-- Sequential audit test: open Card #011, then #025, then #018, then #032, then #005, and verify each response references only the current card. This is the cache-leak test.
+- Sequential audit test: Card #011, then #025, then #018, then #032, then #005, each referencing only its own card. This is the cache-leak test.
 
-### 8. Production gate
+### 10. Production gate
 - Production is not marked complete until the Founder verifies, in a clean published session, that Card #011, Card #025, and Card #032 each audit correctly without ever mentioning another card.
 - No transient text box, no “Ready for Card #12,” no foreign route lines.
 
 ## Plain English
-The disappearing box will be removed, not patched. The conversation will become part of the page like a permanent written record, with a copy button on every message. Before Frassy is allowed to spend a credit, the server will check the page you are actually standing on; if anything says Card #011 while you are on Card #025, the request stops and costs nothing.
+The disappearing box is removed, not patched. The conversation becomes a permanent written record on the page, with a copy button on every message. Identity no longer comes from your browser at all: when you enter a card from the Teleporter, the server issues a session and locks it to that card. Frassy can only ever be handed that one card. If anything disagrees, the request stops before a single credit is spent, and if she still names the wrong card in her answer, you never see it and the credit is refunded.
 
 ## Scope
 Only the Teleporter audit conversation, its voice text surface, and audit request identity validation will change. No unrelated store, member chat, or district features will be altered.
