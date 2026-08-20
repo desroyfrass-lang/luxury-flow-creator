@@ -174,6 +174,23 @@ export function FrassyChat({
       );
   }, [messages, transcriptScope]);
 
+  // FRASS-0573 — the permanent Founder Audit Ledger. Reviews from earlier cards
+  // stay visible above the live thread, so the Founder can scroll from Card #001
+  // to today's card as one continuous audit journal.
+  const ledger = useSyncExternalStore(
+    subscribeAuditLedger,
+    () => readAuditLedger(),
+    () => EMPTY_LEDGER,
+  );
+  useEffect(() => {
+    if (auditCard) void syncAuditLedger();
+  }, [auditCard]);
+  const ledgerGroups = useMemo(
+    () => (auditCard ? groupLedgerByCard(ledger) : []),
+    [auditCard, ledger],
+  );
+
+
   // FRASS-0572A — say out loud which engine is answering here.
   useEffect(() => {
     publishEngineDiagnostics({
