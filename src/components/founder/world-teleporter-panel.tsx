@@ -26,6 +26,8 @@ import {
   saveTeleporterAudit,
   type TeleporterAuditRow,
 } from "@/lib/founder/teleporter-audit.functions";
+import { openAuditSession } from "@/lib/founder/audit-session.functions";
+
 
 const GROUPS: { status: WorldStatus; heading: string }[] = [
   { status: "live", heading: "🟢 Live & Linked" },
