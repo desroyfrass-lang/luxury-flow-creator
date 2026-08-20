@@ -1072,10 +1072,6 @@ the next move toward Legacy is. Never stop at helping someone earn a living.`;
         let auditPromptChars = 0;
         // P0 runtime proof — the literal first 1000 chars handed to the model.
         let auditPromptDump = "";
-        const auditConversationId =
-          typeof crypto.randomUUID === "function"
-            ? crypto.randomUUID()
-            : `conv-${Math.random().toString(36).slice(2)}`;
         if (isAudit && auditIdentity) {
           if (isAuditPaused()) {
             return blockAudit(
