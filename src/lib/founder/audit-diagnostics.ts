@@ -41,3 +41,25 @@ export function readAuditDiagnostics(): AuditBlockRecord[] {
 export function clearAuditDiagnostics(): void {
   buffer.length = 0;
 }
+
+// ── P0 §6 — Violation guard ──────────────────────────────────────────────────
+// Repeated AuditContextViolations mean the runtime itself is unhealthy. After
+// three, Teleporter audits pause until a Founder manually resumes them.
+const VIOLATION_LIMIT = 3;
+let violations = 0;
+let paused = false;
+
+export function recordAuditViolation(): { violations: number; paused: boolean } {
+  violations += 1;
+  if (violations >= VIOLATION_LIMIT) paused = true;
+  return { violations, paused };
+}
+
+export function isAuditPaused(): boolean {
+  return paused;
+}
+
+export function resumeAudits(): void {
+  violations = 0;
+  paused = false;
+}
