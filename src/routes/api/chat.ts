@@ -1360,7 +1360,7 @@ the next move toward Legacy is. Never stop at helping someone earn a living.`;
                       ? "server-resolved audit identity → clean room"
                       : "client admin signal → founder storefront context",
                     historySource: isAudit ? "clean_room_last_turn" : "floating_chat_client_state",
-                    auditEngine: isAudit ? "TELEPORTER-ENGINE-V3" : undefined,
+                    auditEngine: isAudit ? "TELEPORTER-ENGINE-V4" : undefined,
                     registryVersion: isAudit ? auditIdentity!.registryVersion : undefined,
                     registryHash: isAudit ? auditIdentity!.registryHash : undefined,
                     fallback: isFounderIdentityDiscovery(result.text)
@@ -1370,7 +1370,7 @@ the next move toward Legacy is. Never stop at helping someone earn a living.`;
                   },
                 }
               : {}),
-          }, isAudit ? { headers: { "X-Frass-Engine": "TELEPORTER-ENGINE-V3" } } : undefined);
+          }, isAudit ? { headers: { "X-Frass-Engine": "TELEPORTER-ENGINE-V4" } } : undefined);
         } catch (err) {
           const message = err instanceof Error ? err.message : "Unknown error";
           const status = /429|rate/i.test(message) ? 429 : /402|credit/i.test(message) ? 402 : 500;
