@@ -461,7 +461,9 @@ export function FrassyChat({
           requestId?: string;
           history?: number;
           timestamp?: string;
+          proof?: AuditProof;
         };
+
       };
 
       // Stale-turn guard: a superseded or stopped turn can never write to the UI.
