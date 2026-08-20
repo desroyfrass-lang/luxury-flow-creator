@@ -438,16 +438,19 @@ export const journeyOpening = createServerFn({ method: "POST" })
       }
     }
 
-    await sb
+    const openingSave = await sb
       .from("builder_journey_messages")
-      .insert({ user_id: userId, stage: stage.id, role: "assistant", content: reply });
+      .insert({ user_id: userId, stage: stage.id, role: "assistant", content: reply })
+      .select("id")
+      .maybeSingle();
+    const messageId: string | null = openingSave.error ? null : (openingSave.data?.id ?? null);
 
     await sb
       .from("builder_journeys")
       .update({ status: "in_progress", last_active_at: new Date().toISOString() })
       .eq("user_id", userId);
 
-    return { reply, alreadyOpened: false, stageId: stage.id };
+    return { reply, messageId, alreadyOpened: false, stageId: stage.id };
   });
 
 /**
