@@ -34,8 +34,10 @@ Fixing B will not fix A, and neither is closed by the other.
 - The track filter no longer hides messages: everything belonging to this member's journey is shown. A track change reorders/labels, never deletes.
 - The Teleporter-audit filter stays, but only for turns carrying the audit header — it can no longer swallow ordinary replies.
 
-### 4. Make saving honest
-- `journeyOpening` and the turn handler check the insert result. A failed save is surfaced in the page as a small "saved locally only" note on that message instead of failing silently.
+### 4. Make saving honest — visible status, automatic retry
+- `journeyOpening` and the turn handler check the insert result instead of assuming success.
+- Each message shows its own status: `✓ Saved`, `⚠ Saved locally only — retrying…`, or `⚠ Save failed — retry`.
+- Pending and failed messages are retried automatically when the connection returns, and can be retried by hand. No silent failures.
 
 ### 5. Copyable by design
 - Each message gets a copy button, plus one "Copy whole conversation" action at the top of the thread, so any transcript can be pasted elsewhere.
@@ -45,6 +47,12 @@ Fixing B will not fix A, and neither is closed by the other.
 - Refresh: the full thread is still there.
 - Send a message, let her reply, refresh: both are still there.
 - Force a track switch: nothing already shown disappears.
+- Two messages with identical wording: both remain, neither cancels the other out.
+
+### 7. Network failure test
+- Go offline, send a message, let Frassy reply (or fail), then reconnect.
+- Offline messages stay on screen marked `⚠ Saved locally only`, sync automatically on reconnect, and flip to `✓ Saved`.
+- Nothing disappears at any point in that cycle, and nothing is duplicated after the sync.
 
 ## Plain English
 Right now the page shows Frassy's words on a sticky note, then throws the sticky note away as soon as it assumes the filing cabinet has a copy. Sometimes the filing cabinet doesn't. The fix is to never throw the sticky note away until we've actually seen the filed copy, and to keep our own permanent notebook of the conversation on your device as well. Plus copy buttons so you can paste any of it straight into another tool.
