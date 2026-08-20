@@ -1054,6 +1054,53 @@ the next move toward Legacy is. Never stop at helping someone earn a living.`;
             parts: [{ type: "text" as const, text: m.content }] as UiPart[],
           }));
 
+        // ── P0 CLEAN-ROOM RUNTIME CONTRACT ───────────────────────────────────
+        // These are runtime assertions, not intentions. If any of them fails the
+        // request is aborted BEFORE the model is called, so a stale card can
+        // never reach the Founder and no credit is spent.
+        let auditPromptHash = "";
+        let auditPromptChars = 0;
+        if (isAudit && auditIdentity) {
+          const historyObjects = uiMessages.length - 1; // only the current turn is allowed
+          if (historyObjects > 0) {
+            return blockAudit(
+              `AuditContextViolation — clean room requires 0 history objects, found ${historyObjects}.`,
+            );
+          }
+          if (uiMessages[0]?.role !== "user") {
+            return blockAudit("AuditContextViolation — the only prompt object must be the Founder's current request.");
+          }
+          if (!system.includes(auditIdentity.route) || !system.includes(auditIdentity.title)) {
+            return blockAudit(
+              `AuditContextViolation — assembled prompt does not carry the locked card (${auditIdentity.route}).`,
+            );
+          }
+          const foreignInPrompt = [...system.matchAll(/card\s*#?\s*(\d{1,3})\b/gi)]
+            .map((m) => Number(m[1]))
+            .find((n) => Number.isFinite(n) && n !== auditIdentity.id);
+          if (foreignInPrompt !== undefined) {
+            return blockAudit(
+              `AuditContextViolation — assembled prompt referenced Card #${String(foreignInPrompt).padStart(3, "0")} while locked to ${registryCardLabel(auditIdentity.id)}.`,
+            );
+          }
+          auditPromptChars = system.length + (uiMessages[0]?.parts[0] as { text?: string })?.text?.length!;
+          let h = 0;
+          for (const ch of system) h = (h * 31 + ch.charCodeAt(0)) >>> 0;
+          auditPromptHash = h.toString(16).toUpperCase().padStart(8, "0");
+          console.info("[teleporter-clean-room]", {
+            auditSession: auditSessionId,
+            cardNumber: auditIdentity.id,
+            canonicalRoute: auditIdentity.route,
+            registryHash: auditIdentity.registryHash,
+            historyObjects: 0,
+            memoryObjects: 0,
+            previousAuditObjects: 0,
+            promptChars: auditPromptChars,
+            promptHash: auditPromptHash,
+          });
+        }
+
+
 
         // Inline analyzable assets (images, PDFs) onto the latest user turn.
         const lastUserIdx = uiMessages.map((m) => m.role).lastIndexOf("user");
