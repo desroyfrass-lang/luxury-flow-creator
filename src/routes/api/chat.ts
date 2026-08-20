@@ -18,6 +18,17 @@ import { LEARNING_LEVELS_ENGINE } from "@/lib/frassy/learning-levels";
 import { MOMENTUM_ENGINE } from "@/lib/frassy/momentum";
 import { FOUNDER_EXPLANATION_STANDARD } from "@/lib/founder/explanation-standard";
 import { clientHintFrom } from "@/lib/frassy-repair-tools.server";
+import {
+  resolveAuditIdentity,
+  resolveCanonicalCard,
+  validateRegistry,
+  stripAuditIdentity,
+  REGISTRY_VERSION,
+  REGISTRY_HASH,
+  formatCardNumber as registryCardLabel,
+  type AuditIdentity,
+} from "@/lib/founder/audit-registry";
+import { logAuditBlock } from "@/lib/founder/audit-diagnostics";
 
 const FRASS_LINK = `FRASS LINK (FRASS-0428)
 Every member owns ONE permanent Frass Link for life: frasskicks.com/link/<handle>. It is their identity,
