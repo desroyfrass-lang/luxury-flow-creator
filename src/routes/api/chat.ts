@@ -731,54 +731,108 @@ export const Route = createFileRoute("/api/chat")({
 
         const attachments = Array.isArray(body.attachments) ? body.attachments : [];
 
-        // FRASS-0574/0576 — the server is the sole authority for audit identity.
-        // The browser sends only the Current URL (body.districtPath). Card number,
-        // title, district and every other identity field are derived here, never
-        // trusted from the client. Any incoming "auditContext" is ignored.
-        //
-        // A duplicate path (e.g. a layout+index pair sharing /blog) makes the
-        // identity ambiguous and blocks the audit of THAT path only. Other paths
-        // resolve normally — a stale registry on /blog never blocks /admin/visual-index.
-        const pathIsAmbiguous =
-          experienceContext === "founder" && Boolean(body.districtPath)
-            ? isPathAmbiguous(body.districtPath)
-            : false;
-        const auditIdentity: AuditIdentity | null =
-          experienceContext === "founder" && body.districtPath && !pathIsAmbiguous
-            ? resolveAuditIdentity(body.districtPath)
-            : null;
-        const isAudit = Boolean(auditIdentity);
+        // FRASS-0579 — the server-issued Teleporter session is the ONLY identity
+        // authority. Not body.card, not body.districtPath, not the referrer.
+        // Entering a card from the World Teleporter opens a locked session; this
+        // request reads that session back from the database.
+        type ActiveSession = {
+          auditSession: string;
+          cardNumber: number;
+          canonicalRoute: string;
+          locked: boolean;
+        };
+        let activeSession: ActiveSession | null = null;
+        if (experienceContext === "founder" && verifiedToken) {
+          try {
+            const { createClient } = await import("@supabase/supabase-js");
+            const supaSess = createClient(
+              process.env.SUPABASE_URL!,
+              process.env.SUPABASE_PUBLISHABLE_KEY!,
+              {
+                global: { headers: { Authorization: `Bearer ${verifiedToken}` } },
+                auth: { persistSession: false, autoRefreshToken: false },
+              },
+            );
+            const { data: row } = await supaSess
+              .from("teleporter_audit_sessions")
+              .select("audit_session, card_number, canonical_route, locked")
+              .is("closed_at", null)
+              .order("opened_at", { ascending: false })
+              .limit(1)
+              .maybeSingle();
+            if (row) {
+              activeSession = {
+                auditSession: row.audit_session as string,
+                cardNumber: row.card_number as number,
+                canonicalRoute: row.canonical_route as string,
+                locked: Boolean(row.locked),
+              };
+            }
+          } catch {
+            activeSession = null;
+          }
+        }
 
-        // FRASS-0576 §2a-iii — an ambiguous path is a hard block: no AI call, no
-        // ledger write. The Founder sees exactly which path is ambiguous and why.
-        if (pathIsAmbiguous && !auditIdentity) {
-          const blockedReason = `Ambiguous registry: two eligible routes share ${normalizePath(body.districtPath)}. Repair the registry before auditing this page.`;
+        const sessionRoute = activeSession?.canonicalRoute ?? null;
+        const pathIsAmbiguous = sessionRoute ? isPathAmbiguous(sessionRoute) : false;
+        const auditIdentity: AuditIdentity | null =
+          sessionRoute && !pathIsAmbiguous ? resolveAuditIdentity(sessionRoute) : null;
+        const isAudit = Boolean(auditIdentity && activeSession);
+        const auditSessionId = activeSession?.auditSession ?? "";
+
+        const blockAudit = (reason: string) => {
           const blockedRequestId = Math.random().toString(36).slice(2, 10).toUpperCase();
           logAuditBlock({
             requestId: blockedRequestId,
-            reason: blockedReason,
+            reason,
             currentUrl: body.districtPath ?? "",
-            resolvedRoute: null,
+            resolvedRoute: sessionRoute,
             registryVersion: REGISTRY_VERSION,
             registryHash: REGISTRY_HASH,
           });
           return Response.json(
             {
               auditReceipt: {
-                engine: "TELEPORTER-ENGINE-V3",
+                engine: "TELEPORTER-ENGINE-V4",
                 blocked: true,
-                reason: blockedReason,
+                reason,
+                auditSession: auditSessionId,
                 currentUrl: body.districtPath ?? "",
-                resolvedRoute: null,
+                resolvedRoute: sessionRoute,
                 requestId: blockedRequestId,
                 registryVersion: REGISTRY_VERSION,
                 registryHash: REGISTRY_HASH,
+                credits: 0,
                 timestamp: new Date().toISOString(),
               },
             },
-            { status: 409, headers: { "X-Frass-Engine": "TELEPORTER-ENGINE-V3" } },
+            { status: 409, headers: { "X-Frass-Engine": "TELEPORTER-ENGINE-V4" } },
+          );
+        };
+
+        // A session pointing at an ambiguous path is a hard block: no AI, no ledger.
+        if (activeSession && pathIsAmbiguous) {
+          return blockAudit(
+            `Ambiguous registry: two eligible routes share ${normalizePath(sessionRoute)}. Repair the registry before auditing this page.`,
           );
         }
+        if (activeSession && !auditIdentity) {
+          return blockAudit(
+            `The locked audit route ${normalizePath(sessionRoute)} is no longer in the canonical registry. Re-open the card from the World Teleporter.`,
+          );
+        }
+        // The browser-claimed route is a comparison value only. If it disagrees
+        // with the locked session, nothing runs and no credit is spent.
+        if (
+          isAudit &&
+          body.districtPath &&
+          normalizePath(body.districtPath) !== normalizePath(auditIdentity!.route)
+        ) {
+          return blockAudit(
+            `Audit identity mismatch — session Card ${registryCardLabel(auditIdentity!.id)} (${auditIdentity!.route}), request claimed ${normalizePath(body.districtPath)}. Credits spent: 0.`,
+          );
+        }
+
 
         // A Teleporter audit is a clean-room review: the model sees ONLY the
         // Founder's current request. Past turns are never replayed, so no earlier
