@@ -41,6 +41,13 @@ Nothing downstream can mutate them. Not AI. Not middleware. Not React. Not memor
 
 The lock is created immediately after registry resolution, sealed (frozen) before the prompt is generated, and carried unchanged through the AI call, the server-rendered header, the receipt, and the ledger write. Every ledger entry therefore carries its own identity lock, so any entry can be re-verified against the registry long after the fact.
 
+### FRASS-0576 — Single Canonical Registry
+There is exactly one registry in the entire codebase. No duplicated arrays, no JSON copies, no card constants inside components, no secondary lookup tables. Every card lookup — Teleporter panel, audit progress, chat handler, ledger, diagnostics — resolves through the one registry service.
+
+If `/admin/visual-index` is Card #025, there is literally nowhere else in the application that can claim otherwise. Any duplicate source found during implementation is deleted and its callers repointed, not kept in sync.
+
+
+
 
 
 
@@ -156,22 +163,23 @@ Ledger written?  NO
 This is distinct from the Founder Audit Ledger and exists purely for debugging.
 
 
-### 2b. Server renders the receipt; AI only generates the analysis
-- The AI never generates the audit header. It never knows how to format the receipt.
-- The server renders the receipt from resolved registry data:
+### 2b. Server renders the header; AI only generates the analysis (hard rule)
+- Hard rule: the AI never writes "VISUAL VERIFICATION", never writes a card number, never writes a route, never formats a header.
+- The server renders the header from locked registry data:
 
 ```text
-Server
-  Card #025
-  /admin/visual-index
-  Registry Version
-      ↓
-  AI
-      generates the analysis only
+━━━━━━━━━━━━━━━━━━━━━━
+Card #025
+/admin/visual-index
+Registry Version
+Registry Hash
+━━━━━━━━━━━━━━━━━━━━━━
 ```
 
-- The AI receives the locked card identity in its prompt and returns analysis text only. The server wraps that analysis with the canonical header before the client ever sees it.
-- This makes it literally impossible for the AI to invent Card #11 — it cannot emit a card number or route.
+- The AI receives only: "Analyze this page and recommend the canonical destination." plus the page context. It returns analysis text only.
+- The server concatenates header + analysis + receipt before the client ever sees it.
+- Any card number or route pattern the model emits anyway is stripped server-side, so a hallucinated Card #11 can never reach the screen.
+
 
 ### 2c. Forensic Audit Source receipt
 - Every audit response and every blocked attempt carries an Audit Source block. It is a forensic receipt:
@@ -255,12 +263,14 @@ The issue stays open until every one of these passes in production. If even one 
 - [ ] Ledger receives zero blocked audits
 - [ ] `TELEPORTER ENGINE v3` receipt is visible
 - [ ] Registry Version and Registry Hash are present
+- [ ] Exactly one registry exists in the codebase (no duplicate card sources)
 - [ ] No React render loop
 - [ ] No stale Card #11 ever appears again
 
 ## Technical scope
-- Audit Ledger snapshot stabilization, zero-state Teleporter (pathname→registry→card), versioned + hashed shared registry with uniqueness validation, Frassy request construction (URL-only client payload), `/api/chat` validate→resolve→lock→generate→AI pipeline, immutable Audit Identity Lock, server-rendered audit header (AI emits analysis only), `AuditBlockedResponse`, Audit Diagnostics log, forensic Audit Source receipt, and receipt display/storage.
-- Codify FRASS-0574 — Canonical Audit Identity and FRASS-0575 — Audit Identity Lock in the Constitution.
+- Audit Ledger snapshot stabilization, zero-state Teleporter (pathname→registry→card), one canonical versioned + hashed registry service with uniqueness validation, Frassy request construction (URL-only client payload), `/api/chat` validate→resolve→lock→generate→AI pipeline, immutable Audit Identity Lock, server-rendered audit header with model-emitted identity stripped (AI emits analysis only), `AuditBlockedResponse`, Audit Diagnostics log, forensic Audit Source receipt, and receipt display/storage.
+- Delete every duplicate card list/lookup found and repoint its callers at the single registry service.
+- Codify FRASS-0574 — Canonical Audit Identity, FRASS-0575 — Audit Identity Lock, and FRASS-0576 — Single Canonical Registry in the Constitution.
 - No security-finding changes, onboarding changes, or unrelated feature work.
 
 ## Status
