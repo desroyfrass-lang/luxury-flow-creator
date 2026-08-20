@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { useQuery } from "@tanstack/react-query";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { toast } from "sonner";
 import { SiteShell } from "@/components/site-shell";
 import { PageFeedback } from "@/components/page-feedback";
@@ -17,6 +17,14 @@ import {
 } from "@/lib/journey.functions";
 import { isTeleporterAuditTurn } from "@/lib/frassy/engine-registry";
 import {
+  appendEntry,
+  loadJournal,
+  newClientId,
+  updateEntry,
+  type JournalEntry,
+  type JournalStatus,
+} from "@/lib/frassy/conversation-journal";
+import {
   publishEngineDiagnostics,
   clearEngineDiagnostics,
 } from "@/lib/frassy/engine-diagnostics";
@@ -28,7 +36,7 @@ import { LaunchReadiness } from "@/components/launch-readiness";
 import { FounderWalkthrough } from "@/components/founder/founder-walkthrough";
 import { COMMISSIONING_PHASES } from "@/lib/commissioning";
 import { usePushToTalk } from "@/hooks/use-push-to-talk";
-import { Volume2, VolumeX } from "lucide-react";
+import { Copy, Volume2, VolumeX } from "lucide-react";
 
 export const Route = createFileRoute("/_authenticated/onboarding")({
   head: () => ({
@@ -53,7 +61,18 @@ export const Route = createFileRoute("/_authenticated/onboarding")({
   component: OnboardingPage,
 });
 
-type LocalMessage = { role: "user" | "assistant"; content: string; pending?: boolean };
+type ThreadMessage = {
+  key: string;
+  role: "user" | "assistant";
+  content: string;
+  at: string;
+  status: JournalStatus;
+  error?: string;
+  /** Present only for journal-owned messages, so a failed one can be retried. */
+  clientId?: string;
+};
+
+const JOURNAL_SCOPE = "journey";
 
 function OnboardingPage() {
   const loadJourney = useServerFn(getBuilderJourney);
@@ -69,7 +88,14 @@ function OnboardingPage() {
   });
 
   const [busy, setBusy] = useState(false);
-  const [local, setLocal] = useState<LocalMessage[]>([]);
+  const busyRef = useRef(false);
+  busyRef.current = busy;
+  // The append-only journal on this device. Nothing is ever deleted from it —
+  // a message can only change status, never disappear.
+  const [journal, setJournal] = useState<JournalEntry[]>([]);
+  useEffect(() => {
+    setJournal(loadJournal(JOURNAL_SCOPE));
+  }, []);
   const [diagnostics, setDiagnostics] = useState<ConversationDiagnostics | null>(null);
   const [draft, setDraft] = useState("");
   // Frassy speaks her replies aloud unless the Founder mutes her.
@@ -91,23 +117,46 @@ function OnboardingPage() {
   const pct = Math.round((completedCount / stages.length) * 100);
   const finished = data?.status === "complete";
 
-  // Only this track's conversation belongs on screen. FRASS-0572: a Teleporter
-  // card review is a different mode of Frassy and never belongs in this room.
-  const messages: LocalMessage[] = useMemo(() => {
-    const saved = (data?.messages ?? [])
-      .filter((m: JourneyMessage) => trackOf(m.stage) === track)
-      .filter((m: JourneyMessage) => !isTeleporterAuditTurn(m.content))
-      .map((m: JourneyMessage) => ({ role: m.role, content: m.content }));
-    return [...saved, ...local];
-  }, [data?.messages, local, track]);
+  // The thread on screen is the union of what the database holds and what this
+  // device recorded. Messages are matched by id — never by their words — so two
+  // identical sentences can never cancel each other out, and nothing already
+  // shown is removed by a reload, a refetch or a change of track.
+  //
+  // FRASS-0572: a Teleporter card review is a different mode of Frassy and is
+  // the only thing still filtered out of this room.
+  const messages: ThreadMessage[] = useMemo(() => {
+    const saved = (data?.messages ?? []).filter(
+      (m: JourneyMessage) => !isTeleporterAuditTurn(m.content),
+    );
+    const savedIds = new Set(saved.map((m: JourneyMessage) => m.id));
+    const fromServer: ThreadMessage[] = saved.map((m: JourneyMessage) => ({
+      key: `s:${m.id}`,
+      role: m.role,
+      content: m.content,
+      at: m.created_at,
+      status: "synced" as const,
+    }));
+    const fromJournal: ThreadMessage[] = journal
+      .filter((e) => !(e.serverId && savedIds.has(e.serverId)))
+      .filter((e) => !isTeleporterAuditTurn(e.content))
+      .map((e) => ({
+        key: `j:${e.clientId}`,
+        role: e.role,
+        content: e.content,
+        at: e.at,
+        status: e.status,
+        error: e.error,
+        clientId: e.clientId,
+      }));
+    return [...fromServer, ...fromJournal].sort((a, b) => a.at.localeCompare(b.at));
+  }, [data?.messages, journal]);
 
   // FRASS-0572A — publish which engine is answering, so the Founder can see it.
   const auditTurnsFiltered = useMemo(
     () =>
-      (data?.messages ?? []).filter(
-        (m: JourneyMessage) => trackOf(m.stage) === track && isTeleporterAuditTurn(m.content),
-      ).length,
-    [data?.messages, track],
+      (data?.messages ?? []).filter((m: JourneyMessage) => isTeleporterAuditTurn(m.content))
+        .length,
+    [data?.messages],
   );
   useEffect(() => {
     publishEngineDiagnostics({
@@ -121,7 +170,7 @@ function OnboardingPage() {
     return () => clearEngineDiagnostics();
   }, [messages.length, auditTurnsFiltered]);
 
-  const messagesRef = useRef<LocalMessage[]>(messages);
+  const messagesRef = useRef<ThreadMessage[]>(messages);
   messagesRef.current = messages;
 
 
@@ -164,10 +213,20 @@ function OnboardingPage() {
     void openConversation()
       .then(async (res) => {
         if (!res?.reply) return;
-        setLocal([{ role: "assistant", content: res.reply }]);
+        // Her greeting is written to the journal the moment it exists, with the
+        // server row id when the save was proven. It is never cleared later.
+        setJournal(
+          appendEntry(JOURNAL_SCOPE, {
+            clientId: newClientId(),
+            serverId: res.messageId ?? null,
+            role: "assistant",
+            content: res.reply,
+            status: res.messageId ? "synced" : "failed",
+            ...(res.messageId ? {} : { error: "Saved on this device only." }),
+          }),
+        );
         if (speakReplies && voice.voiceAvailable) void voice.speak(res.reply);
         await refetch();
-        setLocal([]);
       })
       .catch(() => {
         openedRef.current = false;
@@ -175,29 +234,104 @@ function OnboardingPage() {
       .finally(() => setBusy(false));
   }, [isLoading, roleLoading, data, messages.length, openConversation, refetch, speakReplies, voice]);
 
+  /**
+   * Delivers one Founder message. The message is already in the journal under
+   * `clientId`; this only ever changes that entry's status, never its words.
+   */
+  const deliver = useCallback(
+    async (clientId: string, message: string) => {
+      setBusy(true);
+      try {
+        const result = await takeTurn({ data: { message } });
+        setJournal(
+          updateEntry(
+            JOURNAL_SCOPE,
+            clientId,
+            result.userMessageId
+              ? { serverId: result.userMessageId, status: "synced", error: undefined }
+              : { status: "failed", error: "Saved on this device only." },
+          ),
+        );
+        setJournal(
+          appendEntry(JOURNAL_SCOPE, {
+            clientId: newClientId(),
+            serverId: result.assistantMessageId ?? null,
+            role: "assistant",
+            content: result.reply,
+            status: result.assistantMessageId ? "synced" : "failed",
+            ...(result.assistantMessageId ? {} : { error: "Saved on this device only." }),
+          }),
+        );
+        setDiagnostics(result.diagnostics);
+        if (speakReplies && voice.voiceAvailable) void voice.speak(result.reply);
+        await refetch();
+      } catch (err) {
+        const reason = err instanceof Error ? err.message : "Frassy could not answer just now.";
+        // The words stay on screen. Only the status changes.
+        setJournal(updateEntry(JOURNAL_SCOPE, clientId, { status: "failed", error: reason }));
+        toast.error(reason);
+      } finally {
+        setBusy(false);
+      }
+    },
+    [takeTurn, refetch, speakReplies, voice],
+  );
 
+  /** Sends a message again without ever creating a second copy of it. */
+  async function retry(clientId: string, content: string) {
+    if (busy) return;
+    setJournal(updateEntry(JOURNAL_SCOPE, clientId, { status: "pending", error: undefined }));
+    await deliver(clientId, content);
+  }
+
+  async function copyOne(text: string) {
+    try {
+      await navigator.clipboard.writeText(text);
+      toast.success("Copied.");
+    } catch {
+      toast.error("Your browser blocked the copy — select the text and copy it by hand.");
+    }
+  }
+
+  async function copyAll() {
+    const text = messagesRef.current
+      .map((m) => `${m.role === "user" ? "Founder" : "Frassy"}: ${m.content}`)
+      .join("\n\n");
+    await copyOne(text);
+  }
 
   async function send(text: string) {
     const message = text.trim();
     if (!message || busy) return;
     setDraft("");
-    setLocal((prev) => [...prev, { role: "user", content: message }]);
-    setBusy(true);
-    try {
-      const result = await takeTurn({ data: { message } });
-      setLocal((prev) => [...prev, { role: "assistant", content: result.reply }]);
-      setDiagnostics(result.diagnostics);
-      if (speakReplies && voice.voiceAvailable) void voice.speak(result.reply);
-      await refetch();
-      setLocal([]);
-    } catch (err) {
-      toast.error(err instanceof Error ? err.message : "Frassy could not answer just now.");
-      setLocal((prev) => prev.slice(0, -1));
-      setDraft(message);
-    } finally {
-      setBusy(false);
-    }
+    const clientId = newClientId();
+    setJournal(
+      appendEntry(JOURNAL_SCOPE, {
+        clientId,
+        serverId: null,
+        role: "user",
+        content: message,
+      }),
+    );
+    await deliver(clientId, message);
   }
+
+  // Nothing is lost to a dropped connection: anything still unsaved is sent
+  // again by itself as soon as the network comes back.
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const onOnline = () => {
+      const stuck = loadJournal(JOURNAL_SCOPE).filter(
+        (e) => e.role === "user" && e.status !== "synced",
+      );
+      const last = stuck[stuck.length - 1];
+      if (!last || busyRef.current) return;
+      setJournal(updateEntry(JOURNAL_SCOPE, last.clientId, { status: "pending" }));
+      void deliver(last.clientId, last.content);
+    };
+    window.addEventListener("online", onOnline);
+    return () => window.removeEventListener("online", onOnline);
+  }, [deliver]);
 
   async function toggleMic() {
     if (voice.phase === "speaking") {
@@ -445,6 +579,13 @@ function OnboardingPage() {
                         ? "Frassy is speaking"
                         : "Type or hold the mic"}
                 </span>
+                <button
+                  type="button"
+                  onClick={() => void copyAll()}
+                  className="inline-flex items-center gap-2 rounded-full border border-border px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground transition hover:border-[color:var(--gold)] hover:text-[color:var(--gold)]"
+                >
+                  <Copy className="h-3 w-3" /> Copy whole conversation
+                </button>
               </div>
             </header>
 
@@ -452,12 +593,12 @@ function OnboardingPage() {
               {isLoading && (
                 <p className="text-sm text-muted-foreground">Bringing your journey back…</p>
               )}
-              {messages.map((m, i) => (
-                <div key={i} className={m.role === "user" ? "flex justify-end" : ""}>
+              {messages.map((m) => (
+                <div key={m.key} className={m.role === "user" ? "flex justify-end" : ""}>
                   <div
                     className={
                       m.role === "user"
-                        ? "max-w-[78%] rounded-sm bg-foreground/5 px-4 py-3 text-sm"
+                        ? "max-w-[78%] rounded-sm bg-foreground/5 px-4 py-3 text-sm whitespace-pre-wrap"
                         : "max-w-[78%] text-[15px] leading-relaxed whitespace-pre-wrap"
                     }
                   >
@@ -467,6 +608,41 @@ function OnboardingPage() {
                       </div>
                     )}
                     {m.content}
+                    <div className="mt-2 flex items-center gap-3 text-[10px] uppercase tracking-[0.18em]">
+                      <span
+                        className={
+                          m.status === "synced"
+                            ? "text-muted-foreground"
+                            : m.status === "pending"
+                              ? "text-amber-500"
+                              : "text-destructive"
+                        }
+                        title={m.error ?? undefined}
+                      >
+                        {m.status === "synced"
+                          ? "✓ Saved"
+                          : m.status === "pending"
+                            ? "⚠ Saving…"
+                            : "⚠ Saved on this device only"}
+                      </span>
+                      <button
+                        type="button"
+                        onClick={() => void copyOne(m.content)}
+                        className="inline-flex items-center gap-1 text-muted-foreground transition hover:text-[color:var(--gold)]"
+                      >
+                        <Copy className="h-3 w-3" /> Copy
+                      </button>
+                      {m.status === "failed" && m.role === "user" && m.clientId && (
+                        <button
+                          type="button"
+                          disabled={busy}
+                          onClick={() => void retry(m.clientId!, m.content)}
+                          className="text-[color:var(--gold)] transition hover:underline disabled:opacity-50"
+                        >
+                          Retry
+                        </button>
+                      )}
+                    </div>
                   </div>
                 </div>
               ))}

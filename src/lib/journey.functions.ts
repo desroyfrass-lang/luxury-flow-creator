@@ -153,9 +153,14 @@ export const journeyTurn = createServerFn({ method: "POST" })
     }
 
     const userText = data.message.trim();
-    await sb
+    // Saving is never assumed. The row id comes back so the page can prove this
+    // exact message was written, instead of clearing it on faith.
+    const userSave = await sb
       .from("builder_journey_messages")
-      .insert({ user_id: userId, stage: stage.id, role: "user", content: userText });
+      .insert({ user_id: userId, stage: stage.id, role: "user", content: userText })
+      .select("id")
+      .maybeSingle();
+    const userMessageId: string | null = userSave.error ? null : (userSave.data?.id ?? null);
 
     const { data: profile } = await sb
       .from("profiles")
@@ -236,9 +241,14 @@ The person just asked about a Teleporter card review. Answer in one short line: 
 
 
 
-    await sb
+    const assistantSave = await sb
       .from("builder_journey_messages")
-      .insert({ user_id: userId, stage: stage.id, role: "assistant", content: reply });
+      .insert({ user_id: userId, stage: stage.id, role: "assistant", content: reply })
+      .select("id")
+      .maybeSingle();
+    const assistantMessageId: string | null = assistantSave.error
+      ? null
+      : (assistantSave.data?.id ?? null);
 
     if (memory.length) {
       // Founder sessions write Platform Memory; Builder sessions write Builder Memory.
@@ -280,6 +290,10 @@ The person just asked about a Teleporter card review. Answer in one short line: 
 
     return {
       reply,
+      // Proof of persistence, per message. Null means "not saved" — the page
+      // keeps its own copy visible and says so, rather than losing the words.
+      userMessageId,
+      assistantMessageId,
       stageId: stage.id,
       movedTo,
       completed: stageComplete && !nextStage(stage.id),
@@ -370,7 +384,12 @@ export const journeyOpening = createServerFn({ method: "POST" })
     if (existing.length) {
       const lastAssistant = [...existing].reverse().find((m) => m.role === "assistant");
       if (lastAssistant?.content) {
-        return { reply: lastAssistant.content, alreadyOpened: true, stageId: stage.id };
+        return {
+          reply: lastAssistant.content,
+          messageId: lastAssistant.id ?? null,
+          alreadyOpened: true,
+          stageId: stage.id,
+        };
       }
     }
 
@@ -419,16 +438,19 @@ export const journeyOpening = createServerFn({ method: "POST" })
       }
     }
 
-    await sb
+    const openingSave = await sb
       .from("builder_journey_messages")
-      .insert({ user_id: userId, stage: stage.id, role: "assistant", content: reply });
+      .insert({ user_id: userId, stage: stage.id, role: "assistant", content: reply })
+      .select("id")
+      .maybeSingle();
+    const messageId: string | null = openingSave.error ? null : (openingSave.data?.id ?? null);
 
     await sb
       .from("builder_journeys")
       .update({ status: "in_progress", last_active_at: new Date().toISOString() })
       .eq("user_id", userId);
 
-    return { reply, alreadyOpened: false, stageId: stage.id };
+    return { reply, messageId, alreadyOpened: false, stageId: stage.id };
   });
 
 /**
