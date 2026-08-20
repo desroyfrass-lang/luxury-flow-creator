@@ -231,7 +231,8 @@ Still Card #025
 If the card changes after a refresh, hidden session state still exists and the work is not done.
 
 ## Technical scope
-- Audit Ledger snapshot stabilization, zero-state Teleporter (pathname→registry→card), versioned shared registry resolver, Frassy request construction (URL-only client payload), `/api/chat` server-side validate→resolve→lock→generate→AI pipeline, server-rendered audit receipt (AI emits analysis only), hard-fail diagnostic, forensic Audit Source receipt, and audit receipt display/storage.
+- Audit Ledger snapshot stabilization, zero-state Teleporter (pathname→registry→card), versioned + hashed shared registry with uniqueness validation, Frassy request construction (URL-only client payload), `/api/chat` validate→resolve→lock→generate→AI pipeline, server-rendered audit header (AI emits analysis only), `AuditBlockedResponse`, Audit Diagnostics log, forensic Audit Source receipt, and receipt display/storage.
+- Codify FRASS-0574 — Canonical Audit Identity in the Constitution.
 - No security-finding changes, onboarding changes, or unrelated feature work.
 
 ## Status
@@ -241,11 +242,12 @@ Status: Founder-blocking
 This issue cannot be marked fixed until a live production audit of Card #025 returns:
 - Card #025
 - `/admin/visual-index`
-- `TELEPORTER ENGINE v3` receipt with a current Registry Version
+- `TELEPORTER ENGINE v3` receipt with a current Registry Version and Registry Hash
 - A correct, single Audit Ledger entry
 - Zero runtime errors
+- The same card after a browser refresh
 
-And a forced mismatch returns the `Audit blocked.` diagnostic with no AI call and no ledger write.
+And a forced mismatch returns the `Audit blocked.` diagnostic with no AI call, no ledger write, and an Audit Diagnostics entry.
 
 Build success, preview success, type checks, or unit tests do not satisfy acceptance.
 
