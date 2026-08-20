@@ -11,7 +11,7 @@
 // NOT wired here. They return only after Phase 2 acceptance testing.
 // ─────────────────────────────────────────────────────────────────────────────
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
 import {
   X,
   ShoppingBag,
@@ -39,6 +39,14 @@ import { SpeechControls } from "@/components/voice/speech-controls";
 import { VoiceFeedbackButton } from "@/components/feedback/voice-feedback";
 import { useFrassyStartup } from "@/hooks/use-frassy-startup";
 import { loadTranscript, saveTranscript, type FrassyTurn } from "@/lib/frassy/transcript";
+// FRASS-0573 — every audit turn is committed to the permanent Founder ledger.
+import {
+  formatCardNumber,
+  groupLedgerByCard,
+  readAuditLedger,
+  subscribeAuditLedger,
+} from "@/lib/founder/audit-ledger";
+import { commitAuditTurn, syncAuditLedger } from "@/lib/founder/audit-ledger-commit";
 import { resolveAuditCard, isStaleTeleport } from "@/lib/founder/teleport-session";
 import { publishEngineDiagnostics } from "@/lib/frassy/engine-diagnostics";
 
@@ -97,6 +105,8 @@ type Msg = {
 // FRASS-0553 — when a page embeds Frassy inline (The Daily, Workshop), the
 // embedded surface owns the dock microphone; otherwise the floating panel does.
 let embeddedSurfaces = 0;
+
+const EMPTY_LEDGER: ReturnType<typeof readAuditLedger> = [];
 
 let seq = 0;
 const nextId = () => `m${++seq}-${Date.now()}`;
@@ -165,6 +175,26 @@ export function FrassyChat({
         transcriptScope,
       );
   }, [messages, transcriptScope]);
+
+  // FRASS-0573 — the permanent Founder Audit Ledger. Reviews from earlier cards
+  // stay visible above the live thread, so the Founder can scroll from Card #001
+  // to today's card as one continuous audit journal.
+  const ledger = useSyncExternalStore(
+    subscribeAuditLedger,
+    () => readAuditLedger(),
+    () => EMPTY_LEDGER,
+  );
+  useEffect(() => {
+    if (auditCard) void syncAuditLedger();
+  }, [auditCard]);
+  const ledgerGroups = useMemo(
+    () =>
+      auditCard
+        ? groupLedgerByCard(ledger).filter((g) => g.cardKey !== auditCard.key)
+        : [],
+    [auditCard, ledger],
+  );
+
 
   // FRASS-0572A — say out loud which engine is answering here.
   useEffect(() => {
@@ -307,6 +337,17 @@ export function FrassyChat({
 
     // Freeze + clear synchronously, before the request leaves.
     setMessages(history);
+    // FRASS-0573 — the Founder's own words are part of the permanent record too.
+    if (auditCard) {
+      commitAuditTurn({
+        cardKey: auditCard.key,
+        cardNumber: auditCard.number,
+        cardTitle: auditCard.title,
+        cardPath: auditCard.path,
+        role: "user",
+        content: text,
+      });
+    }
     setInput("");
     setError(null);
     setLoading(true);
@@ -426,6 +467,19 @@ export function FrassyChat({
             : null,
         },
       ]);
+
+      // FRASS-0573 — the completed reply is committed exactly as generated.
+      if (auditCard) {
+        commitAuditTurn({
+          cardKey: auditCard.key,
+          cardNumber: auditCard.number,
+          cardTitle: auditCard.title,
+          cardPath: auditCard.path,
+          role: "assistant",
+          content: reply,
+        });
+      }
+
 
       // FRASS-0513 — Frassy performs the navigation herself. A member is never
       // asked to type a path; if the place needs a session, she routes through
@@ -744,6 +798,39 @@ export function FrassyChat({
         {startup.notice && (
           <div className="rounded-sm border border-[color:var(--gold)]/30 bg-[color:var(--gold)]/10 px-3 py-2 text-xs text-[color:var(--ws-ink)]">
             {startup.notice}
+          </div>
+        )}
+
+        {/* FRASS-0573 — the permanent audit journal: every earlier card's review
+            stays here, oldest first, above today's live conversation. */}
+        {!!ledgerGroups.length && (
+          <div className="space-y-4 rounded-sm border border-[color:var(--gold)]/25 p-3">
+            <p className="text-[10px] uppercase tracking-[0.25em] text-[color:var(--gold)]">
+              Founder Audit Ledger · permanent record
+            </p>
+            {ledgerGroups.map((g) => (
+              <div key={g.cardKey} className="space-y-2">
+                <p className="text-[10px] uppercase tracking-[0.2em] text-[color:var(--ws-soft)]">
+                  {formatCardNumber(g.cardNumber)} · {g.cardTitle} · {g.cardPath}
+                </p>
+                {g.entries.map((e) => (
+                  <div
+                    key={e.id}
+                    className={
+                      e.role === "user"
+                        ? "ml-auto w-fit max-w-[min(42rem,92%)] rounded-lg bg-[color:var(--gold)]/10 px-3 py-2 text-xs leading-relaxed text-[color:var(--ws-ink)]"
+                        : "w-fit max-w-[min(46rem,95%)] rounded-lg bg-[color:var(--ws-accent-bg)] px-3 py-2 text-xs leading-relaxed text-[color:var(--ws-ink)]"
+                    }
+                  >
+                    <span className="block text-[9px] uppercase tracking-[0.2em] text-[color:var(--ws-soft)]">
+                      {e.role === "user" ? "Founder" : "Frassy"} ·{" "}
+                      {new Date(e.createdAt).toLocaleString()}
+                    </span>
+                    <p className="whitespace-pre-wrap">{e.content}</p>
+                  </div>
+                ))}
+              </div>
+            ))}
           </div>
         )}
 

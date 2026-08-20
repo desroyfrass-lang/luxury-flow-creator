@@ -27,6 +27,7 @@ import { ExperienceSimulator } from "@/components/founder/experience-simulator";
 import { SeedVaultsPanel } from "@/components/founder/seed-vaults-panel";
 import { CommissioningPanel } from "@/components/founder/commissioning-panel";
 import { WorldTeleporterPanel } from "@/components/founder/world-teleporter-panel";
+import { AuditLedgerPanel } from "@/components/founder/audit-ledger-panel";
 import { FounderAiStatusPanel } from "@/components/founder/founder-ai-status-panel";
 import { FounderAiTimelinePanel } from "@/components/founder/founder-ai-timeline-panel";
 import { endTeleport } from "@/lib/founder/teleport-session";
@@ -207,7 +208,12 @@ function ControlRoom() {
 
         {active === "commissioning" && <CommissioningPanel />}
 
-        {active === "world-teleporter" && <WorldTeleporterPanel />}
+        {active === "world-teleporter" && (
+          <div className="space-y-10">
+            <WorldTeleporterPanel />
+            <AuditLedgerPanel />
+          </div>
+        )}
       </div>
     </main>
   );
