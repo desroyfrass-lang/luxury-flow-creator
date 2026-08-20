@@ -293,7 +293,14 @@ export function WorldTeleporterPanel() {
 
                       <button
                         type="button"
-                         onClick={() =>
+                         onClick={async () => {
+                           // FRASS-0579 — the server opens and locks the audit
+                           // session before we move. Identity is decided there.
+                           try {
+                             await openAuditSessionFn({ data: { path: r.path } });
+                           } catch {
+                             /* navigation still proceeds; the audit stays closed */
+                           }
                            beginTeleport({
                              key: r.key,
                              number: r.num,
@@ -302,10 +309,11 @@ export function WorldTeleporterPanel() {
                              component: r.component,
                              file: r.file,
                              district: r.district,
-                           })
-                         }
+                           });
+                         }}
                         className="mt-1 block w-full text-left"
                       >
+
                         <span className="flex items-center gap-2">
                           <span aria-hidden>{STATUS_META[r.status].icon}</span>
                           <span className="text-sm font-semibold">
