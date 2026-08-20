@@ -938,7 +938,7 @@ the next move toward Legacy is. Never stop at helping someone earn a living.`;
         // A Teleporter audit is a clean-room review: the model sees ONLY the
         // Founder's current request plus the authoritative card block above, so
         // no earlier card review can ever be replayed.
-        const modelSource = body.auditContext ? [lastMessage] : clientMessages;
+        const modelSource = isAudit ? [lastMessage] : clientMessages;
         const uiMessages = modelSource
           .filter((m) => m.role === "user" || m.role === "assistant")
           .map((m, i) => ({
@@ -974,15 +974,17 @@ the next move toward Legacy is. Never stop at helping someone earn a living.`;
                 mode: body.modeContext ?? null,
                 cart: body.cartContext ?? null,
                 q: (lastUser?.content ?? "").slice(0, 500),
-                 ...(body.auditContext
-                   ? {
-                       teleporter_card_number: body.auditContext.number,
-                       teleporter_card_title: body.auditContext.title,
-                       teleporter_card_path: body.auditContext.path,
-                       request_path: body.districtPath ?? null,
-                       prompt_preview: (lastUser?.content ?? "").slice(0, 500),
-                     }
-                   : {}),
+                ...(isAudit && auditIdentity
+                  ? {
+                        teleporter_card_number: auditIdentity.id,
+                        teleporter_card_title: auditIdentity.title,
+                        teleporter_card_path: auditIdentity.route,
+                        request_path: body.districtPath ?? null,
+                        prompt_preview: (lastUser?.content ?? "").slice(0, 500),
+                        registry_version: auditIdentity.registryVersion,
+                        registry_hash: auditIdentity.registryHash,
+                      }
+                  : {}),
               },
             });
           } catch {
