@@ -203,10 +203,20 @@ function OnboardingPage() {
     void openConversation()
       .then(async (res) => {
         if (!res?.reply) return;
-        setLocal([{ role: "assistant", content: res.reply }]);
+        // Her greeting is written to the journal the moment it exists, with the
+        // server row id when the save was proven. It is never cleared later.
+        setJournal(
+          appendEntry(JOURNAL_SCOPE, {
+            clientId: newClientId(),
+            serverId: res.messageId ?? null,
+            role: "assistant",
+            content: res.reply,
+            status: res.messageId ? "synced" : "failed",
+            ...(res.messageId ? {} : { error: "Saved on this device only." }),
+          }),
+        );
         if (speakReplies && voice.voiceAvailable) void voice.speak(res.reply);
         await refetch();
-        setLocal([]);
       })
       .catch(() => {
         openedRef.current = false;
@@ -214,29 +224,81 @@ function OnboardingPage() {
       .finally(() => setBusy(false));
   }, [isLoading, roleLoading, data, messages.length, openConversation, refetch, speakReplies, voice]);
 
-
+  /**
+   * Delivers one Founder message. The message is already in the journal under
+   * `clientId`; this only ever changes that entry's status, never its words.
+   */
+  const deliver = useCallback(
+    async (clientId: string, message: string) => {
+      setBusy(true);
+      try {
+        const result = await takeTurn({ data: { message } });
+        setJournal(
+          updateEntry(
+            JOURNAL_SCOPE,
+            clientId,
+            result.userMessageId
+              ? { serverId: result.userMessageId, status: "synced", error: undefined }
+              : { status: "failed", error: "Saved on this device only." },
+          ),
+        );
+        setJournal(
+          appendEntry(JOURNAL_SCOPE, {
+            clientId: newClientId(),
+            serverId: result.assistantMessageId ?? null,
+            role: "assistant",
+            content: result.reply,
+            status: result.assistantMessageId ? "synced" : "failed",
+            ...(result.assistantMessageId ? {} : { error: "Saved on this device only." }),
+          }),
+        );
+        setDiagnostics(result.diagnostics);
+        if (speakReplies && voice.voiceAvailable) void voice.speak(result.reply);
+        await refetch();
+      } catch (err) {
+        const reason = err instanceof Error ? err.message : "Frassy could not answer just now.";
+        // The words stay on screen. Only the status changes.
+        setJournal(updateEntry(JOURNAL_SCOPE, clientId, { status: "failed", error: reason }));
+        toast.error(reason);
+      } finally {
+        setBusy(false);
+      }
+    },
+    [takeTurn, refetch, speakReplies, voice],
+  );
 
   async function send(text: string) {
     const message = text.trim();
     if (!message || busy) return;
     setDraft("");
-    setLocal((prev) => [...prev, { role: "user", content: message }]);
-    setBusy(true);
-    try {
-      const result = await takeTurn({ data: { message } });
-      setLocal((prev) => [...prev, { role: "assistant", content: result.reply }]);
-      setDiagnostics(result.diagnostics);
-      if (speakReplies && voice.voiceAvailable) void voice.speak(result.reply);
-      await refetch();
-      setLocal([]);
-    } catch (err) {
-      toast.error(err instanceof Error ? err.message : "Frassy could not answer just now.");
-      setLocal((prev) => prev.slice(0, -1));
-      setDraft(message);
-    } finally {
-      setBusy(false);
-    }
+    const clientId = newClientId();
+    setJournal(
+      appendEntry(JOURNAL_SCOPE, {
+        clientId,
+        serverId: null,
+        role: "user",
+        content: message,
+      }),
+    );
+    await deliver(clientId, message);
   }
+
+  // Nothing is lost to a dropped connection: anything still unsaved is sent
+  // again by itself as soon as the network comes back.
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const onOnline = () => {
+      const stuck = loadJournal(JOURNAL_SCOPE).filter(
+        (e) => e.role === "user" && e.status !== "synced",
+      );
+      const last = stuck[stuck.length - 1];
+      if (!last || busyRef.current) return;
+      setJournal(updateEntry(JOURNAL_SCOPE, last.clientId, { status: "pending" }));
+      void deliver(last.clientId, last.content);
+    };
+    window.addEventListener("online", onOnline);
+    return () => window.removeEventListener("online", onOnline);
+  }, [deliver]);
 
   async function toggleMic() {
     if (voice.phase === "speaking") {
