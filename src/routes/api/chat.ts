@@ -1485,9 +1485,11 @@ the next move toward Legacy is. Never stop at helping someone earn a living.`;
               `Previous Audit Objects     0`,
               `Prompt Hash                ${auditPromptHash}`,
               `Prompt Size                ${auditPromptChars} chars`,
-              `Model                      ${auditReceipt.model}`,
-              `Credits                    ${auditReceipt.credits}`,
-              `Request                    ${auditReceipt.requestId}`,
+              `Conversation ID            ${auditConversationId}`,
+              `Endpoint                   ${endpointTrace}`,
+              `Model                      ${aborted ? `${usedModel} (aborted)` : usedModel}`,
+              `Credits                    ${aborted ? 0 : 1}`,
+              `Request                    ${requestId}`,
             ].join("\n");
 
             // Structured per-invocation audit log (P0 §5).
@@ -1503,8 +1505,11 @@ the next move toward Legacy is. Never stop at helping someone earn a living.`;
               prompt_hash: auditPromptHash,
               model_id: usedModel,
               aborted,
-              credits: auditReceipt.credits,
+              credits: aborted ? 0 : 1,
               request_id: requestId,
+              conversation_id: auditConversationId,
+              endpoint: endpointTrace,
+              prompt_dump_first_1000: auditPromptDump,
             });
 
           } else {
