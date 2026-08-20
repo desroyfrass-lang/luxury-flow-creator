@@ -29,6 +29,20 @@ Canonical Card
 
 This is a permanent platform rule, not a one-off repair.
 
+### FRASS-0575 — Audit Identity Lock
+Once an audit begins, these four values become immutable for the life of that audit:
+
+- Card ID
+- Route
+- Registry Version
+- Registry Hash
+
+Nothing downstream can mutate them. Not AI. Not middleware. Not React. Not memory. Nothing.
+
+The lock is created immediately after registry resolution, sealed (frozen) before the prompt is generated, and carried unchanged through the AI call, the server-rendered header, the receipt, and the ledger write. Every ledger entry therefore carries its own identity lock, so any entry can be re-verified against the registry long after the fact.
+
+
+
 
 ## Confirmed findings
 - The Teleporter click stores card context, navigates to the selected route, and the shared Frassy panel posts to `POST /api/chat`.
@@ -230,25 +244,29 @@ Still Card #025
 
 If the card changes after a refresh, hidden session state still exists and the work is not done.
 
+## Production sign-off checklist
+The issue stays open until every one of these passes in production. If even one fails, it is not complete.
+
+- [ ] Card #025 returns `/admin/visual-index`
+- [ ] Card #011 returns `/admin/financial-audit`
+- [ ] Refresh keeps the same card
+- [ ] Forced registry mismatch returns `Audit blocked.`
+- [ ] No AI call occurs on mismatch
+- [ ] Ledger receives zero blocked audits
+- [ ] `TELEPORTER ENGINE v3` receipt is visible
+- [ ] Registry Version and Registry Hash are present
+- [ ] No React render loop
+- [ ] No stale Card #11 ever appears again
+
 ## Technical scope
-- Audit Ledger snapshot stabilization, zero-state Teleporter (pathname→registry→card), versioned + hashed shared registry with uniqueness validation, Frassy request construction (URL-only client payload), `/api/chat` validate→resolve→lock→generate→AI pipeline, server-rendered audit header (AI emits analysis only), `AuditBlockedResponse`, Audit Diagnostics log, forensic Audit Source receipt, and receipt display/storage.
-- Codify FRASS-0574 — Canonical Audit Identity in the Constitution.
+- Audit Ledger snapshot stabilization, zero-state Teleporter (pathname→registry→card), versioned + hashed shared registry with uniqueness validation, Frassy request construction (URL-only client payload), `/api/chat` validate→resolve→lock→generate→AI pipeline, immutable Audit Identity Lock, server-rendered audit header (AI emits analysis only), `AuditBlockedResponse`, Audit Diagnostics log, forensic Audit Source receipt, and receipt display/storage.
+- Codify FRASS-0574 — Canonical Audit Identity and FRASS-0575 — Audit Identity Lock in the Constitution.
 - No security-finding changes, onboarding changes, or unrelated feature work.
 
 ## Status
 
 Status: Founder-blocking
 
-This issue cannot be marked fixed until a live production audit of Card #025 returns:
-- Card #025
-- `/admin/visual-index`
-- `TELEPORTER ENGINE v3` receipt with a current Registry Version and Registry Hash
-- A correct, single Audit Ledger entry
-- Zero runtime errors
-- The same card after a browser refresh
-
-And a forced mismatch returns the `Audit blocked.` diagnostic with no AI call, no ledger write, and an Audit Diagnostics entry.
-
-Build success, preview success, type checks, or unit tests do not satisfy acceptance.
+Build success, preview success, type checks, or unit tests do not satisfy acceptance. Only the production sign-off checklist above closes this issue.
 
 Root Cause: The audit handler trusts browser card metadata, stale Teleporter session objects can remain authoritative, and the Audit Ledger snapshot can trigger the confirmed FrassyChat render loop.
