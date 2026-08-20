@@ -798,6 +798,39 @@ export function FrassyChat({
           </div>
         )}
 
+        {/* FRASS-0573 — the permanent audit journal: every earlier card's review
+            stays here, oldest first, above today's live conversation. */}
+        {!!ledgerGroups.length && (
+          <div className="space-y-4 rounded-sm border border-[color:var(--gold)]/25 p-3">
+            <p className="text-[10px] uppercase tracking-[0.25em] text-[color:var(--gold)]">
+              Founder Audit Ledger · permanent record
+            </p>
+            {ledgerGroups.map((g) => (
+              <div key={g.cardKey} className="space-y-2">
+                <p className="text-[10px] uppercase tracking-[0.2em] text-[color:var(--ws-soft)]">
+                  {formatCardNumber(g.cardNumber)} · {g.cardTitle} · {g.cardPath}
+                </p>
+                {g.entries.map((e) => (
+                  <div
+                    key={e.id}
+                    className={
+                      e.role === "user"
+                        ? "ml-auto w-fit max-w-[min(42rem,92%)] rounded-lg bg-[color:var(--gold)]/10 px-3 py-2 text-xs leading-relaxed text-[color:var(--ws-ink)]"
+                        : "w-fit max-w-[min(46rem,95%)] rounded-lg bg-[color:var(--ws-accent-bg)] px-3 py-2 text-xs leading-relaxed text-[color:var(--ws-ink)]"
+                    }
+                  >
+                    <span className="block text-[9px] uppercase tracking-[0.2em] text-[color:var(--ws-soft)]">
+                      {e.role === "user" ? "Founder" : "Frassy"} ·{" "}
+                      {new Date(e.createdAt).toLocaleString()}
+                    </span>
+                    <p className="whitespace-pre-wrap">{e.content}</p>
+                  </div>
+                ))}
+              </div>
+            ))}
+          </div>
+        )}
+
         {messages.map((m) => (
           <div key={m.id}>
             <div
