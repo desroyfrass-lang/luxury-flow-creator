@@ -233,7 +233,9 @@ export function FrassyChat({
   const { isAdmin } = useIsAdminStatus();
   const voice = usePushToTalk();
   const beaconInvite = beaconInviteFor(ctx.pathname ?? "/");
-  const recordedSpeechRuns = useRef(new Set<number>());
+  // Treat speech that finished before this conversation surface mounted as old
+  // history. Only a new run created while this surface is present may append.
+  const lastRecordedSpeechRun = useRef(voice.speechRunId);
 
   // FRASS-0579 — voice is an output format, not a separate conversation.
   // Record the exact text of every speech run, including automatic greetings
@@ -241,10 +243,10 @@ export function FrassyChat({
   // so normal text+voice responses never appear twice.
   useEffect(() => {
     const spoken = voice.spokenText.trim();
-    if (!spoken || voice.speechRunId <= 0 || recordedSpeechRuns.current.has(voice.speechRunId)) {
+    if (!spoken || voice.speechRunId <= 0 || lastRecordedSpeechRun.current === voice.speechRunId) {
       return;
     }
-    recordedSpeechRuns.current.add(voice.speechRunId);
+    lastRecordedSpeechRun.current = voice.speechRunId;
     setMessages((prev) => {
       if (prev.some((message) => message.role === "assistant" && message.content.trim() === spoken)) {
         return prev;
