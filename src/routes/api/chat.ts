@@ -1058,7 +1058,13 @@ the next move toward Legacy is. Never stop at helping someone earn a living.`;
               : `${SYSTEM_PROMPT}\n\n${FOR_US_COMMUNITY}\n\n${FRASS_ECONOMY}\n\n${FRASS_SERVICES_MARKETPLACE}\n\n${FRASS_COMPLIANCE}\n\n${FRASS_REPAIR_ENGINE}`;
 
         const withVoice = `${basePrompt}\n\n${voiceConstitution}`;
-        const system = contextBlock ? `${withVoice}\n\n${contextBlock}` : withVoice;
+        // For a Teleporter audit the locked card block leads the prompt, so the
+        // active card is provable inside the first 1000 characters of the dump.
+        const system = contextBlock
+          ? isAudit
+            ? `${contextBlock}\n\n${withVoice}`
+            : `${withVoice}\n\n${contextBlock}`
+          : withVoice;
 
         // Convert simple {role, content} messages into UI-message shape for the SDK.
         type UiPart =
