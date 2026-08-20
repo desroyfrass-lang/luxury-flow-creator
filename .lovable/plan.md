@@ -41,6 +41,13 @@ Nothing downstream can mutate them. Not AI. Not middleware. Not React. Not memor
 
 The lock is created immediately after registry resolution, sealed (frozen) before the prompt is generated, and carried unchanged through the AI call, the server-rendered header, the receipt, and the ledger write. Every ledger entry therefore carries its own identity lock, so any entry can be re-verified against the registry long after the fact.
 
+### FRASS-0576 — Single Canonical Registry
+There is exactly one registry in the entire codebase. No duplicated arrays, no JSON copies, no card constants inside components, no secondary lookup tables. Every card lookup — Teleporter panel, audit progress, chat handler, ledger, diagnostics — resolves through the one registry service.
+
+If `/admin/visual-index` is Card #025, there is literally nowhere else in the application that can claim otherwise. Any duplicate source found during implementation is deleted and its callers repointed, not kept in sync.
+
+
+
 
 
 
