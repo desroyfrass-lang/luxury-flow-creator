@@ -153,9 +153,14 @@ export const journeyTurn = createServerFn({ method: "POST" })
     }
 
     const userText = data.message.trim();
-    await sb
+    // Saving is never assumed. The row id comes back so the page can prove this
+    // exact message was written, instead of clearing it on faith.
+    const userSave = await sb
       .from("builder_journey_messages")
-      .insert({ user_id: userId, stage: stage.id, role: "user", content: userText });
+      .insert({ user_id: userId, stage: stage.id, role: "user", content: userText })
+      .select("id")
+      .maybeSingle();
+    const userMessageId: string | null = userSave.error ? null : (userSave.data?.id ?? null);
 
     const { data: profile } = await sb
       .from("profiles")
