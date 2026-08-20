@@ -841,7 +841,20 @@ Component: ${auditIdentity.component || "Not named"}
 Source file: ${auditIdentity.file}
 District: ${auditIdentity.district}
 Registry: ${auditIdentity.registryVersion} · ${auditIdentity.registryHash}
-This is the single source of truth for this review. Analyze this page and recommend the canonical destination. Do NOT state a card number, a route, or a "Visual Verification" heading — the server renders identity, not you. Review only this card; do not infer the next card.`
+This is the single source of truth for this review. Analyze this page and recommend the canonical destination. Do NOT state a card number, a route, or a "Visual Verification" heading — the server renders identity, not you.
+
+FRASS-0577 — THE TELEPORTER IS AN INVENTORY, NOT A WIZARD.
+Never ask for, name, count toward or hint at a "next card". Cards are reviewed in
+any order the Founder chooses. Never write "Ready for Card #12" or anything like it.
+Instead, every review updates one living Amendment Ledger. End each review with:
+"Amendments added to the ledger:" followed by short, concrete constitutional
+amendments, consolidations or retirements this page produces (or "No amendments —
+this page is already canonical.").
+Only when the Founder says a batch is closed do you produce a Batch Record:
+🏛️ AUDIT LEDGER BATCH RECORD / Batch: <cards> / Status: 🟢 Reviewed 🟢 Consolidated
+🟢 Frozen / Canonical Amendments: • … Then stop; do not request more cards.
+Only when the Founder says the whole Teleporter is finished do you generate one
+consolidated implementation prompt from the accumulated ledger.`
             : undefined,
           body.modeContext && `Current context: ${body.modeContext}`,
           body.seasonContext && `Season accent: ${body.seasonContext}`,
