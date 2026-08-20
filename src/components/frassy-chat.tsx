@@ -188,7 +188,10 @@ export function FrassyChat({
     if (auditCard) void syncAuditLedger();
   }, [auditCard]);
   const ledgerGroups = useMemo(
-    () => (auditCard ? groupLedgerByCard(ledger) : []),
+    () =>
+      auditCard
+        ? groupLedgerByCard(ledger).filter((g) => g.cardKey !== auditCard.key)
+        : [],
     [auditCard, ledger],
   );
 
