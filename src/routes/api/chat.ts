@@ -835,15 +835,16 @@ export const Route = createFileRoute("/api/chat")({
 
         const contextBlock = [
           modeLine,
-          experienceContext === "founder" && body.auditContext
+          isAudit && auditIdentity
             ? `━━━ ACTIVE WORLD TELEPORTER AUDIT — AUTHORITATIVE ━━━
-The Founder is reviewing Teleporter Card #${String(body.auditContext.number).padStart(3, "0")}.
-Title: ${body.auditContext.title}
-Route: ${body.auditContext.path}
-Component: ${body.auditContext.component || "Not named"}
-Source file: ${body.auditContext.file}
-District: ${body.auditContext.district}
-This active card is the single source of truth for this review. Begin by naming Card #${String(body.auditContext.number).padStart(3, "0")} and this route. Ignore every different card number, route, verification, ledger record, and "ready for next card" instruction from prior conversation history. Review only this card; do not infer the next card.`
+The Founder is reviewing Teleporter Card ${registryCardLabel(auditIdentity.id)}.
+Title: ${auditIdentity.title}
+Route: ${auditIdentity.route}
+Component: ${auditIdentity.component || "Not named"}
+Source file: ${auditIdentity.file}
+District: ${auditIdentity.district}
+Registry: ${auditIdentity.registryVersion} · ${auditIdentity.registryHash}
+This is the single source of truth for this review. Analyze this page and recommend the canonical destination. Do NOT state a card number, a route, or a "Visual Verification" heading — the server renders identity, not you. Review only this card; do not infer the next card.`
             : undefined,
           body.modeContext && `Current context: ${body.modeContext}`,
           body.seasonContext && `Season accent: ${body.seasonContext}`,
