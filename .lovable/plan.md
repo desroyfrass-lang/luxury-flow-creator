@@ -65,7 +65,14 @@ AI Prompt
 
 - Create one shared registry resolver that derives the canonical card from its route/file.
 - Require verified Founder access for audit mode; a client cannot create an audit response merely by adding `auditContext`.
-- Version the registry. Every registry carries a `Registry Version` (e.g. `2026.08.19.01`). Every audit receipt includes it, so if production serves a stale registry it is visible instantly.
+- Fingerprint the registry. Every registry carries both a `Registry Version` and a `Registry Hash`:
+
+```text
+Version    2026.08.19.01
+Hash       4E71A9...
+```
+
+Both appear on every audit receipt, so a stale registry in production is visible instantly.
 
 ### 2a. AI is impossible until validation succeeds
 - The pipeline is strictly ordered. The AI never receives a prompt until every prior step passes:
