@@ -1,6 +1,8 @@
 # Project Memory
 
 ## Core
+FRASS-0577: Teleporter audits are an inventory, never a wizard — no "next card" language; each review updates one living Amendment Ledger, closed by explicit Batch Records.
+Frassy's audit ledger renders as ONE continuous chat thread (Founder/Frassy alternating, same bubbles) — never a separate small scroll box.
 FRASS-0572: one Frassy intelligence layer. Only two pipelines (shared /api/chat, Journey). Journey Mode never audits. New surfaces pick a mode, never a new engine.
 The Daily is where Builders think. The Workshop is where Builders build. Never blur the two.
 Money Moves always nest their Fast Tracks inside the card; never a separate step list.
@@ -70,6 +72,7 @@ Creative series are intellectual property produced by Frassy from a Blueprint, n
 FRASS-0573: every Frassy audit reply is permanently committed to the Founder Audit Ledger — no transient overlays, nothing disappears.
 
 ## Memories
+- [FRASS-0577 Amendment Ledger & batch audits](mem://features/frass-0577-amendment-ledger) — Inventory not wizard, no next-card language, batch records, ledger as one continuous thread
 - [FRASS-0572 Frassy Engine Map](mem://features/frass-0572-frassy-engine-map) — Only two conversation pipelines; Journey Mode never runs or replays Teleporter audits; surfaces pick a mode not an engine
 - [SPEC-BLUEPRINT-001-FROZEN-v1.0 Builder Operating System](mem://features/spec-blueprint-001-builder-os) — FROZEN v1.0: Daily vs Workshop, Money Move lifecycle with nested Fast Tracks, adaptive Workshop environments, Vault Priority, Builder Rhythm, glossary, Simplified mode, Out of Scope boundaries, Founder Walkthrough checklist
 - [FRASS-0569 Welcome Hall Experience](mem://features/frass-0569-welcome-hall-experience) — Mandatory Frass Hill front entrance, three experiences, four Daily Welcome tiers
