@@ -1083,7 +1083,7 @@ the next move toward Legacy is. Never stop at helping someone earn a living.`;
               `AuditContextViolation — assembled prompt referenced Card #${String(foreignInPrompt).padStart(3, "0")} while locked to ${registryCardLabel(auditIdentity.id)}.`,
             );
           }
-          auditPromptChars = system.length + (uiMessages[0]?.parts[0] as { text?: string })?.text?.length!;
+          auditPromptChars = system.length + lastMessage.content.length;
           let h = 0;
           for (const ch of system) h = (h * 31 + ch.charCodeAt(0)) >>> 0;
           auditPromptHash = h.toString(16).toUpperCase().padStart(8, "0");
