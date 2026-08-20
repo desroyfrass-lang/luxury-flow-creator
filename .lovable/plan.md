@@ -56,7 +56,16 @@ AI
 ```
 
 - If validation fails at any stage, the AI never even receives a prompt. This makes it impossible for the model to hallucinate Card #11.
-- If the active URL and the resolved registry entry disagree — or the route is unknown or duplicated — do not call the AI. Return a visible Founder diagnostic instead:
+- Hard invariant — enforced as code, not convention:
+
+```text
+if (resolved.route !== currentUrl) {
+    throw AuditBlockedError();
+}
+```
+
+- No AI. No ledger. No retry. Abort.
+- If the active URL and the resolved registry entry disagree — or the route is unknown or duplicated — return a visible Founder diagnostic instead:
 
 ```text
 Audit blocked.
@@ -68,7 +77,24 @@ No AI call executed.
 
 - A blocked audit is never written to the Audit Ledger. The ledger only ever contains successful audits. Failed validations are diagnostics, not audit history.
 
-### 2b. Forensic Audit Source receipt
+### 2b. Server renders the receipt; AI only generates the analysis
+- The AI never generates the audit header. It never knows how to format the receipt.
+- The server renders the receipt from resolved registry data:
+
+```text
+Server
+  Card #025
+  /admin/visual-index
+  Registry Version
+      ↓
+  AI
+      generates the analysis only
+```
+
+- The AI receives the locked card identity in its prompt and returns analysis text only. The server wraps that analysis with the canonical header before the client ever sees it.
+- This makes it literally impossible for the AI to invent Card #11 — it cannot emit a card number or route.
+
+### 2c. Forensic Audit Source receipt
 - Every audit response and every blocked attempt carries an Audit Source block. It is a forensic receipt:
 
 ```text
@@ -80,17 +106,27 @@ Request ID:
 Current URL:
 Resolved Card:
 History Count:
-Prompt Hash:
 Timestamp:
 ```
 
+- No Prompt Hash — useful for developers, noisy for Founders.
 - Shown with the live response and stored with the ledger entry so any future recurrence is diagnosable in seconds.
 
-### 3. Remove stale session authority
-- Do not store any active card object.
-- Store only: Destination URL. That is it.
-- Everything else comes from the Registry. Every. Single. Time.
-- On every target page and every send, derive the complete active card from the current registry.
+### 3. Remove stale session authority entirely
+- Store nothing. Zero session state. Zero cached objects.
+- Every page already has `window.location.pathname`. Use it:
+
+```text
+pathname
+    ↓
+Registry.lookup(pathname)
+    ↓
+Card
+    ↓
+Done
+```
+
+- When Frassy is opened, derive the card from the current pathname via the registry. No Teleporter session object, no stored destination, no active card cache.
 - Prevent sending until the destination visibly shows the canonical card and route selected in the Teleporter.
 
 ### 4. Add undeniable runtime provenance
@@ -110,13 +146,13 @@ Timestamp:
 3. Search for Card #025 and confirm its canonical route is `/admin/visual-index`.
 4. Click it and confirm the destination says `Reviewing Card #025 · /admin/visual-index` before sending. The browser sends only the Current URL — no card number, no metadata.
 5. Send a unique test sentence while recording the browser request and response.
-6. Confirm the request is `POST /api/chat` and the forensic receipt shows `TELEPORTER ENGINE v3`, a `Registry Version`, Card #025, `/admin/visual-index`, a fresh Request ID, Prompt Hash, and Timestamp.
+6. Confirm the request is `POST /api/chat` and the forensic receipt shows `TELEPORTER ENGINE v3`, a `Registry Version`, Card #025, `/admin/visual-index`, a fresh Request ID, History Count, and Timestamp. Confirm the header (Card #025 / route) was rendered by the server, not the AI.
 7. Confirm the first response line is Card #025, it is stored once in the Audit Ledger, and no maximum-update-depth error appears.
 8. Repeat with Card #011 and confirm it independently resolves to `/admin/financial-audit`.
 9. Force a mismatch (e.g. navigate to `/admin/visual-index` but tamper so the registry disagrees) and confirm the AI is never called — the response is the `Audit blocked.` diagnostic and nothing is written to the ledger.
 
 ## Technical scope
-- Audit Ledger snapshot stabilization, Teleporter session reduced to Destination URL only, versioned shared registry resolver, Frassy request construction (URL-only client payload), `/api/chat` server-side validate→resolve→lock→generate→AI pipeline, hard-fail diagnostic, forensic Audit Source receipt, and audit receipt display/storage.
+- Audit Ledger snapshot stabilization, zero-state Teleporter (pathname→registry→card), versioned shared registry resolver, Frassy request construction (URL-only client payload), `/api/chat` server-side validate→resolve→lock→generate→AI pipeline, server-rendered audit receipt (AI emits analysis only), hard-fail diagnostic, forensic Audit Source receipt, and audit receipt display/storage.
 - No security-finding changes, onboarding changes, or unrelated feature work.
 
 ## Status
