@@ -80,7 +80,12 @@ function OnboardingPage() {
   });
 
   const [busy, setBusy] = useState(false);
-  const [local, setLocal] = useState<LocalMessage[]>([]);
+  // The append-only journal on this device. Nothing is ever deleted from it —
+  // a message can only change status, never disappear.
+  const [journal, setJournal] = useState<JournalEntry[]>([]);
+  useEffect(() => {
+    setJournal(loadJournal(JOURNAL_SCOPE));
+  }, []);
   const [diagnostics, setDiagnostics] = useState<ConversationDiagnostics | null>(null);
   const [draft, setDraft] = useState("");
   // Frassy speaks her replies aloud unless the Founder mutes her.
