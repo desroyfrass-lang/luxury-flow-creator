@@ -1159,16 +1159,22 @@ the next move toward Legacy is. Never stop at helping someone earn a living.`;
             navigate,
             // FRASS-0556 — which brain answered, and why.
             router: { task: decision.task, provider: usedModel, why: decision.why },
+            ...(auditReceipt ? { auditReceipt } : {}),
             ...(experienceContext === "founder"
               ? {
                   diagnostics: {
                     conversationMode: "Founder",
                     systemPrompt: "storefront_plus_founder_context",
                     promptVersion: "v1",
-                    sessionType: "floating_storefront_chat",
+                    sessionType: isAudit ? "teleporter_clean_room_audit" : "floating_storefront_chat",
                     memoryNamespace: "storefront_browser_memory",
-                    routingDecision: "client admin signal → founder storefront context",
-                    historySource: "floating_chat_client_state",
+                    routingDecision: isAudit
+                      ? "server-resolved audit identity → clean room"
+                      : "client admin signal → founder storefront context",
+                    historySource: isAudit ? "clean_room_last_turn" : "floating_chat_client_state",
+                    auditEngine: isAudit ? "TELEPORTER-ENGINE-V3" : undefined,
+                    registryVersion: isAudit ? auditIdentity!.registryVersion : undefined,
+                    registryHash: isAudit ? auditIdentity!.registryHash : undefined,
                     fallback: isFounderIdentityDiscovery(result.text)
                       ? "founder_safety_interceptor"
                       : "disabled",
