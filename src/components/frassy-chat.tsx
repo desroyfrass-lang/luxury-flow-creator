@@ -164,13 +164,18 @@ export function FrassyChat({
     const active = resolveAuditCard(ctx.pathname);
     setAuditCard(active);
     setAuditContextMismatch(isStaleTeleport(ctx.pathname));
+    // A Teleporter audit is a permanent page journal, never a floating box the
+    // Founder can lose while Frassy is still speaking.
+    if (active) setOpen(true);
   }, [ctx.pathname]);
   const transcriptScope = auditCard ? `teleporter.${auditCard.key}` : undefined;
 
   // FRASS-0476B — one shared conversation history. A refresh or a change of
   // district continues the same conversation instead of restarting it.
   const [messages, setMessages] = useState<Msg[]>([]);
+  const loadingTranscriptScope = useRef(false);
   useEffect(() => {
+    loadingTranscriptScope.current = true;
     const prior = loadTranscript(transcriptScope);
     // Empty is meaningful: it is a fresh card. Always replace the rendered
     // transcript so the previous card can never remain visible or be resent.
@@ -179,6 +184,13 @@ export function FrassyChat({
     );
   }, [transcriptScope]);
   useEffect(() => {
+    // Route changes and state updates finish in separate React passes. Without
+    // this guard, the previous card's messages can be written into the newly
+    // selected card before its own transcript has loaded.
+    if (loadingTranscriptScope.current) {
+      loadingTranscriptScope.current = false;
+      return;
+    }
     if (messages.length)
       saveTranscript(
         messages.map((m) => ({ role: m.role, content: m.content })),
@@ -198,11 +210,17 @@ export function FrassyChat({
     if (auditCard) void syncAuditLedger();
   }, [auditCard]);
   const ledgerGroups = useMemo(
-    () =>
-      auditCard
-        ? groupLedgerByCard(ledger).filter((g) => g.cardKey !== auditCard.key)
-        : [],
+    () => (auditCard ? groupLedgerByCard(ledger) : []),
     [auditCard, ledger],
+  );
+  const currentLedgerTurns = useMemo(
+    () =>
+      new Set(
+        ledgerGroups
+          .find((group) => group.cardKey === auditCard?.key)
+          ?.entries.map((entry) => `${entry.role}\u0000${entry.content.trim()}`) ?? [],
+      ),
+    [auditCard?.key, ledgerGroups],
   );
 
 
@@ -230,6 +248,27 @@ export function FrassyChat({
   const { isAdmin } = useIsAdminStatus();
   const voice = usePushToTalk();
   const beaconInvite = beaconInviteFor(ctx.pathname ?? "/");
+  // Treat speech that finished before this conversation surface mounted as old
+  // history. Only a new run created while this surface is present may append.
+  const lastRecordedSpeechRun = useRef(voice.speechRunId);
+
+  // FRASS-0579 — voice is an output format, not a separate conversation.
+  // Record the exact text of every speech run, including automatic greetings
+  // which do not pass through send(). Existing replies are detected verbatim,
+  // so normal text+voice responses never appear twice.
+  useEffect(() => {
+    const spoken = voice.spokenText.trim();
+    if (!spoken || voice.speechRunId <= 0 || lastRecordedSpeechRun.current === voice.speechRunId) {
+      return;
+    }
+    lastRecordedSpeechRun.current = voice.speechRunId;
+    setMessages((prev) => {
+      if (prev.some((message) => message.role === "assistant" && message.content.trim() === spoken)) {
+        return prev;
+      }
+      return [...prev, { id: nextId(), role: "assistant", content: spoken }];
+    });
+  }, [voice.speechRunId, voice.spokenText]);
 
   // Welcome Hall is Frassy's front desk. Open the one shared panel there;
   // every other public page keeps the unobtrusive companion beacon.
@@ -485,6 +524,16 @@ export function FrassyChat({
       }
 
       const reply = data.reply?.trim() || "…";
+      // Flush the completed written turn before voice or navigation can change
+      // the mounted route. The ledger remains authoritative for audits, while
+      // this scoped transcript provides an immediate refresh-safe copy.
+      saveTranscript(
+        [...history, { role: "assistant" as const, content: reply }].map((message) => ({
+          role: message.role,
+          content: message.content,
+        })),
+        transcriptScope,
+      );
       setMessages((prev) => [
         ...prev,
         {
@@ -619,7 +668,7 @@ export function FrassyChat({
   // FRASS-0557 §1 — the Universal Frassy Beacon. One mark, four states: idle
   // (the Frass logo), listening (a microphone), thinking (a gentle pulse) and
   // speaking (the logo with a live waveform). One tap starts a conversation.
-  if (!open && !embedded) {
+  if (!open && !embedded && !auditCard) {
     const listening = voice.phase === "recording";
     const speaking = voice.phase === "speaking";
     const thinking = voice.phase === "transcribing" || loading;
@@ -670,8 +719,10 @@ export function FrassyChat({
       className={`${startup.phase === "verifying" || startup.phase === "recovering" ? "invisible pointer-events-none" : "visible"} frass-workspace ${dark ? "ws-dark" : ""} ${
         expanded
           ? "fixed inset-3 z-[60] flex flex-col overflow-hidden rounded-lg border border-[color:var(--ws-line)] shadow-2xl sm:inset-6"
-          : embedded
-            ? "flex h-[min(820px,86vh)] min-h-[520px] w-full max-w-full flex-col overflow-hidden rounded-lg border border-[color:var(--ws-line)]"
+          : embedded || auditCard
+            ? auditCard
+              ? "relative mx-auto mt-10 flex min-h-[520px] w-[calc(100%-2rem)] max-w-6xl flex-col overflow-hidden rounded-lg border border-[color:var(--ws-line)]"
+              : "flex h-[min(820px,86vh)] min-h-[520px] w-full max-w-full flex-col overflow-hidden rounded-lg border border-[color:var(--ws-line)]"
             : "fixed bottom-6 right-6 z-50 flex h-[min(620px,78vh)] w-[min(420px,calc(100vw-3rem))] max-w-full flex-col overflow-hidden rounded-lg border border-[color:var(--ws-line)] shadow-2xl"
       }`}
       style={{ background: "var(--ws-panel)", color: "var(--ws-ink)" }}
@@ -809,7 +860,7 @@ export function FrassyChat({
           >
             <Trash2 className="h-4 w-4" />
           </button>
-          {!embedded && (
+          {!embedded && !auditCard && (
             <button
               type="button"
               aria-label="Close Frassy chat"
@@ -828,7 +879,7 @@ export function FrassyChat({
       <div
         ref={scrollRef}
         data-frassy-transcript
-        className="frassy-transcript min-h-0 flex-1 space-y-5 overflow-y-auto px-4 py-5 pb-8"
+        className={`frassy-transcript min-h-0 flex-1 space-y-5 px-4 py-5 pb-8 ${auditCard ? "overflow-visible" : "overflow-y-auto"}`}
       >
         {/* FRASS-0551 — conversation first: the room is never an empty box. */}
         {(startup.greeting || (!messages.length && startup.phase === "greeted")) && (
@@ -870,7 +921,13 @@ export function FrassyChat({
         ))}
 
 
-        {messages.map((m) => (
+        {messages
+          .filter(
+            (message) =>
+              !auditCard ||
+              !currentLedgerTurns.has(`${message.role}\u0000${message.content.trim()}`),
+          )
+          .map((m) => (
           <div key={m.id}>
             <div
               className={
@@ -985,7 +1042,7 @@ export function FrassyChat({
               </div>
             )}
           </div>
-        ))}
+          ))}
 
         {loading && (
           <div className="w-fit rounded-lg bg-[color:var(--ws-accent-bg)] px-3 py-2 text-sm text-[color:var(--ws-soft)]">

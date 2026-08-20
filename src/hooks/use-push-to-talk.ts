@@ -187,6 +187,11 @@ export function usePushToTalk(owner = "frassy") {
     /** Global playback controls — safe to call from any surface. */
     speechStatus: speech.status,
     speechProgress: { spoken: speech.chunksSpoken, total: speech.chunksTotal },
+    // The written record of the exact words sent to voice. Conversation
+    // surfaces use this to guarantee that speech can never exist without text.
+    spokenText: speech.fullText,
+    speechRunId: speech.runId,
+    speechOwner: speech.owner,
     isSpeaking: speech.status === "playing" || speech.status === "loading",
     isPaused: speech.status === "paused",
     pauseSpeech,
