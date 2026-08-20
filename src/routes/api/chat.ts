@@ -794,6 +794,10 @@ export const Route = createFileRoute("/api/chat")({
             registryVersion: REGISTRY_VERSION,
             registryHash: REGISTRY_HASH,
           });
+          // P0 §6 — three violations pause Teleporter audits for manual review.
+          const guard = /AuditContextViolation/i.test(reason)
+            ? recordAuditViolation()
+            : { violations: 0, paused: isAuditPaused() };
           return Response.json(
             {
               auditReceipt: {
@@ -807,6 +811,8 @@ export const Route = createFileRoute("/api/chat")({
                 registryVersion: REGISTRY_VERSION,
                 registryHash: REGISTRY_HASH,
                 credits: 0,
+                violations: guard.violations,
+                auditsPaused: guard.paused,
                 timestamp: new Date().toISOString(),
               },
             },
