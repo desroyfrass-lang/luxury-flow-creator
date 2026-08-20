@@ -211,6 +211,7 @@ Registry Hash
 - The AI receives only: "Analyze this page and recommend the canonical destination." plus the page context. It returns analysis text only.
 - The server concatenates header + analysis + receipt before the client ever sees it.
 - Any card number or route pattern the model emits anyway is stripped server-side, so a hallucinated Card #11 can never reach the screen.
+- Hard identity-stripping invariant: AI is not allowed to emit identity. Identity comes from the server only. If the first line of the AI output (or any line) contains a card number, a route path, or the phrase "Visual Verification", discard the offending content and use the analysis text only — never regenerate by calling the AI again (a second call can re-hallucinate). The server's locked header is the only identity the user ever sees.
 
 
 ### 2c. Audit Receipt — concise for the Founder, deep on demand
