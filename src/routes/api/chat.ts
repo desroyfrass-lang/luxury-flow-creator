@@ -1071,6 +1071,11 @@ the next move toward Legacy is. Never stop at helping someone earn a living.`;
         let auditPromptHash = "";
         let auditPromptChars = 0;
         if (isAudit && auditIdentity) {
+          if (isAuditPaused()) {
+            return blockAudit(
+              "Teleporter audits are paused after repeated AuditContextViolations. A Founder must resume them after manual review.",
+            );
+          }
           const historyObjects = uiMessages.length - 1; // only the current turn is allowed
           if (historyObjects > 0) {
             return blockAudit(
