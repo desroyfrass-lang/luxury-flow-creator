@@ -163,22 +163,23 @@ Ledger written?  NO
 This is distinct from the Founder Audit Ledger and exists purely for debugging.
 
 
-### 2b. Server renders the receipt; AI only generates the analysis
-- The AI never generates the audit header. It never knows how to format the receipt.
-- The server renders the receipt from resolved registry data:
+### 2b. Server renders the header; AI only generates the analysis (hard rule)
+- Hard rule: the AI never writes "VISUAL VERIFICATION", never writes a card number, never writes a route, never formats a header.
+- The server renders the header from locked registry data:
 
 ```text
-Server
-  Card #025
-  /admin/visual-index
-  Registry Version
-      ↓
-  AI
-      generates the analysis only
+━━━━━━━━━━━━━━━━━━━━━━
+Card #025
+/admin/visual-index
+Registry Version
+Registry Hash
+━━━━━━━━━━━━━━━━━━━━━━
 ```
 
-- The AI receives the locked card identity in its prompt and returns analysis text only. The server wraps that analysis with the canonical header before the client ever sees it.
-- This makes it literally impossible for the AI to invent Card #11 — it cannot emit a card number or route.
+- The AI receives only: "Analyze this page and recommend the canonical destination." plus the page context. It returns analysis text only.
+- The server concatenates header + analysis + receipt before the client ever sees it.
+- Any card number or route pattern the model emits anyway is stripped server-side, so a hallucinated Card #11 can never reach the screen.
+
 
 ### 2c. Forensic Audit Source receipt
 - Every audit response and every blocked attempt carries an Audit Source block. It is a forensic receipt:
