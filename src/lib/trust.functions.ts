@@ -396,7 +396,9 @@ export const getFeedbackInvitations = createServerFn({ method: "GET" })
 
     if (!orders?.length) return [] as { orderId: string; reference: string; sellerName: string; createdAt: string }[];
 
-    const { data: given } = await context.supabase
+    // Internal author/subject UUIDs are server-only; scope strictly to the caller.
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { data: given } = await supabaseAdmin
       .from("verified_feedback")
       .select("source_id")
       .eq("author_id", context.userId);
