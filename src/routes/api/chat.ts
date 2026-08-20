@@ -29,7 +29,11 @@ import {
   formatCardNumber as registryCardLabel,
   type AuditIdentity,
 } from "@/lib/founder/audit-registry";
-import { logAuditBlock } from "@/lib/founder/audit-diagnostics";
+import {
+  logAuditBlock,
+  recordAuditViolation,
+  isAuditPaused,
+} from "@/lib/founder/audit-diagnostics";
 
 const FRASS_LINK = `FRASS LINK (FRASS-0428)
 Every member owns ONE permanent Frass Link for life: frasskicks.com/link/<handle>. It is their identity,
