@@ -18,6 +18,18 @@ import { LEARNING_LEVELS_ENGINE } from "@/lib/frassy/learning-levels";
 import { MOMENTUM_ENGINE } from "@/lib/frassy/momentum";
 import { FOUNDER_EXPLANATION_STANDARD } from "@/lib/founder/explanation-standard";
 import { clientHintFrom } from "@/lib/frassy-repair-tools.server";
+import {
+  resolveAuditIdentity,
+  resolveCanonicalCard,
+  isPathAmbiguous,
+  normalizePath,
+  stripAuditIdentity,
+  REGISTRY_VERSION,
+  REGISTRY_HASH,
+  formatCardNumber as registryCardLabel,
+  type AuditIdentity,
+} from "@/lib/founder/audit-registry";
+import { logAuditBlock } from "@/lib/founder/audit-diagnostics";
 
 const FRASS_LINK = `FRASS LINK (FRASS-0428)
 Every member owns ONE permanent Frass Link for life: frasskicks.com/link/<handle>. It is their identity,
@@ -650,14 +662,9 @@ export const Route = createFileRoute("/api/chat")({
           experienceContext?: "founder" | "builder" | "storefront";
           relationship?: FrassyRelationship;
           districtPath?: string;
-          auditContext?: {
-            number: number;
-            title: string;
-            path: string;
-            component: string;
-            file: string;
-            district: string;
-          };
+          // FRASS-0574 — the client sends ONLY the Current URL. Card number,
+          // title, district and all identity fields are derived server-side.
+          // Any incoming "auditContext" is ignored.
           arrivalIntent?: string;
           interactionMode?: "text" | "voice_and_text" | "voice_only";
           voiceAvailable?: boolean;
@@ -723,27 +730,66 @@ export const Route = createFileRoute("/api/chat")({
         }
 
         const attachments = Array.isArray(body.attachments) ? body.attachments : [];
-        // A Teleporter review is isolated to one card. Any earlier turn that
-        // names a DIFFERENT card is dropped before the model reads it, so a past
-        // audit can never be replayed as if it were the page in front of us.
-        const activeCardNumber = body.auditContext?.number;
-        const isAuditTurn = (content: string) =>
-          /visual verification\s*:\s*card|ready for card|teleporter card/i.test(content);
-        const namesAnotherCard = (content: string) => {
-          const mentioned = [...content.matchAll(/card\s*#?\s*(\d{1,3})/gi)].map((m) =>
-            Number(m[1]),
+
+        // FRASS-0574/0576 — the server is the sole authority for audit identity.
+        // The browser sends only the Current URL (body.districtPath). Card number,
+        // title, district and every other identity field are derived here, never
+        // trusted from the client. Any incoming "auditContext" is ignored.
+        //
+        // A duplicate path (e.g. a layout+index pair sharing /blog) makes the
+        // identity ambiguous and blocks the audit of THAT path only. Other paths
+        // resolve normally — a stale registry on /blog never blocks /admin/visual-index.
+        const pathIsAmbiguous =
+          experienceContext === "founder" && Boolean(body.districtPath)
+            ? isPathAmbiguous(body.districtPath)
+            : false;
+        const auditIdentity: AuditIdentity | null =
+          experienceContext === "founder" && body.districtPath && !pathIsAmbiguous
+            ? resolveAuditIdentity(body.districtPath)
+            : null;
+        const isAudit = Boolean(auditIdentity);
+
+        // FRASS-0576 §2a-iii — an ambiguous path is a hard block: no AI call, no
+        // ledger write. The Founder sees exactly which path is ambiguous and why.
+        if (pathIsAmbiguous && !auditIdentity) {
+          const blockedReason = `Ambiguous registry: two eligible routes share ${normalizePath(body.districtPath)}. Repair the registry before auditing this page.`;
+          const blockedRequestId = Math.random().toString(36).slice(2, 10).toUpperCase();
+          logAuditBlock({
+            requestId: blockedRequestId,
+            reason: blockedReason,
+            currentUrl: body.districtPath ?? "",
+            resolvedRoute: null,
+            registryVersion: REGISTRY_VERSION,
+            registryHash: REGISTRY_HASH,
+          });
+          return Response.json(
+            {
+              auditReceipt: {
+                engine: "TELEPORTER-ENGINE-V3",
+                blocked: true,
+                reason: blockedReason,
+                currentUrl: body.districtPath ?? "",
+                resolvedRoute: null,
+                requestId: blockedRequestId,
+                registryVersion: REGISTRY_VERSION,
+                registryHash: REGISTRY_HASH,
+                timestamp: new Date().toISOString(),
+              },
+            },
+            { status: 409, headers: { "X-Frass-Engine": "TELEPORTER-ENGINE-V3" } },
           );
-          // With no active card, ANY past audit turn is foreign history.
-          if (!activeCardNumber) return isAuditTurn(content) || mentioned.length > 0;
-          return mentioned.length > 0 && mentioned.every((n) => n !== activeCardNumber);
-        };
+        }
+
+        // A Teleporter audit is a clean-room review: the model sees ONLY the
+        // Founder's current request. Past turns are never replayed, so no earlier
+        // card review can ever be echoed. Non-audit founder chat keeps the shared
+        // transcript but still drops identity-discovery assistant turns.
         const clientMessages = (Array.isArray(body.messages) ? body.messages : []).filter(
           (message) =>
-            (experienceContext !== "founder" ||
-              message.role !== "assistant" ||
-              !isFounderIdentityDiscovery(message.content)) && !namesAnotherCard(message.content),
+            experienceContext !== "founder" ||
+            message.role !== "assistant" ||
+            !isFounderIdentityDiscovery(message.content),
         );
-
 
         // Emergency containment: only a fresh, explicit, non-empty user text
         // submission may create a Frassy turn. Legacy streaming/background
@@ -761,34 +807,6 @@ export const Route = createFileRoute("/api/chat")({
           );
         }
 
-        // FRASS-0571A — fail closed when a stale browser session claims one
-        // Teleporter card while the request comes from another page. This is a
-        // workflow integrity check, not a model instruction: the wrong audit is
-        // never allowed to reach AI or enter the permanent review trail.
-        const samePath = (a?: string | null, b?: string | null) => {
-          const norm = (v?: string | null) => {
-            if (!v) return "";
-            const clean = v.split("?")[0].split("#")[0];
-            return (clean.length > 1 ? clean.replace(/\/+$/, "") : clean).toLowerCase();
-          };
-          return Boolean(norm(a)) && norm(a) === norm(b);
-        };
-        if (body.auditContext && !samePath(body.auditContext.path, body.districtPath)) {
-          return Response.json(
-            {
-              error:
-                "This page does not match the active Teleporter card. Return to the World Teleporter and open the card again before recording an audit.",
-              diagnostics: {
-                activeCardNumber: body.auditContext.number,
-                activeCardTitle: body.auditContext.title,
-                activeCardPath: body.auditContext.path,
-                requestPath: body.districtPath ?? null,
-                promptPreview: lastMessage.content.slice(0, 500),
-              },
-            },
-            { status: 409 },
-          );
-        }
 
         const key = process.env.LOVABLE_API_KEY;
         if (!key) {
@@ -814,15 +832,16 @@ export const Route = createFileRoute("/api/chat")({
 
         const contextBlock = [
           modeLine,
-          experienceContext === "founder" && body.auditContext
+          isAudit && auditIdentity
             ? `━━━ ACTIVE WORLD TELEPORTER AUDIT — AUTHORITATIVE ━━━
-The Founder is reviewing Teleporter Card #${String(body.auditContext.number).padStart(3, "0")}.
-Title: ${body.auditContext.title}
-Route: ${body.auditContext.path}
-Component: ${body.auditContext.component || "Not named"}
-Source file: ${body.auditContext.file}
-District: ${body.auditContext.district}
-This active card is the single source of truth for this review. Begin by naming Card #${String(body.auditContext.number).padStart(3, "0")} and this route. Ignore every different card number, route, verification, ledger record, and "ready for next card" instruction from prior conversation history. Review only this card; do not infer the next card.`
+The Founder is reviewing Teleporter Card ${registryCardLabel(auditIdentity.id)}.
+Title: ${auditIdentity.title}
+Route: ${auditIdentity.route}
+Component: ${auditIdentity.component || "Not named"}
+Source file: ${auditIdentity.file}
+District: ${auditIdentity.district}
+Registry: ${auditIdentity.registryVersion} · ${auditIdentity.registryHash}
+This is the single source of truth for this review. Analyze this page and recommend the canonical destination. Do NOT state a card number, a route, or a "Visual Verification" heading — the server renders identity, not you. Review only this card; do not infer the next card.`
             : undefined,
           body.modeContext && `Current context: ${body.modeContext}`,
           body.seasonContext && `Season accent: ${body.seasonContext}`,
@@ -916,7 +935,7 @@ the next move toward Legacy is. Never stop at helping someone earn a living.`;
         // A Teleporter audit is a clean-room review: the model sees ONLY the
         // Founder's current request plus the authoritative card block above, so
         // no earlier card review can ever be replayed.
-        const modelSource = body.auditContext ? [lastMessage] : clientMessages;
+        const modelSource = isAudit ? [lastMessage] : clientMessages;
         const uiMessages = modelSource
           .filter((m) => m.role === "user" || m.role === "assistant")
           .map((m, i) => ({
@@ -952,15 +971,17 @@ the next move toward Legacy is. Never stop at helping someone earn a living.`;
                 mode: body.modeContext ?? null,
                 cart: body.cartContext ?? null,
                 q: (lastUser?.content ?? "").slice(0, 500),
-                 ...(body.auditContext
-                   ? {
-                       teleporter_card_number: body.auditContext.number,
-                       teleporter_card_title: body.auditContext.title,
-                       teleporter_card_path: body.auditContext.path,
-                       request_path: body.districtPath ?? null,
-                       prompt_preview: (lastUser?.content ?? "").slice(0, 500),
-                     }
-                   : {}),
+                ...(isAudit && auditIdentity
+                  ? {
+                        teleporter_card_number: auditIdentity.id,
+                        teleporter_card_title: auditIdentity.title,
+                        teleporter_card_path: auditIdentity.route,
+                        request_path: body.districtPath ?? null,
+                        prompt_preview: (lastUser?.content ?? "").slice(0, 500),
+                        registry_version: auditIdentity.registryVersion,
+                        registry_hash: auditIdentity.registryHash,
+                      }
+                  : {}),
               },
             });
           } catch {
@@ -1069,16 +1090,61 @@ the next move toward Legacy is. Never stop at helping someone earn a living.`;
             experienceContext === "founder" && isFounderIdentityDiscovery(result.text)
               ? founderFallback
               : result.text || "…";
-          // FRASS-0571A — the active Teleporter card, not conversation history,
-          // owns the first line of every review. This deterministic label makes
-          // stale-card regressions immediately visible to the Founder and keeps
-          // the model from choosing an earlier card as the response heading.
-          const auditFooter = body.auditContext
-            ? `\n\n---\nAudit context received by Frassy: Card #${String(body.auditContext.number).padStart(3, "0")} · ${body.auditContext.path} · history: clean-room (0 prior turns).`
-            : "";
-          const reply = body.auditContext
-            ? `### 🏛️ VISUAL VERIFICATION: CARD #${String(body.auditContext.number).padStart(3, "0")} (${body.auditContext.path})\n\n${modelReply}${auditFooter}`
-            : modelReply;
+
+          // FRASS-0574/0576 — the server renders identity; the AI only generates
+          // analysis. Any card number, route, or "Visual Verification" heading the
+          // model emits anyway is stripped — never regenerated by a second call.
+          let reply: string;
+          let auditReceipt:
+            | {
+                engine: "TELEPORTER-ENGINE-V3";
+                blocked: false;
+                cardNumber: number;
+                cardKey: string;
+                cardTitle: string;
+                cardPath: string;
+                registryVersion: string;
+                registryHash: string;
+                requestId: string;
+                history: number;
+                timestamp: string;
+              }
+            | undefined;
+
+          if (isAudit && auditIdentity) {
+            const analysis =
+              isFounderIdentityDiscovery(result.text)
+                ? founderFallback
+                : stripAuditIdentity(result.text, auditIdentity);
+            const requestId = Math.random().toString(36).slice(2, 10).toUpperCase();
+            const historyCount = 0; // clean room — model saw only the current turn
+            const ts = new Date().toISOString();
+            auditReceipt = {
+              engine: "TELEPORTER-ENGINE-V3",
+              blocked: false,
+              cardNumber: auditIdentity.id,
+              cardKey: auditIdentity.key,
+              cardTitle: auditIdentity.title,
+              cardPath: auditIdentity.route,
+              registryVersion: auditIdentity.registryVersion,
+              registryHash: auditIdentity.registryHash,
+              requestId,
+              history: historyCount,
+              timestamp: ts,
+            };
+            reply = [
+              `### 🏛️ CARD ${registryCardLabel(auditIdentity.id)}`,
+              `${auditIdentity.route}`,
+              `Registry ${auditIdentity.registryVersion} · ${auditIdentity.registryHash}`,
+              ``,
+              analysis,
+              ``,
+              `---`,
+              `Audit Receipt · Engine ${auditReceipt.engine} · Card ${registryCardLabel(auditIdentity.id)} · ${auditIdentity.route} · Registry ${auditIdentity.registryVersion} · History ${historyCount} · Request ${requestId}`,
+            ].join("\n");
+          } else {
+            reply = modelReply;
+          }
 
 
           return Response.json({
@@ -1090,16 +1156,22 @@ the next move toward Legacy is. Never stop at helping someone earn a living.`;
             navigate,
             // FRASS-0556 — which brain answered, and why.
             router: { task: decision.task, provider: usedModel, why: decision.why },
+            ...(auditReceipt ? { auditReceipt } : {}),
             ...(experienceContext === "founder"
               ? {
                   diagnostics: {
                     conversationMode: "Founder",
                     systemPrompt: "storefront_plus_founder_context",
                     promptVersion: "v1",
-                    sessionType: "floating_storefront_chat",
+                    sessionType: isAudit ? "teleporter_clean_room_audit" : "floating_storefront_chat",
                     memoryNamespace: "storefront_browser_memory",
-                    routingDecision: "client admin signal → founder storefront context",
-                    historySource: "floating_chat_client_state",
+                    routingDecision: isAudit
+                      ? "server-resolved audit identity → clean room"
+                      : "client admin signal → founder storefront context",
+                    historySource: isAudit ? "clean_room_last_turn" : "floating_chat_client_state",
+                    auditEngine: isAudit ? "TELEPORTER-ENGINE-V3" : undefined,
+                    registryVersion: isAudit ? auditIdentity!.registryVersion : undefined,
+                    registryHash: isAudit ? auditIdentity!.registryHash : undefined,
                     fallback: isFounderIdentityDiscovery(result.text)
                       ? "founder_safety_interceptor"
                       : "disabled",
@@ -1107,7 +1179,7 @@ the next move toward Legacy is. Never stop at helping someone earn a living.`;
                   },
                 }
               : {}),
-          });
+          }, isAudit ? { headers: { "X-Frass-Engine": "TELEPORTER-ENGINE-V3" } } : undefined);
         } catch (err) {
           const message = err instanceof Error ? err.message : "Unknown error";
           const status = /429|rate/i.test(message) ? 429 : /402|credit/i.test(message) ? 402 : 500;

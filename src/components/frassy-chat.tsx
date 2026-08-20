@@ -402,16 +402,9 @@ export function FrassyChat({
           experienceContext: isAdmin ? "founder" : "storefront",
           // FRASS-0451A — where we are, and why they came.
           districtPath: ctx.pathname,
-           auditContext: auditCard
-             ? {
-                 number: auditCard.number,
-                 title: auditCard.title,
-                 path: auditCard.path,
-                 component: auditCard.component,
-                 file: auditCard.file,
-                 district: auditCard.district,
-               }
-             : undefined,
+          // FRASS-0574 — the browser sends ONLY the Current URL. No card number,
+          // title, district or identity metadata leaves the client. The server
+          // resolves and returns the authoritative identity in auditReceipt.
           arrivalIntent: readArrivalIntent() ?? undefined,
           // Actual runtime interaction mode, so Frassy never misstates her capabilities.
           interactionMode: spoken ? "voice_and_text" : "text",
@@ -443,10 +436,36 @@ export function FrassyChat({
           path: string;
           requiresAuth: boolean;
         } | null;
+        auditReceipt?: {
+          engine: string;
+          blocked?: boolean;
+          reason?: string;
+          currentUrl?: string;
+          resolvedRoute?: string | null;
+          cardNumber?: number;
+          cardKey?: string;
+          cardTitle?: string;
+          cardPath?: string;
+          registryVersion?: string;
+          registryHash?: string;
+          requestId?: string;
+          history?: number;
+          timestamp?: string;
+        };
       };
 
       // Stale-turn guard: a superseded or stopped turn can never write to the UI.
       if (turnRef.current !== myTurn) return;
+
+      // FRASS-0576 — a blocked audit never reaches the AI or the ledger. Show
+      // the diagnostic and stop; the Founder must repair the registry or return
+      // to the World Teleporter.
+      if (data.auditReceipt?.blocked) {
+        setError(
+          `Audit blocked — ${data.auditReceipt.reason ?? "registry mismatch"}. No AI call executed; nothing was written to the ledger.`,
+        );
+        return;
+      }
 
       if (!res.ok || data.error) {
         setError(data.error ?? "I hit a snag reaching my systems. Try again in a sec?");
@@ -468,8 +487,20 @@ export function FrassyChat({
         },
       ]);
 
-      // FRASS-0573 — the completed reply is committed exactly as generated.
-      if (auditCard) {
+      // FRASS-0573/0575 — the completed reply is committed exactly as generated,
+      // using the SERVER-RESOLVED identity from the audit receipt — never the
+      // locally-resolved card. The server is the sole authority for identity.
+      const receipt = data.auditReceipt;
+      if (receipt && !receipt.blocked && receipt.cardNumber != null) {
+        commitAuditTurn({
+          cardKey: receipt.cardKey ?? auditCard?.key ?? "",
+          cardNumber: receipt.cardNumber,
+          cardTitle: receipt.cardTitle ?? auditCard?.title ?? "",
+          cardPath: receipt.cardPath ?? auditCard?.path ?? "",
+          role: "assistant",
+          content: reply,
+        });
+      } else if (auditCard) {
         commitAuditTurn({
           cardKey: auditCard.key,
           cardNumber: auditCard.number,

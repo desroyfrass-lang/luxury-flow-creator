@@ -1,12 +1,12 @@
-// FRASS-0570 — Teleport session (Founder inspection only, this device only).
+// FRASS-0570 / FRASS-0574 — Teleport session (Founder inspection only).
 //
-// Remembers that the Founder stepped out of the Control Room to look at a page,
-// so a floating "return" chip can bring them straight back. The active card is
-// also carried as read-only conversation context so Frassy never inherits the
-// identity of the previously inspected card.
+// FRASS-0574 made the route the ONLY authority: the card identity is derived
+// purely from the current pathname against the canonical registry. The
+// session record here is reduced to a "return to the Control Room" navigation
+// hint only — it no longer carries card identity, and resolveAuditCard never
+// reads it. There is zero session authority over identity.
 
-import { WORLD_ROUTES } from "./world-teleporter";
-import { cardKey, cardNumber } from "./teleporter-audit";
+import { resolveCanonicalCard } from "./audit-registry";
 
 const KEY = "frass.teleport.active";
 export const TELEPORT_HOME = "/control-room?tab=world-teleporter";
@@ -21,23 +21,27 @@ export type ActiveTeleportCard = {
   district: string;
 };
 
+/** Navigate to a card's page and remember where to return to. Only the return
+ *  destination is stored; card identity is never read back from here. */
 export function beginTeleport(card: ActiveTeleportCard) {
   if (typeof window === "undefined") return;
   try {
-    window.sessionStorage.setItem(KEY, JSON.stringify(card));
+    // Store only the return hint — never trust this for identity.
+    window.sessionStorage.setItem(KEY, JSON.stringify({ returnTo: TELEPORT_HOME, path: card.path }));
   } catch {
     /* private mode — the chip simply won't appear */
   }
   window.location.assign(card.path);
 }
 
-export function readActiveTeleport(): ActiveTeleportCard | null {
+export function readActiveTeleport(): { returnTo: string; path: string } | null {
   if (typeof window === "undefined") return null;
   try {
     const raw = window.sessionStorage.getItem(KEY);
     if (!raw || raw === "1") return null;
-    const card = JSON.parse(raw) as ActiveTeleportCard;
-    return card?.key && card?.path && Number.isFinite(card.number) ? card : null;
+    const obj = JSON.parse(raw) as { returnTo?: string; path?: string };
+    if (!obj?.path) return null;
+    return { returnTo: obj.returnTo ?? TELEPORT_HOME, path: obj.path };
   } catch {
     return null;
   }
@@ -61,38 +65,25 @@ export function endTeleport() {
   }
 }
 
-// The page you are standing on is the source of truth.
-//
-// The session record can go stale (an older card left behind, a path saved with
-// a query string, a trailing slash). Resolving the card from the live pathname
-// against the Teleporter registry means Frassy can never inherit the identity of
-// a previously inspected card.
-function normalizePath(p: string | null | undefined): string {
-  if (!p) return "";
-  const clean = p.split("?")[0].split("#")[0];
-  const trimmed = clean.length > 1 ? clean.replace(/\/+$/, "") : clean;
-  return trimmed.toLowerCase();
-}
-
+// FRASS-0574 — the page you are standing on is the sole source of truth.
+// Resolved purely from the pathname via the canonical registry. No session
+// object, no cached card, no stored destination is consulted for identity.
 export function resolveAuditCard(pathname: string | null | undefined): ActiveTeleportCard | null {
-  const here = normalizePath(pathname);
-  if (!here) return null;
-  const active = readActiveTeleport();
-  if (active && normalizePath(active.path) === here) return active;
-  const route = WORLD_ROUTES.find((r) => normalizePath(r.path) === here);
-  if (!route) return null;
+  const card = resolveCanonicalCard(pathname);
+  if (!card) return null;
   return {
-    key: cardKey(route),
-    number: cardNumber(route),
-    title: route.title,
-    path: route.path,
-    component: route.component,
-    file: route.file,
-    district: route.district,
+    key: card.key,
+    number: card.number,
+    title: card.title,
+    path: card.path,
+    component: card.component,
+    file: card.file,
+    district: card.district,
   };
 }
 
-/** True only when a teleport session is open on a page that has no card of its own. */
+/** True only when a return hint exists but the current page has no card of
+ *  its own — i.e. the Founder stepped somewhere that is not an audit page. */
 export function isStaleTeleport(pathname: string | null | undefined): boolean {
   return Boolean(readActiveTeleport()) && resolveAuditCard(pathname) === null;
 }
