@@ -181,23 +181,22 @@ Registry Hash
 - Any card number or route pattern the model emits anyway is stripped server-side, so a hallucinated Card #11 can never reach the screen.
 
 
-### 2c. Forensic Audit Source receipt
-- Every audit response and every blocked attempt carries an Audit Source block. It is a forensic receipt:
+### 2c. Audit Receipt — concise for the Founder, deep on demand
+- Every audit response and every blocked attempt carries an Audit Receipt. The visible part stays short:
 
 ```text
-Audit Source
-Engine:              TELEPORTER ENGINE v3
-Registry Version:
-Registry Hash:
-Conversation ID:
-Request ID:
-Current URL:
-Resolved Card:
-History Count:
-Timestamp:
+Audit Receipt
+Engine     TELEPORTER ENGINE v3
+Card       #025
+Route      /admin/visual-index
+Registry   2026.08.19.01
+History    0
+Request    A81D...
 ```
 
+- Everything deeper — Registry Hash, Conversation ID, Handler ID, Timestamp, deployment marker — lives in an expandable "Developer details" section and in the Audit Diagnostics log. Collected always, shown only when asked for.
 - No Prompt Hash — useful for developers, noisy for Founders.
+
 - Shown with the live response and stored with the ledger entry so any future recurrence is diagnosable in seconds.
 
 ### 3. Remove stale session authority entirely
