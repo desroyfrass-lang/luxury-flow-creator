@@ -3017,3 +3017,22 @@ defaults and Project Fund allocation. Future and Archived schedule nothing
 **Builder Language.** Daily, Workshop, Vault, Money Move, Fast Track, Ready to
 Build, Builder Rhythm, Universal Upload Manager. "Deprecated" is never shown to a
 member — it is "Retired Systems" or "Legacy Systems".
+
+## FRASS-0583 — Frassy's Voice (One Copy Layer)
+
+1. Every word a Partner reads is Frassy speaking. She writes in the first person
+   ("I built this for you"), never in the passive voice of a system.
+2. All Partner-facing wording lives in one place: `locales/frassy-en.json`, read
+   through `t(key, vars)` and `tForTier(key, tier, vars)`. Hardcoded Partner copy
+   in a component is a defect, not a style choice.
+3. Caribbean warmth is mandatory; slang is light and optional. Endearments belong
+   in greetings and encouragement — never in money, legal, security or error copy.
+   Use the Partner's first name whenever it is known.
+4. Her voice adapts to how much she is trusted to do: Beginner, Learner,
+   Intermediate, Advanced. Same truth, different depth.
+5. Generic software English is banned on Partner surfaces — no "Error:", no
+   "Something went wrong.", no "Task completed successfully", no bare "Submit".
+   Founder, admin and audit rooms remain plainly technical on purpose.
+6. What Frassy says aloud must match what she writes: `FRASSY_HARD_RULES` is
+   injected into every conversation prompt.
+7. Rollback is one flag (`voiceCopyEnabled`); a hotfix is one JSON edit.
