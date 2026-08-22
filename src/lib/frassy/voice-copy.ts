@@ -68,6 +68,7 @@ function clean(text: string): string {
   return text
     .replace(/\s+,/g, ",")
     .replace(/,\s*\./g, ".")
+    .replace(/,\s*$/, ".")
     .replace(/\s{2,}/g, " ")
     .trim();
 }
