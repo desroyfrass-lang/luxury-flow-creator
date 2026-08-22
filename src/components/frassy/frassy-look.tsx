@@ -11,7 +11,7 @@ import { Link } from "@tanstack/react-router";
 import { ShoppingBag, Scissors, X } from "lucide-react";
 import {
   frassyLook,
-  pieceHref,
+  pieceHandle,
   type FrassyRoom,
   type WardrobePiece,
 } from "@/lib/frassy/wardrobe";
@@ -19,7 +19,8 @@ import {
 function PieceRow({ piece }: { piece: WardrobePiece }) {
   return (
     <Link
-      to={pieceHref(piece)}
+      to="/collection/$handle"
+      params={{ handle: pieceHandle(piece) }}
       className="flex items-start justify-between gap-4 rounded-sm border border-white/10 px-4 py-3 hover:border-[color:var(--gold)]/60"
     >
       <span>

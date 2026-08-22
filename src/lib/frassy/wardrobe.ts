@@ -158,7 +158,7 @@ export function frassyLook(room: FrassyRoom, date = new Date()): FrassyLook {
 }
 
 /** Where a piece sends the Partner when they tap it. */
-export function pieceHref(piece: WardrobePiece): string {
-  if (!piece.handle || piece.comingSoon) return `/collection/${LIVE_COLLECTION_HANDLE}`;
-  return `/collection/${piece.handle}`;
+export function pieceHandle(piece: WardrobePiece): string {
+  if (!piece.handle || piece.comingSoon) return LIVE_COLLECTION_HANDLE;
+  return piece.handle;
 }
