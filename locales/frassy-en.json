@@ -1,0 +1,98 @@
+{
+  "global": {
+    "headerGreeting": "Good to see you, {name}. I've been keeping things moving.",
+    "headerGreetingAnon": "Good to see you. I've been keeping things moving.",
+    "headerBuildingFor": "I'm building for {name}'s freedom",
+    "headerBuildingForAnon": "I'm building for your freedom",
+    "autonomyToggleLabel": "How much I do on my own: {tierLabel}",
+    "wardrobeHint": "Tap my outfit or my hair — everything I wear is in the store.",
+    "workingNow": "I'm working on something for you right now.",
+    "restingNow": "I've paused. Nothing moves until you say the word.",
+    "saving": "Holding that for you…"
+  },
+  "greetings": {
+    "buildersHallWelcome": "Welcome back to the Hill, {name}. Take your time — I'm right here.",
+    "dailyWelcome": "Good to have you, {name}. Let's take today one move at a time.",
+    "firstVisit": "Welcome. I'm Frassy. Before anything else, let me learn what you're building.",
+    "returning": "Good to see you again, {name}. Nothing was lost while you were away."
+  },
+  "hero": {
+    "heroFinishedTitle": "{moveName} is finished, {name}",
+    "heroFinishedTitleAnon": "{moveName} is finished",
+    "heroFrassyNote": "{moveName} is finished and waiting on your word.",
+    "heroFrassyNote_Beginner": "I finished your {moveName}, {name}. Everything's connected and tested. Say yes and I'll make it live for you — no stress.",
+    "heroFrassyNote_Learner": "I finished your {moveName} and left notes so you can see exactly what I did. Want me to walk you through it?",
+    "heroFrassyNote_Intermediate": "{moveName} is built and ready. Look it over, change anything you want, then send it live.",
+    "heroFrassyNote_Advanced": "{moveName} is built to your spec, tested end to end and ready to launch. Full detail is open below.",
+    "heroButtonLaunch": "Make it live",
+    "heroButtonChange": "Change something",
+    "heroButtonNotNow": "Not right now",
+    "heroWhyBuilt": "Why I built it this way: {insight}",
+    "heroProgress": "{pct}% built so far"
+  },
+  "queue": {
+    "sectionLabel": "What I've built",
+    "sectionTitle": "Waiting on you",
+    "sectionBlurbActive": "Work I finished for you. Nothing goes live until you say so.",
+    "sectionBlurbPaused": "I've paused new builds, love. Anything already finished still waits here for your word.",
+    "loading": "Opening your queue…",
+    "empty": "Nothing waiting on you right now, {name}. I'm still building in the background — come back a little later.",
+    "emptyAnon": "Nothing waiting on you right now. I'm still building in the background — come back a little later.",
+    "yourMovesLabel": "Your Money Moves",
+    "yourMovesBlurb": "The moves you're running yourself. Same cards as your Daily — one place, one truth.",
+    "readyForYou": "Finished — waiting on you"
+  },
+  "confirmations": {
+    "launched": "Beautiful. I'll take it from here.",
+    "changesRequested": "Got your note, love. I'm rebuilding the piece you asked for — I'll bring it back when it's ready.",
+    "shelved": "Shelved, not lost. It stays yours, exactly as it is, until you want it again.",
+    "saved": "Held safe. That's yours now.",
+    "approved": "Approved. I'm proud of how this one came out."
+  },
+  "trouble": {
+    "generic": "Hmm, this one giving a little trouble. Let me sort it out and try again.",
+    "network": "The line went quiet for a second. Nothing you did was lost — try once more when you're ready.",
+    "notAllowed": "I'm not able to do that one from here. I can point you to someone on the team who can.",
+    "money": "I couldn't complete that payment step, and I won't guess with your money. Please check the details and try again.",
+    "security": "For your protection I stopped there. Please sign in again to continue.",
+    "tryAgain": "Try that again"
+  },
+  "empty": {
+    "generic": "Nothing here yet, and that's fine — here's where we start.",
+    "vault": "Your Vault is still quiet. The first thing you keep here starts your record.",
+    "journal": "No entries yet. The first line you write is the beginning of the story."
+  },
+  "loading": {
+    "generic": "One moment — I'm gathering this for you.",
+    "thinking": "Let me think this through properly.",
+    "building": "I'm building it now. I'll tell you the moment it's done."
+  },
+  "welcome": {
+    "hallLabel": "Welcome Hall · Daily Welcome",
+    "voiceOn": "Voice on",
+    "voiceOff": "Voice off",
+    "hearFrassy": "Hear me",
+    "continue": "Continue to my Daily",
+    "skip": "Skip today's welcome",
+    "tierIntro": "How you'd like to be welcomed — right now it's {styleName}",
+    "tierPlain": "Here's what that means: this choice lives in your Daily settings, and I greet you this way every morning until you change it."
+  },
+  "freedom": {
+    "trackerTitle": "Your road to freedom",
+    "monthsToFreedom": "About {months} months at today's pace, {name}.",
+    "progress": "{pct}% of the way to your freedom number."
+  },
+  "ariaLiveAnnouncement": {
+    "Launch": "{moveName} is live now.",
+    "Change": "I'm reworking {moveName} for you.",
+    "Shelve": "{moveName} is shelved and safe.",
+    "Error": "Something went wrong. I've left everything exactly as it was.",
+    "Loading": "Working on it."
+  },
+  "accessibility": {
+    "audioPlayTooltip": "Hear me read this",
+    "audioStopTooltip": "Stop reading",
+    "avatarOutfit": "See what I'm wearing in the store",
+    "avatarHair": "See my hair style in the store"
+  }
+}
