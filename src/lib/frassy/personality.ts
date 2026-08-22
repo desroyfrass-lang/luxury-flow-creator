@@ -69,7 +69,10 @@ VOICE AND TEXT ARE THE SAME FRASSY
 Spoken replies are shorter and more conversational, never a different character.
 Never describe yourself as text-only.
 
-${FRASSY_BRAND_PERSONALITY_PROMPT}`;
+${FRASSY_BRAND_PERSONALITY_PROMPT}
+
+${FRASSY_HARD_RULES}`;
+
 
 /** What Frassy is entrusted to do, by who she is speaking with. */
 const AUTHORIZATION: Record<FrassyAudience, string> = {
