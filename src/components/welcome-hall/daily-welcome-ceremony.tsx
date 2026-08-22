@@ -108,7 +108,7 @@ export function DailyWelcomeCeremony({ next = "/room" }: { next?: string }) {
     >
       <div className="flex flex-wrap items-center justify-between gap-3">
         <p className="text-[10px] uppercase tracking-[0.4em] text-[color:var(--hill-gold)]">
-          🌅 Welcome Hall · Daily Welcome
+          🌅 {copy("welcome.hallLabel")}
         </p>
         <button
           type="button"
@@ -125,7 +125,7 @@ export function DailyWelcomeCeremony({ next = "/room" }: { next?: string }) {
           className="inline-flex items-center gap-2 rounded-full border border-border px-4 py-1.5 text-[10px] uppercase tracking-[0.25em] text-muted-foreground hover:text-foreground"
         >
           {muted ? <VolumeX className="h-3.5 w-3.5" /> : <Volume2 className="h-3.5 w-3.5" />}
-          {muted ? "Voice off" : "Voice on"}
+          {muted ? copy("welcome.voiceOff") : copy("welcome.voiceOn")}
         </button>
       </div>
 
@@ -221,20 +221,20 @@ export function DailyWelcomeCeremony({ next = "/room" }: { next?: string }) {
           onClick={() => leave(next)}
           className="lux-press inline-flex items-center gap-2 rounded-sm border border-[color:var(--hill-gold)] bg-[color:var(--hill-gold)] px-7 py-3.5 text-[11px] font-bold uppercase tracking-[0.3em] text-[color:var(--ink)]"
         >
-          Continue to my Daily <ArrowRight className="h-3.5 w-3.5" />
+          {copy("welcome.continue")} <ArrowRight className="h-3.5 w-3.5" />
         </button>
         <button
           type="button"
           onClick={() => leave(next)}
           className="lux-press rounded-sm border border-border px-7 py-3.5 text-[11px] font-bold uppercase tracking-[0.3em] hover:border-[color:var(--hill-gold)]"
         >
-          Skip today's welcome
+          {copy("welcome.skip")}
         </button>
       </div>
 
       <div className="mt-8 border-t border-border/60 pt-6">
         <p className="text-[10px] uppercase tracking-[0.3em] text-muted-foreground">
-          How you'd like to be welcomed — currently {meta.glyph} {meta.name}
+          {copy("welcome.tierIntro", { styleName: `${meta.glyph} ${meta.name}` })}
         </p>
         <div className="mt-3 flex flex-wrap gap-2">
           {WELCOME_TIERS.map((t) => (
