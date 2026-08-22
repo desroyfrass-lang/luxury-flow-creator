@@ -14,6 +14,8 @@ import { toast } from "sonner";
 import { Check, ChevronDown, ChevronRight, Pencil, Sparkles, Archive } from "lucide-react";
 import { MoneyMoveStack } from "@/components/builder-os/money-move-stack";
 import { LAYER_BY_ID, type LayerId } from "@/lib/business/financial-layers";
+import { t, tForTier, type Tier } from "@/lib/i18n";
+import { DEFAULT_AUTONOMY, type AutonomyMode } from "@/lib/frassy/autonomy";
 import {
   listBuildQueue,
   decideBuildQueueItem,
@@ -22,12 +24,30 @@ import {
 
 const WAITING = new Set(["queued", "executing", "complete", "changes_requested"]);
 
-export function BuildQueue({ paused }: { paused: boolean }) {
+/** How much Frassy does on her own decides how she presents finished work. */
+const TIER_BY_MODE: Record<AutonomyMode, Tier> = {
+  handle_everything: "beginner",
+  teach_me: "learner",
+  work_with_me: "intermediate",
+  advise_only: "advanced",
+};
+
+export function BuildQueue({
+  paused,
+  mode = DEFAULT_AUTONOMY,
+  firstName = "",
+}: {
+  paused: boolean;
+  mode?: AutonomyMode;
+  firstName?: string;
+}) {
   const qc = useQueryClient();
   const navigate = useNavigate();
   const listFn = useServerFn(listBuildQueue);
   const decideFn = useServerFn(decideBuildQueueItem);
   const [openId, setOpenId] = useState<string | null>(null);
+  const [announcement, setAnnouncement] = useState("");
+  const tier = TIER_BY_MODE[mode] ?? "beginner";
 
   const queue = useQuery<QueueItem[]>({
     queryKey: ["frassy", "build-queue"],
@@ -36,19 +56,33 @@ export function BuildQueue({ paused }: { paused: boolean }) {
   });
 
   const decide = useMutation({
-    mutationFn: (input: { id: string; decision: "approved" | "changes_requested" | "shelved" }) =>
-      decideFn({ data: input }),
+    mutationFn: (input: {
+      id: string;
+      decision: "approved" | "changes_requested" | "shelved";
+      moveName: string;
+    }) => decideFn({ data: { id: input.id, decision: input.decision } }),
     onSuccess: (_r, v) => {
       qc.invalidateQueries({ queryKey: ["frassy", "build-queue"] });
-      toast.success(
+      const key =
         v.decision === "approved"
-          ? "Approved — I'll take it from here."
+          ? "launched"
           : v.decision === "shelved"
-            ? "Shelved. It stays yours; nothing is deleted."
-            : "Noted. I'll rework it and bring it back.",
+            ? "shelved"
+            : "changesRequested";
+      toast.success(t(`confirmations.${key}`));
+      setAnnouncement(
+        t(
+          `ariaLiveAnnouncement.${
+            v.decision === "approved" ? "Launch" : v.decision === "shelved" ? "Shelve" : "Change"
+          }`,
+          { moveName: v.moveName },
+        ),
       );
     },
-    onError: (e: Error) => toast.error(e.message),
+    onError: () => {
+      toast.error(t("trouble.generic"));
+      setAnnouncement(t("ariaLiveAnnouncement.Error"));
+    },
   });
 
   const waiting = (queue.data ?? []).filter((i) => WAITING.has(i.status));
@@ -57,25 +91,28 @@ export function BuildQueue({ paused }: { paused: boolean }) {
     <section className="mt-10">
       <div className="border-b border-white/10 pb-4">
         <div className="text-[10px] uppercase tracking-[0.4em] text-[color:var(--gold)]">
-          Build queue
+          {t("queue.sectionLabel")}
         </div>
-        <h2 className="mt-2 font-display text-2xl text-white">Waiting on you</h2>
+        <h2 className="mt-2 font-display text-2xl text-white">{t("queue.sectionTitle")}</h2>
         <p className="mt-2 text-sm text-white/50">
-          {paused
-            ? "I've paused new builds. Anything already finished still waits here for your word."
-            : "Finished work I've built for you. Nothing goes live until you say so."}
+          {paused ? t("queue.sectionBlurbPaused") : t("queue.sectionBlurbActive")}
         </p>
+      </div>
+
+      {/* Anything Frassy announces out loud is announced to screen readers too. */}
+      <div aria-live="polite" className="sr-only">
+        {announcement}
       </div>
 
       {queue.isLoading ? (
         <div className="mt-4 rounded-sm border border-white/10 px-6 py-8 text-sm text-white/40">
-          Opening your queue…
+          {t("queue.loading")}
         </div>
       ) : waiting.length === 0 ? (
         <div className="mt-4 flex items-start gap-4 rounded-sm border border-dashed border-white/15 px-6 py-10">
           <Sparkles className="mt-0.5 h-5 w-5 shrink-0 text-[color:var(--gold)]" />
           <p className="text-sm text-white/60">
-            Nothing waiting for you right now. I'm building in the background — check back shortly.
+            {firstName ? t("queue.empty", { name: firstName }) : t("queue.emptyAnon")}
           </p>
         </div>
       ) : (
@@ -84,10 +121,14 @@ export function BuildQueue({ paused }: { paused: boolean }) {
             <QueueCard
               key={item.id}
               item={item}
+              tier={tier}
+              firstName={firstName}
               open={openId === item.id}
               busy={decide.isPending}
               onToggle={() => setOpenId(openId === item.id ? null : item.id)}
-              onDecide={(decision) => decide.mutate({ id: item.id, decision })}
+              onDecide={(decision) =>
+                decide.mutate({ id: item.id, decision, moveName: item.moveName })
+              }
             />
           ))}
         </div>
@@ -96,11 +137,9 @@ export function BuildQueue({ paused }: { paused: boolean }) {
       {/* Your own Money Moves — the same card the Daily uses. */}
       <div className="mt-10 border-t border-white/10 pt-6">
         <div className="text-[10px] uppercase tracking-[0.4em] text-white/40">
-          Your Money Moves
+          {t("queue.yourMovesLabel")}
         </div>
-        <p className="mt-2 mb-4 text-sm text-white/50">
-          The moves you're running yourself. Same cards as your Daily — one place, one truth.
-        </p>
+        <p className="mt-2 mb-4 text-sm text-white/50">{t("queue.yourMovesBlurb")}</p>
         <MoneyMoveStack onNavigate={(to) => navigate({ to })} />
       </div>
     </section>
