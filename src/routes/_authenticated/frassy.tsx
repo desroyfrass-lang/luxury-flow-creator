@@ -196,44 +196,15 @@ function StoreOperations() {
 
   const warm = useMemo(() => WARM_LINES[Math.floor(Math.random() * WARM_LINES.length)], []);
 
-  if (admin.isLoading) {
-    return (
-      <FrassyShell>
-        <div className="mt-32 text-center text-xs uppercase tracking-[0.3em] text-white/40">
-          Waking Frassy…
-        </div>
-      </FrassyShell>
-    );
-  }
-
-  if (!admin.data) {
-    return (
-      <FrassyShell>
-        <div className="mx-auto mt-32 max-w-md text-center">
-          <h1 className="font-display text-3xl text-white">Owner access only</h1>
-          <p className="mt-4 text-sm text-white/60">
-            Frassy is your private operating console. Only the site owner can enter.
-          </p>
-          <button
-            onClick={() => navigate({ to: "/admin" })}
-            className="mt-8 text-[11px] uppercase tracking-[0.3em] text-[color:var(--gold)] hover:underline"
-          >
-            Go to admin →
-          </button>
-        </div>
-      </FrassyShell>
-    );
-  }
-
   const b = brief.data;
 
   return (
-    <FrassyShell>
+    <>
       {/* Greeting */}
-      <header className="flex flex-wrap items-end justify-between gap-6 border-b border-white/10 pb-8">
+      <header className="mt-16 flex flex-wrap items-end justify-between gap-6 border-b border-white/10 pb-8">
         <div>
           <div className="text-[10px] uppercase tracking-[0.45em] text-[color:var(--gold)]">
-            Frassy · Mission Control
+            Store operations · owner only
           </div>
           <h1 className="mt-3 font-display text-4xl text-white md:text-5xl">
             {greeting()}{firstName ? `, ${firstName}` : ""}.
