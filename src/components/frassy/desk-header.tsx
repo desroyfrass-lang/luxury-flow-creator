@@ -45,15 +45,15 @@ export function DeskHeader({
               Frassy · Money Moves Desk
             </div>
             <h1 className="mt-3 font-display text-3xl text-white md:text-4xl">
-              Frassy is building for {firstName ? `${firstName}'s` : "your"} freedom
+              {firstName
+                ? t("global.headerBuildingFor", { name: firstName })
+                : t("global.headerBuildingForAnon")}
             </h1>
-            <p className="mt-2 text-xs text-white/40">
-              Tap her outfit or her hair — everything she wears is in the store.
-            </p>
+            <p className="mt-2 text-xs text-white/40">{t("global.wardrobeHint")}</p>
           </div>
         </div>
 
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-3" aria-live="polite">
           <span
             className={`h-2.5 w-2.5 rounded-full ${
               status.working
@@ -62,6 +62,9 @@ export function DeskHeader({
             }`}
           />
           <span className="text-xs uppercase tracking-[0.3em] text-white/60">{status.text}</span>
+          <span className="sr-only">
+            {status.working ? t("global.workingNow") : t("global.restingNow")}
+          </span>
         </div>
       </div>
 
