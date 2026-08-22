@@ -148,12 +148,16 @@ export function BuildQueue({
 
 function QueueCard({
   item,
+  tier,
+  firstName,
   open,
   busy,
   onToggle,
   onDecide,
 }: {
   item: QueueItem;
+  tier: Tier;
+  firstName: string;
   open: boolean;
   busy: boolean;
   onToggle: () => void;
@@ -161,6 +165,7 @@ function QueueCard({
 }) {
   const layer = LAYER_BY_ID[item.moneyLayer as LayerId] ?? LAYER_BY_ID["immediate-income"];
   const ready = item.status === "complete" || item.progress >= 100;
+  const vars = { moveName: item.moveName, name: firstName, pct: String(item.progress) };
 
   return (
     <div className="rounded-sm border border-white/10 bg-white/[0.02] p-5">
@@ -171,10 +176,16 @@ function QueueCard({
           <ChevronRight className="mt-1 h-4 w-4 shrink-0 text-white/50" />
         )}
         <span className="flex-1">
-          <span className="block text-base text-white">{item.moveName}</span>
+          <span className="block text-base text-white">
+            {ready
+              ? firstName
+                ? t("hero.heroFinishedTitle", vars)
+                : t("hero.heroFinishedTitleAnon", vars)
+              : item.moveName}
+          </span>
           <span className="mt-1 block text-xs text-white/50">
             {layer.dot} {layer.label} · {item.oracle} ·{" "}
-            {ready ? "Finished — waiting on you" : `${item.progress}% built`}
+            {ready ? t("queue.readyForYou") : t("hero.heroProgress", vars)}
           </span>
         </span>
       </button>
@@ -188,9 +199,14 @@ function QueueCard({
 
       {open && (
         <div className="mt-4 space-y-3">
-          {item.frassyNote && <p className="text-sm text-white/70">“{item.frassyNote}”</p>}
+          {/* Her own note if she left one; otherwise she speaks in the partner's tier. */}
+          <p className="text-sm text-white/70">
+            {item.frassyNote ? `“${item.frassyNote}”` : tForTier("hero.heroFrassyNote", tier, vars)}
+          </p>
           {item.reasoning && (
-            <p className="text-xs text-white/45">Why I built it this way: {item.reasoning}</p>
+            <p className="text-xs text-white/45">
+              {t("hero.heroWhyBuilt", { insight: item.reasoning })}
+            </p>
           )}
           <p className="text-xs text-white/45">{layer.because}</p>
 
@@ -200,21 +216,21 @@ function QueueCard({
               onClick={() => onDecide("approved")}
               className="inline-flex items-center gap-2 rounded-sm border border-[color:var(--gold)]/60 bg-[color:var(--gold)]/10 px-4 py-2 text-[11px] uppercase tracking-[0.25em] text-white disabled:opacity-60"
             >
-              <Check className="h-3.5 w-3.5" /> Launch it
+              <Check className="h-3.5 w-3.5" /> {t("hero.heroButtonLaunch")}
             </button>
             <button
               disabled={busy}
               onClick={() => onDecide("changes_requested")}
               className="inline-flex items-center gap-2 rounded-sm border border-white/15 px-4 py-2 text-[11px] uppercase tracking-[0.25em] text-white/70 hover:text-white disabled:opacity-60"
             >
-              <Pencil className="h-3.5 w-3.5" /> Change something
+              <Pencil className="h-3.5 w-3.5" /> {t("hero.heroButtonChange")}
             </button>
             <button
               disabled={busy}
               onClick={() => onDecide("shelved")}
               className="inline-flex items-center gap-2 rounded-sm border border-white/15 px-4 py-2 text-[11px] uppercase tracking-[0.25em] text-white/50 hover:text-white disabled:opacity-60"
             >
-              <Archive className="h-3.5 w-3.5" /> Not now
+              <Archive className="h-3.5 w-3.5" /> {t("hero.heroButtonNotNow")}
             </button>
           </div>
         </div>
