@@ -92,7 +92,7 @@ function FrassyDeskPage() {
         onPausedChange={(p) => save.mutate({ paused: p })}
       />
 
-      <BuildQueue paused={paused} />
+      <BuildQueue paused={paused} mode={mode} firstName={firstName} />
 
       {/* One conversation. The same Frassy, memory and voice included. */}
       <section className="mt-10">
