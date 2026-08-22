@@ -118,12 +118,11 @@ export type QueueItem = {
   progress: number;
   frassyNote: string | null;
   reasoning: string | null;
-  output: Record<string, unknown> | null;
   updatedAt: string;
 };
 
 const QUEUE_COLUMNS =
-  "id,oracle,move_name,move_type,money_layer,status,progress,frassy_note,reasoning,output,updated_at";
+  "id,oracle,move_name,move_type,money_layer,status,progress,frassy_note,reasoning,updated_at";
 
 function toQueueItem(r: any): QueueItem {
   return {
@@ -136,7 +135,6 @@ function toQueueItem(r: any): QueueItem {
     progress: Number(r.progress ?? 0),
     frassyNote: (r.frassy_note as string | null) ?? null,
     reasoning: (r.reasoning as string | null) ?? null,
-    output: (r.output && typeof r.output === "object" ? (r.output as Record<string, unknown>) : null),
     updatedAt: String(r.updated_at ?? ""),
   };
 }
