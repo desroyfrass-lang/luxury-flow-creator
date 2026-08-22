@@ -3,12 +3,13 @@ import { useEffect, useMemo, useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { Pin, PinOff, Archive, RefreshCw, ArrowUpRight, Plus, Sparkles } from "lucide-react";
+import { Pin, PinOff, Archive, RefreshCw, ArrowUpRight, Plus } from "lucide-react";
 import { PageFeedback } from "@/components/page-feedback";
 import { supabase } from "@/integrations/supabase/client";
 import { checkIsAdmin } from "@/lib/admin.functions";
 import { FrassyChat } from "@/components/frassy-chat";
 import { DeskHeader } from "@/components/frassy/desk-header";
+import { BuildQueue } from "@/components/frassy/build-queue";
 import { getDeskAutonomy, setDeskAutonomy, type DeskAutonomy } from "@/lib/frassy/oracles.functions";
 import { DEFAULT_AUTONOMY, type AutonomyMode } from "@/lib/frassy/autonomy";
 import {
@@ -91,21 +92,7 @@ function FrassyDeskPage() {
         onPausedChange={(p) => save.mutate({ paused: p })}
       />
 
-      {/* Build Queue — Frassy's finished work lands here (Step 2). */}
-      <section className="mt-10">
-        <div className="border-b border-white/10 pb-4">
-          <div className="text-[10px] uppercase tracking-[0.4em] text-[color:var(--gold)]">
-            Build queue
-          </div>
-          <h2 className="mt-2 font-display text-2xl text-white">Waiting on you</h2>
-        </div>
-        <div className="mt-4 flex items-start gap-4 rounded-sm border border-dashed border-white/15 px-6 py-10">
-          <Sparkles className="mt-0.5 h-5 w-5 shrink-0 text-[color:var(--gold)]" />
-          <p className="text-sm text-white/60">
-            Nothing waiting for you right now. I'm building in the background — check back shortly.
-          </p>
-        </div>
-      </section>
+      <BuildQueue paused={paused} />
 
       {/* One conversation. The same Frassy, memory and voice included. */}
       <section className="mt-10">
