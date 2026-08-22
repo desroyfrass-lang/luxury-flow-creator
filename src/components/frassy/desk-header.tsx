@@ -8,6 +8,7 @@
 import { useState } from "react";
 import { Check, ChevronDown, Pause, Play } from "lucide-react";
 import { FrassyLook } from "@/components/frassy/frassy-look";
+import { t } from "@/lib/i18n";
 import {
   AUTONOMY_META,
   AUTONOMY_MODES,
