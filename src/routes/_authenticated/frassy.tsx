@@ -376,8 +376,7 @@ function StoreOperations() {
           ))}
         </ul>
       </section>
-      <PageFeedback pageTitle="Frassy OS" />
-    </FrassyShell>
+    </>
   );
 }
 
