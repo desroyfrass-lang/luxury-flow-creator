@@ -22,6 +22,7 @@ import {
   type WelcomeTier,
 } from "@/lib/welcome-hall/daily-welcome";
 import { FrassyLook } from "@/components/frassy/frassy-look";
+import { t as copy } from "@/lib/i18n";
 
 export function DailyWelcomeCeremony({ next = "/room" }: { next?: string }) {
   const navigate = useNavigate();
