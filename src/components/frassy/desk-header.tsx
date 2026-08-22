@@ -7,6 +7,7 @@
 
 import { useState } from "react";
 import { Check, ChevronDown, Pause, Play } from "lucide-react";
+import { FrassyLook } from "@/components/frassy/frassy-look";
 import {
   AUTONOMY_META,
   AUTONOMY_MODES,
@@ -36,13 +37,19 @@ export function DeskHeader({
   return (
     <header className="rounded-sm border border-white/10 bg-white/[0.03] px-6 py-6">
       <div className="flex flex-wrap items-start justify-between gap-6">
-        <div>
-          <div className="text-[10px] uppercase tracking-[0.45em] text-[color:var(--gold)]">
-            Frassy · Money Moves Desk
+        <div className="flex items-start gap-5">
+          <FrassyLook room="workshop" size={112} showCaption={false} />
+          <div>
+            <div className="text-[10px] uppercase tracking-[0.45em] text-[color:var(--gold)]">
+              Frassy · Money Moves Desk
+            </div>
+            <h1 className="mt-3 font-display text-3xl text-white md:text-4xl">
+              Frassy is building for {firstName ? `${firstName}'s` : "your"} freedom
+            </h1>
+            <p className="mt-2 text-xs text-white/40">
+              Tap her outfit or her hair — everything she wears is in the store.
+            </p>
           </div>
-          <h1 className="mt-3 font-display text-3xl text-white md:text-4xl">
-            Frassy is building for {firstName ? `${firstName}'s` : "your"} freedom
-          </h1>
         </div>
 
         <div className="flex items-center gap-3">
