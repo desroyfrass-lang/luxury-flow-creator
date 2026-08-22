@@ -1,12 +1,16 @@
-import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { Pin, PinOff, Archive, RefreshCw, ArrowUpRight, Plus } from "lucide-react";
+import { Pin, PinOff, Archive, RefreshCw, ArrowUpRight, Plus, Sparkles } from "lucide-react";
 import { PageFeedback } from "@/components/page-feedback";
 import { supabase } from "@/integrations/supabase/client";
 import { checkIsAdmin } from "@/lib/admin.functions";
+import { FrassyChat } from "@/components/frassy-chat";
+import { DeskHeader } from "@/components/frassy/desk-header";
+import { getDeskAutonomy, setDeskAutonomy, type DeskAutonomy } from "@/lib/frassy/oracles.functions";
+import { DEFAULT_AUTONOMY, type AutonomyMode } from "@/lib/frassy/autonomy";
 import {
   getDailyBriefing,
   listNotes,
@@ -18,8 +22,107 @@ import {
 } from "@/lib/frassy.functions";
 
 export const Route = createFileRoute("/_authenticated/frassy")({
-  component: FrassyOS,
+  head: () => ({
+    meta: [
+      { title: "Frassy's Money Moves Desk — Frass" },
+      {
+        name: "description",
+        content:
+          "Your private desk with Frassy: approve the Money Moves she has finished, and watch your path to financial freedom.",
+      },
+      { property: "og:title", content: "Frassy's Money Moves Desk — Frass" },
+      {
+        property: "og:description",
+        content: "Approve what Frassy built for you and track your path to financial freedom.",
+      },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
+    ],
+  }),
+  component: FrassyDeskPage,
 });
+
+// ─────────────────────────────────────────────────────────────────────────────
+// STEP 1 — The Desk itself: header, one embedded conversation with Frassy, and
+// the Build Queue slot her finished work will drop into.
+// ─────────────────────────────────────────────────────────────────────────────
+function FrassyDeskPage() {
+  const qc = useQueryClient();
+  const autonomyFn = useServerFn(getDeskAutonomy);
+  const saveAutonomyFn = useServerFn(setDeskAutonomy);
+  const isAdminFn = useServerFn(checkIsAdmin);
+  const [fallbackName, setFallbackName] = useState("");
+
+  useEffect(() => {
+    supabase.auth.getUser().then(({ data }) => {
+      const u = data.user;
+      const full = (u?.user_metadata?.full_name as string | undefined) ?? "";
+      setFallbackName(full.split(" ")[0] || (u?.email?.split("@")[0] ?? ""));
+    });
+  }, []);
+
+  const desk = useQuery<DeskAutonomy>({
+    queryKey: ["frassy", "desk-autonomy"],
+    queryFn: () => autonomyFn(),
+    staleTime: 30_000,
+  });
+
+  const admin = useQuery({ queryKey: ["is-admin"], queryFn: () => isAdminFn(), staleTime: 60_000 });
+
+  const save = useMutation({
+    mutationFn: (input: { mode?: AutonomyMode; paused?: boolean }) =>
+      saveAutonomyFn({ data: input }),
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["frassy", "desk-autonomy"] }),
+    onError: () => toast.error("I couldn't save that just now. Try once more."),
+  });
+
+  const mode = desk.data?.mode ?? DEFAULT_AUTONOMY;
+  const paused = desk.data?.paused ?? false;
+  const firstName = desk.data?.firstName || fallbackName;
+
+  return (
+    <FrassyShell>
+      <DeskHeader
+        firstName={firstName}
+        mode={mode}
+        paused={paused}
+        saving={save.isPending || desk.isLoading}
+        onModeChange={(m) => save.mutate({ mode: m })}
+        onPausedChange={(p) => save.mutate({ paused: p })}
+      />
+
+      {/* Build Queue — Frassy's finished work lands here (Step 2). */}
+      <section className="mt-10">
+        <div className="border-b border-white/10 pb-4">
+          <div className="text-[10px] uppercase tracking-[0.4em] text-[color:var(--gold)]">
+            Build queue
+          </div>
+          <h2 className="mt-2 font-display text-2xl text-white">Waiting on you</h2>
+        </div>
+        <div className="mt-4 flex items-start gap-4 rounded-sm border border-dashed border-white/15 px-6 py-10">
+          <Sparkles className="mt-0.5 h-5 w-5 shrink-0 text-[color:var(--gold)]" />
+          <p className="text-sm text-white/60">
+            Nothing waiting for you right now. I'm building in the background — check back shortly.
+          </p>
+        </div>
+      </section>
+
+      {/* One conversation. The same Frassy, memory and voice included. */}
+      <section className="mt-10">
+        <div className="border-b border-white/10 pb-4">
+          <div className="text-[10px] uppercase tracking-[0.4em] text-white/40">Talk to me</div>
+          <h2 className="mt-2 font-display text-2xl text-white">Frassy</h2>
+        </div>
+        <div className="mt-4 overflow-hidden rounded-sm border border-white/10">
+          <FrassyChat embedded tone="dark" />
+        </div>
+      </section>
+
+      {admin.data ? <StoreOperations /> : <div className="pb-24" />}
+      <PageFeedback pageTitle="Frassy Desk" />
+    </FrassyShell>
+  );
+}
 
 function greeting(now = new Date()) {
   const h = now.getHours();
