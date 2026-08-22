@@ -26,6 +26,8 @@ const ALLOWLIST = [
   "simulator",
   "release",
   "deploy",
+  "lovable/email",
+  "webhook",
 ];
 
 /** Wording a partner must never read. */
