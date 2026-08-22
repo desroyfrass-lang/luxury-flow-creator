@@ -21,7 +21,7 @@ import {
   TIER_BY_ID,
   type WelcomeTier,
 } from "@/lib/welcome-hall/daily-welcome";
-import frassyGold from "@/assets/frassy-gold.png.asset.json";
+import { FrassyLook } from "@/components/frassy/frassy-look";
 
 export function DailyWelcomeCeremony({ next = "/room" }: { next?: string }) {
   const navigate = useNavigate();
@@ -129,11 +129,7 @@ export function DailyWelcomeCeremony({ next = "/room" }: { next?: string }) {
       </div>
 
       <div className="mt-7 flex items-start gap-5">
-        <img
-          src={frassyGold.url}
-          alt="Frassy, host of Frass Hill"
-          className="h-20 w-20 shrink-0 rounded-full object-cover"
-        />
+        <FrassyLook room="hall" size={112} showCaption={false} />
         <div className="space-y-4">
           {(mounted ? script.lines.slice(0, line + 1) : []).map((l, i) => (
             <p
