@@ -99,3 +99,93 @@ export const setDeskAutonomy = createServerFn({ method: "POST" })
       firstName: "",
     };
   });
+
+// ─────────────────────────────────────────────────────────────────────────────
+// STEP 2 — The Build Queue.
+//
+// Frassy's finished work waits here for one word from the partner: launch it,
+// change it, or leave it. Nothing goes live on its own.
+// Reuses the existing frassy_oracle_tasks table — no second store of work.
+// ─────────────────────────────────────────────────────────────────────────────
+
+export type QueueItem = {
+  id: string;
+  oracle: string;
+  moveName: string;
+  moveType: string;
+  moneyLayer: string;
+  status: string;
+  progress: number;
+  frassyNote: string | null;
+  reasoning: string | null;
+  output: unknown;
+  updatedAt: string;
+};
+
+const QUEUE_COLUMNS =
+  "id,oracle,move_name,move_type,money_layer,status,progress,frassy_note,reasoning,output,updated_at";
+
+function toQueueItem(r: any): QueueItem {
+  return {
+    id: String(r.id),
+    oracle: String(r.oracle ?? ""),
+    moveName: String(r.move_name ?? ""),
+    moveType: String(r.move_type ?? ""),
+    moneyLayer: String(r.money_layer ?? "immediate-income"),
+    status: String(r.status ?? "queued"),
+    progress: Number(r.progress ?? 0),
+    frassyNote: (r.frassy_note as string | null) ?? null,
+    reasoning: (r.reasoning as string | null) ?? null,
+    output: r.output ?? null,
+    updatedAt: String(r.updated_at ?? ""),
+  };
+}
+
+export const listBuildQueue = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }): Promise<QueueItem[]> => {
+    const sb = context.supabase as unknown as { from: (t: string) => any };
+    const { data, error } = await sb
+      .from("frassy_oracle_tasks")
+      .select(QUEUE_COLUMNS)
+      .eq("partner_id", context.userId)
+      .order("updated_at", { ascending: false })
+      .limit(40);
+
+    if (error) throw new Error("I couldn't open your queue just now.");
+    return (data ?? []).map(toQueueItem);
+  });
+
+const DECISIONS = ["approved", "changes_requested", "shelved"] as const;
+type Decision = (typeof DECISIONS)[number];
+
+export const decideBuildQueueItem = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((data: { id?: string; decision?: string; note?: string }) => {
+    if (!data?.id || typeof data.id !== "string") throw new Error("Which piece of work?");
+    if (!DECISIONS.includes(data.decision as Decision)) throw new Error("Unknown decision.");
+    return {
+      id: data.id,
+      decision: data.decision as Decision,
+      note: typeof data.note === "string" ? data.note.slice(0, 2000) : "",
+    };
+  })
+  .handler(async ({ context, data }): Promise<QueueItem> => {
+    const sb = context.supabase as unknown as { from: (t: string) => any };
+
+    const { data: saved, error } = await sb
+      .from("frassy_oracle_tasks")
+      .update({
+        status: data.decision,
+        progress: data.decision === "approved" ? 100 : undefined,
+        reasoning: data.note || undefined,
+        updated_at: new Date().toISOString(),
+      })
+      .eq("id", data.id)
+      .eq("partner_id", context.userId)
+      .select(QUEUE_COLUMNS)
+      .maybeSingle();
+
+    if (error || !saved) throw new Error("I couldn't record that decision. Try once more.");
+    return toQueueItem(saved);
+  });
