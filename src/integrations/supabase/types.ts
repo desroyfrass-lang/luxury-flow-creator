@@ -2317,6 +2317,36 @@ export type Database = {
         }
         Relationships: []
       }
+      frassy_autonomy_settings: {
+        Row: {
+          autonomy_mode: string
+          changed_at: string
+          created_at: string
+          freedom_number: number | null
+          id: string
+          partner_id: string
+          paused: boolean
+        }
+        Insert: {
+          autonomy_mode?: string
+          changed_at?: string
+          created_at?: string
+          freedom_number?: number | null
+          id?: string
+          partner_id: string
+          paused?: boolean
+        }
+        Update: {
+          autonomy_mode?: string
+          changed_at?: string
+          created_at?: string
+          freedom_number?: number | null
+          id?: string
+          partner_id?: string
+          paused?: boolean
+        }
+        Relationships: []
+      }
       frassy_notes: {
         Row: {
           archived_at: string | null
@@ -2344,6 +2374,54 @@ export type Database = {
           pinned?: boolean
           updated_at?: string
           user_id?: string
+        }
+        Relationships: []
+      }
+      frassy_oracle_tasks: {
+        Row: {
+          created_at: string
+          frassy_note: string | null
+          id: string
+          money_layer: string
+          move_name: string
+          move_type: string
+          oracle: string
+          output: Json
+          partner_id: string
+          progress: number
+          reasoning: string | null
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          frassy_note?: string | null
+          id?: string
+          money_layer?: string
+          move_name: string
+          move_type?: string
+          oracle: string
+          output?: Json
+          partner_id: string
+          progress?: number
+          reasoning?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          frassy_note?: string | null
+          id?: string
+          money_layer?: string
+          move_name?: string
+          move_type?: string
+          oracle?: string
+          output?: Json
+          partner_id?: string
+          progress?: number
+          reasoning?: string | null
+          status?: string
+          updated_at?: string
         }
         Relationships: []
       }
