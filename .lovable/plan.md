@@ -36,6 +36,16 @@ In priority order, replacing default copy with the new source:
 ### 4. A guard so it doesn't drift back
 A permanent test scans partner-facing components for banned wording ("Error:", "Task completed successfully", "Submit", "AI", "system") and fails the build if new generic copy appears. Founder-only Control Room diagnostics are exempt — that surface is allowed to be technical.
 
+## Conditions of approval (accepted)
+
+1. **Delivery set** — `locales/frassy-en.json`, `src/lib/frassy/voice-copy.ts` (`t`, `tForTier`, `validateTokens`), `FRASSY_HARD_RULES` in `src/lib/frassy/personality.ts`, `src/lib/i18n.ts`, the copy-lint and token-validation tests, and `docs/frassy-voice.md`. Everything lands in preview first.
+2. **Nothing goes to the live site until your QA passes in preview** — you review `/frassy` in Beginner mode and confirm Frassy's voice on the hero, approvals, confirmations, empty states and receipts; permission checks confirm a collaborator cannot approve or launch while Founder and partner owner can; Teleporter receipts for the demo runs carry the correct fields.
+3. **Checks block bad copy** — the copy lint runs on every build; banned wording in partner-facing screens fails it. Founder-only Control Room and admin paths are allowlisted.
+4. **Legal and financial wording keeps its exact substance** — tone only. Any change of meaning waits for your sign-off.
+5. **Staged rollout with an instant undo** — the new copy layer sits behind a switch that can be turned off in one step, returning every screen to its current wording without a redeploy.
+
+Note on the platform: work is delivered as a preview deployment you approve and publish, not as a GitHub pull request — the review gate is the same, the mechanism is Lovable's publish step.
+
 ## What does not change
 
 No new page, no new district, no new chat engine, no visual redesign. Wording and the prompt only. Security, legal and financial notices keep their exact meaning — warmer delivery, identical substance.
