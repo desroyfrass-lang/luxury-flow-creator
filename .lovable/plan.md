@@ -42,7 +42,14 @@ No new page, no new district, no new chat engine, no visual redesign. Wording an
 
 ## Technical notes
 
-- New `src/lib/frassy/voice-copy.ts`: typed catalogue of copy keys with tier variants and `{name}` interpolation; the JSON config you supplied becomes its literal seed data.
-- `src/lib/frassy/personality.ts` gains a `FRASSY_HARD_RULES` block, appended in `src/routes/api/chat.ts` alongside the existing constitution sections.
+- **Source of copy:** `locales/frassy-en.json` — one developer- and translator-friendly file, nested keys (`global.headerGreeting`, `hero.heroFinishedTitle`, `hero.heroFrassyNote_Beginner`, `accessibility.audioPlayTooltip`, `ariaLiveAnnouncement_Launch`). The JSON you supplied is the literal seed.
+- **Loader:** `src/lib/i18n.ts` exposes `t(key, vars)`. The JSON is imported once (bundled at build time, so it works identically in the browser and during server rendering — no fetch, no per-request load cost). Placeholders use `{name}`, `{moveName}`, `{tierLabel}`; a missing key returns the key itself and logs once in development, never a blank screen.
+- **Component usage:** exactly your examples — `t('global.headerGreeting', { name })` in the Desk header, `t('hero.heroFinishedTitle', { moveName })` plus the tier-specific note and `hero.heroButtonLaunch` in the Money Move hero/queue card.
+- **Accessibility:** launch, approval and error announcements render inside `aria-live="polite"` regions using `ariaLiveAnnouncement_*` keys; each major message gets an icon button labelled `accessibility.audioPlayTooltip`, wired to the existing Frassy speech engine.
+- **Placeholder QA test:** a unit test loads the JSON, walks every string, and asserts (a) every `{token}` is in the allowed token list, (b) no `{missing}`/empty tokens, (c) every key referenced by a `t(...)` call in the source exists. Fails the build on drift.
+- **Minification (option B): deferred, not built now.** Short-key minification saves a few kilobytes but makes every log line and copy hotfix unreadable. The build script (`bun run build-i18n` producing `frassy-en.min.json` + `frassy-en.map.json`) is designed for and documented, and can be switched on later without touching a single component, since everything goes through `t()`.
+- **Copy hotfix process:** edit `locales/frassy-en.json`, deploy. No component changes, no rebuild step while minification stays off.
+- `src/lib/frassy/personality.ts` gains a `FRASSY_HARD_RULES` block, appended in `src/routes/api/chat.ts` alongside the existing constitution sections, so spoken Frassy obeys the same law as the wording on screen.
 - Autonomy tier presentation reads existing `frassy_autonomy_settings`; no schema change.
-- Regression guard added to the existing test suite as a copy lint over `src/components/**` and `src/routes/**`, with an allowlist for Founder-only paths.
+- Regression guard: a copy lint over `src/components/**` and `src/routes/**` for banned generic wording, with an allowlist for Founder-only diagnostic paths.
+
