@@ -141,10 +141,10 @@ const WARM_LINES = [
   "The store missed you.",
 ];
 
-function FrassyOS() {
-  const navigate = useNavigate();
+// Store operations — the owner's original Mission Control briefing, preserved
+// exactly as it was and now shown beneath the Desk for the site owner only.
+function StoreOperations() {
   const qc = useQueryClient();
-  const isAdminFn = useServerFn(checkIsAdmin);
   const briefFn = useServerFn(getDailyBriefing);
   const notesFn = useServerFn(listNotes);
   const createFn = useServerFn(createNote);
