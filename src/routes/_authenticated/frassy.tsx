@@ -163,12 +163,9 @@ function StoreOperations() {
     });
   }, []);
 
-  const admin = useQuery({ queryKey: ["is-admin"], queryFn: () => isAdminFn(), staleTime: 60_000 });
-
   const brief = useQuery<DailyBriefing>({
     queryKey: ["frassy", "briefing"],
     queryFn: () => briefFn(),
-    enabled: !!admin.data,
     staleTime: 60_000,
     refetchOnWindowFocus: false,
   });
@@ -176,7 +173,6 @@ function StoreOperations() {
   const notes = useQuery<FrassyNote[]>({
     queryKey: ["frassy", "notes"],
     queryFn: () => notesFn(),
-    enabled: !!admin.data,
   });
 
   const addNote = useMutation({
