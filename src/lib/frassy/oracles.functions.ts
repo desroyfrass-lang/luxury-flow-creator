@@ -118,7 +118,7 @@ export type QueueItem = {
   progress: number;
   frassyNote: string | null;
   reasoning: string | null;
-  output: unknown;
+  output: Record<string, unknown> | null;
   updatedAt: string;
 };
 
@@ -136,7 +136,7 @@ function toQueueItem(r: any): QueueItem {
     progress: Number(r.progress ?? 0),
     frassyNote: (r.frassy_note as string | null) ?? null,
     reasoning: (r.reasoning as string | null) ?? null,
-    output: r.output ?? null,
+    output: (r.output && typeof r.output === "object" ? (r.output as Record<string, unknown>) : null),
     updatedAt: String(r.updated_at ?? ""),
   };
 }
