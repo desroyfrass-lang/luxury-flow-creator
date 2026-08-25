@@ -124,6 +124,7 @@ import { Route as AuthenticatedWorkspaceRouteImport } from './routes/_authentica
 import { Route as AuthenticatedVisualReviewRouteImport } from './routes/_authenticated/visual-review'
 import { Route as AuthenticatedVaultRouteImport } from './routes/_authenticated/vault'
 import { Route as AuthenticatedTryOnRouteImport } from './routes/_authenticated/try-on'
+import { Route as AuthenticatedStudiosRouteImport } from './routes/_authenticated/studios'
 import { Route as AuthenticatedStudioRouteImport } from './routes/_authenticated/studio'
 import { Route as AuthenticatedRoomRouteImport } from './routes/_authenticated/room'
 import { Route as AuthenticatedPaymentProvidersRouteImport } from './routes/_authenticated/payment-providers'
@@ -160,6 +161,7 @@ import { Route as FrassDripWomenIndexRouteImport } from './routes/frass-drip.wom
 import { Route as FrassDripMenIndexRouteImport } from './routes/frass-drip.men.index'
 import { Route as BareDripWomenIndexRouteImport } from './routes/bare-drip.women.index'
 import { Route as BareDripMenIndexRouteImport } from './routes/bare-drip.men.index'
+import { Route as AuthenticatedStudiosIndexRouteImport } from './routes/_authenticated/studios.index'
 import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated/admin.index'
 import { Route as SocialMediaViralsCategorySubRouteImport } from './routes/social-media-virals.$category.$sub'
 import { Route as KidsWorldActivitySlugRouteImport } from './routes/kids-world.activity.$slug'
@@ -189,6 +191,11 @@ import { Route as AuthenticatedWorkspaceFirstVentureRouteImport } from './routes
 import { Route as AuthenticatedWorkspaceDailyDesignRouteImport } from './routes/_authenticated/workspace.daily-design'
 import { Route as AuthenticatedWorkspaceCardRouteImport } from './routes/_authenticated/workspace.card'
 import { Route as AuthenticatedWorkspaceAffiliateRouteImport } from './routes/_authenticated/workspace.affiliate'
+import { Route as AuthenticatedStudiosSeriesRouteImport } from './routes/_authenticated/studios.series'
+import { Route as AuthenticatedStudiosProductionsRouteImport } from './routes/_authenticated/studios.productions'
+import { Route as AuthenticatedStudiosCreateRouteImport } from './routes/_authenticated/studios.create'
+import { Route as AuthenticatedStudiosCharactersRouteImport } from './routes/_authenticated/studios.characters'
+import { Route as AuthenticatedStudiosAssetsRouteImport } from './routes/_authenticated/studios.assets'
 import { Route as AuthenticatedAdminVoiceRouteImport } from './routes/_authenticated/admin.voice'
 import { Route as AuthenticatedAdminVisualIndexRouteImport } from './routes/_authenticated/admin.visual-index'
 import { Route as AuthenticatedAdminViralsRouteImport } from './routes/_authenticated/admin.virals'
@@ -219,6 +226,7 @@ import { Route as LovableEmailQueueProcessRouteImport } from './routes/lovable/e
 import { Route as LovableEmailAuthWebhookRouteImport } from './routes/lovable/email/auth/webhook'
 import { Route as LovableEmailAuthPreviewRouteImport } from './routes/lovable/email/auth/preview'
 import { Route as FrassShapeGenderGoalsGoalRouteImport } from './routes/frass-shape.$gender.goals.$goal'
+import { Route as AuthenticatedStudiosProductionIdRouteImport } from './routes/_authenticated/studios.production.$id'
 
 const WelcomeHallRoute = WelcomeHallRouteImport.update({
   id: '/welcome-hall',
@@ -796,6 +804,11 @@ const AuthenticatedTryOnRoute = AuthenticatedTryOnRouteImport.update({
   path: '/try-on',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedStudiosRoute = AuthenticatedStudiosRouteImport.update({
+  id: '/studios',
+  path: '/studios',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedStudioRoute = AuthenticatedStudioRouteImport.update({
   id: '/studio',
   path: '/studio',
@@ -991,6 +1004,12 @@ const BareDripMenIndexRoute = BareDripMenIndexRouteImport.update({
   path: '/',
   getParentRoute: () => BareDripMenRoute,
 } as any)
+const AuthenticatedStudiosIndexRoute =
+  AuthenticatedStudiosIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => AuthenticatedStudiosRoute,
+  } as any)
 const AuthenticatedAdminIndexRoute = AuthenticatedAdminIndexRouteImport.update({
   id: '/',
   path: '/',
@@ -1153,6 +1172,36 @@ const AuthenticatedWorkspaceAffiliateRoute =
     id: '/affiliate',
     path: '/affiliate',
     getParentRoute: () => AuthenticatedWorkspaceRoute,
+  } as any)
+const AuthenticatedStudiosSeriesRoute =
+  AuthenticatedStudiosSeriesRouteImport.update({
+    id: '/series',
+    path: '/series',
+    getParentRoute: () => AuthenticatedStudiosRoute,
+  } as any)
+const AuthenticatedStudiosProductionsRoute =
+  AuthenticatedStudiosProductionsRouteImport.update({
+    id: '/productions',
+    path: '/productions',
+    getParentRoute: () => AuthenticatedStudiosRoute,
+  } as any)
+const AuthenticatedStudiosCreateRoute =
+  AuthenticatedStudiosCreateRouteImport.update({
+    id: '/create',
+    path: '/create',
+    getParentRoute: () => AuthenticatedStudiosRoute,
+  } as any)
+const AuthenticatedStudiosCharactersRoute =
+  AuthenticatedStudiosCharactersRouteImport.update({
+    id: '/characters',
+    path: '/characters',
+    getParentRoute: () => AuthenticatedStudiosRoute,
+  } as any)
+const AuthenticatedStudiosAssetsRoute =
+  AuthenticatedStudiosAssetsRouteImport.update({
+    id: '/assets',
+    path: '/assets',
+    getParentRoute: () => AuthenticatedStudiosRoute,
   } as any)
 const AuthenticatedAdminVoiceRoute = AuthenticatedAdminVoiceRouteImport.update({
   id: '/voice',
@@ -1325,6 +1374,12 @@ const FrassShapeGenderGoalsGoalRoute =
     path: '/goals/$goal',
     getParentRoute: () => FrassShapeGenderRoute,
   } as any)
+const AuthenticatedStudiosProductionIdRoute =
+  AuthenticatedStudiosProductionIdRouteImport.update({
+    id: '/production/$id',
+    path: '/production/$id',
+    getParentRoute: () => AuthenticatedStudiosRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -1403,6 +1458,7 @@ export interface FileRoutesByFullPath {
   '/payment-providers': typeof AuthenticatedPaymentProvidersRoute
   '/room': typeof AuthenticatedRoomRoute
   '/studio': typeof AuthenticatedStudioRoute
+  '/studios': typeof AuthenticatedStudiosRouteWithChildren
   '/try-on': typeof AuthenticatedTryOnRoute
   '/vault': typeof AuthenticatedVaultRoute
   '/visual-review': typeof AuthenticatedVisualReviewRoute
@@ -1494,6 +1550,11 @@ export interface FileRoutesByFullPath {
   '/admin/virals': typeof AuthenticatedAdminViralsRoute
   '/admin/visual-index': typeof AuthenticatedAdminVisualIndexRoute
   '/admin/voice': typeof AuthenticatedAdminVoiceRoute
+  '/studios/assets': typeof AuthenticatedStudiosAssetsRoute
+  '/studios/characters': typeof AuthenticatedStudiosCharactersRoute
+  '/studios/create': typeof AuthenticatedStudiosCreateRoute
+  '/studios/productions': typeof AuthenticatedStudiosProductionsRoute
+  '/studios/series': typeof AuthenticatedStudiosSeriesRoute
   '/workspace/affiliate': typeof AuthenticatedWorkspaceAffiliateRoute
   '/workspace/card': typeof AuthenticatedWorkspaceCardRoute
   '/workspace/daily-design': typeof AuthenticatedWorkspaceDailyDesignRoute
@@ -1523,6 +1584,7 @@ export interface FileRoutesByFullPath {
   '/kids-world/activity/$slug': typeof KidsWorldActivitySlugRoute
   '/social-media-virals/$category/$sub': typeof SocialMediaViralsCategorySubRouteWithChildren
   '/admin/': typeof AuthenticatedAdminIndexRoute
+  '/studios/': typeof AuthenticatedStudiosIndexRoute
   '/bare-drip/men/': typeof BareDripMenIndexRoute
   '/bare-drip/women/': typeof BareDripWomenIndexRoute
   '/frass-drip/men/': typeof FrassDripMenIndexRoute
@@ -1531,6 +1593,7 @@ export interface FileRoutesByFullPath {
   '/frass-plus/$gender/': typeof FrassPlusGenderIndexRoute
   '/frass-shape/$gender/': typeof FrassShapeGenderIndexRoute
   '/kids-world/$age/': typeof KidsWorldAgeIndexRoute
+  '/studios/production/$id': typeof AuthenticatedStudiosProductionIdRoute
   '/frass-shape/$gender/goals/$goal': typeof FrassShapeGenderGoalsGoalRoute
   '/lovable/email/auth/preview': typeof LovableEmailAuthPreviewRoute
   '/lovable/email/auth/webhook': typeof LovableEmailAuthWebhookRoute
@@ -1683,6 +1746,11 @@ export interface FileRoutesByTo {
   '/admin/virals': typeof AuthenticatedAdminViralsRoute
   '/admin/visual-index': typeof AuthenticatedAdminVisualIndexRoute
   '/admin/voice': typeof AuthenticatedAdminVoiceRoute
+  '/studios/assets': typeof AuthenticatedStudiosAssetsRoute
+  '/studios/characters': typeof AuthenticatedStudiosCharactersRoute
+  '/studios/create': typeof AuthenticatedStudiosCreateRoute
+  '/studios/productions': typeof AuthenticatedStudiosProductionsRoute
+  '/studios/series': typeof AuthenticatedStudiosSeriesRoute
   '/workspace/affiliate': typeof AuthenticatedWorkspaceAffiliateRoute
   '/workspace/card': typeof AuthenticatedWorkspaceCardRoute
   '/workspace/daily-design': typeof AuthenticatedWorkspaceDailyDesignRoute
@@ -1712,6 +1780,7 @@ export interface FileRoutesByTo {
   '/kids-world/activity/$slug': typeof KidsWorldActivitySlugRoute
   '/social-media-virals/$category/$sub': typeof SocialMediaViralsCategorySubRouteWithChildren
   '/admin': typeof AuthenticatedAdminIndexRoute
+  '/studios': typeof AuthenticatedStudiosIndexRoute
   '/bare-drip/men': typeof BareDripMenIndexRoute
   '/bare-drip/women': typeof BareDripWomenIndexRoute
   '/frass-drip/men': typeof FrassDripMenIndexRoute
@@ -1720,6 +1789,7 @@ export interface FileRoutesByTo {
   '/frass-plus/$gender': typeof FrassPlusGenderIndexRoute
   '/frass-shape/$gender': typeof FrassShapeGenderIndexRoute
   '/kids-world/$age': typeof KidsWorldAgeIndexRoute
+  '/studios/production/$id': typeof AuthenticatedStudiosProductionIdRoute
   '/frass-shape/$gender/goals/$goal': typeof FrassShapeGenderGoalsGoalRoute
   '/lovable/email/auth/preview': typeof LovableEmailAuthPreviewRoute
   '/lovable/email/auth/webhook': typeof LovableEmailAuthWebhookRoute
@@ -1805,6 +1875,7 @@ export interface FileRoutesById {
   '/_authenticated/payment-providers': typeof AuthenticatedPaymentProvidersRoute
   '/_authenticated/room': typeof AuthenticatedRoomRoute
   '/_authenticated/studio': typeof AuthenticatedStudioRoute
+  '/_authenticated/studios': typeof AuthenticatedStudiosRouteWithChildren
   '/_authenticated/try-on': typeof AuthenticatedTryOnRoute
   '/_authenticated/vault': typeof AuthenticatedVaultRoute
   '/_authenticated/visual-review': typeof AuthenticatedVisualReviewRoute
@@ -1896,6 +1967,11 @@ export interface FileRoutesById {
   '/_authenticated/admin/virals': typeof AuthenticatedAdminViralsRoute
   '/_authenticated/admin/visual-index': typeof AuthenticatedAdminVisualIndexRoute
   '/_authenticated/admin/voice': typeof AuthenticatedAdminVoiceRoute
+  '/_authenticated/studios/assets': typeof AuthenticatedStudiosAssetsRoute
+  '/_authenticated/studios/characters': typeof AuthenticatedStudiosCharactersRoute
+  '/_authenticated/studios/create': typeof AuthenticatedStudiosCreateRoute
+  '/_authenticated/studios/productions': typeof AuthenticatedStudiosProductionsRoute
+  '/_authenticated/studios/series': typeof AuthenticatedStudiosSeriesRoute
   '/_authenticated/workspace/affiliate': typeof AuthenticatedWorkspaceAffiliateRoute
   '/_authenticated/workspace/card': typeof AuthenticatedWorkspaceCardRoute
   '/_authenticated/workspace/daily-design': typeof AuthenticatedWorkspaceDailyDesignRoute
@@ -1925,6 +2001,7 @@ export interface FileRoutesById {
   '/kids-world/activity/$slug': typeof KidsWorldActivitySlugRoute
   '/social-media-virals/$category/$sub': typeof SocialMediaViralsCategorySubRouteWithChildren
   '/_authenticated/admin/': typeof AuthenticatedAdminIndexRoute
+  '/_authenticated/studios/': typeof AuthenticatedStudiosIndexRoute
   '/bare-drip/men/': typeof BareDripMenIndexRoute
   '/bare-drip/women/': typeof BareDripWomenIndexRoute
   '/frass-drip/men/': typeof FrassDripMenIndexRoute
@@ -1933,6 +2010,7 @@ export interface FileRoutesById {
   '/frass-plus/$gender/': typeof FrassPlusGenderIndexRoute
   '/frass-shape/$gender/': typeof FrassShapeGenderIndexRoute
   '/kids-world/$age/': typeof KidsWorldAgeIndexRoute
+  '/_authenticated/studios/production/$id': typeof AuthenticatedStudiosProductionIdRoute
   '/frass-shape/$gender/goals/$goal': typeof FrassShapeGenderGoalsGoalRoute
   '/lovable/email/auth/preview': typeof LovableEmailAuthPreviewRoute
   '/lovable/email/auth/webhook': typeof LovableEmailAuthWebhookRoute
@@ -2018,6 +2096,7 @@ export interface FileRouteTypes {
     | '/payment-providers'
     | '/room'
     | '/studio'
+    | '/studios'
     | '/try-on'
     | '/vault'
     | '/visual-review'
@@ -2109,6 +2188,11 @@ export interface FileRouteTypes {
     | '/admin/virals'
     | '/admin/visual-index'
     | '/admin/voice'
+    | '/studios/assets'
+    | '/studios/characters'
+    | '/studios/create'
+    | '/studios/productions'
+    | '/studios/series'
     | '/workspace/affiliate'
     | '/workspace/card'
     | '/workspace/daily-design'
@@ -2138,6 +2222,7 @@ export interface FileRouteTypes {
     | '/kids-world/activity/$slug'
     | '/social-media-virals/$category/$sub'
     | '/admin/'
+    | '/studios/'
     | '/bare-drip/men/'
     | '/bare-drip/women/'
     | '/frass-drip/men/'
@@ -2146,6 +2231,7 @@ export interface FileRouteTypes {
     | '/frass-plus/$gender/'
     | '/frass-shape/$gender/'
     | '/kids-world/$age/'
+    | '/studios/production/$id'
     | '/frass-shape/$gender/goals/$goal'
     | '/lovable/email/auth/preview'
     | '/lovable/email/auth/webhook'
@@ -2298,6 +2384,11 @@ export interface FileRouteTypes {
     | '/admin/virals'
     | '/admin/visual-index'
     | '/admin/voice'
+    | '/studios/assets'
+    | '/studios/characters'
+    | '/studios/create'
+    | '/studios/productions'
+    | '/studios/series'
     | '/workspace/affiliate'
     | '/workspace/card'
     | '/workspace/daily-design'
@@ -2327,6 +2418,7 @@ export interface FileRouteTypes {
     | '/kids-world/activity/$slug'
     | '/social-media-virals/$category/$sub'
     | '/admin'
+    | '/studios'
     | '/bare-drip/men'
     | '/bare-drip/women'
     | '/frass-drip/men'
@@ -2335,6 +2427,7 @@ export interface FileRouteTypes {
     | '/frass-plus/$gender'
     | '/frass-shape/$gender'
     | '/kids-world/$age'
+    | '/studios/production/$id'
     | '/frass-shape/$gender/goals/$goal'
     | '/lovable/email/auth/preview'
     | '/lovable/email/auth/webhook'
@@ -2419,6 +2512,7 @@ export interface FileRouteTypes {
     | '/_authenticated/payment-providers'
     | '/_authenticated/room'
     | '/_authenticated/studio'
+    | '/_authenticated/studios'
     | '/_authenticated/try-on'
     | '/_authenticated/vault'
     | '/_authenticated/visual-review'
@@ -2510,6 +2604,11 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/virals'
     | '/_authenticated/admin/visual-index'
     | '/_authenticated/admin/voice'
+    | '/_authenticated/studios/assets'
+    | '/_authenticated/studios/characters'
+    | '/_authenticated/studios/create'
+    | '/_authenticated/studios/productions'
+    | '/_authenticated/studios/series'
     | '/_authenticated/workspace/affiliate'
     | '/_authenticated/workspace/card'
     | '/_authenticated/workspace/daily-design'
@@ -2539,6 +2638,7 @@ export interface FileRouteTypes {
     | '/kids-world/activity/$slug'
     | '/social-media-virals/$category/$sub'
     | '/_authenticated/admin/'
+    | '/_authenticated/studios/'
     | '/bare-drip/men/'
     | '/bare-drip/women/'
     | '/frass-drip/men/'
@@ -2547,6 +2647,7 @@ export interface FileRouteTypes {
     | '/frass-plus/$gender/'
     | '/frass-shape/$gender/'
     | '/kids-world/$age/'
+    | '/_authenticated/studios/production/$id'
     | '/frass-shape/$gender/goals/$goal'
     | '/lovable/email/auth/preview'
     | '/lovable/email/auth/webhook'
@@ -3437,6 +3538,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedTryOnRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/studios': {
+      id: '/_authenticated/studios'
+      path: '/studios'
+      fullPath: '/studios'
+      preLoaderRoute: typeof AuthenticatedStudiosRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/studio': {
       id: '/_authenticated/studio'
       path: '/studio'
@@ -3689,6 +3797,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BareDripMenIndexRouteImport
       parentRoute: typeof BareDripMenRoute
     }
+    '/_authenticated/studios/': {
+      id: '/_authenticated/studios/'
+      path: '/'
+      fullPath: '/studios/'
+      preLoaderRoute: typeof AuthenticatedStudiosIndexRouteImport
+      parentRoute: typeof AuthenticatedStudiosRoute
+    }
     '/_authenticated/admin/': {
       id: '/_authenticated/admin/'
       path: '/'
@@ -3891,6 +4006,41 @@ declare module '@tanstack/react-router' {
       fullPath: '/workspace/affiliate'
       preLoaderRoute: typeof AuthenticatedWorkspaceAffiliateRouteImport
       parentRoute: typeof AuthenticatedWorkspaceRoute
+    }
+    '/_authenticated/studios/series': {
+      id: '/_authenticated/studios/series'
+      path: '/series'
+      fullPath: '/studios/series'
+      preLoaderRoute: typeof AuthenticatedStudiosSeriesRouteImport
+      parentRoute: typeof AuthenticatedStudiosRoute
+    }
+    '/_authenticated/studios/productions': {
+      id: '/_authenticated/studios/productions'
+      path: '/productions'
+      fullPath: '/studios/productions'
+      preLoaderRoute: typeof AuthenticatedStudiosProductionsRouteImport
+      parentRoute: typeof AuthenticatedStudiosRoute
+    }
+    '/_authenticated/studios/create': {
+      id: '/_authenticated/studios/create'
+      path: '/create'
+      fullPath: '/studios/create'
+      preLoaderRoute: typeof AuthenticatedStudiosCreateRouteImport
+      parentRoute: typeof AuthenticatedStudiosRoute
+    }
+    '/_authenticated/studios/characters': {
+      id: '/_authenticated/studios/characters'
+      path: '/characters'
+      fullPath: '/studios/characters'
+      preLoaderRoute: typeof AuthenticatedStudiosCharactersRouteImport
+      parentRoute: typeof AuthenticatedStudiosRoute
+    }
+    '/_authenticated/studios/assets': {
+      id: '/_authenticated/studios/assets'
+      path: '/assets'
+      fullPath: '/studios/assets'
+      preLoaderRoute: typeof AuthenticatedStudiosAssetsRouteImport
+      parentRoute: typeof AuthenticatedStudiosRoute
     }
     '/_authenticated/admin/voice': {
       id: '/_authenticated/admin/voice'
@@ -4102,6 +4252,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof FrassShapeGenderGoalsGoalRouteImport
       parentRoute: typeof FrassShapeGenderRoute
     }
+    '/_authenticated/studios/production/$id': {
+      id: '/_authenticated/studios/production/$id'
+      path: '/production/$id'
+      fullPath: '/studios/production/$id'
+      preLoaderRoute: typeof AuthenticatedStudiosProductionIdRouteImport
+      parentRoute: typeof AuthenticatedStudiosRoute
+    }
   }
 }
 
@@ -4162,6 +4319,29 @@ const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
 
 const AuthenticatedAdminRouteWithChildren =
   AuthenticatedAdminRoute._addFileChildren(AuthenticatedAdminRouteChildren)
+
+interface AuthenticatedStudiosRouteChildren {
+  AuthenticatedStudiosAssetsRoute: typeof AuthenticatedStudiosAssetsRoute
+  AuthenticatedStudiosCharactersRoute: typeof AuthenticatedStudiosCharactersRoute
+  AuthenticatedStudiosCreateRoute: typeof AuthenticatedStudiosCreateRoute
+  AuthenticatedStudiosProductionsRoute: typeof AuthenticatedStudiosProductionsRoute
+  AuthenticatedStudiosSeriesRoute: typeof AuthenticatedStudiosSeriesRoute
+  AuthenticatedStudiosIndexRoute: typeof AuthenticatedStudiosIndexRoute
+  AuthenticatedStudiosProductionIdRoute: typeof AuthenticatedStudiosProductionIdRoute
+}
+
+const AuthenticatedStudiosRouteChildren: AuthenticatedStudiosRouteChildren = {
+  AuthenticatedStudiosAssetsRoute: AuthenticatedStudiosAssetsRoute,
+  AuthenticatedStudiosCharactersRoute: AuthenticatedStudiosCharactersRoute,
+  AuthenticatedStudiosCreateRoute: AuthenticatedStudiosCreateRoute,
+  AuthenticatedStudiosProductionsRoute: AuthenticatedStudiosProductionsRoute,
+  AuthenticatedStudiosSeriesRoute: AuthenticatedStudiosSeriesRoute,
+  AuthenticatedStudiosIndexRoute: AuthenticatedStudiosIndexRoute,
+  AuthenticatedStudiosProductionIdRoute: AuthenticatedStudiosProductionIdRoute,
+}
+
+const AuthenticatedStudiosRouteWithChildren =
+  AuthenticatedStudiosRoute._addFileChildren(AuthenticatedStudiosRouteChildren)
 
 interface AuthenticatedWorkspaceRouteChildren {
   AuthenticatedWorkspaceAffiliateRoute: typeof AuthenticatedWorkspaceAffiliateRoute
@@ -4224,6 +4404,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedPaymentProvidersRoute: typeof AuthenticatedPaymentProvidersRoute
   AuthenticatedRoomRoute: typeof AuthenticatedRoomRoute
   AuthenticatedStudioRoute: typeof AuthenticatedStudioRoute
+  AuthenticatedStudiosRoute: typeof AuthenticatedStudiosRouteWithChildren
   AuthenticatedTryOnRoute: typeof AuthenticatedTryOnRoute
   AuthenticatedVaultRoute: typeof AuthenticatedVaultRoute
   AuthenticatedVisualReviewRoute: typeof AuthenticatedVisualReviewRoute
@@ -4257,6 +4438,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedPaymentProvidersRoute: AuthenticatedPaymentProvidersRoute,
   AuthenticatedRoomRoute: AuthenticatedRoomRoute,
   AuthenticatedStudioRoute: AuthenticatedStudioRoute,
+  AuthenticatedStudiosRoute: AuthenticatedStudiosRouteWithChildren,
   AuthenticatedTryOnRoute: AuthenticatedTryOnRoute,
   AuthenticatedVaultRoute: AuthenticatedVaultRoute,
   AuthenticatedVisualReviewRoute: AuthenticatedVisualReviewRoute,
