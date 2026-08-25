@@ -8,7 +8,7 @@ import {
   HeadContent,
   Scripts,
 } from "@tanstack/react-router";
-import { useEffect, type ReactNode } from "react";
+import { useEffect, useSyncExternalStore, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
@@ -23,6 +23,15 @@ import { FrassyEngineBadge } from "@/components/founder/frassy-engine-badge";
 
 import { frassySurface } from "@/lib/frassy/surfaces";
 import { FrassyHost } from "@/components/frassy-host";
+// Step 2 — existing Frassy systems, revived: the voice transport, the consent
+// moment, and the one-Frassy-at-a-time stage rule.
+import { FrassyConversationDock } from "@/components/voice/frassy-conversation-dock";
+import { FrassyConsentGate } from "@/components/frassy/frassy-consent-gate";
+import {
+  isEntranceActive,
+  isEntranceActiveServer,
+  subscribeEntrance,
+} from "@/lib/frassy/host-presence";
 import { DailyGate } from "@/components/workspace/daily-gate";
 import { ConstructionMode } from "@/components/construction/blueprint-mode";
 
@@ -136,7 +145,14 @@ function RootShell({ children }: { children: ReactNode }) {
 
 function FrassyCompanion() {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const entrance = useSyncExternalStore(
+    subscribeEntrance,
+    isEntranceActive,
+    isEntranceActiveServer,
+  );
   if (frassySurface(pathname) !== "beacon") return null;
+  // Step 2 — she never appears twice: the cinematic host holds the stage alone.
+  if (entrance) return null;
   return <FrassyChat />;
 }
 
@@ -153,6 +169,10 @@ function RootComponent() {
         {/* FRASS-0558 — one Frassy. She only floats where the page has no conversation of its own. */}
         <FrassyCompanion />
         <FrassyHost />
+        {/* Step 2 — one dock, globally mounted, self-gated by the surface rules. */}
+        <FrassyConversationDock />
+        {/* Step 2 — the visitor chooses voice before she ever speaks. */}
+        <FrassyConsentGate />
         {/* FRASS-0560 — every build begins at the front door. */}
         <FounderPreviewReset />
         {/* FRASS-0562 — simulate the state of a member, never a second account. */}
