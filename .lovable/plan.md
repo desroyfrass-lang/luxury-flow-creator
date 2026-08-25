@@ -28,6 +28,16 @@ Implementation of the frozen 201-card World Teleporter audit. No new pages, no r
 | / | unchanged (canonical) | Three-door cinematic arrival restored; doors point at canonical routes |
 | /welcome-hall | unchanged | Registry marks it red, your directive locks it as canonical — flagged, not touched |
 
+## Root arrival — three doors (correction, locked)
+
+The root stays canonical and never redirects to Welcome Hall. It presents the approved three-door cinematic arrival, restored from the existing arch concept and refreshed against the supplied reference imagery rather than redesigned:
+
+- **Door 1 — Frass District**: shopping and the FrassKicks retail ecosystem. Goes to `/frass-district`. Identity: luxury, shopping, elegance.
+- **Door 2 — Frass Hill**: community, Builders, opportunity, the wider ecosystem. Goes through the approved Frass Hill welcome experience. Identity: purpose, building, community.
+- **Door 3 — Frass Kids**: the children's and parent journey. Goes through the approved Frass Kids / Kids Valley welcome experience. Identity: wonder, animation, adventure, storybook.
+
+Three equal entrances. Frass Kids is never nested under the Frass Hill door, and the root is never returned to a two-door Shop-vs-Hill gateway. No new gateway page is created; the existing root arrival is updated in place, and each door keeps its own visual character.
+
 ## Content that must survive
 
 **/welcome (First Arrival ceremony)** — the spoken personal greeting, the arrival-state lookup and the walk into the Hall move into Welcome Hall as a *first-arrival state* (`/welcome-hall?arrival=first`). Nothing is deleted; the ceremony becomes one of the Hall's arrival states, exactly as the Welcome Architecture lock requires. Only after it renders inside the Hall does /welcome become a redirect that preserves any `next` parameter.
