@@ -46,6 +46,22 @@ export const STUDIO_NAV: StudioNavItem[] = [
   { id: "settings", label: "Settings", icon: "⚙️", to: "/studios/settings", plain: "How the studio behaves." },
 ];
 
+export const STUDIO_PRIMARY_NAV = ["dashboard", "create", "productions", "review", "publishing", "performance"] as const;
+
+export const STUDIO_SECONDARY_NAV = [
+  { label: "Library", ids: ["assets", "library", "locations", "animation", "music", "thumbnails"] },
+  { label: "Series & Characters", ids: ["series", "episodes", "characters", "voices"] },
+  { label: "Studio Tools", ids: ["scene-studio", "distribution", "calendar", "monetization", "analytics", "jobs"] },
+  { label: "Settings", ids: ["settings", "connections", "providers", "usage"] },
+] as const;
+
+export function studioNavItems(ids: readonly string[]): StudioNavItem[] {
+  return ids.flatMap((id) => {
+    const item = STUDIO_NAV.find((candidate) => candidate.id === id);
+    return item ? [item] : [];
+  });
+}
+
 export const PRODUCTION_TYPES = [
   { value: "full_episode", label: "Full Episode" },
   { value: "short_episode", label: "Short Episode" },

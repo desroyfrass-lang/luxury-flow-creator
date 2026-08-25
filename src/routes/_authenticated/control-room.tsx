@@ -6,7 +6,9 @@
 import { useState } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { IdentityGate } from "@/components/security/identity-gate";
-import { COMMAND_SECTIONS, type CommandSectionId } from "@/lib/founder/command-center";
+import { COMMAND_SECTIONS, FOUNDER_NAV_GROUPS, type CommandSectionId } from "@/lib/founder/command-center";
+import { useIsAdminStatus } from "@/hooks/use-is-admin";
+import { Button } from "@/components/ui/button";
 import { FounderHome } from "@/components/founder/founder-home";
 import { ReleaseApprovalPanel } from "@/components/founder/release-approval-panel";
 import { FounderWorkflowPanel } from "@/components/founder/founder-workflow-panel";
@@ -55,12 +57,30 @@ export const Route = createFileRoute("/_authenticated/control-room")({
       { name: "robots", content: "noindex,nofollow" },
     ],
   }),
-  component: () => (
-    <IdentityGate action="founder_command_center">
-      <ControlRoom />
-    </IdentityGate>
-  ),
+  component: FounderControlRoomGate,
 });
+
+function FounderControlRoomGate() {
+  const { isAdmin, loading } = useIsAdminStatus();
+  if (loading) return <AccessState title="Checking Founder access…" />;
+  if (!isAdmin) return <AccessState title="Founder access required" />;
+  return <IdentityGate action="founder_command_center"><ControlRoom /></IdentityGate>;
+}
+
+function AccessState({ title }: { title: string }) {
+  return (
+    <main className="mx-auto grid min-h-[70vh] max-w-lg place-items-center px-6 text-center">
+      <div>
+        <h1 className="font-display text-3xl uppercase">{title}</h1>
+        <p className="mt-3 text-sm text-muted-foreground">This Hall is protected. Your account permissions remain the final authority.</p>
+        <div className="mt-6 flex justify-center gap-3">
+          <Button asChild variant="outline"><Link to="/welcome-hall">Welcome Hall</Link></Button>
+          <Button asChild><Link to="/">Site Home</Link></Button>
+        </div>
+      </div>
+    </main>
+  );
+}
 
 function ControlRoom() {
   const [active, setActive] = useState<CommandSectionId>(() => {
@@ -74,11 +94,19 @@ function ControlRoom() {
     }
     return "home";
   });
-  const section = COMMAND_SECTIONS.find((s) => s.id === active)!;
+  const section = COMMAND_SECTIONS.find((s) => s.id === active) ?? COMMAND_SECTIONS.find((s) => s.id === "home");
+  if (!section) return null;
+  const activeGroup = FOUNDER_NAV_GROUPS.find((group) => group.sections.includes(active)) ?? FOUNDER_NAV_GROUPS[0];
+  if (!activeGroup) return null;
 
   return (
     <main className="mx-auto w-full max-w-5xl px-4 py-10">
-      <p className="text-xs uppercase tracking-[0.3em] text-[color:var(--gold)]">FRASS-0568</p>
+      <nav aria-label="Founder Hall location" className="flex flex-wrap items-center gap-2 text-[10px] uppercase tracking-[0.22em] text-muted-foreground">
+        <Link to="/welcome-hall" className="hover:text-foreground">Welcome Hall</Link><span>→</span>
+        <Link to="/control-room" className="text-[color:var(--gold)]">Founder Hall</Link><span>→</span>
+        <span aria-current="page">{activeGroup.label}</span>
+      </nav>
+      <p className="mt-5 text-xs uppercase tracking-[0.3em] text-[color:var(--gold)]">FRASS-0568</p>
       <h1 className="mt-2 text-3xl font-black uppercase tracking-tight">
         🎛️ Founder Control Room
       </h1>
@@ -90,24 +118,35 @@ function ControlRoom() {
       {/* The emergency switch, always in reach at the top. */}
       <PlatformProtectionHeaderToggle />
 
-      <nav className="mt-6 flex flex-wrap gap-2">
-        {COMMAND_SECTIONS.map((s) => (
-          <button
-            key={s.id}
-            onClick={() => setActive(s.id)}
-            className={`rounded-full border px-4 py-1.5 text-xs uppercase tracking-wide transition ${
-              active === s.id
+      <nav aria-label="Founder Hall primary navigation" className="mt-6 grid grid-cols-2 gap-2 sm:grid-cols-4">
+        {FOUNDER_NAV_GROUPS.map((group) => (
+          <Button
+            key={group.id}
+            type="button"
+            variant="outline"
+            onClick={() => setActive(group.sections[0])}
+            className={`h-auto min-h-11 whitespace-normal px-3 py-2 text-[10px] uppercase tracking-wide ${
+              activeGroup.id === group.id
                 ? "border-[color:var(--gold)] text-[color:var(--gold)]"
                 : "border-border text-muted-foreground hover:text-foreground"
             }`}
           >
             <span aria-hidden className="mr-1">
-              {s.icon}
+              {group.icon}
             </span>
-            {s.label}
-          </button>
+            {group.label}
+          </Button>
         ))}
       </nav>
+
+      {activeGroup.sections.length > 1 && (
+        <nav aria-label={`${activeGroup.label} sections`} className="mt-3 flex flex-wrap gap-2 border-l-2 border-[color:var(--gold)]/40 pl-3">
+          {activeGroup.sections.map((id) => {
+            const item = COMMAND_SECTIONS.find((candidate) => candidate.id === id);
+            return item ? <Button key={id} type="button" variant="ghost" size="sm" onClick={() => setActive(id)} className={active === id ? "text-[color:var(--gold)]" : "text-muted-foreground"}>{item.label}</Button> : null;
+          })}
+        </nav>
+      )}
 
       <p className="mt-4 text-sm text-muted-foreground">{section.purpose}</p>
 

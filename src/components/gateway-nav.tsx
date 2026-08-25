@@ -1,6 +1,6 @@
 import { Link, useRouterState } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { Search, KeyRound, Menu, X, UserRound, Sun } from "lucide-react";
+import { Search, KeyRound, Menu, X, UserRound, Sun, Landmark } from "lucide-react";
 import { useAccountSection, useMyRoles } from "@/hooks/use-my-roles";
 import { SignOutButton } from "@/components/secure-sign-out";
 import { openTheDaily } from "@/components/workspace/daily-gate";
@@ -244,7 +244,7 @@ export function GatewayNav({ mode }: { mode: "shop" | "world" }) {
     <header className="sticky top-0 z-50 border-b border-border/60 bg-background/85 backdrop-blur-xl">
       <div className="mx-auto grid max-w-[1600px] grid-cols-[minmax(0,1fr)_auto] items-center gap-4 px-5 py-3 lg:px-10">
         <div className="flex min-w-0 items-center gap-5">
-          <Link to="/frass-district" aria-label="Frass District" className="shrink-0">
+          <Link to="/" aria-label="Frass site home" title="Site Home" className="shrink-0">
             <img src={fullLogo.url} alt="Frass" className="h-8 w-auto object-contain md:h-10" />
           </Link>
 
@@ -281,6 +281,14 @@ export function GatewayNav({ mode }: { mode: "shop" | "world" }) {
         </div>
 
         <div className="flex items-center justify-end gap-2">
+          <Link
+            to="/welcome-hall"
+            aria-label="Welcome Hall"
+            title="Welcome Hall"
+            className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-border transition hover:border-[color:var(--gold)]"
+          >
+            <Landmark className="h-4 w-4" />
+          </Link>
           <Link
             to="/visual-search"
             aria-label="Universal search"
@@ -472,6 +480,9 @@ function AccountNavSection() {
 
       {open && (
         <div className="absolute right-0 top-full z-50 mt-2 w-60 rounded-lg border border-border/70 bg-background/95 p-2 shadow-xl backdrop-blur-xl">
+          <Link to="/welcome-hall" className="block rounded-sm px-3 py-2 text-[10px] uppercase tracking-[0.2em] text-muted-foreground transition hover:bg-foreground/5 hover:text-foreground">
+            Welcome Hall
+          </Link>
           {section.items.map((i) => (
             <Link
               key={i.to}

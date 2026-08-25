@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { ArrowRight, Volume2, VolumeX } from "lucide-react";
+import { ArrowRight, Home, Volume2, VolumeX } from "lucide-react";
 import gateway from "@/assets/welcome-hall-gateway.jpg";
 import valley from "@/assets/kids-valley.jpg";
 import { ambienceEnabled, setAmbienceEnabled, startAmbience, stopAmbience } from "@/lib/for-us-ambience";
@@ -12,6 +12,7 @@ import { ViewModeToggle } from "@/components/view-mode/view-mode-toggle";
 import { DailyWelcomeCeremony } from "@/components/welcome-hall/daily-welcome-ceremony";
 import { WELCOME_HALL_PURPOSES } from "@/lib/welcome-hall/daily-welcome";
 import { FirstArrivalCeremony } from "@/components/welcome-hall/first-arrival-ceremony";
+import { useMyRoles } from "@/hooks/use-my-roles";
 
 
 /**
@@ -56,7 +57,7 @@ const WHAT_THIS_IS = [
   {
     glyph: "🏘",
     title: "Frass Hill is a town, not a menu",
-    line: "Nine places sit on the Hill — a retail district, a luxury house, studios, a farm, a wellness centre, a builders village, Founder Hall, Town Square and the children's valley.",
+    line: "Ten places sit on the Hill — Town Square, Children's Village, the retail and bridal districts, Luxury House, studios, a farm, a wellness centre, Builders Village and Founder Hall.",
   },
   {
     glyph: "🤝",
@@ -77,7 +78,6 @@ const ARRIVAL_SIGHTLINES = [
   { name: "Builders Village", line: "Where the work gets made in public.", to: "/academy" },
   { name: "Health & Wellness Centre", line: "The mountain sanctuary.", to: "/health-wellness" },
   { name: "Farm District", line: "Fields and market days.", to: "/frass-hill" },
-  { name: "Founder Hall", line: "Governance and the record of the Hill.", to: "/frass-hill" },
   { name: "Town Square", line: "The civic heart — everyone's experience.", to: "/town-square" },
 ];
 
@@ -126,6 +126,8 @@ function WelcomeHallPage() {
   const stage = useArrivalStage();
   const search = Route.useSearch();
   const [sound, setSound] = useState(false);
+  const { roles, signedIn, loading: rolesLoading } = useMyRoles();
+  const canEnterFounderHall = roles.includes("admin") || roles.includes("super_admin");
 
 
   useEffect(() => {
@@ -165,6 +167,10 @@ function WelcomeHallPage() {
 
   return (
     <div className="min-h-screen bg-background text-foreground">
+      <nav aria-label="Welcome Hall navigation" className="fixed left-4 top-4 z-40 flex items-center gap-2 rounded-full border border-border/70 bg-background/75 px-2 py-1.5 text-[10px] uppercase tracking-[0.18em] text-muted-foreground backdrop-blur-xl">
+        <Link to="/" aria-label="Site Home" title="Site Home" className="inline-flex h-8 w-8 items-center justify-center rounded-full hover:text-foreground"><Home className="h-4 w-4" /></Link>
+        <span className="hidden sm:inline">Welcome Hall</span>
+      </nav>
       {/* FRASS-0517 — choose how Frass feels before you even begin. */}
       <ViewModeToggle className="fixed right-4 top-4 z-40" />
 
@@ -229,8 +235,9 @@ function WelcomeHallPage() {
               open ? "translate-y-0 opacity-100" : "translate-y-4 opacity-0"
             }`}
           >
-            Welcome Hall
+            Welcome to Frass Hill
           </h1>
+          <p className="mt-2 text-xs uppercase tracking-[0.28em] text-[color:var(--hill-gold)]">Welcome Hall</p>
 
           {/* What you see down the hill, arriving one by one */}
           <ul className="mt-6 flex flex-wrap gap-x-5 gap-y-2">
@@ -279,8 +286,8 @@ function WelcomeHallPage() {
             }`}
           >
             <Link
-              to="/auth"
-              search={{ next: "/frass-hill" }}
+              to={signedIn ? "/frass-hill" : "/auth"}
+              search={signedIn ? undefined : { next: "/frass-hill" }}
               className="chrome-glow group rounded-2xl border border-border bg-card/70 p-6 transition hover:scale-[1.01]"
             >
               <span aria-hidden className="text-3xl">
@@ -292,7 +299,7 @@ function WelcomeHallPage() {
                 people who live here.
               </p>
               <span className="mt-5 inline-flex items-center gap-2 text-[10px] uppercase tracking-[0.25em] text-muted-foreground transition group-hover:text-foreground">
-                Register and walk in <ArrowRight className="h-3 w-3" />
+                {signedIn ? "Walk into the Hill" : "Register and walk in"} <ArrowRight className="h-3 w-3" />
               </span>
             </Link>
 
@@ -313,6 +320,12 @@ function WelcomeHallPage() {
               </span>
             </Link>
           </div>
+
+          {!rolesLoading && canEnterFounderHall && (
+            <Link to="/control-room" className="mt-4 inline-flex items-center gap-2 rounded-full border border-[color:var(--hill-gold)]/60 px-5 py-2.5 text-[10px] font-bold uppercase tracking-[0.22em] text-[color:var(--hill-gold)] transition hover:bg-[color:var(--hill-gold)]/10">
+              Enter Founder Hall <ArrowRight className="h-3 w-3" />
+            </Link>
+          )}
 
           <p className="mt-6 text-xs text-muted-foreground">
             Already registered?{" "}
@@ -402,6 +415,12 @@ function WelcomeHallPage() {
                 <p className="mt-1 text-xs leading-relaxed text-muted-foreground">{s.line}</p>
               </Link>
             ))}
+            {!rolesLoading && canEnterFounderHall && (
+              <Link to="/control-room" className="chrome-glow group rounded-xl border border-border/70 bg-card/40 p-4 transition hover:scale-[1.01]">
+                <h3 className="text-sm font-bold">Founder Hall</h3>
+                <p className="mt-1 text-xs leading-relaxed text-muted-foreground">Governance and the record of the Hill.</p>
+              </Link>
+            )}
           </div>
         </section>
 

@@ -350,7 +350,7 @@ export const HILL_DISTRICTS: HillDistrict[] = [
 
 /** The town plan rule: if it isn't one of these, it's a building inside one of these. */
 export const TOWN_PLAN_RULE =
-  "Frass Hill has eight places. Everything else — Opportunity Centre, Community Hall, Marketplace Pavilion, Reflection Gardens, Builder Academy, DJ Academy — is a building, venue or service with an address inside one of them.";
+  "Frass Hill has ten places. Everything else — Opportunity Centre, Community Hall, Marketplace Pavilion, Reflection Gardens, Builder Academy, DJ Academy — is a building, venue or service with an address inside one of them.";
 
 /**
  * Constitutional principle — the sightline rule.

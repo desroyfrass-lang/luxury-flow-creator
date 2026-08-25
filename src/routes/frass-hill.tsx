@@ -60,13 +60,13 @@ export const Route = createFileRoute("/frass-hill")({
       {
         name: "description",
         content:
-          "Frass Hill is a living town of eight places: Town Square, Children's Village, Frass District, Luxury House, Studio District, Builders Village, Farm District and Founder Hall.",
+          "Frass Hill is a living town of ten places, including Town Square, Children's Village, Frass District, Luxury House, Studio District, Builders Village, Farm District, Wellness Centre and Founder Hall.",
       },
       { property: "og:title", content: "Frass Hill — The Town Plan" },
       {
         property: "og:description",
         content:
-          "Eight districts. Every service, academy and office has an address inside one of them.",
+          "Ten places. Every service, academy and office has an address inside one of them.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -115,7 +115,7 @@ function FrassHillPage() {
             Frass Hill
           </h1>
           <p className="mt-4 max-w-2xl text-sm text-muted-foreground">
-            Frass Hill is not a menu of features. It is a town. Eight places you can walk between —
+            Frass Hill is not a menu of features. It is a town. Ten places you can walk between —
             and inside each one, the offices, academies, studios and venues that do the work.
           </p>
           <div className="mt-5 flex flex-wrap items-center gap-3">
