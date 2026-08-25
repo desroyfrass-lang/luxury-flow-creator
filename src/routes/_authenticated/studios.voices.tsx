@@ -26,12 +26,11 @@ export const Route = createFileRoute("/_authenticated/studios/voices")({
 
 const EMPTY = {
   name: "",
-  voice_type: "character",
+  language: "English",
   accent: "Caribbean",
   tone: "",
-  pace: "natural",
-  age_range: "General Audience",
-  description: "",
+  age_presentation: "General Audience",
+  reference_notes: "",
   character_id: "",
   rights_status: "owned",
 };
@@ -60,7 +59,7 @@ function VoicesPage() {
   };
 
   const toggleApproval = async (v: any) => {
-    await supabase.from("studio_voices").update({ is_approved: !v.is_approved }).eq("id", v.id);
+    await supabase.from("studio_voices").update({ active: !v.active }).eq("id", v.id);
     qc.invalidateQueries({ queryKey: ["studio", "voices"] });
   };
 
@@ -78,14 +77,8 @@ function VoicesPage() {
           <Field label="Name">
             <input className={inputClass} value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} />
           </Field>
-          <Field label="Used for">
-            <select className={inputClass} value={form.voice_type} onChange={(e) => setForm({ ...form, voice_type: e.target.value })}>
-              {["character", "narrator", "host", "announcer"].map((t) => (
-                <option key={t} value={t}>
-                  {t}
-                </option>
-              ))}
-            </select>
+          <Field label="Language">
+            <input className={inputClass} value={form.language} onChange={(e) => setForm({ ...form, language: e.target.value })} />
           </Field>
           <Field label="Accent">
             <input className={inputClass} value={form.accent} onChange={(e) => setForm({ ...form, accent: e.target.value })} />
@@ -93,17 +86,8 @@ function VoicesPage() {
           <Field label="Tone" hint="Warm, playful, steady, serious.">
             <input className={inputClass} value={form.tone} onChange={(e) => setForm({ ...form, tone: e.target.value })} />
           </Field>
-          <Field label="Pace">
-            <select className={inputClass} value={form.pace} onChange={(e) => setForm({ ...form, pace: e.target.value })}>
-              {["slow", "natural", "lively", "fast"].map((p) => (
-                <option key={p} value={p}>
-                  {p}
-                </option>
-              ))}
-            </select>
-          </Field>
           <Field label="Right for which age">
-            <select className={inputClass} value={form.age_range} onChange={(e) => setForm({ ...form, age_range: e.target.value })}>
+            <select className={inputClass} value={form.age_presentation} onChange={(e) => setForm({ ...form, age_presentation: e.target.value })}>
               {AGE_GROUPS.map((a) => (
                 <option key={a} value={a}>
                   {a}
@@ -131,8 +115,8 @@ function VoicesPage() {
             </select>
           </Field>
           <div className="md:col-span-2">
-            <Field label="Description">
-              <textarea rows={2} className={inputClass} value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} />
+            <Field label="Notes">
+              <textarea rows={2} className={inputClass} value={form.reference_notes} onChange={(e) => setForm({ ...form, reference_notes: e.target.value })} />
             </Field>
           </div>
           <div className="md:col-span-2">
@@ -150,16 +134,16 @@ function VoicesPage() {
           {voices.map((v: any) => (
             <div key={v.id} className="rounded-lg border border-border/70 bg-card/60 p-4">
               <div className="text-[10px] uppercase tracking-[0.22em] text-[color:var(--gold)]">
-                {v.voice_type} · {v.accent}
+                {v.language} · {v.accent ?? "no accent set"}
               </div>
               <h3 className="font-display text-lg uppercase tracking-tight">{v.name}</h3>
               <p className="mt-1 text-xs text-muted-foreground">
-                {v.tone || "tone not set"} · {v.pace} · {v.age_range}
+                {v.tone || "tone not set"} · {v.age_presentation ?? "any age"}
               </p>
-              {v.description ? <p className="mt-2 text-sm text-muted-foreground">{v.description}</p> : null}
+              {v.reference_notes ? <p className="mt-2 text-sm text-muted-foreground">{v.reference_notes}</p> : null}
               <p className="mt-2 text-xs text-muted-foreground">Rights: {v.rights_status}</p>
               <div className="mt-3">
-                <QuietButton onClick={() => toggleApproval(v)}>{v.is_approved ? "Approved ✓" : "Approve"}</QuietButton>
+                <QuietButton onClick={() => toggleApproval(v)}>{v.active ? "In use ✓" : "Bring into use"}</QuietButton>
               </div>
             </div>
           ))}
