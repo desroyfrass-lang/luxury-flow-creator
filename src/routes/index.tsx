@@ -78,7 +78,8 @@ function EntrancePage() {
       <section className="relative mx-auto flex min-h-screen w-full flex-col items-center justify-center gap-6 py-6">
         <h1 className="sr-only">Welcome to FrassKicks</h1>
 
-        {/* The archway — full-bleed edge to edge, always shown complete. */}
+        {/* The archway — full-bleed edge to edge, always shown complete.
+            It breathes: a very slow drift, never enough to hide a door. */}
         <div className="gateway-rise relative w-screen overflow-hidden">
           <img
             src={archHero}
@@ -86,26 +87,35 @@ function EntrancePage() {
             width={1376}
             height={768}
             fetchPriority="high"
-            className="block h-auto w-full object-cover"
+            className="arrival-breathe block h-auto w-full object-cover"
           />
         </div>
 
-        {/* Visible entrance buttons — placed beneath the image, not over it. */}
-        <div className="gateway-rise flex w-full max-w-[1100px] flex-col gap-3 sm:flex-row sm:justify-center">
-          <DoorButton onClick={goShop} tone="district">
+        {/* Visible entrance buttons — the only set. Each carries its marker. */}
+        <div className="gateway-rise flex w-full max-w-[1100px] flex-col gap-3 px-4 sm:flex-row sm:justify-center">
+          <DoorButton onClick={goShop} tone="district" symbol={<DistrictSymbol />}>
             Enter Frass District
             <span className="block text-[10px] font-normal tracking-[0.3em] text-[#e8c96a] opacity-95 sm:text-xs">
               Shop. Style. Elevate.
             </span>
           </DoorButton>
-          <DoorButton onClick={goHill} tone="hill">
+          <DoorButton onClick={goHill} tone="hill" symbol={<HillSymbol />}>
             Enter Frass Hill
             <span className="block text-[10px] font-normal tracking-[0.3em] text-[#e8c96a] opacity-95 sm:text-xs">
               Build. Connect. Grow.
             </span>
           </DoorButton>
-          <DoorButton onClick={goKids} tone="kids">
-            Enter Frass Kids
+          <DoorButton onClick={goKids} tone="kids" symbol={<KidsSymbol />}>
+            <span aria-label="Enter Frass Kids">
+              <span aria-hidden="true">
+                <span className="text-[#ffd34d]">En</span>
+                <span className="text-[#7fe3f0]">ter</span>{" "}
+                <span className="text-[#ff8a5c]">Fr</span>
+                <span className="text-[#8ce68c]">ass</span>{" "}
+                <span className="text-[#ffb3e6]">Ki</span>
+                <span className="text-[#ffd34d]">ds</span>
+              </span>
+            </span>
             <span className="block text-[10px] font-normal tracking-[0.3em] text-[#e8c96a] opacity-95 sm:text-xs">
               Wonder. Adventure. Play.
             </span>
@@ -122,15 +132,17 @@ function EntrancePage() {
 
 /**
  * A glass entrance button beneath the archway image — translucent ocean-glass
- * with a gold rim, frosted and luminous.
+ * with a gold rim, frosted and luminous, carrying its destination marker.
  */
 function DoorButton({
   onClick,
   tone,
+  symbol,
   children,
 }: {
   onClick: () => void;
   tone: "district" | "hill" | "kids";
+  symbol: React.ReactNode;
   children: React.ReactNode;
 }) {
   return (
@@ -138,11 +150,13 @@ function DoorButton({
       type="button"
       onClick={onClick}
       data-tone={tone}
-      className="door-glass relative flex-1 overflow-hidden rounded-2xl border border-[#d4af37]/70 bg-[#0e7490]/30 px-5 py-4 text-center font-[var(--font-display,'Archivo_Black',sans-serif)] text-base font-bold uppercase tracking-[0.2em] text-[#f4d35e] drop-shadow-[0_1px_2px_rgba(0,0,0,0.85)] shadow-[0_10px_40px_-16px_rgba(8,80,110,0.65)] backdrop-blur-xl transition-all duration-300 ease-out hover:-translate-y-0.5 hover:border-[#f4d35e] hover:bg-[#0e7490]/45 hover:shadow-[0_16px_50px_-16px_rgba(103,232,249,0.7)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#f4d35e] motion-reduce:transition-none"
+      className="door-glass group relative flex flex-1 items-center justify-center gap-3 overflow-hidden rounded-2xl border border-[#d4af37]/70 bg-[#0e7490]/30 px-5 py-4 text-center font-[var(--font-display,'Archivo_Black',sans-serif)] text-base font-bold uppercase tracking-[0.2em] text-[#f4d35e] drop-shadow-[0_1px_2px_rgba(0,0,0,0.85)] shadow-[0_10px_40px_-16px_rgba(8,80,110,0.65)] backdrop-blur-xl transition-all duration-300 ease-out hover:-translate-y-0.5 hover:border-[#f4d35e] hover:bg-[#0e7490]/45 hover:shadow-[0_16px_50px_-16px_rgba(103,232,249,0.7)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#f4d35e] motion-reduce:transition-none"
     >
       <span className="pointer-events-none absolute inset-0 rounded-2xl bg-[linear-gradient(120deg,transparent_30%,rgba(255,255,255,0.18)_50%,transparent_70%)] opacity-70" />
+      <span className="relative">{symbol}</span>
       <span className="relative">{children}</span>
     </button>
   );
 }
+
 
