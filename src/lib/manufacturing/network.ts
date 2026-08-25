@@ -88,7 +88,7 @@ export const CREATOR_CATEGORIES: CreatorCategory[] = [
     emoji: "👟",
     label: "Footwear",
     items: ["Sneakers", "Dress shoes", "Sandals", "Boots", "Athletic footwear"],
-    showcase: { label: "Frass Kicks", to: "/frass-kicks" },
+    showcase: { label: "Frass Kicks", to: "/frass-district" },
     vaultKey: "footwear",
   },
   {

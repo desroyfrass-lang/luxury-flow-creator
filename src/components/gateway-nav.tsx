@@ -31,17 +31,16 @@ const SHOP_NAV: NavGroup[] = [
   { label: "Frass District", to: "/frass-district", match: "/frass-district" },
   {
     label: "Frass Kicks",
-    to: "/frass-kicks",
+    to: "/frass-district",
     match: "/frass-kicks",
     items: [
       { label: "Men's Kicks", to: "/frass-kicks/men" },
       { label: "Women's Kicks", to: "/frass-kicks/women" },
-      { label: "Kicks District", to: "/kicks-district", note: "The street" },
     ],
   },
   {
     label: "Frass Drip",
-    to: "/frass-drip",
+    to: "/frass-district",
     match: "/frass-drip",
     items: [
       { label: "Men's Drip", to: "/frass-drip/men", note: "Work · Party · Casual · Street" },
@@ -50,7 +49,7 @@ const SHOP_NAV: NavGroup[] = [
   },
   {
     label: "Bare Drip",
-    to: "/bare-drip",
+    to: "/frass-district",
     match: "/bare-drip",
     items: [
       { label: "Men — Underwear & Swimwear", to: "/bare-drip/men" },

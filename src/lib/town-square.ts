@@ -81,8 +81,8 @@ export const SQUARE_PRESENCES: SquarePresence[] = [
   { id: "d-hill", kind: "districts", name: "The Town Plan", line: "Stand back and see every district at once.", to: "/frass-hill", glyph: "🗺", status: "Always" },
 
   // Stores
-  { id: "s-kicks", kind: "stores", name: "Frass Kicks", line: "Casual, Classic and Street — three walls of shoes.", to: "/frass-kicks", glyph: "👟", status: "Open now" },
-  { id: "s-drip", kind: "stores", name: "Frass Drip", line: "Work, Street and Evening drip for men and women.", to: "/frass-drip", glyph: "🧥", status: "Open now" },
+  { id: "s-kicks", kind: "stores", name: "Frass Kicks", line: "Casual, Classic and Street — three walls of shoes.", to: "/frass-district", glyph: "👟", status: "Open now" },
+  { id: "s-drip", kind: "stores", name: "Frass Drip", line: "Work, Street and Evening drip for men and women.", to: "/frass-district", glyph: "🧥", status: "Open now" },
   { id: "s-bridal", kind: "stores", name: "Frass Bridal", line: "The wedding village — pavilions, vault and concierge.", to: "/bridal", glyph: "💍", status: "Open now" },
   { id: "s-shape", kind: "stores", name: "Frass Shape™", line: "Shapewear as wellness, with the AI Fit Assistant.", to: "/frass-shape", glyph: "🪞", status: "Open now" },
   { id: "s-plus", kind: "stores", name: "Frass Plus+", line: "The full collection architecture, sized 10.5 and up.", to: "/frass-plus", glyph: "➕", status: "Open now" },
