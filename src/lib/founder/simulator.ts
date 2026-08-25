@@ -148,7 +148,7 @@ export function personaById(id: string): Persona | undefined {
 /** FRASS-0560 — the official Founder testing sequence. Always starts outside. */
 export const TESTING_SEQUENCE: Array<{ id: string; label: string; path: string; plain: string }> = [
   { id: "landing", label: "FrassKicks.com", path: "/", plain: "The public front door. Exactly what a stranger sees." },
-  { id: "welcome", label: "Welcome Hall", path: "/welcome", plain: "The official introduction to Frassy." },
+  { id: "welcome", label: "Welcome Hall", path: "/welcome-hall", plain: "The official introduction to Frassy." },
   { id: "conversation", label: "First Frassy conversation", path: "/frassy", plain: "Greeting, direction, confidence." },
   {
     id: "district",
