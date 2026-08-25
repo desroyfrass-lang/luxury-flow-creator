@@ -1,6 +1,8 @@
 // FRASS-0600 — the Create Production wizard.
 import { useState } from "react";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { useServerFn } from "@tanstack/react-start";
+import { interpretProductionRequest } from "@/lib/studios/production-engine.functions";
 import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
@@ -39,6 +41,11 @@ function CreateProduction() {
   const [step, setStep] = useState(0);
   const [saving, setSaving] = useState(false);
   const [askFrassy, setAskFrassy] = useState(true);
+  const [request, setRequest] = useState("");
+  const [interpreting, setInterpreting] = useState(false);
+  const [understanding, setUnderstanding] = useState("");
+  const [questions, setQuestions] = useState<string[]>([]);
+  const interpretRequest = useServerFn(interpretProductionRequest);
 
   const [form, setForm] = useState({
     series_id: "",
@@ -62,6 +69,41 @@ function CreateProduction() {
     narrator: "",
     special_instructions: "",
   });
+
+  /** Frassy reads the sentence and fills the wizard. She never saves it herself. */
+  const interpret = async () => {
+    setInterpreting(true);
+    try {
+      const r = (await interpretRequest({ data: { request } })) as any;
+      patch({
+        series_id: r.series_id ?? "",
+        production_type: r.production_type ?? "full_episode",
+        title: r.working_title ?? "",
+        episode_number: r.episode_number ? String(r.episode_number) : "",
+        season: r.season ? String(r.season) : "1",
+        audience: r.audience ?? "General Audience",
+        age_group: r.age_group ?? "General Audience",
+        destinations: r.target_platforms ?? [],
+        target_duration_seconds: r.target_duration_seconds ? String(r.target_duration_seconds) : "600",
+        concept: r.story_concept ?? "",
+        story_goal: r.objective ?? "",
+        educational_objective: r.educational_objective ?? "",
+        characters: r.characters ?? "",
+        location: r.locations ?? "",
+        visual_style: r.visual_direction ?? "",
+        music_direction: r.music_direction ?? "",
+        narrator: r.voice_direction ?? "",
+        special_instructions: r.special_instructions ?? "",
+      });
+      setUnderstanding(r.understanding ?? "");
+      setQuestions(r.questions ?? []);
+      toast.success("Frassy filled it in. Read it through before you save.");
+    } catch (e) {
+      toast.error(e instanceof Error ? e.message : "Frassy couldn't read that request.");
+    } finally {
+      setInterpreting(false);
+    }
+  };
 
   const patch = (p: Partial<typeof form>) => setForm((f) => ({ ...f, ...p }));
   const toggleDestination = (value: string) =>
@@ -127,7 +169,11 @@ function CreateProduction() {
           ? "Production created. Ask Frassy to develop it — she reads the Series Bible first."
           : "Production created.",
       );
-      navigate({ to: "/studios/production/$id", params: { id: data.id } });
+      navigate(
+        askFrassy
+          ? { to: "/studios/engine/$id", params: { id: data.id } }
+          : { to: "/studios/production/$id", params: { id: data.id } },
+      );
     } catch (e) {
       toast.error(e instanceof Error ? e.message : "Could not create the production.");
     } finally {
@@ -141,6 +187,33 @@ function CreateProduction() {
       <p className="mt-1 text-sm text-muted-foreground">
         Four steps. Nothing generates and nothing publishes — this only plans the work.
       </p>
+
+      <div className="mt-6 rounded-lg border border-[color:var(--gold)]/40 bg-card/60 p-5">
+        <div className="text-[10px] uppercase tracking-[0.28em] text-[color:var(--gold)]">Create with Frassy</div>
+        <p className="mt-1 text-sm text-muted-foreground">
+          Say it the way you would say it out loud. Frassy fills in the plan; you check every word before anything is saved.
+        </p>
+        <textarea
+          rows={3}
+          className={`${inputClass} mt-3`}
+          placeholder="Make a 10-minute Frass Chronicles episode for ages 6-12 about the day the Hill lost power."
+          value={request}
+          onChange={(e) => setRequest(e.target.value)}
+        />
+        <div className="mt-3 flex flex-wrap items-center gap-2">
+          <GoldButton onClick={interpret} disabled={interpreting}>
+            {interpreting ? "Frassy is reading it…" : "Let Frassy plan it"}
+          </GoldButton>
+          {understanding ? <span className="text-sm text-muted-foreground">{understanding}</span> : null}
+        </div>
+        {questions.length ? (
+          <ul className="mt-3 list-disc space-y-1 pl-5 text-sm text-[color:var(--gold)]">
+            {questions.map((q, i) => (
+              <li key={i}>{q}</li>
+            ))}
+          </ul>
+        ) : null}
+      </div>
 
       <ol className="mt-6 flex flex-wrap gap-2">
         {STEPS.map((s, i) => (
