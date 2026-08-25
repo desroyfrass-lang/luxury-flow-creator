@@ -140,7 +140,7 @@ export const HILL_DISTRICTS: HillDistrict[] = [
     success: "People come to browse the street, not just to buy a product.",
     engine: true,
     status: "open",
-    to: "/shop-frass",
+    to: "/frass-district",
     image: "kicks",
   },
   {

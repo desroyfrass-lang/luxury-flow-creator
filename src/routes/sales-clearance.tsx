@@ -75,7 +75,7 @@ function LiquidationRoomPage() {
           <nav className="mb-8 flex flex-wrap items-center justify-center gap-2 text-[10px] uppercase tracking-[0.22em] text-muted-foreground">
             <Link to="/" className="hover:text-foreground">Home</Link>
             <span>/</span>
-            <Link to="/shop-frass" className="hover:text-foreground">Frass District</Link>
+            <Link to="/frass-district" className="hover:text-foreground">Frass District</Link>
             <span>/</span>
             <span className="text-foreground">The Liquidation Room</span>
           </nav>

@@ -133,7 +133,7 @@ function ProductPage() {
             Home
           </Link>
           <span className="opacity-40">/</span>
-          <Link to="/frass-kicks" className="hover:text-foreground">
+          <Link to="/frass-district" className="hover:text-foreground">
             Shop
           </Link>
           <span className="opacity-40">/</span>
