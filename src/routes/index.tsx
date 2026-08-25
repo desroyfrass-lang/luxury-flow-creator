@@ -16,16 +16,17 @@ import archHero from "@/assets/frass-gateway-arch.jpg.asset.json";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Welcome to Frass — Shop Frass or Enter Frass Hill" },
+      { title: "Welcome to Frass — Frass District, Frass Hill or Frass Kids" },
       {
         name: "description",
         content:
-          "The ceremonial entrance to Frass. Built by people, powered by community, driven by execution. Shop the Frass District, or journey into Frass Hill.",
+          "The ceremonial entrance to Frass. Three doors under one arch: the storefronts of the Frass District, the living town of Frass Hill, and the children's world of Frass Kids.",
       },
       { property: "og:title", content: "Welcome to Frass" },
       {
         property: "og:description",
-        content: "Two ways in: the storefronts of the Frass District, or the living town of Frass Hill.",
+        content:
+          "Three ways in: the Frass District, Frass Hill and Frass Kids. One account covers all three.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -57,11 +58,18 @@ function EntrancePage() {
 
   /**
    * Hill door: a stranger goes to the Welcome Hall registration; a member goes
-   * to /welcome, which is the only place that decides first-time vs returning.
+   * to the Hall's first-arrival state, which decides first-time vs returning.
    */
   const goHill = () => {
-    navigate({ to: signedIn ? "/welcome" : "/join/frass-hill" });
+    if (signedIn) navigate({ to: "/welcome-hall", search: { arrival: "first" as const } });
+    else navigate({ to: "/join/frass-hill" });
   };
+
+  /** Kids door: the children's world has its own welcome and its own passport. */
+  const goKids = () => {
+    navigate({ to: "/kids-world" });
+  };
+
 
   return (
     <main className="relative min-h-screen overflow-hidden bg-[color:var(--retail-ink)]">
