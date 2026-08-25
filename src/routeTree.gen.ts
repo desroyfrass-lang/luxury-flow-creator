@@ -191,6 +191,7 @@ import { Route as AuthenticatedWorkspaceFirstVentureRouteImport } from './routes
 import { Route as AuthenticatedWorkspaceDailyDesignRouteImport } from './routes/_authenticated/workspace.daily-design'
 import { Route as AuthenticatedWorkspaceCardRouteImport } from './routes/_authenticated/workspace.card'
 import { Route as AuthenticatedWorkspaceAffiliateRouteImport } from './routes/_authenticated/workspace.affiliate'
+import { Route as AuthenticatedStudiosSeriesRouteImport } from './routes/_authenticated/studios.series'
 import { Route as AuthenticatedStudiosProductionsRouteImport } from './routes/_authenticated/studios.productions'
 import { Route as AuthenticatedStudiosCreateRouteImport } from './routes/_authenticated/studios.create'
 import { Route as AuthenticatedAdminVoiceRouteImport } from './routes/_authenticated/admin.voice'
@@ -1170,6 +1171,12 @@ const AuthenticatedWorkspaceAffiliateRoute =
     path: '/affiliate',
     getParentRoute: () => AuthenticatedWorkspaceRoute,
   } as any)
+const AuthenticatedStudiosSeriesRoute =
+  AuthenticatedStudiosSeriesRouteImport.update({
+    id: '/series',
+    path: '/series',
+    getParentRoute: () => AuthenticatedStudiosRoute,
+  } as any)
 const AuthenticatedStudiosProductionsRoute =
   AuthenticatedStudiosProductionsRouteImport.update({
     id: '/productions',
@@ -1531,6 +1538,7 @@ export interface FileRoutesByFullPath {
   '/admin/voice': typeof AuthenticatedAdminVoiceRoute
   '/studios/create': typeof AuthenticatedStudiosCreateRoute
   '/studios/productions': typeof AuthenticatedStudiosProductionsRoute
+  '/studios/series': typeof AuthenticatedStudiosSeriesRoute
   '/workspace/affiliate': typeof AuthenticatedWorkspaceAffiliateRoute
   '/workspace/card': typeof AuthenticatedWorkspaceCardRoute
   '/workspace/daily-design': typeof AuthenticatedWorkspaceDailyDesignRoute
@@ -1724,6 +1732,7 @@ export interface FileRoutesByTo {
   '/admin/voice': typeof AuthenticatedAdminVoiceRoute
   '/studios/create': typeof AuthenticatedStudiosCreateRoute
   '/studios/productions': typeof AuthenticatedStudiosProductionsRoute
+  '/studios/series': typeof AuthenticatedStudiosSeriesRoute
   '/workspace/affiliate': typeof AuthenticatedWorkspaceAffiliateRoute
   '/workspace/card': typeof AuthenticatedWorkspaceCardRoute
   '/workspace/daily-design': typeof AuthenticatedWorkspaceDailyDesignRoute
@@ -1942,6 +1951,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/voice': typeof AuthenticatedAdminVoiceRoute
   '/_authenticated/studios/create': typeof AuthenticatedStudiosCreateRoute
   '/_authenticated/studios/productions': typeof AuthenticatedStudiosProductionsRoute
+  '/_authenticated/studios/series': typeof AuthenticatedStudiosSeriesRoute
   '/_authenticated/workspace/affiliate': typeof AuthenticatedWorkspaceAffiliateRoute
   '/_authenticated/workspace/card': typeof AuthenticatedWorkspaceCardRoute
   '/_authenticated/workspace/daily-design': typeof AuthenticatedWorkspaceDailyDesignRoute
@@ -2160,6 +2170,7 @@ export interface FileRouteTypes {
     | '/admin/voice'
     | '/studios/create'
     | '/studios/productions'
+    | '/studios/series'
     | '/workspace/affiliate'
     | '/workspace/card'
     | '/workspace/daily-design'
@@ -2353,6 +2364,7 @@ export interface FileRouteTypes {
     | '/admin/voice'
     | '/studios/create'
     | '/studios/productions'
+    | '/studios/series'
     | '/workspace/affiliate'
     | '/workspace/card'
     | '/workspace/daily-design'
@@ -2570,6 +2582,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/voice'
     | '/_authenticated/studios/create'
     | '/_authenticated/studios/productions'
+    | '/_authenticated/studios/series'
     | '/_authenticated/workspace/affiliate'
     | '/_authenticated/workspace/card'
     | '/_authenticated/workspace/daily-design'
@@ -3968,6 +3981,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedWorkspaceAffiliateRouteImport
       parentRoute: typeof AuthenticatedWorkspaceRoute
     }
+    '/_authenticated/studios/series': {
+      id: '/_authenticated/studios/series'
+      path: '/series'
+      fullPath: '/studios/series'
+      preLoaderRoute: typeof AuthenticatedStudiosSeriesRouteImport
+      parentRoute: typeof AuthenticatedStudiosRoute
+    }
     '/_authenticated/studios/productions': {
       id: '/_authenticated/studios/productions'
       path: '/productions'
@@ -4263,6 +4283,7 @@ const AuthenticatedAdminRouteWithChildren =
 interface AuthenticatedStudiosRouteChildren {
   AuthenticatedStudiosCreateRoute: typeof AuthenticatedStudiosCreateRoute
   AuthenticatedStudiosProductionsRoute: typeof AuthenticatedStudiosProductionsRoute
+  AuthenticatedStudiosSeriesRoute: typeof AuthenticatedStudiosSeriesRoute
   AuthenticatedStudiosIndexRoute: typeof AuthenticatedStudiosIndexRoute
   AuthenticatedStudiosProductionIdRoute: typeof AuthenticatedStudiosProductionIdRoute
 }
@@ -4270,6 +4291,7 @@ interface AuthenticatedStudiosRouteChildren {
 const AuthenticatedStudiosRouteChildren: AuthenticatedStudiosRouteChildren = {
   AuthenticatedStudiosCreateRoute: AuthenticatedStudiosCreateRoute,
   AuthenticatedStudiosProductionsRoute: AuthenticatedStudiosProductionsRoute,
+  AuthenticatedStudiosSeriesRoute: AuthenticatedStudiosSeriesRoute,
   AuthenticatedStudiosIndexRoute: AuthenticatedStudiosIndexRoute,
   AuthenticatedStudiosProductionIdRoute: AuthenticatedStudiosProductionIdRoute,
 }
