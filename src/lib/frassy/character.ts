@@ -13,9 +13,17 @@
 // ─────────────────────────────────────────────────────────────────────────────
 
 import frassyPortrait from "@/assets/frassy-gold.png.asset.json";
+import frassyHall from "@/assets/frassy-look-hall.jpg.asset.json";
 
 /** The approved portrait every Frassy surface renders. */
 export const FRASSY_PORTRAIT_URL = frassyPortrait.url;
+
+/**
+ * Step 2A — the cinematic arrival shows Frassy herself, not the Frass symbol.
+ * This is the existing approved Hall look (src/lib/frassy/wardrobe.ts, room
+ * "hall"), the one already designed for welcoming people. No new artwork.
+ */
+export const FRASSY_ARRIVAL_PORTRAIT_URL = frassyHall.url;
 
 /** Alt text for the host presentation (the large, speaking Frassy). */
 export const FRASSY_HOST_ALT = "Frassy, host of the Frass ecosystem";

@@ -1,9 +1,9 @@
 import { useEffect, useRef, useState } from "react";
 import { useRouterState } from "@tanstack/react-router";
 import {
+  FRASSY_ARRIVAL_PORTRAIT_URL,
   FRASSY_HOST_ALT,
   FRASSY_HOST_BREATHE,
-  FRASSY_PORTRAIT_URL,
 } from "@/lib/frassy/character";
 import { setEntranceActive } from "@/lib/frassy/host-presence";
 import { resolveDestination, type FrassyDestination } from "@/lib/frassy-destinations";
@@ -161,7 +161,7 @@ export function FrassyHost() {
 
   return (
     <div
-      className="fixed inset-0 z-[60] flex items-center justify-center"
+      className="fixed inset-0 z-[60] flex items-center justify-center overflow-hidden px-5 py-[max(4rem,env(safe-area-inset-top))]"
       role="dialog"
       aria-live="polite"
       aria-label={`Frassy welcomes you to ${greeting.label}`}
@@ -178,7 +178,7 @@ export function FrassyHost() {
       />
 
       <div
-        className="relative flex flex-col items-center text-center transition-all duration-[700ms]"
+        className="relative flex max-h-full flex-col items-center justify-center text-center transition-all duration-[700ms]"
         style={{
           transitionTimingFunction: "cubic-bezier(0.22, 1, 0.36, 1)",
           opacity: phase === "enter" ? 0 : 1,
@@ -189,16 +189,20 @@ export function FrassyHost() {
               : "none",
         }}
       >
-        <div className="relative">
+        {/* The frame reserves her space before the picture loads, so the
+            greeting line can never sit over the page header on a narrow
+            phone while the image is still arriving. */}
+        <div className="relative h-[min(30vh,56vw)] w-[min(30vh,56vw)] shrink-0 sm:h-[min(36vh,44vw)] sm:w-[min(36vh,44vw)]">
           <span
             aria-hidden
             className="absolute inset-0 -z-10 rounded-full blur-3xl"
             style={{ background: "radial-gradient(closest-side, rgba(212,175,55,0.35), transparent 72%)" }}
           />
           <img
-            src={FRASSY_PORTRAIT_URL}
+            src={FRASSY_ARRIVAL_PORTRAIT_URL}
             alt={FRASSY_HOST_ALT}
-            className="h-[min(36vh,64vw)] w-[min(36vh,64vw)] rounded-full object-cover"
+            decoding="async"
+            className="h-full w-full rounded-full object-cover"
             style={{
               animation: departing ? undefined : FRASSY_HOST_BREATHE,
               boxShadow: "0 40px 120px -50px rgba(212,175,55,0.8)",
@@ -207,7 +211,7 @@ export function FrassyHost() {
         </div>
 
         <div
-          className="mt-8 max-w-[min(38rem,88vw)] px-2 transition-opacity duration-700"
+          className="mt-6 max-w-[min(38rem,88vw)] px-2 transition-opacity duration-700 sm:mt-8"
           style={{ opacity: phase === "speak" ? 1 : 0 }}
         >
           <span className="text-[10px] uppercase tracking-[0.4em] text-[color:var(--gold)]">
