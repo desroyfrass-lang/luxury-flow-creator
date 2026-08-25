@@ -126,6 +126,7 @@ function WelcomeHallPage() {
   const search = Route.useSearch();
   const [sound, setSound] = useState(false);
 
+
   useEffect(() => {
     setSound(ambienceEnabled());
   }, []);
