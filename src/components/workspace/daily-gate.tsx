@@ -4,7 +4,7 @@
 // calendar day is The Frass Daily. Dispatch "frass:open-daily" to reopen it.
 
 import { useCallback, useEffect, useState } from "react";
-import { useNavigate } from "@tanstack/react-router";
+import { useNavigate, useRouterState } from "@tanstack/react-router";
 import { supabase } from "@/integrations/supabase/client";
 import { useIsAdminStatus } from "@/hooks/use-is-admin";
 import { FrassDaily } from "@/components/workspace/frass-daily";
@@ -24,6 +24,7 @@ export function DailyGate() {
   const [signedIn, setSignedIn] = useState(false);
   const { isAdmin } = useIsAdminStatus();
   const navigate = useNavigate();
+  const pathname = useRouterState({ select: (state) => state.location.pathname });
 
   useEffect(() => {
     let alive = true;
@@ -54,19 +55,11 @@ export function DailyGate() {
     return () => window.removeEventListener(OPEN_DAILY_EVENT, reopen);
   }, []);
 
-  // FRASS-0481 golden rule: the Workspace loads BEHIND the Daily, so closing
-  // the Daily reveals the workspace already there — never an empty screen.
-  useEffect(() => {
-    if (!open || !auto) return;
-    if (window.location.pathname !== "/room") void navigate({ to: "/room" });
-  }, [open, auto, navigate]);
-
   const dismiss = useCallback(() => {
     window.localStorage.setItem(SEEN_KEY, dayKey());
     setOpen(false);
-    if (auto && window.location.pathname !== "/room") void navigate({ to: "/room" });
     setAuto(false);
-  }, [auto, navigate]);
+  }, []);
 
 
 
