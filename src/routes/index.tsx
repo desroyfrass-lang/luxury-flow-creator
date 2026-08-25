@@ -1,8 +1,8 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import archHero from "@/assets/frass-three-doors-daylight.png.asset.json";
-import frassLogo from "@/assets/frass-logo-full.asset.json";
+import archHero from "@/assets/frass-three-doors-arrival-v2.png.asset.json";
+
 
 /**
  * FRASS-0923 / FRASS-0471 — The Frass Entrance Experience.
