@@ -241,8 +241,13 @@ export function FrassyChat({
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  // Frassy speaks her replies aloud again — unless the Builder mutes her.
-  const [speakReplies, setSpeakReplies] = useState(true);
+  // Frassy speaks her replies aloud — unless the Builder mutes her, or has not
+  // yet said yes to voice. This control is also how the choice is changed later.
+  const [speakReplies, setSpeakReplies] = useState(false);
+  useEffect(() => {
+    setSpeakReplies(voiceAllowed());
+    return subscribeVoiceConsent(() => setSpeakReplies(voiceAllowed()));
+  }, []);
 
   const items = useCartStore((s) => s.items);
   const { isAdmin } = useIsAdminStatus();
@@ -297,11 +302,15 @@ export function FrassyChat({
   const toggleReplyVoice = useCallback(() => {
     if (speakReplies) {
       if (voice.phase === "speaking") voice.stopSpeaking();
+      setMuted(true);
       setSpeakReplies(false);
       return;
     }
     // This runs directly inside the Builder's gesture, satisfying browser
     // autoplay rules. Enabling voice is an action, never a silent preference.
+    // It is also how somebody changes an earlier "no" into a "yes".
+    setMuted(false);
+    if (!voiceAllowed()) setVoiceChoice("voice_text");
     setSpeakReplies(true);
     void startup.speakGreetingNow();
   }, [speakReplies, startup, voice]);
