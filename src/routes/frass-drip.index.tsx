@@ -4,6 +4,6 @@ import { createFileRoute, redirect } from "@tanstack/react-router";
 // already lists the Men's and Women's Drip storefronts.
 export const Route = createFileRoute("/frass-drip/")({
   beforeLoad: () => {
-    throw redirect({ to: "/shop-frass" });
+    throw redirect({ to: "/frass-district", replace: true });
   },
 });

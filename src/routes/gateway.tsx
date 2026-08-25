@@ -1,8 +1,8 @@
 import { createFileRoute, redirect } from "@tanstack/react-router";
 
-/** The entrance now lives at the homepage. */
+/** The gateway address now opens the Welcome Hall. */
 export const Route = createFileRoute("/gateway")({
   beforeLoad: () => {
-    throw redirect({ to: "/", replace: true });
+    throw redirect({ to: "/welcome-hall", replace: true });
   },
 });
