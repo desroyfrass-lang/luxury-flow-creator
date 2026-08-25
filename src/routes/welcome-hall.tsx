@@ -11,6 +11,7 @@ import { onboardingDestination } from "@/lib/navigation/core-routes";
 import { ViewModeToggle } from "@/components/view-mode/view-mode-toggle";
 import { DailyWelcomeCeremony } from "@/components/welcome-hall/daily-welcome-ceremony";
 import { WELCOME_HALL_PURPOSES } from "@/lib/welcome-hall/daily-welcome";
+import { FirstArrivalCeremony } from "@/components/welcome-hall/first-arrival-ceremony";
 
 
 /**
