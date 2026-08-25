@@ -41,6 +41,25 @@ export type CommandSection = {
   tools: CommandTool[];
 };
 
+export type FounderNavGroup = {
+  id: string;
+  label: string;
+  icon: string;
+  sections: CommandSectionId[];
+};
+
+/** Eight everyday doors. Technical instruments stay inside them. */
+export const FOUNDER_NAV_GROUPS: FounderNavGroup[] = [
+  { id: "home", label: "Home", icon: "🏠", sections: ["home"] },
+  { id: "create-media", label: "Create & Media", icon: "🎬", sections: ["conversation", "frassy"] },
+  { id: "business", label: "Business", icon: "💼", sections: ["commissioning"] },
+  { id: "community", label: "Community", icon: "🤝", sections: ["simulator"] },
+  { id: "content", label: "Content", icon: "✍🏾", sections: ["design", "innovation"] },
+  { id: "analytics-money", label: "Analytics & Money", icon: "📊", sections: ["operations"] },
+  { id: "site-management", label: "Site Management", icon: "🧭", sections: ["platform", "world-teleporter"] },
+  { id: "settings", label: "Settings", icon: "⚙️", sections: ["ai"] },
+];
+
 export const COMMAND_SECTIONS: CommandSection[] = [
   {
     id: "world-teleporter",

@@ -3,8 +3,10 @@
 // new wing of the same house.
 import { createFileRoute, Link, Outlet, useRouterState } from "@tanstack/react-router";
 import { IdentityGate } from "@/components/security/identity-gate";
-import { STUDIO_NAV } from "@/lib/studios/studios";
+import { STUDIO_NAV, STUDIO_PRIMARY_NAV, STUDIO_SECONDARY_NAV, studioNavItems } from "@/lib/studios/studios";
 import { FrassyChat } from "@/components/frassy-chat";
+import { useIsAdminStatus } from "@/hooks/use-is-admin";
+import { Button } from "@/components/ui/button";
 
 export const Route = createFileRoute("/_authenticated/studios")({
   head: () => ({
@@ -22,12 +24,19 @@ export const Route = createFileRoute("/_authenticated/studios")({
       { name: "robots", content: "noindex,nofollow" },
     ],
   }),
-  component: () => (
-    <IdentityGate action="founder_command_center">
-      <StudiosShell />
-    </IdentityGate>
-  ),
+  component: StudiosAccessGate,
 });
+
+function StudiosAccessGate() {
+  const { isAdmin, loading } = useIsAdminStatus();
+  if (loading) return <StudioAccessState title="Checking Studio access…" />;
+  if (!isAdmin) return <StudioAccessState title="Founder or Admin access required" />;
+  return <IdentityGate action="founder_command_center"><StudiosShell /></IdentityGate>;
+}
+
+function StudioAccessState({ title }: { title: string }) {
+  return <main className="mx-auto grid min-h-[70vh] max-w-lg place-items-center px-6 text-center"><div><h1 className="font-display text-3xl uppercase">{title}</h1><p className="mt-3 text-sm text-muted-foreground">Frassy Studios stays inside Founder Hall.</p><div className="mt-6 flex justify-center gap-3"><Button asChild variant="outline"><Link to="/welcome-hall">Welcome Hall</Link></Button><Button asChild><Link to="/">Site Home</Link></Button></div></div></main>;
+}
 
 function StudiosShell() {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
@@ -45,13 +54,11 @@ function StudiosShell() {
     <main className="mx-auto w-full max-w-[1500px] px-4 py-8 lg:px-8">
       <div className="flex flex-col gap-8 lg:flex-row">
         <aside className="lg:w-64 lg:shrink-0">
-          <Link to="/control-room" className="text-[10px] uppercase tracking-[0.3em] text-muted-foreground hover:text-foreground">
-            ← Founder Hall
-          </Link>
+          <nav aria-label="Studio location" className="flex flex-wrap gap-1 text-[9px] uppercase tracking-[0.18em] text-muted-foreground"><Link to="/welcome-hall" className="hover:text-foreground">Welcome Hall</Link><span>→</span><Link to="/control-room" className="hover:text-foreground">Founder Hall</Link><span>→</span><Link to="/studios" className="text-[color:var(--gold)]">Frassy Studios</Link></nav>
           <div className="mt-3 text-[10px] uppercase tracking-[0.32em] text-[color:var(--gold)]">FRASS-0600</div>
           <h1 className="font-display text-2xl uppercase leading-none tracking-tight">Frassy Studios</h1>
-          <nav className="mt-5 flex flex-wrap gap-1.5 lg:flex-col lg:gap-0.5">
-            {STUDIO_NAV.map((item) => (
+          <nav aria-label="Frassy Studios primary navigation" className="mt-5 grid grid-cols-2 gap-1.5 lg:flex lg:flex-col lg:gap-0.5">
+            {studioNavItems(STUDIO_PRIMARY_NAV).map((item) => (
               <Link
                 key={item.id}
                 to={item.to}
@@ -70,6 +77,16 @@ function StudiosShell() {
               </Link>
             ))}
           </nav>
+          <div className="mt-5 space-y-2 border-t border-border/60 pt-4">
+            {STUDIO_SECONDARY_NAV.map((group) => (
+              <details key={group.label} className="group">
+                <summary className="cursor-pointer list-none px-3 py-2 text-[10px] uppercase tracking-[0.18em] text-muted-foreground hover:text-foreground">{group.label} <span aria-hidden>＋</span></summary>
+                <nav aria-label={`${group.label} studio navigation`} className="grid gap-0.5 pl-2">
+                  {studioNavItems(group.ids).map((item) => <Link key={item.id} to={item.to} search={item.search as never} title={item.plain} className={`rounded-sm px-3 py-2 text-[10px] uppercase tracking-[0.14em] ${isActive(item) ? "bg-[color:var(--gold)]/10 text-[color:var(--gold)]" : "text-muted-foreground hover:bg-card/60 hover:text-foreground"}`}>{item.icon} {item.label}</Link>)}
+                </nav>
+              </details>
+            ))}
+          </div>
         </aside>
 
         <div className="min-w-0 flex-1">
