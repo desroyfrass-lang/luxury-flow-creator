@@ -87,7 +87,9 @@ export function isMuted(): boolean {
 
 export function subscribeVoiceConsent(listener: () => void) {
   listeners.add(listener);
-  return () => listeners.delete(listener);
+  return () => {
+    listeners.delete(listener);
+  };
 }
 
 /** Full snapshot for the consent modal, which expects the prefs shape. */

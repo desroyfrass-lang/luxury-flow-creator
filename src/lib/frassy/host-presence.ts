@@ -33,5 +33,7 @@ export function isEntranceActiveServer() {
 
 export function subscribeEntrance(listener: () => void) {
   listeners.add(listener);
-  return () => listeners.delete(listener);
+  return () => {
+    listeners.delete(listener);
+  };
 }
