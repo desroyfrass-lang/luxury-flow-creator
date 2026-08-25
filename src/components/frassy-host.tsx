@@ -178,7 +178,7 @@ export function FrassyHost() {
       />
 
       <div
-        className="relative flex flex-col items-center text-center transition-all duration-[700ms]"
+        className="relative flex max-h-full flex-col items-center justify-center text-center transition-all duration-[700ms]"
         style={{
           transitionTimingFunction: "cubic-bezier(0.22, 1, 0.36, 1)",
           opacity: phase === "enter" ? 0 : 1,
