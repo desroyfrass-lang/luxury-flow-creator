@@ -51,6 +51,13 @@ import { resolveAuditCard, isStaleTeleport } from "@/lib/founder/teleport-sessio
 import { publishEngineDiagnostics } from "@/lib/frassy/engine-diagnostics";
 
 import { VOICE_TIER_LABELS } from "@/lib/voice/voice-tier";
+// Step 2 — the visitor's voice choice, made once and changeable any time.
+import {
+  setMuted,
+  setVoiceChoice,
+  subscribeVoiceConsent,
+  voiceAllowed,
+} from "@/lib/frassy/voice-consent";
 // FRASS-0478 — she learns how you like to work, never who you are.
 import {
   observeInterruption,

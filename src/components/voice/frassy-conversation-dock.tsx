@@ -7,11 +7,17 @@
 // controls stack directly above her, so members reach for one thing only.
 // ─────────────────────────────────────────────────────────────────────────────
 
+import { useSyncExternalStore } from "react";
 import { Pause, Play, Square } from "lucide-react";
 import { useRouterState } from "@tanstack/react-router";
 import { useConversationState, useSpeechState } from "@/hooks/use-push-to-talk";
 import { pauseSpeech, resumeSpeech, stopSpeech } from "@/lib/voice/speech-manager";
 import { frassySurface } from "@/lib/frassy/surfaces";
+import {
+  isEntranceActive,
+  isEntranceActiveServer,
+  subscribeEntrance,
+} from "@/lib/frassy/host-presence";
 
 type DockStatus = "listening" | "thinking" | "speaking" | "idle";
 
