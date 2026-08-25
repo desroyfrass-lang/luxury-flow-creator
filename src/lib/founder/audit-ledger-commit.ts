@@ -1,8 +1,24 @@
 // FRASS-0573 — one commit path for the Founder Audit Ledger.
 // Writes the local mirror first (instant, survives refresh) and then the
 // permanent database record. A network hiccup can never erase a review.
+import { supabase } from "@/integrations/supabase/client";
 import { appendAuditLedgerLocal, mergeAuditLedger } from "@/lib/founder/audit-ledger";
 import { appendAuditLedgerEntry, listAuditLedger } from "@/lib/founder/audit-ledger.functions";
+
+/**
+ * The ledger endpoints are Founder-only and require a bearer token. Without a
+ * signed-in session the request never leaves the browser — a visitor must never
+ * trigger an "Unauthorized" runtime error just by opening a page.
+ */
+async function hasSession() {
+  try {
+    const { data } = await supabase.auth.getSession();
+    return Boolean(data.session);
+  } catch {
+    return false;
+  }
+}
+
 
 export type CommitInput = {
   cardKey: string;
