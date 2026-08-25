@@ -240,6 +240,7 @@ import { Route as LovableEmailAuthPreviewRouteImport } from './routes/lovable/em
 import { Route as FrassShapeGenderGoalsGoalRouteImport } from './routes/frass-shape.$gender.goals.$goal'
 import { Route as AuthenticatedStudiosProductionIdRouteImport } from './routes/_authenticated/studios.production.$id'
 import { Route as AuthenticatedStudiosEngineIdRouteImport } from './routes/_authenticated/studios.engine.$id'
+import { Route as AuthenticatedStudiosDistributionIdRouteImport } from './routes/_authenticated/studios.distribution.$id'
 
 const WelcomeHallRoute = WelcomeHallRouteImport.update({
   id: '/welcome-hall',
@@ -1471,6 +1472,12 @@ const AuthenticatedStudiosEngineIdRoute =
     path: '/engine/$id',
     getParentRoute: () => AuthenticatedStudiosRoute,
   } as any)
+const AuthenticatedStudiosDistributionIdRoute =
+  AuthenticatedStudiosDistributionIdRouteImport.update({
+    id: '/distribution/$id',
+    path: '/distribution/$id',
+    getParentRoute: () => AuthenticatedStudiosRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -1695,6 +1702,7 @@ export interface FileRoutesByFullPath {
   '/frass-plus/$gender/': typeof FrassPlusGenderIndexRoute
   '/frass-shape/$gender/': typeof FrassShapeGenderIndexRoute
   '/kids-world/$age/': typeof KidsWorldAgeIndexRoute
+  '/studios/distribution/$id': typeof AuthenticatedStudiosDistributionIdRoute
   '/studios/engine/$id': typeof AuthenticatedStudiosEngineIdRoute
   '/studios/production/$id': typeof AuthenticatedStudiosProductionIdRoute
   '/frass-shape/$gender/goals/$goal': typeof FrassShapeGenderGoalsGoalRoute
@@ -1904,6 +1912,7 @@ export interface FileRoutesByTo {
   '/frass-plus/$gender': typeof FrassPlusGenderIndexRoute
   '/frass-shape/$gender': typeof FrassShapeGenderIndexRoute
   '/kids-world/$age': typeof KidsWorldAgeIndexRoute
+  '/studios/distribution/$id': typeof AuthenticatedStudiosDistributionIdRoute
   '/studios/engine/$id': typeof AuthenticatedStudiosEngineIdRoute
   '/studios/production/$id': typeof AuthenticatedStudiosProductionIdRoute
   '/frass-shape/$gender/goals/$goal': typeof FrassShapeGenderGoalsGoalRoute
@@ -2138,6 +2147,7 @@ export interface FileRoutesById {
   '/frass-plus/$gender/': typeof FrassPlusGenderIndexRoute
   '/frass-shape/$gender/': typeof FrassShapeGenderIndexRoute
   '/kids-world/$age/': typeof KidsWorldAgeIndexRoute
+  '/_authenticated/studios/distribution/$id': typeof AuthenticatedStudiosDistributionIdRoute
   '/_authenticated/studios/engine/$id': typeof AuthenticatedStudiosEngineIdRoute
   '/_authenticated/studios/production/$id': typeof AuthenticatedStudiosProductionIdRoute
   '/frass-shape/$gender/goals/$goal': typeof FrassShapeGenderGoalsGoalRoute
@@ -2372,6 +2382,7 @@ export interface FileRouteTypes {
     | '/frass-plus/$gender/'
     | '/frass-shape/$gender/'
     | '/kids-world/$age/'
+    | '/studios/distribution/$id'
     | '/studios/engine/$id'
     | '/studios/production/$id'
     | '/frass-shape/$gender/goals/$goal'
@@ -2581,6 +2592,7 @@ export interface FileRouteTypes {
     | '/frass-plus/$gender'
     | '/frass-shape/$gender'
     | '/kids-world/$age'
+    | '/studios/distribution/$id'
     | '/studios/engine/$id'
     | '/studios/production/$id'
     | '/frass-shape/$gender/goals/$goal'
@@ -2814,6 +2826,7 @@ export interface FileRouteTypes {
     | '/frass-plus/$gender/'
     | '/frass-shape/$gender/'
     | '/kids-world/$age/'
+    | '/_authenticated/studios/distribution/$id'
     | '/_authenticated/studios/engine/$id'
     | '/_authenticated/studios/production/$id'
     | '/frass-shape/$gender/goals/$goal'
@@ -4519,6 +4532,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedStudiosEngineIdRouteImport
       parentRoute: typeof AuthenticatedStudiosRoute
     }
+    '/_authenticated/studios/distribution/$id': {
+      id: '/_authenticated/studios/distribution/$id'
+      path: '/distribution/$id'
+      fullPath: '/studios/distribution/$id'
+      preLoaderRoute: typeof AuthenticatedStudiosDistributionIdRouteImport
+      parentRoute: typeof AuthenticatedStudiosRoute
+    }
   }
 }
 
@@ -4598,6 +4618,7 @@ interface AuthenticatedStudiosRouteChildren {
   AuthenticatedStudiosUsageRoute: typeof AuthenticatedStudiosUsageRoute
   AuthenticatedStudiosVoicesRoute: typeof AuthenticatedStudiosVoicesRoute
   AuthenticatedStudiosIndexRoute: typeof AuthenticatedStudiosIndexRoute
+  AuthenticatedStudiosDistributionIdRoute: typeof AuthenticatedStudiosDistributionIdRoute
   AuthenticatedStudiosEngineIdRoute: typeof AuthenticatedStudiosEngineIdRoute
   AuthenticatedStudiosProductionIdRoute: typeof AuthenticatedStudiosProductionIdRoute
   AuthenticatedStudiosDistributionIndexRoute: typeof AuthenticatedStudiosDistributionIndexRoute
@@ -4621,6 +4642,8 @@ const AuthenticatedStudiosRouteChildren: AuthenticatedStudiosRouteChildren = {
   AuthenticatedStudiosUsageRoute: AuthenticatedStudiosUsageRoute,
   AuthenticatedStudiosVoicesRoute: AuthenticatedStudiosVoicesRoute,
   AuthenticatedStudiosIndexRoute: AuthenticatedStudiosIndexRoute,
+  AuthenticatedStudiosDistributionIdRoute:
+    AuthenticatedStudiosDistributionIdRoute,
   AuthenticatedStudiosEngineIdRoute: AuthenticatedStudiosEngineIdRoute,
   AuthenticatedStudiosProductionIdRoute: AuthenticatedStudiosProductionIdRoute,
   AuthenticatedStudiosDistributionIndexRoute:
