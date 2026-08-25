@@ -223,6 +223,7 @@ import { Route as LovableEmailQueueProcessRouteImport } from './routes/lovable/e
 import { Route as LovableEmailAuthWebhookRouteImport } from './routes/lovable/email/auth/webhook'
 import { Route as LovableEmailAuthPreviewRouteImport } from './routes/lovable/email/auth/preview'
 import { Route as FrassShapeGenderGoalsGoalRouteImport } from './routes/frass-shape.$gender.goals.$goal'
+import { Route as AuthenticatedStudiosProductionIdRouteImport } from './routes/_authenticated/studios.production.$id'
 
 const WelcomeHallRoute = WelcomeHallRouteImport.update({
   id: '/welcome-hall',
@@ -1352,6 +1353,12 @@ const FrassShapeGenderGoalsGoalRoute =
     path: '/goals/$goal',
     getParentRoute: () => FrassShapeGenderRoute,
   } as any)
+const AuthenticatedStudiosProductionIdRoute =
+  AuthenticatedStudiosProductionIdRouteImport.update({
+    id: '/production/$id',
+    path: '/production/$id',
+    getParentRoute: () => AuthenticatedStudiosRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -1562,6 +1569,7 @@ export interface FileRoutesByFullPath {
   '/frass-plus/$gender/': typeof FrassPlusGenderIndexRoute
   '/frass-shape/$gender/': typeof FrassShapeGenderIndexRoute
   '/kids-world/$age/': typeof KidsWorldAgeIndexRoute
+  '/studios/production/$id': typeof AuthenticatedStudiosProductionIdRoute
   '/frass-shape/$gender/goals/$goal': typeof FrassShapeGenderGoalsGoalRoute
   '/lovable/email/auth/preview': typeof LovableEmailAuthPreviewRoute
   '/lovable/email/auth/webhook': typeof LovableEmailAuthWebhookRoute
@@ -1754,6 +1762,7 @@ export interface FileRoutesByTo {
   '/frass-plus/$gender': typeof FrassPlusGenderIndexRoute
   '/frass-shape/$gender': typeof FrassShapeGenderIndexRoute
   '/kids-world/$age': typeof KidsWorldAgeIndexRoute
+  '/studios/production/$id': typeof AuthenticatedStudiosProductionIdRoute
   '/frass-shape/$gender/goals/$goal': typeof FrassShapeGenderGoalsGoalRoute
   '/lovable/email/auth/preview': typeof LovableEmailAuthPreviewRoute
   '/lovable/email/auth/webhook': typeof LovableEmailAuthWebhookRoute
@@ -1971,6 +1980,7 @@ export interface FileRoutesById {
   '/frass-plus/$gender/': typeof FrassPlusGenderIndexRoute
   '/frass-shape/$gender/': typeof FrassShapeGenderIndexRoute
   '/kids-world/$age/': typeof KidsWorldAgeIndexRoute
+  '/_authenticated/studios/production/$id': typeof AuthenticatedStudiosProductionIdRoute
   '/frass-shape/$gender/goals/$goal': typeof FrassShapeGenderGoalsGoalRoute
   '/lovable/email/auth/preview': typeof LovableEmailAuthPreviewRoute
   '/lovable/email/auth/webhook': typeof LovableEmailAuthWebhookRoute
@@ -2188,6 +2198,7 @@ export interface FileRouteTypes {
     | '/frass-plus/$gender/'
     | '/frass-shape/$gender/'
     | '/kids-world/$age/'
+    | '/studios/production/$id'
     | '/frass-shape/$gender/goals/$goal'
     | '/lovable/email/auth/preview'
     | '/lovable/email/auth/webhook'
@@ -2380,6 +2391,7 @@ export interface FileRouteTypes {
     | '/frass-plus/$gender'
     | '/frass-shape/$gender'
     | '/kids-world/$age'
+    | '/studios/production/$id'
     | '/frass-shape/$gender/goals/$goal'
     | '/lovable/email/auth/preview'
     | '/lovable/email/auth/webhook'
@@ -2596,6 +2608,7 @@ export interface FileRouteTypes {
     | '/frass-plus/$gender/'
     | '/frass-shape/$gender/'
     | '/kids-world/$age/'
+    | '/_authenticated/studios/production/$id'
     | '/frass-shape/$gender/goals/$goal'
     | '/lovable/email/auth/preview'
     | '/lovable/email/auth/webhook'
@@ -4179,6 +4192,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof FrassShapeGenderGoalsGoalRouteImport
       parentRoute: typeof FrassShapeGenderRoute
     }
+    '/_authenticated/studios/production/$id': {
+      id: '/_authenticated/studios/production/$id'
+      path: '/production/$id'
+      fullPath: '/studios/production/$id'
+      preLoaderRoute: typeof AuthenticatedStudiosProductionIdRouteImport
+      parentRoute: typeof AuthenticatedStudiosRoute
+    }
   }
 }
 
@@ -4244,12 +4264,14 @@ interface AuthenticatedStudiosRouteChildren {
   AuthenticatedStudiosCreateRoute: typeof AuthenticatedStudiosCreateRoute
   AuthenticatedStudiosProductionsRoute: typeof AuthenticatedStudiosProductionsRoute
   AuthenticatedStudiosIndexRoute: typeof AuthenticatedStudiosIndexRoute
+  AuthenticatedStudiosProductionIdRoute: typeof AuthenticatedStudiosProductionIdRoute
 }
 
 const AuthenticatedStudiosRouteChildren: AuthenticatedStudiosRouteChildren = {
   AuthenticatedStudiosCreateRoute: AuthenticatedStudiosCreateRoute,
   AuthenticatedStudiosProductionsRoute: AuthenticatedStudiosProductionsRoute,
   AuthenticatedStudiosIndexRoute: AuthenticatedStudiosIndexRoute,
+  AuthenticatedStudiosProductionIdRoute: AuthenticatedStudiosProductionIdRoute,
 }
 
 const AuthenticatedStudiosRouteWithChildren =
