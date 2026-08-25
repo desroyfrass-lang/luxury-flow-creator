@@ -45,7 +45,6 @@ function ProvidersPage() {
 
   return (
     <StudioSection
-      eyebrow="FRASS-0601 · Engine"
       title="Generation Services"
       hint="Every kind of work is a slot. Fill it, swap it, or leave it empty — the productions never change."
     >

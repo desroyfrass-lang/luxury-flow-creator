@@ -66,7 +66,6 @@ function VoicesPage() {
 
   return (
     <StudioSection
-      eyebrow="FRASS-0601 · Library"
       title="Voice Library"
       hint="A saved voice keeps a character sounding like themselves across every episode."
     >

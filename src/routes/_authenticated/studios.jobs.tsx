@@ -51,7 +51,6 @@ function JobsPage() {
 
   return (
     <StudioSection
-      eyebrow="FRASS-0601 · Engine"
       title="Generation Queue"
       hint="Nothing runs quietly in the background. Every job is listed here with its state and its cost."
     >

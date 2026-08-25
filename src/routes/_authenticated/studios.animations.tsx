@@ -69,7 +69,6 @@ function AnimationsPage() {
 
   return (
     <StudioSection
-      eyebrow="FRASS-0601 · Library"
       title="Animation Library"
       hint="Walks, gestures, expressions, camera moves and transitions — made once, reused everywhere."
     >

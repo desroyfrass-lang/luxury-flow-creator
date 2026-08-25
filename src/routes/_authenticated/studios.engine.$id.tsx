@@ -58,7 +58,6 @@ function EnginePage() {
 
   return (
     <StudioSection
-      eyebrow="FRASS-0601 · Frassy Production Engine"
       title={production.title}
       hint="Frassy develops it with you, step by step. Nothing is published from this room."
     >
