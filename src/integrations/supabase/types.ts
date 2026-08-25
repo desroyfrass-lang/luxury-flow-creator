@@ -5997,58 +5997,99 @@ export type Database = {
       studio_monetization: {
         Row: {
           account_label: string | null
+          availability: string
+          connection_id: string | null
+          cpm: number | null
           created_at: string
           currency: string
+          estimated_ad_revenue: number | null
           id: string
+          is_demo: boolean
+          monetized_playbacks: number | null
           monetized_views: number
           period_end: string | null
           period_start: string | null
           platform: string
           production_id: string | null
+          publication_id: string | null
+          raw: Json
           revenue: number
           rpm: number | null
           status: string
+          synced_at: string | null
           views: number
           watch_time_minutes: number
         }
         Insert: {
           account_label?: string | null
+          availability?: string
+          connection_id?: string | null
+          cpm?: number | null
           created_at?: string
           currency?: string
+          estimated_ad_revenue?: number | null
           id?: string
+          is_demo?: boolean
+          monetized_playbacks?: number | null
           monetized_views?: number
           period_end?: string | null
           period_start?: string | null
           platform: string
           production_id?: string | null
+          publication_id?: string | null
+          raw?: Json
           revenue?: number
           rpm?: number | null
           status?: string
+          synced_at?: string | null
           views?: number
           watch_time_minutes?: number
         }
         Update: {
           account_label?: string | null
+          availability?: string
+          connection_id?: string | null
+          cpm?: number | null
           created_at?: string
           currency?: string
+          estimated_ad_revenue?: number | null
           id?: string
+          is_demo?: boolean
+          monetized_playbacks?: number | null
           monetized_views?: number
           period_end?: string | null
           period_start?: string | null
           platform?: string
           production_id?: string | null
+          publication_id?: string | null
+          raw?: Json
           revenue?: number
           rpm?: number | null
           status?: string
+          synced_at?: string | null
           views?: number
           watch_time_minutes?: number
         }
         Relationships: [
           {
+            foreignKeyName: "studio_monetization_connection_id_fkey"
+            columns: ["connection_id"]
+            isOneToOne: false
+            referencedRelation: "studio_platform_connections"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "studio_monetization_production_id_fkey"
             columns: ["production_id"]
             isOneToOne: false
             referencedRelation: "studio_productions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "studio_monetization_publication_id_fkey"
+            columns: ["publication_id"]
+            isOneToOne: false
+            referencedRelation: "studio_publications"
             referencedColumns: ["id"]
           },
         ]
@@ -6108,60 +6149,94 @@ export type Database = {
       }
       studio_platform_analytics: {
         Row: {
+          average_view_duration_seconds: number | null
           click_through_rate: number | null
           comments: number
           completion_rate: number | null
+          connection_id: string | null
           created_at: string
+          engaged_views: number | null
           engagements: number
           id: string
+          is_demo: boolean
+          likes: number | null
+          metric_source: string | null
           monetized_views: number
           period_end: string | null
           period_start: string | null
           platform: string
           production_id: string | null
           publication_id: string | null
+          raw: Json
           shares: number
           subscribers_gained: number
+          subscribers_lost: number | null
+          synced_at: string | null
           views: number
           watch_time_minutes: number
         }
         Insert: {
+          average_view_duration_seconds?: number | null
           click_through_rate?: number | null
           comments?: number
           completion_rate?: number | null
+          connection_id?: string | null
           created_at?: string
+          engaged_views?: number | null
           engagements?: number
           id?: string
+          is_demo?: boolean
+          likes?: number | null
+          metric_source?: string | null
           monetized_views?: number
           period_end?: string | null
           period_start?: string | null
           platform: string
           production_id?: string | null
           publication_id?: string | null
+          raw?: Json
           shares?: number
           subscribers_gained?: number
+          subscribers_lost?: number | null
+          synced_at?: string | null
           views?: number
           watch_time_minutes?: number
         }
         Update: {
+          average_view_duration_seconds?: number | null
           click_through_rate?: number | null
           comments?: number
           completion_rate?: number | null
+          connection_id?: string | null
           created_at?: string
+          engaged_views?: number | null
           engagements?: number
           id?: string
+          is_demo?: boolean
+          likes?: number | null
+          metric_source?: string | null
           monetized_views?: number
           period_end?: string | null
           period_start?: string | null
           platform?: string
           production_id?: string | null
           publication_id?: string | null
+          raw?: Json
           shares?: number
           subscribers_gained?: number
+          subscribers_lost?: number | null
+          synced_at?: string | null
           views?: number
           watch_time_minutes?: number
         }
         Relationships: [
+          {
+            foreignKeyName: "studio_platform_analytics_connection_id_fkey"
+            columns: ["connection_id"]
+            isOneToOne: false
+            referencedRelation: "studio_platform_connections"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "studio_platform_analytics_production_id_fkey"
             columns: ["production_id"]
@@ -6178,53 +6253,166 @@ export type Database = {
           },
         ]
       }
+      studio_platform_capabilities: {
+        Row: {
+          capability: string
+          id: string
+          note: string | null
+          platform: string
+          requires_credentials: boolean
+          requires_platform_review: boolean
+          supported: boolean
+          updated_at: string
+        }
+        Insert: {
+          capability: string
+          id?: string
+          note?: string | null
+          platform: string
+          requires_credentials?: boolean
+          requires_platform_review?: boolean
+          supported?: boolean
+          updated_at?: string
+        }
+        Update: {
+          capability?: string
+          id?: string
+          note?: string | null
+          platform?: string
+          requires_credentials?: boolean
+          requires_platform_review?: boolean
+          supported?: boolean
+          updated_at?: string
+        }
+        Relationships: []
+      }
       studio_platform_connections: {
         Row: {
           account_label: string | null
           analytics_enabled: boolean
+          capabilities: string[]
+          content_kinds: string[]
           created_at: string
+          created_by: string | null
+          credentials_configured: boolean
           external_account_id: string | null
           health: string
           id: string
+          is_demo: boolean
+          last_error: string | null
           last_sync_at: string | null
           monetization_enabled: boolean
+          notes: string | null
           permissions: Json
           platform: string
           publishing_enabled: boolean
+          revenue_enabled: boolean
+          scopes: string[]
           status: string
+          token_expires_at: string | null
           updated_at: string
         }
         Insert: {
           account_label?: string | null
           analytics_enabled?: boolean
+          capabilities?: string[]
+          content_kinds?: string[]
           created_at?: string
+          created_by?: string | null
+          credentials_configured?: boolean
           external_account_id?: string | null
           health?: string
           id?: string
+          is_demo?: boolean
+          last_error?: string | null
           last_sync_at?: string | null
           monetization_enabled?: boolean
+          notes?: string | null
           permissions?: Json
           platform: string
           publishing_enabled?: boolean
+          revenue_enabled?: boolean
+          scopes?: string[]
           status?: string
+          token_expires_at?: string | null
           updated_at?: string
         }
         Update: {
           account_label?: string | null
           analytics_enabled?: boolean
+          capabilities?: string[]
+          content_kinds?: string[]
           created_at?: string
+          created_by?: string | null
+          credentials_configured?: boolean
           external_account_id?: string | null
           health?: string
           id?: string
+          is_demo?: boolean
+          last_error?: string | null
           last_sync_at?: string | null
           monetization_enabled?: boolean
+          notes?: string | null
           permissions?: Json
           platform?: string
           publishing_enabled?: boolean
+          revenue_enabled?: boolean
+          scopes?: string[]
           status?: string
+          token_expires_at?: string | null
           updated_at?: string
         }
         Relationships: []
+      }
+      studio_platform_credentials: {
+        Row: {
+          access_token_ref: string | null
+          connection_id: string
+          created_at: string
+          expires_at: string | null
+          external_account_id: string | null
+          id: string
+          platform: string
+          platform_user_id: string | null
+          refresh_token_ref: string | null
+          scopes: string[]
+          updated_at: string
+        }
+        Insert: {
+          access_token_ref?: string | null
+          connection_id: string
+          created_at?: string
+          expires_at?: string | null
+          external_account_id?: string | null
+          id?: string
+          platform: string
+          platform_user_id?: string | null
+          refresh_token_ref?: string | null
+          scopes?: string[]
+          updated_at?: string
+        }
+        Update: {
+          access_token_ref?: string | null
+          connection_id?: string
+          created_at?: string
+          expires_at?: string | null
+          external_account_id?: string | null
+          id?: string
+          platform?: string
+          platform_user_id?: string | null
+          refresh_token_ref?: string | null
+          scopes?: string[]
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "studio_platform_credentials_connection_id_fkey"
+            columns: ["connection_id"]
+            isOneToOne: false
+            referencedRelation: "studio_platform_connections"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       studio_platform_packages: {
         Row: {
@@ -6324,6 +6512,7 @@ export type Database = {
       }
       studio_production_derivatives: {
         Row: {
+          content_id: string | null
           created_at: string
           derivative_production_id: string
           derivative_type: string
@@ -6331,6 +6520,7 @@ export type Database = {
           master_production_id: string
         }
         Insert: {
+          content_id?: string | null
           created_at?: string
           derivative_production_id: string
           derivative_type: string
@@ -6338,6 +6528,7 @@ export type Database = {
           master_production_id: string
         }
         Update: {
+          content_id?: string | null
           created_at?: string
           derivative_production_id?: string
           derivative_type?: string
@@ -6432,6 +6623,7 @@ export type Database = {
           audience: string | null
           characters: string | null
           concept: string | null
+          content_id: string | null
           cover_url: string | null
           created_at: string
           created_by: string | null
@@ -6463,6 +6655,7 @@ export type Database = {
           audience?: string | null
           characters?: string | null
           concept?: string | null
+          content_id?: string | null
           cover_url?: string | null
           created_at?: string
           created_by?: string | null
@@ -6494,6 +6687,7 @@ export type Database = {
           audience?: string | null
           characters?: string | null
           concept?: string | null
+          content_id?: string | null
           cover_url?: string | null
           created_at?: string
           created_by?: string | null
@@ -6634,33 +6828,110 @@ export type Database = {
       }
       studio_publications: {
         Row: {
+          account_label: string | null
+          connection_id: string | null
+          content_id: string | null
           created_at: string
+          derivative_production_id: string | null
+          distribution_stopped: boolean
           external_id: string | null
           external_url: string | null
           id: string
+          is_demo: boolean
+          job_id: string | null
+          last_analytics_sync_at: string | null
+          master_production_id: string | null
+          monetization_status: string
+          package_id: string | null
           platform: string
           production_id: string
           published_at: string | null
+          removal_status: string
+          removed_at: string | null
+          status: string
         }
         Insert: {
+          account_label?: string | null
+          connection_id?: string | null
+          content_id?: string | null
           created_at?: string
+          derivative_production_id?: string | null
+          distribution_stopped?: boolean
           external_id?: string | null
           external_url?: string | null
           id?: string
+          is_demo?: boolean
+          job_id?: string | null
+          last_analytics_sync_at?: string | null
+          master_production_id?: string | null
+          monetization_status?: string
+          package_id?: string | null
           platform: string
           production_id: string
           published_at?: string | null
+          removal_status?: string
+          removed_at?: string | null
+          status?: string
         }
         Update: {
+          account_label?: string | null
+          connection_id?: string | null
+          content_id?: string | null
           created_at?: string
+          derivative_production_id?: string | null
+          distribution_stopped?: boolean
           external_id?: string | null
           external_url?: string | null
           id?: string
+          is_demo?: boolean
+          job_id?: string | null
+          last_analytics_sync_at?: string | null
+          master_production_id?: string | null
+          monetization_status?: string
+          package_id?: string | null
           platform?: string
           production_id?: string
           published_at?: string | null
+          removal_status?: string
+          removed_at?: string | null
+          status?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "studio_publications_connection_id_fkey"
+            columns: ["connection_id"]
+            isOneToOne: false
+            referencedRelation: "studio_platform_connections"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "studio_publications_derivative_production_id_fkey"
+            columns: ["derivative_production_id"]
+            isOneToOne: false
+            referencedRelation: "studio_productions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "studio_publications_job_id_fkey"
+            columns: ["job_id"]
+            isOneToOne: false
+            referencedRelation: "studio_publish_jobs"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "studio_publications_master_production_id_fkey"
+            columns: ["master_production_id"]
+            isOneToOne: false
+            referencedRelation: "studio_productions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "studio_publications_package_id_fkey"
+            columns: ["package_id"]
+            isOneToOne: false
+            referencedRelation: "studio_platform_packages"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "studio_publications_production_id_fkey"
             columns: ["production_id"]
@@ -6673,44 +6944,116 @@ export type Database = {
       studio_publish_jobs: {
         Row: {
           account_label: string | null
+          attention_reason: string | null
+          blocked_reasons: Json
+          cancelled_at: string | null
+          completed_at: string | null
+          connection_id: string | null
+          consent_confirmed_at: string | null
           created_at: string
+          created_by: string | null
+          derivative_production_id: string | null
           error: string | null
+          external_id: string | null
+          external_url: string | null
           format: string | null
           id: string
+          idempotency_key: string | null
+          is_demo: boolean
+          mode: string
           monetization_eligibility: string
+          package_id: string | null
           platform: string
           production_id: string
+          retry_count: number
           scheduled_for: string | null
+          started_at: string | null
           status: string
+          timezone: string | null
           updated_at: string
         }
         Insert: {
           account_label?: string | null
+          attention_reason?: string | null
+          blocked_reasons?: Json
+          cancelled_at?: string | null
+          completed_at?: string | null
+          connection_id?: string | null
+          consent_confirmed_at?: string | null
           created_at?: string
+          created_by?: string | null
+          derivative_production_id?: string | null
           error?: string | null
+          external_id?: string | null
+          external_url?: string | null
           format?: string | null
           id?: string
+          idempotency_key?: string | null
+          is_demo?: boolean
+          mode?: string
           monetization_eligibility?: string
+          package_id?: string | null
           platform: string
           production_id: string
+          retry_count?: number
           scheduled_for?: string | null
+          started_at?: string | null
           status?: string
+          timezone?: string | null
           updated_at?: string
         }
         Update: {
           account_label?: string | null
+          attention_reason?: string | null
+          blocked_reasons?: Json
+          cancelled_at?: string | null
+          completed_at?: string | null
+          connection_id?: string | null
+          consent_confirmed_at?: string | null
           created_at?: string
+          created_by?: string | null
+          derivative_production_id?: string | null
           error?: string | null
+          external_id?: string | null
+          external_url?: string | null
           format?: string | null
           id?: string
+          idempotency_key?: string | null
+          is_demo?: boolean
+          mode?: string
           monetization_eligibility?: string
+          package_id?: string | null
           platform?: string
           production_id?: string
+          retry_count?: number
           scheduled_for?: string | null
+          started_at?: string | null
           status?: string
+          timezone?: string | null
           updated_at?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "studio_publish_jobs_connection_id_fkey"
+            columns: ["connection_id"]
+            isOneToOne: false
+            referencedRelation: "studio_platform_connections"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "studio_publish_jobs_derivative_production_id_fkey"
+            columns: ["derivative_production_id"]
+            isOneToOne: false
+            referencedRelation: "studio_productions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "studio_publish_jobs_package_id_fkey"
+            columns: ["package_id"]
+            isOneToOne: false
+            referencedRelation: "studio_platform_packages"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "studio_publish_jobs_production_id_fkey"
             columns: ["production_id"]
@@ -7069,6 +7412,7 @@ export type Database = {
           cover_url: string | null
           created_at: string
           created_by: string | null
+          default_destinations: Json
           description: string | null
           id: string
           name: string
@@ -7083,6 +7427,7 @@ export type Database = {
           cover_url?: string | null
           created_at?: string
           created_by?: string | null
+          default_destinations?: Json
           description?: string | null
           id?: string
           name: string
@@ -7097,6 +7442,7 @@ export type Database = {
           cover_url?: string | null
           created_at?: string
           created_by?: string | null
+          default_destinations?: Json
           description?: string | null
           id?: string
           name?: string
@@ -7171,6 +7517,103 @@ export type Database = {
             columns: ["series_id"]
             isOneToOne: true
             referencedRelation: "studio_series"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      studio_sync_runs: {
+        Row: {
+          connection_id: string | null
+          created_at: string
+          created_by: string | null
+          detail: Json
+          error: string | null
+          finished_at: string | null
+          id: string
+          items_synced: number
+          kind: string
+          platform: string
+          started_at: string | null
+          status: string
+        }
+        Insert: {
+          connection_id?: string | null
+          created_at?: string
+          created_by?: string | null
+          detail?: Json
+          error?: string | null
+          finished_at?: string | null
+          id?: string
+          items_synced?: number
+          kind?: string
+          platform: string
+          started_at?: string | null
+          status?: string
+        }
+        Update: {
+          connection_id?: string | null
+          created_at?: string
+          created_by?: string | null
+          detail?: Json
+          error?: string | null
+          finished_at?: string | null
+          id?: string
+          items_synced?: number
+          kind?: string
+          platform?: string
+          started_at?: string | null
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "studio_sync_runs_connection_id_fkey"
+            columns: ["connection_id"]
+            isOneToOne: false
+            referencedRelation: "studio_platform_connections"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      studio_takedowns: {
+        Row: {
+          action: string
+          completed_at: string | null
+          id: string
+          publication_id: string
+          reason: string | null
+          requested_at: string
+          requested_by: string | null
+          result: string | null
+          status: string
+        }
+        Insert: {
+          action: string
+          completed_at?: string | null
+          id?: string
+          publication_id: string
+          reason?: string | null
+          requested_at?: string
+          requested_by?: string | null
+          result?: string | null
+          status?: string
+        }
+        Update: {
+          action?: string
+          completed_at?: string | null
+          id?: string
+          publication_id?: string
+          reason?: string | null
+          requested_at?: string
+          requested_by?: string | null
+          result?: string | null
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "studio_takedowns_publication_id_fkey"
+            columns: ["publication_id"]
+            isOneToOne: false
+            referencedRelation: "studio_publications"
             referencedColumns: ["id"]
           },
         ]
