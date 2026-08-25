@@ -45,12 +45,15 @@ The existing navigation handlers stay byte-identical:
 Replace the warm-brown background and brown-tinted blur with a clean white/cream frame (e.g. `#faf7f0` surface, no brown tint). The daylight archway becomes the bright focal point.
 
 ### 6. Responsive behavior
-Hotspots are percentage-positioned over the `object-contain` image, so they scale identically on desktop, tablet, and mobile. All three doors stay visible and tappable; nothing is cropped or centered away on narrow screens.
+Hotspots are positioned as percentages of the **rendered `object-contain` image box**, not the page container — the image sits in its own wrapper sized to the artwork's aspect ratio so the percentage coordinates land on the baked-in buttons at every width. Alignment is tested against the actual rendered box on desktop, tablet, and mobile. All three doors stay visible and tappable; nothing is cropped or centered away on narrow screens.
 
 ## Verification
 1. Root `/` is still the canonical three-door arrival — no redirect.
-2. Exactly **one** FrassKicks sign: correct logo, no extra K, embedded into the façade, no overlay, no ghost letters.
+2. Exactly **one** FrassKicks sign: correct logo, no extra K, embedded into the façade, no overlay, no ghost letters, logo geometry identical to the approved asset.
 3. Exactly **one** set of ENTER buttons (the artwork's), all clickable with the gold hover/focus glow.
 4. White/cream backdrop, no brown.
-5. Desktop + mobile: all three doors visible and enterable; hotspots align with the in-image buttons.
-6. No unrelated routes, pages, permissions, or platform architecture changed.
+5. Desktop + mobile: all three doors visible and enterable; hotspots verified against the rendered image box, aligned to the in-image buttons.
+6. No changes outside `src/routes/index.tsx` plus the single sign-area image edit and its new asset pointer.
+
+## On completion — stop and report
+Return desktop and mobile screenshots plus explicit confirmation of: one logo, one ENTER-button set, three aligned hotspots, white/cream frame, and no changes outside `src/routes/index.tsx` and the single sign-area image edit. Do not proceed to further work.
