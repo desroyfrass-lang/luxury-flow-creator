@@ -114,6 +114,12 @@ export function FrassyHost() {
 
   useEffect(() => () => clearTimers(), []);
 
+  // Step 2 — while she is on stage, every other Frassy surface stands down.
+  useEffect(() => {
+    setEntranceActive(Boolean(greeting));
+    return () => setEntranceActive(false);
+  }, [greeting]);
+
   // Let her step aside early.
   const stepAside = () => {
     if (!greeting || phase === "depart") return;

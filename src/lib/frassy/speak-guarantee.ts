@@ -6,6 +6,7 @@
 // different.
 
 import { speakText } from "@/lib/voice/speech-manager";
+import { voiceAllowed } from "@/lib/frassy/voice-consent";
 import { VOICE_RETRY_LIMIT } from "@/lib/frassy/startup";
 import {
   VOICE_TIER_NOTICES,
