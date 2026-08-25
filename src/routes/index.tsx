@@ -1,28 +1,31 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import archHero from "@/assets/frass-three-doors.jpg.asset.json";
+import archHero from "@/assets/frass-three-doors-daylight.png.asset.json";
+import frassLogo from "@/assets/frass-logo-full.asset.json";
 
 /**
  * FRASS-0923 / FRASS-0471 — The Frass Entrance Experience.
  *
- * The ceremonial gateway into the Frass ecosystem. Every visitor arrives
- * beneath the arch, Frassy welcomes them, and the visitor chooses commerce
- * (Frass District) or community (Frass Hill). This page never auto-redirects:
- * frasskicks.com is always "Welcome to FrassKicks".
+ * The ceremonial gateway into the Frass ecosystem: one daylight archway, three
+ * equal doors — Frass District (shopping), Frass Hill (community) and Frass
+ * Kids (the children's world). This page never auto-redirects: frasskicks.com
+ * is always "Welcome to FrassKicks".
+ *
+ * Brand lock: the FrassKicks mark is the exact approved logo asset overlaid on
+ * the artwork — never an AI reproduction.
  */
-
 
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Welcome to Frass — Frass District, Frass Hill or Frass Kids" },
+      { title: "Welcome to FrassKicks — District, Hill or Kids" },
       {
         name: "description",
         content:
-          "The ceremonial entrance to Frass. Three doors under one arch: the storefronts of the Frass District, the living town of Frass Hill, and the children's world of Frass Kids.",
+          "The daylight entrance to FrassKicks. Three doors under one Caribbean archway: the storefronts of the Frass District, the living town of Frass Hill, and Kids Valley in Frass Kids.",
       },
-      { property: "og:title", content: "Welcome to Frass" },
+      { property: "og:title", content: "Welcome to FrassKicks" },
       {
         property: "og:description",
         content:
@@ -70,131 +73,106 @@ function EntrancePage() {
     navigate({ to: "/kids-world" });
   };
 
-
   return (
-    <main className="relative min-h-screen overflow-hidden bg-[color:var(--retail-ink)]">
-      <div className="absolute inset-0 bg-black">
-        <img
-          src={archHero.url}
-          alt=""
-          aria-hidden="true"
-          className="absolute inset-0 h-full w-full scale-110 object-cover blur-2xl brightness-50"
-        />
-        <img
-          src={archHero.url}
-          alt="Three doors under the Frass archway at golden hour: Frass Hill, Frass District and Frass Kids"
-          width={1920}
-          height={1080}
-          fetchPriority="high"
-          className="gateway-drift absolute inset-0 h-full w-full object-cover object-center"
-        />
-        <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-black/75" />
-      </div>
+    <main className="relative min-h-screen overflow-hidden bg-[#0b0a08]">
+      {/* Soft, warm backdrop so the artwork can always be shown whole. */}
+      <img
+        src={archHero.url}
+        alt=""
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 h-full w-full scale-125 object-cover blur-3xl brightness-[0.55] saturate-125"
+      />
 
-      <section className="gateway-swell relative mx-auto flex min-h-screen max-w-[1400px] flex-col items-center justify-end px-6 pb-14 pt-[58vh] text-center">
-        <h1
-          className="gateway-rise font-display text-4xl leading-[0.95] text-white drop-shadow-[0_2px_24px_rgba(0,0,0,0.55)] sm:text-6xl lg:text-8xl"
-          style={{ animationDelay: "80ms" }}
-        >
-          Welcome to FrassKicks
-        </h1>
+      <section className="relative mx-auto flex min-h-screen w-full max-w-[1500px] flex-col items-center justify-center gap-6 px-4 py-8 sm:px-6 lg:gap-8">
+        {/* The archway — always shown complete, never cropped. */}
+        <div className="gateway-rise relative w-full overflow-hidden rounded-[1.5rem] shadow-[0_40px_120px_-40px_rgba(0,0,0,0.8)] ring-1 ring-[#d4af37]/25">
+          <img
+            src={archHero.url}
+            alt="The FrassKicks archway in daylight with three entrances: Frass District, Frass Hill and Frass Kids"
+            width={1656}
+            height={936}
+            fetchPriority="high"
+            className="block h-auto w-full object-contain"
+          />
 
-        <p
-          className="gateway-rise mt-5 max-w-2xl text-sm uppercase tracking-[0.3em] text-white/75 sm:text-base"
-          style={{ animationDelay: "160ms" }}
-        >
-          Built by people. Powered by community. Driven by execution.
-        </p>
-
-        <div className="mt-10 grid w-full max-w-5xl gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          <EntranceCard
-            onClick={goShop}
-            delay="240ms"
-            emoji="🛍️"
-            title="Frass District"
-            copy="Kicks, Drip, Bare Drip, Luxury House, Plus+, Bridal and the Marketplace. We'll set up your FrassKicks profile first — sizes, fits and orders in one place."
-            cta={signedIn ? "Walk the promenade" : "Create my shopping profile"}
-            tone="light"
-          />
-          <EntranceCard
-            onClick={goHill}
-            delay="320ms"
-            emoji="⛰️"
-            title="Frass Hill"
-            copy="Membership in the town: a Frass Card, a Builder Vault and a Daily. One account covers all three doors — joining the Hill also gives you your FrassKicks profile."
-            cta={signedIn ? "Continue into the Hill" : "Begin at the Welcome Hall"}
-            tone="dark"
-          />
-          <EntranceCard
-            onClick={goKids}
-            delay="400ms"
-            emoji="🌈"
-            title="Frass Kids"
-            copy="The children's world: learning villages, creative studios, music gardens and young-builder spaces, ages 0–3 through 12+, behind a parent-issued passport."
-            cta="Enter Frass Kids"
-            tone="kids"
-          />
+          {/* Brand lock — the exact approved FrassKicks mark, warmly lit. */}
+          <div className="pointer-events-none absolute inset-x-0 top-[4.2%] flex justify-center">
+            <div className="relative">
+              <div
+                aria-hidden="true"
+                className="absolute -inset-x-10 -inset-y-8 rounded-full bg-[radial-gradient(ellipse_at_center,rgba(255,224,150,0.55),transparent_70%)] blur-xl"
+              />
+              <img
+                src={frassLogo.url}
+                alt="FrassKicks"
+                className="relative w-[54%] max-w-[840px] drop-shadow-[0_6px_18px_rgba(60,35,0,0.55)]"
+              />
+            </div>
+          </div>
         </div>
 
-        <p className="mt-8 max-w-xl text-[10px] uppercase tracking-[0.25em] text-white/50">
-          Three doors. One account. Frassy meets you at whichever one you choose.
+        <h1 className="gateway-rise sr-only">Welcome to FrassKicks</h1>
+        <p
+          className="gateway-rise text-center text-[10px] uppercase tracking-[0.35em] text-[#f4e3b8]/80 sm:text-xs"
+          style={{ animationDelay: "120ms" }}
+        >
+          Three doors. One account. Choose the world you want to walk into.
         </p>
 
+        {/* One transparent gold button beneath each doorway. */}
+        <div className="grid w-full gap-3 sm:grid-cols-3 sm:gap-5">
+          <DoorButton
+            onClick={goShop}
+            delay="200ms"
+            label="Enter Frass District"
+            hint="Shop. Style. Elevate."
+          />
+          <DoorButton
+            onClick={goHill}
+            delay="280ms"
+            label="Enter Frass Hill"
+            hint="Build. Connect. Grow."
+          />
+          <DoorButton
+            onClick={goKids}
+            delay="360ms"
+            label="Enter Frass Kids"
+            hint="Wonder. Adventure. Play."
+          />
+        </div>
       </section>
     </main>
   );
 }
 
-
-function EntranceCard({
+function DoorButton({
   onClick,
-  emoji,
-  title,
-  copy,
-  cta,
-  tone,
+  label,
+  hint,
   delay,
 }: {
   onClick: () => void;
-  emoji: string;
-  title: string;
-  copy: string;
-  cta: string;
-  tone: "light" | "dark" | "kids";
+  label: string;
+  hint: string;
   delay: string;
 }) {
-  const light = tone === "light";
-  const kids = tone === "kids";
-  const surface = light
-    ? "border-white/70 bg-white/92 text-[color:var(--retail-ink)] hover:shadow-[0_20px_60px_-20px_rgba(255,255,255,0.5)]"
-    : kids
-      ? "border-[color:var(--kids-sun,#f6c945)]/60 bg-[color:var(--kids-sky,#1b4f7a)]/85 text-white hover:shadow-[0_20px_60px_-20px_rgba(246,201,69,0.6)]"
-      : "border-[color:var(--hill-gold)]/50 bg-[color:var(--hill-green)]/85 text-[color:var(--luxe-linen)] hover:shadow-[0_20px_60px_-20px_rgba(212,175,55,0.6)]";
-  const body = light ? "text-black/65" : kids ? "text-white/80" : "text-[color:var(--luxe-linen)]/75";
-  const action = light
-    ? "text-black/70"
-    : kids
-      ? "text-[color:var(--kids-sun,#f6c945)]"
-      : "text-[color:var(--hill-gold)]";
   return (
     <button
       type="button"
       onClick={onClick}
-      aria-label={`${title} — ${copy}`}
       style={{ animationDelay: delay }}
-      className={`gateway-rise group relative overflow-hidden rounded-2xl border p-5 text-left backdrop-blur-xl transition duration-300 will-change-transform hover:-translate-y-1.5 ${surface}`}
+      className="gateway-rise group relative overflow-hidden rounded-xl border border-[#d4af37]/70 bg-black/25 px-5 py-4 text-center backdrop-blur-[2px] transition-all duration-500 ease-out outline-none hover:-translate-y-0.5 hover:border-[#f3d27a] hover:bg-black/35 hover:shadow-[0_0_38px_-6px_rgba(212,175,55,0.65)] focus-visible:-translate-y-0.5 focus-visible:border-[#f3d27a] focus-visible:shadow-[0_0_38px_-6px_rgba(212,175,55,0.65)] motion-reduce:transform-none motion-reduce:transition-none"
     >
-      <span className="text-2xl">{emoji}</span>
-      <h2 className="mt-3 font-display text-2xl uppercase leading-none md:text-3xl">{title}</h2>
-      <p className={`mt-2 text-xs ${body}`}>{copy}</p>
       <span
-        className={`mt-4 inline-flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.28em] ${action}`}
-      >
-        {cta}
-        <span className="transition-transform duration-300 group-hover:translate-x-1">→</span>
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 -translate-x-full bg-[linear-gradient(110deg,transparent,rgba(255,240,200,0.22),transparent)] transition-transform duration-[900ms] ease-out group-hover:translate-x-full group-focus-visible:translate-x-full motion-reduce:hidden"
+      />
+      <span className="relative block font-display text-lg uppercase leading-none tracking-[0.14em] text-[#f7ead0] transition-colors duration-300 group-hover:text-white sm:text-xl">
+        {label}
+      </span>
+      <span className="relative mt-2 block text-[9px] uppercase tracking-[0.3em] text-[#e7cf95]/75">
+        {hint}
       </span>
     </button>
-
-
   );
 }
