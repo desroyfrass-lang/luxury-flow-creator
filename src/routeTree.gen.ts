@@ -192,6 +192,7 @@ import { Route as AuthenticatedWorkspaceDailyDesignRouteImport } from './routes/
 import { Route as AuthenticatedWorkspaceCardRouteImport } from './routes/_authenticated/workspace.card'
 import { Route as AuthenticatedWorkspaceAffiliateRouteImport } from './routes/_authenticated/workspace.affiliate'
 import { Route as AuthenticatedStudiosProductionsRouteImport } from './routes/_authenticated/studios.productions'
+import { Route as AuthenticatedStudiosCreateRouteImport } from './routes/_authenticated/studios.create'
 import { Route as AuthenticatedAdminVoiceRouteImport } from './routes/_authenticated/admin.voice'
 import { Route as AuthenticatedAdminVisualIndexRouteImport } from './routes/_authenticated/admin.visual-index'
 import { Route as AuthenticatedAdminViralsRouteImport } from './routes/_authenticated/admin.virals'
@@ -1174,6 +1175,12 @@ const AuthenticatedStudiosProductionsRoute =
     path: '/productions',
     getParentRoute: () => AuthenticatedStudiosRoute,
   } as any)
+const AuthenticatedStudiosCreateRoute =
+  AuthenticatedStudiosCreateRouteImport.update({
+    id: '/create',
+    path: '/create',
+    getParentRoute: () => AuthenticatedStudiosRoute,
+  } as any)
 const AuthenticatedAdminVoiceRoute = AuthenticatedAdminVoiceRouteImport.update({
   id: '/voice',
   path: '/voice',
@@ -1515,6 +1522,7 @@ export interface FileRoutesByFullPath {
   '/admin/virals': typeof AuthenticatedAdminViralsRoute
   '/admin/visual-index': typeof AuthenticatedAdminVisualIndexRoute
   '/admin/voice': typeof AuthenticatedAdminVoiceRoute
+  '/studios/create': typeof AuthenticatedStudiosCreateRoute
   '/studios/productions': typeof AuthenticatedStudiosProductionsRoute
   '/workspace/affiliate': typeof AuthenticatedWorkspaceAffiliateRoute
   '/workspace/card': typeof AuthenticatedWorkspaceCardRoute
@@ -1706,6 +1714,7 @@ export interface FileRoutesByTo {
   '/admin/virals': typeof AuthenticatedAdminViralsRoute
   '/admin/visual-index': typeof AuthenticatedAdminVisualIndexRoute
   '/admin/voice': typeof AuthenticatedAdminVoiceRoute
+  '/studios/create': typeof AuthenticatedStudiosCreateRoute
   '/studios/productions': typeof AuthenticatedStudiosProductionsRoute
   '/workspace/affiliate': typeof AuthenticatedWorkspaceAffiliateRoute
   '/workspace/card': typeof AuthenticatedWorkspaceCardRoute
@@ -1922,6 +1931,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/virals': typeof AuthenticatedAdminViralsRoute
   '/_authenticated/admin/visual-index': typeof AuthenticatedAdminVisualIndexRoute
   '/_authenticated/admin/voice': typeof AuthenticatedAdminVoiceRoute
+  '/_authenticated/studios/create': typeof AuthenticatedStudiosCreateRoute
   '/_authenticated/studios/productions': typeof AuthenticatedStudiosProductionsRoute
   '/_authenticated/workspace/affiliate': typeof AuthenticatedWorkspaceAffiliateRoute
   '/_authenticated/workspace/card': typeof AuthenticatedWorkspaceCardRoute
@@ -2138,6 +2148,7 @@ export interface FileRouteTypes {
     | '/admin/virals'
     | '/admin/visual-index'
     | '/admin/voice'
+    | '/studios/create'
     | '/studios/productions'
     | '/workspace/affiliate'
     | '/workspace/card'
@@ -2329,6 +2340,7 @@ export interface FileRouteTypes {
     | '/admin/virals'
     | '/admin/visual-index'
     | '/admin/voice'
+    | '/studios/create'
     | '/studios/productions'
     | '/workspace/affiliate'
     | '/workspace/card'
@@ -2544,6 +2556,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/virals'
     | '/_authenticated/admin/visual-index'
     | '/_authenticated/admin/voice'
+    | '/_authenticated/studios/create'
     | '/_authenticated/studios/productions'
     | '/_authenticated/workspace/affiliate'
     | '/_authenticated/workspace/card'
@@ -3949,6 +3962,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedStudiosProductionsRouteImport
       parentRoute: typeof AuthenticatedStudiosRoute
     }
+    '/_authenticated/studios/create': {
+      id: '/_authenticated/studios/create'
+      path: '/create'
+      fullPath: '/studios/create'
+      preLoaderRoute: typeof AuthenticatedStudiosCreateRouteImport
+      parentRoute: typeof AuthenticatedStudiosRoute
+    }
     '/_authenticated/admin/voice': {
       id: '/_authenticated/admin/voice'
       path: '/voice'
@@ -4221,11 +4241,13 @@ const AuthenticatedAdminRouteWithChildren =
   AuthenticatedAdminRoute._addFileChildren(AuthenticatedAdminRouteChildren)
 
 interface AuthenticatedStudiosRouteChildren {
+  AuthenticatedStudiosCreateRoute: typeof AuthenticatedStudiosCreateRoute
   AuthenticatedStudiosProductionsRoute: typeof AuthenticatedStudiosProductionsRoute
   AuthenticatedStudiosIndexRoute: typeof AuthenticatedStudiosIndexRoute
 }
 
 const AuthenticatedStudiosRouteChildren: AuthenticatedStudiosRouteChildren = {
+  AuthenticatedStudiosCreateRoute: AuthenticatedStudiosCreateRoute,
   AuthenticatedStudiosProductionsRoute: AuthenticatedStudiosProductionsRoute,
   AuthenticatedStudiosIndexRoute: AuthenticatedStudiosIndexRoute,
 }
