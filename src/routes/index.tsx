@@ -1,7 +1,7 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import archHero from "@/assets/frass-three-doors-arrival-v2.png.asset.json";
+import archHero from "@/assets/frass-three-doors-arrival-v3.png";
 
 
 /**
@@ -81,7 +81,7 @@ function EntrancePage() {
         {/* The archway — always shown complete, never cropped, enlarged. */}
         <div className="gateway-rise relative w-full overflow-hidden rounded-[1.5rem] shadow-[0_30px_90px_-40px_rgba(90,70,20,0.45)] ring-1 ring-[#d4af37]/30">
           <img
-            src={archHero.url}
+            src={archHero}
             alt="The FrassKicks archway in daylight with three entrances: Frass District, Frass Hill and Frass Kids"
             width={1376}
             height={768}
@@ -121,8 +121,8 @@ function EntrancePage() {
 }
 
 /**
- * A visible entrance button beneath the archway image. Solid gold/chrome on
- * dark for the brand; transparent gold-glass hover.
+ * A glass entrance button beneath the archway image — translucent ocean-glass
+ * with a gold rim, frosted and luminous.
  */
 function DoorButton({
   onClick,
@@ -137,10 +137,11 @@ function DoorButton({
     <button
       type="button"
       onClick={onClick}
-      className="flex-1 rounded-xl border border-[#d4af37]/60 bg-[#0f0f0f] px-5 py-3 text-center font-[var(--font-display,'Archivo_Black',sans-serif)] text-sm font-bold uppercase tracking-[0.2em] text-[#f3d27a] shadow-[0_8px_30px_-12px_rgba(0,0,0,0.6)] transition-all duration-300 ease-out hover:-translate-y-0.5 hover:border-[#f3d27a] hover:bg-[#1a1a1a] hover:shadow-[0_12px_40px_-12px_rgba(212,175,55,0.7)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#f3d27a] motion-reduce:transition-none"
       data-tone={tone}
+      className="door-glass relative flex-1 overflow-hidden rounded-2xl border border-[#7fd8e6]/60 bg-[#0e7490]/30 px-5 py-4 text-center font-[var(--font-display,'Archivo_Black',sans-serif)] text-sm font-bold uppercase tracking-[0.2em] text-[#eaf6fb] shadow-[0_10px_40px_-16px_rgba(8,80,110,0.65)] backdrop-blur-xl transition-all duration-300 ease-out hover:-translate-y-0.5 hover:border-[#67e8f9]/90 hover:bg-[#0e7490]/45 hover:shadow-[0_16px_50px_-16px_rgba(103,232,249,0.7)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#67e8f9] motion-reduce:transition-none"
     >
-      {children}
+      <span className="pointer-events-none absolute inset-0 rounded-2xl bg-[linear-gradient(120deg,transparent_30%,rgba(255,255,255,0.18)_50%,transparent_70%)] opacity-70" />
+      <span className="relative">{children}</span>
     </button>
   );
 }
