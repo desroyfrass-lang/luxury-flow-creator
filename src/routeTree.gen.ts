@@ -199,11 +199,13 @@ import { Route as AuthenticatedStudiosReviewRouteImport } from './routes/_authen
 import { Route as AuthenticatedStudiosPublishingRouteImport } from './routes/_authenticated/studios.publishing'
 import { Route as AuthenticatedStudiosProvidersRouteImport } from './routes/_authenticated/studios.providers'
 import { Route as AuthenticatedStudiosProductionsRouteImport } from './routes/_authenticated/studios.productions'
+import { Route as AuthenticatedStudiosPerformanceRouteImport } from './routes/_authenticated/studios.performance'
 import { Route as AuthenticatedStudiosMonetizationRouteImport } from './routes/_authenticated/studios.monetization'
 import { Route as AuthenticatedStudiosJobsRouteImport } from './routes/_authenticated/studios.jobs'
 import { Route as AuthenticatedStudiosCreateRouteImport } from './routes/_authenticated/studios.create'
 import { Route as AuthenticatedStudiosConnectionsRouteImport } from './routes/_authenticated/studios.connections'
 import { Route as AuthenticatedStudiosCharactersRouteImport } from './routes/_authenticated/studios.characters'
+import { Route as AuthenticatedStudiosCalendarRouteImport } from './routes/_authenticated/studios.calendar'
 import { Route as AuthenticatedStudiosAssetsRouteImport } from './routes/_authenticated/studios.assets'
 import { Route as AuthenticatedStudiosAnimationsRouteImport } from './routes/_authenticated/studios.animations'
 import { Route as AuthenticatedStudiosAnalyticsRouteImport } from './routes/_authenticated/studios.analytics'
@@ -232,6 +234,7 @@ import { Route as AuthenticatedAdminAffiliatePolicyRouteImport } from './routes/
 import { Route as AuthenticatedAdminActivitiesRouteImport } from './routes/_authenticated/admin.activities'
 import { Route as Char91DotmcpChar93InvokeToolToolRouteImport } from './routes/[.mcp]/invoke-tool/$tool'
 import { Route as DotlovableOauthConsentRouteImport } from './routes/[.]lovable.oauth.consent'
+import { Route as AuthenticatedStudiosDistributionIndexRouteImport } from './routes/_authenticated/studios.distribution.index'
 import { Route as SocialMediaViralsCategorySubProductRouteImport } from './routes/social-media-virals.$category.$sub.$product'
 import { Route as LovableEmailQueueProcessRouteImport } from './routes/lovable/email/queue/process'
 import { Route as LovableEmailAuthWebhookRouteImport } from './routes/lovable/email/auth/webhook'
@@ -239,6 +242,7 @@ import { Route as LovableEmailAuthPreviewRouteImport } from './routes/lovable/em
 import { Route as FrassShapeGenderGoalsGoalRouteImport } from './routes/frass-shape.$gender.goals.$goal'
 import { Route as AuthenticatedStudiosProductionIdRouteImport } from './routes/_authenticated/studios.production.$id'
 import { Route as AuthenticatedStudiosEngineIdRouteImport } from './routes/_authenticated/studios.engine.$id'
+import { Route as AuthenticatedStudiosDistributionIdRouteImport } from './routes/_authenticated/studios.distribution.$id'
 
 const WelcomeHallRoute = WelcomeHallRouteImport.update({
   id: '/welcome-hall',
@@ -1233,6 +1237,12 @@ const AuthenticatedStudiosProductionsRoute =
     path: '/productions',
     getParentRoute: () => AuthenticatedStudiosRoute,
   } as any)
+const AuthenticatedStudiosPerformanceRoute =
+  AuthenticatedStudiosPerformanceRouteImport.update({
+    id: '/performance',
+    path: '/performance',
+    getParentRoute: () => AuthenticatedStudiosRoute,
+  } as any)
 const AuthenticatedStudiosMonetizationRoute =
   AuthenticatedStudiosMonetizationRouteImport.update({
     id: '/monetization',
@@ -1261,6 +1271,12 @@ const AuthenticatedStudiosCharactersRoute =
   AuthenticatedStudiosCharactersRouteImport.update({
     id: '/characters',
     path: '/characters',
+    getParentRoute: () => AuthenticatedStudiosRoute,
+  } as any)
+const AuthenticatedStudiosCalendarRoute =
+  AuthenticatedStudiosCalendarRouteImport.update({
+    id: '/calendar',
+    path: '/calendar',
     getParentRoute: () => AuthenticatedStudiosRoute,
   } as any)
 const AuthenticatedStudiosAssetsRoute =
@@ -1424,6 +1440,12 @@ const DotlovableOauthConsentRoute = DotlovableOauthConsentRouteImport.update({
   path: '/.lovable/oauth/consent',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedStudiosDistributionIndexRoute =
+  AuthenticatedStudiosDistributionIndexRouteImport.update({
+    id: '/distribution/',
+    path: '/distribution/',
+    getParentRoute: () => AuthenticatedStudiosRoute,
+  } as any)
 const SocialMediaViralsCategorySubProductRoute =
   SocialMediaViralsCategorySubProductRouteImport.update({
     id: '/$product',
@@ -1462,6 +1484,12 @@ const AuthenticatedStudiosEngineIdRoute =
   AuthenticatedStudiosEngineIdRouteImport.update({
     id: '/engine/$id',
     path: '/engine/$id',
+    getParentRoute: () => AuthenticatedStudiosRoute,
+  } as any)
+const AuthenticatedStudiosDistributionIdRoute =
+  AuthenticatedStudiosDistributionIdRouteImport.update({
+    id: '/distribution/$id',
+    path: '/distribution/$id',
     getParentRoute: () => AuthenticatedStudiosRoute,
   } as any)
 
@@ -1637,11 +1665,13 @@ export interface FileRoutesByFullPath {
   '/studios/analytics': typeof AuthenticatedStudiosAnalyticsRoute
   '/studios/animations': typeof AuthenticatedStudiosAnimationsRoute
   '/studios/assets': typeof AuthenticatedStudiosAssetsRoute
+  '/studios/calendar': typeof AuthenticatedStudiosCalendarRoute
   '/studios/characters': typeof AuthenticatedStudiosCharactersRoute
   '/studios/connections': typeof AuthenticatedStudiosConnectionsRoute
   '/studios/create': typeof AuthenticatedStudiosCreateRoute
   '/studios/jobs': typeof AuthenticatedStudiosJobsRoute
   '/studios/monetization': typeof AuthenticatedStudiosMonetizationRoute
+  '/studios/performance': typeof AuthenticatedStudiosPerformanceRoute
   '/studios/productions': typeof AuthenticatedStudiosProductionsRoute
   '/studios/providers': typeof AuthenticatedStudiosProvidersRoute
   '/studios/publishing': typeof AuthenticatedStudiosPublishingRoute
@@ -1688,6 +1718,7 @@ export interface FileRoutesByFullPath {
   '/frass-plus/$gender/': typeof FrassPlusGenderIndexRoute
   '/frass-shape/$gender/': typeof FrassShapeGenderIndexRoute
   '/kids-world/$age/': typeof KidsWorldAgeIndexRoute
+  '/studios/distribution/$id': typeof AuthenticatedStudiosDistributionIdRoute
   '/studios/engine/$id': typeof AuthenticatedStudiosEngineIdRoute
   '/studios/production/$id': typeof AuthenticatedStudiosProductionIdRoute
   '/frass-shape/$gender/goals/$goal': typeof FrassShapeGenderGoalsGoalRoute
@@ -1695,6 +1726,7 @@ export interface FileRoutesByFullPath {
   '/lovable/email/auth/webhook': typeof LovableEmailAuthWebhookRoute
   '/lovable/email/queue/process': typeof LovableEmailQueueProcessRoute
   '/social-media-virals/$category/$sub/$product': typeof SocialMediaViralsCategorySubProductRoute
+  '/studios/distribution/': typeof AuthenticatedStudiosDistributionIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -1845,11 +1877,13 @@ export interface FileRoutesByTo {
   '/studios/analytics': typeof AuthenticatedStudiosAnalyticsRoute
   '/studios/animations': typeof AuthenticatedStudiosAnimationsRoute
   '/studios/assets': typeof AuthenticatedStudiosAssetsRoute
+  '/studios/calendar': typeof AuthenticatedStudiosCalendarRoute
   '/studios/characters': typeof AuthenticatedStudiosCharactersRoute
   '/studios/connections': typeof AuthenticatedStudiosConnectionsRoute
   '/studios/create': typeof AuthenticatedStudiosCreateRoute
   '/studios/jobs': typeof AuthenticatedStudiosJobsRoute
   '/studios/monetization': typeof AuthenticatedStudiosMonetizationRoute
+  '/studios/performance': typeof AuthenticatedStudiosPerformanceRoute
   '/studios/productions': typeof AuthenticatedStudiosProductionsRoute
   '/studios/providers': typeof AuthenticatedStudiosProvidersRoute
   '/studios/publishing': typeof AuthenticatedStudiosPublishingRoute
@@ -1896,6 +1930,7 @@ export interface FileRoutesByTo {
   '/frass-plus/$gender': typeof FrassPlusGenderIndexRoute
   '/frass-shape/$gender': typeof FrassShapeGenderIndexRoute
   '/kids-world/$age': typeof KidsWorldAgeIndexRoute
+  '/studios/distribution/$id': typeof AuthenticatedStudiosDistributionIdRoute
   '/studios/engine/$id': typeof AuthenticatedStudiosEngineIdRoute
   '/studios/production/$id': typeof AuthenticatedStudiosProductionIdRoute
   '/frass-shape/$gender/goals/$goal': typeof FrassShapeGenderGoalsGoalRoute
@@ -1903,6 +1938,7 @@ export interface FileRoutesByTo {
   '/lovable/email/auth/webhook': typeof LovableEmailAuthWebhookRoute
   '/lovable/email/queue/process': typeof LovableEmailQueueProcessRoute
   '/social-media-virals/$category/$sub/$product': typeof SocialMediaViralsCategorySubProductRoute
+  '/studios/distribution': typeof AuthenticatedStudiosDistributionIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -2078,11 +2114,13 @@ export interface FileRoutesById {
   '/_authenticated/studios/analytics': typeof AuthenticatedStudiosAnalyticsRoute
   '/_authenticated/studios/animations': typeof AuthenticatedStudiosAnimationsRoute
   '/_authenticated/studios/assets': typeof AuthenticatedStudiosAssetsRoute
+  '/_authenticated/studios/calendar': typeof AuthenticatedStudiosCalendarRoute
   '/_authenticated/studios/characters': typeof AuthenticatedStudiosCharactersRoute
   '/_authenticated/studios/connections': typeof AuthenticatedStudiosConnectionsRoute
   '/_authenticated/studios/create': typeof AuthenticatedStudiosCreateRoute
   '/_authenticated/studios/jobs': typeof AuthenticatedStudiosJobsRoute
   '/_authenticated/studios/monetization': typeof AuthenticatedStudiosMonetizationRoute
+  '/_authenticated/studios/performance': typeof AuthenticatedStudiosPerformanceRoute
   '/_authenticated/studios/productions': typeof AuthenticatedStudiosProductionsRoute
   '/_authenticated/studios/providers': typeof AuthenticatedStudiosProvidersRoute
   '/_authenticated/studios/publishing': typeof AuthenticatedStudiosPublishingRoute
@@ -2129,6 +2167,7 @@ export interface FileRoutesById {
   '/frass-plus/$gender/': typeof FrassPlusGenderIndexRoute
   '/frass-shape/$gender/': typeof FrassShapeGenderIndexRoute
   '/kids-world/$age/': typeof KidsWorldAgeIndexRoute
+  '/_authenticated/studios/distribution/$id': typeof AuthenticatedStudiosDistributionIdRoute
   '/_authenticated/studios/engine/$id': typeof AuthenticatedStudiosEngineIdRoute
   '/_authenticated/studios/production/$id': typeof AuthenticatedStudiosProductionIdRoute
   '/frass-shape/$gender/goals/$goal': typeof FrassShapeGenderGoalsGoalRoute
@@ -2136,6 +2175,7 @@ export interface FileRoutesById {
   '/lovable/email/auth/webhook': typeof LovableEmailAuthWebhookRoute
   '/lovable/email/queue/process': typeof LovableEmailQueueProcessRoute
   '/social-media-virals/$category/$sub/$product': typeof SocialMediaViralsCategorySubProductRoute
+  '/_authenticated/studios/distribution/': typeof AuthenticatedStudiosDistributionIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -2311,11 +2351,13 @@ export interface FileRouteTypes {
     | '/studios/analytics'
     | '/studios/animations'
     | '/studios/assets'
+    | '/studios/calendar'
     | '/studios/characters'
     | '/studios/connections'
     | '/studios/create'
     | '/studios/jobs'
     | '/studios/monetization'
+    | '/studios/performance'
     | '/studios/productions'
     | '/studios/providers'
     | '/studios/publishing'
@@ -2362,6 +2404,7 @@ export interface FileRouteTypes {
     | '/frass-plus/$gender/'
     | '/frass-shape/$gender/'
     | '/kids-world/$age/'
+    | '/studios/distribution/$id'
     | '/studios/engine/$id'
     | '/studios/production/$id'
     | '/frass-shape/$gender/goals/$goal'
@@ -2369,6 +2412,7 @@ export interface FileRouteTypes {
     | '/lovable/email/auth/webhook'
     | '/lovable/email/queue/process'
     | '/social-media-virals/$category/$sub/$product'
+    | '/studios/distribution/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -2519,11 +2563,13 @@ export interface FileRouteTypes {
     | '/studios/analytics'
     | '/studios/animations'
     | '/studios/assets'
+    | '/studios/calendar'
     | '/studios/characters'
     | '/studios/connections'
     | '/studios/create'
     | '/studios/jobs'
     | '/studios/monetization'
+    | '/studios/performance'
     | '/studios/productions'
     | '/studios/providers'
     | '/studios/publishing'
@@ -2570,6 +2616,7 @@ export interface FileRouteTypes {
     | '/frass-plus/$gender'
     | '/frass-shape/$gender'
     | '/kids-world/$age'
+    | '/studios/distribution/$id'
     | '/studios/engine/$id'
     | '/studios/production/$id'
     | '/frass-shape/$gender/goals/$goal'
@@ -2577,6 +2624,7 @@ export interface FileRouteTypes {
     | '/lovable/email/auth/webhook'
     | '/lovable/email/queue/process'
     | '/social-media-virals/$category/$sub/$product'
+    | '/studios/distribution'
   id:
     | '__root__'
     | '/'
@@ -2751,11 +2799,13 @@ export interface FileRouteTypes {
     | '/_authenticated/studios/analytics'
     | '/_authenticated/studios/animations'
     | '/_authenticated/studios/assets'
+    | '/_authenticated/studios/calendar'
     | '/_authenticated/studios/characters'
     | '/_authenticated/studios/connections'
     | '/_authenticated/studios/create'
     | '/_authenticated/studios/jobs'
     | '/_authenticated/studios/monetization'
+    | '/_authenticated/studios/performance'
     | '/_authenticated/studios/productions'
     | '/_authenticated/studios/providers'
     | '/_authenticated/studios/publishing'
@@ -2802,6 +2852,7 @@ export interface FileRouteTypes {
     | '/frass-plus/$gender/'
     | '/frass-shape/$gender/'
     | '/kids-world/$age/'
+    | '/_authenticated/studios/distribution/$id'
     | '/_authenticated/studios/engine/$id'
     | '/_authenticated/studios/production/$id'
     | '/frass-shape/$gender/goals/$goal'
@@ -2809,6 +2860,7 @@ export interface FileRouteTypes {
     | '/lovable/email/auth/webhook'
     | '/lovable/email/queue/process'
     | '/social-media-virals/$category/$sub/$product'
+    | '/_authenticated/studios/distribution/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -4219,6 +4271,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedStudiosProductionsRouteImport
       parentRoute: typeof AuthenticatedStudiosRoute
     }
+    '/_authenticated/studios/performance': {
+      id: '/_authenticated/studios/performance'
+      path: '/performance'
+      fullPath: '/studios/performance'
+      preLoaderRoute: typeof AuthenticatedStudiosPerformanceRouteImport
+      parentRoute: typeof AuthenticatedStudiosRoute
+    }
     '/_authenticated/studios/monetization': {
       id: '/_authenticated/studios/monetization'
       path: '/monetization'
@@ -4252,6 +4311,13 @@ declare module '@tanstack/react-router' {
       path: '/characters'
       fullPath: '/studios/characters'
       preLoaderRoute: typeof AuthenticatedStudiosCharactersRouteImport
+      parentRoute: typeof AuthenticatedStudiosRoute
+    }
+    '/_authenticated/studios/calendar': {
+      id: '/_authenticated/studios/calendar'
+      path: '/calendar'
+      fullPath: '/studios/calendar'
+      preLoaderRoute: typeof AuthenticatedStudiosCalendarRouteImport
       parentRoute: typeof AuthenticatedStudiosRoute
     }
     '/_authenticated/studios/assets': {
@@ -4450,6 +4516,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DotlovableOauthConsentRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated/studios/distribution/': {
+      id: '/_authenticated/studios/distribution/'
+      path: '/distribution'
+      fullPath: '/studios/distribution/'
+      preLoaderRoute: typeof AuthenticatedStudiosDistributionIndexRouteImport
+      parentRoute: typeof AuthenticatedStudiosRoute
+    }
     '/social-media-virals/$category/$sub/$product': {
       id: '/social-media-virals/$category/$sub/$product'
       path: '/$product'
@@ -4497,6 +4570,13 @@ declare module '@tanstack/react-router' {
       path: '/engine/$id'
       fullPath: '/studios/engine/$id'
       preLoaderRoute: typeof AuthenticatedStudiosEngineIdRouteImport
+      parentRoute: typeof AuthenticatedStudiosRoute
+    }
+    '/_authenticated/studios/distribution/$id': {
+      id: '/_authenticated/studios/distribution/$id'
+      path: '/distribution/$id'
+      fullPath: '/studios/distribution/$id'
+      preLoaderRoute: typeof AuthenticatedStudiosDistributionIdRouteImport
       parentRoute: typeof AuthenticatedStudiosRoute
     }
   }
@@ -4564,11 +4644,13 @@ interface AuthenticatedStudiosRouteChildren {
   AuthenticatedStudiosAnalyticsRoute: typeof AuthenticatedStudiosAnalyticsRoute
   AuthenticatedStudiosAnimationsRoute: typeof AuthenticatedStudiosAnimationsRoute
   AuthenticatedStudiosAssetsRoute: typeof AuthenticatedStudiosAssetsRoute
+  AuthenticatedStudiosCalendarRoute: typeof AuthenticatedStudiosCalendarRoute
   AuthenticatedStudiosCharactersRoute: typeof AuthenticatedStudiosCharactersRoute
   AuthenticatedStudiosConnectionsRoute: typeof AuthenticatedStudiosConnectionsRoute
   AuthenticatedStudiosCreateRoute: typeof AuthenticatedStudiosCreateRoute
   AuthenticatedStudiosJobsRoute: typeof AuthenticatedStudiosJobsRoute
   AuthenticatedStudiosMonetizationRoute: typeof AuthenticatedStudiosMonetizationRoute
+  AuthenticatedStudiosPerformanceRoute: typeof AuthenticatedStudiosPerformanceRoute
   AuthenticatedStudiosProductionsRoute: typeof AuthenticatedStudiosProductionsRoute
   AuthenticatedStudiosProvidersRoute: typeof AuthenticatedStudiosProvidersRoute
   AuthenticatedStudiosPublishingRoute: typeof AuthenticatedStudiosPublishingRoute
@@ -4578,19 +4660,23 @@ interface AuthenticatedStudiosRouteChildren {
   AuthenticatedStudiosUsageRoute: typeof AuthenticatedStudiosUsageRoute
   AuthenticatedStudiosVoicesRoute: typeof AuthenticatedStudiosVoicesRoute
   AuthenticatedStudiosIndexRoute: typeof AuthenticatedStudiosIndexRoute
+  AuthenticatedStudiosDistributionIdRoute: typeof AuthenticatedStudiosDistributionIdRoute
   AuthenticatedStudiosEngineIdRoute: typeof AuthenticatedStudiosEngineIdRoute
   AuthenticatedStudiosProductionIdRoute: typeof AuthenticatedStudiosProductionIdRoute
+  AuthenticatedStudiosDistributionIndexRoute: typeof AuthenticatedStudiosDistributionIndexRoute
 }
 
 const AuthenticatedStudiosRouteChildren: AuthenticatedStudiosRouteChildren = {
   AuthenticatedStudiosAnalyticsRoute: AuthenticatedStudiosAnalyticsRoute,
   AuthenticatedStudiosAnimationsRoute: AuthenticatedStudiosAnimationsRoute,
   AuthenticatedStudiosAssetsRoute: AuthenticatedStudiosAssetsRoute,
+  AuthenticatedStudiosCalendarRoute: AuthenticatedStudiosCalendarRoute,
   AuthenticatedStudiosCharactersRoute: AuthenticatedStudiosCharactersRoute,
   AuthenticatedStudiosConnectionsRoute: AuthenticatedStudiosConnectionsRoute,
   AuthenticatedStudiosCreateRoute: AuthenticatedStudiosCreateRoute,
   AuthenticatedStudiosJobsRoute: AuthenticatedStudiosJobsRoute,
   AuthenticatedStudiosMonetizationRoute: AuthenticatedStudiosMonetizationRoute,
+  AuthenticatedStudiosPerformanceRoute: AuthenticatedStudiosPerformanceRoute,
   AuthenticatedStudiosProductionsRoute: AuthenticatedStudiosProductionsRoute,
   AuthenticatedStudiosProvidersRoute: AuthenticatedStudiosProvidersRoute,
   AuthenticatedStudiosPublishingRoute: AuthenticatedStudiosPublishingRoute,
@@ -4600,8 +4686,12 @@ const AuthenticatedStudiosRouteChildren: AuthenticatedStudiosRouteChildren = {
   AuthenticatedStudiosUsageRoute: AuthenticatedStudiosUsageRoute,
   AuthenticatedStudiosVoicesRoute: AuthenticatedStudiosVoicesRoute,
   AuthenticatedStudiosIndexRoute: AuthenticatedStudiosIndexRoute,
+  AuthenticatedStudiosDistributionIdRoute:
+    AuthenticatedStudiosDistributionIdRoute,
   AuthenticatedStudiosEngineIdRoute: AuthenticatedStudiosEngineIdRoute,
   AuthenticatedStudiosProductionIdRoute: AuthenticatedStudiosProductionIdRoute,
+  AuthenticatedStudiosDistributionIndexRoute:
+    AuthenticatedStudiosDistributionIndexRoute,
 }
 
 const AuthenticatedStudiosRouteWithChildren =
