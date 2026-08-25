@@ -71,7 +71,7 @@ function PublishingCenter() {
           <div className="space-y-2">
             {attention.map((j) => (
               <StudioCard key={j.id} eyebrow={platformMeta(j.platform).label} title={j.studio_productions?.title ?? "Untitled"}>
-                <p className="text-xs text-red-400">{j.error ?? "The platform did not confirm the outcome."}</p>
+                <p className="text-xs text-red-400">{j.attention_reason ?? j.error ?? "The platform did not confirm the outcome."}</p>
                 <div className="mt-3 flex flex-wrap gap-2">
                   <QuietButton onClick={() => act(retry, j.id, "Retried safely.")}>Retry safely</QuietButton>
                   <QuietButton onClick={() => act(cancel, j.id, "Release cancelled.")}>Cancel</QuietButton>
@@ -101,11 +101,11 @@ function PublishingCenter() {
                 <StatusPill status={labelOf(JOB_STATUSES, j.status)} />
                 <span>{j.account_label ?? "No channel"}</span>
                 <span>{j.scheduled_for ? `Scheduled ${new Date(j.scheduled_for).toLocaleString()}` : "No date set"}</span>
-                {j.attempts ? <span>{j.attempts} attempt{j.attempts === 1 ? "" : "s"}</span> : null}
+                {j.retry_count ? <span>{j.retry_count} retr{j.retry_count === 1 ? "y" : "ies"}</span> : null}
                 {!connected.has(j.platform) ? (
                   <span className="text-amber-400">Channel not connected yet — this stays on hold.</span>
                 ) : null}
-                {j.blocked_reason ? <span className="text-amber-400">{j.blocked_reason}</span> : null}
+                {j.attention_reason ? <span className="text-amber-400">{j.attention_reason}</span> : null}
                 {j.error ? <span className="text-red-400">{j.error}</span> : null}
               </div>
               {j.status !== "cancelled" && j.status !== "published" ? (

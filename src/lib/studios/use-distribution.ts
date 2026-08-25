@@ -55,7 +55,7 @@ export function useDistributionJobs() {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("studio_publish_jobs")
-        .select("*, studio_productions(title, series_id, production_type, studio_series(name))")
+        .select("*, studio_productions!studio_publish_jobs_production_id_fkey(title, series_id, production_type, studio_series(name))")
         .order("scheduled_for", { ascending: true, nullsFirst: false })
         .limit(500);
       if (error) throw error;
@@ -70,7 +70,7 @@ export function usePublications() {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("studio_publications")
-        .select("*, studio_productions(title, series_id, production_type, studio_series(name))")
+        .select("*, studio_productions!studio_publications_production_id_fkey(title, series_id, production_type, studio_series(name))")
         .order("published_at", { ascending: false, nullsFirst: false })
         .limit(500);
       if (error) throw error;
