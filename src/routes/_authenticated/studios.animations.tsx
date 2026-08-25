@@ -61,7 +61,7 @@ function AnimationsPage() {
   const reuse = async (a: any) => {
     await supabase
       .from("studio_animations")
-      .update({ usage_count: (a.usage_count ?? 0) + 1, last_used_at: new Date().toISOString() })
+      .update({ times_used: (a.times_used ?? 0) + 1 })
       .eq("id", a.id);
     qc.invalidateQueries({ queryKey: ["studio", "animations"] });
     toast.success("Marked as reused. That is one generation you did not pay for.");
@@ -76,9 +76,9 @@ function AnimationsPage() {
         <GoldButton onClick={() => setOpen(!open)}>{open ? "Close" : "Save a movement"}</GoldButton>
         <select className={`${inputClass} max-w-[240px]`} value={filter} onChange={(e) => setFilter(e.target.value)}>
           <option value="">Every category</option>
-          {ANIMATION_CATEGORIES.map((c: any) => (
-            <option key={c.id} value={c.id}>
-              {c.label}
+          {ANIMATION_CATEGORIES.map((c) => (
+            <option key={c} value={c}>
+              {c.replace(/_/g, " ")}
             </option>
           ))}
         </select>
@@ -91,9 +91,9 @@ function AnimationsPage() {
           </Field>
           <Field label="Category">
             <select className={inputClass} value={form.category} onChange={(e) => setForm({ ...form, category: e.target.value })}>
-              {ANIMATION_CATEGORIES.map((c: any) => (
-                <option key={c.id} value={c.id}>
-                  {c.label}
+              {ANIMATION_CATEGORIES.map((c) => (
+                <option key={c} value={c}>
+                  {c.replace(/_/g, " ")}
                 </option>
               ))}
             </select>
@@ -140,12 +140,12 @@ function AnimationsPage() {
           {animations.map((a: any) => (
             <div key={a.id} className="rounded-lg border border-border/70 bg-card/60 p-4">
               <div className="text-[10px] uppercase tracking-[0.22em] text-[color:var(--gold)]">
-                {ANIMATION_CATEGORIES.find((c: any) => c.id === a.category)?.label ?? a.category}
+                {String(a.category).replace(/_/g, " ")}
               </div>
               <h3 className="font-display text-lg uppercase tracking-tight">{a.name}</h3>
               {a.description ? <p className="mt-1 text-sm text-muted-foreground">{a.description}</p> : null}
               <p className="mt-2 text-xs text-muted-foreground">
-                {a.duration_seconds ?? "—"}s · {a.loopable ? "loops" : "one-off"} · reused {a.usage_count ?? 0}×
+                {a.duration_seconds ?? "—"}s · {a.loopable ? "loops" : "one-off"} · reused {a.times_used ?? 0}×
               </p>
               <div className="mt-3">
                 <QuietButton onClick={() => reuse(a)}>Reuse this</QuietButton>

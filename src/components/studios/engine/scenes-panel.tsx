@@ -98,7 +98,8 @@ export function ScenesPanel({
   const duplicateScene = async (scene: any) => {
     const { id: _id, created_at: _c, updated_at: _u, ...rest } = scene as Record<string, any>;
     await supabase.from("studio_scenes").insert({
-      ...rest,
+      ...(rest as any),
+      production_id: production.id,
       scene_number: Number(scene.scene_number) + 0.5,
       title: `${scene.title ?? "Scene"} (copy)`,
       approval_status: "draft",

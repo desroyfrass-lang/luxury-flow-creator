@@ -35,11 +35,11 @@ function ProvidersPage() {
   };
 
   const toggle = async (p: any) => {
-    if (!p.is_configured && !p.is_active) {
+    if (p.status !== "available" && !p.enabled) {
       return toast.error("This service isn't connected yet. Connection happens in a later build, with keys kept on the server.");
     }
-    await supabase.from("studio_providers").update({ is_active: !p.is_active }).eq("id", p.id);
-    await logStudioActivity("provider_toggled", "provider", p.id, { active: !p.is_active });
+    await supabase.from("studio_providers").update({ enabled: !p.enabled }).eq("id", p.id);
+    await logStudioActivity("provider_toggled", "provider", p.id, { enabled: !p.enabled });
     qc.invalidateQueries({ queryKey: ["studio", "providers"] });
   };
 
@@ -55,9 +55,9 @@ function ProvidersPage() {
       ) : (
         <div className="space-y-6">
           {GENERATION_CAPABILITIES.map((cap: any) => {
-            const rows = providers.filter((p: any) => p.capability === cap.id);
+            const rows = providers.filter((p: any) => (p.capabilities ?? []).includes(cap.id));
             if (!rows.length) return null;
-            const live = rows.some((r: any) => r.is_active && r.is_configured);
+            const live = rows.some((r: any) => r.enabled && r.status === "available");
             return (
               <div key={cap.id} className="rounded-lg border border-border/70 bg-card/60 p-5">
                 <div className="flex flex-wrap items-center justify-between gap-2">
@@ -82,7 +82,7 @@ function ProvidersPage() {
                         <div className="min-w-0">
                           <div className="text-sm">{p.label}</div>
                           <p className="text-xs text-muted-foreground">
-                            {p.is_configured ? "Connected" : "Awaiting connection"} · choice #{p.priority ?? "—"}
+                            {p.status === "available" ? "Connected" : "Awaiting connection"} · choice #{p.priority ?? "—"}
                             {p.notes ? ` · ${p.notes}` : ""}
                           </p>
                         </div>
@@ -93,7 +93,7 @@ function ProvidersPage() {
                           >
                             Prefer more
                           </button>
-                          <QuietButton onClick={() => toggle(p)}>{p.is_active ? "Turn off" : "Turn on"}</QuietButton>
+                          <QuietButton onClick={() => toggle(p)}>{p.enabled ? "Turn off" : "Turn on"}</QuietButton>
                         </div>
                       </li>
                     ))}
