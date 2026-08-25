@@ -32,7 +32,7 @@ function AuthPage() {
   useEffect(() => {
     supabase.auth.getSession().then(async ({ data }) => {
       if (!data.session) return;
-      window.location.assign("/welcome");
+      window.location.assign("/welcome-hall?arrival=first");
     });
   }, []);
 
@@ -53,11 +53,11 @@ function AuthPage() {
         const { error } = await supabase.auth.signUp({
           email,
           password,
-          options: { emailRedirectTo: window.location.origin + "/welcome" },
+          options: { emailRedirectTo: window.location.origin + "/welcome-hall?arrival=first" },
         });
         if (error) throw error;
         toast.success("Welcome — Frassy is waiting at the gate");
-        window.location.assign("/welcome");
+        window.location.assign("/welcome-hall?arrival=first");
         return;
       }
     } catch (err) {
@@ -67,7 +67,7 @@ function AuthPage() {
     }
 
     // Signed in. Routing must never be able to strand the Builder on this page.
-    window.location.assign("/welcome");
+    window.location.assign("/welcome-hall?arrival=first");
   };
 
 
