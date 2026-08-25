@@ -25,8 +25,18 @@ Implementation of the frozen 201-card World Teleporter audit. No new pages, no r
 | /builder-hall | /room | New redirect; unique content check below |
 | /builder/$handle | /card/$handle | Already correct; graceful "card not found" verified |
 | /admin | /control-room | Retarget (today it lands on /admin/images); all /admin/* tools untouched |
-| / | unchanged | Two-door arrival stays as approved; buttons point at canonical routes |
+| / | unchanged (canonical) | Three-door cinematic arrival restored; doors point at canonical routes |
 | /welcome-hall | unchanged | Registry marks it red, your directive locks it as canonical — flagged, not touched |
+
+## Root arrival — three doors (correction, locked)
+
+The root stays canonical and never redirects to Welcome Hall. It presents the approved three-door cinematic arrival, restored from the existing arch concept and refreshed against the supplied reference imagery rather than redesigned:
+
+- **Door 1 — Frass District**: shopping and the FrassKicks retail ecosystem. Goes to `/frass-district`. Identity: luxury, shopping, elegance.
+- **Door 2 — Frass Hill**: community, Builders, opportunity, the wider ecosystem. Goes through the approved Frass Hill welcome experience. Identity: purpose, building, community.
+- **Door 3 — Frass Kids**: the children's and parent journey. Goes through the approved Frass Kids / Kids Valley welcome experience. Identity: wonder, animation, adventure, storybook.
+
+Three equal entrances. Frass Kids is never nested under the Frass Hill door, and the root is never returned to a two-door Shop-vs-Hill gateway. No new gateway page is created; the existing root arrival is updated in place, and each door keeps its own visual character.
 
 ## Content that must survive
 
@@ -53,7 +63,7 @@ Then a Legacy Route Verification report covering all 21 cards: old route, final 
 
 ## Technical notes
 
-- Redirects use `beforeLoad` + `throw redirect({ to, replace: true })` in the existing route files; no new route files are created except where a legacy path currently has none.
+- Redirects use `beforeLoad` + `throw redirect({ to, replace: true })` in the existing route files. No new route files are created unless an audited legacy URL cannot be preserved without one; modifying existing route definitions or router aliases comes first.
 - Chain removal: `kicks-district.tsx`, `frass-kicks.index.tsx`, `frass-drip.index.tsx`, `bare-drip.index.tsx` change their target from `/shop-frass` to `/frass-district`.
 - `/admin` (`admin.index.tsx`) redirects to `/control-room`; the `_authenticated` gate and Founder server-side role check remain the only permission source.
 - The registry file `src/lib/founder/world-teleporter.ts` is data, not logic; red cards keep their card numbers and stay marked legacy so future audits do not count them as destinations.
