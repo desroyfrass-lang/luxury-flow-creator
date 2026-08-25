@@ -241,6 +241,14 @@ export const COMMAND_SECTIONS: CommandSection[] = [
     purpose: "Is Frass healthy, safe, and affordable to run today?",
     tools: [
       {
+        id: "frassy-studios",
+        label: "Frassy Studios",
+        plain: "Frass Hill's production house \u2014 make shows, approve them, publish them, own them.",
+        kind: "link",
+        path: "/studios",
+        amendment: "FRASS-0600",
+      },
+      {
         id: "founder-daily",
         label: "Founder Daily",
         plain: "Today's briefing — what needs you, and what can wait.",

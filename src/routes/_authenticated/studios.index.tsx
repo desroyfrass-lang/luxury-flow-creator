@@ -38,9 +38,7 @@ function StudiosDashboard() {
   const genCount = (kind: string) => gen.filter((g) => g.job_type === kind).length;
   const reused = gen.filter((g) => g.reused_asset_id).length;
   const estCost = gen.reduce((s, g) => s + Number(g.cost_credits ?? 0), 0);
-  const voiceMinutes = gen
-    .filter((g) => g.job_type === "voice")
-    .reduce((s, g) => s + Number((g.detail_seconds as never) ?? 0), 0);
+  const voiceJobs = gen.filter((g) => g.job_type === "voice").length;
 
   const revenue = money.reduce((s, m) => s + Number(m.revenue ?? 0), 0);
   const monetizedViews = money.reduce((s, m) => s + Number(m.monetized_views ?? 0), 0);
@@ -163,7 +161,7 @@ function StudiosDashboard() {
           <StatTile label="Videos generated" value={genCount("video")} />
           <StatTile label="Scenes generated" value={genCount("scene")} />
           <StatTile label="Images generated" value={genCount("image")} />
-          <StatTile label="Voice minutes" value={Math.round(voiceMinutes / 60)} />
+          <StatTile label="Voice tracks" value={voiceJobs} />
           <StatTile label="Music / audio" value={genCount("music")} />
           <StatTile label="Regenerations" value={gen.filter((g) => g.job_type.startsWith("re")).length} />
           <StatTile label="Reused assets" value={reused} hint="Cost avoided" />
