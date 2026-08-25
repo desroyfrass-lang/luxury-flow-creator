@@ -20,6 +20,7 @@ export const Route = createFileRoute("/auth")({
 });
 
 function AuthPage() {
+  const search = Route.useSearch();
   const navigate = useNavigate();
   const [mode, setMode] = useState<"signin" | "signup">("signin");
   const [email, setEmail] = useState("");
@@ -32,9 +33,10 @@ function AuthPage() {
   useEffect(() => {
     supabase.auth.getSession().then(async ({ data }) => {
       if (!data.session) return;
-      window.location.assign("/welcome-hall?arrival=first");
+      const next = search.next ? `&next=${encodeURIComponent(search.next)}` : "";
+      window.location.assign(`/welcome-hall?arrival=first${next}`);
     });
-  }, []);
+  }, [search.next]);
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -53,11 +55,12 @@ function AuthPage() {
         const { error } = await supabase.auth.signUp({
           email,
           password,
-          options: { emailRedirectTo: window.location.origin + "/welcome-hall?arrival=first" },
+          options: { emailRedirectTo: window.location.origin + `/welcome-hall?arrival=first${search.next ? `&next=${encodeURIComponent(search.next)}` : ""}` },
         });
         if (error) throw error;
         toast.success("Welcome — Frassy is waiting at the gate");
-        window.location.assign("/welcome-hall?arrival=first");
+        const next = search.next ? `&next=${encodeURIComponent(search.next)}` : "";
+        window.location.assign(`/welcome-hall?arrival=first${next}`);
         return;
       }
     } catch (err) {
@@ -67,7 +70,8 @@ function AuthPage() {
     }
 
     // Signed in. Routing must never be able to strand the Builder on this page.
-    window.location.assign("/welcome-hall?arrival=first");
+    const next = search.next ? `&next=${encodeURIComponent(search.next)}` : "";
+    window.location.assign(`/welcome-hall?arrival=first${next}`);
   };
 
 

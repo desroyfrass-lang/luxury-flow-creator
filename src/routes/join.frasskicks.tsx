@@ -49,7 +49,7 @@ function JoinKicks() {
       email,
       password,
       options: {
-        emailRedirectTo: window.location.origin + "/welcome-hall?arrival=first",
+        emailRedirectTo: window.location.origin + "/welcome-hall?arrival=first&next=%2Ffrass-district",
         data: { frass_entry: "shop" },
       },
     });
@@ -63,7 +63,7 @@ function JoinKicks() {
       return;
     }
     toast.success("Your FrassKicks profile is ready. Frassy is waiting at the Welcome Hall.");
-    navigate({ to: "/welcome-hall", search: { arrival: "first" as const } });
+    navigate({ to: "/welcome-hall", search: { arrival: "first" as const, next: "/frass-district" } });
   };
 
   return (

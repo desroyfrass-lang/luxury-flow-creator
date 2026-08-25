@@ -16,11 +16,16 @@ import symbolLogo from "@/assets/frass-logo-symbol.asset.json";
 export const Route = createFileRoute("/_authenticated/builder-hall")({
   head: () => ({
     meta: [
-      { title: "Welcome Hall — Frass Operating System" },
+      { title: "My Builder Hall — Frass Operating System" },
+      { name: "description", content: "Your private Builder Hall for journey progress, saved knowledge and work with Frassy." },
+      { property: "og:title", content: "My Builder Hall — Frass Operating System" },
+      { property: "og:description", content: "Your private Builder Hall for journey progress, saved knowledge and work with Frassy." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
       { name: "robots", content: "noindex,nofollow" },
     ],
   }),
-  component: WelcomeHallPage,
+  component: BuilderHallPage,
 });
 
 function greeting(): string {
@@ -34,7 +39,7 @@ function titleize(key: string): string {
   return key.replace(/_/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
 }
 
-function WelcomeHallPage() {
+function BuilderHallPage() {
   const loadHall = useServerFn(getWelcomeHall);
   const { data, isLoading } = useQuery({
     queryKey: ["welcome-hall"],
@@ -67,7 +72,7 @@ function WelcomeHallPage() {
         <header className="text-center">
           <img src={symbolLogo.url} alt="" className="mx-auto h-12 w-auto opacity-90" />
           <div className="mt-6 text-[11px] uppercase tracking-[0.4em] text-[color:var(--gold)]">
-            Welcome Hall
+            My Builder Hall
           </div>
           <h1 className="mt-4 font-display text-4xl leading-tight md:text-5xl">
             {greeting()}
