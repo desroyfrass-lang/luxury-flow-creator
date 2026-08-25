@@ -1,9 +1,9 @@
 import { useEffect, useRef, useState } from "react";
 import { useRouterState } from "@tanstack/react-router";
 import {
+  FRASSY_ARRIVAL_PORTRAIT_URL,
   FRASSY_HOST_ALT,
   FRASSY_HOST_BREATHE,
-  FRASSY_PORTRAIT_URL,
 } from "@/lib/frassy/character";
 import { setEntranceActive } from "@/lib/frassy/host-presence";
 import { resolveDestination, type FrassyDestination } from "@/lib/frassy-destinations";
