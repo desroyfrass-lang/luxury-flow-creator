@@ -71,7 +71,7 @@ export const CORE_ROUTES: CoreRoute[] = [
     label: "The Daily",
     path: "/daily",
     requiresAuth: true,
-    redirectsTo: "/room?daily=1",
+    redirectsTo: "/room?daily=true",
     spoken: ["the daily", "my day", "today", "daily briefing"],
   },
   {

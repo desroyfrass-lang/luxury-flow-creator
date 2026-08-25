@@ -189,7 +189,11 @@ export function FirstArrivalCeremony({ next }: { next?: string }) {
           type="button"
           onClick={() => {
             stopSpeech("walked into the Hall");
-            navigate({ to: "/welcome-hall", replace: true });
+            navigate({
+              to: "/welcome-hall",
+              search: next ? { next } : {},
+              replace: true,
+            });
           }}
           className="lux-press inline-flex items-center gap-2 rounded-sm border border-[color:var(--gold)] bg-[color:var(--gold)] px-7 py-3.5 text-[11px] font-bold uppercase tracking-[0.3em] text-[color:var(--ink)]"
         >
