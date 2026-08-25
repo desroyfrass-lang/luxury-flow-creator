@@ -161,7 +161,7 @@ export function FrassyHost() {
 
   return (
     <div
-      className="fixed inset-0 z-[60] flex items-center justify-center"
+      className="fixed inset-0 z-[60] flex items-center justify-center overflow-hidden px-5 py-[max(4rem,env(safe-area-inset-top))]"
       role="dialog"
       aria-live="polite"
       aria-label={`Frassy welcomes you to ${greeting.label}`}
