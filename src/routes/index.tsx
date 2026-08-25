@@ -100,7 +100,7 @@ function EntrancePage() {
           </DoorButton>
           <DoorButton onClick={goHill} tone="hill">
             Enter Frass Hill
-            <span className="block text-[10px] font-normal tracking-[0.3em] opacity-80 sm:text-xs">
+            <span className="block text-[10px] font-normal tracking-[0.3em] text-[#e8c96a] opacity-95 sm:text-xs">
               Build. Connect. Grow.
             </span>
           </DoorButton>
