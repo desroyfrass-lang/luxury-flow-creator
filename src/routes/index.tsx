@@ -75,12 +75,10 @@ function EntrancePage() {
 
   return (
     <main className="relative min-h-screen overflow-hidden bg-[#faf7f0]">
-      <section className="relative mx-auto flex min-h-screen w-full max-w-[1500px] flex-col items-center justify-center gap-5 px-3 py-6 sm:px-6">
+      <section className="relative mx-auto flex min-h-screen w-full max-w-[1800px] flex-col items-center justify-center gap-6 px-2 py-6 sm:px-6">
         <h1 className="sr-only">Welcome to FrassKicks</h1>
 
-        {/* The archway — always shown complete, never cropped. The FrassKicks
-            sign and the three ENTER buttons live inside the artwork itself;
-            invisible hotspots sit exactly over them. */}
+        {/* The archway — always shown complete, never cropped, enlarged. */}
         <div className="gateway-rise relative w-full overflow-hidden rounded-[1.5rem] shadow-[0_30px_90px_-40px_rgba(90,70,20,0.45)] ring-1 ring-[#d4af37]/30">
           <img
             src={archHero.url}
@@ -88,24 +86,30 @@ function EntrancePage() {
             width={1376}
             height={768}
             fetchPriority="high"
-            className="block h-auto w-full object-contain"
+            className="block h-auto w-full object-cover"
           />
+        </div>
 
-          <DoorHotspot
-            onClick={goShop}
-            label="Enter Frass District — Shop. Style. Elevate."
-            style={{ left: "7%", width: "22%", top: "26%", height: "71%" }}
-          />
-          <DoorHotspot
-            onClick={goHill}
-            label="Enter Frass Hill — Build. Connect. Grow."
-            style={{ left: "36.6%", width: "25.6%", top: "26%", height: "71%" }}
-          />
-          <DoorHotspot
-            onClick={goKids}
-            label="Enter Frass Kids — Wonder. Adventure. Play."
-            style={{ left: "68.8%", width: "22%", top: "26%", height: "71%" }}
-          />
+        {/* Visible entrance buttons — placed beneath the image, not over it. */}
+        <div className="gateway-rise flex w-full max-w-[1100px] flex-col gap-3 sm:flex-row sm:justify-center">
+          <DoorButton onClick={goShop} tone="district">
+            Enter Frass District
+            <span className="block text-[10px] font-normal tracking-[0.3em] opacity-80 sm:text-xs">
+              Shop. Style. Elevate.
+            </span>
+          </DoorButton>
+          <DoorButton onClick={goHill} tone="hill">
+            Enter Frass Hill
+            <span className="block text-[10px] font-normal tracking-[0.3em] opacity-80 sm:text-xs">
+              Build. Connect. Grow.
+            </span>
+          </DoorButton>
+          <DoorButton onClick={goKids} tone="kids">
+            Enter Frass Kids
+            <span className="block text-[10px] font-normal tracking-[0.3em] opacity-80 sm:text-xs">
+              Wonder. Adventure. Play.
+            </span>
+          </DoorButton>
         </div>
 
         <p className="gateway-rise text-center text-[10px] uppercase tracking-[0.35em] text-[#8a7134] sm:text-xs">
@@ -117,26 +121,27 @@ function EntrancePage() {
 }
 
 /**
- * An invisible, keyboard-reachable control laid over a doorway and its
- * baked-in ENTER button. No second visible button is ever drawn.
+ * A visible entrance button beneath the archway image. Solid gold/chrome on
+ * dark for the brand; transparent gold-glass hover.
  */
-function DoorHotspot({
+function DoorButton({
   onClick,
-  label,
-  style,
+  tone,
+  children,
 }: {
   onClick: () => void;
-  label: string;
-  style: React.CSSProperties;
+  tone: "district" | "hill" | "kids";
+  children: React.ReactNode;
 }) {
   return (
     <button
       type="button"
       onClick={onClick}
-      aria-label={label}
-      style={style}
-      className="absolute cursor-pointer rounded-2xl bg-transparent outline-none transition-all duration-500 ease-out hover:bg-[radial-gradient(ellipse_at_center,rgba(255,224,150,0.22),transparent_70%)] hover:shadow-[0_0_60px_-10px_rgba(212,175,55,0.85)] focus-visible:bg-[radial-gradient(ellipse_at_center,rgba(255,224,150,0.22),transparent_70%)] focus-visible:ring-2 focus-visible:ring-[#f3d27a] motion-reduce:transition-none"
-    />
+      className="flex-1 rounded-xl border border-[#d4af37]/60 bg-[#0f0f0f] px-5 py-3 text-center font-[var(--font-display,'Archivo_Black',sans-serif)] text-sm font-bold uppercase tracking-[0.2em] text-[#f3d27a] shadow-[0_8px_30px_-12px_rgba(0,0,0,0.6)] transition-all duration-300 ease-out hover:-translate-y-0.5 hover:border-[#f3d27a] hover:bg-[#1a1a1a] hover:shadow-[0_12px_40px_-12px_rgba(212,175,55,0.7)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#f3d27a] motion-reduce:transition-none"
+      data-tone={tone}
+    >
+      {children}
+    </button>
   );
 }
 
