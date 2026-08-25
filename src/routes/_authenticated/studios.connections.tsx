@@ -29,7 +29,7 @@ function Connections() {
   const disconnect = async (id: string) => {
     const { error } = await supabase
       .from("studio_platform_connections")
-      .update({ status: "disconnected", account_name: null })
+      .update({ status: "disconnected" })
       .eq("id", id);
     if (error) return toast.error(error.message);
     toast.success("Channel disconnected.");
@@ -51,11 +51,11 @@ function Connections() {
               <dl className="space-y-1 text-xs text-muted-foreground">
                 <div className="flex justify-between gap-3">
                   <dt>Account</dt>
-                  <dd>{c.account_name ?? "Not linked"}</dd>
+                  <dd>{c.account_label ?? "Not linked"}</dd>
                 </div>
                 <div className="flex justify-between gap-3">
-                  <dt>Last checked</dt>
-                  <dd>{c.last_checked_at ? new Date(c.last_checked_at).toLocaleString() : "Never"}</dd>
+                  <dt>Last synced</dt>
+                  <dd>{c.last_sync_at ? new Date(c.last_sync_at).toLocaleString() : "Never"}</dd>
                 </div>
               </dl>
               <div className="mt-3 flex flex-wrap gap-2">

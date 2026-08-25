@@ -79,11 +79,11 @@ function PublishingCenter() {
         </div>
       </StudioSection>
 
-      <StudioSection title="Channels" subtitle="Connect a channel before scheduling anything to it.">
+      <StudioSection title="Channels" hint="Connect a channel before scheduling anything to it.">
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
           {connections.map((c) => (
             <StudioCard key={c.id} eyebrow={prettify(c.status)} title={prettify(c.platform)}>
-              <p className="text-xs text-muted-foreground">{c.account_name ?? "No account linked yet."}</p>
+              <p className="text-xs text-muted-foreground">{c.account_label ?? "No account linked yet."}</p>
               <Link to="/studios/connections" className="mt-3 inline-block text-xs text-[color:var(--gold)]">
                 Manage connection →
               </Link>
