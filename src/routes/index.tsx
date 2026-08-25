@@ -2,6 +2,8 @@ import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import archHero from "@/assets/frass-three-doors-arrival-v3.png";
+import { DistrictSymbol, HillSymbol, KidsSymbol } from "@/components/entrance/door-symbols";
+
 
 
 /**
