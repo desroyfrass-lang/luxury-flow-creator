@@ -177,6 +177,13 @@ function ProductionDetail() {
               </option>
             ))}
           </select>
+          <Link
+            to="/studios/engine/$id"
+            params={{ id }}
+            className="rounded-sm border border-[color:var(--gold)] px-3 py-2 text-[11px] uppercase tracking-[0.18em] text-[color:var(--gold)] transition hover:bg-[color:var(--gold)]/10"
+          >
+            ✨ Build it with Frassy
+          </Link>
           <GoldButton onClick={queuePublishing}>Send to publishing</GoldButton>
         </div>
       </div>
