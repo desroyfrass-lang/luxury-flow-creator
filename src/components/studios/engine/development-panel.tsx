@@ -141,17 +141,17 @@ export function DevelopmentPanel({ production, briefApproved }: { production: an
               </div>
             ) : null}
             <div className="grid gap-3 sm:grid-cols-2">
-              <List title="Story beats" items={shown.story_beats ?? []} render={(b) => `${b.label}: ${b.beat}`} />
+              <List title="Story beats" items={(shown.story_beats as any[]) ?? []} render={(b) => `${b.label}: ${b.beat}`} />
               <List
                 title="Character roles"
-                items={shown.character_roles ?? []}
+                items={(shown.character_roles as any[]) ?? []}
                 render={(c) => `${c.name}${c.existing ? " (existing)" : " (new)"} — ${c.purpose}`}
               />
-              <List title="Locations" items={shown.locations ?? []} render={(l) => `${l.name}${l.existing ? " (existing)" : " (new)"} — ${l.note}`} />
-              <List title="Continuity connections" items={shown.continuity_connections ?? []} render={(c) => `${c.episode}: ${c.connection}`} />
+              <List title="Locations" items={(shown.locations as any[]) ?? []} render={(l) => `${l.name}${l.existing ? " (existing)" : " (new)"} — ${l.note}`} />
+              <List title="Continuity connections" items={(shown.continuity_connections as any[]) ?? []} render={(c) => `${c.episode}: ${c.connection}`} />
               <List
                 title="Content opportunities"
-                items={shown.content_opportunities ?? []}
+                items={(shown.content_opportunities as any[]) ?? []}
                 render={(o) => `${o.moment} → ${o.format} (${o.why})`}
               />
             </div>
