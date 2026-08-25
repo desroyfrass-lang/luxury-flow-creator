@@ -1,7 +1,7 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import archHero from "@/assets/frass-gateway-arch.jpg.asset.json";
+import archHero from "@/assets/frass-three-doors.jpg.asset.json";
 
 /**
  * FRASS-0923 / FRASS-0471 — The Frass Entrance Experience.
@@ -82,7 +82,7 @@ function EntrancePage() {
         />
         <img
           src={archHero.url}
-          alt="The carved Frass archway opening onto the palm-lined promenade at golden hour"
+          alt="Three doors under the Frass archway at golden hour: Frass Hill, Frass District and Frass Kids"
           width={1920}
           height={1080}
           fetchPriority="high"
