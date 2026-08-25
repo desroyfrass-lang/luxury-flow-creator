@@ -154,7 +154,7 @@ export function useGenerationJobs() {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("studio_generation_jobs")
-        .select("*")
+        .select("*, studio_productions(title)")
         .order("created_at", { ascending: false })
         .limit(400);
       if (error) throw error;
@@ -162,6 +162,10 @@ export function useGenerationJobs() {
     },
   });
 }
+
+/** Friendly aliases used across the studio pages. */
+export const useConnections = usePlatformConnections;
+export const useAnalytics = usePlatformAnalytics;
 
 export function useDerivatives(masterId: string) {
   return useQuery({

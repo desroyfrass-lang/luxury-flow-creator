@@ -191,11 +191,18 @@ import { Route as AuthenticatedWorkspaceFirstVentureRouteImport } from './routes
 import { Route as AuthenticatedWorkspaceDailyDesignRouteImport } from './routes/_authenticated/workspace.daily-design'
 import { Route as AuthenticatedWorkspaceCardRouteImport } from './routes/_authenticated/workspace.card'
 import { Route as AuthenticatedWorkspaceAffiliateRouteImport } from './routes/_authenticated/workspace.affiliate'
+import { Route as AuthenticatedStudiosUsageRouteImport } from './routes/_authenticated/studios.usage'
+import { Route as AuthenticatedStudiosSettingsRouteImport } from './routes/_authenticated/studios.settings'
 import { Route as AuthenticatedStudiosSeriesRouteImport } from './routes/_authenticated/studios.series'
+import { Route as AuthenticatedStudiosReviewRouteImport } from './routes/_authenticated/studios.review'
+import { Route as AuthenticatedStudiosPublishingRouteImport } from './routes/_authenticated/studios.publishing'
 import { Route as AuthenticatedStudiosProductionsRouteImport } from './routes/_authenticated/studios.productions'
+import { Route as AuthenticatedStudiosMonetizationRouteImport } from './routes/_authenticated/studios.monetization'
 import { Route as AuthenticatedStudiosCreateRouteImport } from './routes/_authenticated/studios.create'
+import { Route as AuthenticatedStudiosConnectionsRouteImport } from './routes/_authenticated/studios.connections'
 import { Route as AuthenticatedStudiosCharactersRouteImport } from './routes/_authenticated/studios.characters'
 import { Route as AuthenticatedStudiosAssetsRouteImport } from './routes/_authenticated/studios.assets'
+import { Route as AuthenticatedStudiosAnalyticsRouteImport } from './routes/_authenticated/studios.analytics'
 import { Route as AuthenticatedAdminVoiceRouteImport } from './routes/_authenticated/admin.voice'
 import { Route as AuthenticatedAdminVisualIndexRouteImport } from './routes/_authenticated/admin.visual-index'
 import { Route as AuthenticatedAdminViralsRouteImport } from './routes/_authenticated/admin.virals'
@@ -1173,10 +1180,34 @@ const AuthenticatedWorkspaceAffiliateRoute =
     path: '/affiliate',
     getParentRoute: () => AuthenticatedWorkspaceRoute,
   } as any)
+const AuthenticatedStudiosUsageRoute =
+  AuthenticatedStudiosUsageRouteImport.update({
+    id: '/usage',
+    path: '/usage',
+    getParentRoute: () => AuthenticatedStudiosRoute,
+  } as any)
+const AuthenticatedStudiosSettingsRoute =
+  AuthenticatedStudiosSettingsRouteImport.update({
+    id: '/settings',
+    path: '/settings',
+    getParentRoute: () => AuthenticatedStudiosRoute,
+  } as any)
 const AuthenticatedStudiosSeriesRoute =
   AuthenticatedStudiosSeriesRouteImport.update({
     id: '/series',
     path: '/series',
+    getParentRoute: () => AuthenticatedStudiosRoute,
+  } as any)
+const AuthenticatedStudiosReviewRoute =
+  AuthenticatedStudiosReviewRouteImport.update({
+    id: '/review',
+    path: '/review',
+    getParentRoute: () => AuthenticatedStudiosRoute,
+  } as any)
+const AuthenticatedStudiosPublishingRoute =
+  AuthenticatedStudiosPublishingRouteImport.update({
+    id: '/publishing',
+    path: '/publishing',
     getParentRoute: () => AuthenticatedStudiosRoute,
   } as any)
 const AuthenticatedStudiosProductionsRoute =
@@ -1185,10 +1216,22 @@ const AuthenticatedStudiosProductionsRoute =
     path: '/productions',
     getParentRoute: () => AuthenticatedStudiosRoute,
   } as any)
+const AuthenticatedStudiosMonetizationRoute =
+  AuthenticatedStudiosMonetizationRouteImport.update({
+    id: '/monetization',
+    path: '/monetization',
+    getParentRoute: () => AuthenticatedStudiosRoute,
+  } as any)
 const AuthenticatedStudiosCreateRoute =
   AuthenticatedStudiosCreateRouteImport.update({
     id: '/create',
     path: '/create',
+    getParentRoute: () => AuthenticatedStudiosRoute,
+  } as any)
+const AuthenticatedStudiosConnectionsRoute =
+  AuthenticatedStudiosConnectionsRouteImport.update({
+    id: '/connections',
+    path: '/connections',
     getParentRoute: () => AuthenticatedStudiosRoute,
   } as any)
 const AuthenticatedStudiosCharactersRoute =
@@ -1201,6 +1244,12 @@ const AuthenticatedStudiosAssetsRoute =
   AuthenticatedStudiosAssetsRouteImport.update({
     id: '/assets',
     path: '/assets',
+    getParentRoute: () => AuthenticatedStudiosRoute,
+  } as any)
+const AuthenticatedStudiosAnalyticsRoute =
+  AuthenticatedStudiosAnalyticsRouteImport.update({
+    id: '/analytics',
+    path: '/analytics',
     getParentRoute: () => AuthenticatedStudiosRoute,
   } as any)
 const AuthenticatedAdminVoiceRoute = AuthenticatedAdminVoiceRouteImport.update({
@@ -1550,11 +1599,18 @@ export interface FileRoutesByFullPath {
   '/admin/virals': typeof AuthenticatedAdminViralsRoute
   '/admin/visual-index': typeof AuthenticatedAdminVisualIndexRoute
   '/admin/voice': typeof AuthenticatedAdminVoiceRoute
+  '/studios/analytics': typeof AuthenticatedStudiosAnalyticsRoute
   '/studios/assets': typeof AuthenticatedStudiosAssetsRoute
   '/studios/characters': typeof AuthenticatedStudiosCharactersRoute
+  '/studios/connections': typeof AuthenticatedStudiosConnectionsRoute
   '/studios/create': typeof AuthenticatedStudiosCreateRoute
+  '/studios/monetization': typeof AuthenticatedStudiosMonetizationRoute
   '/studios/productions': typeof AuthenticatedStudiosProductionsRoute
+  '/studios/publishing': typeof AuthenticatedStudiosPublishingRoute
+  '/studios/review': typeof AuthenticatedStudiosReviewRoute
   '/studios/series': typeof AuthenticatedStudiosSeriesRoute
+  '/studios/settings': typeof AuthenticatedStudiosSettingsRoute
+  '/studios/usage': typeof AuthenticatedStudiosUsageRoute
   '/workspace/affiliate': typeof AuthenticatedWorkspaceAffiliateRoute
   '/workspace/card': typeof AuthenticatedWorkspaceCardRoute
   '/workspace/daily-design': typeof AuthenticatedWorkspaceDailyDesignRoute
@@ -1746,11 +1802,18 @@ export interface FileRoutesByTo {
   '/admin/virals': typeof AuthenticatedAdminViralsRoute
   '/admin/visual-index': typeof AuthenticatedAdminVisualIndexRoute
   '/admin/voice': typeof AuthenticatedAdminVoiceRoute
+  '/studios/analytics': typeof AuthenticatedStudiosAnalyticsRoute
   '/studios/assets': typeof AuthenticatedStudiosAssetsRoute
   '/studios/characters': typeof AuthenticatedStudiosCharactersRoute
+  '/studios/connections': typeof AuthenticatedStudiosConnectionsRoute
   '/studios/create': typeof AuthenticatedStudiosCreateRoute
+  '/studios/monetization': typeof AuthenticatedStudiosMonetizationRoute
   '/studios/productions': typeof AuthenticatedStudiosProductionsRoute
+  '/studios/publishing': typeof AuthenticatedStudiosPublishingRoute
+  '/studios/review': typeof AuthenticatedStudiosReviewRoute
   '/studios/series': typeof AuthenticatedStudiosSeriesRoute
+  '/studios/settings': typeof AuthenticatedStudiosSettingsRoute
+  '/studios/usage': typeof AuthenticatedStudiosUsageRoute
   '/workspace/affiliate': typeof AuthenticatedWorkspaceAffiliateRoute
   '/workspace/card': typeof AuthenticatedWorkspaceCardRoute
   '/workspace/daily-design': typeof AuthenticatedWorkspaceDailyDesignRoute
@@ -1967,11 +2030,18 @@ export interface FileRoutesById {
   '/_authenticated/admin/virals': typeof AuthenticatedAdminViralsRoute
   '/_authenticated/admin/visual-index': typeof AuthenticatedAdminVisualIndexRoute
   '/_authenticated/admin/voice': typeof AuthenticatedAdminVoiceRoute
+  '/_authenticated/studios/analytics': typeof AuthenticatedStudiosAnalyticsRoute
   '/_authenticated/studios/assets': typeof AuthenticatedStudiosAssetsRoute
   '/_authenticated/studios/characters': typeof AuthenticatedStudiosCharactersRoute
+  '/_authenticated/studios/connections': typeof AuthenticatedStudiosConnectionsRoute
   '/_authenticated/studios/create': typeof AuthenticatedStudiosCreateRoute
+  '/_authenticated/studios/monetization': typeof AuthenticatedStudiosMonetizationRoute
   '/_authenticated/studios/productions': typeof AuthenticatedStudiosProductionsRoute
+  '/_authenticated/studios/publishing': typeof AuthenticatedStudiosPublishingRoute
+  '/_authenticated/studios/review': typeof AuthenticatedStudiosReviewRoute
   '/_authenticated/studios/series': typeof AuthenticatedStudiosSeriesRoute
+  '/_authenticated/studios/settings': typeof AuthenticatedStudiosSettingsRoute
+  '/_authenticated/studios/usage': typeof AuthenticatedStudiosUsageRoute
   '/_authenticated/workspace/affiliate': typeof AuthenticatedWorkspaceAffiliateRoute
   '/_authenticated/workspace/card': typeof AuthenticatedWorkspaceCardRoute
   '/_authenticated/workspace/daily-design': typeof AuthenticatedWorkspaceDailyDesignRoute
@@ -2188,11 +2258,18 @@ export interface FileRouteTypes {
     | '/admin/virals'
     | '/admin/visual-index'
     | '/admin/voice'
+    | '/studios/analytics'
     | '/studios/assets'
     | '/studios/characters'
+    | '/studios/connections'
     | '/studios/create'
+    | '/studios/monetization'
     | '/studios/productions'
+    | '/studios/publishing'
+    | '/studios/review'
     | '/studios/series'
+    | '/studios/settings'
+    | '/studios/usage'
     | '/workspace/affiliate'
     | '/workspace/card'
     | '/workspace/daily-design'
@@ -2384,11 +2461,18 @@ export interface FileRouteTypes {
     | '/admin/virals'
     | '/admin/visual-index'
     | '/admin/voice'
+    | '/studios/analytics'
     | '/studios/assets'
     | '/studios/characters'
+    | '/studios/connections'
     | '/studios/create'
+    | '/studios/monetization'
     | '/studios/productions'
+    | '/studios/publishing'
+    | '/studios/review'
     | '/studios/series'
+    | '/studios/settings'
+    | '/studios/usage'
     | '/workspace/affiliate'
     | '/workspace/card'
     | '/workspace/daily-design'
@@ -2604,11 +2688,18 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/virals'
     | '/_authenticated/admin/visual-index'
     | '/_authenticated/admin/voice'
+    | '/_authenticated/studios/analytics'
     | '/_authenticated/studios/assets'
     | '/_authenticated/studios/characters'
+    | '/_authenticated/studios/connections'
     | '/_authenticated/studios/create'
+    | '/_authenticated/studios/monetization'
     | '/_authenticated/studios/productions'
+    | '/_authenticated/studios/publishing'
+    | '/_authenticated/studios/review'
     | '/_authenticated/studios/series'
+    | '/_authenticated/studios/settings'
+    | '/_authenticated/studios/usage'
     | '/_authenticated/workspace/affiliate'
     | '/_authenticated/workspace/card'
     | '/_authenticated/workspace/daily-design'
@@ -4007,11 +4098,39 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedWorkspaceAffiliateRouteImport
       parentRoute: typeof AuthenticatedWorkspaceRoute
     }
+    '/_authenticated/studios/usage': {
+      id: '/_authenticated/studios/usage'
+      path: '/usage'
+      fullPath: '/studios/usage'
+      preLoaderRoute: typeof AuthenticatedStudiosUsageRouteImport
+      parentRoute: typeof AuthenticatedStudiosRoute
+    }
+    '/_authenticated/studios/settings': {
+      id: '/_authenticated/studios/settings'
+      path: '/settings'
+      fullPath: '/studios/settings'
+      preLoaderRoute: typeof AuthenticatedStudiosSettingsRouteImport
+      parentRoute: typeof AuthenticatedStudiosRoute
+    }
     '/_authenticated/studios/series': {
       id: '/_authenticated/studios/series'
       path: '/series'
       fullPath: '/studios/series'
       preLoaderRoute: typeof AuthenticatedStudiosSeriesRouteImport
+      parentRoute: typeof AuthenticatedStudiosRoute
+    }
+    '/_authenticated/studios/review': {
+      id: '/_authenticated/studios/review'
+      path: '/review'
+      fullPath: '/studios/review'
+      preLoaderRoute: typeof AuthenticatedStudiosReviewRouteImport
+      parentRoute: typeof AuthenticatedStudiosRoute
+    }
+    '/_authenticated/studios/publishing': {
+      id: '/_authenticated/studios/publishing'
+      path: '/publishing'
+      fullPath: '/studios/publishing'
+      preLoaderRoute: typeof AuthenticatedStudiosPublishingRouteImport
       parentRoute: typeof AuthenticatedStudiosRoute
     }
     '/_authenticated/studios/productions': {
@@ -4021,11 +4140,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedStudiosProductionsRouteImport
       parentRoute: typeof AuthenticatedStudiosRoute
     }
+    '/_authenticated/studios/monetization': {
+      id: '/_authenticated/studios/monetization'
+      path: '/monetization'
+      fullPath: '/studios/monetization'
+      preLoaderRoute: typeof AuthenticatedStudiosMonetizationRouteImport
+      parentRoute: typeof AuthenticatedStudiosRoute
+    }
     '/_authenticated/studios/create': {
       id: '/_authenticated/studios/create'
       path: '/create'
       fullPath: '/studios/create'
       preLoaderRoute: typeof AuthenticatedStudiosCreateRouteImport
+      parentRoute: typeof AuthenticatedStudiosRoute
+    }
+    '/_authenticated/studios/connections': {
+      id: '/_authenticated/studios/connections'
+      path: '/connections'
+      fullPath: '/studios/connections'
+      preLoaderRoute: typeof AuthenticatedStudiosConnectionsRouteImport
       parentRoute: typeof AuthenticatedStudiosRoute
     }
     '/_authenticated/studios/characters': {
@@ -4040,6 +4173,13 @@ declare module '@tanstack/react-router' {
       path: '/assets'
       fullPath: '/studios/assets'
       preLoaderRoute: typeof AuthenticatedStudiosAssetsRouteImport
+      parentRoute: typeof AuthenticatedStudiosRoute
+    }
+    '/_authenticated/studios/analytics': {
+      id: '/_authenticated/studios/analytics'
+      path: '/analytics'
+      fullPath: '/studios/analytics'
+      preLoaderRoute: typeof AuthenticatedStudiosAnalyticsRouteImport
       parentRoute: typeof AuthenticatedStudiosRoute
     }
     '/_authenticated/admin/voice': {
@@ -4321,21 +4461,35 @@ const AuthenticatedAdminRouteWithChildren =
   AuthenticatedAdminRoute._addFileChildren(AuthenticatedAdminRouteChildren)
 
 interface AuthenticatedStudiosRouteChildren {
+  AuthenticatedStudiosAnalyticsRoute: typeof AuthenticatedStudiosAnalyticsRoute
   AuthenticatedStudiosAssetsRoute: typeof AuthenticatedStudiosAssetsRoute
   AuthenticatedStudiosCharactersRoute: typeof AuthenticatedStudiosCharactersRoute
+  AuthenticatedStudiosConnectionsRoute: typeof AuthenticatedStudiosConnectionsRoute
   AuthenticatedStudiosCreateRoute: typeof AuthenticatedStudiosCreateRoute
+  AuthenticatedStudiosMonetizationRoute: typeof AuthenticatedStudiosMonetizationRoute
   AuthenticatedStudiosProductionsRoute: typeof AuthenticatedStudiosProductionsRoute
+  AuthenticatedStudiosPublishingRoute: typeof AuthenticatedStudiosPublishingRoute
+  AuthenticatedStudiosReviewRoute: typeof AuthenticatedStudiosReviewRoute
   AuthenticatedStudiosSeriesRoute: typeof AuthenticatedStudiosSeriesRoute
+  AuthenticatedStudiosSettingsRoute: typeof AuthenticatedStudiosSettingsRoute
+  AuthenticatedStudiosUsageRoute: typeof AuthenticatedStudiosUsageRoute
   AuthenticatedStudiosIndexRoute: typeof AuthenticatedStudiosIndexRoute
   AuthenticatedStudiosProductionIdRoute: typeof AuthenticatedStudiosProductionIdRoute
 }
 
 const AuthenticatedStudiosRouteChildren: AuthenticatedStudiosRouteChildren = {
+  AuthenticatedStudiosAnalyticsRoute: AuthenticatedStudiosAnalyticsRoute,
   AuthenticatedStudiosAssetsRoute: AuthenticatedStudiosAssetsRoute,
   AuthenticatedStudiosCharactersRoute: AuthenticatedStudiosCharactersRoute,
+  AuthenticatedStudiosConnectionsRoute: AuthenticatedStudiosConnectionsRoute,
   AuthenticatedStudiosCreateRoute: AuthenticatedStudiosCreateRoute,
+  AuthenticatedStudiosMonetizationRoute: AuthenticatedStudiosMonetizationRoute,
   AuthenticatedStudiosProductionsRoute: AuthenticatedStudiosProductionsRoute,
+  AuthenticatedStudiosPublishingRoute: AuthenticatedStudiosPublishingRoute,
+  AuthenticatedStudiosReviewRoute: AuthenticatedStudiosReviewRoute,
   AuthenticatedStudiosSeriesRoute: AuthenticatedStudiosSeriesRoute,
+  AuthenticatedStudiosSettingsRoute: AuthenticatedStudiosSettingsRoute,
+  AuthenticatedStudiosUsageRoute: AuthenticatedStudiosUsageRoute,
   AuthenticatedStudiosIndexRoute: AuthenticatedStudiosIndexRoute,
   AuthenticatedStudiosProductionIdRoute: AuthenticatedStudiosProductionIdRoute,
 }
