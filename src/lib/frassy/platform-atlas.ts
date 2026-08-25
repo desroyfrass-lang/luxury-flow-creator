@@ -46,9 +46,9 @@ export const PLATFORM_ATLAS: AtlasEntry[] = [
   { name: "FOR ME", path: "/for-me", purpose: "The personal page that turns a visitor into someone who knows you." },
 
   // Commerce
-  { name: "Shop / Frass District", path: "/shop-frass", purpose: "Men's and Women's directories into every drip house." },
-  { name: "Frass Kicks", path: "/frass-kicks", purpose: "Sneaker district — Casual, Classic, Street." },
-  { name: "Frass Drip / Bare Drip / Plus+", path: "/frass-drip", purpose: "Apparel houses, mirrored architecture across Plus+ and Bare Drip." },
+  { name: "Shop / Frass District", path: "/frass-district", purpose: "Men's and Women's directories into every drip house." },
+  { name: "Frass Kicks", path: "/frass-district/men", purpose: "Sneaker district — Casual, Classic, Street." },
+  { name: "Frass Drip / Bare Drip / Plus+", path: "/frass-district", purpose: "Apparel houses, mirrored architecture across Plus+ and Bare Drip." },
   { name: "Frass Kids", path: "/frass-kids", purpose: "Kids Valley — eight departments by age and gender, School Drip architecture." },
   { name: "Frass Shape", path: "/frass-shape", purpose: "Shapewear and wellness flagship with the AI Fit Assistant." },
   { name: "Bridal", path: "/bridal", purpose: "The Wedding Village — checklist, concierge, vault, marketplace." },

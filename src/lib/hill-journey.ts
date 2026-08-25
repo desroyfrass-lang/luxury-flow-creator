@@ -131,8 +131,8 @@ export const HILL_STOPS: HillStop[] = [
     origin: "50% 58%",
     doors: [
       { label: "Frass Luxury House", to: "/frass-luxury-house", note: "East and West wings" },
-      { label: "Frass Drip", to: "/frass-drip", note: "Men's and women's drip" },
-      { label: "Bare Drip", to: "/bare-drip", note: "Swim and intimates" },
+      { label: "Frass Drip", to: "/frass-district", note: "Men's and women's drip" },
+      { label: "Bare Drip", to: "/frass-district", note: "Swim and intimates" },
     ],
   },
   {

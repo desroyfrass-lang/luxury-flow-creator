@@ -126,9 +126,9 @@ export const HILL_DISTRICTS: HillDistrict[] = [
     contribution: "Keeps commerce — and the money it makes — inside the community.",
     legacy: "Businesses that outlive their first season.",
     venues: [
-      { name: "Frass Kicks", does: "Casual, Classic and Street on one wall, men's and women's.", to: "/frass-kicks" },
-      { name: "Frass Drip", does: "Floor by floor: the Boardroom, the Night Floor, the Lounge.", to: "/frass-drip" },
-      { name: "Bare Drip", does: "Swim on one side, intimates on the other.", to: "/bare-drip" },
+      { name: "Frass Kicks", does: "Casual, Classic and Street on one wall, men's and women's.", to: "/frass-district" },
+      { name: "Frass Drip", does: "Floor by floor: the Boardroom, the Night Floor, the Lounge.", to: "/frass-district" },
+      { name: "Bare Drip", does: "Swim on one side, intimates on the other.", to: "/frass-district" },
       { name: "Frass Plus+", does: "The full district architecture, mirrored for Plus sizing.", to: "/frass-plus" },
       { name: "Afro Designers", does: "Independent houses from the continent and the diaspora.", to: "/afro-designers" },
       { name: "Social Media Virals", does: "Everything trending, in one store.", to: "/social-media-virals" },
