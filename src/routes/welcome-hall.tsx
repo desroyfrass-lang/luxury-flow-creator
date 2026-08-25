@@ -150,10 +150,23 @@ function WelcomeHallPage() {
 
   const open = stage >= 1;
 
+  // Legacy Route Consolidation — the First Arrival ceremony (formerly /welcome)
+  // is now an arrival state of the Hall. It plays once, on its own, and then
+  // the Hall itself opens behind it.
+  if (search.arrival === "first") {
+    return (
+      <div className="min-h-screen bg-background text-foreground">
+        <ViewModeToggle className="fixed right-4 top-4 z-40" />
+        <FirstArrivalCeremony {...(search.next ? { next: search.next } : {})} />
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-background text-foreground">
       {/* FRASS-0517 — choose how Frass feels before you even begin. */}
       <ViewModeToggle className="fixed right-4 top-4 z-40" />
+
 
       {/* FRASS-0569 — 🌅 Welcome Hall One. Frassy greets first; the Daily follows. */}
       {search.welcome === "daily" && (
