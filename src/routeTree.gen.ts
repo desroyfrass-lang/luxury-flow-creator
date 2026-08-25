@@ -204,6 +204,7 @@ import { Route as AuthenticatedStudiosJobsRouteImport } from './routes/_authenti
 import { Route as AuthenticatedStudiosCreateRouteImport } from './routes/_authenticated/studios.create'
 import { Route as AuthenticatedStudiosConnectionsRouteImport } from './routes/_authenticated/studios.connections'
 import { Route as AuthenticatedStudiosCharactersRouteImport } from './routes/_authenticated/studios.characters'
+import { Route as AuthenticatedStudiosCalendarRouteImport } from './routes/_authenticated/studios.calendar'
 import { Route as AuthenticatedStudiosAssetsRouteImport } from './routes/_authenticated/studios.assets'
 import { Route as AuthenticatedStudiosAnimationsRouteImport } from './routes/_authenticated/studios.animations'
 import { Route as AuthenticatedStudiosAnalyticsRouteImport } from './routes/_authenticated/studios.analytics'
@@ -1265,6 +1266,12 @@ const AuthenticatedStudiosCharactersRoute =
     path: '/characters',
     getParentRoute: () => AuthenticatedStudiosRoute,
   } as any)
+const AuthenticatedStudiosCalendarRoute =
+  AuthenticatedStudiosCalendarRouteImport.update({
+    id: '/calendar',
+    path: '/calendar',
+    getParentRoute: () => AuthenticatedStudiosRoute,
+  } as any)
 const AuthenticatedStudiosAssetsRoute =
   AuthenticatedStudiosAssetsRouteImport.update({
     id: '/assets',
@@ -1651,6 +1658,7 @@ export interface FileRoutesByFullPath {
   '/studios/analytics': typeof AuthenticatedStudiosAnalyticsRoute
   '/studios/animations': typeof AuthenticatedStudiosAnimationsRoute
   '/studios/assets': typeof AuthenticatedStudiosAssetsRoute
+  '/studios/calendar': typeof AuthenticatedStudiosCalendarRoute
   '/studios/characters': typeof AuthenticatedStudiosCharactersRoute
   '/studios/connections': typeof AuthenticatedStudiosConnectionsRoute
   '/studios/create': typeof AuthenticatedStudiosCreateRoute
@@ -1861,6 +1869,7 @@ export interface FileRoutesByTo {
   '/studios/analytics': typeof AuthenticatedStudiosAnalyticsRoute
   '/studios/animations': typeof AuthenticatedStudiosAnimationsRoute
   '/studios/assets': typeof AuthenticatedStudiosAssetsRoute
+  '/studios/calendar': typeof AuthenticatedStudiosCalendarRoute
   '/studios/characters': typeof AuthenticatedStudiosCharactersRoute
   '/studios/connections': typeof AuthenticatedStudiosConnectionsRoute
   '/studios/create': typeof AuthenticatedStudiosCreateRoute
@@ -2096,6 +2105,7 @@ export interface FileRoutesById {
   '/_authenticated/studios/analytics': typeof AuthenticatedStudiosAnalyticsRoute
   '/_authenticated/studios/animations': typeof AuthenticatedStudiosAnimationsRoute
   '/_authenticated/studios/assets': typeof AuthenticatedStudiosAssetsRoute
+  '/_authenticated/studios/calendar': typeof AuthenticatedStudiosCalendarRoute
   '/_authenticated/studios/characters': typeof AuthenticatedStudiosCharactersRoute
   '/_authenticated/studios/connections': typeof AuthenticatedStudiosConnectionsRoute
   '/_authenticated/studios/create': typeof AuthenticatedStudiosCreateRoute
@@ -2331,6 +2341,7 @@ export interface FileRouteTypes {
     | '/studios/analytics'
     | '/studios/animations'
     | '/studios/assets'
+    | '/studios/calendar'
     | '/studios/characters'
     | '/studios/connections'
     | '/studios/create'
@@ -2541,6 +2552,7 @@ export interface FileRouteTypes {
     | '/studios/analytics'
     | '/studios/animations'
     | '/studios/assets'
+    | '/studios/calendar'
     | '/studios/characters'
     | '/studios/connections'
     | '/studios/create'
@@ -2775,6 +2787,7 @@ export interface FileRouteTypes {
     | '/_authenticated/studios/analytics'
     | '/_authenticated/studios/animations'
     | '/_authenticated/studios/assets'
+    | '/_authenticated/studios/calendar'
     | '/_authenticated/studios/characters'
     | '/_authenticated/studios/connections'
     | '/_authenticated/studios/create'
@@ -4280,6 +4293,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedStudiosCharactersRouteImport
       parentRoute: typeof AuthenticatedStudiosRoute
     }
+    '/_authenticated/studios/calendar': {
+      id: '/_authenticated/studios/calendar'
+      path: '/calendar'
+      fullPath: '/studios/calendar'
+      preLoaderRoute: typeof AuthenticatedStudiosCalendarRouteImport
+      parentRoute: typeof AuthenticatedStudiosRoute
+    }
     '/_authenticated/studios/assets': {
       id: '/_authenticated/studios/assets'
       path: '/assets'
@@ -4604,6 +4624,7 @@ interface AuthenticatedStudiosRouteChildren {
   AuthenticatedStudiosAnalyticsRoute: typeof AuthenticatedStudiosAnalyticsRoute
   AuthenticatedStudiosAnimationsRoute: typeof AuthenticatedStudiosAnimationsRoute
   AuthenticatedStudiosAssetsRoute: typeof AuthenticatedStudiosAssetsRoute
+  AuthenticatedStudiosCalendarRoute: typeof AuthenticatedStudiosCalendarRoute
   AuthenticatedStudiosCharactersRoute: typeof AuthenticatedStudiosCharactersRoute
   AuthenticatedStudiosConnectionsRoute: typeof AuthenticatedStudiosConnectionsRoute
   AuthenticatedStudiosCreateRoute: typeof AuthenticatedStudiosCreateRoute
@@ -4628,6 +4649,7 @@ const AuthenticatedStudiosRouteChildren: AuthenticatedStudiosRouteChildren = {
   AuthenticatedStudiosAnalyticsRoute: AuthenticatedStudiosAnalyticsRoute,
   AuthenticatedStudiosAnimationsRoute: AuthenticatedStudiosAnimationsRoute,
   AuthenticatedStudiosAssetsRoute: AuthenticatedStudiosAssetsRoute,
+  AuthenticatedStudiosCalendarRoute: AuthenticatedStudiosCalendarRoute,
   AuthenticatedStudiosCharactersRoute: AuthenticatedStudiosCharactersRoute,
   AuthenticatedStudiosConnectionsRoute: AuthenticatedStudiosConnectionsRoute,
   AuthenticatedStudiosCreateRoute: AuthenticatedStudiosCreateRoute,
