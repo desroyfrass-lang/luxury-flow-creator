@@ -160,34 +160,41 @@ function EntranceCard({
   title: string;
   copy: string;
   cta: string;
-  tone: "light" | "dark";
+  tone: "light" | "dark" | "kids";
   delay: string;
 }) {
   const light = tone === "light";
+  const kids = tone === "kids";
+  const surface = light
+    ? "border-white/70 bg-white/92 text-[color:var(--retail-ink)] hover:shadow-[0_20px_60px_-20px_rgba(255,255,255,0.5)]"
+    : kids
+      ? "border-[color:var(--kids-sun,#f6c945)]/60 bg-[color:var(--kids-sky,#1b4f7a)]/85 text-white hover:shadow-[0_20px_60px_-20px_rgba(246,201,69,0.6)]"
+      : "border-[color:var(--hill-gold)]/50 bg-[color:var(--hill-green)]/85 text-[color:var(--luxe-linen)] hover:shadow-[0_20px_60px_-20px_rgba(212,175,55,0.6)]";
+  const body = light ? "text-black/65" : kids ? "text-white/80" : "text-[color:var(--luxe-linen)]/75";
+  const action = light
+    ? "text-black/70"
+    : kids
+      ? "text-[color:var(--kids-sun,#f6c945)]"
+      : "text-[color:var(--hill-gold)]";
   return (
     <button
       type="button"
       onClick={onClick}
       aria-label={`${title} — ${copy}`}
       style={{ animationDelay: delay }}
-      className={`gateway-rise group relative overflow-hidden rounded-2xl border p-5 text-left backdrop-blur-xl transition duration-300 will-change-transform hover:-translate-y-1.5 ${
-        light
-          ? "border-white/70 bg-white/92 text-[color:var(--retail-ink)] hover:shadow-[0_20px_60px_-20px_rgba(255,255,255,0.5)]"
-          : "border-[color:var(--hill-gold)]/50 bg-[color:var(--hill-green)]/85 text-[color:var(--luxe-linen)] hover:shadow-[0_20px_60px_-20px_rgba(212,175,55,0.6)]"
-      }`}
+      className={`gateway-rise group relative overflow-hidden rounded-2xl border p-5 text-left backdrop-blur-xl transition duration-300 will-change-transform hover:-translate-y-1.5 ${surface}`}
     >
       <span className="text-2xl">{emoji}</span>
       <h2 className="mt-3 font-display text-2xl uppercase leading-none md:text-3xl">{title}</h2>
-      <p className={`mt-2 text-xs ${light ? "text-black/65" : "text-[color:var(--luxe-linen)]/75"}`}>{copy}</p>
+      <p className={`mt-2 text-xs ${body}`}>{copy}</p>
       <span
-        className={`mt-4 inline-flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.28em] ${
-          light ? "text-black/70" : "text-[color:var(--hill-gold)]"
-        }`}
+        className={`mt-4 inline-flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.28em] ${action}`}
       >
         {cta}
         <span className="transition-transform duration-300 group-hover:translate-x-1">→</span>
       </span>
     </button>
+
 
   );
 }
