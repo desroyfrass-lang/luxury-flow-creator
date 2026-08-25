@@ -21,8 +21,11 @@ import { WELCOME_HALL_PURPOSES } from "@/lib/welcome-hall/daily-welcome";
  * registers, and chooses their entrance — Frass Hill or Kids Valley.
  */
 export const Route = createFileRoute("/welcome-hall")({
-  validateSearch: (search: Record<string, unknown>): { welcome?: "daily"; next?: string } => ({
+  validateSearch: (
+    search: Record<string, unknown>,
+  ): { welcome?: "daily"; arrival?: "first"; next?: string } => ({
     ...(search["welcome"] === "daily" ? { welcome: "daily" as const } : {}),
+    ...(search["arrival"] === "first" ? { arrival: "first" as const } : {}),
     ...(typeof search["next"] === "string" && search["next"].startsWith("/")
       ? { next: search["next"] }
       : {}),
