@@ -106,13 +106,13 @@ function EntrancePage() {
           Built by people. Powered by community. Driven by execution.
         </p>
 
-        <div className="mt-10 grid w-full max-w-3xl gap-4 sm:grid-cols-2">
+        <div className="mt-10 grid w-full max-w-5xl gap-4 sm:grid-cols-2 lg:grid-cols-3">
           <EntranceCard
             onClick={goShop}
             delay="240ms"
             emoji="🛍️"
-            title="Shop Frass District"
-            copy="Kicks, Drip, Bare Drip, Luxury House, Plus+, Kids, Bridal and the Marketplace. We'll set up your FrassKicks profile first — sizes, fits and orders in one place."
+            title="Frass District"
+            copy="Kicks, Drip, Bare Drip, Luxury House, Plus+, Bridal and the Marketplace. We'll set up your FrassKicks profile first — sizes, fits and orders in one place."
             cta={signedIn ? "Walk the promenade" : "Create my shopping profile"}
             tone="light"
           />
@@ -120,16 +120,26 @@ function EntrancePage() {
             onClick={goHill}
             delay="320ms"
             emoji="⛰️"
-            title="Enter Frass Hill"
-            copy="Membership in the town: a Frass Card, a Builder Vault and a Daily. One account covers both — joining the Hill also gives you your FrassKicks profile."
+            title="Frass Hill"
+            copy="Membership in the town: a Frass Card, a Builder Vault and a Daily. One account covers all three doors — joining the Hill also gives you your FrassKicks profile."
             cta={signedIn ? "Continue into the Hill" : "Begin at the Welcome Hall"}
             tone="dark"
+          />
+          <EntranceCard
+            onClick={goKids}
+            delay="400ms"
+            emoji="🌈"
+            title="Frass Kids"
+            copy="The children's world: learning villages, creative studios, music gardens and young-builder spaces, ages 0–3 through 12+, behind a parent-issued passport."
+            cta="Enter Frass Kids"
+            tone="kids"
           />
         </div>
 
         <p className="mt-8 max-w-xl text-[10px] uppercase tracking-[0.25em] text-white/50">
-          Two doors. One account. Frassy meets you at whichever one you choose.
+          Three doors. One account. Frassy meets you at whichever one you choose.
         </p>
+
       </section>
     </main>
   );
