@@ -83,6 +83,7 @@ export const SENSITIVE_ACTIONS: SensitiveAction[] = [
 
   // Founder — platform-wide
   { id: "founder_mode", area: "founder", label: "Founder Mode", reason: "Founder Mode carries platform-wide authority.", ttlMinutes: 15, strongestOnly: true },
+  { id: "founder_command_center", area: "founder", label: "Founder Hall", reason: "Founder Hall carries platform-wide authority. I need to confirm it's you before opening it.", ttlMinutes: 15, strongestOnly: true },
   { id: "financial_audit_center", area: "founder", label: "Financial Audit Center", reason: "The audit book shows every member's money movement.", ttlMinutes: 10, strongestOnly: true },
   { id: "payout_rules", area: "founder", label: "Change payout rules", reason: "Payout rules decide how everyone gets paid.", ttlMinutes: 5, strongestOnly: true },
   { id: "platform_settings", area: "founder", label: "Platform-wide settings", reason: "This changes Frass for every member.", ttlMinutes: 5, strongestOnly: true },

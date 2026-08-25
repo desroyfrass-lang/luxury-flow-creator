@@ -34,7 +34,7 @@ const NAV_ITEMS = [
 
 
 const MENU_ITEMS = [
-  { to: "/gateway", slot: "nav-gateway", fallback: "Frass Gateway" },
+  { to: "/welcome-hall", slot: "nav-gateway", fallback: "Welcome Hall" },
   { to: "/frass-hill", slot: "nav-frass-world", fallback: "Enter Frass Hill" },
   { to: "/lookbook", slot: "nav-lookbook", fallback: "Lookbook" },
   { to: "/music-media", slot: "nav-music-media", fallback: "Music & Media" },
@@ -53,9 +53,10 @@ const SOCIALS = [
 function BrandMark({ compact = false }: { compact?: boolean }) {
   return (
     <Link
-      to="/frass-district"
+      to="/"
       className={`inline-flex items-center ${compact ? "gap-3" : "gap-4"}`}
-      aria-label="Frass District"
+      aria-label="Frass site home"
+      title="Site Home"
     >
       <img
         src={compact ? symbolLogo.url : fullLogo.url}
@@ -524,15 +525,15 @@ function Footer() {
         </div>
         {[
           { title: "Shop", links: [["Frass Kicks", "/frass-kicks"], ["Frass Drip", "/frass-drip"], ["Bare Drip", "/bare-drip"]] },
-          { title: "Help", links: [["Shipping", "#"], ["Returns", "#"], ["Sizing", "#"]] },
-          { title: "Brand", links: [["About", "#"], ["Lookbook", "/lookbook"], ["Contact", "#"]] },
+          { title: "Help", links: [["Welcome Hall", "/welcome-hall"], ["Visual Search", "/visual-search"], ["Rewards", "/rewards"]] },
+          { title: "Brand", links: [["Frass Hill", "/frass-hill"], ["Lookbook", "/lookbook"], ["For Us", "/for-us"]] },
         ].map((col) => (
           <div key={col.title}>
             <h4 className="text-xs uppercase tracking-[0.3em] text-muted-foreground">{col.title}</h4>
             <ul className="mt-4 space-y-2 text-sm">
               {col.links.map(([label, href]) => (
                 <li key={label}>
-                  <a href={href} className="hover:text-[color:var(--gold)] transition">{label}</a>
+                  <Link to={href as never} className="hover:text-[color:var(--gold)] transition">{label}</Link>
                 </li>
               ))}
             </ul>
