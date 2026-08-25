@@ -4,7 +4,7 @@
 // calendar day is The Frass Daily. Dispatch "frass:open-daily" to reopen it.
 
 import { useCallback, useEffect, useState } from "react";
-import { useNavigate, useRouterState } from "@tanstack/react-router";
+import { useNavigate } from "@tanstack/react-router";
 import { supabase } from "@/integrations/supabase/client";
 import { useIsAdminStatus } from "@/hooks/use-is-admin";
 import { FrassDaily } from "@/components/workspace/frass-daily";
@@ -24,7 +24,6 @@ export function DailyGate() {
   const [signedIn, setSignedIn] = useState(false);
   const { isAdmin } = useIsAdminStatus();
   const navigate = useNavigate();
-  const pathname = useRouterState({ select: (state) => state.location.pathname });
 
   useEffect(() => {
     let alive = true;
