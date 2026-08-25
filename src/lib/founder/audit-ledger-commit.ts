@@ -31,8 +31,11 @@ export type CommitInput = {
 
 export function commitAuditTurn(entry: CommitInput) {
   const local = appendAuditLedgerLocal(entry);
-  void appendAuditLedgerEntry({ data: { ...entry, createdAt: local.createdAt } }).catch(() => {
-    /* offline or not signed in — the local mirror still holds the review */
+  void (async () => {
+    if (!(await hasSession())) return;
+    await appendAuditLedgerEntry({ data: { ...entry, createdAt: local.createdAt } });
+  })().catch(() => {
+    /* offline or not the Founder — the local mirror still holds the review */
   });
   return local;
 }
@@ -40,7 +43,9 @@ export function commitAuditTurn(entry: CommitInput) {
 /** Pull the permanent record down and merge it into the local journal. */
 export async function syncAuditLedger() {
   try {
+    if (!(await hasSession())) return;
     const rows = await listAuditLedger();
+
     mergeAuditLedger(
       rows.map((r) => ({
         id: r.id,
