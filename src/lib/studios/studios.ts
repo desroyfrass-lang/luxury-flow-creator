@@ -37,6 +37,8 @@ export const STUDIO_NAV: StudioNavItem[] = [
   { id: "monetization", label: "Monetization", icon: "💰", to: "/studios/monetization", plain: "What the work actually earns." },
   { id: "analytics", label: "Analytics", icon: "📈", to: "/studios/analytics", plain: "How the work performs." },
   { id: "library", label: "Content Library", icon: "📦", to: "/studios/assets", search: { type: "video" }, plain: "Finished media you own." },
+  { id: "jobs", label: "Generation Queue", icon: "⏳", to: "/studios/jobs", plain: "Every job waiting, running or failed." },
+  { id: "providers", label: "Generation Services", icon: "🔧", to: "/studios/providers", plain: "Which service does which job." },
   { id: "usage", label: "Generation Usage", icon: "⚡", to: "/studios/usage", plain: "What generation costs, and what reuse saved." },
   { id: "settings", label: "Settings", icon: "⚙️", to: "/studios/settings", plain: "How the studio behaves." },
 ];
