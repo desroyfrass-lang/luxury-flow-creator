@@ -9,12 +9,17 @@ Scope: the root arrival page (`src/routes/index.tsx`) + one image edit only. No 
 
 ## Changes
 
-### 1. Fix the building sign — image edit, not a code overlay
-Use `imagegen--edit_image` on the approved artwork (`/mnt/user-uploads/ChatGPT_Image_Aug_25_2026_10_15_24_AM.png`) together with the exact approved logo asset (`frass-logo-full` at `https://luxury-flow-creator.lovable.app/__l5e/assets-v1/60badf1c-0e15-4380-9caa-f644348207a9/frass-logo-full.png`) to **replace the central upper sign** so the exact logo reads as architectural signage embedded into the façade:
-- The exact approved mark (backwards FRASS treatment, central symbol, ICKS on the right — no extra K), used as the source of truth, not redrawn or AI-regenerated.
-- Visually fabricated into the stone: matching perspective, scale, depth, recessing, contact shadows, highlights, and the building's warm gold daylight so it belongs to the architecture — not floating, pasted, or a rectangular image layer.
-- Completely conceals the incorrect baked-in lettering/symbol underneath: no ghost letters, no visible original sign, no duplicate, no floating boundary.
-- Preserve the people, doors, destinations, building, sky, and overall scene exactly — only the sign is replaced.
+### 1. Fix the building sign — locked logo, edited façade only
+**Locked-artwork rule:** Use the exact approved FrassKicks logo asset as a locked composited source. Do not regenerate, redraw, reinterpret, or alter the logo artwork itself. Only edit the surrounding sign area and façade treatment needed to make that exact asset appear physically embedded into the building. Perspective placement, masking, architectural recessing, edge blending, contact shadows, highlights, and warm daylight integration may change; the logo design itself may not.
+
+Sources: the approved artwork (`/mnt/user-uploads/ChatGPT_Image_Aug_25_2026_10_15_24_AM.png`), the approved wordmark asset `frass-logo-full` (`/__l5e/assets-v1/60badf1c-0e15-4380-9caa-f644348207a9/frass-logo-full.png`), and the supplied gold symbol (`frassy-gold.png`) as the authority on the central mark's pixels and geometry.
+
+- The exact approved mark — backwards FRASS treatment, central metallic symbol, ICKS on the right, no extra K — composited, never AI-reproduced.
+- Only the sign area is edited: the incorrect baked-in lettering and distorted symbol are fully concealed — no ghost letters, no visible original sign, no duplicate, no floating rectangular boundary.
+- The result reads as architectural signage fabricated into the stone façade: matching perspective, scale, recessing, contact shadows, highlights, and the building's warm gold daylight.
+- Preserve the people, doors, destinations, building, sky, and overall scene exactly — nothing outside the sign area changes.
+- Verify against the source asset after the edit: if the composited mark's lettering or symbol geometry differs at all from the approved artwork, redo the composite rather than accept it.
+
 Save as a new CDN asset `frass-three-doors-arrival-v2.png` and point the hero `<img>` at it.
 
 ### 2. Remove the code logo overlay
