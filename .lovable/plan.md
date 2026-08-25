@@ -25,7 +25,7 @@ Implementation of the frozen 201-card World Teleporter audit. No new pages, no r
 | /builder-hall | /room | New redirect; unique content check below |
 | /builder/$handle | /card/$handle | Already correct; graceful "card not found" verified |
 | /admin | /control-room | Retarget (today it lands on /admin/images); all /admin/* tools untouched |
-| / | unchanged | Two-door arrival stays as approved; buttons point at canonical routes |
+| / | unchanged (canonical) | Three-door cinematic arrival restored; doors point at canonical routes |
 | /welcome-hall | unchanged | Registry marks it red, your directive locks it as canonical — flagged, not touched |
 
 ## Content that must survive
