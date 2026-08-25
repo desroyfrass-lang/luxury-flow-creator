@@ -199,6 +199,7 @@ import { Route as AuthenticatedStudiosReviewRouteImport } from './routes/_authen
 import { Route as AuthenticatedStudiosPublishingRouteImport } from './routes/_authenticated/studios.publishing'
 import { Route as AuthenticatedStudiosProvidersRouteImport } from './routes/_authenticated/studios.providers'
 import { Route as AuthenticatedStudiosProductionsRouteImport } from './routes/_authenticated/studios.productions'
+import { Route as AuthenticatedStudiosPerformanceRouteImport } from './routes/_authenticated/studios.performance'
 import { Route as AuthenticatedStudiosMonetizationRouteImport } from './routes/_authenticated/studios.monetization'
 import { Route as AuthenticatedStudiosJobsRouteImport } from './routes/_authenticated/studios.jobs'
 import { Route as AuthenticatedStudiosCreateRouteImport } from './routes/_authenticated/studios.create'
@@ -1236,6 +1237,12 @@ const AuthenticatedStudiosProductionsRoute =
     path: '/productions',
     getParentRoute: () => AuthenticatedStudiosRoute,
   } as any)
+const AuthenticatedStudiosPerformanceRoute =
+  AuthenticatedStudiosPerformanceRouteImport.update({
+    id: '/performance',
+    path: '/performance',
+    getParentRoute: () => AuthenticatedStudiosRoute,
+  } as any)
 const AuthenticatedStudiosMonetizationRoute =
   AuthenticatedStudiosMonetizationRouteImport.update({
     id: '/monetization',
@@ -1664,6 +1671,7 @@ export interface FileRoutesByFullPath {
   '/studios/create': typeof AuthenticatedStudiosCreateRoute
   '/studios/jobs': typeof AuthenticatedStudiosJobsRoute
   '/studios/monetization': typeof AuthenticatedStudiosMonetizationRoute
+  '/studios/performance': typeof AuthenticatedStudiosPerformanceRoute
   '/studios/productions': typeof AuthenticatedStudiosProductionsRoute
   '/studios/providers': typeof AuthenticatedStudiosProvidersRoute
   '/studios/publishing': typeof AuthenticatedStudiosPublishingRoute
@@ -1875,6 +1883,7 @@ export interface FileRoutesByTo {
   '/studios/create': typeof AuthenticatedStudiosCreateRoute
   '/studios/jobs': typeof AuthenticatedStudiosJobsRoute
   '/studios/monetization': typeof AuthenticatedStudiosMonetizationRoute
+  '/studios/performance': typeof AuthenticatedStudiosPerformanceRoute
   '/studios/productions': typeof AuthenticatedStudiosProductionsRoute
   '/studios/providers': typeof AuthenticatedStudiosProvidersRoute
   '/studios/publishing': typeof AuthenticatedStudiosPublishingRoute
@@ -2111,6 +2120,7 @@ export interface FileRoutesById {
   '/_authenticated/studios/create': typeof AuthenticatedStudiosCreateRoute
   '/_authenticated/studios/jobs': typeof AuthenticatedStudiosJobsRoute
   '/_authenticated/studios/monetization': typeof AuthenticatedStudiosMonetizationRoute
+  '/_authenticated/studios/performance': typeof AuthenticatedStudiosPerformanceRoute
   '/_authenticated/studios/productions': typeof AuthenticatedStudiosProductionsRoute
   '/_authenticated/studios/providers': typeof AuthenticatedStudiosProvidersRoute
   '/_authenticated/studios/publishing': typeof AuthenticatedStudiosPublishingRoute
@@ -2347,6 +2357,7 @@ export interface FileRouteTypes {
     | '/studios/create'
     | '/studios/jobs'
     | '/studios/monetization'
+    | '/studios/performance'
     | '/studios/productions'
     | '/studios/providers'
     | '/studios/publishing'
@@ -2558,6 +2569,7 @@ export interface FileRouteTypes {
     | '/studios/create'
     | '/studios/jobs'
     | '/studios/monetization'
+    | '/studios/performance'
     | '/studios/productions'
     | '/studios/providers'
     | '/studios/publishing'
@@ -2793,6 +2805,7 @@ export interface FileRouteTypes {
     | '/_authenticated/studios/create'
     | '/_authenticated/studios/jobs'
     | '/_authenticated/studios/monetization'
+    | '/_authenticated/studios/performance'
     | '/_authenticated/studios/productions'
     | '/_authenticated/studios/providers'
     | '/_authenticated/studios/publishing'
@@ -4258,6 +4271,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedStudiosProductionsRouteImport
       parentRoute: typeof AuthenticatedStudiosRoute
     }
+    '/_authenticated/studios/performance': {
+      id: '/_authenticated/studios/performance'
+      path: '/performance'
+      fullPath: '/studios/performance'
+      preLoaderRoute: typeof AuthenticatedStudiosPerformanceRouteImport
+      parentRoute: typeof AuthenticatedStudiosRoute
+    }
     '/_authenticated/studios/monetization': {
       id: '/_authenticated/studios/monetization'
       path: '/monetization'
@@ -4630,6 +4650,7 @@ interface AuthenticatedStudiosRouteChildren {
   AuthenticatedStudiosCreateRoute: typeof AuthenticatedStudiosCreateRoute
   AuthenticatedStudiosJobsRoute: typeof AuthenticatedStudiosJobsRoute
   AuthenticatedStudiosMonetizationRoute: typeof AuthenticatedStudiosMonetizationRoute
+  AuthenticatedStudiosPerformanceRoute: typeof AuthenticatedStudiosPerformanceRoute
   AuthenticatedStudiosProductionsRoute: typeof AuthenticatedStudiosProductionsRoute
   AuthenticatedStudiosProvidersRoute: typeof AuthenticatedStudiosProvidersRoute
   AuthenticatedStudiosPublishingRoute: typeof AuthenticatedStudiosPublishingRoute
@@ -4655,6 +4676,7 @@ const AuthenticatedStudiosRouteChildren: AuthenticatedStudiosRouteChildren = {
   AuthenticatedStudiosCreateRoute: AuthenticatedStudiosCreateRoute,
   AuthenticatedStudiosJobsRoute: AuthenticatedStudiosJobsRoute,
   AuthenticatedStudiosMonetizationRoute: AuthenticatedStudiosMonetizationRoute,
+  AuthenticatedStudiosPerformanceRoute: AuthenticatedStudiosPerformanceRoute,
   AuthenticatedStudiosProductionsRoute: AuthenticatedStudiosProductionsRoute,
   AuthenticatedStudiosProvidersRoute: AuthenticatedStudiosProvidersRoute,
   AuthenticatedStudiosPublishingRoute: AuthenticatedStudiosPublishingRoute,
