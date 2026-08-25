@@ -96,16 +96,16 @@ function EntrancePage() {
           />
 
           {/* Brand lock — the exact approved FrassKicks mark, warmly lit. */}
-          <div className="pointer-events-none absolute inset-x-0 top-[3%] flex justify-center">
+          <div className="pointer-events-none absolute inset-x-0 top-[4.2%] flex justify-center">
             <div className="relative">
               <div
                 aria-hidden="true"
-                className="absolute -inset-x-8 -inset-y-6 rounded-full bg-[radial-gradient(ellipse_at_center,rgba(255,224,150,0.55),transparent_70%)] blur-xl"
+                className="absolute -inset-x-10 -inset-y-8 rounded-full bg-[radial-gradient(ellipse_at_center,rgba(255,224,150,0.55),transparent_70%)] blur-xl"
               />
               <img
                 src={frassLogo.url}
                 alt="FrassKicks"
-                className="relative w-[46vw] max-w-[560px] drop-shadow-[0_6px_18px_rgba(60,35,0,0.55)]"
+                className="relative w-[54%] max-w-[840px] drop-shadow-[0_6px_18px_rgba(60,35,0,0.55)]"
               />
             </div>
           </div>
