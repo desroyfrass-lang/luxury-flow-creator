@@ -48,9 +48,16 @@ export function FrassyConversationDock() {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const convo = useConversationState();
   const speech = useSpeechState();
+  const entrance = useSyncExternalStore(
+    subscribeEntrance,
+    isEntranceActive,
+    isEntranceActiveServer,
+  );
 
   // FRASS-0558 — no transport controls where Frassy is deliberately absent.
   if (frassySurface(pathname) === "none") return null;
+  // Step 2 — one Frassy at a time: the cinematic host owns the screen alone.
+  if (entrance) return null;
 
   const listening = convo.state === "listening" || convo.micOpen;
   const thinking =
