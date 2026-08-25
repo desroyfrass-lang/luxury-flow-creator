@@ -94,19 +94,19 @@ function EntrancePage() {
         <div className="gateway-rise flex w-full max-w-[1100px] flex-col gap-3 sm:flex-row sm:justify-center">
           <DoorButton onClick={goShop} tone="district">
             Enter Frass District
-            <span className="block text-[10px] font-normal tracking-[0.3em] opacity-80 sm:text-xs">
+            <span className="block text-[10px] font-normal tracking-[0.3em] text-[#e8c96a] opacity-95 sm:text-xs">
               Shop. Style. Elevate.
             </span>
           </DoorButton>
           <DoorButton onClick={goHill} tone="hill">
             Enter Frass Hill
-            <span className="block text-[10px] font-normal tracking-[0.3em] opacity-80 sm:text-xs">
+            <span className="block text-[10px] font-normal tracking-[0.3em] text-[#e8c96a] opacity-95 sm:text-xs">
               Build. Connect. Grow.
             </span>
           </DoorButton>
           <DoorButton onClick={goKids} tone="kids">
             Enter Frass Kids
-            <span className="block text-[10px] font-normal tracking-[0.3em] opacity-80 sm:text-xs">
+            <span className="block text-[10px] font-normal tracking-[0.3em] text-[#e8c96a] opacity-95 sm:text-xs">
               Wonder. Adventure. Play.
             </span>
           </DoorButton>
@@ -138,7 +138,7 @@ function DoorButton({
       type="button"
       onClick={onClick}
       data-tone={tone}
-      className="door-glass relative flex-1 overflow-hidden rounded-2xl border border-[#7fd8e6]/60 bg-[#0e7490]/30 px-5 py-4 text-center font-[var(--font-display,'Archivo_Black',sans-serif)] text-sm font-bold uppercase tracking-[0.2em] text-[#eaf6fb] shadow-[0_10px_40px_-16px_rgba(8,80,110,0.65)] backdrop-blur-xl transition-all duration-300 ease-out hover:-translate-y-0.5 hover:border-[#67e8f9]/90 hover:bg-[#0e7490]/45 hover:shadow-[0_16px_50px_-16px_rgba(103,232,249,0.7)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#67e8f9] motion-reduce:transition-none"
+      className="door-glass relative flex-1 overflow-hidden rounded-2xl border border-[#d4af37]/70 bg-[#0e7490]/30 px-5 py-4 text-center font-[var(--font-display,'Archivo_Black',sans-serif)] text-base font-bold uppercase tracking-[0.2em] text-[#f4d35e] drop-shadow-[0_1px_2px_rgba(0,0,0,0.85)] shadow-[0_10px_40px_-16px_rgba(8,80,110,0.65)] backdrop-blur-xl transition-all duration-300 ease-out hover:-translate-y-0.5 hover:border-[#f4d35e] hover:bg-[#0e7490]/45 hover:shadow-[0_16px_50px_-16px_rgba(103,232,249,0.7)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#f4d35e] motion-reduce:transition-none"
     >
       <span className="pointer-events-none absolute inset-0 rounded-2xl bg-[linear-gradient(120deg,transparent_30%,rgba(255,255,255,0.18)_50%,transparent_70%)] opacity-70" />
       <span className="relative">{children}</span>
