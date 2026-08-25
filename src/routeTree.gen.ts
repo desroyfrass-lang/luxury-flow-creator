@@ -232,6 +232,7 @@ import { Route as AuthenticatedAdminAffiliatePolicyRouteImport } from './routes/
 import { Route as AuthenticatedAdminActivitiesRouteImport } from './routes/_authenticated/admin.activities'
 import { Route as Char91DotmcpChar93InvokeToolToolRouteImport } from './routes/[.mcp]/invoke-tool/$tool'
 import { Route as DotlovableOauthConsentRouteImport } from './routes/[.]lovable.oauth.consent'
+import { Route as AuthenticatedStudiosDistributionIndexRouteImport } from './routes/_authenticated/studios.distribution.index'
 import { Route as SocialMediaViralsCategorySubProductRouteImport } from './routes/social-media-virals.$category.$sub.$product'
 import { Route as LovableEmailQueueProcessRouteImport } from './routes/lovable/email/queue/process'
 import { Route as LovableEmailAuthWebhookRouteImport } from './routes/lovable/email/auth/webhook'
@@ -1424,6 +1425,12 @@ const DotlovableOauthConsentRoute = DotlovableOauthConsentRouteImport.update({
   path: '/.lovable/oauth/consent',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedStudiosDistributionIndexRoute =
+  AuthenticatedStudiosDistributionIndexRouteImport.update({
+    id: '/distribution/',
+    path: '/distribution/',
+    getParentRoute: () => AuthenticatedStudiosRoute,
+  } as any)
 const SocialMediaViralsCategorySubProductRoute =
   SocialMediaViralsCategorySubProductRouteImport.update({
     id: '/$product',
@@ -1695,6 +1702,7 @@ export interface FileRoutesByFullPath {
   '/lovable/email/auth/webhook': typeof LovableEmailAuthWebhookRoute
   '/lovable/email/queue/process': typeof LovableEmailQueueProcessRoute
   '/social-media-virals/$category/$sub/$product': typeof SocialMediaViralsCategorySubProductRoute
+  '/studios/distribution/': typeof AuthenticatedStudiosDistributionIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -1903,6 +1911,7 @@ export interface FileRoutesByTo {
   '/lovable/email/auth/webhook': typeof LovableEmailAuthWebhookRoute
   '/lovable/email/queue/process': typeof LovableEmailQueueProcessRoute
   '/social-media-virals/$category/$sub/$product': typeof SocialMediaViralsCategorySubProductRoute
+  '/studios/distribution': typeof AuthenticatedStudiosDistributionIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -2136,6 +2145,7 @@ export interface FileRoutesById {
   '/lovable/email/auth/webhook': typeof LovableEmailAuthWebhookRoute
   '/lovable/email/queue/process': typeof LovableEmailQueueProcessRoute
   '/social-media-virals/$category/$sub/$product': typeof SocialMediaViralsCategorySubProductRoute
+  '/_authenticated/studios/distribution/': typeof AuthenticatedStudiosDistributionIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -2369,6 +2379,7 @@ export interface FileRouteTypes {
     | '/lovable/email/auth/webhook'
     | '/lovable/email/queue/process'
     | '/social-media-virals/$category/$sub/$product'
+    | '/studios/distribution/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -2577,6 +2588,7 @@ export interface FileRouteTypes {
     | '/lovable/email/auth/webhook'
     | '/lovable/email/queue/process'
     | '/social-media-virals/$category/$sub/$product'
+    | '/studios/distribution'
   id:
     | '__root__'
     | '/'
@@ -2809,6 +2821,7 @@ export interface FileRouteTypes {
     | '/lovable/email/auth/webhook'
     | '/lovable/email/queue/process'
     | '/social-media-virals/$category/$sub/$product'
+    | '/_authenticated/studios/distribution/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -4450,6 +4463,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DotlovableOauthConsentRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated/studios/distribution/': {
+      id: '/_authenticated/studios/distribution/'
+      path: '/distribution'
+      fullPath: '/studios/distribution/'
+      preLoaderRoute: typeof AuthenticatedStudiosDistributionIndexRouteImport
+      parentRoute: typeof AuthenticatedStudiosRoute
+    }
     '/social-media-virals/$category/$sub/$product': {
       id: '/social-media-virals/$category/$sub/$product'
       path: '/$product'
@@ -4580,6 +4600,7 @@ interface AuthenticatedStudiosRouteChildren {
   AuthenticatedStudiosIndexRoute: typeof AuthenticatedStudiosIndexRoute
   AuthenticatedStudiosEngineIdRoute: typeof AuthenticatedStudiosEngineIdRoute
   AuthenticatedStudiosProductionIdRoute: typeof AuthenticatedStudiosProductionIdRoute
+  AuthenticatedStudiosDistributionIndexRoute: typeof AuthenticatedStudiosDistributionIndexRoute
 }
 
 const AuthenticatedStudiosRouteChildren: AuthenticatedStudiosRouteChildren = {
@@ -4602,6 +4623,8 @@ const AuthenticatedStudiosRouteChildren: AuthenticatedStudiosRouteChildren = {
   AuthenticatedStudiosIndexRoute: AuthenticatedStudiosIndexRoute,
   AuthenticatedStudiosEngineIdRoute: AuthenticatedStudiosEngineIdRoute,
   AuthenticatedStudiosProductionIdRoute: AuthenticatedStudiosProductionIdRoute,
+  AuthenticatedStudiosDistributionIndexRoute:
+    AuthenticatedStudiosDistributionIndexRoute,
 }
 
 const AuthenticatedStudiosRouteWithChildren =
