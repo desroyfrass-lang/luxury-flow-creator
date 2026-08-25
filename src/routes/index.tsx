@@ -1,7 +1,7 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import archHero from "@/assets/frass-three-doors-arrival-v2.png.asset.json";
+import archHero from "@/assets/frass-three-doors-arrival-v3.png";
 
 
 /**
@@ -81,7 +81,7 @@ function EntrancePage() {
         {/* The archway — always shown complete, never cropped, enlarged. */}
         <div className="gateway-rise relative w-full overflow-hidden rounded-[1.5rem] shadow-[0_30px_90px_-40px_rgba(90,70,20,0.45)] ring-1 ring-[#d4af37]/30">
           <img
-            src={archHero.url}
+            src={archHero}
             alt="The FrassKicks archway in daylight with three entrances: Frass District, Frass Hill and Frass Kids"
             width={1376}
             height={768}
