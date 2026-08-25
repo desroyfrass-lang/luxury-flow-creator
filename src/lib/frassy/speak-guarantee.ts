@@ -6,6 +6,7 @@
 // different.
 
 import { speakText } from "@/lib/voice/speech-manager";
+import { voiceAllowed } from "@/lib/frassy/voice-consent";
 import { VOICE_RETRY_LIMIT } from "@/lib/frassy/startup";
 import {
   VOICE_TIER_NOTICES,
@@ -20,6 +21,9 @@ export async function speakWithGuarantee(
   opts: { owner?: string; allowed?: boolean; tone?: VoiceTone } = {},
 ): Promise<{ spoke: boolean; notice: string | null; tier: VoiceTier }> {
   if (opts.allowed === false) return { spoke: false, notice: null, tier: getVoiceTier() };
+  // Step 2 — the visitor chooses first. Until they do, she stays in text and
+  // remains completely usable there.
+  if (!voiceAllowed()) return { spoke: false, notice: null, tier: "text" };
   let attempts = 0;
   let result = await speakText(text, { owner: opts.owner ?? "frassy", tone: opts.tone }).catch(
     () => "failed" as const,

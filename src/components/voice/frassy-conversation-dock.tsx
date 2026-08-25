@@ -7,11 +7,17 @@
 // controls stack directly above her, so members reach for one thing only.
 // ─────────────────────────────────────────────────────────────────────────────
 
+import { useSyncExternalStore } from "react";
 import { Pause, Play, Square } from "lucide-react";
 import { useRouterState } from "@tanstack/react-router";
 import { useConversationState, useSpeechState } from "@/hooks/use-push-to-talk";
 import { pauseSpeech, resumeSpeech, stopSpeech } from "@/lib/voice/speech-manager";
 import { frassySurface } from "@/lib/frassy/surfaces";
+import {
+  isEntranceActive,
+  isEntranceActiveServer,
+  subscribeEntrance,
+} from "@/lib/frassy/host-presence";
 
 type DockStatus = "listening" | "thinking" | "speaking" | "idle";
 
@@ -42,9 +48,16 @@ export function FrassyConversationDock() {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const convo = useConversationState();
   const speech = useSpeechState();
+  const entrance = useSyncExternalStore(
+    subscribeEntrance,
+    isEntranceActive,
+    isEntranceActiveServer,
+  );
 
   // FRASS-0558 — no transport controls where Frassy is deliberately absent.
   if (frassySurface(pathname) === "none") return null;
+  // Step 2 — one Frassy at a time: the cinematic host owns the screen alone.
+  if (entrance) return null;
 
   const listening = convo.state === "listening" || convo.micOpen;
   const thinking =

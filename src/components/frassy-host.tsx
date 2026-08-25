@@ -1,6 +1,11 @@
 import { useEffect, useRef, useState } from "react";
 import { useRouterState } from "@tanstack/react-router";
-import frassyAvatar from "@/assets/frassy-gold.png.asset.json";
+import {
+  FRASSY_HOST_ALT,
+  FRASSY_HOST_BREATHE,
+  FRASSY_PORTRAIT_URL,
+} from "@/lib/frassy/character";
+import { setEntranceActive } from "@/lib/frassy/host-presence";
 import { resolveDestination, type FrassyDestination } from "@/lib/frassy-destinations";
 
 /**
@@ -24,9 +29,19 @@ const SESSION_PREFIX = "frassy-host:";
  * Frassy greets once, at the doors of the World of Frass. Everywhere else she
  * is already present and simply continues; she never re-introduces herself.
  */
-// The entrance page (/) performs Frassy's full welcome itself (FRASS-0923),
-// so the universal host never re-introduces her anywhere.
-const ENTRANCE_IDS = new Set<string>();
+// Step 2 — the cinematic welcome is revived for the major destinations only.
+// The root arrival page (/) performs its own welcome (FRASS-0923) and is
+// deliberately absent. Sub-pages, product pages, collection grids, workspace
+// pages and admin utilities are not destinations, so they never trigger her:
+// `resolveDestination` collapses every URL inside a destination onto one
+// canonical id, and the session key is that id — never the raw URL. Refreshes,
+// back-navigation, query strings and hash changes therefore never replay it.
+const ENTRANCE_IDS = new Set<string>([
+  "welcome-hall",
+  "frass-hill",
+  "district",
+  "district-legacy",
+]);
 
 
 function seenThisSession(id: string) {
@@ -98,6 +113,12 @@ export function FrassyHost() {
 
 
   useEffect(() => () => clearTimers(), []);
+
+  // Step 2 — while she is on stage, every other Frassy surface stands down.
+  useEffect(() => {
+    setEntranceActive(Boolean(greeting));
+    return () => setEntranceActive(false);
+  }, [greeting]);
 
   // Let her step aside early.
   const stepAside = () => {
@@ -175,11 +196,11 @@ export function FrassyHost() {
             style={{ background: "radial-gradient(closest-side, rgba(212,175,55,0.35), transparent 72%)" }}
           />
           <img
-            src={frassyAvatar.url}
-            alt="Frassy, host of the Frass ecosystem"
+            src={FRASSY_PORTRAIT_URL}
+            alt={FRASSY_HOST_ALT}
             className="h-[min(36vh,64vw)] w-[min(36vh,64vw)] rounded-full object-cover"
             style={{
-              animation: departing ? undefined : "frassy-host-breathe 6s ease-in-out infinite",
+              animation: departing ? undefined : FRASSY_HOST_BREATHE,
               boxShadow: "0 40px 120px -50px rgba(212,175,55,0.8)",
             }}
           />
