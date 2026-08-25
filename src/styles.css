@@ -592,9 +592,35 @@
 }
 
 
-@media (prefers-reduced-motion: reduce) {
-  .gateway-drift, .gateway-rise, .gateway-swell, .hero-drift { animation: none !important; }
+/* FRASS root arrival — the scene breathes: a very slow drift + micro scale.
+   Range is tiny so all three doors stay fully readable at all times. */
+@keyframes arrival-breathe {
+  0%   { transform: scale(1.018) translate3d(-0.5%, 0.15%, 0); }
+  50%  { transform: scale(1.032) translate3d(0.5%, -0.15%, 0); }
+  100% { transform: scale(1.018) translate3d(-0.5%, 0.15%, 0); }
 }
+
+@utility arrival-breathe {
+  animation: arrival-breathe 44s cubic-bezier(0.45, 0, 0.55, 1) infinite;
+  transform-origin: center center;
+  will-change: transform;
+}
+
+/* Restrained sparkle for the jewelled dollar marker */
+@keyframes marker-sparkle {
+  0%, 100% { opacity: 0.25; }
+  50%      { opacity: 0.9; }
+}
+
+@utility marker-sparkle {
+  animation: marker-sparkle 5.5s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gateway-drift, .gateway-rise, .gateway-swell, .hero-drift,
+  .arrival-breathe, .marker-sparkle { animation: none !important; }
+}
+
 
 /* ── FRASS KICKS DISTRICT — living environment motion ─────────── */
 @keyframes district-arch-open {
