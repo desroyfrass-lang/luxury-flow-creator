@@ -53,7 +53,7 @@ Then a Legacy Route Verification report covering all 21 cards: old route, final 
 
 ## Technical notes
 
-- Redirects use `beforeLoad` + `throw redirect({ to, replace: true })` in the existing route files; no new route files are created except where a legacy path currently has none.
+- Redirects use `beforeLoad` + `throw redirect({ to, replace: true })` in the existing route files. No new route files are created unless an audited legacy URL cannot be preserved without one; modifying existing route definitions or router aliases comes first.
 - Chain removal: `kicks-district.tsx`, `frass-kicks.index.tsx`, `frass-drip.index.tsx`, `bare-drip.index.tsx` change their target from `/shop-frass` to `/frass-district`.
 - `/admin` (`admin.index.tsx`) redirects to `/control-room`; the `_authenticated` gate and Founder server-side role check remain the only permission source.
 - The registry file `src/lib/founder/world-teleporter.ts` is data, not logic; red cards keep their card numbers and stay marked legacy so future audits do not count them as destinations.
