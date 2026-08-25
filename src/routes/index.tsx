@@ -1,8 +1,8 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import archHero from "@/assets/frass-three-doors-daylight.png.asset.json";
-import frassLogo from "@/assets/frass-logo-full.asset.json";
+import archHero from "@/assets/frass-three-doors-arrival-v2.png.asset.json";
+
 
 /**
  * FRASS-0923 / FRASS-0471 — The Frass Entrance Experience.
@@ -74,105 +74,69 @@ function EntrancePage() {
   };
 
   return (
-    <main className="relative min-h-screen overflow-hidden bg-[#0b0a08]">
-      {/* Soft, warm backdrop so the artwork can always be shown whole. */}
-      <img
-        src={archHero.url}
-        alt=""
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-0 h-full w-full scale-125 object-cover blur-3xl brightness-[0.55] saturate-125"
-      />
+    <main className="relative min-h-screen overflow-hidden bg-[#faf7f0]">
+      <section className="relative mx-auto flex min-h-screen w-full max-w-[1500px] flex-col items-center justify-center gap-5 px-3 py-6 sm:px-6">
+        <h1 className="sr-only">Welcome to FrassKicks</h1>
 
-      <section className="relative mx-auto flex min-h-screen w-full max-w-[1500px] flex-col items-center justify-center gap-6 px-4 py-8 sm:px-6 lg:gap-8">
-        {/* The archway — always shown complete, never cropped. */}
-        <div className="gateway-rise relative w-full overflow-hidden rounded-[1.5rem] shadow-[0_40px_120px_-40px_rgba(0,0,0,0.8)] ring-1 ring-[#d4af37]/25">
+        {/* The archway — always shown complete, never cropped. The FrassKicks
+            sign and the three ENTER buttons live inside the artwork itself;
+            invisible hotspots sit exactly over them. */}
+        <div className="gateway-rise relative w-full overflow-hidden rounded-[1.5rem] shadow-[0_30px_90px_-40px_rgba(90,70,20,0.45)] ring-1 ring-[#d4af37]/30">
           <img
             src={archHero.url}
             alt="The FrassKicks archway in daylight with three entrances: Frass District, Frass Hill and Frass Kids"
-            width={1656}
-            height={936}
+            width={1376}
+            height={768}
             fetchPriority="high"
             className="block h-auto w-full object-contain"
           />
 
-          {/* Brand lock — the exact approved FrassKicks mark, warmly lit. */}
-          <div className="pointer-events-none absolute inset-x-0 top-[4.2%] flex justify-center">
-            <div className="relative">
-              <div
-                aria-hidden="true"
-                className="absolute -inset-x-10 -inset-y-8 rounded-full bg-[radial-gradient(ellipse_at_center,rgba(255,224,150,0.55),transparent_70%)] blur-xl"
-              />
-              <img
-                src={frassLogo.url}
-                alt="FrassKicks"
-                className="relative w-[54%] max-w-[840px] drop-shadow-[0_6px_18px_rgba(60,35,0,0.55)]"
-              />
-            </div>
-          </div>
+          <DoorHotspot
+            onClick={goShop}
+            label="Enter Frass District — Shop. Style. Elevate."
+            style={{ left: "7%", width: "22%", top: "26%", height: "71%" }}
+          />
+          <DoorHotspot
+            onClick={goHill}
+            label="Enter Frass Hill — Build. Connect. Grow."
+            style={{ left: "36.6%", width: "25.6%", top: "26%", height: "71%" }}
+          />
+          <DoorHotspot
+            onClick={goKids}
+            label="Enter Frass Kids — Wonder. Adventure. Play."
+            style={{ left: "68.8%", width: "22%", top: "26%", height: "71%" }}
+          />
         </div>
 
-        <h1 className="gateway-rise sr-only">Welcome to FrassKicks</h1>
-        <p
-          className="gateway-rise text-center text-[10px] uppercase tracking-[0.35em] text-[#f4e3b8]/80 sm:text-xs"
-          style={{ animationDelay: "120ms" }}
-        >
+        <p className="gateway-rise text-center text-[10px] uppercase tracking-[0.35em] text-[#8a7134] sm:text-xs">
           Three doors. One account. Choose the world you want to walk into.
         </p>
-
-        {/* One transparent gold button beneath each doorway. */}
-        <div className="grid w-full gap-3 sm:grid-cols-3 sm:gap-5">
-          <DoorButton
-            onClick={goShop}
-            delay="200ms"
-            label="Enter Frass District"
-            hint="Shop. Style. Elevate."
-          />
-          <DoorButton
-            onClick={goHill}
-            delay="280ms"
-            label="Enter Frass Hill"
-            hint="Build. Connect. Grow."
-          />
-          <DoorButton
-            onClick={goKids}
-            delay="360ms"
-            label="Enter Frass Kids"
-            hint="Wonder. Adventure. Play."
-          />
-        </div>
       </section>
     </main>
   );
 }
 
-function DoorButton({
+/**
+ * An invisible, keyboard-reachable control laid over a doorway and its
+ * baked-in ENTER button. No second visible button is ever drawn.
+ */
+function DoorHotspot({
   onClick,
   label,
-  hint,
-  delay,
+  style,
 }: {
   onClick: () => void;
   label: string;
-  hint: string;
-  delay: string;
+  style: React.CSSProperties;
 }) {
   return (
     <button
       type="button"
       onClick={onClick}
-      style={{ animationDelay: delay }}
-      className="gateway-rise group relative overflow-hidden rounded-xl border border-[#d4af37]/70 bg-black/25 px-5 py-4 text-center backdrop-blur-[2px] transition-all duration-500 ease-out outline-none hover:-translate-y-0.5 hover:border-[#f3d27a] hover:bg-black/35 hover:shadow-[0_0_38px_-6px_rgba(212,175,55,0.65)] focus-visible:-translate-y-0.5 focus-visible:border-[#f3d27a] focus-visible:shadow-[0_0_38px_-6px_rgba(212,175,55,0.65)] motion-reduce:transform-none motion-reduce:transition-none"
-    >
-      <span
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-0 -translate-x-full bg-[linear-gradient(110deg,transparent,rgba(255,240,200,0.22),transparent)] transition-transform duration-[900ms] ease-out group-hover:translate-x-full group-focus-visible:translate-x-full motion-reduce:hidden"
-      />
-      <span className="relative block font-display text-lg uppercase leading-none tracking-[0.14em] text-[#f7ead0] transition-colors duration-300 group-hover:text-white sm:text-xl">
-        {label}
-      </span>
-      <span className="relative mt-2 block text-[9px] uppercase tracking-[0.3em] text-[#e7cf95]/75">
-        {hint}
-      </span>
-    </button>
+      aria-label={label}
+      style={style}
+      className="absolute cursor-pointer rounded-2xl bg-transparent outline-none transition-all duration-500 ease-out hover:bg-[radial-gradient(ellipse_at_center,rgba(255,224,150,0.22),transparent_70%)] hover:shadow-[0_0_60px_-10px_rgba(212,175,55,0.85)] focus-visible:bg-[radial-gradient(ellipse_at_center,rgba(255,224,150,0.22),transparent_70%)] focus-visible:ring-2 focus-visible:ring-[#f3d27a] motion-reduce:transition-none"
+    />
   );
 }
+
