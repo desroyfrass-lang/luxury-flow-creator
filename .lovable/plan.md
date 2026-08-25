@@ -1,70 +1,51 @@
-# Legacy Route Consolidation — Phase 2, Step 1
+# Root Arrival — One Logo, One Set of Doors
 
-Implementation of the frozen 201-card World Teleporter audit. No new pages, no redesigns, no reopened audit. Every old address keeps working; each one now lands directly on its canonical home in one hop.
+Scope: the root arrival page (`src/routes/index.tsx`) + one image edit only. No routes, permissions, other pages, or platform architecture are touched. The 201-card Teleporter audit, Legacy Route Consolidation, Welcome Hall, and all district architecture stay frozen.
 
-## The 21 red cards and their canonical homes
+## What's wrong now
+- **Two FrassKicks signs.** The artwork has a baked-in sign above the central arch (it reads "KICKS" with an extra K and a distorted central symbol), and the code *also* overlays a separate logo floating above the building → a double logo.
+- **Two sets of ENTER buttons.** Three glowing gold ENTER buttons are already baked into the bottom of the artwork (one per door), and the code renders a *second* set of three transparent gold buttons beneath the image → redundant buttons saying the same thing.
+- **Warm-brown outer background** (`#0b0a08` + a brown-tinted blurred backdrop). You said white/cream is fine and definitely not brown.
 
-| Old route | Canonical destination | Action |
-| --- | --- | --- |
-| /shop-frass | /frass-district | Already redirects — keep, permanent |
-| /kicks-district | /frass-district | Retarget (today it hops via /shop-frass) |
-| /frass-kicks | /frass-district | Retarget; /frass-kicks/men, /women and deeper untouched |
-| /frass-drip | /frass-district | Retarget; deeper men/women collections untouched |
-| /bare-drip | /frass-district | Retarget; deeper men/women untouched |
-| /plus-size/men | /frass-plus/men | Already correct — keep |
-| /plus-size/women | /frass-plus/women | Already correct — keep |
-| /frass-kids/boys | /frass-kids | Already correct; age routes 0-3, 3-6, 6-12, 12+ untouched |
-| /frass-kids/girls | /frass-kids | Already correct |
-| /frass-world | /frass-hill | Already correct — make permanent |
-| /command | /control-room | Already correct, stays behind Founder authorisation |
-| /founder | /control-room | Already correct, stays behind Founder authorisation |
-| /gateway | /welcome-hall | Retarget (currently points at the root) |
-| /welcome | /welcome-hall | New redirect after the first-arrival ceremony is moved into the Hall |
-| /workspace/journal | /journal | Already correct; Journal gets its link inside the Daily/Workspace nav |
-| /daily | /room?daily=1 | Already correct — keep, query preserved |
-| /builder-hall | /room | New redirect; unique content check below |
-| /builder/$handle | /card/$handle | Already correct; graceful "card not found" verified |
-| /admin | /control-room | Retarget (today it lands on /admin/images); all /admin/* tools untouched |
-| / | unchanged (canonical) | Three-door cinematic arrival restored; doors point at canonical routes |
-| /welcome-hall | unchanged | Registry marks it red, your directive locks it as canonical — flagged, not touched |
+## Changes
 
-## Root arrival — three doors (correction, locked)
+### 1. Fix the building sign — image edit, not a code overlay
+Use `imagegen--edit_image` on the approved artwork (`/mnt/user-uploads/ChatGPT_Image_Aug_25_2026_10_15_24_AM.png`) together with the exact approved logo asset (`frass-logo-full` at `https://luxury-flow-creator.lovable.app/__l5e/assets-v1/60badf1c-0e15-4380-9caa-f644348207a9/frass-logo-full.png`) to **replace the central upper sign** so the exact logo reads as architectural signage embedded into the façade:
+- The exact approved mark (backwards FRASS treatment, central symbol, ICKS on the right — no extra K), used as the source of truth, not redrawn or AI-regenerated.
+- Visually fabricated into the stone: matching perspective, scale, depth, recessing, contact shadows, highlights, and the building's warm gold daylight so it belongs to the architecture — not floating, pasted, or a rectangular image layer.
+- Completely conceals the incorrect baked-in lettering/symbol underneath: no ghost letters, no visible original sign, no duplicate, no floating boundary.
+- Preserve the people, doors, destinations, building, sky, and overall scene exactly — only the sign is replaced.
+Save as a new CDN asset `frass-three-doors-arrival-v2.png` and point the hero `<img>` at it.
 
-The root stays canonical and never redirects to Welcome Hall. It presents the approved three-door cinematic arrival, restored from the existing arch concept and refreshed against the supplied reference imagery rather than redesigned:
+### 2. Remove the code logo overlay
+Delete the overlaid `frassLogo` block (current `index.tsx` lines 98–111) and the `frassLogo` import. The single correct sign now lives in the image itself — one sign, not two.
 
-- **Door 1 — Frass District**: shopping and the FrassKicks retail ecosystem. Goes to `/frass-district`. Identity: luxury, shopping, elegance.
-- **Door 2 — Frass Hill**: community, Builders, opportunity, the wider ecosystem. Goes through the approved Frass Hill welcome experience. Identity: purpose, building, community.
-- **Door 3 — Frass Kids**: the children's and parent journey. Goes through the approved Frass Kids / Kids Valley welcome experience. Identity: wonder, animation, adventure, storybook.
+### 3. Remove the redundant transparent button row
+Delete the three `DoorButton` components and the bottom button grid (lines 122–178). No second set of ENTER buttons remains.
 
-Three equal entrances. Frass Kids is never nested under the Frass Hill door, and the root is never returned to a two-door Shop-vs-Hill gateway. No new gateway page is created; the existing root arrival is updated in place, and each door keeps its own visual character.
+### 4. Make the in-image ENTER buttons the clickable doors
+Overlay three transparent, keyboard-focusable hotspot `<button>`s on the image, each covering one door's archway opening **plus** its baked-in ENTER button (coordinates from the artwork):
+- Frass District — left 8.4%, top 39.3%, width 21.4%, height ~56%
+- Frass Hill — left 37.1%, top 39.3%, width 25.0%, height ~56%
+- Frass Kids — left 69.9%, top 39.3%, width 20.6%, height ~56%
 
-## Content that must survive
+On hover/focus, a thin gold ring + soft warm gold glow appears over that door's ENTER-button sub-region only (reinforces the button already in the art — it is **not** a new visible button). Subtle lift, optional light sweep, smooth transition; `prefers-reduced-motion` respected. Each hotspot is `aria-label`ed ("Enter Frass District", "Enter Frass Hill", "Enter Frass Kids") and keyboard-focusable with the same glow treatment.
 
-**/welcome (First Arrival ceremony)** — the spoken personal greeting, the arrival-state lookup and the walk into the Hall move into Welcome Hall as a *first-arrival state* (`/welcome-hall?arrival=first`). Nothing is deleted; the ceremony becomes one of the Hall's arrival states, exactly as the Welcome Architecture lock requires. Only after it renders inside the Hall does /welcome become a redirect that preserves any `next` parameter.
+The existing navigation handlers stay byte-identical:
+- District → `goShop` (signed-in: `/frass-district`; else `/join/frasskicks`)
+- Hill → `goHill` (signed-in: `/welcome-hall?arrival=first`; else `/join/frass-hill`)
+- Kids → `goKids` (`/kids-world`)
 
-**/builder-hall** — before redirecting, its distinct pieces (working style, learning preferences, momentum, journey stage strip) are checked against My Workspace. Anything present only on Builder Hall is carried into the Workspace; if something cannot be placed unambiguously, the route is left alone and flagged for you instead of being removed.
+### 5. White/cream backdrop
+Replace the warm-brown background and brown-tinted blur with a clean white/cream frame (e.g. `#faf7f0` surface, no brown tint). The daylight archway becomes the bright focal point.
 
-**/workspace/journal** — the Journal keeps private-by-default entries, mood/state selection, optional Founder sharing and the First Week Promise at /journal. The only change is that the Daily/Workspace navigation links to it directly, so there is one Journal, one door.
+### 6. Responsive behavior
+Hotspots are percentage-positioned over the `object-contain` image, so they scale identically on desktop, tablet, and mobile. All three doors stay visible and tappable; nothing is cropped or centered away on narrow screens.
 
-## Navigation and internal links
-
-Every internal button, menu item, Frassy destination and site-map entry that currently points at an old address is repointed at the canonical one, so members never bounce through a redirect. Button wording such as "Shop Frass" stays; only the destination changes. Sitemap and canonical tags list canonical routes only. Duplicate menu entries for consolidated routes are removed from navigation, while the URL itself keeps working for bookmarks and QR codes.
-
-## Verification before I report back
-
-- Every red route resolves in exactly one hop, with no loops and no A→B→C chains.
-- Query strings, auth return paths (`?next=`), payment tokens and dynamic parameters survive the redirect.
-- Dynamic routes ($handle, $category, $sub, $product, $token) are untouched.
-- 201-card registry intact; 174 Live & Linked cards unchanged apart from receiving links; 6 Built-but-Unlinked still accounted for.
-- Welcome Hall, Frass District, Founder Control Room and Frass Plus+ remain the canonical names; Kids architecture intact.
-- Founder/admin access stays server-authorised; no admin content renders during a redirect.
-
-Then a Legacy Route Verification report covering all 21 cards: old route, final route, status, content migrated, links updated, chains, anything left unchanged, and anything needing your review.
-
-## Technical notes
-
-- Redirects use `beforeLoad` + `throw redirect({ to, replace: true })` in the existing route files. No new route files are created unless an audited legacy URL cannot be preserved without one; modifying existing route definitions or router aliases comes first.
-- Chain removal: `kicks-district.tsx`, `frass-kicks.index.tsx`, `frass-drip.index.tsx`, `bare-drip.index.tsx` change their target from `/shop-frass` to `/frass-district`.
-- `/admin` (`admin.index.tsx`) redirects to `/control-room`; the `_authenticated` gate and Founder server-side role check remain the only permission source.
-- The registry file `src/lib/founder/world-teleporter.ts` is data, not logic; red cards keep their card numbers and stay marked legacy so future audits do not count them as destinations.
-- The Teleporter audit tables and card numbering are not modified.
+## Verification
+1. Root `/` is still the canonical three-door arrival — no redirect.
+2. Exactly **one** FrassKicks sign: correct logo, no extra K, embedded into the façade, no overlay, no ghost letters.
+3. Exactly **one** set of ENTER buttons (the artwork's), all clickable with the gold hover/focus glow.
+4. White/cream backdrop, no brown.
+5. Desktop + mobile: all three doors visible and enterable; hotspots align with the in-image buttons.
+6. No unrelated routes, pages, permissions, or platform architecture changed.
