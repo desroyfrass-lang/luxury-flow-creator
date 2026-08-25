@@ -110,7 +110,7 @@ export const FOUNDER_LAUNCHERS: Record<string, { label: string; href: string; pl
     { label: "Commerce simulation", href: "/commerce-simulation", plain: "Prove the flows still work." },
   ],
   command: [
-    { label: "Admin console", href: "/admin", plain: "Every operational tool." },
+    { label: "Admin console", href: "/control-room", plain: "Every operational tool." },
     { label: "Approvals", href: "/admin/approvals", plain: "Things waiting on your word." },
     { label: "Roles", href: "/admin/roles", plain: "Who can do what." },
     { label: "Link check", href: "/admin/link-check", plain: "Nothing broken in the world." },
