@@ -75,11 +75,11 @@ function EntrancePage() {
 
   return (
     <main className="relative min-h-screen overflow-hidden bg-[#faf7f0]">
-      <section className="relative mx-auto flex min-h-screen w-full max-w-[1800px] flex-col items-center justify-center gap-6 px-2 py-6 sm:px-6">
+      <section className="relative mx-auto flex min-h-screen w-full flex-col items-center justify-center gap-6 py-6">
         <h1 className="sr-only">Welcome to FrassKicks</h1>
 
-        {/* The archway — always shown complete, never cropped, enlarged. */}
-        <div className="gateway-rise relative w-full overflow-hidden rounded-[1.5rem] shadow-[0_30px_90px_-40px_rgba(90,70,20,0.45)] ring-1 ring-[#d4af37]/30">
+        {/* The archway — full-bleed edge to edge, always shown complete. */}
+        <div className="gateway-rise relative w-screen overflow-hidden">
           <img
             src={archHero}
             alt="The FrassKicks archway in daylight with three entrances: Frass District, Frass Hill and Frass Kids"
