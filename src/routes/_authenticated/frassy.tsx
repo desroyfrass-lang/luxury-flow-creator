@@ -206,7 +206,7 @@ function StoreOperations() {
             <RefreshCw className={`h-3 w-3 ${brief.isFetching ? "animate-spin" : ""}`} /> Refresh
           </button>
           <Link
-            to="/admin"
+            to="/control-room"
             className="text-[10px] uppercase tracking-[0.3em] text-white/50 hover:text-white"
           >
             Admin console →

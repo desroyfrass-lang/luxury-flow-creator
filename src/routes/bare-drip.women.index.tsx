@@ -51,8 +51,8 @@ export const Route = createFileRoute("/bare-drip/women/")({
         description="Made for Movement. Built for Confidence."
         crumbs={[
           { label: "Home", to: "/" },
-          { label: "Frass District", to: "/shop-frass" },
-          { label: "Bare Drip", to: "/bare-drip" },
+          { label: "Frass District", to: "/frass-district" },
+          { label: "Bare Drip", to: "/bare-drip/women" },
           { label: "Bare Drip for Women" },
         ]}
       />

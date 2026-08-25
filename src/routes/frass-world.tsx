@@ -6,6 +6,6 @@ import { createFileRoute, redirect } from "@tanstack/react-router";
  */
 export const Route = createFileRoute("/frass-world")({
   beforeLoad: () => {
-    throw redirect({ to: "/frass-hill" });
+    throw redirect({ to: "/frass-hill", replace: true });
   },
 });

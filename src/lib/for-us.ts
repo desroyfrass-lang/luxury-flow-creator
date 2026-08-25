@@ -62,7 +62,7 @@ export const FOR_US_SECTIONS: ForUsSection[] = [
         source: "Frass District",
         title: "A new storefront opened on the promenade",
         body: "An independent house joined the district street this week. The doors are open, the rails are stocked, and the first fitting appointments are live.",
-        to: "/shop-frass",
+        to: "/frass-district",
         cta: "Walk the street",
         tags: ["fashion", "marketplace", "business"],
       },
@@ -541,7 +541,7 @@ export function orderSections(priority: string[]): ForUsSection[] {
 export const CAUGHT_UP_ACTIONS: { label: string; to: string }[] = [
   { label: "Visit the Town Square", to: "/frass-hill" },
   { label: "Continue your current project", to: "/workspace" },
-  { label: "Explore another district", to: "/shop-frass" },
+  { label: "Explore another district", to: "/frass-district" },
   { label: "Learn something new", to: "/academy" },
   { label: "Support the Foundation", to: "/opportunity" },
 ];
@@ -613,7 +613,7 @@ export const HALL_EXHIBITS: HallExhibit[] = [
     glyph: "👗",
     name: "The Frass District Display",
     showing: "A dressed case from the district promenade, changed every Friday.",
-    to: "/shop-frass",
+    to: "/frass-district",
     cta: "Frass District",
     tags: ["fashion", "editorials", "marketplace"],
   },

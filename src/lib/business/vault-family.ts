@@ -290,7 +290,7 @@ export const BUSINESS_VAULTS: BusinessVault[] = [
       ...MARKETPLACE_CLOSE,
     ],
     monetizationOutcome: "An approved footwear sample in production and listed for sale.",
-    showcase: { label: "Frass Kicks", to: "/frass-kicks", note: "Your drop shown where the sneaker people already are." },
+    showcase: { label: "Frass Kicks", to: "/frass-district", note: "Your drop shown where the sneaker people already are." },
     manufacturing: ["footwear"],
     craft: "footwear design",
   },

@@ -120,7 +120,7 @@ function CheckoutPage() {
           <div className="mt-16 rounded-3xl border border-dashed border-border p-16 text-center">
             <p className="font-display text-2xl">Your bag is empty.</p>
             <Link
-              to="/frass-kicks"
+              to="/frass-district"
               className="mt-6 inline-block rounded-full bg-foreground px-6 py-3 text-xs uppercase tracking-[0.25em] text-background"
             >
               Shop Frass Kicks

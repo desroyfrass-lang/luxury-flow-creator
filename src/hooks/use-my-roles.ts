@@ -62,7 +62,7 @@ export function useAccountSection(): AccountSection | null {
       items: [
         { label: "Frassy OS", to: "/frassy", note: "Command center" },
         { label: "Founder Control Room", to: "/control-room" },
-        { label: "Admin Console", to: "/admin" },
+        { label: "Admin Console", to: "/control-room" },
         { label: "Roles & Access", to: "/admin/roles" },
         { label: "My Archive", to: "/try-on", note: "Try-on hauls" },
       ],
@@ -72,9 +72,9 @@ export function useAccountSection(): AccountSection | null {
   if (has("staff") || has("moderator")) {
     return {
       label: "Operator",
-      to: "/admin",
+      to: "/control-room",
       items: [
-        { label: "Admin Console", to: "/admin" },
+        { label: "Admin Console", to: "/control-room" },
         { label: "Approvals", to: "/admin/approvals" },
         { label: "My Archive", to: "/try-on" },
       ],

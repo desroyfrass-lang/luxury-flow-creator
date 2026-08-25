@@ -95,7 +95,7 @@ export function WorkspaceRoom({
     const links: RoleLink[] = [];
     if (isAdmin) {
       links.push({ to: "/control-room", label: "Founder Dashboard", emoji: "🏛" });
-      links.push({ to: "/admin", label: "Admin", emoji: "🛠" });
+      links.push({ to: "/admin/images", label: "Admin", emoji: "🛠" });
       links.push({ to: "/admin/affiliate-policy", label: "Governance", emoji: "⚖️" });
     }
     if (businessRoles.includes("partner")) {
@@ -108,6 +108,8 @@ export function WorkspaceRoom({
     if (businessRoles.includes("designer")) {
       links.push({ to: "/creation", label: "Creator Studio", emoji: "🎨" });
     }
+    // One Journal, one door — linked straight from the Workspace.
+    links.push({ to: "/journal", label: "Journal", emoji: "📓" });
     links.push({ to: "/academy", label: "Academy", emoji: "🎓" });
     return links;
   }, [isAdmin, businessRoles]);

@@ -25,7 +25,7 @@ import fullLogo from "@/assets/frass-logo-full.asset.json";
 import symbolLogo from "@/assets/frass-logo-symbol.asset.json";
 
 const NAV_ITEMS = [
-  { to: "/shop-frass", slot: "nav-frass-district", fallback: "Frass District" },
+  { to: "/frass-district", slot: "nav-frass-district", fallback: "Frass District" },
   { to: "/afro-designers", slot: "nav-afro-designers", fallback: "Afro Designers" },
   { to: "/capsules", slot: "nav-capsules", fallback: "Lookbooks & Capsules" },
   { to: "/social-media-virals", slot: "nav-social-virals", fallback: "Social Media Virals" },

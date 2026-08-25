@@ -11,6 +11,7 @@ import { onboardingDestination } from "@/lib/navigation/core-routes";
 import { ViewModeToggle } from "@/components/view-mode/view-mode-toggle";
 import { DailyWelcomeCeremony } from "@/components/welcome-hall/daily-welcome-ceremony";
 import { WELCOME_HALL_PURPOSES } from "@/lib/welcome-hall/daily-welcome";
+import { FirstArrivalCeremony } from "@/components/welcome-hall/first-arrival-ceremony";
 
 
 /**
@@ -21,8 +22,11 @@ import { WELCOME_HALL_PURPOSES } from "@/lib/welcome-hall/daily-welcome";
  * registers, and chooses their entrance — Frass Hill or Kids Valley.
  */
 export const Route = createFileRoute("/welcome-hall")({
-  validateSearch: (search: Record<string, unknown>): { welcome?: "daily"; next?: string } => ({
+  validateSearch: (
+    search: Record<string, unknown>,
+  ): { welcome?: "daily"; arrival?: "first"; next?: string } => ({
     ...(search["welcome"] === "daily" ? { welcome: "daily" as const } : {}),
+    ...(search["arrival"] === "first" ? { arrival: "first" as const } : {}),
     ...(typeof search["next"] === "string" && search["next"].startsWith("/")
       ? { next: search["next"] }
       : {}),
@@ -123,6 +127,7 @@ function WelcomeHallPage() {
   const search = Route.useSearch();
   const [sound, setSound] = useState(false);
 
+
   useEffect(() => {
     setSound(ambienceEnabled());
   }, []);
@@ -146,10 +151,23 @@ function WelcomeHallPage() {
 
   const open = stage >= 1;
 
+  // Legacy Route Consolidation — the First Arrival ceremony (formerly /welcome)
+  // is now an arrival state of the Hall. It plays once, on its own, and then
+  // the Hall itself opens behind it.
+  if (search.arrival === "first") {
+    return (
+      <div className="min-h-screen bg-background text-foreground">
+        <ViewModeToggle className="fixed right-4 top-4 z-40" />
+        <FirstArrivalCeremony {...(search.next ? { next: search.next } : {})} />
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-background text-foreground">
       {/* FRASS-0517 — choose how Frass feels before you even begin. */}
       <ViewModeToggle className="fixed right-4 top-4 z-40" />
+
 
       {/* FRASS-0569 — 🌅 Welcome Hall One. Frassy greets first; the Daily follows. */}
       {search.welcome === "daily" && (
