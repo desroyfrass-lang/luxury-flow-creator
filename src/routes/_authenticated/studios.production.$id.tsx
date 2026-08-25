@@ -85,7 +85,7 @@ function ProductionDetail() {
   };
 
   const duplicateScene = async (scene: (typeof scenes)[number]) => {
-    const { id: _drop, created_at: _c, updated_at: _u, ...rest } = scene as Record<string, unknown> as never;
+    const { id: _drop, created_at: _c, updated_at: _u, ...rest } = scene as unknown as Record<string, unknown>;
     const next = (scenes[scenes.length - 1]?.scene_number ?? 0) + 1;
     const { error } = await supabase.from("studio_scenes").insert({ ...(rest as object), scene_number: next } as never);
     if (error) return toast.error(error.message);
