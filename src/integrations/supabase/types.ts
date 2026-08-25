@@ -5111,6 +5111,84 @@ export type Database = {
         }
         Relationships: []
       }
+      studio_animations: {
+        Row: {
+          approved: boolean
+          category: string
+          character_id: string | null
+          created_at: string
+          created_by: string | null
+          description: string | null
+          duration_seconds: number | null
+          file_url: string | null
+          id: string
+          loopable: boolean
+          name: string
+          preview_url: string | null
+          reuse_allowed: boolean
+          rights_status: string
+          series_id: string | null
+          tags: string[]
+          times_used: number
+          updated_at: string
+        }
+        Insert: {
+          approved?: boolean
+          category?: string
+          character_id?: string | null
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          duration_seconds?: number | null
+          file_url?: string | null
+          id?: string
+          loopable?: boolean
+          name: string
+          preview_url?: string | null
+          reuse_allowed?: boolean
+          rights_status?: string
+          series_id?: string | null
+          tags?: string[]
+          times_used?: number
+          updated_at?: string
+        }
+        Update: {
+          approved?: boolean
+          category?: string
+          character_id?: string | null
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          duration_seconds?: number | null
+          file_url?: string | null
+          id?: string
+          loopable?: boolean
+          name?: string
+          preview_url?: string | null
+          reuse_allowed?: boolean
+          rights_status?: string
+          series_id?: string | null
+          tags?: string[]
+          times_used?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "studio_animations_character_id_fkey"
+            columns: ["character_id"]
+            isOneToOne: false
+            referencedRelation: "studio_characters"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "studio_animations_series_id_fkey"
+            columns: ["series_id"]
+            isOneToOne: false
+            referencedRelation: "studio_series"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       studio_asset_usage: {
         Row: {
           asset_id: string
@@ -5215,6 +5293,117 @@ export type Database = {
         Relationships: [
           {
             foreignKeyName: "studio_assets_series_id_fkey"
+            columns: ["series_id"]
+            isOneToOne: false
+            referencedRelation: "studio_series"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      studio_briefs: {
+        Row: {
+          age_group: string | null
+          approved_at: string | null
+          approved_by: string | null
+          audience: string | null
+          characters: string | null
+          created_at: string
+          created_by: string | null
+          educational_objective: string | null
+          episode_number: number | null
+          generated_by: string | null
+          id: string
+          locations: string | null
+          music_direction: string | null
+          objective: string | null
+          production_id: string
+          production_type: string
+          revision_count: number
+          season: number | null
+          series_id: string | null
+          source_request: string | null
+          special_instructions: string | null
+          status: string
+          story_concept: string | null
+          target_duration_seconds: number | null
+          target_platforms: string[]
+          updated_at: string
+          visual_direction: string | null
+          voice_direction: string | null
+          working_title: string
+        }
+        Insert: {
+          age_group?: string | null
+          approved_at?: string | null
+          approved_by?: string | null
+          audience?: string | null
+          characters?: string | null
+          created_at?: string
+          created_by?: string | null
+          educational_objective?: string | null
+          episode_number?: number | null
+          generated_by?: string | null
+          id?: string
+          locations?: string | null
+          music_direction?: string | null
+          objective?: string | null
+          production_id: string
+          production_type?: string
+          revision_count?: number
+          season?: number | null
+          series_id?: string | null
+          source_request?: string | null
+          special_instructions?: string | null
+          status?: string
+          story_concept?: string | null
+          target_duration_seconds?: number | null
+          target_platforms?: string[]
+          updated_at?: string
+          visual_direction?: string | null
+          voice_direction?: string | null
+          working_title?: string
+        }
+        Update: {
+          age_group?: string | null
+          approved_at?: string | null
+          approved_by?: string | null
+          audience?: string | null
+          characters?: string | null
+          created_at?: string
+          created_by?: string | null
+          educational_objective?: string | null
+          episode_number?: number | null
+          generated_by?: string | null
+          id?: string
+          locations?: string | null
+          music_direction?: string | null
+          objective?: string | null
+          production_id?: string
+          production_type?: string
+          revision_count?: number
+          season?: number | null
+          series_id?: string | null
+          source_request?: string | null
+          special_instructions?: string | null
+          status?: string
+          story_concept?: string | null
+          target_duration_seconds?: number | null
+          target_platforms?: string[]
+          updated_at?: string
+          visual_direction?: string | null
+          voice_direction?: string | null
+          working_title?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "studio_briefs_production_id_fkey"
+            columns: ["production_id"]
+            isOneToOne: false
+            referencedRelation: "studio_productions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "studio_briefs_series_id_fkey"
             columns: ["series_id"]
             isOneToOne: false
             referencedRelation: "studio_series"
@@ -5392,57 +5581,224 @@ export type Database = {
           },
         ]
       }
+      studio_continuity_findings: {
+        Row: {
+          area: string
+          conflicts_with: string | null
+          created_at: string
+          detail: string | null
+          id: string
+          production_id: string
+          resolution: string
+          resolved_at: string | null
+          resolved_by: string | null
+          scene_id: string | null
+          severity: string
+          suggestion: string | null
+          summary: string
+          updated_at: string
+        }
+        Insert: {
+          area?: string
+          conflicts_with?: string | null
+          created_at?: string
+          detail?: string | null
+          id?: string
+          production_id: string
+          resolution?: string
+          resolved_at?: string | null
+          resolved_by?: string | null
+          scene_id?: string | null
+          severity?: string
+          suggestion?: string | null
+          summary: string
+          updated_at?: string
+        }
+        Update: {
+          area?: string
+          conflicts_with?: string | null
+          created_at?: string
+          detail?: string | null
+          id?: string
+          production_id?: string
+          resolution?: string
+          resolved_at?: string | null
+          resolved_by?: string | null
+          scene_id?: string | null
+          severity?: string
+          suggestion?: string | null
+          summary?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "studio_continuity_findings_production_id_fkey"
+            columns: ["production_id"]
+            isOneToOne: false
+            referencedRelation: "studio_productions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "studio_continuity_findings_scene_id_fkey"
+            columns: ["scene_id"]
+            isOneToOne: false
+            referencedRelation: "studio_scenes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      studio_episode_development: {
+        Row: {
+          approved_at: string | null
+          character_roles: Json
+          concept: string | null
+          content_opportunities: Json
+          continuity_connections: Json
+          created_at: string
+          created_by: string | null
+          educational_objective: string | null
+          generated_by: string | null
+          id: string
+          is_current: boolean
+          locations: Json
+          notes: string | null
+          production_id: string
+          status: string
+          story_beats: Json
+          synopsis: string | null
+          updated_at: string
+          version: number
+        }
+        Insert: {
+          approved_at?: string | null
+          character_roles?: Json
+          concept?: string | null
+          content_opportunities?: Json
+          continuity_connections?: Json
+          created_at?: string
+          created_by?: string | null
+          educational_objective?: string | null
+          generated_by?: string | null
+          id?: string
+          is_current?: boolean
+          locations?: Json
+          notes?: string | null
+          production_id: string
+          status?: string
+          story_beats?: Json
+          synopsis?: string | null
+          updated_at?: string
+          version?: number
+        }
+        Update: {
+          approved_at?: string | null
+          character_roles?: Json
+          concept?: string | null
+          content_opportunities?: Json
+          continuity_connections?: Json
+          created_at?: string
+          created_by?: string | null
+          educational_objective?: string | null
+          generated_by?: string | null
+          id?: string
+          is_current?: boolean
+          locations?: Json
+          notes?: string | null
+          production_id?: string
+          status?: string
+          story_beats?: Json
+          synopsis?: string | null
+          updated_at?: string
+          version?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "studio_episode_development_production_id_fkey"
+            columns: ["production_id"]
+            isOneToOne: false
+            referencedRelation: "studio_productions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       studio_generation_jobs: {
         Row: {
+          actual_cost_credits: number | null
+          asset_id: string | null
+          cancelled_at: string | null
           completed_at: string | null
           cost_credits: number
           created_at: string
           created_by: string | null
           error: string | null
+          estimated_cost_credits: number | null
           id: string
           job_type: string
           model_reference: string | null
+          output: Json
           production_id: string | null
           prompt: string | null
           provider: string | null
+          queued_at: string
+          retry_count: number
           reused_asset_id: string | null
           scene_id: string | null
           started_at: string | null
           status: string
+          target_kind: string | null
+          updated_at: string
         }
         Insert: {
+          actual_cost_credits?: number | null
+          asset_id?: string | null
+          cancelled_at?: string | null
           completed_at?: string | null
           cost_credits?: number
           created_at?: string
           created_by?: string | null
           error?: string | null
+          estimated_cost_credits?: number | null
           id?: string
           job_type: string
           model_reference?: string | null
+          output?: Json
           production_id?: string | null
           prompt?: string | null
           provider?: string | null
+          queued_at?: string
+          retry_count?: number
           reused_asset_id?: string | null
           scene_id?: string | null
           started_at?: string | null
           status?: string
+          target_kind?: string | null
+          updated_at?: string
         }
         Update: {
+          actual_cost_credits?: number | null
+          asset_id?: string | null
+          cancelled_at?: string | null
           completed_at?: string | null
           cost_credits?: number
           created_at?: string
           created_by?: string | null
           error?: string | null
+          estimated_cost_credits?: number | null
           id?: string
           job_type?: string
           model_reference?: string | null
+          output?: Json
           production_id?: string | null
           prompt?: string | null
           provider?: string | null
+          queued_at?: string
+          retry_count?: number
           reused_asset_id?: string | null
           scene_id?: string | null
           started_at?: string | null
           status?: string
+          target_kind?: string | null
+          updated_at?: string
         }
         Relationships: [
           {
@@ -5547,6 +5903,90 @@ export type Database = {
         Relationships: [
           {
             foreignKeyName: "studio_locations_series_id_fkey"
+            columns: ["series_id"]
+            isOneToOne: false
+            referencedRelation: "studio_series"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      studio_masters: {
+        Row: {
+          approval_status: string
+          approved_at: string | null
+          approved_by: string | null
+          audio_tracks: Json
+          captions_url: string | null
+          created_at: string
+          created_by: string | null
+          episode_number: number | null
+          id: string
+          master_media_url: string | null
+          notes: string | null
+          production_id: string
+          rights_blockers: Json
+          rights_status: string
+          runtime_seconds: number | null
+          scene_count: number
+          series_id: string | null
+          thumbnail_url: string | null
+          updated_at: string
+          version: number
+        }
+        Insert: {
+          approval_status?: string
+          approved_at?: string | null
+          approved_by?: string | null
+          audio_tracks?: Json
+          captions_url?: string | null
+          created_at?: string
+          created_by?: string | null
+          episode_number?: number | null
+          id?: string
+          master_media_url?: string | null
+          notes?: string | null
+          production_id: string
+          rights_blockers?: Json
+          rights_status?: string
+          runtime_seconds?: number | null
+          scene_count?: number
+          series_id?: string | null
+          thumbnail_url?: string | null
+          updated_at?: string
+          version?: number
+        }
+        Update: {
+          approval_status?: string
+          approved_at?: string | null
+          approved_by?: string | null
+          audio_tracks?: Json
+          captions_url?: string | null
+          created_at?: string
+          created_by?: string | null
+          episode_number?: number | null
+          id?: string
+          master_media_url?: string | null
+          notes?: string | null
+          production_id?: string
+          rights_blockers?: Json
+          rights_status?: string
+          runtime_seconds?: number | null
+          scene_count?: number
+          series_id?: string | null
+          thumbnail_url?: string | null
+          updated_at?: string
+          version?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "studio_masters_production_id_fkey"
+            columns: ["production_id"]
+            isOneToOne: false
+            referencedRelation: "studio_productions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "studio_masters_series_id_fkey"
             columns: ["series_id"]
             isOneToOne: false
             referencedRelation: "studio_series"
@@ -5786,6 +6226,102 @@ export type Database = {
         }
         Relationships: []
       }
+      studio_platform_packages: {
+        Row: {
+          approved_at: string | null
+          caption: string | null
+          captions_url: string | null
+          content_classification: string | null
+          created_at: string
+          created_by: string | null
+          derivative_type: string | null
+          description: string | null
+          episode_reference: string | null
+          generated_by: string | null
+          hashtags: string[]
+          id: string
+          master_id: string | null
+          monetization_ready: boolean
+          platform: string
+          production_id: string
+          queued_at: string | null
+          rights_status: string
+          series_reference: string | null
+          status: string
+          thumbnail_url: string | null
+          title: string | null
+          updated_at: string
+          video_url: string | null
+        }
+        Insert: {
+          approved_at?: string | null
+          caption?: string | null
+          captions_url?: string | null
+          content_classification?: string | null
+          created_at?: string
+          created_by?: string | null
+          derivative_type?: string | null
+          description?: string | null
+          episode_reference?: string | null
+          generated_by?: string | null
+          hashtags?: string[]
+          id?: string
+          master_id?: string | null
+          monetization_ready?: boolean
+          platform: string
+          production_id: string
+          queued_at?: string | null
+          rights_status?: string
+          series_reference?: string | null
+          status?: string
+          thumbnail_url?: string | null
+          title?: string | null
+          updated_at?: string
+          video_url?: string | null
+        }
+        Update: {
+          approved_at?: string | null
+          caption?: string | null
+          captions_url?: string | null
+          content_classification?: string | null
+          created_at?: string
+          created_by?: string | null
+          derivative_type?: string | null
+          description?: string | null
+          episode_reference?: string | null
+          generated_by?: string | null
+          hashtags?: string[]
+          id?: string
+          master_id?: string | null
+          monetization_ready?: boolean
+          platform?: string
+          production_id?: string
+          queued_at?: string | null
+          rights_status?: string
+          series_reference?: string | null
+          status?: string
+          thumbnail_url?: string | null
+          title?: string | null
+          updated_at?: string
+          video_url?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "studio_platform_packages_master_id_fkey"
+            columns: ["master_id"]
+            isOneToOne: false
+            referencedRelation: "studio_masters"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "studio_platform_packages_production_id_fkey"
+            columns: ["production_id"]
+            isOneToOne: false
+            referencedRelation: "studio_productions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       studio_production_derivatives: {
         Row: {
           created_at: string
@@ -5821,6 +6357,70 @@ export type Database = {
             columns: ["master_production_id"]
             isOneToOne: false
             referencedRelation: "studio_productions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      studio_production_memory: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          id: string
+          importance: number
+          key: string
+          production_id: string | null
+          scene_id: string | null
+          scope: string
+          series_id: string | null
+          updated_at: string
+          value: string
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          importance?: number
+          key: string
+          production_id?: string | null
+          scene_id?: string | null
+          scope?: string
+          series_id?: string | null
+          updated_at?: string
+          value: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          importance?: number
+          key?: string
+          production_id?: string | null
+          scene_id?: string | null
+          scope?: string
+          series_id?: string | null
+          updated_at?: string
+          value?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "studio_production_memory_production_id_fkey"
+            columns: ["production_id"]
+            isOneToOne: false
+            referencedRelation: "studio_productions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "studio_production_memory_scene_id_fkey"
+            columns: ["scene_id"]
+            isOneToOne: false
+            referencedRelation: "studio_scenes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "studio_production_memory_series_id_fkey"
+            columns: ["series_id"]
+            isOneToOne: false
+            referencedRelation: "studio_series"
             referencedColumns: ["id"]
           },
         ]
@@ -5969,6 +6569,66 @@ export type Database = {
           title?: string
           updated_at?: string
           user_id?: string
+        }
+        Relationships: []
+      }
+      studio_providers: {
+        Row: {
+          capabilities: string[]
+          character_consistency: boolean
+          commercial_rights: string
+          cost_rating: number | null
+          created_at: string
+          enabled: boolean
+          founder_preferred: boolean
+          id: string
+          label: string
+          notes: string | null
+          priority: number
+          quality_rating: number | null
+          secret_name: string | null
+          slug: string
+          speed_rating: number | null
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          capabilities?: string[]
+          character_consistency?: boolean
+          commercial_rights?: string
+          cost_rating?: number | null
+          created_at?: string
+          enabled?: boolean
+          founder_preferred?: boolean
+          id?: string
+          label: string
+          notes?: string | null
+          priority?: number
+          quality_rating?: number | null
+          secret_name?: string | null
+          slug: string
+          speed_rating?: number | null
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          capabilities?: string[]
+          character_consistency?: boolean
+          commercial_rights?: string
+          cost_rating?: number | null
+          created_at?: string
+          enabled?: boolean
+          founder_preferred?: boolean
+          id?: string
+          label?: string
+          notes?: string | null
+          priority?: number
+          quality_rating?: number | null
+          secret_name?: string | null
+          slug?: string
+          speed_rating?: number | null
+          status?: string
+          updated_at?: string
         }
         Relationships: []
       }
@@ -6164,6 +6824,54 @@ export type Database = {
           },
         ]
       }
+      studio_scene_versions: {
+        Row: {
+          change_note: string | null
+          created_at: string
+          created_by: string | null
+          id: string
+          production_id: string | null
+          scene_id: string
+          snapshot: Json
+          version: number
+        }
+        Insert: {
+          change_note?: string | null
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          production_id?: string | null
+          scene_id: string
+          snapshot?: Json
+          version?: number
+        }
+        Update: {
+          change_note?: string | null
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          production_id?: string | null
+          scene_id?: string
+          snapshot?: Json
+          version?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "studio_scene_versions_production_id_fkey"
+            columns: ["production_id"]
+            isOneToOne: false
+            referencedRelation: "studio_productions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "studio_scene_versions_scene_id_fkey"
+            columns: ["scene_id"]
+            isOneToOne: false
+            referencedRelation: "studio_scenes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       studio_scenes: {
         Row: {
           animation_notes: string | null
@@ -6237,6 +6945,116 @@ export type Database = {
         Relationships: [
           {
             foreignKeyName: "studio_scenes_production_id_fkey"
+            columns: ["production_id"]
+            isOneToOne: false
+            referencedRelation: "studio_productions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      studio_script_versions: {
+        Row: {
+          body: string
+          change_note: string | null
+          created_at: string
+          created_by: string | null
+          id: string
+          production_id: string | null
+          script_id: string
+          sections: Json
+          version: number
+        }
+        Insert: {
+          body?: string
+          change_note?: string | null
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          production_id?: string | null
+          script_id: string
+          sections?: Json
+          version: number
+        }
+        Update: {
+          body?: string
+          change_note?: string | null
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          production_id?: string | null
+          script_id?: string
+          sections?: Json
+          version?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "studio_script_versions_production_id_fkey"
+            columns: ["production_id"]
+            isOneToOne: false
+            referencedRelation: "studio_productions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "studio_script_versions_script_id_fkey"
+            columns: ["script_id"]
+            isOneToOne: false
+            referencedRelation: "studio_scripts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      studio_scripts: {
+        Row: {
+          approved_at: string | null
+          body: string
+          created_at: string
+          created_by: string | null
+          format: string
+          generated_by: string | null
+          id: string
+          production_id: string
+          sections: Json
+          status: string
+          title: string | null
+          updated_at: string
+          version: number
+          word_count: number
+        }
+        Insert: {
+          approved_at?: string | null
+          body?: string
+          created_at?: string
+          created_by?: string | null
+          format?: string
+          generated_by?: string | null
+          id?: string
+          production_id: string
+          sections?: Json
+          status?: string
+          title?: string | null
+          updated_at?: string
+          version?: number
+          word_count?: number
+        }
+        Update: {
+          approved_at?: string | null
+          body?: string
+          created_at?: string
+          created_by?: string | null
+          format?: string
+          generated_by?: string | null
+          id?: string
+          production_id?: string
+          sections?: Json
+          status?: string
+          title?: string | null
+          updated_at?: string
+          version?: number
+          word_count?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "studio_scripts_production_id_fkey"
             columns: ["production_id"]
             isOneToOne: false
             referencedRelation: "studio_productions"
@@ -6352,6 +7170,84 @@ export type Database = {
             foreignKeyName: "studio_series_bibles_series_id_fkey"
             columns: ["series_id"]
             isOneToOne: true
+            referencedRelation: "studio_series"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      studio_voices: {
+        Row: {
+          accent: string | null
+          active: boolean
+          age_presentation: string | null
+          character_id: string | null
+          created_at: string
+          created_by: string | null
+          id: string
+          language: string
+          model_reference: string | null
+          name: string
+          provider: string | null
+          reference_notes: string | null
+          reuse_allowed: boolean
+          rights_status: string
+          sample_url: string | null
+          series_id: string | null
+          tone: string | null
+          updated_at: string
+        }
+        Insert: {
+          accent?: string | null
+          active?: boolean
+          age_presentation?: string | null
+          character_id?: string | null
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          language?: string
+          model_reference?: string | null
+          name: string
+          provider?: string | null
+          reference_notes?: string | null
+          reuse_allowed?: boolean
+          rights_status?: string
+          sample_url?: string | null
+          series_id?: string | null
+          tone?: string | null
+          updated_at?: string
+        }
+        Update: {
+          accent?: string | null
+          active?: boolean
+          age_presentation?: string | null
+          character_id?: string | null
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          language?: string
+          model_reference?: string | null
+          name?: string
+          provider?: string | null
+          reference_notes?: string | null
+          reuse_allowed?: boolean
+          rights_status?: string
+          sample_url?: string | null
+          series_id?: string | null
+          tone?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "studio_voices_character_id_fkey"
+            columns: ["character_id"]
+            isOneToOne: false
+            referencedRelation: "studio_characters"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "studio_voices_series_id_fkey"
+            columns: ["series_id"]
+            isOneToOne: false
             referencedRelation: "studio_series"
             referencedColumns: ["id"]
           },
