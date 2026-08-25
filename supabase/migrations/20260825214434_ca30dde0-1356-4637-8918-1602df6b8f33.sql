@@ -1,0 +1,2 @@
+REVOKE SELECT ON public.card_listings FROM anon;
+GRANT SELECT (id, kind, title, description, image_url, price, currency, quantity, sold, status, is_quick_sell, created_at, updated_at, brand, collection, gallery, details) ON public.card_listings TO anon;
