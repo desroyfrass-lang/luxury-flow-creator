@@ -15,10 +15,10 @@ export type VaultRow = {
   description: string | null;
   status: string;
   setup_step: string;
-  setup_answers: Record<string, unknown>;
+  setup_answers: Record<string, any>;
   enabled_modules: string[];
   hidden_modules: string[];
-  settings: Record<string, unknown>;
+  settings: Record<string, any>;
   last_activity_at: string;
   created_at: string;
   updated_at: string;
@@ -31,7 +31,7 @@ export type VaultRecordRow = {
   title: string;
   body: string | null;
   status: string;
-  data: Record<string, unknown>;
+  data: Record<string, any>;
   due_at: string | null;
   amount: number | null;
   created_by: string;
