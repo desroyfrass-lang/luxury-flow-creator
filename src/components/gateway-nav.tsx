@@ -140,6 +140,7 @@ const HILL_NAV: NavGroup[] = [
       { label: "Town Square", to: "/town-square", note: "The civic heart — people, businesses, stores, live" },
       { label: "For Us", to: "/for-us", note: "The Community Hall" },
       { label: "For Me", to: "/for-me", note: "Your own corner of the Hill" },
+      { label: "My Vaults", to: "/vaults", note: "Workspaces you own and run yourself" },
       { label: "Builder Vault", to: "/vault" },
     ],
   },

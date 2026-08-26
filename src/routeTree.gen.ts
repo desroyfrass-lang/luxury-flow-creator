@@ -161,6 +161,7 @@ import { Route as FrassDripWomenIndexRouteImport } from './routes/frass-drip.wom
 import { Route as FrassDripMenIndexRouteImport } from './routes/frass-drip.men.index'
 import { Route as BareDripWomenIndexRouteImport } from './routes/bare-drip.women.index'
 import { Route as BareDripMenIndexRouteImport } from './routes/bare-drip.men.index'
+import { Route as AuthenticatedVaultsIndexRouteImport } from './routes/_authenticated/vaults.index'
 import { Route as AuthenticatedStudiosIndexRouteImport } from './routes/_authenticated/studios.index'
 import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated/admin.index'
 import { Route as SocialMediaViralsCategorySubRouteImport } from './routes/social-media-virals.$category.$sub'
@@ -191,6 +192,8 @@ import { Route as AuthenticatedWorkspaceFirstVentureRouteImport } from './routes
 import { Route as AuthenticatedWorkspaceDailyDesignRouteImport } from './routes/_authenticated/workspace.daily-design'
 import { Route as AuthenticatedWorkspaceCardRouteImport } from './routes/_authenticated/workspace.card'
 import { Route as AuthenticatedWorkspaceAffiliateRouteImport } from './routes/_authenticated/workspace.affiliate'
+import { Route as AuthenticatedVaultsNewRouteImport } from './routes/_authenticated/vaults.new'
+import { Route as AuthenticatedVaultsVaultIdRouteImport } from './routes/_authenticated/vaults.$vaultId'
 import { Route as AuthenticatedStudiosVoicesRouteImport } from './routes/_authenticated/studios.voices'
 import { Route as AuthenticatedStudiosUsageRouteImport } from './routes/_authenticated/studios.usage'
 import { Route as AuthenticatedStudiosSettingsRouteImport } from './routes/_authenticated/studios.settings'
@@ -234,15 +237,18 @@ import { Route as AuthenticatedAdminAffiliatePolicyRouteImport } from './routes/
 import { Route as AuthenticatedAdminActivitiesRouteImport } from './routes/_authenticated/admin.activities'
 import { Route as Char91DotmcpChar93InvokeToolToolRouteImport } from './routes/[.mcp]/invoke-tool/$tool'
 import { Route as DotlovableOauthConsentRouteImport } from './routes/[.]lovable.oauth.consent'
+import { Route as AuthenticatedVaultsVaultIdIndexRouteImport } from './routes/_authenticated/vaults.$vaultId.index'
 import { Route as AuthenticatedStudiosDistributionIndexRouteImport } from './routes/_authenticated/studios.distribution.index'
 import { Route as SocialMediaViralsCategorySubProductRouteImport } from './routes/social-media-virals.$category.$sub.$product'
 import { Route as LovableEmailQueueProcessRouteImport } from './routes/lovable/email/queue/process'
 import { Route as LovableEmailAuthWebhookRouteImport } from './routes/lovable/email/auth/webhook'
 import { Route as LovableEmailAuthPreviewRouteImport } from './routes/lovable/email/auth/preview'
 import { Route as FrassShapeGenderGoalsGoalRouteImport } from './routes/frass-shape.$gender.goals.$goal'
+import { Route as AuthenticatedVaultsVaultIdCustomizeRouteImport } from './routes/_authenticated/vaults.$vaultId.customize'
 import { Route as AuthenticatedStudiosProductionIdRouteImport } from './routes/_authenticated/studios.production.$id'
 import { Route as AuthenticatedStudiosEngineIdRouteImport } from './routes/_authenticated/studios.engine.$id'
 import { Route as AuthenticatedStudiosDistributionIdRouteImport } from './routes/_authenticated/studios.distribution.$id'
+import { Route as AuthenticatedVaultsVaultIdMModuleIdRouteImport } from './routes/_authenticated/vaults.$vaultId.m.$moduleId'
 
 const WelcomeHallRoute = WelcomeHallRouteImport.update({
   id: '/welcome-hall',
@@ -1020,6 +1026,12 @@ const BareDripMenIndexRoute = BareDripMenIndexRouteImport.update({
   path: '/',
   getParentRoute: () => BareDripMenRoute,
 } as any)
+const AuthenticatedVaultsIndexRoute =
+  AuthenticatedVaultsIndexRouteImport.update({
+    id: '/vaults/',
+    path: '/vaults/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedStudiosIndexRoute =
   AuthenticatedStudiosIndexRouteImport.update({
     id: '/',
@@ -1188,6 +1200,17 @@ const AuthenticatedWorkspaceAffiliateRoute =
     id: '/affiliate',
     path: '/affiliate',
     getParentRoute: () => AuthenticatedWorkspaceRoute,
+  } as any)
+const AuthenticatedVaultsNewRoute = AuthenticatedVaultsNewRouteImport.update({
+  id: '/vaults/new',
+  path: '/vaults/new',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedVaultsVaultIdRoute =
+  AuthenticatedVaultsVaultIdRouteImport.update({
+    id: '/vaults/$vaultId',
+    path: '/vaults/$vaultId',
+    getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
 const AuthenticatedStudiosVoicesRoute =
   AuthenticatedStudiosVoicesRouteImport.update({
@@ -1440,6 +1463,12 @@ const DotlovableOauthConsentRoute = DotlovableOauthConsentRouteImport.update({
   path: '/.lovable/oauth/consent',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedVaultsVaultIdIndexRoute =
+  AuthenticatedVaultsVaultIdIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => AuthenticatedVaultsVaultIdRoute,
+  } as any)
 const AuthenticatedStudiosDistributionIndexRoute =
   AuthenticatedStudiosDistributionIndexRouteImport.update({
     id: '/distribution/',
@@ -1474,6 +1503,12 @@ const FrassShapeGenderGoalsGoalRoute =
     path: '/goals/$goal',
     getParentRoute: () => FrassShapeGenderRoute,
   } as any)
+const AuthenticatedVaultsVaultIdCustomizeRoute =
+  AuthenticatedVaultsVaultIdCustomizeRouteImport.update({
+    id: '/customize',
+    path: '/customize',
+    getParentRoute: () => AuthenticatedVaultsVaultIdRoute,
+  } as any)
 const AuthenticatedStudiosProductionIdRoute =
   AuthenticatedStudiosProductionIdRouteImport.update({
     id: '/production/$id',
@@ -1491,6 +1526,12 @@ const AuthenticatedStudiosDistributionIdRoute =
     id: '/distribution/$id',
     path: '/distribution/$id',
     getParentRoute: () => AuthenticatedStudiosRoute,
+  } as any)
+const AuthenticatedVaultsVaultIdMModuleIdRoute =
+  AuthenticatedVaultsVaultIdMModuleIdRouteImport.update({
+    id: '/m/$moduleId',
+    path: '/m/$moduleId',
+    getParentRoute: () => AuthenticatedVaultsVaultIdRoute,
   } as any)
 
 export interface FileRoutesByFullPath {
@@ -1680,6 +1721,8 @@ export interface FileRoutesByFullPath {
   '/studios/settings': typeof AuthenticatedStudiosSettingsRoute
   '/studios/usage': typeof AuthenticatedStudiosUsageRoute
   '/studios/voices': typeof AuthenticatedStudiosVoicesRoute
+  '/vaults/$vaultId': typeof AuthenticatedVaultsVaultIdRouteWithChildren
+  '/vaults/new': typeof AuthenticatedVaultsNewRoute
   '/workspace/affiliate': typeof AuthenticatedWorkspaceAffiliateRoute
   '/workspace/card': typeof AuthenticatedWorkspaceCardRoute
   '/workspace/daily-design': typeof AuthenticatedWorkspaceDailyDesignRoute
@@ -1710,6 +1753,7 @@ export interface FileRoutesByFullPath {
   '/social-media-virals/$category/$sub': typeof SocialMediaViralsCategorySubRouteWithChildren
   '/admin/': typeof AuthenticatedAdminIndexRoute
   '/studios/': typeof AuthenticatedStudiosIndexRoute
+  '/vaults/': typeof AuthenticatedVaultsIndexRoute
   '/bare-drip/men/': typeof BareDripMenIndexRoute
   '/bare-drip/women/': typeof BareDripWomenIndexRoute
   '/frass-drip/men/': typeof FrassDripMenIndexRoute
@@ -1721,12 +1765,15 @@ export interface FileRoutesByFullPath {
   '/studios/distribution/$id': typeof AuthenticatedStudiosDistributionIdRoute
   '/studios/engine/$id': typeof AuthenticatedStudiosEngineIdRoute
   '/studios/production/$id': typeof AuthenticatedStudiosProductionIdRoute
+  '/vaults/$vaultId/customize': typeof AuthenticatedVaultsVaultIdCustomizeRoute
   '/frass-shape/$gender/goals/$goal': typeof FrassShapeGenderGoalsGoalRoute
   '/lovable/email/auth/preview': typeof LovableEmailAuthPreviewRoute
   '/lovable/email/auth/webhook': typeof LovableEmailAuthWebhookRoute
   '/lovable/email/queue/process': typeof LovableEmailQueueProcessRoute
   '/social-media-virals/$category/$sub/$product': typeof SocialMediaViralsCategorySubProductRoute
   '/studios/distribution/': typeof AuthenticatedStudiosDistributionIndexRoute
+  '/vaults/$vaultId/': typeof AuthenticatedVaultsVaultIdIndexRoute
+  '/vaults/$vaultId/m/$moduleId': typeof AuthenticatedVaultsVaultIdMModuleIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -1892,6 +1939,7 @@ export interface FileRoutesByTo {
   '/studios/settings': typeof AuthenticatedStudiosSettingsRoute
   '/studios/usage': typeof AuthenticatedStudiosUsageRoute
   '/studios/voices': typeof AuthenticatedStudiosVoicesRoute
+  '/vaults/new': typeof AuthenticatedVaultsNewRoute
   '/workspace/affiliate': typeof AuthenticatedWorkspaceAffiliateRoute
   '/workspace/card': typeof AuthenticatedWorkspaceCardRoute
   '/workspace/daily-design': typeof AuthenticatedWorkspaceDailyDesignRoute
@@ -1922,6 +1970,7 @@ export interface FileRoutesByTo {
   '/social-media-virals/$category/$sub': typeof SocialMediaViralsCategorySubRouteWithChildren
   '/admin': typeof AuthenticatedAdminIndexRoute
   '/studios': typeof AuthenticatedStudiosIndexRoute
+  '/vaults': typeof AuthenticatedVaultsIndexRoute
   '/bare-drip/men': typeof BareDripMenIndexRoute
   '/bare-drip/women': typeof BareDripWomenIndexRoute
   '/frass-drip/men': typeof FrassDripMenIndexRoute
@@ -1933,12 +1982,15 @@ export interface FileRoutesByTo {
   '/studios/distribution/$id': typeof AuthenticatedStudiosDistributionIdRoute
   '/studios/engine/$id': typeof AuthenticatedStudiosEngineIdRoute
   '/studios/production/$id': typeof AuthenticatedStudiosProductionIdRoute
+  '/vaults/$vaultId/customize': typeof AuthenticatedVaultsVaultIdCustomizeRoute
   '/frass-shape/$gender/goals/$goal': typeof FrassShapeGenderGoalsGoalRoute
   '/lovable/email/auth/preview': typeof LovableEmailAuthPreviewRoute
   '/lovable/email/auth/webhook': typeof LovableEmailAuthWebhookRoute
   '/lovable/email/queue/process': typeof LovableEmailQueueProcessRoute
   '/social-media-virals/$category/$sub/$product': typeof SocialMediaViralsCategorySubProductRoute
   '/studios/distribution': typeof AuthenticatedStudiosDistributionIndexRoute
+  '/vaults/$vaultId': typeof AuthenticatedVaultsVaultIdIndexRoute
+  '/vaults/$vaultId/m/$moduleId': typeof AuthenticatedVaultsVaultIdMModuleIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -2129,6 +2181,8 @@ export interface FileRoutesById {
   '/_authenticated/studios/settings': typeof AuthenticatedStudiosSettingsRoute
   '/_authenticated/studios/usage': typeof AuthenticatedStudiosUsageRoute
   '/_authenticated/studios/voices': typeof AuthenticatedStudiosVoicesRoute
+  '/_authenticated/vaults/$vaultId': typeof AuthenticatedVaultsVaultIdRouteWithChildren
+  '/_authenticated/vaults/new': typeof AuthenticatedVaultsNewRoute
   '/_authenticated/workspace/affiliate': typeof AuthenticatedWorkspaceAffiliateRoute
   '/_authenticated/workspace/card': typeof AuthenticatedWorkspaceCardRoute
   '/_authenticated/workspace/daily-design': typeof AuthenticatedWorkspaceDailyDesignRoute
@@ -2159,6 +2213,7 @@ export interface FileRoutesById {
   '/social-media-virals/$category/$sub': typeof SocialMediaViralsCategorySubRouteWithChildren
   '/_authenticated/admin/': typeof AuthenticatedAdminIndexRoute
   '/_authenticated/studios/': typeof AuthenticatedStudiosIndexRoute
+  '/_authenticated/vaults/': typeof AuthenticatedVaultsIndexRoute
   '/bare-drip/men/': typeof BareDripMenIndexRoute
   '/bare-drip/women/': typeof BareDripWomenIndexRoute
   '/frass-drip/men/': typeof FrassDripMenIndexRoute
@@ -2170,12 +2225,15 @@ export interface FileRoutesById {
   '/_authenticated/studios/distribution/$id': typeof AuthenticatedStudiosDistributionIdRoute
   '/_authenticated/studios/engine/$id': typeof AuthenticatedStudiosEngineIdRoute
   '/_authenticated/studios/production/$id': typeof AuthenticatedStudiosProductionIdRoute
+  '/_authenticated/vaults/$vaultId/customize': typeof AuthenticatedVaultsVaultIdCustomizeRoute
   '/frass-shape/$gender/goals/$goal': typeof FrassShapeGenderGoalsGoalRoute
   '/lovable/email/auth/preview': typeof LovableEmailAuthPreviewRoute
   '/lovable/email/auth/webhook': typeof LovableEmailAuthWebhookRoute
   '/lovable/email/queue/process': typeof LovableEmailQueueProcessRoute
   '/social-media-virals/$category/$sub/$product': typeof SocialMediaViralsCategorySubProductRoute
   '/_authenticated/studios/distribution/': typeof AuthenticatedStudiosDistributionIndexRoute
+  '/_authenticated/vaults/$vaultId/': typeof AuthenticatedVaultsVaultIdIndexRoute
+  '/_authenticated/vaults/$vaultId/m/$moduleId': typeof AuthenticatedVaultsVaultIdMModuleIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -2366,6 +2424,8 @@ export interface FileRouteTypes {
     | '/studios/settings'
     | '/studios/usage'
     | '/studios/voices'
+    | '/vaults/$vaultId'
+    | '/vaults/new'
     | '/workspace/affiliate'
     | '/workspace/card'
     | '/workspace/daily-design'
@@ -2396,6 +2456,7 @@ export interface FileRouteTypes {
     | '/social-media-virals/$category/$sub'
     | '/admin/'
     | '/studios/'
+    | '/vaults/'
     | '/bare-drip/men/'
     | '/bare-drip/women/'
     | '/frass-drip/men/'
@@ -2407,12 +2468,15 @@ export interface FileRouteTypes {
     | '/studios/distribution/$id'
     | '/studios/engine/$id'
     | '/studios/production/$id'
+    | '/vaults/$vaultId/customize'
     | '/frass-shape/$gender/goals/$goal'
     | '/lovable/email/auth/preview'
     | '/lovable/email/auth/webhook'
     | '/lovable/email/queue/process'
     | '/social-media-virals/$category/$sub/$product'
     | '/studios/distribution/'
+    | '/vaults/$vaultId/'
+    | '/vaults/$vaultId/m/$moduleId'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -2578,6 +2642,7 @@ export interface FileRouteTypes {
     | '/studios/settings'
     | '/studios/usage'
     | '/studios/voices'
+    | '/vaults/new'
     | '/workspace/affiliate'
     | '/workspace/card'
     | '/workspace/daily-design'
@@ -2608,6 +2673,7 @@ export interface FileRouteTypes {
     | '/social-media-virals/$category/$sub'
     | '/admin'
     | '/studios'
+    | '/vaults'
     | '/bare-drip/men'
     | '/bare-drip/women'
     | '/frass-drip/men'
@@ -2619,12 +2685,15 @@ export interface FileRouteTypes {
     | '/studios/distribution/$id'
     | '/studios/engine/$id'
     | '/studios/production/$id'
+    | '/vaults/$vaultId/customize'
     | '/frass-shape/$gender/goals/$goal'
     | '/lovable/email/auth/preview'
     | '/lovable/email/auth/webhook'
     | '/lovable/email/queue/process'
     | '/social-media-virals/$category/$sub/$product'
     | '/studios/distribution'
+    | '/vaults/$vaultId'
+    | '/vaults/$vaultId/m/$moduleId'
   id:
     | '__root__'
     | '/'
@@ -2814,6 +2883,8 @@ export interface FileRouteTypes {
     | '/_authenticated/studios/settings'
     | '/_authenticated/studios/usage'
     | '/_authenticated/studios/voices'
+    | '/_authenticated/vaults/$vaultId'
+    | '/_authenticated/vaults/new'
     | '/_authenticated/workspace/affiliate'
     | '/_authenticated/workspace/card'
     | '/_authenticated/workspace/daily-design'
@@ -2844,6 +2915,7 @@ export interface FileRouteTypes {
     | '/social-media-virals/$category/$sub'
     | '/_authenticated/admin/'
     | '/_authenticated/studios/'
+    | '/_authenticated/vaults/'
     | '/bare-drip/men/'
     | '/bare-drip/women/'
     | '/frass-drip/men/'
@@ -2855,12 +2927,15 @@ export interface FileRouteTypes {
     | '/_authenticated/studios/distribution/$id'
     | '/_authenticated/studios/engine/$id'
     | '/_authenticated/studios/production/$id'
+    | '/_authenticated/vaults/$vaultId/customize'
     | '/frass-shape/$gender/goals/$goal'
     | '/lovable/email/auth/preview'
     | '/lovable/email/auth/webhook'
     | '/lovable/email/queue/process'
     | '/social-media-virals/$category/$sub/$product'
     | '/_authenticated/studios/distribution/'
+    | '/_authenticated/vaults/$vaultId/'
+    | '/_authenticated/vaults/$vaultId/m/$moduleId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -4005,6 +4080,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BareDripMenIndexRouteImport
       parentRoute: typeof BareDripMenRoute
     }
+    '/_authenticated/vaults/': {
+      id: '/_authenticated/vaults/'
+      path: '/vaults'
+      fullPath: '/vaults/'
+      preLoaderRoute: typeof AuthenticatedVaultsIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/studios/': {
       id: '/_authenticated/studios/'
       path: '/'
@@ -4214,6 +4296,20 @@ declare module '@tanstack/react-router' {
       fullPath: '/workspace/affiliate'
       preLoaderRoute: typeof AuthenticatedWorkspaceAffiliateRouteImport
       parentRoute: typeof AuthenticatedWorkspaceRoute
+    }
+    '/_authenticated/vaults/new': {
+      id: '/_authenticated/vaults/new'
+      path: '/vaults/new'
+      fullPath: '/vaults/new'
+      preLoaderRoute: typeof AuthenticatedVaultsNewRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/vaults/$vaultId': {
+      id: '/_authenticated/vaults/$vaultId'
+      path: '/vaults/$vaultId'
+      fullPath: '/vaults/$vaultId'
+      preLoaderRoute: typeof AuthenticatedVaultsVaultIdRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/studios/voices': {
       id: '/_authenticated/studios/voices'
@@ -4516,6 +4612,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DotlovableOauthConsentRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated/vaults/$vaultId/': {
+      id: '/_authenticated/vaults/$vaultId/'
+      path: '/'
+      fullPath: '/vaults/$vaultId/'
+      preLoaderRoute: typeof AuthenticatedVaultsVaultIdIndexRouteImport
+      parentRoute: typeof AuthenticatedVaultsVaultIdRoute
+    }
     '/_authenticated/studios/distribution/': {
       id: '/_authenticated/studios/distribution/'
       path: '/distribution'
@@ -4558,6 +4661,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof FrassShapeGenderGoalsGoalRouteImport
       parentRoute: typeof FrassShapeGenderRoute
     }
+    '/_authenticated/vaults/$vaultId/customize': {
+      id: '/_authenticated/vaults/$vaultId/customize'
+      path: '/customize'
+      fullPath: '/vaults/$vaultId/customize'
+      preLoaderRoute: typeof AuthenticatedVaultsVaultIdCustomizeRouteImport
+      parentRoute: typeof AuthenticatedVaultsVaultIdRoute
+    }
     '/_authenticated/studios/production/$id': {
       id: '/_authenticated/studios/production/$id'
       path: '/production/$id'
@@ -4578,6 +4688,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/studios/distribution/$id'
       preLoaderRoute: typeof AuthenticatedStudiosDistributionIdRouteImport
       parentRoute: typeof AuthenticatedStudiosRoute
+    }
+    '/_authenticated/vaults/$vaultId/m/$moduleId': {
+      id: '/_authenticated/vaults/$vaultId/m/$moduleId'
+      path: '/m/$moduleId'
+      fullPath: '/vaults/$vaultId/m/$moduleId'
+      preLoaderRoute: typeof AuthenticatedVaultsVaultIdMModuleIdRouteImport
+      parentRoute: typeof AuthenticatedVaultsVaultIdRoute
     }
   }
 }
@@ -4731,6 +4848,26 @@ const AuthenticatedWorkspaceRouteWithChildren =
     AuthenticatedWorkspaceRouteChildren,
   )
 
+interface AuthenticatedVaultsVaultIdRouteChildren {
+  AuthenticatedVaultsVaultIdCustomizeRoute: typeof AuthenticatedVaultsVaultIdCustomizeRoute
+  AuthenticatedVaultsVaultIdIndexRoute: typeof AuthenticatedVaultsVaultIdIndexRoute
+  AuthenticatedVaultsVaultIdMModuleIdRoute: typeof AuthenticatedVaultsVaultIdMModuleIdRoute
+}
+
+const AuthenticatedVaultsVaultIdRouteChildren: AuthenticatedVaultsVaultIdRouteChildren =
+  {
+    AuthenticatedVaultsVaultIdCustomizeRoute:
+      AuthenticatedVaultsVaultIdCustomizeRoute,
+    AuthenticatedVaultsVaultIdIndexRoute: AuthenticatedVaultsVaultIdIndexRoute,
+    AuthenticatedVaultsVaultIdMModuleIdRoute:
+      AuthenticatedVaultsVaultIdMModuleIdRoute,
+  }
+
+const AuthenticatedVaultsVaultIdRouteWithChildren =
+  AuthenticatedVaultsVaultIdRoute._addFileChildren(
+    AuthenticatedVaultsVaultIdRouteChildren,
+  )
+
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedAcademyRoute: typeof AuthenticatedAcademyRoute
   AuthenticatedAdminRoute: typeof AuthenticatedAdminRouteWithChildren
@@ -4763,6 +4900,9 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedVaultRoute: typeof AuthenticatedVaultRoute
   AuthenticatedVisualReviewRoute: typeof AuthenticatedVisualReviewRoute
   AuthenticatedWorkspaceRoute: typeof AuthenticatedWorkspaceRouteWithChildren
+  AuthenticatedVaultsVaultIdRoute: typeof AuthenticatedVaultsVaultIdRouteWithChildren
+  AuthenticatedVaultsNewRoute: typeof AuthenticatedVaultsNewRoute
+  AuthenticatedVaultsIndexRoute: typeof AuthenticatedVaultsIndexRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
@@ -4797,6 +4937,9 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedVaultRoute: AuthenticatedVaultRoute,
   AuthenticatedVisualReviewRoute: AuthenticatedVisualReviewRoute,
   AuthenticatedWorkspaceRoute: AuthenticatedWorkspaceRouteWithChildren,
+  AuthenticatedVaultsVaultIdRoute: AuthenticatedVaultsVaultIdRouteWithChildren,
+  AuthenticatedVaultsNewRoute: AuthenticatedVaultsNewRoute,
+  AuthenticatedVaultsIndexRoute: AuthenticatedVaultsIndexRoute,
 }
 
 const AuthenticatedRouteRouteWithChildren =
