@@ -135,6 +135,21 @@ function FutureVaultsPage() {
           </p>
         </header>
 
+        {/* FRASS-0610 — ideas are not ownership. */}
+        <div className="mt-6 rounded-3xl border border-[color:var(--gold)]/40 bg-black/25 p-5">
+          <p className="text-sm">
+            Everything on this page is a <strong>suggestion</strong>. A workspace you actually own —
+            with your own clients, work, dates and money in it — is a Vault.
+          </p>
+          <Link
+            to="/vaults"
+            className="mt-3 inline-block rounded-sm border border-[color:var(--gold)] px-5 py-2.5 text-[11px] uppercase tracking-[0.28em] text-[color:var(--gold)]"
+          >
+            Go to My Vaults
+          </Link>
+        </div>
+
+
         {/* What is actually getting attention today */}
         <section className="mt-8 rounded-3xl border border-white/12 bg-white/[0.03] p-5">
           <h2 className="font-display text-lg uppercase tracking-[0.06em]">Getting all the attention right now</h2>
