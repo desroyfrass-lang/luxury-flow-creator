@@ -4,7 +4,7 @@ import { useServerFn } from "@tanstack/react-start";
 import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { SiteShell } from "@/components/site-shell";
-import { getVault, listMyVaults } from "@/lib/vault-engine/vaults.functions";
+import { getVault, listMyVaults, type VaultRow } from "@/lib/vault-engine/vaults.functions";
 import { categoryMeta, moduleById } from "@/lib/vault-engine/registry";
 import { setActiveVaultId } from "@/lib/vault-engine/active-vault";
 
@@ -34,10 +34,12 @@ function VaultShell() {
     queryFn: () => fetchVault({ data: { vaultId } }),
   });
   const others = useQuery({ queryKey: ["my-vaults"], queryFn: () => listVaults(), enabled: switcher });
+  const shell = data as { vault: VaultRow; role: string } | null | undefined;
+  const otherVaults = (others.data ?? []) as VaultRow[];
 
   useEffect(() => {
-    if (data?.vault) setActiveVaultId(data.vault.id);
-  }, [data]);
+    if (shell?.vault) setActiveVaultId(shell.vault.id);
+  }, [shell]);
 
   if (isLoading) {
     return (
@@ -49,7 +51,7 @@ function VaultShell() {
     );
   }
 
-  if (!data?.vault) {
+  if (!shell?.vault) {
     return (
       <SiteShell>
         <div className="mx-auto max-w-3xl px-6 py-24">
@@ -66,9 +68,9 @@ function VaultShell() {
     );
   }
 
-  const vault = data.vault;
+  const vault = shell.vault;
   const meta = categoryMeta(vault.category);
-  const sections = vault.enabled_modules.filter((m) => !vault.hidden_modules.includes(m));
+  const sections = vault.enabled_modules.filter((m: string) => !vault.hidden_modules.includes(m));
 
   return (
     <SiteShell>
@@ -107,7 +109,7 @@ function VaultShell() {
 
           {switcher && (
             <div className="mt-5 grid gap-2 border-t border-border/60 pt-5">
-              {(others.data ?? []).map((v) => (
+              {otherVaults.map((v) => (
                 <button
                   key={v.id}
                   type="button"
@@ -134,7 +136,7 @@ function VaultShell() {
           )}
 
           <nav className="mt-6 flex flex-wrap gap-2 border-t border-border/60 pt-5">
-            {sections.map((id) => {
+            {sections.map((id: string) => {
               const m = moduleById(id);
               if (!m) return null;
               return m.id === "home" ? (

@@ -9,6 +9,7 @@ import {
   updateVaultModules,
   updateVaultDetails,
   deleteVault,
+  type VaultRow,
 } from "@/lib/vault-engine/vaults.functions";
 import { modulesFor } from "@/lib/vault-engine/registry";
 import { setActiveVaultId } from "@/lib/vault-engine/active-vault";
@@ -38,7 +39,7 @@ function CustomizeVault() {
   const [confirm, setConfirm] = useState("");
 
   useEffect(() => {
-    const v = data?.vault;
+    const v = (data as { vault: VaultRow } | null | undefined)?.vault;
     if (!v) return;
     setEnabled(v.enabled_modules);
     setHidden(v.hidden_modules);
@@ -90,9 +91,9 @@ function CustomizeVault() {
     onError: (e: Error) => toast.error(e.message),
   });
 
-  const vault = data?.vault;
+  const vault = (data as { vault: VaultRow; role: string } | null | undefined)?.vault;
   const available = modulesFor(vault?.category ?? "business");
-  const isOwner = data?.role === "owner";
+  const isOwner = (data as { role?: string } | null | undefined)?.role === "owner";
 
   return (
     <div className="mt-8 grid gap-8">

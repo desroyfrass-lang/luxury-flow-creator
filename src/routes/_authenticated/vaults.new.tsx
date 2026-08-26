@@ -21,6 +21,7 @@ import {
   saveSetupAnswers,
   activateVault,
   getVault,
+  type VaultRow,
 } from "@/lib/vault-engine/vaults.functions";
 import { setActiveVaultId } from "@/lib/vault-engine/active-vault";
 
@@ -65,7 +66,7 @@ function NewVaultPage() {
   });
 
   useEffect(() => {
-    const v = resumed.data?.vault;
+    const v = (resumed.data as { vault: VaultRow } | null | undefined)?.vault;
     if (!v) return;
     setVaultId(v.id);
     setCategory(v.category);
@@ -108,9 +109,9 @@ function NewVaultPage() {
     if (question.id === "name" && !vaultId) {
       try {
         setBusy(true);
-        const row = await make({
+        const row = (await make({
           data: { name: String(value), category, subtype: subtype || undefined },
-        });
+        })) as VaultRow;
         setVaultId(row.id);
         setActiveVaultId(row.id);
       } catch (e) {

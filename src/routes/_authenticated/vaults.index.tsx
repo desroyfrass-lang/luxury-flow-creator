@@ -4,7 +4,7 @@ import { useServerFn } from "@tanstack/react-start";
 import { useQuery } from "@tanstack/react-query";
 import { useEffect } from "react";
 import { SiteShell } from "@/components/site-shell";
-import { listMyVaults } from "@/lib/vault-engine/vaults.functions";
+import { listMyVaults, type VaultRow } from "@/lib/vault-engine/vaults.functions";
 import { categoryMeta, subtypeName } from "@/lib/vault-engine/registry";
 import { getActiveVaultId, setActiveVaultId } from "@/lib/vault-engine/active-vault";
 
@@ -27,7 +27,7 @@ function MyVaultsPage() {
   const load = useServerFn(listMyVaults);
   const navigate = useNavigate();
   const { data, isLoading, error } = useQuery({ queryKey: ["my-vaults"], queryFn: () => load() });
-  const vaults = data ?? [];
+  const vaults = (data ?? []) as VaultRow[];
   const active = getActiveVaultId();
 
   useEffect(() => {

@@ -2,7 +2,14 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { useQuery } from "@tanstack/react-query";
-import { getVault, listVaultRecords, listVaultActivity } from "@/lib/vault-engine/vaults.functions";
+import {
+  getVault,
+  listVaultRecords,
+  listVaultActivity,
+  type VaultRow,
+  type VaultRecordRow,
+  type VaultActivityRow,
+} from "@/lib/vault-engine/vaults.functions";
 import { moduleById } from "@/lib/vault-engine/registry";
 
 export const Route = createFileRoute("/_authenticated/vaults/$vaultId/")({
@@ -20,20 +27,20 @@ function VaultHome() {
     queryKey: ["vault-records", vaultId],
     queryFn: () => records({ data: { vaultId } }),
   });
-  const a = useQuery({
+  const a = useQuery<VaultActivityRow[]>({
     queryKey: ["vault-activity", vaultId],
     queryFn: () => activity({ data: { vaultId } }),
   });
 
-  const vault = v.data?.vault;
-  const rows = (r.data ?? []).filter((x) => !x.archived_at);
+  const vault = (v.data as { vault: VaultRow } | null | undefined)?.vault;
+  const rows = ((r.data ?? []) as VaultRecordRow[]).filter((x) => !x.archived_at);
   const openTasks = rows.filter((x) => x.module_id === "tasks" && x.status !== "done");
   const upcoming = rows
     .filter((x) => x.due_at && new Date(x.due_at).getTime() >= Date.now() - 86400000)
     .sort((x, y) => (x.due_at ?? "").localeCompare(y.due_at ?? ""))
     .slice(0, 5);
   const goals = rows.filter((x) => x.module_id === "goals").slice(0, 3);
-  const sections = (vault?.enabled_modules ?? []).filter(
+  const sections = ((vault?.enabled_modules ?? []) as string[]).filter(
     (m) => m !== "home" && !(vault?.hidden_modules ?? []).includes(m),
   );
 

@@ -10,6 +10,7 @@ import {
   createVaultRecord,
   updateVaultRecord,
   deleteVaultRecord,
+  type VaultRecordRow,
 } from "@/lib/vault-engine/vaults.functions";
 import { moduleById } from "@/lib/vault-engine/registry";
 
@@ -91,7 +92,7 @@ function ModuleWorkspace() {
     );
   }
 
-  const rows = (data ?? []).filter((r) => Boolean(r.archived_at) === showArchived);
+  const rows = ((data ?? []) as VaultRecordRow[]).filter((r) => Boolean(r.archived_at) === showArchived);
   const wantsDate = mod.shape === "dated" || mod.shape === "tasks";
   const wantsAmount = mod.shape === "money";
 
