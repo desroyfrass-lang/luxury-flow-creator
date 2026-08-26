@@ -161,6 +161,7 @@ import { Route as FrassDripWomenIndexRouteImport } from './routes/frass-drip.wom
 import { Route as FrassDripMenIndexRouteImport } from './routes/frass-drip.men.index'
 import { Route as BareDripWomenIndexRouteImport } from './routes/bare-drip.women.index'
 import { Route as BareDripMenIndexRouteImport } from './routes/bare-drip.men.index'
+import { Route as AuthenticatedVaultsIndexRouteImport } from './routes/_authenticated/vaults.index'
 import { Route as AuthenticatedStudiosIndexRouteImport } from './routes/_authenticated/studios.index'
 import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated/admin.index'
 import { Route as SocialMediaViralsCategorySubRouteImport } from './routes/social-media-virals.$category.$sub'
@@ -1020,6 +1021,12 @@ const BareDripMenIndexRoute = BareDripMenIndexRouteImport.update({
   path: '/',
   getParentRoute: () => BareDripMenRoute,
 } as any)
+const AuthenticatedVaultsIndexRoute =
+  AuthenticatedVaultsIndexRouteImport.update({
+    id: '/vaults/',
+    path: '/vaults/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedStudiosIndexRoute =
   AuthenticatedStudiosIndexRouteImport.update({
     id: '/',
@@ -1710,6 +1717,7 @@ export interface FileRoutesByFullPath {
   '/social-media-virals/$category/$sub': typeof SocialMediaViralsCategorySubRouteWithChildren
   '/admin/': typeof AuthenticatedAdminIndexRoute
   '/studios/': typeof AuthenticatedStudiosIndexRoute
+  '/vaults/': typeof AuthenticatedVaultsIndexRoute
   '/bare-drip/men/': typeof BareDripMenIndexRoute
   '/bare-drip/women/': typeof BareDripWomenIndexRoute
   '/frass-drip/men/': typeof FrassDripMenIndexRoute
@@ -1922,6 +1930,7 @@ export interface FileRoutesByTo {
   '/social-media-virals/$category/$sub': typeof SocialMediaViralsCategorySubRouteWithChildren
   '/admin': typeof AuthenticatedAdminIndexRoute
   '/studios': typeof AuthenticatedStudiosIndexRoute
+  '/vaults': typeof AuthenticatedVaultsIndexRoute
   '/bare-drip/men': typeof BareDripMenIndexRoute
   '/bare-drip/women': typeof BareDripWomenIndexRoute
   '/frass-drip/men': typeof FrassDripMenIndexRoute
@@ -2159,6 +2168,7 @@ export interface FileRoutesById {
   '/social-media-virals/$category/$sub': typeof SocialMediaViralsCategorySubRouteWithChildren
   '/_authenticated/admin/': typeof AuthenticatedAdminIndexRoute
   '/_authenticated/studios/': typeof AuthenticatedStudiosIndexRoute
+  '/_authenticated/vaults/': typeof AuthenticatedVaultsIndexRoute
   '/bare-drip/men/': typeof BareDripMenIndexRoute
   '/bare-drip/women/': typeof BareDripWomenIndexRoute
   '/frass-drip/men/': typeof FrassDripMenIndexRoute
@@ -2396,6 +2406,7 @@ export interface FileRouteTypes {
     | '/social-media-virals/$category/$sub'
     | '/admin/'
     | '/studios/'
+    | '/vaults/'
     | '/bare-drip/men/'
     | '/bare-drip/women/'
     | '/frass-drip/men/'
@@ -2608,6 +2619,7 @@ export interface FileRouteTypes {
     | '/social-media-virals/$category/$sub'
     | '/admin'
     | '/studios'
+    | '/vaults'
     | '/bare-drip/men'
     | '/bare-drip/women'
     | '/frass-drip/men'
@@ -2844,6 +2856,7 @@ export interface FileRouteTypes {
     | '/social-media-virals/$category/$sub'
     | '/_authenticated/admin/'
     | '/_authenticated/studios/'
+    | '/_authenticated/vaults/'
     | '/bare-drip/men/'
     | '/bare-drip/women/'
     | '/frass-drip/men/'
@@ -4005,6 +4018,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BareDripMenIndexRouteImport
       parentRoute: typeof BareDripMenRoute
     }
+    '/_authenticated/vaults/': {
+      id: '/_authenticated/vaults/'
+      path: '/vaults'
+      fullPath: '/vaults/'
+      preLoaderRoute: typeof AuthenticatedVaultsIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/studios/': {
       id: '/_authenticated/studios/'
       path: '/'
@@ -4763,6 +4783,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedVaultRoute: typeof AuthenticatedVaultRoute
   AuthenticatedVisualReviewRoute: typeof AuthenticatedVisualReviewRoute
   AuthenticatedWorkspaceRoute: typeof AuthenticatedWorkspaceRouteWithChildren
+  AuthenticatedVaultsIndexRoute: typeof AuthenticatedVaultsIndexRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
@@ -4797,6 +4818,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedVaultRoute: AuthenticatedVaultRoute,
   AuthenticatedVisualReviewRoute: AuthenticatedVisualReviewRoute,
   AuthenticatedWorkspaceRoute: AuthenticatedWorkspaceRouteWithChildren,
+  AuthenticatedVaultsIndexRoute: AuthenticatedVaultsIndexRoute,
 }
 
 const AuthenticatedRouteRouteWithChildren =
