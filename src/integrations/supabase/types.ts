@@ -8447,18 +8447,6 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      can_manage_vault: {
-        Args: { _user_id: string; _vault_id: string }
-        Returns: boolean
-      }
-      can_view_vault: {
-        Args: { _user_id: string; _vault_id: string }
-        Returns: boolean
-      }
-      can_write_vault: {
-        Args: { _user_id: string; _vault_id: string }
-        Returns: boolean
-      }
       delete_email: {
         Args: { message_id: number; queue_name: string }
         Returns: boolean
@@ -8529,10 +8517,6 @@ export type Database = {
           msg_id: number
           read_ct: number
         }[]
-      }
-      vault_role: {
-        Args: { _user_id: string; _vault_id: string }
-        Returns: string
       }
     }
     Enums: {
