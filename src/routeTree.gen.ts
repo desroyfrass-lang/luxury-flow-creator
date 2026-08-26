@@ -247,6 +247,7 @@ import { Route as FrassShapeGenderGoalsGoalRouteImport } from './routes/frass-sh
 import { Route as AuthenticatedStudiosProductionIdRouteImport } from './routes/_authenticated/studios.production.$id'
 import { Route as AuthenticatedStudiosEngineIdRouteImport } from './routes/_authenticated/studios.engine.$id'
 import { Route as AuthenticatedStudiosDistributionIdRouteImport } from './routes/_authenticated/studios.distribution.$id'
+import { Route as AuthenticatedVaultsVaultIdMModuleIdRouteImport } from './routes/_authenticated/vaults.$vaultId.m.$moduleId'
 
 const WelcomeHallRoute = WelcomeHallRouteImport.update({
   id: '/welcome-hall',
@@ -1519,6 +1520,12 @@ const AuthenticatedStudiosDistributionIdRoute =
     path: '/distribution/$id',
     getParentRoute: () => AuthenticatedStudiosRoute,
   } as any)
+const AuthenticatedVaultsVaultIdMModuleIdRoute =
+  AuthenticatedVaultsVaultIdMModuleIdRouteImport.update({
+    id: '/m/$moduleId',
+    path: '/m/$moduleId',
+    getParentRoute: () => AuthenticatedVaultsVaultIdRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -1758,6 +1765,7 @@ export interface FileRoutesByFullPath {
   '/social-media-virals/$category/$sub/$product': typeof SocialMediaViralsCategorySubProductRoute
   '/studios/distribution/': typeof AuthenticatedStudiosDistributionIndexRoute
   '/vaults/$vaultId/': typeof AuthenticatedVaultsVaultIdIndexRoute
+  '/vaults/$vaultId/m/$moduleId': typeof AuthenticatedVaultsVaultIdMModuleIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -1973,6 +1981,7 @@ export interface FileRoutesByTo {
   '/social-media-virals/$category/$sub/$product': typeof SocialMediaViralsCategorySubProductRoute
   '/studios/distribution': typeof AuthenticatedStudiosDistributionIndexRoute
   '/vaults/$vaultId': typeof AuthenticatedVaultsVaultIdIndexRoute
+  '/vaults/$vaultId/m/$moduleId': typeof AuthenticatedVaultsVaultIdMModuleIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -2214,6 +2223,7 @@ export interface FileRoutesById {
   '/social-media-virals/$category/$sub/$product': typeof SocialMediaViralsCategorySubProductRoute
   '/_authenticated/studios/distribution/': typeof AuthenticatedStudiosDistributionIndexRoute
   '/_authenticated/vaults/$vaultId/': typeof AuthenticatedVaultsVaultIdIndexRoute
+  '/_authenticated/vaults/$vaultId/m/$moduleId': typeof AuthenticatedVaultsVaultIdMModuleIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -2455,6 +2465,7 @@ export interface FileRouteTypes {
     | '/social-media-virals/$category/$sub/$product'
     | '/studios/distribution/'
     | '/vaults/$vaultId/'
+    | '/vaults/$vaultId/m/$moduleId'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -2670,6 +2681,7 @@ export interface FileRouteTypes {
     | '/social-media-virals/$category/$sub/$product'
     | '/studios/distribution'
     | '/vaults/$vaultId'
+    | '/vaults/$vaultId/m/$moduleId'
   id:
     | '__root__'
     | '/'
@@ -2910,6 +2922,7 @@ export interface FileRouteTypes {
     | '/social-media-virals/$category/$sub/$product'
     | '/_authenticated/studios/distribution/'
     | '/_authenticated/vaults/$vaultId/'
+    | '/_authenticated/vaults/$vaultId/m/$moduleId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -4656,6 +4669,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedStudiosDistributionIdRouteImport
       parentRoute: typeof AuthenticatedStudiosRoute
     }
+    '/_authenticated/vaults/$vaultId/m/$moduleId': {
+      id: '/_authenticated/vaults/$vaultId/m/$moduleId'
+      path: '/m/$moduleId'
+      fullPath: '/vaults/$vaultId/m/$moduleId'
+      preLoaderRoute: typeof AuthenticatedVaultsVaultIdMModuleIdRouteImport
+      parentRoute: typeof AuthenticatedVaultsVaultIdRoute
+    }
   }
 }
 
@@ -4810,11 +4830,14 @@ const AuthenticatedWorkspaceRouteWithChildren =
 
 interface AuthenticatedVaultsVaultIdRouteChildren {
   AuthenticatedVaultsVaultIdIndexRoute: typeof AuthenticatedVaultsVaultIdIndexRoute
+  AuthenticatedVaultsVaultIdMModuleIdRoute: typeof AuthenticatedVaultsVaultIdMModuleIdRoute
 }
 
 const AuthenticatedVaultsVaultIdRouteChildren: AuthenticatedVaultsVaultIdRouteChildren =
   {
     AuthenticatedVaultsVaultIdIndexRoute: AuthenticatedVaultsVaultIdIndexRoute,
+    AuthenticatedVaultsVaultIdMModuleIdRoute:
+      AuthenticatedVaultsVaultIdMModuleIdRoute,
   }
 
 const AuthenticatedVaultsVaultIdRouteWithChildren =
