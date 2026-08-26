@@ -237,6 +237,7 @@ import { Route as AuthenticatedAdminAffiliatePolicyRouteImport } from './routes/
 import { Route as AuthenticatedAdminActivitiesRouteImport } from './routes/_authenticated/admin.activities'
 import { Route as Char91DotmcpChar93InvokeToolToolRouteImport } from './routes/[.mcp]/invoke-tool/$tool'
 import { Route as DotlovableOauthConsentRouteImport } from './routes/[.]lovable.oauth.consent'
+import { Route as AuthenticatedVaultsVaultIdIndexRouteImport } from './routes/_authenticated/vaults.$vaultId.index'
 import { Route as AuthenticatedStudiosDistributionIndexRouteImport } from './routes/_authenticated/studios.distribution.index'
 import { Route as SocialMediaViralsCategorySubProductRouteImport } from './routes/social-media-virals.$category.$sub.$product'
 import { Route as LovableEmailQueueProcessRouteImport } from './routes/lovable/email/queue/process'
@@ -1460,6 +1461,12 @@ const DotlovableOauthConsentRoute = DotlovableOauthConsentRouteImport.update({
   path: '/.lovable/oauth/consent',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedVaultsVaultIdIndexRoute =
+  AuthenticatedVaultsVaultIdIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => AuthenticatedVaultsVaultIdRoute,
+  } as any)
 const AuthenticatedStudiosDistributionIndexRoute =
   AuthenticatedStudiosDistributionIndexRouteImport.update({
     id: '/distribution/',
@@ -1700,7 +1707,7 @@ export interface FileRoutesByFullPath {
   '/studios/settings': typeof AuthenticatedStudiosSettingsRoute
   '/studios/usage': typeof AuthenticatedStudiosUsageRoute
   '/studios/voices': typeof AuthenticatedStudiosVoicesRoute
-  '/vaults/$vaultId': typeof AuthenticatedVaultsVaultIdRoute
+  '/vaults/$vaultId': typeof AuthenticatedVaultsVaultIdRouteWithChildren
   '/vaults/new': typeof AuthenticatedVaultsNewRoute
   '/workspace/affiliate': typeof AuthenticatedWorkspaceAffiliateRoute
   '/workspace/card': typeof AuthenticatedWorkspaceCardRoute
@@ -1750,6 +1757,7 @@ export interface FileRoutesByFullPath {
   '/lovable/email/queue/process': typeof LovableEmailQueueProcessRoute
   '/social-media-virals/$category/$sub/$product': typeof SocialMediaViralsCategorySubProductRoute
   '/studios/distribution/': typeof AuthenticatedStudiosDistributionIndexRoute
+  '/vaults/$vaultId/': typeof AuthenticatedVaultsVaultIdIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -1915,7 +1923,6 @@ export interface FileRoutesByTo {
   '/studios/settings': typeof AuthenticatedStudiosSettingsRoute
   '/studios/usage': typeof AuthenticatedStudiosUsageRoute
   '/studios/voices': typeof AuthenticatedStudiosVoicesRoute
-  '/vaults/$vaultId': typeof AuthenticatedVaultsVaultIdRoute
   '/vaults/new': typeof AuthenticatedVaultsNewRoute
   '/workspace/affiliate': typeof AuthenticatedWorkspaceAffiliateRoute
   '/workspace/card': typeof AuthenticatedWorkspaceCardRoute
@@ -1965,6 +1972,7 @@ export interface FileRoutesByTo {
   '/lovable/email/queue/process': typeof LovableEmailQueueProcessRoute
   '/social-media-virals/$category/$sub/$product': typeof SocialMediaViralsCategorySubProductRoute
   '/studios/distribution': typeof AuthenticatedStudiosDistributionIndexRoute
+  '/vaults/$vaultId': typeof AuthenticatedVaultsVaultIdIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -2155,7 +2163,7 @@ export interface FileRoutesById {
   '/_authenticated/studios/settings': typeof AuthenticatedStudiosSettingsRoute
   '/_authenticated/studios/usage': typeof AuthenticatedStudiosUsageRoute
   '/_authenticated/studios/voices': typeof AuthenticatedStudiosVoicesRoute
-  '/_authenticated/vaults/$vaultId': typeof AuthenticatedVaultsVaultIdRoute
+  '/_authenticated/vaults/$vaultId': typeof AuthenticatedVaultsVaultIdRouteWithChildren
   '/_authenticated/vaults/new': typeof AuthenticatedVaultsNewRoute
   '/_authenticated/workspace/affiliate': typeof AuthenticatedWorkspaceAffiliateRoute
   '/_authenticated/workspace/card': typeof AuthenticatedWorkspaceCardRoute
@@ -2205,6 +2213,7 @@ export interface FileRoutesById {
   '/lovable/email/queue/process': typeof LovableEmailQueueProcessRoute
   '/social-media-virals/$category/$sub/$product': typeof SocialMediaViralsCategorySubProductRoute
   '/_authenticated/studios/distribution/': typeof AuthenticatedStudiosDistributionIndexRoute
+  '/_authenticated/vaults/$vaultId/': typeof AuthenticatedVaultsVaultIdIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -2445,6 +2454,7 @@ export interface FileRouteTypes {
     | '/lovable/email/queue/process'
     | '/social-media-virals/$category/$sub/$product'
     | '/studios/distribution/'
+    | '/vaults/$vaultId/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -2610,7 +2620,6 @@ export interface FileRouteTypes {
     | '/studios/settings'
     | '/studios/usage'
     | '/studios/voices'
-    | '/vaults/$vaultId'
     | '/vaults/new'
     | '/workspace/affiliate'
     | '/workspace/card'
@@ -2660,6 +2669,7 @@ export interface FileRouteTypes {
     | '/lovable/email/queue/process'
     | '/social-media-virals/$category/$sub/$product'
     | '/studios/distribution'
+    | '/vaults/$vaultId'
   id:
     | '__root__'
     | '/'
@@ -2899,6 +2909,7 @@ export interface FileRouteTypes {
     | '/lovable/email/queue/process'
     | '/social-media-virals/$category/$sub/$product'
     | '/_authenticated/studios/distribution/'
+    | '/_authenticated/vaults/$vaultId/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -4575,6 +4586,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DotlovableOauthConsentRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated/vaults/$vaultId/': {
+      id: '/_authenticated/vaults/$vaultId/'
+      path: '/'
+      fullPath: '/vaults/$vaultId/'
+      preLoaderRoute: typeof AuthenticatedVaultsVaultIdIndexRouteImport
+      parentRoute: typeof AuthenticatedVaultsVaultIdRoute
+    }
     '/_authenticated/studios/distribution/': {
       id: '/_authenticated/studios/distribution/'
       path: '/distribution'
@@ -4790,6 +4808,20 @@ const AuthenticatedWorkspaceRouteWithChildren =
     AuthenticatedWorkspaceRouteChildren,
   )
 
+interface AuthenticatedVaultsVaultIdRouteChildren {
+  AuthenticatedVaultsVaultIdIndexRoute: typeof AuthenticatedVaultsVaultIdIndexRoute
+}
+
+const AuthenticatedVaultsVaultIdRouteChildren: AuthenticatedVaultsVaultIdRouteChildren =
+  {
+    AuthenticatedVaultsVaultIdIndexRoute: AuthenticatedVaultsVaultIdIndexRoute,
+  }
+
+const AuthenticatedVaultsVaultIdRouteWithChildren =
+  AuthenticatedVaultsVaultIdRoute._addFileChildren(
+    AuthenticatedVaultsVaultIdRouteChildren,
+  )
+
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedAcademyRoute: typeof AuthenticatedAcademyRoute
   AuthenticatedAdminRoute: typeof AuthenticatedAdminRouteWithChildren
@@ -4822,7 +4854,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedVaultRoute: typeof AuthenticatedVaultRoute
   AuthenticatedVisualReviewRoute: typeof AuthenticatedVisualReviewRoute
   AuthenticatedWorkspaceRoute: typeof AuthenticatedWorkspaceRouteWithChildren
-  AuthenticatedVaultsVaultIdRoute: typeof AuthenticatedVaultsVaultIdRoute
+  AuthenticatedVaultsVaultIdRoute: typeof AuthenticatedVaultsVaultIdRouteWithChildren
   AuthenticatedVaultsNewRoute: typeof AuthenticatedVaultsNewRoute
   AuthenticatedVaultsIndexRoute: typeof AuthenticatedVaultsIndexRoute
 }
@@ -4859,7 +4891,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedVaultRoute: AuthenticatedVaultRoute,
   AuthenticatedVisualReviewRoute: AuthenticatedVisualReviewRoute,
   AuthenticatedWorkspaceRoute: AuthenticatedWorkspaceRouteWithChildren,
-  AuthenticatedVaultsVaultIdRoute: AuthenticatedVaultsVaultIdRoute,
+  AuthenticatedVaultsVaultIdRoute: AuthenticatedVaultsVaultIdRouteWithChildren,
   AuthenticatedVaultsNewRoute: AuthenticatedVaultsNewRoute,
   AuthenticatedVaultsIndexRoute: AuthenticatedVaultsIndexRoute,
 }
