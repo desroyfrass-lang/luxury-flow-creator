@@ -7941,6 +7941,41 @@ export type Database = {
         }
         Relationships: []
       }
+      vault_activity: {
+        Row: {
+          actor_id: string | null
+          created_at: string
+          id: string
+          kind: string
+          summary: string
+          vault_id: string
+        }
+        Insert: {
+          actor_id?: string | null
+          created_at?: string
+          id?: string
+          kind: string
+          summary: string
+          vault_id: string
+        }
+        Update: {
+          actor_id?: string | null
+          created_at?: string
+          id?: string
+          kind?: string
+          summary?: string
+          vault_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "vault_activity_vault_id_fkey"
+            columns: ["vault_id"]
+            isOneToOne: false
+            referencedRelation: "vaults"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       vault_items: {
         Row: {
           archived_at: string | null
@@ -7983,6 +8018,151 @@ export type Database = {
           updated_at?: string
           url?: string | null
           user_id?: string
+        }
+        Relationships: []
+      }
+      vault_members: {
+        Row: {
+          created_at: string
+          id: string
+          role: string
+          updated_at: string
+          user_id: string
+          vault_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          role?: string
+          updated_at?: string
+          user_id: string
+          vault_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          role?: string
+          updated_at?: string
+          user_id?: string
+          vault_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "vault_members_vault_id_fkey"
+            columns: ["vault_id"]
+            isOneToOne: false
+            referencedRelation: "vaults"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      vault_records: {
+        Row: {
+          amount: number | null
+          archived_at: string | null
+          body: string | null
+          created_at: string
+          created_by: string
+          data: Json
+          due_at: string | null
+          id: string
+          module_id: string
+          status: string
+          title: string
+          updated_at: string
+          vault_id: string
+        }
+        Insert: {
+          amount?: number | null
+          archived_at?: string | null
+          body?: string | null
+          created_at?: string
+          created_by: string
+          data?: Json
+          due_at?: string | null
+          id?: string
+          module_id: string
+          status?: string
+          title: string
+          updated_at?: string
+          vault_id: string
+        }
+        Update: {
+          amount?: number | null
+          archived_at?: string | null
+          body?: string | null
+          created_at?: string
+          created_by?: string
+          data?: Json
+          due_at?: string | null
+          id?: string
+          module_id?: string
+          status?: string
+          title?: string
+          updated_at?: string
+          vault_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "vault_records_vault_id_fkey"
+            columns: ["vault_id"]
+            isOneToOne: false
+            referencedRelation: "vaults"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      vaults: {
+        Row: {
+          category: string
+          created_at: string
+          description: string | null
+          enabled_modules: string[]
+          hidden_modules: string[]
+          id: string
+          last_activity_at: string
+          name: string
+          owner_id: string
+          settings: Json
+          setup_answers: Json
+          setup_step: string
+          status: string
+          subtype: string | null
+          updated_at: string
+        }
+        Insert: {
+          category: string
+          created_at?: string
+          description?: string | null
+          enabled_modules?: string[]
+          hidden_modules?: string[]
+          id?: string
+          last_activity_at?: string
+          name: string
+          owner_id: string
+          settings?: Json
+          setup_answers?: Json
+          setup_step?: string
+          status?: string
+          subtype?: string | null
+          updated_at?: string
+        }
+        Update: {
+          category?: string
+          created_at?: string
+          description?: string | null
+          enabled_modules?: string[]
+          hidden_modules?: string[]
+          id?: string
+          last_activity_at?: string
+          name?: string
+          owner_id?: string
+          settings?: Json
+          setup_answers?: Json
+          setup_step?: string
+          status?: string
+          subtype?: string | null
+          updated_at?: string
         }
         Relationships: []
       }
@@ -8267,6 +8447,18 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      can_manage_vault: {
+        Args: { _user_id: string; _vault_id: string }
+        Returns: boolean
+      }
+      can_view_vault: {
+        Args: { _user_id: string; _vault_id: string }
+        Returns: boolean
+      }
+      can_write_vault: {
+        Args: { _user_id: string; _vault_id: string }
+        Returns: boolean
+      }
       delete_email: {
         Args: { message_id: number; queue_name: string }
         Returns: boolean
@@ -8337,6 +8529,10 @@ export type Database = {
           msg_id: number
           read_ct: number
         }[]
+      }
+      vault_role: {
+        Args: { _user_id: string; _vault_id: string }
+        Returns: string
       }
     }
     Enums: {
