@@ -57,6 +57,7 @@ const PLACES: NavigationPlace[] = [
   { match: "/frass-district", label: "Frass District", hall: "Frass District", hallPath: "/frass-district", parent: "/welcome-hall", audience: "PUBLIC" },
   { match: "/health-wellness", label: "Health & Wellness", hall: "Frass Hill", hallPath: "/frass-hill", parent: "/frass-hill", audience: "PUBLIC" },
   { match: "/financial-center", label: "Financial Center", hall: "Builders Village", hallPath: "/room", parent: "/room", audience: "MEMBER" },
+  { match: "/vaults", label: "My Vaults", hall: "Builders Village", hallPath: "/room", parent: "/room", audience: "MEMBER" },
   { match: "/vault", label: "Builder Vault", hall: "Builders Village", hallPath: "/room", parent: "/room", audience: "MEMBER" },
 ];
 
