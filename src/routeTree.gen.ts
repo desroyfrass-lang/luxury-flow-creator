@@ -193,6 +193,7 @@ import { Route as AuthenticatedWorkspaceDailyDesignRouteImport } from './routes/
 import { Route as AuthenticatedWorkspaceCardRouteImport } from './routes/_authenticated/workspace.card'
 import { Route as AuthenticatedWorkspaceAffiliateRouteImport } from './routes/_authenticated/workspace.affiliate'
 import { Route as AuthenticatedVaultsNewRouteImport } from './routes/_authenticated/vaults.new'
+import { Route as AuthenticatedVaultsVaultIdRouteImport } from './routes/_authenticated/vaults.$vaultId'
 import { Route as AuthenticatedStudiosVoicesRouteImport } from './routes/_authenticated/studios.voices'
 import { Route as AuthenticatedStudiosUsageRouteImport } from './routes/_authenticated/studios.usage'
 import { Route as AuthenticatedStudiosSettingsRouteImport } from './routes/_authenticated/studios.settings'
@@ -1202,6 +1203,12 @@ const AuthenticatedVaultsNewRoute = AuthenticatedVaultsNewRouteImport.update({
   path: '/vaults/new',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedVaultsVaultIdRoute =
+  AuthenticatedVaultsVaultIdRouteImport.update({
+    id: '/vaults/$vaultId',
+    path: '/vaults/$vaultId',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedStudiosVoicesRoute =
   AuthenticatedStudiosVoicesRouteImport.update({
     id: '/voices',
@@ -1693,6 +1700,7 @@ export interface FileRoutesByFullPath {
   '/studios/settings': typeof AuthenticatedStudiosSettingsRoute
   '/studios/usage': typeof AuthenticatedStudiosUsageRoute
   '/studios/voices': typeof AuthenticatedStudiosVoicesRoute
+  '/vaults/$vaultId': typeof AuthenticatedVaultsVaultIdRoute
   '/vaults/new': typeof AuthenticatedVaultsNewRoute
   '/workspace/affiliate': typeof AuthenticatedWorkspaceAffiliateRoute
   '/workspace/card': typeof AuthenticatedWorkspaceCardRoute
@@ -1907,6 +1915,7 @@ export interface FileRoutesByTo {
   '/studios/settings': typeof AuthenticatedStudiosSettingsRoute
   '/studios/usage': typeof AuthenticatedStudiosUsageRoute
   '/studios/voices': typeof AuthenticatedStudiosVoicesRoute
+  '/vaults/$vaultId': typeof AuthenticatedVaultsVaultIdRoute
   '/vaults/new': typeof AuthenticatedVaultsNewRoute
   '/workspace/affiliate': typeof AuthenticatedWorkspaceAffiliateRoute
   '/workspace/card': typeof AuthenticatedWorkspaceCardRoute
@@ -2146,6 +2155,7 @@ export interface FileRoutesById {
   '/_authenticated/studios/settings': typeof AuthenticatedStudiosSettingsRoute
   '/_authenticated/studios/usage': typeof AuthenticatedStudiosUsageRoute
   '/_authenticated/studios/voices': typeof AuthenticatedStudiosVoicesRoute
+  '/_authenticated/vaults/$vaultId': typeof AuthenticatedVaultsVaultIdRoute
   '/_authenticated/vaults/new': typeof AuthenticatedVaultsNewRoute
   '/_authenticated/workspace/affiliate': typeof AuthenticatedWorkspaceAffiliateRoute
   '/_authenticated/workspace/card': typeof AuthenticatedWorkspaceCardRoute
@@ -2385,6 +2395,7 @@ export interface FileRouteTypes {
     | '/studios/settings'
     | '/studios/usage'
     | '/studios/voices'
+    | '/vaults/$vaultId'
     | '/vaults/new'
     | '/workspace/affiliate'
     | '/workspace/card'
@@ -2599,6 +2610,7 @@ export interface FileRouteTypes {
     | '/studios/settings'
     | '/studios/usage'
     | '/studios/voices'
+    | '/vaults/$vaultId'
     | '/vaults/new'
     | '/workspace/affiliate'
     | '/workspace/card'
@@ -2837,6 +2849,7 @@ export interface FileRouteTypes {
     | '/_authenticated/studios/settings'
     | '/_authenticated/studios/usage'
     | '/_authenticated/studios/voices'
+    | '/_authenticated/vaults/$vaultId'
     | '/_authenticated/vaults/new'
     | '/_authenticated/workspace/affiliate'
     | '/_authenticated/workspace/card'
@@ -4254,6 +4267,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedVaultsNewRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/vaults/$vaultId': {
+      id: '/_authenticated/vaults/$vaultId'
+      path: '/vaults/$vaultId'
+      fullPath: '/vaults/$vaultId'
+      preLoaderRoute: typeof AuthenticatedVaultsVaultIdRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/studios/voices': {
       id: '/_authenticated/studios/voices'
       path: '/voices'
@@ -4802,6 +4822,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedVaultRoute: typeof AuthenticatedVaultRoute
   AuthenticatedVisualReviewRoute: typeof AuthenticatedVisualReviewRoute
   AuthenticatedWorkspaceRoute: typeof AuthenticatedWorkspaceRouteWithChildren
+  AuthenticatedVaultsVaultIdRoute: typeof AuthenticatedVaultsVaultIdRoute
   AuthenticatedVaultsNewRoute: typeof AuthenticatedVaultsNewRoute
   AuthenticatedVaultsIndexRoute: typeof AuthenticatedVaultsIndexRoute
 }
@@ -4838,6 +4859,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedVaultRoute: AuthenticatedVaultRoute,
   AuthenticatedVisualReviewRoute: AuthenticatedVisualReviewRoute,
   AuthenticatedWorkspaceRoute: AuthenticatedWorkspaceRouteWithChildren,
+  AuthenticatedVaultsVaultIdRoute: AuthenticatedVaultsVaultIdRoute,
   AuthenticatedVaultsNewRoute: AuthenticatedVaultsNewRoute,
   AuthenticatedVaultsIndexRoute: AuthenticatedVaultsIndexRoute,
 }
