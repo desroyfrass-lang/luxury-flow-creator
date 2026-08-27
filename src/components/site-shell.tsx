@@ -16,6 +16,13 @@ import { openTheDaily } from "@/components/workspace/daily-gate";
 import { ForUsLink } from "@/components/for-us-link";
 
 import { useCartSync } from "@/hooks/use-cart-sync";
+import {
+  activeGlobal,
+  areaNavFor,
+  globalNavFor,
+  type NavNode,
+} from "@/lib/navigation/hierarchy";
+
 import { useSiteText } from "@/hooks/use-site-text";
 import { useIsAdmin } from "@/hooks/use-is-admin";
 import { useWorkspaceRoles } from "@/hooks/use-workspace-roles";
