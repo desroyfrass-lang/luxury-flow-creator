@@ -16,6 +16,8 @@ import { openTheDaily } from "@/components/workspace/daily-gate";
 import { ForUsLink } from "@/components/for-us-link";
 
 import { useCartSync } from "@/hooks/use-cart-sync";
+import { KidsFooter, KidsNav } from "@/components/kids-world/kids-nav";
+
 import {
   activeGlobal,
   areaNavFor,
