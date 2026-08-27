@@ -637,6 +637,22 @@ export function SiteShell({
   preHeader?: ReactNode;
 }) {
   useCartSync();
+  const path = useRouterState({ select: (r) => r.location.pathname });
+  // Kids World is a place of its own, so it wears its own chrome: a child-first
+  // header, no adult footer, no shopping fab.
+  const kids = path === "/kids-world" || path.startsWith("/kids-world/");
+
+  if (kids) {
+    return (
+      <div className="relative min-h-screen">
+        {preHeader}
+        <KidsNav />
+        <main className="relative">{children}</main>
+        <KidsFooter />
+      </div>
+    );
+  }
+
   return (
     <div className="relative min-h-screen">
       {background && <LuxuryBackground />}
@@ -648,3 +664,4 @@ export function SiteShell({
     </div>
   );
 }
+
