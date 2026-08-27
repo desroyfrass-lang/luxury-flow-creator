@@ -475,50 +475,80 @@ function MobileAccountLinks({ hasWorkspace, isAdmin }: { hasWorkspace: boolean; 
   );
 }
 
-type NavItem = { to: string; slot: string; fallback: string };
-
-function MenuLink({ item }: { item: NavItem }) {
-  const label = useSiteText(item.slot, item.fallback);
+/**
+ * FRASS-0590 — a Level 1 place on the desktop bar. Hovering or focusing it
+ * reveals what lives inside that place, so the ecosystem is discoverable
+ * without a giant flat menu.
+ */
+function GlobalNavItem({ node, active }: { node: NavNode; active: boolean }) {
+  const [open, setOpen] = useState(false);
+  const children = node.children ?? [];
   return (
-    <Link
-      to={item.to}
-      className="nav-glow block rounded-xl px-4 py-3 text-xs uppercase tracking-[0.25em] text-muted-foreground transition-colors hover:bg-foreground/5"
-      activeProps={{ className: "text-foreground bg-foreground/5" }}
+    <div
+      className="relative"
+      onMouseEnter={() => setOpen(true)}
+      onMouseLeave={() => setOpen(false)}
+      onFocus={() => setOpen(true)}
+      onBlur={(e) => {
+        if (!e.currentTarget.contains(e.relatedTarget as Node)) setOpen(false);
+      }}
     >
-      {label}
-    </Link>
-  );
-}
-
-function HeaderNavLink({ item, active }: { item: NavItem; active: boolean }) {
-  const label = useSiteText(item.slot, item.fallback);
-  return (
-    <Link
-      to={item.to}
-      className={`nav-glow relative px-4 py-2 text-xs uppercase tracking-[0.25em] transition-colors ${
-        active ? "text-foreground" : "text-muted-foreground"
-      }`}
-    >
-      {label}
-      {active && (
-        <span className="absolute left-4 right-4 -bottom-0.5 h-px bg-[color:var(--gold)]" />
+      <Link
+        to={node.path as never}
+        className={`nav-glow relative inline-block px-3 py-2 text-xs uppercase tracking-[0.22em] transition-colors ${
+          active ? "text-foreground" : "text-muted-foreground hover:text-foreground"
+        }`}
+      >
+        {node.label}
+        {active && <span className="absolute left-3 right-3 -bottom-0.5 h-px bg-[color:var(--gold)]" />}
+      </Link>
+      {open && children.length > 0 && (
+        <div className="absolute left-0 top-full z-50 w-72 rounded-2xl border border-border/70 bg-background/95 p-2 shadow-2xl backdrop-blur-xl">
+          {node.blurb && (
+            <p className="px-3 pb-2 pt-1 text-[11px] normal-case tracking-normal text-muted-foreground">
+              {node.blurb}
+            </p>
+          )}
+          {children.map((c) => (
+            <Link
+              key={c.key}
+              to={c.path as never}
+              className="block rounded-xl px-3 py-2 text-[11px] uppercase tracking-[0.18em] text-muted-foreground transition hover:bg-foreground/5 hover:text-foreground"
+            >
+              {c.label}
+            </Link>
+          ))}
+        </div>
       )}
-    </Link>
+    </div>
   );
 }
 
-function MobileNavLink({ item }: { item: NavItem }) {
-  const label = useSiteText(item.slot, item.fallback);
+/** The same registry, rendered as a grouped list inside the menu panel. */
+function MenuGroup({ node }: { node: NavNode }) {
   return (
-    <Link
-      to={item.to}
-      className="nav-glow shrink-0 whitespace-nowrap text-[10px] uppercase tracking-[0.2em] py-1 px-3 text-muted-foreground"
-      activeProps={{ className: "text-foreground" }}
-    >
-      {label}
-    </Link>
+    <div className="py-1">
+      <Link
+        to={node.path as never}
+        className="nav-glow block rounded-xl px-4 py-2.5 text-xs font-bold uppercase tracking-[0.22em] text-foreground transition-colors hover:bg-foreground/5"
+        activeProps={{ className: "bg-foreground/5" }}
+      >
+        {node.label}
+      </Link>
+      {(node.children ?? []).map((c) => (
+        <Link
+          key={c.key}
+          to={c.path as never}
+          className="block rounded-xl px-6 py-2 text-[11px] uppercase tracking-[0.18em] text-muted-foreground transition-colors hover:bg-foreground/5 hover:text-foreground"
+          activeProps={{ className: "text-foreground bg-foreground/5" }}
+        >
+          {c.label}
+        </Link>
+      ))}
+    </div>
   );
 }
+
 
 function FreeTryOnFab() {
   const path = useRouterState({ select: (r) => r.location.pathname });
