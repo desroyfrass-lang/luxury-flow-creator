@@ -24,24 +24,11 @@ import { useSecureSignOut, SignOutButton } from "@/components/secure-sign-out";
 import fullLogo from "@/assets/frass-logo-full.asset.json";
 import symbolLogo from "@/assets/frass-logo-symbol.asset.json";
 
-const NAV_ITEMS = [
-  { to: "/frass-district", slot: "nav-frass-district", fallback: "Frass District" },
-  { to: "/afro-designers", slot: "nav-afro-designers", fallback: "Afro Designers" },
-  { to: "/capsules", slot: "nav-capsules", fallback: "Lookbooks & Capsules" },
-  { to: "/social-media-virals", slot: "nav-social-virals", fallback: "Social Media Virals" },
-  { to: "/services", slot: "nav-services", fallback: "Frass Services" },
-] as const;
-
-
-const MENU_ITEMS = [
-  { to: "/welcome-hall", slot: "nav-gateway", fallback: "Welcome Hall" },
-  { to: "/frass-hill", slot: "nav-frass-world", fallback: "Enter Frass Hill" },
-  { to: "/lookbook", slot: "nav-lookbook", fallback: "Lookbook" },
-  { to: "/music-media", slot: "nav-music-media", fallback: "Music & Media" },
-  { to: "/blog", slot: "nav-blog", fallback: "Frass Blog" },
-] as const;
-
+// FRASS-0590 — the header no longer keeps its own private list of places.
+// Every item below comes from the one authoritative registry so the menus,
+// Frassy and the breadcrumb can never disagree about where a place lives.
 const ADMIN_ITEM = { to: "/admin", slot: "nav-admin", fallback: "Admin" } as const;
+
 
 const SOCIALS = [
   { href: "https://instagram.com", label: "Instagram", Icon: Instagram },
