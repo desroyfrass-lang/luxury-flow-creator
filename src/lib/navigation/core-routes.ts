@@ -1,9 +1,11 @@
-// FRASS-0513 / FRASS-0514 — Core Route Registry.
+// FRASS-0513 / FRASS-0514 / FRASS-0590 — Core Route Registry.
 //
 // Members never type URLs. Frassy, buttons and menus take them where they are
-// going. This registry is the one list of core platform destinations: it feeds
-// Frassy's navigation tool, the Welcome Hall's onboarding action, and the Core
-// Route Audit that must pass before every production publish.
+// going. This file no longer keeps its own private map of Frass Hill: it is
+// DERIVED from the one authoritative registry in `hierarchy.ts`, so Frassy can
+// never contradict the visible menus.
+
+import { allNavNodes, type NavNode } from "./hierarchy";
 
 export type CoreRoute = {
   /** Stable key used by Frassy's navigation tool. */
@@ -22,109 +24,35 @@ export type CoreRoute = {
   spoken: string[];
 };
 
-export const CORE_ROUTES: CoreRoute[] = [
-  {
-    key: "manufacturing",
-    label: "Creator Manufacturing Network",
-    path: "/manufacturing",
-    requiresAuth: true,
-    spoken: [
-      "manufacturing",
-      "manufacturing network",
-      "get my product made",
-      "find a manufacturer",
-      "make my designs",
-      "production partner",
-    ],
-  },
-  {
-    key: "welcome-hall",
-    label: "Welcome Hall",
-    path: "/welcome-hall",
-    requiresAuth: false,
-    spoken: ["welcome hall", "the front door", "arrival", "the gates"],
-  },
-  {
-    key: "onboarding",
-    label: "Onboarding with Frassy",
-    path: "/onboarding",
-    requiresAuth: true,
-    spoken: [
-      "start onboarding",
-      "begin onboarding",
-      "start my journey",
-      "get started",
-      "let's get started",
-      "sit down with frassy",
-      "builder journey",
-    ],
-  },
-  {
-    key: "room",
-    label: "My Workspace",
-    path: "/room",
-    requiresAuth: true,
-    spoken: ["my workspace", "workspace", "my room", "where i work"],
-  },
-  {
-    key: "daily",
-    label: "The Daily",
-    path: "/daily",
-    requiresAuth: true,
-    redirectsTo: "/room?daily=true",
-    spoken: ["the daily", "my day", "today", "daily briefing"],
-  },
-  {
-    key: "money-moves",
-    label: "Money Moves",
-    path: "/money-moves",
-    requiresAuth: true,
-    spoken: ["money moves", "how do i make money today", "income"],
-  },
-  {
-    key: "marketplace",
-    label: "Frass Services Marketplace",
-    path: "/frass-services",
-    requiresAuth: false,
-    spoken: ["marketplace", "frass services", "services"],
-  },
-  {
-    key: "financial-center",
-    label: "Financial Center",
-    path: "/financial-center",
-    requiresAuth: true,
-    spoken: ["financial center", "my money", "earnings", "receipts"],
-  },
-  {
-    key: "vault",
-    label: "Builder Vault",
-    path: "/vault",
-    requiresAuth: true,
-    spoken: ["vault", "builder vault", "my files", "my assets"],
-  },
-  {
-    key: "for-me",
-    label: "FOR ME",
-    path: "/for-me",
-    requiresAuth: false,
-    spoken: ["for me", "my page", "my profile page"],
-  },
-  {
-    key: "frass-card",
-    label: "My Frass Card",
-    path: "/workspace/card",
-    requiresAuth: true,
-    spoken: ["frass card", "my card", "my identity", "my storefront"],
-  },
-  {
-    key: "founder",
-    label: "Founder Control Room",
-    path: "/control-room",
-    requiresAuth: true,
-    founderOnly: true,
-    spoken: ["founder mode", "control room", "founder hall", "headquarters", "command center"],
-  },
-];
+/** Paths that deliberately land somewhere else. */
+const REDIRECTS: Record<string, string> = {
+  "/daily": "/room?daily=true",
+};
+
+function toCoreRoute(node: NavNode): CoreRoute {
+  const founderOnly = node.audience === "FOUNDER" || node.audience === "ADMIN";
+  return {
+    key: node.key,
+    label: node.label,
+    path: node.path,
+    requiresAuth: founderOnly || node.audience === "MEMBER" || node.audience === "CREATOR",
+    ...(founderOnly ? { founderOnly: true } : {}),
+    ...(REDIRECTS[node.path] ? { redirectsTo: REDIRECTS[node.path] } : {}),
+    spoken: node.spoken ?? [node.label.toLowerCase()],
+  };
+}
+
+export const CORE_ROUTES: CoreRoute[] = (() => {
+  const seen = new Set<string>();
+  const routes: CoreRoute[] = [];
+  for (const node of allNavNodes()) {
+    if (seen.has(node.key)) continue;
+    seen.add(node.key);
+    routes.push(toCoreRoute(node));
+  }
+  return routes;
+})();
+
 
 export function coreRouteByKey(key: string): CoreRoute | undefined {
   return CORE_ROUTES.find((r) => r.key === key);

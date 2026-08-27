@@ -16,6 +16,15 @@ import { openTheDaily } from "@/components/workspace/daily-gate";
 import { ForUsLink } from "@/components/for-us-link";
 
 import { useCartSync } from "@/hooks/use-cart-sync";
+import { KidsFooter, KidsNav } from "@/components/kids-world/kids-nav";
+
+import {
+  activeGlobal,
+  areaNavFor,
+  globalNavFor,
+  type NavNode,
+} from "@/lib/navigation/hierarchy";
+
 import { useSiteText } from "@/hooks/use-site-text";
 import { useIsAdmin } from "@/hooks/use-is-admin";
 import { useWorkspaceRoles } from "@/hooks/use-workspace-roles";
@@ -24,24 +33,11 @@ import { useSecureSignOut, SignOutButton } from "@/components/secure-sign-out";
 import fullLogo from "@/assets/frass-logo-full.asset.json";
 import symbolLogo from "@/assets/frass-logo-symbol.asset.json";
 
-const NAV_ITEMS = [
-  { to: "/frass-district", slot: "nav-frass-district", fallback: "Frass District" },
-  { to: "/afro-designers", slot: "nav-afro-designers", fallback: "Afro Designers" },
-  { to: "/capsules", slot: "nav-capsules", fallback: "Lookbooks & Capsules" },
-  { to: "/social-media-virals", slot: "nav-social-virals", fallback: "Social Media Virals" },
-  { to: "/services", slot: "nav-services", fallback: "Frass Services" },
-] as const;
-
-
-const MENU_ITEMS = [
-  { to: "/welcome-hall", slot: "nav-gateway", fallback: "Welcome Hall" },
-  { to: "/frass-hill", slot: "nav-frass-world", fallback: "Enter Frass Hill" },
-  { to: "/lookbook", slot: "nav-lookbook", fallback: "Lookbook" },
-  { to: "/music-media", slot: "nav-music-media", fallback: "Music & Media" },
-  { to: "/blog", slot: "nav-blog", fallback: "Frass Blog" },
-] as const;
-
+// FRASS-0590 — the header no longer keeps its own private list of places.
+// Every item below comes from the one authoritative registry so the menus,
+// Frassy and the breadcrumb can never disagree about where a place lives.
 const ADMIN_ITEM = { to: "/admin", slot: "nav-admin", fallback: "Admin" } as const;
+
 
 const SOCIALS = [
   { href: "https://instagram.com", label: "Instagram", Icon: Instagram },
@@ -72,8 +68,14 @@ function Header() {
   const isAdmin = useIsAdmin();
   const workspaceRoles = useWorkspaceRoles();
   const hasWorkspace = workspaceRoles.length > 0;
+  const signedIn = useSession();
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement | null>(null);
+
+  const viewer = { signedIn, isAdmin, isFounder: isAdmin };
+  const globals = globalNavFor(viewer);
+  const here = activeGlobal(path);
+  const areaItems = areaNavFor(path, viewer);
 
   useEffect(() => {
     setMenuOpen(false);
@@ -104,8 +106,11 @@ function Header() {
             className="nav-glow relative px-4 py-2 text-xs uppercase tracking-[0.25em] text-[color:var(--gold)] transition-colors"
             activeClassName="text-foreground"
           />
-          {NAV_ITEMS.map((n) => <HeaderNavLink key={n.to} item={n} active={path.startsWith(n.to)} />)}
+          {globals.map((node) => (
+            <GlobalNavItem key={node.key} node={node} active={here?.key === node.key} />
+          ))}
         </div>
+
         <div className="shrink-0">
           <div className="hidden md:block">
             <BrandMark />
@@ -152,12 +157,14 @@ function Header() {
               {menuOpen ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
             </button>
               {menuOpen && (
-                <div className="absolute right-0 mt-3 w-64 rounded-2xl border border-border/70 bg-background/95 backdrop-blur-xl shadow-2xl p-2 z-50">
+                <div className="absolute right-0 mt-3 max-h-[75vh] w-72 overflow-y-auto rounded-2xl border border-border/70 bg-background/95 backdrop-blur-xl shadow-2xl p-2 z-50">
                   <ForUsLink
                     className="nav-glow block rounded-xl px-4 py-3 text-xs uppercase tracking-[0.25em] text-[color:var(--gold)] transition-colors hover:bg-foreground/5"
                     activeClassName="bg-foreground/5"
                   />
-                  {MENU_ITEMS.map((n) => <MenuLink key={n.to} item={n} />)}
+                  {globals.map((node) => (
+                    <MenuGroup key={node.key} node={node} />
+                  ))}
                   <div className="my-1 h-px bg-border/60" />
                   <MobileAccountLinks hasWorkspace={hasWorkspace} isAdmin={isAdmin} />
                 </div>
@@ -166,15 +173,53 @@ function Header() {
           <CartDrawer />
         </div>
       </div>
+      {/* Level 1 on mobile — the major places, always one tap away. */}
       <div className="relative md:hidden border-t border-border/60 bg-background/60 backdrop-blur">
         <div className="flex overflow-x-auto no-scrollbar px-2 py-2 gap-1">
           <ForUsLink
             className="nav-glow shrink-0 whitespace-nowrap text-[10px] uppercase tracking-[0.2em] py-1 px-3 text-[color:var(--gold)]"
             activeClassName="text-foreground"
           />
-          {NAV_ITEMS.map((n) => <MobileNavLink key={n.to} item={n} />)}
+          {globals.map((node) => (
+            <Link
+              key={node.key}
+              to={node.path as never}
+              className={`nav-glow shrink-0 whitespace-nowrap rounded-full px-3 py-1.5 text-[10px] uppercase tracking-[0.2em] ${
+                here?.key === node.key ? "bg-foreground/10 text-foreground" : "text-muted-foreground"
+              }`}
+            >
+              {node.label}
+            </Link>
+          ))}
         </div>
       </div>
+      {/* Level 2 — where you are, and what else is in this place. */}
+      {here && areaItems.length > 0 && (
+        <div className="relative border-t border-border/60 bg-background/50 backdrop-blur">
+          <div className="mx-auto flex max-w-[1600px] items-center gap-1 overflow-x-auto no-scrollbar px-4 py-2 lg:px-12">
+            <Link
+              to={here.path as never}
+              className="mr-2 shrink-0 whitespace-nowrap rounded-full border border-[color:var(--gold)]/50 px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.2em] text-[color:var(--gold)]"
+            >
+              📍 {here.label}
+            </Link>
+            {areaItems.map((c) => (
+              <Link
+                key={c.key}
+                to={c.path as never}
+                className={`shrink-0 whitespace-nowrap rounded-full px-3 py-1.5 text-[10px] uppercase tracking-[0.2em] transition hover:bg-foreground/5 ${
+                  path === c.path || path.startsWith(`${c.path}/`)
+                    ? "bg-foreground/10 text-foreground"
+                    : "text-muted-foreground"
+                }`}
+              >
+                {c.label}
+              </Link>
+            ))}
+          </div>
+        </div>
+      )}
+
     </header>
   );
 }
@@ -439,50 +484,80 @@ function MobileAccountLinks({ hasWorkspace, isAdmin }: { hasWorkspace: boolean; 
   );
 }
 
-type NavItem = { to: string; slot: string; fallback: string };
-
-function MenuLink({ item }: { item: NavItem }) {
-  const label = useSiteText(item.slot, item.fallback);
+/**
+ * FRASS-0590 — a Level 1 place on the desktop bar. Hovering or focusing it
+ * reveals what lives inside that place, so the ecosystem is discoverable
+ * without a giant flat menu.
+ */
+function GlobalNavItem({ node, active }: { node: NavNode; active: boolean }) {
+  const [open, setOpen] = useState(false);
+  const children = node.children ?? [];
   return (
-    <Link
-      to={item.to}
-      className="nav-glow block rounded-xl px-4 py-3 text-xs uppercase tracking-[0.25em] text-muted-foreground transition-colors hover:bg-foreground/5"
-      activeProps={{ className: "text-foreground bg-foreground/5" }}
+    <div
+      className="relative"
+      onMouseEnter={() => setOpen(true)}
+      onMouseLeave={() => setOpen(false)}
+      onFocus={() => setOpen(true)}
+      onBlur={(e) => {
+        if (!e.currentTarget.contains(e.relatedTarget as Node)) setOpen(false);
+      }}
     >
-      {label}
-    </Link>
-  );
-}
-
-function HeaderNavLink({ item, active }: { item: NavItem; active: boolean }) {
-  const label = useSiteText(item.slot, item.fallback);
-  return (
-    <Link
-      to={item.to}
-      className={`nav-glow relative px-4 py-2 text-xs uppercase tracking-[0.25em] transition-colors ${
-        active ? "text-foreground" : "text-muted-foreground"
-      }`}
-    >
-      {label}
-      {active && (
-        <span className="absolute left-4 right-4 -bottom-0.5 h-px bg-[color:var(--gold)]" />
+      <Link
+        to={node.path as never}
+        className={`nav-glow relative inline-block px-3 py-2 text-xs uppercase tracking-[0.22em] transition-colors ${
+          active ? "text-foreground" : "text-muted-foreground hover:text-foreground"
+        }`}
+      >
+        {node.label}
+        {active && <span className="absolute left-3 right-3 -bottom-0.5 h-px bg-[color:var(--gold)]" />}
+      </Link>
+      {open && children.length > 0 && (
+        <div className="absolute left-0 top-full z-50 w-72 rounded-2xl border border-border/70 bg-background/95 p-2 shadow-2xl backdrop-blur-xl">
+          {node.blurb && (
+            <p className="px-3 pb-2 pt-1 text-[11px] normal-case tracking-normal text-muted-foreground">
+              {node.blurb}
+            </p>
+          )}
+          {children.map((c) => (
+            <Link
+              key={c.key}
+              to={c.path as never}
+              className="block rounded-xl px-3 py-2 text-[11px] uppercase tracking-[0.18em] text-muted-foreground transition hover:bg-foreground/5 hover:text-foreground"
+            >
+              {c.label}
+            </Link>
+          ))}
+        </div>
       )}
-    </Link>
+    </div>
   );
 }
 
-function MobileNavLink({ item }: { item: NavItem }) {
-  const label = useSiteText(item.slot, item.fallback);
+/** The same registry, rendered as a grouped list inside the menu panel. */
+function MenuGroup({ node }: { node: NavNode }) {
   return (
-    <Link
-      to={item.to}
-      className="nav-glow shrink-0 whitespace-nowrap text-[10px] uppercase tracking-[0.2em] py-1 px-3 text-muted-foreground"
-      activeProps={{ className: "text-foreground" }}
-    >
-      {label}
-    </Link>
+    <div className="py-1">
+      <Link
+        to={node.path as never}
+        className="nav-glow block rounded-xl px-4 py-2.5 text-xs font-bold uppercase tracking-[0.22em] text-foreground transition-colors hover:bg-foreground/5"
+        activeProps={{ className: "bg-foreground/5" }}
+      >
+        {node.label}
+      </Link>
+      {(node.children ?? []).map((c) => (
+        <Link
+          key={c.key}
+          to={c.path as never}
+          className="block rounded-xl px-6 py-2 text-[11px] uppercase tracking-[0.18em] text-muted-foreground transition-colors hover:bg-foreground/5 hover:text-foreground"
+          activeProps={{ className: "text-foreground bg-foreground/5" }}
+        >
+          {c.label}
+        </Link>
+      ))}
+    </div>
   );
 }
+
 
 function FreeTryOnFab() {
   const path = useRouterState({ select: (r) => r.location.pathname });
@@ -564,6 +639,22 @@ export function SiteShell({
   preHeader?: ReactNode;
 }) {
   useCartSync();
+  const path = useRouterState({ select: (r) => r.location.pathname });
+  // Kids World is a place of its own, so it wears its own chrome: a child-first
+  // header, no adult footer, no shopping fab.
+  const kids = path === "/kids-world" || path.startsWith("/kids-world/");
+
+  if (kids) {
+    return (
+      <div className="relative min-h-screen">
+        {preHeader}
+        <KidsNav />
+        <main className="relative">{children}</main>
+        <KidsFooter />
+      </div>
+    );
+  }
+
   return (
     <div className="relative min-h-screen">
       {background && <LuxuryBackground />}
@@ -575,3 +666,4 @@ export function SiteShell({
     </div>
   );
 }
+
