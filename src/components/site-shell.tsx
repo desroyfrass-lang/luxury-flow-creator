@@ -59,8 +59,14 @@ function Header() {
   const isAdmin = useIsAdmin();
   const workspaceRoles = useWorkspaceRoles();
   const hasWorkspace = workspaceRoles.length > 0;
+  const signedIn = useSession();
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement | null>(null);
+
+  const viewer = { signedIn, isAdmin, isFounder: isAdmin };
+  const globals = globalNavFor(viewer);
+  const here = activeGlobal(path);
+  const areaItems = areaNavFor(path, viewer);
 
   useEffect(() => {
     setMenuOpen(false);
@@ -91,8 +97,11 @@ function Header() {
             className="nav-glow relative px-4 py-2 text-xs uppercase tracking-[0.25em] text-[color:var(--gold)] transition-colors"
             activeClassName="text-foreground"
           />
-          {NAV_ITEMS.map((n) => <HeaderNavLink key={n.to} item={n} active={path.startsWith(n.to)} />)}
+          {globals.map((node) => (
+            <GlobalNavItem key={node.key} node={node} active={here?.key === node.key} />
+          ))}
         </div>
+
         <div className="shrink-0">
           <div className="hidden md:block">
             <BrandMark />
