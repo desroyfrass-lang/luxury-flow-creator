@@ -17,7 +17,11 @@ const HIDDEN_PREFIXES = [
   "/frass-hill-journey",
   "/api",
   "/checkout",
+  // Kids World has its own child-first Home and Back. A small text breadcrumb
+  // is the wrong tool for a six-year-old, so the adult trail stays out.
+  "/kids-world",
 ];
+
 
 /** Human labels for path segments. Anything missing is title-cased automatically. */
 const SEGMENT_LABELS: Record<string, string> = {
