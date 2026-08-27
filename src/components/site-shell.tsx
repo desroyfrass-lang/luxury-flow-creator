@@ -148,12 +148,14 @@ function Header() {
               {menuOpen ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
             </button>
               {menuOpen && (
-                <div className="absolute right-0 mt-3 w-64 rounded-2xl border border-border/70 bg-background/95 backdrop-blur-xl shadow-2xl p-2 z-50">
+                <div className="absolute right-0 mt-3 max-h-[75vh] w-72 overflow-y-auto rounded-2xl border border-border/70 bg-background/95 backdrop-blur-xl shadow-2xl p-2 z-50">
                   <ForUsLink
                     className="nav-glow block rounded-xl px-4 py-3 text-xs uppercase tracking-[0.25em] text-[color:var(--gold)] transition-colors hover:bg-foreground/5"
                     activeClassName="bg-foreground/5"
                   />
-                  {MENU_ITEMS.map((n) => <MenuLink key={n.to} item={n} />)}
+                  {globals.map((node) => (
+                    <MenuGroup key={node.key} node={node} />
+                  ))}
                   <div className="my-1 h-px bg-border/60" />
                   <MobileAccountLinks hasWorkspace={hasWorkspace} isAdmin={isAdmin} />
                 </div>
@@ -162,15 +164,53 @@ function Header() {
           <CartDrawer />
         </div>
       </div>
+      {/* Level 1 on mobile — the major places, always one tap away. */}
       <div className="relative md:hidden border-t border-border/60 bg-background/60 backdrop-blur">
         <div className="flex overflow-x-auto no-scrollbar px-2 py-2 gap-1">
           <ForUsLink
             className="nav-glow shrink-0 whitespace-nowrap text-[10px] uppercase tracking-[0.2em] py-1 px-3 text-[color:var(--gold)]"
             activeClassName="text-foreground"
           />
-          {NAV_ITEMS.map((n) => <MobileNavLink key={n.to} item={n} />)}
+          {globals.map((node) => (
+            <Link
+              key={node.key}
+              to={node.path as never}
+              className={`nav-glow shrink-0 whitespace-nowrap rounded-full px-3 py-1.5 text-[10px] uppercase tracking-[0.2em] ${
+                here?.key === node.key ? "bg-foreground/10 text-foreground" : "text-muted-foreground"
+              }`}
+            >
+              {node.label}
+            </Link>
+          ))}
         </div>
       </div>
+      {/* Level 2 — where you are, and what else is in this place. */}
+      {here && areaItems.length > 0 && (
+        <div className="relative border-t border-border/60 bg-background/50 backdrop-blur">
+          <div className="mx-auto flex max-w-[1600px] items-center gap-1 overflow-x-auto no-scrollbar px-4 py-2 lg:px-12">
+            <Link
+              to={here.path as never}
+              className="mr-2 shrink-0 whitespace-nowrap rounded-full border border-[color:var(--gold)]/50 px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.2em] text-[color:var(--gold)]"
+            >
+              📍 {here.label}
+            </Link>
+            {areaItems.map((c) => (
+              <Link
+                key={c.key}
+                to={c.path as never}
+                className={`shrink-0 whitespace-nowrap rounded-full px-3 py-1.5 text-[10px] uppercase tracking-[0.2em] transition hover:bg-foreground/5 ${
+                  path === c.path || path.startsWith(`${c.path}/`)
+                    ? "bg-foreground/10 text-foreground"
+                    : "text-muted-foreground"
+                }`}
+              >
+                {c.label}
+              </Link>
+            ))}
+          </div>
+        </div>
+      )}
+
     </header>
   );
 }
