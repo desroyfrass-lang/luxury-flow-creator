@@ -1,90 +1,57 @@
-# Frass Hill — Master Navigation Foundation Pass (Prompt 1 of 3)
+# Atlas Phase 2 — Real User Functional Verification
 
-Goal: make the *visible menus* usable for a human being, expose the whole ecosystem coherently, and give each world back its own character — without rebuilding anything, deleting pages, renaming Frass properties, or starting Frassy Studios Build 4.
+No new features. No Build 4. No shell filling. This phase only proves, by real clicking, what actually works today.
 
-## What is actually there right now (re-verified)
+## What changes on disk
 
-- 143 route files under `src/routes` plus nested folders; the ~234 declarations in `FRASS_SITE_MAP.md` still hold.
-- **Two competing visible shells.** `src/components/site-shell.tsx` is used by **106 route files** and shows only 5 header items plus 5 hamburger items — most of the ecosystem is invisible from it. `src/components/gateway-nav.tsx` holds the richer grouped `shop`/`world` menus but is used by only a handful of routes.
-- **Three destination lists.** `hierarchy.ts` (place → hall → parent → audience, already good), `core-routes.ts` (Frassy's `open_place`), and the hard-coded arrays inside both shells.
-- `frass-trail.tsx` breadcrumb is mounted globally in `__root.tsx` but the headers ignore it.
-- Kids World currently renders inside the adult `SiteShell` with a text-link age bar — an adult chrome wrapping a children's world.
+Only two documents:
 
-So the problem is not missing routes. It is three competing lists, two headers, and one generic template flattening distinct worlds.
+- `FRASS_FUNCTIONAL_REALITY_AUDIT.md` — updated to separate **STATIC EVIDENCE** (the existing 95/116/18 classification) from **END-TO-END VERIFIED** (what real clicking proved). No page keeps "REAL" status just because it has saving code.
+- `FRASS_CORE_JOURNEY_SCORECARD.md` — new: one row per journey with the columns you specified (Journey, User Role, Entry, Primary Action, Persistence, Reload, Return, Permissions, Mobile, Frassy, Final Status, P0–P3, Notes).
 
-## The approach
+No source code is touched. Bugs found are written down, not fixed.
 
-### A. One navigation truth — not one visual menu
+## Test accounts
 
-1. Extend `src/lib/navigation/hierarchy.ts` into the single authoritative registry: label, path, parent, hall/world, audience, navigation level (Global / Area / Section), role visibility, intentional parent, highlight rules. No second registry is created.
-2. `core-routes.ts` derives from it, so Frassy's `open_place` can never contradict the menus, and never offers a destination the current user is not authorized for.
-3. `SiteShell` and `GatewayNav` both consume it. `GatewayNav` becomes a presentation skin, not a second source of truth.
+Two real sign-ins, minted inside the sandbox (no passwords needed, no new accounts created):
 
-### B. Correct master hierarchy (Founder correction applied)
+- **Normal member** — an existing non-admin account with the fewest existing records, so nothing real is disturbed. I'll name the exact account before signing in as it, for your approval.
+- **Founder** — your own admin account, used only for section 14 and 15, and only for safe, reversible test actions (create a draft, save, reload, then leave it clearly labelled "ATLAS TEST").
 
-**Frass District IS the fashion/shopping district.** No separate "Fashion & Shopping" destination is created.
+Every test record created is prefixed `ATLAS TEST` so it is identifiable and removable.
 
-```text
-FRASS HILL
-├── Welcome Hall
-├── Frass District  (fashion / shopping)
-│   ├── Frass Kicks · Frass Drip · Plus Size · Bridal · Luxury House
-│   └── other existing District/commerce destinations from the route map
-├── Kids World / Frass Kids
-├── Socials / Community
-├── My Space (member personal)
-├── My Vaults
-└── Authorized internal — Founder Hall · Frassy Studios
-```
+## How each area is tested
 
-Three levels are kept distinct: Global menu → Area menu → Section menu. No single giant menu.
+For every area below the same loop runs: enter → do the primary task → save → reload the page → find it again → edit/continue → navigate away → come back → confirm it survived → confirm permissions. A page that merely loads is never counted as working.
 
-### C. Distinctive worlds, shared architecture
+Order of testing:
 
-Same registry underneath, deliberately different presentation on top:
-
-- **Frass District** — obviously the shopping district; District Home, District-local navigation, consistent return-to-District and return-to-Frass-Hill.
-- **Bridal** — elegant, occasion-led. Bridal Home identity, Bride / Groom / Wedding Party distinctions where routes already exist, bridal imagery, generous spacing. No new bridal commerce invented.
-- **Luxury House** — premium and quiet. Luxury Home identity, restrained type, editorial category navigation. Never a plain District category page.
-- **Kids World** — child-first (below).
-- **My Space / My Vaults / Founder Hall / Frassy Studios** — personal, owned-workspace, control-centre and production presentations respectively.
-
-### D. Kids World — child-first, age-banded
-
-Kids stops rendering as an adult shell with kids content inside it. Age bands 0–3, 3–6, 6–9, 9–12, 12–15, 15–18 are preserved and each gets navigation matched to the child:
-
-- **0–3** — no reading required: colour, big pictures, characters, very few enormous buttons, visual Home and Back.
-- **3–6** — picture/icon-led with very short words, large colourful category buttons.
-- **6–9** — strong visuals with short readable labels, slightly more choice, still plainly playful.
-- **9–12** — more independence and category depth, still visibly a kids environment.
-- **12–15** — more text and structure, youth-styled, never a business workspace.
-- **15–18** — the most mature youth interface, denser but still continuous with Kids World.
-
-Kids World Home becomes large visual age entrances rather than a list of text links. No adult grouped menu, no Founder Hall / Studios / Admin / Vault / adult Socials links inside child routes. Kids retail keeps Frass Kicks Kids and Frass Drip Kids with its existing taxonomy including School Drip. Kids feeds, infinite scroll and safety boundaries are untouched. For young bands, breadcrumbs become visual Home/Back cues, not text trails.
-
-### E. Founder Hall & Frassy Studios — grouping only
-
-Existing Founder pages regrouped under Home, Create & Media, Business, Vaults, Community, Content, Analytics & Money, Site Management, Settings. Studios everyday navigation surfaces Studio Home, Create, My Productions, Review, Publish, Performance, with Library, Series & Characters, Distribution, Studio Tools and Settings as secondary. Distribution Network, Content Calendar, Media Performance, Frass Media Revenue and Publishing Center all remain — access improves, functionality does not change. Builds 1–3 preserved, Build 4 not started.
-
-### F. Home, Back, location
-
-Home is per-area and predictable (Welcome Hall, District Home, Kids Home, Bridal Home, Luxury Home, My Space, My Vaults, Founder Hall, Studio Home). App-level Back uses the existing `intentionalParent()` hierarchy rather than raw browser history. `FrassTrail` derives from the same registry, and renders age-appropriate cues in Kids.
-
-### G. Audit, test, document
-
-- Classify every active route: USER-REACHABLE / ROLE-RESTRICTED / SYSTEM-INTERNAL / INTENTIONAL REDIRECT / DEPRECATED–FOUNDER REVIEW. Nothing deleted; orphans reported for your decision.
-- Real Playwright journeys A–J at 1280px and 390px, signed out and signed in, interacting with menus rather than reading CSS — including each Kids age band judged on whether it *feels* made for that child.
-- Fix navigation-specific rendering faults; document anything that looks like a **global** typography/rendering fault for the later consolidated visual pass instead of patching pages one by one.
-- Create `FRASS_NAVIGATION_MAP.md` with all 34 required sections including the World/Area Experience Rules that stop future work flattening these worlds back into one template, plus the plain-language "WHEN I WANT TO…" guide using the labels actually on screen. Update `FRASS_SITE_MAP.md` only where hierarchy genuinely changed.
-
-## Guardrails
-
-- Menu visibility is never treated as authorization — RLS, role gates and every prior security fix stay exactly as they are. A genuine unsafe path, if found, is stopped and reported, not quietly patched around.
-- No route files deleted; redirects stay redirects.
-- Commerce, cart, Try-On, profiles, saved items, feeds, the Self-Service Vault Engine and Vault isolation are untouched.
-- Frass naming preserved verbatim.
-- Work stops at the final report, the 53-point results list, the verdict and the six yes/no answers. Prompt 2 and Build 4 are not started.
+1. Normal user entry — login, Welcome Hall, into Frass Hill; then direct-URL attempts at `/control-room`, `/admin`, `/studios`, `/admin/roles` to confirm the block is enforced by the server, not just hidden in the menu.
+2. Profile menu — the exact items actually rendered are recorded, then each one is opened and its primary action attempted.
+3. My Workspace (`/room`) — and its true relationship to My Space, My Vaults, Daily and creator tools.
+4. Frass Daily — open today, act on a task, mark it, reload.
+5. My Vaults — open an owned vault, create a test record, save, reload, switch vault, confirm records stay separated.
+6. FV Studios — is Frassy present and does she do anything; start and save a real creation.
+7. Builder's Vault — the promised primary workflow, end to end.
+8. Creation District — create, save, retrieve, continue.
+9. Opportunity Center — open an opportunity, act, save status, reload; and whether the data is real, seeded, or generated.
+10. Academy District — start a lesson, progress, save, reload, continue.
+11. My Frass Card — actual purpose read from the implementation, then every meaningful action.
+12. Frass District commerce — Kicks/Drip → product → variant → cart → quantity/remove → checkout handoff. **No charge is completed.** Plus Lookbook, Capsule, Try-On, Saved items where present.
+13. Kids World — one journey per current age band, plus Home and Back.
+14. Founder Hall — as Founder, one safe control action, saved and reloaded; then re-confirm a normal member is still blocked.
+15. Frassy Studios — Builds 1–3 as workflows: production → script/scene → review → approved → distribution package → calendar → empty performance state. No external platforms connected, no analytics invented.
+16. Frassy — per area, classified as Functional Action Assistant / Functional Navigation Assistant / Guidance Only / Decorative / Missing / Broken. Her face appearing never counts as functional.
+17. Mobile — the critical journeys repeated at phone width, testing actions and not just layout.
 
 ## Technical notes
 
-Files expected to change: `src/lib/navigation/hierarchy.ts`, `src/lib/navigation/core-routes.ts`, `src/components/site-shell.tsx`, `src/components/gateway-nav.tsx`, `src/components/frass-trail.tsx`, the Kids navigation components under `src/components/kids*`, Founder and Studios navigation components, plus individual link corrections where a link is dead or points at the wrong Home. Verification: `tsgo` typecheck, build, and Playwright desktop/mobile runs with a small set of representative screenshots.
+Verification runs through a scripted headless browser against the live preview, one journey per script, capturing screenshots, console errors and failed network calls as evidence. Findings that cannot be reproduced by clicking are marked BLOCKED rather than guessed.
+
+Statuses used: END-TO-END VERIFIED · FUNCTIONAL WITH ISSUES · PARTIAL · UI SHELL · BROKEN · BLOCKED · REDIRECT ONLY · NOT IMPLEMENTED.
+
+## What you get at the end
+
+A written result for every numbered area, the P0 and P1 failure lists, which previously-"REAL" pages failed real testing, which are genuinely verified, which still need your own hands-on testing — then the Atlas Phase 2 Verdict: can a normal member, a creator/partner, and the Founder each complete their core journey (YES / NO / PARTIALLY), and the five workflows to fix first in priority order.
+
+Then I stop and wait for your approval before anything is repaired or built.
