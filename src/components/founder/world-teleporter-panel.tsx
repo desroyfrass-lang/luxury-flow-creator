@@ -167,6 +167,37 @@ export function WorldTeleporterPanel() {
         page to visit it, then use the floating chip to come straight back here.
       </p>
 
+      {/* Founder Architecture Amendment — pinned jumps to the rooms used most,
+          including the real Onboarding Room. No duplicate Founder-only copies. */}
+      <div className="mt-4 rounded-2xl border border-[color:var(--gold)]/40 p-4">
+        <div className="text-[10px] uppercase tracking-[0.3em] text-[color:var(--gold)]">
+          Founder quick jumps
+        </div>
+        <div className="mt-3 flex flex-wrap gap-2">
+          {QUICK_JUMP_ROOMS.map((room) => (
+            <a
+              key={room.id}
+              href={room.path}
+              className="rounded-full border border-border px-3 py-1.5 text-xs hover:border-[color:var(--gold)]"
+              title={room.purpose}
+            >
+              <span aria-hidden className="mr-1">
+                {room.icon}
+              </span>
+              {room.label}
+            </a>
+          ))}
+          <a
+            href="/founder"
+            className="rounded-full border border-[color:var(--gold)]/60 px-3 py-1.5 text-xs text-[color:var(--gold)]"
+          >
+            🏛 Back to Founder Hall
+          </a>
+        </div>
+      </div>
+
+
+
       {/* Progress counter */}
       <div className="mt-5 rounded-2xl border border-border/70 p-4">
         <div className="flex flex-wrap items-baseline justify-between gap-2">
