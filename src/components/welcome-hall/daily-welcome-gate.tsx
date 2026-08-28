@@ -8,6 +8,7 @@ import { useEffect, useState } from "react";
 import { useNavigate, useRouterState } from "@tanstack/react-router";
 import { supabase } from "@/integrations/supabase/client";
 import { welcomedToday } from "@/lib/welcome-hall/daily-welcome";
+import { safeContinuation } from "@/lib/welcome-hall/continuation";
 
 export function DailyWelcomeGate({ children }: { children: React.ReactNode }) {
   const navigate = useNavigate();
@@ -30,7 +31,7 @@ export function DailyWelcomeGate({ children }: { children: React.ReactNode }) {
         }
         navigate({
           to: "/welcome-hall",
-          search: { welcome: "daily", next: pathname },
+          search: { welcome: "daily", next: safeContinuation(pathname) },
           replace: true,
         });
       })

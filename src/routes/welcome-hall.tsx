@@ -181,7 +181,7 @@ function WelcomeHallPage() {
       {/* FRASS-0569 — 🌅 Welcome Hall One. Frassy greets first; the Daily follows. */}
       {search.welcome === "daily" && (
         <div className="mx-auto max-w-[1100px] px-6 pt-24 lg:px-10">
-          <DailyWelcomeCeremony next={search.next ?? "/room"} />
+          <DailyWelcomeCeremony next={search.next ?? SAFE_MEMBER_DESTINATION} />
         </div>
       )}
       {/* The gates */}
