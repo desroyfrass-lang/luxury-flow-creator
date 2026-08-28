@@ -275,3 +275,26 @@ Nothing to build here; they exist so old doors still open.
 Think of Frass as a street of shops. REAL shops have staff, tills and stock rooms — a customer can walk in and buy. SHELL shops have the window display finished and the lights on, but no till behind the counter yet. Nothing is broken; the work remaining is to fit tills, shop by shop, in the order that earns first.
 
 Recommended order: any SHELL page that sits on a money path (marketplace, vaults, money moves, wallet) is fitted first. Storytelling and gallery pages can stay SHELL for launch without harming a member.
+
+---
+
+## ATLAS PHASE 2 — REAL USER VERIFICATION (2026-08-28)
+
+Verified by driving the live app in a real browser as the approved normal member
+(porositybalance@gmail.com). Full results: `FRASS_CORE_JOURNEY_SCORECARD.md`.
+
+Status upgrades (previously "REAL" by code inspection, now proven by use):
+- `/vaults`, `/vaults/new`, `/vaults/:id/m/*` — **END-TO-END VERIFIED**
+  (created a vault, added a record, reloaded, data persisted and stayed private).
+
+Status corrections:
+- `/room`, `/daily` — REDIRECT ONLY (both land on `/onboarding`).
+- `/workspace`, `/workspace/wallet` — gated by Identity Check; not machine-verifiable.
+- `/academy`, `/services` — remain UI SHELL (no member progress or listings saved).
+- `/card`, `/builder-identity`, `/shop`, `/kids`, `/community`, `/wallet` — **404**.
+
+Defects found (not fixed, per instruction):
+1. `/admin/roles` exposes "CLAIM SITE OWNERSHIP" to a normal member when no owner is detected.
+2. The Frass Daily is labelled "🟡 Sample Data".
+3. Welcome Hall `next` parameter can become circular (`next=%2Fwelcome-hall`).
+4. React "state update before mount" warning on `/first-30-days` and `/workspace`.
