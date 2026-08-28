@@ -23,8 +23,11 @@ export type NavigationPlace = {
 };
 
 const PLACES: NavigationPlace[] = [
-  { match: "/control-room", label: "Founder Hall Home", hall: "Founder Hall", hallPath: "/control-room", parent: "/welcome-hall", audience: "FOUNDER", exact: true },
-  { match: "/studios", label: "Frassy Studios", hall: "Founder Hall", hallPath: "/control-room", parent: "/control-room", audience: "FOUNDER", exact: true },
+  // Founder Architecture Amendment — Founder Hall is the headquarters; the
+  // Control Room is one of its protected rooms, not the front door.
+  { match: "/founder", label: "Founder Hall Home", hall: "Founder Hall", hallPath: "/founder", parent: "/welcome-hall", audience: "FOUNDER", exact: true },
+  { match: "/control-room", label: "Control Room", hall: "Founder Hall", hallPath: "/founder", parent: "/founder", audience: "FOUNDER", exact: true },
+  { match: "/studios", label: "Frassy Studios", hall: "Founder Hall", hallPath: "/founder", parent: "/founder", audience: "FOUNDER", exact: true },
   { match: "/studios/production/", label: "Production", hall: "Frassy Studios", hallPath: "/studios", parent: "/studios/productions", audience: "FOUNDER" },
   { match: "/studios/engine/", label: "Production Studio", hall: "Frassy Studios", hallPath: "/studios", parent: "/studios/productions", audience: "FOUNDER" },
   { match: "/studios/distribution/", label: "Destination Matrix", hall: "Frassy Studios", hallPath: "/studios", parent: "/studios/distribution", audience: "FOUNDER" },
