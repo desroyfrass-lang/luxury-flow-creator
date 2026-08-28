@@ -29,7 +29,6 @@ import { useSiteText } from "@/hooks/use-site-text";
 import { useIsAdmin } from "@/hooks/use-is-admin";
 import { useMyRoles } from "@/hooks/use-my-roles";
 import { accountMenuGroups } from "@/lib/navigation/account-menu";
-import { useWorkspaceRoles } from "@/hooks/use-workspace-roles";
 import { supabase } from "@/integrations/supabase/client";
 import { useSecureSignOut, SignOutButton } from "@/components/secure-sign-out";
 import fullLogo from "@/assets/frass-logo-full.asset.json";
@@ -68,8 +67,6 @@ function BrandMark({ compact = false }: { compact?: boolean }) {
 function Header() {
   const path = useRouterState({ select: (r) => r.location.pathname });
   const isAdmin = useIsAdmin();
-  const workspaceRoles = useWorkspaceRoles();
-  const hasWorkspace = workspaceRoles.length > 0;
   const signedIn = useSession();
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement | null>(null);
