@@ -2,7 +2,7 @@
 // Frassy, visible — FRASS-0581.
 //
 // Her illustrated portrait, dressed for the room she is standing in. Tap her
-// outfit and the Frost District pieces open. Tap her hair and the Hair
+// outfit and the Frass District pieces open. Tap her hair and the Hair
 // Collection unit opens. This is the store living inside the conversation.
 // ─────────────────────────────────────────────────────────────────────────────
 
@@ -109,7 +109,7 @@ export function FrassyLook({
         />
         <button
           onClick={() => setSheet("outfit")}
-          aria-label="Shop Frassy's outfit from the Frost District"
+          aria-label="Shop Frassy's outfit from the Frass District"
           className="absolute inset-x-0 bottom-0 h-1/2 hover:bg-[color:var(--gold)]/10"
         />
       </div>
@@ -139,8 +139,8 @@ export function FrassyLook({
 
       {sheet === "outfit" && (
         <ShopSheet
-          title="Frost District — what she's wearing"
-          note="Frassy only ever wears Frass. Every piece here is from the Frost District collection."
+          title="Frass District — what she's wearing"
+          note="Frassy only ever wears Frass. Every piece here is from the Frass District collection."
           pieces={look.outfit}
           onClose={() => setSheet(null)}
         />
