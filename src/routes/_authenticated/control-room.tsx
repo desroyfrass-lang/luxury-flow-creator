@@ -106,7 +106,9 @@ function ControlRoom() {
     <main className="mx-auto w-full max-w-5xl px-4 py-10">
       <nav aria-label="Founder Hall location" className="flex flex-wrap items-center gap-2 text-[10px] uppercase tracking-[0.22em] text-muted-foreground">
         <Link to="/welcome-hall" className="hover:text-foreground">Welcome Hall</Link><span>→</span>
-        <Link to="/control-room" className="text-[color:var(--gold)]">Founder Hall</Link><span>→</span>
+        {/* Founder Architecture Amendment — headquarters is Founder Hall; this is one of its rooms. */}
+        <Link to="/founder" className="hover:text-foreground">Founder Hall</Link><span>→</span>
+        <Link to="/control-room" className="text-[color:var(--gold)]">Control Room</Link><span>→</span>
         <span aria-current="page">{activeGroup.label}</span>
       </nav>
       <p className="mt-5 text-xs uppercase tracking-[0.3em] text-[color:var(--gold)]">FRASS-0568</p>
