@@ -27,6 +27,11 @@ import {
   type TeleporterAuditRow,
 } from "@/lib/founder/teleporter-audit.functions";
 import { openAuditSession } from "@/lib/founder/audit-session.functions";
+import { FOUNDER_ROOMS, TP_QUICK_JUMPS } from "@/lib/founder/founder-hall";
+
+const QUICK_JUMP_ROOMS = TP_QUICK_JUMPS.map((id) => FOUNDER_ROOMS.find((r) => r.id === id)).filter(
+  (r): r is (typeof FOUNDER_ROOMS)[number] => Boolean(r),
+);
 
 
 const GROUPS: { status: WorldStatus; heading: string }[] = [
