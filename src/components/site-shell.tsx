@@ -255,12 +255,10 @@ function HeaderSignOut() {
   );
 }
 
-function BuilderAccountMenu({ hasWorkspace, isAdmin }: { hasWorkspace: boolean; isAdmin: boolean }) {
-
-  const navigate = useNavigate();
-  const queryClient = useQueryClient();
+function BuilderAccountMenu() {
   const hasSession = useSession();
-
+  const { roles } = useMyRoles();
+  const groups = accountMenuGroups(roles);
   const handleSignOut = useSecureSignOut();
 
   if (!hasSession) {
@@ -286,7 +284,10 @@ function BuilderAccountMenu({ hasWorkspace, isAdmin }: { hasWorkspace: boolean; 
           <User className="h-4 w-4" />
         </button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="w-56 rounded-2xl border-border/70 bg-background/95 backdrop-blur-xl">
+      <DropdownMenuContent
+        align="end"
+        className="max-h-[75vh] w-64 overflow-y-auto rounded-2xl border-border/70 bg-background/95 backdrop-blur-xl"
+      >
         <DropdownMenuItem
           onClick={() => openTheDaily()}
           className="rounded-xl cursor-pointer flex items-center gap-2 text-xs uppercase tracking-[0.2em] text-[color:var(--gold)]"
@@ -294,72 +295,26 @@ function BuilderAccountMenu({ hasWorkspace, isAdmin }: { hasWorkspace: boolean; 
           <Sun className="h-4 w-4" />
           The Frass Daily
         </DropdownMenuItem>
-        {/* FRASS-0481 — one workspace, one order: Daily · Workspace · Studios · places. */}
-        <DropdownMenuItem asChild className="rounded-xl cursor-pointer">
-          <Link to="/room" className="flex items-center gap-2 text-xs uppercase tracking-[0.2em]">
-            <KeyRound className="h-4 w-4" />
-            My Workspace
-          </Link>
-        </DropdownMenuItem>
-        <DropdownMenuItem asChild className="rounded-xl cursor-pointer">
-          <Link to="/studio" className="flex items-center gap-2 text-xs uppercase tracking-[0.2em]">
-            <span aria-hidden>🎬</span>
-            FV Studios
-          </Link>
-        </DropdownMenuItem>
-        <DropdownMenuItem asChild className="rounded-xl cursor-pointer">
-          <Link to="/welcome-hall" className="flex items-center gap-2 text-xs uppercase tracking-[0.2em]">
-            <Sparkles className="h-4 w-4" />
-            Welcome Hall
-          </Link>
-        </DropdownMenuItem>
-        <DropdownMenuItem asChild className="rounded-xl cursor-pointer">
-          <Link to="/vault" className="flex items-center gap-2 text-xs uppercase tracking-[0.2em]">
-            <KeyRound className="h-4 w-4" />
-            Builder Vault
-          </Link>
-        </DropdownMenuItem>
-        <DropdownMenuItem asChild className="rounded-xl cursor-pointer">
-          <Link to="/creation" className="flex items-center gap-2 text-xs uppercase tracking-[0.2em]">
-            <Sparkles className="h-4 w-4" />
-            Creation District
-          </Link>
-        </DropdownMenuItem>
-        <DropdownMenuItem asChild className="rounded-xl cursor-pointer">
-          <Link to="/opportunity" className="flex items-center gap-2 text-xs uppercase tracking-[0.2em]">
-            <Sparkles className="h-4 w-4" />
-            Opportunity Center
-          </Link>
-        </DropdownMenuItem>
-        <DropdownMenuItem asChild className="rounded-xl cursor-pointer">
-          <Link to="/academy" className="flex items-center gap-2 text-xs uppercase tracking-[0.2em]">
-            <Sparkles className="h-4 w-4" />
-            Academy District
-          </Link>
-        </DropdownMenuItem>
-        <DropdownMenuItem asChild className="rounded-xl cursor-pointer">
-          <Link to="/workspace/card" className="flex items-center gap-2 text-xs uppercase tracking-[0.2em]">
-            <Settings className="h-4 w-4" />
-            My Frass Card
-          </Link>
-        </DropdownMenuItem>
-
-        {isAdmin && (
-          <DropdownMenuItem asChild className="rounded-xl cursor-pointer">
-            <Link to="/control-room" className="flex items-center gap-2 text-xs uppercase tracking-[0.2em]">
-              <Sparkles className="h-4 w-4" />
-              Founder Mode
-            </Link>
-          </DropdownMenuItem>
-        )}
-        {isAdmin && (
-          <DropdownMenuItem asChild className="rounded-xl cursor-pointer">
-            <Link to="/admin" className="flex items-center gap-2 text-xs uppercase tracking-[0.2em]">
-              <Sparkles className="h-4 w-4" />
-              Admin
-            </Link>
-          </DropdownMenuItem>
-        )}
+        {groups.map((group) => (
+          <div key={group.id}>
+            <DropdownMenuSeparator />
+            <p className="px-3 pb-1 pt-2 text-[9px] uppercase tracking-[0.3em] text-muted-foreground">
+              {group.label}
+            </p>
+            {group.items.map((item) => (
+              <DropdownMenuItem key={item.to} asChild className="rounded-xl cursor-pointer">
+                <Link
+                  to={item.to as never}
+                  title={item.plain}
+                  className="flex items-center gap-2 text-xs uppercase tracking-[0.2em]"
+                >
+                  <span aria-hidden>{item.glyph}</span>
+                  {item.label}
+                </Link>
+              </DropdownMenuItem>
+            ))}
+          </div>
+        ))}
         <DropdownMenuSeparator />
         <DropdownMenuItem onClick={handleSignOut} className="rounded-xl cursor-pointer text-xs uppercase tracking-[0.2em]">
           <LogOut className="h-4 w-4 mr-2" />
@@ -370,11 +325,10 @@ function BuilderAccountMenu({ hasWorkspace, isAdmin }: { hasWorkspace: boolean; 
   );
 }
 
-function MobileAccountLinks({ hasWorkspace, isAdmin }: { hasWorkspace: boolean; isAdmin: boolean }) {
-  const navigate = useNavigate();
-  const queryClient = useQueryClient();
+function MobileAccountLinks() {
   const hasSession = useSession();
-
+  const { roles } = useMyRoles();
+  const groups = accountMenuGroups(roles);
   const handleSignOut = useSecureSignOut();
 
   if (!hasSession) {
@@ -399,81 +353,26 @@ function MobileAccountLinks({ hasWorkspace, isAdmin }: { hasWorkspace: boolean; 
         The Frass Daily
       </button>
 
-      <Link
-        to="/room"
-        className="nav-glow block rounded-xl px-4 py-3 text-xs uppercase tracking-[0.25em] text-muted-foreground transition-colors hover:bg-foreground/5"
-        activeProps={{ className: "text-foreground bg-foreground/5" }}
-      >
-        My Workspace
-      </Link>
-      <Link
-        to="/studio"
-        className="nav-glow block rounded-xl px-4 py-3 text-xs uppercase tracking-[0.25em] text-muted-foreground transition-colors hover:bg-foreground/5"
-        activeProps={{ className: "text-foreground bg-foreground/5" }}
-      >
-        🎬 FV Studios
-      </Link>
-      <Link
-        to="/welcome-hall"
-        className="nav-glow block rounded-xl px-4 py-3 text-xs uppercase tracking-[0.25em] text-muted-foreground transition-colors hover:bg-foreground/5"
-        activeProps={{ className: "text-foreground bg-foreground/5" }}
-      >
-        Welcome Hall
-      </Link>
-      <Link
-        to="/vault"
-        className="nav-glow block rounded-xl px-4 py-3 text-xs uppercase tracking-[0.25em] text-muted-foreground transition-colors hover:bg-foreground/5"
-        activeProps={{ className: "text-foreground bg-foreground/5" }}
-      >
-        Builder Vault
-      </Link>
-      <Link
-        to="/creation"
-        className="nav-glow block rounded-xl px-4 py-3 text-xs uppercase tracking-[0.25em] text-muted-foreground transition-colors hover:bg-foreground/5"
-        activeProps={{ className: "text-foreground bg-foreground/5" }}
-      >
-        Creation District
-      </Link>
-      <Link
-        to="/opportunity"
-        className="nav-glow block rounded-xl px-4 py-3 text-xs uppercase tracking-[0.25em] text-muted-foreground transition-colors hover:bg-foreground/5"
-        activeProps={{ className: "text-foreground bg-foreground/5" }}
-      >
-        Opportunity Center
-      </Link>
-      <Link
-        to="/academy"
-        className="nav-glow block rounded-xl px-4 py-3 text-xs uppercase tracking-[0.25em] text-muted-foreground transition-colors hover:bg-foreground/5"
-        activeProps={{ className: "text-foreground bg-foreground/5" }}
-      >
-        Academy District
-      </Link>
-      <Link
-        to="/workspace/card"
-        className="nav-glow block rounded-xl px-4 py-3 text-xs uppercase tracking-[0.25em] text-muted-foreground transition-colors hover:bg-foreground/5"
-        activeProps={{ className: "text-foreground bg-foreground/5" }}
-      >
-        My Frass Card
-      </Link>
+      {groups.map((group) => (
+        <div key={group.id}>
+          <p className="px-4 pb-1 pt-3 text-[9px] uppercase tracking-[0.3em] text-muted-foreground">
+            {group.label}
+          </p>
+          {group.items.map((item) => (
+            <Link
+              key={item.to}
+              to={item.to as never}
+              title={item.plain}
+              className="nav-glow block rounded-xl px-4 py-3 text-xs uppercase tracking-[0.25em] text-muted-foreground transition-colors hover:bg-foreground/5"
+              activeProps={{ className: "text-foreground bg-foreground/5" }}
+            >
+              <span aria-hidden className="mr-2">{item.glyph}</span>
+              {item.label}
+            </Link>
+          ))}
+        </div>
+      ))}
 
-      {isAdmin && (
-        <Link
-          to="/control-room"
-          className="nav-glow block rounded-xl px-4 py-3 text-xs uppercase tracking-[0.25em] text-muted-foreground transition-colors hover:bg-foreground/5"
-          activeProps={{ className: "text-foreground bg-foreground/5" }}
-        >
-          Founder Mode
-        </Link>
-      )}
-      {isAdmin && (
-        <Link
-          to="/admin"
-          className="nav-glow block rounded-xl px-4 py-3 text-xs uppercase tracking-[0.25em] text-muted-foreground transition-colors hover:bg-foreground/5"
-          activeProps={{ className: "text-foreground bg-foreground/5" }}
-        >
-          Admin
-        </Link>
-      )}
       <button
         onClick={handleSignOut}
         className="nav-glow block w-full rounded-xl px-4 py-3 text-left text-xs uppercase tracking-[0.25em] text-muted-foreground transition-colors hover:bg-foreground/5"
