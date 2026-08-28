@@ -78,3 +78,92 @@ there, private to them. Around it, three things hold the experience back:
 3. `/admin/roles` can offer site ownership to a normal member.
 
 No source code, data or shells were changed during this audit.
+
+---
+
+# ATLAS RECOVERY PHASE 1 — 28 Aug 2026
+
+## 0. Audit contradiction: "nothing was changed" vs "the ledger no longer throws"
+
+- **What "the ledger" is:** the Founder Audit Ledger (FRASS-0573) — the Founder's
+  permanent conversation journal, shown inside the Founder Control Room.
+- **File changed:** `src/lib/founder/audit-ledger.functions.ts` (`listAuditLedger`).
+- **When:** immediately *after* the Atlas Phase 2 audit report was written, as a
+  separate error-fix request from the Founder ("Error: Founder access only").
+- **Was it part of Atlas Phase 2?** No. It was a follow-up fix in the next
+  message, so the Phase 2 sentence "nothing was fixed" was true when written and
+  became stale once the fix landed in the same document.
+- **Source code change:** YES — the reading function now returns an empty list
+  for non-Founders instead of throwing.
+- **Database change:** NO. **RLS change:** NO. Writes stayed Founder-only and the
+  table's policies were untouched.
+- **Why the contradiction:** the two statements describe two different moments
+  and were recorded in one document without a timeline. Corrected here.
+
+## 1. P0 — CLAIM SITE OWNERSHIP
+
+- **BEFORE:** `/admin` (and therefore `/admin/roles`) rendered for any signed-in
+  member and offered a "Claim site ownership" button.
+- **Root cause:** the owner console had no route-level authorization at all. It
+  rendered an "Owner access required" screen client-side, and that screen carried
+  a first-run bootstrap button.
+- **Could a member actually claim ownership?** NO. `claimInitialAdmin` refused
+  whenever an admin already existed, and the Founder (desroyfrass@gmail.com)
+  holds the admin role. The exposure was a real authorization gap in the door,
+  not a completed takeover path.
+- **FIX:** server-verified `beforeLoad` guard (`requireFounderRoute`) on `/admin`;
+  the bootstrap UI and the `claimInitialAdmin` server function were deleted
+  outright, so no ownership-claim action exists to call any more.
+- **RETEST (porositybalance@gmail.com):** `/admin` → `/welcome-hall`,
+  `/admin/roles` → `/welcome-hall`. No ownership control rendered. **PASS.**
+
+## 2. P0 — Founder Hall / Control Room exposure
+
+- **BEFORE:** `/control-room`, `/founder`, `/command`, `/studios` relied on a
+  client-side role hook only; a direct URL rendered the shell for anyone.
+- **FIX:** all Founder routes now run one shared server-verified guard before
+  loading or rendering anything. Unauthorized visitors go to the Welcome Hall,
+  never sideways into another Founder route.
+- **RETEST:** `/control-room` → `/welcome-hall`, `/founder` → `/welcome-hall`,
+  `/command` → `/welcome-hall`, `/studios` → `/welcome-hall`. **PASS.**
+- Founder-only server functions (roles list/grant/revoke, ledger, admin data)
+  already re-verify `has_role` server-side; unchanged.
+
+## 3. `/room` and `/daily`
+
+- **BEFORE (Phase 2):** both landed on `/onboarding`.
+- **Root cause:** the member has an *in-progress* Builder Journey and has never
+  answered Frassy (0 messages), so FRASS-0563's Welcome Gate correctly walked
+  them to onboarding. This is a legitimate unmet prerequisite, not a routing bug.
+- **RETEST:** `/room` → My Workspace renders; `/daily` → `/room?daily=true` and
+  the Daily opens. **PASS** (no invented replacement destination).
+
+## 4. Welcome Hall self-redirect loop
+
+- **Root cause:** the `next` continuation accepted any internal path, including
+  `/welcome-hall` itself and `/onboarding`.
+- **FIX:** one shared sanitizer (`src/lib/welcome-hall/continuation.ts`) used by
+  the route, the daily ceremony and the gate. Self-references, sign-in and
+  onboarding fall back to the canonical member destination `/room`.
+- **RETEST:** `/welcome-hall?welcome=daily&next=/welcome-hall` normalised to
+  `next=/room`. **PASS.**
+
+## 5. The six 404 destinations
+
+| Route | Classification | Result |
+|---|---|---|
+| `/card` | BROKEN ALIAS → `/workspace/card` | redirect verified |
+| `/builder-identity` | BROKEN ALIAS → `/workspace/profile` | redirect verified |
+| `/shop` | BROKEN ALIAS → `/frass-district` (matches existing `/shop-frass`) | redirect verified |
+| `/kids` | BROKEN ALIAS → `/kids-world` (Kids Valley; the kids *shop* is `/frass-kids`) | redirect verified |
+| `/community` | BROKEN ALIAS → `/town-square` | redirect verified |
+| `/wallet` | BROKEN ALIAS → `/workspace/wallet` | redirect verified, then **REQUIRES HUMAN IDENTITY VERIFICATION** (Identity Check) |
+
+All destinations were taken from the authoritative registry in
+`src/lib/navigation/hierarchy.ts`; no new destination list was introduced and no
+missing feature was built.
+
+## 6. Vault Engine regression
+
+`/vaults` lists the existing ATLAS TEST VAULT; the vault opens and its stored
+record persists. **STILL END-TO-END VERIFIED.**
