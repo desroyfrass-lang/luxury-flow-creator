@@ -23,7 +23,9 @@ export const listAuditLedger = createServerFn({ method: "GET" })
       _user_id: context.userId,
       _role: "admin",
     });
-    if (role.data !== true) throw new Error("Founder access only.");
+    // Not the Founder: no ledger to read. Return an empty journal rather than
+    // throwing — a signed-in member must never hit a runtime error here.
+    if (role.data !== true) return [];
     const { data, error } = await context.supabase
       .from("founder_audit_ledger")
       .select("id, card_key, card_number, card_title, card_path, role, content, created_at")
