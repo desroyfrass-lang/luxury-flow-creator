@@ -494,6 +494,19 @@ function StudioPage() {
             </aside>
           </div>
         </div>
+
+        {/* Frassy is present in every studio — she directs, you approve. */}
+        <section className="mx-auto mt-14 max-w-[1500px] rounded-lg border border-border/70 bg-card/40 p-5">
+          <div className="text-[10px] uppercase tracking-[0.3em] text-[color:var(--gold)]">Your production partner</div>
+          <h2 className="mt-1 font-display text-xl uppercase tracking-tight">Ask Frassy</h2>
+          <p className="mt-1 text-sm text-muted-foreground">
+            Same Frassy from everywhere else — she just knows the edit suite too. Try: “cut this into three shorts”,
+            “what will this cost before I approve it”, “add captions in my voice”.
+          </p>
+          <div className="mt-4">
+            <FrassyChat embedded tone="dark" />
+          </div>
+        </section>
       </div>
     </SiteShell>
   );
