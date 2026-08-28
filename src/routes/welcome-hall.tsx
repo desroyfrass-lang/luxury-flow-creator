@@ -11,6 +11,7 @@ import { onboardingDestination } from "@/lib/navigation/core-routes";
 import { ViewModeToggle } from "@/components/view-mode/view-mode-toggle";
 import { DailyWelcomeCeremony } from "@/components/welcome-hall/daily-welcome-ceremony";
 import { WELCOME_HALL_PURPOSES } from "@/lib/welcome-hall/daily-welcome";
+import { safeContinuation, SAFE_MEMBER_DESTINATION } from "@/lib/welcome-hall/continuation";
 import { FirstArrivalCeremony } from "@/components/welcome-hall/first-arrival-ceremony";
 import { useMyRoles } from "@/hooks/use-my-roles";
 
@@ -28,8 +29,10 @@ export const Route = createFileRoute("/welcome-hall")({
   ): { welcome?: "daily"; arrival?: "first"; next?: string } => ({
     ...(search["welcome"] === "daily" ? { welcome: "daily" as const } : {}),
     ...(search["arrival"] === "first" ? { arrival: "first" as const } : {}),
-    ...(typeof search["next"] === "string" && search["next"].startsWith("/")
-      ? { next: search["next"] }
+    // Atlas Recovery Phase 1 — a continuation may never point back at the
+    // Welcome Hall, the sign-in door or the onboarding conversation.
+    ...(typeof search["next"] === "string"
+      ? { next: safeContinuation(search["next"]) }
       : {}),
   }),
   head: () => ({
@@ -178,7 +181,7 @@ function WelcomeHallPage() {
       {/* FRASS-0569 — 🌅 Welcome Hall One. Frassy greets first; the Daily follows. */}
       {search.welcome === "daily" && (
         <div className="mx-auto max-w-[1100px] px-6 pt-24 lg:px-10">
-          <DailyWelcomeCeremony next={search.next ?? "/room"} />
+          <DailyWelcomeCeremony next={search.next ?? SAFE_MEMBER_DESTINATION} />
         </div>
       )}
       {/* The gates */}

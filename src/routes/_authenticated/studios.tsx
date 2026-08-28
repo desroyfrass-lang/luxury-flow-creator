@@ -3,12 +3,15 @@
 // new wing of the same house.
 import { createFileRoute, Link, Outlet, useRouterState } from "@tanstack/react-router";
 import { IdentityGate } from "@/components/security/identity-gate";
+import { requireFounderRoute } from "@/lib/founder/route-guard";
 import { STUDIO_NAV, STUDIO_PRIMARY_NAV, STUDIO_SECONDARY_NAV, studioNavItems } from "@/lib/studios/studios";
 import { FrassyChat } from "@/components/frassy-chat";
 import { useIsAdminStatus } from "@/hooks/use-is-admin";
 import { Button } from "@/components/ui/button";
 
 export const Route = createFileRoute("/_authenticated/studios")({
+  // Atlas Recovery Phase 1 — server-verified Founder door before anything loads.
+  beforeLoad: requireFounderRoute,
   head: () => ({
     meta: [
       { title: "Frassy Studios | Frass Hill" },

@@ -6,6 +6,7 @@
 import { useState } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { IdentityGate } from "@/components/security/identity-gate";
+import { requireFounderRoute } from "@/lib/founder/route-guard";
 import { COMMAND_SECTIONS, FOUNDER_NAV_GROUPS, type CommandSectionId } from "@/lib/founder/command-center";
 import { useIsAdminStatus } from "@/hooks/use-is-admin";
 import { Button } from "@/components/ui/button";
@@ -39,6 +40,8 @@ import { ObservationWindowPanel } from "@/components/finance/observation-window-
 import { SecurityAlertsPanel } from "@/components/finance/security-alerts-panel";
 
 export const Route = createFileRoute("/_authenticated/control-room")({
+  // Atlas Recovery Phase 1 — server-verified Founder door before anything loads.
+  beforeLoad: requireFounderRoute,
   head: () => ({
     meta: [
       { title: "Founder Control Room | Frass" },

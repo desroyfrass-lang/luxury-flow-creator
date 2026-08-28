@@ -1,3 +1,4 @@
+import { safeContinuation, SAFE_MEMBER_DESTINATION } from "@/lib/welcome-hall/continuation";
 // FRASS-0569 — 🌅 Welcome Hall One: the Daily Welcome.
 //
 // This is the ceremony every Builder passes through once a calendar day before
@@ -24,7 +25,9 @@ import {
 import { FrassyLook } from "@/components/frassy/frassy-look";
 import { t as copy } from "@/lib/i18n";
 
-export function DailyWelcomeCeremony({ next = "/room" }: { next?: string }) {
+export function DailyWelcomeCeremony({ next = SAFE_MEMBER_DESTINATION }: { next?: string }) {
+  // Atlas Recovery Phase 1 — never continue back into the Welcome Hall itself.
+  const destination = safeContinuation(next);
   const navigate = useNavigate();
   const hallFn = useServerFn(getWelcomeHall);
   const [tier, setTier] = useState<WelcomeTier>("motivational");
@@ -218,14 +221,14 @@ export function DailyWelcomeCeremony({ next = "/room" }: { next?: string }) {
       <div className="mt-9 flex flex-wrap gap-3">
         <button
           type="button"
-          onClick={() => leave(next)}
+          onClick={() => leave(destination)}
           className="lux-press inline-flex items-center gap-2 rounded-sm border border-[color:var(--hill-gold)] bg-[color:var(--hill-gold)] px-7 py-3.5 text-[11px] font-bold uppercase tracking-[0.3em] text-[color:var(--ink)]"
         >
           {copy("welcome.continue")} <ArrowRight className="h-3.5 w-3.5" />
         </button>
         <button
           type="button"
-          onClick={() => leave(next)}
+          onClick={() => leave(destination)}
           className="lux-press rounded-sm border border-border px-7 py-3.5 text-[11px] font-bold uppercase tracking-[0.3em] hover:border-[color:var(--hill-gold)]"
         >
           {copy("welcome.skip")}
