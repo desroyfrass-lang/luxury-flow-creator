@@ -207,3 +207,16 @@ record persists. **STILL END-TO-END VERIFIED.**
 - NORMAL MEMBER CANNOT ACCESS FOUNDER TP: YES (it lives inside the guarded Control Room)
 - FOUNDER CAN ENTER THE NORMAL FRASS HILL EXPERIENCE INTENTIONALLY: YES
 - NO NEW COMPETING ADMIN HOME WAS CREATED: YES
+
+---
+
+## DAILY + WORKSHOP FUNCTIONAL REBUILD — RETEST (real member: porositybalance@gmail.com)
+
+| Journey step | BEFORE | FIX | RETEST | STATUS |
+| --- | --- | --- | --- | --- |
+| `/daily` | Redirect to `/room?daily=true`, sample persona data | Canonical `/daily` under `_authenticated`, real data only | Loads directly, greets member, shows only real work | ✅ |
+| `/workshop` | Did not exist | Canonical execution environment on `member_actions` | Created work item, persisted after reload | ✅ |
+| Daily ↔ Workshop | Duplicated features | Daily organises, Workshop executes; one shared work record | Item created in Workshop appears in Daily TODAY | ✅ |
+| `/room` | Member workspace with sample data | Redirects to `/workshop` (or `/daily` for `?daily=true`); old UI preserved at `/room-classic` | No 404, no onboarding bounce | ✅ |
+| Sample data for real members | Fake tasks/revenue/meetings | Removed from the member path; honest empty states | No fabricated items shown | ✅ |
+| Navigation registry | `My Space` rooted at `/room` | Rooted at `/daily`, Workshop registered as an area | Breadcrumbs/teleporter resolve correctly | ✅ |
