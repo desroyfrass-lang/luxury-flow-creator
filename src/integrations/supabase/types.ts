@@ -3374,6 +3374,77 @@ export type Database = {
         }
         Relationships: []
       }
+      member_actions: {
+        Row: {
+          completed_at: string | null
+          context: string | null
+          created_at: string
+          detail: string | null
+          due_at: string | null
+          href: string | null
+          id: string
+          is_sample: boolean
+          owner_id: string
+          priority: number
+          scheduled_for: string | null
+          snoozed_until: string | null
+          source_ref: string | null
+          source_system: string
+          status: string
+          title: string
+          updated_at: string
+          vault_id: string | null
+        }
+        Insert: {
+          completed_at?: string | null
+          context?: string | null
+          created_at?: string
+          detail?: string | null
+          due_at?: string | null
+          href?: string | null
+          id?: string
+          is_sample?: boolean
+          owner_id?: string
+          priority?: number
+          scheduled_for?: string | null
+          snoozed_until?: string | null
+          source_ref?: string | null
+          source_system?: string
+          status?: string
+          title: string
+          updated_at?: string
+          vault_id?: string | null
+        }
+        Update: {
+          completed_at?: string | null
+          context?: string | null
+          created_at?: string
+          detail?: string | null
+          due_at?: string | null
+          href?: string | null
+          id?: string
+          is_sample?: boolean
+          owner_id?: string
+          priority?: number
+          scheduled_for?: string | null
+          snoozed_until?: string | null
+          source_ref?: string | null
+          source_system?: string
+          status?: string
+          title?: string
+          updated_at?: string
+          vault_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "member_actions_vault_id_fkey"
+            columns: ["vault_id"]
+            isOneToOne: false
+            referencedRelation: "vaults"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       member_success_blueprints: {
         Row: {
           accessibility_notes: string | null

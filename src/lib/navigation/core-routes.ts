@@ -26,7 +26,7 @@ export type CoreRoute = {
 
 /** Paths that deliberately land somewhere else. */
 const REDIRECTS: Record<string, string> = {
-  "/daily": "/room?daily=true",
+  "/room": "/workshop",
 };
 
 function toCoreRoute(node: NavNode): CoreRoute {

@@ -48,7 +48,6 @@ import { Route as FrassDripRouteImport } from './routes/frass-drip'
 import { Route as FrassDistrictRouteImport } from './routes/frass-district'
 import { Route as ForUsRouteImport } from './routes/for-us'
 import { Route as ForMeRouteImport } from './routes/for-me'
-import { Route as DailyRouteImport } from './routes/daily'
 import { Route as CommunityRouteImport } from './routes/community'
 import { Route as CheckoutRouteImport } from './routes/checkout'
 import { Route as CapsulesRouteImport } from './routes/capsules'
@@ -127,11 +126,13 @@ import { Route as ApiChatRouteImport } from './routes/api/chat'
 import { Route as AfroDesignersJoinRouteImport } from './routes/afro-designers.join'
 import { Route as AfroDesignersDesignersRouteImport } from './routes/afro-designers.designers'
 import { Route as AuthenticatedWorkspaceRouteImport } from './routes/_authenticated/workspace'
+import { Route as AuthenticatedWorkshopRouteImport } from './routes/_authenticated/workshop'
 import { Route as AuthenticatedVisualReviewRouteImport } from './routes/_authenticated/visual-review'
 import { Route as AuthenticatedVaultRouteImport } from './routes/_authenticated/vault'
 import { Route as AuthenticatedTryOnRouteImport } from './routes/_authenticated/try-on'
 import { Route as AuthenticatedStudiosRouteImport } from './routes/_authenticated/studios'
 import { Route as AuthenticatedStudioRouteImport } from './routes/_authenticated/studio'
+import { Route as AuthenticatedRoomClassicRouteImport } from './routes/_authenticated/room-classic'
 import { Route as AuthenticatedRoomRouteImport } from './routes/_authenticated/room'
 import { Route as AuthenticatedPaymentProvidersRouteImport } from './routes/_authenticated/payment-providers'
 import { Route as AuthenticatedOpportunityRouteImport } from './routes/_authenticated/opportunity'
@@ -146,6 +147,7 @@ import { Route as AuthenticatedFrassyRouteImport } from './routes/_authenticated
 import { Route as AuthenticatedFounderRouteImport } from './routes/_authenticated/founder'
 import { Route as AuthenticatedFirst30DaysRouteImport } from './routes/_authenticated/first-30-days'
 import { Route as AuthenticatedFinancialCenterRouteImport } from './routes/_authenticated/financial-center'
+import { Route as AuthenticatedDailyRouteImport } from './routes/_authenticated/daily'
 import { Route as AuthenticatedCreationRouteImport } from './routes/_authenticated/creation'
 import { Route as AuthenticatedControlRoomRouteImport } from './routes/_authenticated/control-room'
 import { Route as AuthenticatedCommerceSimulationRouteImport } from './routes/_authenticated/commerce-simulation'
@@ -449,11 +451,6 @@ const ForUsRoute = ForUsRouteImport.update({
 const ForMeRoute = ForMeRouteImport.update({
   id: '/for-me',
   path: '/for-me',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const DailyRoute = DailyRouteImport.update({
-  id: '/daily',
-  path: '/daily',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CommunityRoute = CommunityRouteImport.update({
@@ -846,6 +843,11 @@ const AuthenticatedWorkspaceRoute = AuthenticatedWorkspaceRouteImport.update({
   path: '/workspace',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedWorkshopRoute = AuthenticatedWorkshopRouteImport.update({
+  id: '/workshop',
+  path: '/workshop',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedVisualReviewRoute =
   AuthenticatedVisualReviewRouteImport.update({
     id: '/visual-review',
@@ -872,6 +874,12 @@ const AuthenticatedStudioRoute = AuthenticatedStudioRouteImport.update({
   path: '/studio',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedRoomClassicRoute =
+  AuthenticatedRoomClassicRouteImport.update({
+    id: '/room-classic',
+    path: '/room-classic',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedRoomRoute = AuthenticatedRoomRouteImport.update({
   id: '/room',
   path: '/room',
@@ -950,6 +958,11 @@ const AuthenticatedFinancialCenterRoute =
     path: '/financial-center',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedDailyRoute = AuthenticatedDailyRouteImport.update({
+  id: '/daily',
+  path: '/daily',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedCreationRoute = AuthenticatedCreationRouteImport.update({
   id: '/creation',
   path: '/creation',
@@ -1584,7 +1597,6 @@ export interface FileRoutesByFullPath {
   '/capsules': typeof CapsulesRouteWithChildren
   '/checkout': typeof CheckoutRoute
   '/community': typeof CommunityRoute
-  '/daily': typeof DailyRoute
   '/for-me': typeof ForMeRoute
   '/for-us': typeof ForUsRoute
   '/frass-district': typeof FrassDistrictRoute
@@ -1637,6 +1649,7 @@ export interface FileRoutesByFullPath {
   '/commerce-simulation': typeof AuthenticatedCommerceSimulationRoute
   '/control-room': typeof AuthenticatedControlRoomRoute
   '/creation': typeof AuthenticatedCreationRoute
+  '/daily': typeof AuthenticatedDailyRoute
   '/financial-center': typeof AuthenticatedFinancialCenterRoute
   '/first-30-days': typeof AuthenticatedFirst30DaysRoute
   '/founder': typeof AuthenticatedFounderRoute
@@ -1651,11 +1664,13 @@ export interface FileRoutesByFullPath {
   '/opportunity': typeof AuthenticatedOpportunityRoute
   '/payment-providers': typeof AuthenticatedPaymentProvidersRoute
   '/room': typeof AuthenticatedRoomRoute
+  '/room-classic': typeof AuthenticatedRoomClassicRoute
   '/studio': typeof AuthenticatedStudioRoute
   '/studios': typeof AuthenticatedStudiosRouteWithChildren
   '/try-on': typeof AuthenticatedTryOnRoute
   '/vault': typeof AuthenticatedVaultRoute
   '/visual-review': typeof AuthenticatedVisualReviewRoute
+  '/workshop': typeof AuthenticatedWorkshopRoute
   '/workspace': typeof AuthenticatedWorkspaceRouteWithChildren
   '/afro-designers/designers': typeof AfroDesignersDesignersRouteWithChildren
   '/afro-designers/join': typeof AfroDesignersJoinRoute
@@ -1825,7 +1840,6 @@ export interface FileRoutesByTo {
   '/builder-identity': typeof BuilderIdentityRoute
   '/checkout': typeof CheckoutRoute
   '/community': typeof CommunityRoute
-  '/daily': typeof DailyRoute
   '/for-me': typeof ForMeRoute
   '/for-us': typeof ForUsRoute
   '/frass-district': typeof FrassDistrictRoute
@@ -1867,6 +1881,7 @@ export interface FileRoutesByTo {
   '/commerce-simulation': typeof AuthenticatedCommerceSimulationRoute
   '/control-room': typeof AuthenticatedControlRoomRoute
   '/creation': typeof AuthenticatedCreationRoute
+  '/daily': typeof AuthenticatedDailyRoute
   '/financial-center': typeof AuthenticatedFinancialCenterRoute
   '/first-30-days': typeof AuthenticatedFirst30DaysRoute
   '/founder': typeof AuthenticatedFounderRoute
@@ -1881,10 +1896,12 @@ export interface FileRoutesByTo {
   '/opportunity': typeof AuthenticatedOpportunityRoute
   '/payment-providers': typeof AuthenticatedPaymentProvidersRoute
   '/room': typeof AuthenticatedRoomRoute
+  '/room-classic': typeof AuthenticatedRoomClassicRoute
   '/studio': typeof AuthenticatedStudioRoute
   '/try-on': typeof AuthenticatedTryOnRoute
   '/vault': typeof AuthenticatedVaultRoute
   '/visual-review': typeof AuthenticatedVisualReviewRoute
+  '/workshop': typeof AuthenticatedWorkshopRoute
   '/workspace': typeof AuthenticatedWorkspaceRouteWithChildren
   '/afro-designers/designers': typeof AfroDesignersDesignersRouteWithChildren
   '/afro-designers/join': typeof AfroDesignersJoinRoute
@@ -2056,7 +2073,6 @@ export interface FileRoutesById {
   '/capsules': typeof CapsulesRouteWithChildren
   '/checkout': typeof CheckoutRoute
   '/community': typeof CommunityRoute
-  '/daily': typeof DailyRoute
   '/for-me': typeof ForMeRoute
   '/for-us': typeof ForUsRoute
   '/frass-district': typeof FrassDistrictRoute
@@ -2109,6 +2125,7 @@ export interface FileRoutesById {
   '/_authenticated/commerce-simulation': typeof AuthenticatedCommerceSimulationRoute
   '/_authenticated/control-room': typeof AuthenticatedControlRoomRoute
   '/_authenticated/creation': typeof AuthenticatedCreationRoute
+  '/_authenticated/daily': typeof AuthenticatedDailyRoute
   '/_authenticated/financial-center': typeof AuthenticatedFinancialCenterRoute
   '/_authenticated/first-30-days': typeof AuthenticatedFirst30DaysRoute
   '/_authenticated/founder': typeof AuthenticatedFounderRoute
@@ -2123,11 +2140,13 @@ export interface FileRoutesById {
   '/_authenticated/opportunity': typeof AuthenticatedOpportunityRoute
   '/_authenticated/payment-providers': typeof AuthenticatedPaymentProvidersRoute
   '/_authenticated/room': typeof AuthenticatedRoomRoute
+  '/_authenticated/room-classic': typeof AuthenticatedRoomClassicRoute
   '/_authenticated/studio': typeof AuthenticatedStudioRoute
   '/_authenticated/studios': typeof AuthenticatedStudiosRouteWithChildren
   '/_authenticated/try-on': typeof AuthenticatedTryOnRoute
   '/_authenticated/vault': typeof AuthenticatedVaultRoute
   '/_authenticated/visual-review': typeof AuthenticatedVisualReviewRoute
+  '/_authenticated/workshop': typeof AuthenticatedWorkshopRoute
   '/_authenticated/workspace': typeof AuthenticatedWorkspaceRouteWithChildren
   '/afro-designers/designers': typeof AfroDesignersDesignersRouteWithChildren
   '/afro-designers/join': typeof AfroDesignersJoinRoute
@@ -2305,7 +2324,6 @@ export interface FileRouteTypes {
     | '/capsules'
     | '/checkout'
     | '/community'
-    | '/daily'
     | '/for-me'
     | '/for-us'
     | '/frass-district'
@@ -2358,6 +2376,7 @@ export interface FileRouteTypes {
     | '/commerce-simulation'
     | '/control-room'
     | '/creation'
+    | '/daily'
     | '/financial-center'
     | '/first-30-days'
     | '/founder'
@@ -2372,11 +2391,13 @@ export interface FileRouteTypes {
     | '/opportunity'
     | '/payment-providers'
     | '/room'
+    | '/room-classic'
     | '/studio'
     | '/studios'
     | '/try-on'
     | '/vault'
     | '/visual-review'
+    | '/workshop'
     | '/workspace'
     | '/afro-designers/designers'
     | '/afro-designers/join'
@@ -2546,7 +2567,6 @@ export interface FileRouteTypes {
     | '/builder-identity'
     | '/checkout'
     | '/community'
-    | '/daily'
     | '/for-me'
     | '/for-us'
     | '/frass-district'
@@ -2588,6 +2608,7 @@ export interface FileRouteTypes {
     | '/commerce-simulation'
     | '/control-room'
     | '/creation'
+    | '/daily'
     | '/financial-center'
     | '/first-30-days'
     | '/founder'
@@ -2602,10 +2623,12 @@ export interface FileRouteTypes {
     | '/opportunity'
     | '/payment-providers'
     | '/room'
+    | '/room-classic'
     | '/studio'
     | '/try-on'
     | '/vault'
     | '/visual-review'
+    | '/workshop'
     | '/workspace'
     | '/afro-designers/designers'
     | '/afro-designers/join'
@@ -2776,7 +2799,6 @@ export interface FileRouteTypes {
     | '/capsules'
     | '/checkout'
     | '/community'
-    | '/daily'
     | '/for-me'
     | '/for-us'
     | '/frass-district'
@@ -2829,6 +2851,7 @@ export interface FileRouteTypes {
     | '/_authenticated/commerce-simulation'
     | '/_authenticated/control-room'
     | '/_authenticated/creation'
+    | '/_authenticated/daily'
     | '/_authenticated/financial-center'
     | '/_authenticated/first-30-days'
     | '/_authenticated/founder'
@@ -2843,11 +2866,13 @@ export interface FileRouteTypes {
     | '/_authenticated/opportunity'
     | '/_authenticated/payment-providers'
     | '/_authenticated/room'
+    | '/_authenticated/room-classic'
     | '/_authenticated/studio'
     | '/_authenticated/studios'
     | '/_authenticated/try-on'
     | '/_authenticated/vault'
     | '/_authenticated/visual-review'
+    | '/_authenticated/workshop'
     | '/_authenticated/workspace'
     | '/afro-designers/designers'
     | '/afro-designers/join'
@@ -3025,7 +3050,6 @@ export interface RootRouteChildren {
   CapsulesRoute: typeof CapsulesRouteWithChildren
   CheckoutRoute: typeof CheckoutRoute
   CommunityRoute: typeof CommunityRoute
-  DailyRoute: typeof DailyRoute
   ForMeRoute: typeof ForMeRoute
   ForUsRoute: typeof ForUsRoute
   FrassDistrictRoute: typeof FrassDistrictRoute
@@ -3365,13 +3389,6 @@ declare module '@tanstack/react-router' {
       path: '/for-me'
       fullPath: '/for-me'
       preLoaderRoute: typeof ForMeRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/daily': {
-      id: '/daily'
-      path: '/daily'
-      fullPath: '/daily'
-      preLoaderRoute: typeof DailyRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/community': {
@@ -3920,6 +3937,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedWorkspaceRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/workshop': {
+      id: '/_authenticated/workshop'
+      path: '/workshop'
+      fullPath: '/workshop'
+      preLoaderRoute: typeof AuthenticatedWorkshopRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/visual-review': {
       id: '/_authenticated/visual-review'
       path: '/visual-review'
@@ -3953,6 +3977,13 @@ declare module '@tanstack/react-router' {
       path: '/studio'
       fullPath: '/studio'
       preLoaderRoute: typeof AuthenticatedStudioRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/room-classic': {
+      id: '/_authenticated/room-classic'
+      path: '/room-classic'
+      fullPath: '/room-classic'
+      preLoaderRoute: typeof AuthenticatedRoomClassicRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/room': {
@@ -4051,6 +4082,13 @@ declare module '@tanstack/react-router' {
       path: '/financial-center'
       fullPath: '/financial-center'
       preLoaderRoute: typeof AuthenticatedFinancialCenterRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/daily': {
+      id: '/_authenticated/daily'
+      path: '/daily'
+      fullPath: '/daily'
+      preLoaderRoute: typeof AuthenticatedDailyRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/creation': {
@@ -5000,6 +5038,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedCommerceSimulationRoute: typeof AuthenticatedCommerceSimulationRoute
   AuthenticatedControlRoomRoute: typeof AuthenticatedControlRoomRoute
   AuthenticatedCreationRoute: typeof AuthenticatedCreationRoute
+  AuthenticatedDailyRoute: typeof AuthenticatedDailyRoute
   AuthenticatedFinancialCenterRoute: typeof AuthenticatedFinancialCenterRoute
   AuthenticatedFirst30DaysRoute: typeof AuthenticatedFirst30DaysRoute
   AuthenticatedFounderRoute: typeof AuthenticatedFounderRoute
@@ -5014,11 +5053,13 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedOpportunityRoute: typeof AuthenticatedOpportunityRoute
   AuthenticatedPaymentProvidersRoute: typeof AuthenticatedPaymentProvidersRoute
   AuthenticatedRoomRoute: typeof AuthenticatedRoomRoute
+  AuthenticatedRoomClassicRoute: typeof AuthenticatedRoomClassicRoute
   AuthenticatedStudioRoute: typeof AuthenticatedStudioRoute
   AuthenticatedStudiosRoute: typeof AuthenticatedStudiosRouteWithChildren
   AuthenticatedTryOnRoute: typeof AuthenticatedTryOnRoute
   AuthenticatedVaultRoute: typeof AuthenticatedVaultRoute
   AuthenticatedVisualReviewRoute: typeof AuthenticatedVisualReviewRoute
+  AuthenticatedWorkshopRoute: typeof AuthenticatedWorkshopRoute
   AuthenticatedWorkspaceRoute: typeof AuthenticatedWorkspaceRouteWithChildren
   AuthenticatedVaultsVaultIdRoute: typeof AuthenticatedVaultsVaultIdRouteWithChildren
   AuthenticatedVaultsNewRoute: typeof AuthenticatedVaultsNewRoute
@@ -5037,6 +5078,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedCommerceSimulationRoute: AuthenticatedCommerceSimulationRoute,
   AuthenticatedControlRoomRoute: AuthenticatedControlRoomRoute,
   AuthenticatedCreationRoute: AuthenticatedCreationRoute,
+  AuthenticatedDailyRoute: AuthenticatedDailyRoute,
   AuthenticatedFinancialCenterRoute: AuthenticatedFinancialCenterRoute,
   AuthenticatedFirst30DaysRoute: AuthenticatedFirst30DaysRoute,
   AuthenticatedFounderRoute: AuthenticatedFounderRoute,
@@ -5051,11 +5093,13 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedOpportunityRoute: AuthenticatedOpportunityRoute,
   AuthenticatedPaymentProvidersRoute: AuthenticatedPaymentProvidersRoute,
   AuthenticatedRoomRoute: AuthenticatedRoomRoute,
+  AuthenticatedRoomClassicRoute: AuthenticatedRoomClassicRoute,
   AuthenticatedStudioRoute: AuthenticatedStudioRoute,
   AuthenticatedStudiosRoute: AuthenticatedStudiosRouteWithChildren,
   AuthenticatedTryOnRoute: AuthenticatedTryOnRoute,
   AuthenticatedVaultRoute: AuthenticatedVaultRoute,
   AuthenticatedVisualReviewRoute: AuthenticatedVisualReviewRoute,
+  AuthenticatedWorkshopRoute: AuthenticatedWorkshopRoute,
   AuthenticatedWorkspaceRoute: AuthenticatedWorkspaceRouteWithChildren,
   AuthenticatedVaultsVaultIdRoute: AuthenticatedVaultsVaultIdRouteWithChildren,
   AuthenticatedVaultsNewRoute: AuthenticatedVaultsNewRoute,
@@ -5466,7 +5510,6 @@ const rootRouteChildren: RootRouteChildren = {
   CapsulesRoute: CapsulesRouteWithChildren,
   CheckoutRoute: CheckoutRoute,
   CommunityRoute: CommunityRoute,
-  DailyRoute: DailyRoute,
   ForMeRoute: ForMeRoute,
   ForUsRoute: ForUsRoute,
   FrassDistrictRoute: FrassDistrictRoute,
