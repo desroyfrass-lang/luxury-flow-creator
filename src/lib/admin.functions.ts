@@ -13,28 +13,9 @@ export const checkIsAdmin = createServerFn({ method: "GET" })
     return Boolean(data);
   });
 
-/**
- * Claim admin role for the calling user IFF no admin exists yet.
- * Self-service first-owner setup. Subsequent calls are no-ops.
- */
-export const claimInitialAdmin = createServerFn({ method: "POST" })
-  .middleware([requireSupabaseAuth])
-  .handler(async ({ context }) => {
-    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-    const { count, error: countErr } = await supabaseAdmin
-      .from("user_roles")
-      .select("id", { count: "exact", head: true })
-      .eq("role", "admin");
-    if (countErr) throw countErr;
-    if ((count ?? 0) > 0) {
-      return { claimed: false, reason: "An admin already exists." };
-    }
-    const { error: insErr } = await supabaseAdmin
-      .from("user_roles")
-      .insert({ user_id: context.userId, role: "admin" });
-    if (insErr) throw insErr;
-    return { claimed: true };
-  });
+// Atlas Recovery Phase 1 — the self-service "claim site ownership" bootstrap
+// has been removed. Frass Hill has an owner; ownership is granted only through
+// the owner console, never claimed by whoever arrives first.
 
 /** List recent page feedback for the admin console. */
 export const listPageFeedback = createServerFn({ method: "GET" })

@@ -11,11 +11,13 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as WelcomeHallRouteImport } from './routes/welcome-hall'
 import { Route as WelcomeRouteImport } from './routes/welcome'
+import { Route as WalletRouteImport } from './routes/wallet'
 import { Route as VisualSearchRouteImport } from './routes/visual-search'
 import { Route as TownSquareRouteImport } from './routes/town-square'
 import { Route as SocialMediaViralsRouteImport } from './routes/social-media-virals'
 import { Route as SignedOutRouteImport } from './routes/signed-out'
 import { Route as ShopFrassRouteImport } from './routes/shop-frass'
+import { Route as ShopRouteImport } from './routes/shop'
 import { Route as ServicesRouteImport } from './routes/services'
 import { Route as SalesClearanceRouteImport } from './routes/sales-clearance'
 import { Route as RewardsRouteImport } from './routes/rewards'
@@ -26,6 +28,7 @@ import { Route as LookbookRouteImport } from './routes/lookbook'
 import { Route as LiveRouteImport } from './routes/live'
 import { Route as KidsWorldRouteImport } from './routes/kids-world'
 import { Route as KidsValleyRouteImport } from './routes/kids-valley'
+import { Route as KidsRouteImport } from './routes/kids'
 import { Route as KicksDistrictRouteImport } from './routes/kicks-district'
 import { Route as HealthWellnessRouteImport } from './routes/health-wellness'
 import { Route as GatewayRouteImport } from './routes/gateway'
@@ -46,8 +49,10 @@ import { Route as FrassDistrictRouteImport } from './routes/frass-district'
 import { Route as ForUsRouteImport } from './routes/for-us'
 import { Route as ForMeRouteImport } from './routes/for-me'
 import { Route as DailyRouteImport } from './routes/daily'
+import { Route as CommunityRouteImport } from './routes/community'
 import { Route as CheckoutRouteImport } from './routes/checkout'
 import { Route as CapsulesRouteImport } from './routes/capsules'
+import { Route as BuilderIdentityRouteImport } from './routes/builder-identity'
 import { Route as BridalBoutiqueRouteImport } from './routes/bridal-boutique'
 import { Route as BridalRouteImport } from './routes/bridal'
 import { Route as BrandPartnershipsRouteImport } from './routes/brand-partnerships'
@@ -70,6 +75,7 @@ import { Route as FrassLuxuryHouseIndexRouteImport } from './routes/frass-luxury
 import { Route as FrassKidsIndexRouteImport } from './routes/frass-kids.index'
 import { Route as FrassKicksIndexRouteImport } from './routes/frass-kicks.index'
 import { Route as FrassDripIndexRouteImport } from './routes/frass-drip.index'
+import { Route as CardIndexRouteImport } from './routes/card.index'
 import { Route as CapsulesIndexRouteImport } from './routes/capsules.index'
 import { Route as BridalIndexRouteImport } from './routes/bridal.index'
 import { Route as BrandPartnershipsIndexRouteImport } from './routes/brand-partnerships.index'
@@ -260,6 +266,11 @@ const WelcomeRoute = WelcomeRouteImport.update({
   path: '/welcome',
   getParentRoute: () => rootRouteImport,
 } as any)
+const WalletRoute = WalletRouteImport.update({
+  id: '/wallet',
+  path: '/wallet',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const VisualSearchRoute = VisualSearchRouteImport.update({
   id: '/visual-search',
   path: '/visual-search',
@@ -283,6 +294,11 @@ const SignedOutRoute = SignedOutRouteImport.update({
 const ShopFrassRoute = ShopFrassRouteImport.update({
   id: '/shop-frass',
   path: '/shop-frass',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ShopRoute = ShopRouteImport.update({
+  id: '/shop',
+  path: '/shop',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ServicesRoute = ServicesRouteImport.update({
@@ -333,6 +349,11 @@ const KidsWorldRoute = KidsWorldRouteImport.update({
 const KidsValleyRoute = KidsValleyRouteImport.update({
   id: '/kids-valley',
   path: '/kids-valley',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const KidsRoute = KidsRouteImport.update({
+  id: '/kids',
+  path: '/kids',
   getParentRoute: () => rootRouteImport,
 } as any)
 const KicksDistrictRoute = KicksDistrictRouteImport.update({
@@ -435,6 +456,11 @@ const DailyRoute = DailyRouteImport.update({
   path: '/daily',
   getParentRoute: () => rootRouteImport,
 } as any)
+const CommunityRoute = CommunityRouteImport.update({
+  id: '/community',
+  path: '/community',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const CheckoutRoute = CheckoutRouteImport.update({
   id: '/checkout',
   path: '/checkout',
@@ -443,6 +469,11 @@ const CheckoutRoute = CheckoutRouteImport.update({
 const CapsulesRoute = CapsulesRouteImport.update({
   id: '/capsules',
   path: '/capsules',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BuilderIdentityRoute = BuilderIdentityRouteImport.update({
+  id: '/builder-identity',
+  path: '/builder-identity',
   getParentRoute: () => rootRouteImport,
 } as any)
 const BridalBoutiqueRoute = BridalBoutiqueRouteImport.update({
@@ -553,6 +584,11 @@ const FrassDripIndexRoute = FrassDripIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => FrassDripRoute,
+} as any)
+const CardIndexRoute = CardIndexRouteImport.update({
+  id: '/card/',
+  path: '/card/',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const CapsulesIndexRoute = CapsulesIndexRouteImport.update({
   id: '/',
@@ -1544,8 +1580,10 @@ export interface FileRoutesByFullPath {
   '/brand-partnerships': typeof BrandPartnershipsRouteWithChildren
   '/bridal': typeof BridalRouteWithChildren
   '/bridal-boutique': typeof BridalBoutiqueRoute
+  '/builder-identity': typeof BuilderIdentityRoute
   '/capsules': typeof CapsulesRouteWithChildren
   '/checkout': typeof CheckoutRoute
+  '/community': typeof CommunityRoute
   '/daily': typeof DailyRoute
   '/for-me': typeof ForMeRoute
   '/for-us': typeof ForUsRoute
@@ -1566,6 +1604,7 @@ export interface FileRoutesByFullPath {
   '/gateway': typeof GatewayRoute
   '/health-wellness': typeof HealthWellnessRoute
   '/kicks-district': typeof KicksDistrictRoute
+  '/kids': typeof KidsRoute
   '/kids-valley': typeof KidsValleyRoute
   '/kids-world': typeof KidsWorldRouteWithChildren
   '/live': typeof LiveRouteWithChildren
@@ -1576,11 +1615,13 @@ export interface FileRoutesByFullPath {
   '/rewards': typeof RewardsRoute
   '/sales-clearance': typeof SalesClearanceRoute
   '/services': typeof ServicesRoute
+  '/shop': typeof ShopRoute
   '/shop-frass': typeof ShopFrassRoute
   '/signed-out': typeof SignedOutRoute
   '/social-media-virals': typeof SocialMediaViralsRouteWithChildren
   '/town-square': typeof TownSquareRoute
   '/visual-search': typeof VisualSearchRoute
+  '/wallet': typeof WalletRoute
   '/welcome': typeof WelcomeRoute
   '/welcome-hall': typeof WelcomeHallRoute
   '/.mcp/list-tools': typeof Char91DotmcpChar93ListToolsRoute
@@ -1666,6 +1707,7 @@ export interface FileRoutesByFullPath {
   '/brand-partnerships/': typeof BrandPartnershipsIndexRoute
   '/bridal/': typeof BridalIndexRoute
   '/capsules/': typeof CapsulesIndexRoute
+  '/card/': typeof CardIndexRoute
   '/frass-drip/': typeof FrassDripIndexRoute
   '/frass-kicks/': typeof FrassKicksIndexRoute
   '/frass-kids/': typeof FrassKidsIndexRoute
@@ -1780,7 +1822,9 @@ export interface FileRoutesByTo {
   '/arrival': typeof ArrivalRoute
   '/auth': typeof AuthRoute
   '/bridal-boutique': typeof BridalBoutiqueRoute
+  '/builder-identity': typeof BuilderIdentityRoute
   '/checkout': typeof CheckoutRoute
+  '/community': typeof CommunityRoute
   '/daily': typeof DailyRoute
   '/for-me': typeof ForMeRoute
   '/for-us': typeof ForUsRoute
@@ -1795,6 +1839,7 @@ export interface FileRoutesByTo {
   '/gateway': typeof GatewayRoute
   '/health-wellness': typeof HealthWellnessRoute
   '/kicks-district': typeof KicksDistrictRoute
+  '/kids': typeof KidsRoute
   '/kids-valley': typeof KidsValleyRoute
   '/mcp': typeof McpRoute
   '/music-media': typeof MusicMediaRoute
@@ -1802,10 +1847,12 @@ export interface FileRoutesByTo {
   '/rewards': typeof RewardsRoute
   '/sales-clearance': typeof SalesClearanceRoute
   '/services': typeof ServicesRoute
+  '/shop': typeof ShopRoute
   '/shop-frass': typeof ShopFrassRoute
   '/signed-out': typeof SignedOutRoute
   '/town-square': typeof TownSquareRoute
   '/visual-search': typeof VisualSearchRoute
+  '/wallet': typeof WalletRoute
   '/welcome': typeof WelcomeRoute
   '/welcome-hall': typeof WelcomeHallRoute
   '/.mcp/list-tools': typeof Char91DotmcpChar93ListToolsRoute
@@ -1884,6 +1931,7 @@ export interface FileRoutesByTo {
   '/brand-partnerships': typeof BrandPartnershipsIndexRoute
   '/bridal': typeof BridalIndexRoute
   '/capsules': typeof CapsulesIndexRoute
+  '/card': typeof CardIndexRoute
   '/frass-drip': typeof FrassDripIndexRoute
   '/frass-kicks': typeof FrassKicksIndexRoute
   '/frass-kids': typeof FrassKidsIndexRoute
@@ -2004,8 +2052,10 @@ export interface FileRoutesById {
   '/brand-partnerships': typeof BrandPartnershipsRouteWithChildren
   '/bridal': typeof BridalRouteWithChildren
   '/bridal-boutique': typeof BridalBoutiqueRoute
+  '/builder-identity': typeof BuilderIdentityRoute
   '/capsules': typeof CapsulesRouteWithChildren
   '/checkout': typeof CheckoutRoute
+  '/community': typeof CommunityRoute
   '/daily': typeof DailyRoute
   '/for-me': typeof ForMeRoute
   '/for-us': typeof ForUsRoute
@@ -2026,6 +2076,7 @@ export interface FileRoutesById {
   '/gateway': typeof GatewayRoute
   '/health-wellness': typeof HealthWellnessRoute
   '/kicks-district': typeof KicksDistrictRoute
+  '/kids': typeof KidsRoute
   '/kids-valley': typeof KidsValleyRoute
   '/kids-world': typeof KidsWorldRouteWithChildren
   '/live': typeof LiveRouteWithChildren
@@ -2036,11 +2087,13 @@ export interface FileRoutesById {
   '/rewards': typeof RewardsRoute
   '/sales-clearance': typeof SalesClearanceRoute
   '/services': typeof ServicesRoute
+  '/shop': typeof ShopRoute
   '/shop-frass': typeof ShopFrassRoute
   '/signed-out': typeof SignedOutRoute
   '/social-media-virals': typeof SocialMediaViralsRouteWithChildren
   '/town-square': typeof TownSquareRoute
   '/visual-search': typeof VisualSearchRoute
+  '/wallet': typeof WalletRoute
   '/welcome': typeof WelcomeRoute
   '/welcome-hall': typeof WelcomeHallRoute
   '/.mcp/list-tools': typeof Char91DotmcpChar93ListToolsRoute
@@ -2126,6 +2179,7 @@ export interface FileRoutesById {
   '/brand-partnerships/': typeof BrandPartnershipsIndexRoute
   '/bridal/': typeof BridalIndexRoute
   '/capsules/': typeof CapsulesIndexRoute
+  '/card/': typeof CardIndexRoute
   '/frass-drip/': typeof FrassDripIndexRoute
   '/frass-kicks/': typeof FrassKicksIndexRoute
   '/frass-kids/': typeof FrassKidsIndexRoute
@@ -2247,8 +2301,10 @@ export interface FileRouteTypes {
     | '/brand-partnerships'
     | '/bridal'
     | '/bridal-boutique'
+    | '/builder-identity'
     | '/capsules'
     | '/checkout'
+    | '/community'
     | '/daily'
     | '/for-me'
     | '/for-us'
@@ -2269,6 +2325,7 @@ export interface FileRouteTypes {
     | '/gateway'
     | '/health-wellness'
     | '/kicks-district'
+    | '/kids'
     | '/kids-valley'
     | '/kids-world'
     | '/live'
@@ -2279,11 +2336,13 @@ export interface FileRouteTypes {
     | '/rewards'
     | '/sales-clearance'
     | '/services'
+    | '/shop'
     | '/shop-frass'
     | '/signed-out'
     | '/social-media-virals'
     | '/town-square'
     | '/visual-search'
+    | '/wallet'
     | '/welcome'
     | '/welcome-hall'
     | '/.mcp/list-tools'
@@ -2369,6 +2428,7 @@ export interface FileRouteTypes {
     | '/brand-partnerships/'
     | '/bridal/'
     | '/capsules/'
+    | '/card/'
     | '/frass-drip/'
     | '/frass-kicks/'
     | '/frass-kids/'
@@ -2483,7 +2543,9 @@ export interface FileRouteTypes {
     | '/arrival'
     | '/auth'
     | '/bridal-boutique'
+    | '/builder-identity'
     | '/checkout'
+    | '/community'
     | '/daily'
     | '/for-me'
     | '/for-us'
@@ -2498,6 +2560,7 @@ export interface FileRouteTypes {
     | '/gateway'
     | '/health-wellness'
     | '/kicks-district'
+    | '/kids'
     | '/kids-valley'
     | '/mcp'
     | '/music-media'
@@ -2505,10 +2568,12 @@ export interface FileRouteTypes {
     | '/rewards'
     | '/sales-clearance'
     | '/services'
+    | '/shop'
     | '/shop-frass'
     | '/signed-out'
     | '/town-square'
     | '/visual-search'
+    | '/wallet'
     | '/welcome'
     | '/welcome-hall'
     | '/.mcp/list-tools'
@@ -2587,6 +2652,7 @@ export interface FileRouteTypes {
     | '/brand-partnerships'
     | '/bridal'
     | '/capsules'
+    | '/card'
     | '/frass-drip'
     | '/frass-kicks'
     | '/frass-kids'
@@ -2706,8 +2772,10 @@ export interface FileRouteTypes {
     | '/brand-partnerships'
     | '/bridal'
     | '/bridal-boutique'
+    | '/builder-identity'
     | '/capsules'
     | '/checkout'
+    | '/community'
     | '/daily'
     | '/for-me'
     | '/for-us'
@@ -2728,6 +2796,7 @@ export interface FileRouteTypes {
     | '/gateway'
     | '/health-wellness'
     | '/kicks-district'
+    | '/kids'
     | '/kids-valley'
     | '/kids-world'
     | '/live'
@@ -2738,11 +2807,13 @@ export interface FileRouteTypes {
     | '/rewards'
     | '/sales-clearance'
     | '/services'
+    | '/shop'
     | '/shop-frass'
     | '/signed-out'
     | '/social-media-virals'
     | '/town-square'
     | '/visual-search'
+    | '/wallet'
     | '/welcome'
     | '/welcome-hall'
     | '/.mcp/list-tools'
@@ -2828,6 +2899,7 @@ export interface FileRouteTypes {
     | '/brand-partnerships/'
     | '/bridal/'
     | '/capsules/'
+    | '/card/'
     | '/frass-drip/'
     | '/frass-kicks/'
     | '/frass-kids/'
@@ -2949,8 +3021,10 @@ export interface RootRouteChildren {
   BrandPartnershipsRoute: typeof BrandPartnershipsRouteWithChildren
   BridalRoute: typeof BridalRouteWithChildren
   BridalBoutiqueRoute: typeof BridalBoutiqueRoute
+  BuilderIdentityRoute: typeof BuilderIdentityRoute
   CapsulesRoute: typeof CapsulesRouteWithChildren
   CheckoutRoute: typeof CheckoutRoute
+  CommunityRoute: typeof CommunityRoute
   DailyRoute: typeof DailyRoute
   ForMeRoute: typeof ForMeRoute
   ForUsRoute: typeof ForUsRoute
@@ -2971,6 +3045,7 @@ export interface RootRouteChildren {
   GatewayRoute: typeof GatewayRoute
   HealthWellnessRoute: typeof HealthWellnessRoute
   KicksDistrictRoute: typeof KicksDistrictRoute
+  KidsRoute: typeof KidsRoute
   KidsValleyRoute: typeof KidsValleyRoute
   KidsWorldRoute: typeof KidsWorldRouteWithChildren
   LiveRoute: typeof LiveRouteWithChildren
@@ -2981,11 +3056,13 @@ export interface RootRouteChildren {
   RewardsRoute: typeof RewardsRoute
   SalesClearanceRoute: typeof SalesClearanceRoute
   ServicesRoute: typeof ServicesRoute
+  ShopRoute: typeof ShopRoute
   ShopFrassRoute: typeof ShopFrassRoute
   SignedOutRoute: typeof SignedOutRoute
   SocialMediaViralsRoute: typeof SocialMediaViralsRouteWithChildren
   TownSquareRoute: typeof TownSquareRoute
   VisualSearchRoute: typeof VisualSearchRoute
+  WalletRoute: typeof WalletRoute
   WelcomeRoute: typeof WelcomeRoute
   WelcomeHallRoute: typeof WelcomeHallRoute
   Char91DotmcpChar93ListToolsRoute: typeof Char91DotmcpChar93ListToolsRoute
@@ -3005,6 +3082,7 @@ export interface RootRouteChildren {
   PlusSizeMenRoute: typeof PlusSizeMenRoute
   PlusSizeWomenRoute: typeof PlusSizeWomenRoute
   ProductHandleRoute: typeof ProductHandleRoute
+  CardIndexRoute: typeof CardIndexRoute
   JoinIndexRoute: typeof JoinIndexRoute
   LegalIndexRoute: typeof LegalIndexRoute
   DotlovableOauthConsentRoute: typeof DotlovableOauthConsentRoute
@@ -3028,6 +3106,13 @@ declare module '@tanstack/react-router' {
       path: '/welcome'
       fullPath: '/welcome'
       preLoaderRoute: typeof WelcomeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/wallet': {
+      id: '/wallet'
+      path: '/wallet'
+      fullPath: '/wallet'
+      preLoaderRoute: typeof WalletRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/visual-search': {
@@ -3063,6 +3148,13 @@ declare module '@tanstack/react-router' {
       path: '/shop-frass'
       fullPath: '/shop-frass'
       preLoaderRoute: typeof ShopFrassRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/shop': {
+      id: '/shop'
+      path: '/shop'
+      fullPath: '/shop'
+      preLoaderRoute: typeof ShopRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/services': {
@@ -3133,6 +3225,13 @@ declare module '@tanstack/react-router' {
       path: '/kids-valley'
       fullPath: '/kids-valley'
       preLoaderRoute: typeof KidsValleyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/kids': {
+      id: '/kids'
+      path: '/kids'
+      fullPath: '/kids'
+      preLoaderRoute: typeof KidsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/kicks-district': {
@@ -3275,6 +3374,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DailyRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/community': {
+      id: '/community'
+      path: '/community'
+      fullPath: '/community'
+      preLoaderRoute: typeof CommunityRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/checkout': {
       id: '/checkout'
       path: '/checkout'
@@ -3287,6 +3393,13 @@ declare module '@tanstack/react-router' {
       path: '/capsules'
       fullPath: '/capsules'
       preLoaderRoute: typeof CapsulesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/builder-identity': {
+      id: '/builder-identity'
+      path: '/builder-identity'
+      fullPath: '/builder-identity'
+      preLoaderRoute: typeof BuilderIdentityRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/bridal-boutique': {
@@ -3442,6 +3555,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/frass-drip/'
       preLoaderRoute: typeof FrassDripIndexRouteImport
       parentRoute: typeof FrassDripRoute
+    }
+    '/card/': {
+      id: '/card/'
+      path: '/card'
+      fullPath: '/card/'
+      preLoaderRoute: typeof CardIndexRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/capsules/': {
       id: '/capsules/'
@@ -5342,8 +5462,10 @@ const rootRouteChildren: RootRouteChildren = {
   BrandPartnershipsRoute: BrandPartnershipsRouteWithChildren,
   BridalRoute: BridalRouteWithChildren,
   BridalBoutiqueRoute: BridalBoutiqueRoute,
+  BuilderIdentityRoute: BuilderIdentityRoute,
   CapsulesRoute: CapsulesRouteWithChildren,
   CheckoutRoute: CheckoutRoute,
+  CommunityRoute: CommunityRoute,
   DailyRoute: DailyRoute,
   ForMeRoute: ForMeRoute,
   ForUsRoute: ForUsRoute,
@@ -5364,6 +5486,7 @@ const rootRouteChildren: RootRouteChildren = {
   GatewayRoute: GatewayRoute,
   HealthWellnessRoute: HealthWellnessRoute,
   KicksDistrictRoute: KicksDistrictRoute,
+  KidsRoute: KidsRoute,
   KidsValleyRoute: KidsValleyRoute,
   KidsWorldRoute: KidsWorldRouteWithChildren,
   LiveRoute: LiveRouteWithChildren,
@@ -5374,11 +5497,13 @@ const rootRouteChildren: RootRouteChildren = {
   RewardsRoute: RewardsRoute,
   SalesClearanceRoute: SalesClearanceRoute,
   ServicesRoute: ServicesRoute,
+  ShopRoute: ShopRoute,
   ShopFrassRoute: ShopFrassRoute,
   SignedOutRoute: SignedOutRoute,
   SocialMediaViralsRoute: SocialMediaViralsRouteWithChildren,
   TownSquareRoute: TownSquareRoute,
   VisualSearchRoute: VisualSearchRoute,
+  WalletRoute: WalletRoute,
   WelcomeRoute: WelcomeRoute,
   WelcomeHallRoute: WelcomeHallRoute,
   Char91DotmcpChar93ListToolsRoute: Char91DotmcpChar93ListToolsRoute,
@@ -5399,6 +5524,7 @@ const rootRouteChildren: RootRouteChildren = {
   PlusSizeMenRoute: PlusSizeMenRoute,
   PlusSizeWomenRoute: PlusSizeWomenRoute,
   ProductHandleRoute: ProductHandleRoute,
+  CardIndexRoute: CardIndexRoute,
   JoinIndexRoute: JoinIndexRoute,
   LegalIndexRoute: LegalIndexRoute,
   DotlovableOauthConsentRoute: DotlovableOauthConsentRoute,
