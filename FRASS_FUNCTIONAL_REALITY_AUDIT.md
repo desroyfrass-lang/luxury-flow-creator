@@ -298,3 +298,22 @@ Defects found (not fixed, per instruction):
 2. The Frass Daily is labelled "🟡 Sample Data".
 3. Welcome Hall `next` parameter can become circular (`next=%2Fwelcome-hall`).
 4. React "state update before mount" warning on `/first-30-days` and `/workspace`.
+
+---
+
+## ATLAS RECOVERY PHASE 1 — status changes (28 Aug 2026)
+
+Original Phase 1/2 evidence above is preserved unchanged.
+
+| Route | BEFORE | FIX | RETEST | CURRENT |
+|---|---|---|---|---|
+| `/admin`, `/admin/roles` | reachable by a normal member, offered ownership claim | server-verified Founder guard; claim UI and claim server function deleted | redirected to Welcome Hall | SECURED |
+| `/control-room`, `/founder`, `/command`, `/studios` | client-side role check only | shared server-verified Founder guard in `beforeLoad` | redirected to Welcome Hall | SECURED |
+| `/room` | → `/onboarding` | none needed — unmet onboarding prerequisite confirmed legitimate | workspace renders | REAL |
+| `/daily` | → `/onboarding` | none needed | `/room?daily=true`, Daily opens (sample data still pending Phase 2) | REAL (ACCESS) |
+| `/welcome-hall?next=/welcome-hall` | self-referential loop | shared continuation sanitizer | normalised to `/room` | FIXED |
+| `/card` `/builder-identity` `/shop` `/kids` `/community` `/wallet` | 404 | broken aliases redirected to canonical registry routes | all resolve | FIXED (alias) |
+| Vault Engine | END-TO-END VERIFIED | untouched | vault + record persist | STILL VERIFIED |
+
+Note: the Founder Audit Ledger change described in the scorecard was made AFTER
+Phase 2, not during it.
