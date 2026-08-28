@@ -257,8 +257,8 @@ export const NAV_TREE: NavNode[] = [
     spoken: ["founder hall", "founder mode", "headquarters"],
     children: [
       { key: "founder-home", label: "Home", path: "/founder", audience: "FOUNDER", level: "AREA" },
-      { key: "founder-control-room", label: "Control Room", path: "/control-room", audience: "FOUNDER", level: "AREA", blurb: "Run and monitor Frass Hill." },
-      { key: "founder-onboarding-room", label: "Onboarding Room", path: "/onboarding", audience: "FOUNDER", level: "AREA", blurb: "Inspect and manage the real onboarding experience." },
+      { key: "founder-control-room", label: "Control Room", path: "/control-room", audience: "FOUNDER", level: "AREA", blurb: "Run and monitor Frass Hill.", spoken: ["control room", "command center"] },
+      { key: "founder-onboarding-room", label: "Onboarding Room", path: "/onboarding", audience: "FOUNDER", level: "AREA", blurb: "Inspect and manage the real onboarding experience.", spoken: ["onboarding room"] },
       { key: "founder-create", label: "Create & Media", path: "/studios", audience: "FOUNDER", level: "AREA" },
       { key: "founder-business", label: "Business", path: "/business-builder", audience: "FOUNDER", level: "AREA" },
       { key: "founder-vaults", label: "Vaults", path: "/vaults", audience: "FOUNDER", level: "AREA" },
