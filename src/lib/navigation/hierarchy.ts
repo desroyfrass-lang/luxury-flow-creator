@@ -39,8 +39,9 @@ const PLACES: NavigationPlace[] = [
   { match: "/for-me", label: "For Me", hall: "Frass Hill", hallPath: "/frass-hill", parent: "/town-square", audience: "MEMBER" },
   { match: "/academy", label: "Academy", hall: "Builders Village", hallPath: "/academy", parent: "/frass-hill", audience: "MEMBER" },
   { match: "/opportunity", label: "Opportunity Centre", hall: "Builders Village", hallPath: "/opportunity", parent: "/frass-hill", audience: "MEMBER" },
-  { match: "/room", label: "My Workspace", hall: "Builders Village", hallPath: "/room", parent: "/welcome-hall", audience: "MEMBER" },
-  { match: "/workspace", label: "My Workspace", hall: "Builders Village", hallPath: "/room", parent: "/room", audience: "MEMBER" },
+  { match: "/daily", label: "Frass Daily", hall: "Builders Village", hallPath: "/daily", parent: "/welcome-hall", audience: "MEMBER" },
+  { match: "/workshop", label: "Workshop", hall: "Builders Village", hallPath: "/daily", parent: "/daily", audience: "MEMBER" },
+  { match: "/workspace", label: "My Workspace", hall: "Builders Village", hallPath: "/daily", parent: "/workshop", audience: "MEMBER" },
   { match: "/builder-hall", label: "My Builder Hall", hall: "Builders Village", hallPath: "/builder-hall", parent: "/welcome-hall", audience: "MEMBER" },
   { match: "/studio", label: "FV Studios", hall: "Studio District", hallPath: "/studio", parent: "/frass-hill", audience: "CREATOR" },
   { match: "/fv-studios", label: "Frass Vision Studios", hall: "Studio District", hallPath: "/studio", parent: "/frass-hill", audience: "PUBLIC" },
@@ -59,9 +60,9 @@ const PLACES: NavigationPlace[] = [
   { match: "/sales-clearance", label: "The Liquidation Room", hall: "Frass District", hallPath: "/frass-district", parent: "/frass-district", audience: "CUSTOMER" },
   { match: "/frass-district", label: "Frass District", hall: "Frass District", hallPath: "/frass-district", parent: "/welcome-hall", audience: "PUBLIC" },
   { match: "/health-wellness", label: "Health & Wellness", hall: "Frass Hill", hallPath: "/frass-hill", parent: "/frass-hill", audience: "PUBLIC" },
-  { match: "/financial-center", label: "Financial Center", hall: "Builders Village", hallPath: "/room", parent: "/room", audience: "MEMBER" },
-  { match: "/vaults", label: "My Vaults", hall: "Builders Village", hallPath: "/room", parent: "/room", audience: "MEMBER" },
-  { match: "/vault", label: "Builder Vault", hall: "Builders Village", hallPath: "/room", parent: "/room", audience: "MEMBER" },
+  { match: "/financial-center", label: "Financial Center", hall: "Builders Village", hallPath: "/daily", parent: "/workshop", audience: "MEMBER" },
+  { match: "/vaults", label: "My Vaults", hall: "Builders Village", hallPath: "/daily", parent: "/workshop", audience: "MEMBER" },
+  { match: "/vault", label: "Builder Vault", hall: "Builders Village", hallPath: "/daily", parent: "/workshop", audience: "MEMBER" },
 ];
 
 const normalize = (pathname: string) => pathname.length > 1 ? pathname.replace(/\/+$/, "") : pathname;
@@ -215,14 +216,14 @@ export const NAV_TREE: NavNode[] = [
   {
     key: "my-space",
     label: "My Space",
-    path: "/room",
+    path: "/daily",
     audience: "MEMBER",
     level: "GLOBAL",
     blurb: "Your own side of Frass Hill.",
     spoken: ["my space", "my workspace", "workspace", "my room"],
     children: [
       { key: "daily", label: "The Daily", path: "/daily", audience: "MEMBER", level: "AREA", spoken: ["the daily", "my day", "today"] },
-      { key: "room", label: "My Workspace", path: "/room", audience: "MEMBER", level: "AREA" },
+      { key: "workshop", label: "Workshop", path: "/workshop", audience: "MEMBER", level: "AREA", spoken: ["workshop", "my workshop", "my work", "where i work"] },
       { key: "money-moves", label: "Money Moves", path: "/money-moves", audience: "MEMBER", level: "AREA", spoken: ["money moves", "income"] },
       { key: "frass-card", label: "My Frass Card", path: "/workspace/card", audience: "MEMBER", level: "AREA", spoken: ["frass card", "my card", "my storefront"] },
       { key: "financial-center", label: "Financial Center", path: "/financial-center", audience: "MEMBER", level: "AREA", spoken: ["financial center", "my money", "earnings"] },
