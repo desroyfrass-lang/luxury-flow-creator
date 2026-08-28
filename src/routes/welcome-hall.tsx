@@ -28,8 +28,10 @@ export const Route = createFileRoute("/welcome-hall")({
   ): { welcome?: "daily"; arrival?: "first"; next?: string } => ({
     ...(search["welcome"] === "daily" ? { welcome: "daily" as const } : {}),
     ...(search["arrival"] === "first" ? { arrival: "first" as const } : {}),
-    ...(typeof search["next"] === "string" && search["next"].startsWith("/")
-      ? { next: search["next"] }
+    // Atlas Recovery Phase 1 — a continuation may never point back at the
+    // Welcome Hall, the sign-in door or the onboarding conversation.
+    ...(typeof search["next"] === "string"
+      ? { next: safeContinuation(search["next"]) }
       : {}),
   }),
   head: () => ({
