@@ -21,6 +21,7 @@ import {
   Info,
 } from "lucide-react";
 import { SiteShell } from "@/components/site-shell";
+import { FrassyChat } from "@/components/frassy-chat";
 import { PhoneContentMode } from "@/components/studio/phone-content-mode";
 import { VoiceFeedbackButton } from "@/components/feedback/voice-feedback";
 import { CreationOpportunities } from "@/components/creation/opportunity-panel";
