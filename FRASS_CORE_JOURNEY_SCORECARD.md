@@ -167,3 +167,43 @@ missing feature was built.
 
 `/vaults` lists the existing ATLAS TEST VAULT; the vault opens and its stored
 record persists. **STILL END-TO-END VERIFIED.**
+
+## 7. Founder Admin Architecture Amendment (applied in Phase 1)
+
+**ONE HEADQUARTERS, MANY PROTECTED ROOMS.**
+
+- **Founder Hall** is now the single headquarters at `/founder` (previously that
+  URL only bounced into the Control Room). It is a navigation and orientation
+  layer: plain-language cards onto rooms that already exist. No new admin tool,
+  no new dashboard, no data cramming.
+- **Control Room** stays exactly as it is at `/control-room` — a major protected
+  operational room reached from Founder Hall, with a breadcrumb back to
+  headquarters. Nothing was merged, moved or deleted.
+- **Onboarding Room** stays the members' onboarding system at `/onboarding`. No
+  Founder-only copy. It is now a first-class Founder TP destination and a
+  Founder Hall card, so the Founder can inspect the real room.
+- **Founder TP** gained a pinned "quick jumps" row (Onboarding Room, Control
+  Room, Studios, Vaults, Security & Access, Site Management) plus a "Back to
+  Founder Hall" chip. The rest of the World Teleporter is untouched.
+- **Authoritative registry** (`src/lib/navigation/hierarchy.ts`) was corrected at
+  source: Founder Hall's path is `/founder`, Control Room and Onboarding Room are
+  its children. No second hard-coded destination list drives the menus.
+- **Founder can leave administration** intentionally: an "Enter Frass Hill" card,
+  visually separated from the rooms, walks the member experience. No impersonation
+  was invented.
+- **Rooms with no existing implementation were not fabricated.** Every card points
+  at a route that already exists; a dedicated Kids World *administration* console
+  does not exist, so the Kids card opens the real Kids World for inspection.
+
+### Architecture verdict
+
+- FOUNDER HALL IS THE SINGLE ADMIN HEADQUARTERS: YES
+- CONTROL ROOM REMAINS A SEPARATE PROTECTED TOOL: YES
+- ONBOARDING ROOM REMAINS A SEPARATE USER SYSTEM: YES
+- ONBOARDING ROOM IS ACCESSIBLE THROUGH FOUNDER TP: YES
+- FOUNDER CAN RETURN TO FOUNDER HALL FROM PROTECTED SYSTEMS: YES
+- NORMAL MEMBER CANNOT ACCESS FOUNDER HALL: YES (verified: `/founder` → Welcome Hall)
+- NORMAL MEMBER CANNOT ACCESS CONTROL ROOM: YES (verified)
+- NORMAL MEMBER CANNOT ACCESS FOUNDER TP: YES (it lives inside the guarded Control Room)
+- FOUNDER CAN ENTER THE NORMAL FRASS HILL EXPERIENCE INTENTIONALLY: YES
+- NO NEW COMPETING ADMIN HOME WAS CREATED: YES
