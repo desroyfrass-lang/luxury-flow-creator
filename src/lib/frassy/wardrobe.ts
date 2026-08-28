@@ -2,7 +2,7 @@
 // Frassy's wardrobe — FRASS-0581.
 //
 // Frassy is never a stock icon. She is an illustrated Caribbean woman, and
-// everything she wears is a real Frass item: her clothes come from the Frost
+// everything she wears is a real Frass item: her clothes come from the Frass
 // District collection, her hair comes from the Hair Collection.
 //
 // Two things decide her look:
@@ -42,7 +42,7 @@ export type FrassyLook = {
   mood: string;
   image: string;
   alt: string;
-  /** Frost District pieces — tap her outfit to see these. */
+  /** Frass District pieces — tap her outfit to see these. */
   outfit: WardrobePiece[];
   /** Hair Collection unit — tap her hair to see this. */
   hair: WardrobePiece;
@@ -86,9 +86,9 @@ const BASE: Record<FrassyRoom, Omit<FrassyLook, "hair"> & { hairKey: string }> =
     alt: "Frassy in a black and gold Frass Kicks tracksuit, welcoming you into the Builders Hall",
     hairKey: "hall",
     outfit: [
-      { name: "Frost District Track Jacket", detail: "Black · gold piping · unisex", handle: FROST_DISTRICT_HANDLE, comingSoon: true },
+      { name: "Frass District Track Jacket", detail: "Black · gold piping · unisex", handle: FROST_DISTRICT_HANDLE, comingSoon: true },
       { name: "Frass Kicks Signature Tank", detail: "Black · gold wordmark", handle: FROST_DISTRICT_HANDLE, comingSoon: true },
-      { name: "Frost Gold Hoops", detail: "18k plated · 50mm", handle: FROST_DISTRICT_HANDLE, comingSoon: true },
+      { name: "Frass Gold Hoops", detail: "18k plated · 50mm", handle: FROST_DISTRICT_HANDLE, comingSoon: true },
     ],
   },
   daily: {
@@ -99,7 +99,7 @@ const BASE: Record<FrassyRoom, Omit<FrassyLook, "hair"> & { hairKey: string }> =
     alt: "Frassy in a black ribbed zip knit holding a tablet, ready for the Daily",
     hairKey: "daily",
     outfit: [
-      { name: "Frost Ribbed Zip Knit", detail: "Black · gold zip pull", handle: FROST_DISTRICT_HANDLE, comingSoon: true },
+      { name: "Frass Ribbed Zip Knit", detail: "Black · gold zip pull", handle: FROST_DISTRICT_HANDLE, comingSoon: true },
       { name: "Frass Medallion Chain", detail: "Gold plated · 18\"", handle: FROST_DISTRICT_HANDLE, comingSoon: true },
     ],
   },
@@ -108,10 +108,10 @@ const BASE: Record<FrassyRoom, Omit<FrassyLook, "hair"> & { hairKey: string }> =
     title: "Her Builders look",
     mood: "Sleeves up. This is the room where things actually get made.",
     image: lookWorkshop.url,
-    alt: "Frassy in an oversized black Frost District hoodie with long braids, in the Workshop",
+    alt: "Frassy in an oversized black Frass District hoodie with long braids, in the Workshop",
     hairKey: "workshop",
     outfit: [
-      { name: "Frost District Heavy Hoodie", detail: "Black · gold crown emblem · oversized", handle: FROST_DISTRICT_HANDLE, comingSoon: true },
+      { name: "Frass District Heavy Hoodie", detail: "Black · gold crown emblem · oversized", handle: FROST_DISTRICT_HANDLE, comingSoon: true },
       { name: "Builder Gold Cuff", detail: "Engraved brass · gold finish", handle: FROST_DISTRICT_HANDLE, comingSoon: true },
     ],
   },
@@ -123,9 +123,9 @@ const BASE: Record<FrassyRoom, Omit<FrassyLook, "hair"> & { hairKey: string }> =
     alt: "Frassy in a black tailored blazer with gold lapel trim at the Financial Freedom tracker",
     hairKey: "freedom",
     outfit: [
-      { name: "Frost Gold-Trim Blazer", detail: "Black · gold lapel · tailored", handle: FROST_DISTRICT_HANDLE, comingSoon: true },
-      { name: "Frost Silk Shell", detail: "Black · cowl neck", handle: FROST_DISTRICT_HANDLE, comingSoon: true },
-      { name: "Frost Gold Bar Earrings", detail: "18k plated · drop", handle: FROST_DISTRICT_HANDLE, comingSoon: true },
+      { name: "Frass Gold-Trim Blazer", detail: "Black · gold lapel · tailored", handle: FROST_DISTRICT_HANDLE, comingSoon: true },
+      { name: "Frass Silk Shell", detail: "Black · cowl neck", handle: FROST_DISTRICT_HANDLE, comingSoon: true },
+      { name: "Frass Gold Bar Earrings", detail: "18k plated · drop", handle: FROST_DISTRICT_HANDLE, comingSoon: true },
     ],
   },
   celebration: {
@@ -136,8 +136,8 @@ const BASE: Record<FrassyRoom, Omit<FrassyLook, "hair"> & { hairKey: string }> =
     alt: "Frassy in a black satin slip gown with gold chain straps, celebrating",
     hairKey: "celebration",
     outfit: [
-      { name: "Frost Satin Slip Gown", detail: "Black · gold chain straps", handle: FROST_DISTRICT_HANDLE, comingSoon: true },
-      { name: "Frost Chandelier Earrings", detail: "Gold plated · statement", handle: FROST_DISTRICT_HANDLE, comingSoon: true },
+      { name: "Frass Satin Slip Gown", detail: "Black · gold chain straps", handle: FROST_DISTRICT_HANDLE, comingSoon: true },
+      { name: "Frass Chandelier Earrings", detail: "Gold plated · statement", handle: FROST_DISTRICT_HANDLE, comingSoon: true },
     ],
   },
 };

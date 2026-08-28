@@ -27,6 +27,8 @@ import {
 
 import { useSiteText } from "@/hooks/use-site-text";
 import { useIsAdmin } from "@/hooks/use-is-admin";
+import { useMyRoles } from "@/hooks/use-my-roles";
+import { accountMenuGroups } from "@/lib/navigation/account-menu";
 import { useWorkspaceRoles } from "@/hooks/use-workspace-roles";
 import { supabase } from "@/integrations/supabase/client";
 import { useSecureSignOut, SignOutButton } from "@/components/secure-sign-out";
@@ -143,7 +145,7 @@ function Header() {
           <NotificationBell />
           {/* FRASS-0481 — one way in. The Workspace lives in the account menu only. */}
 
-          <BuilderAccountMenu hasWorkspace={hasWorkspace} isAdmin={isAdmin} />
+          <BuilderAccountMenu />
           <HeaderSignOut />
 
           <div ref={menuRef} className="relative">
@@ -166,7 +168,7 @@ function Header() {
                     <MenuGroup key={node.key} node={node} />
                   ))}
                   <div className="my-1 h-px bg-border/60" />
-                  <MobileAccountLinks hasWorkspace={hasWorkspace} isAdmin={isAdmin} />
+                  <MobileAccountLinks />
                 </div>
               )}
           </div>
