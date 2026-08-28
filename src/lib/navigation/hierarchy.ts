@@ -23,13 +23,16 @@ export type NavigationPlace = {
 };
 
 const PLACES: NavigationPlace[] = [
-  { match: "/control-room", label: "Founder Hall Home", hall: "Founder Hall", hallPath: "/control-room", parent: "/welcome-hall", audience: "FOUNDER", exact: true },
-  { match: "/studios", label: "Frassy Studios", hall: "Founder Hall", hallPath: "/control-room", parent: "/control-room", audience: "FOUNDER", exact: true },
+  // Founder Architecture Amendment — Founder Hall is the headquarters; the
+  // Control Room is one of its protected rooms, not the front door.
+  { match: "/founder", label: "Founder Hall Home", hall: "Founder Hall", hallPath: "/founder", parent: "/welcome-hall", audience: "FOUNDER", exact: true },
+  { match: "/control-room", label: "Control Room", hall: "Founder Hall", hallPath: "/founder", parent: "/founder", audience: "FOUNDER", exact: true },
+  { match: "/studios", label: "Frassy Studios", hall: "Founder Hall", hallPath: "/founder", parent: "/founder", audience: "FOUNDER", exact: true },
   { match: "/studios/production/", label: "Production", hall: "Frassy Studios", hallPath: "/studios", parent: "/studios/productions", audience: "FOUNDER" },
   { match: "/studios/engine/", label: "Production Studio", hall: "Frassy Studios", hallPath: "/studios", parent: "/studios/productions", audience: "FOUNDER" },
   { match: "/studios/distribution/", label: "Destination Matrix", hall: "Frassy Studios", hallPath: "/studios", parent: "/studios/distribution", audience: "FOUNDER" },
   { match: "/studios/", label: "Studio", hall: "Frassy Studios", hallPath: "/studios", parent: "/studios", audience: "FOUNDER" },
-  { match: "/admin", label: "Site Management", hall: "Founder Hall", hallPath: "/control-room", parent: "/control-room", audience: "ADMIN" },
+  { match: "/admin", label: "Site Management", hall: "Founder Hall", hallPath: "/founder", parent: "/founder", audience: "ADMIN" },
   { match: "/frass-hill", label: "Frass Hill", hall: "Frass Hill", hallPath: "/frass-hill", parent: "/welcome-hall", audience: "PUBLIC" },
   { match: "/town-square", label: "Town Square", hall: "Frass Hill", hallPath: "/frass-hill", parent: "/frass-hill", audience: "PUBLIC" },
   { match: "/for-us", label: "For Us", hall: "Community Hall", hallPath: "/for-us", parent: "/town-square", audience: "PUBLIC" },
@@ -247,13 +250,15 @@ export const NAV_TREE: NavNode[] = [
   {
     key: "founder-hall",
     label: "Founder Hall",
-    path: "/control-room",
+    path: "/founder",
     audience: "FOUNDER",
     level: "GLOBAL",
     blurb: "The Founder control centre.",
-    spoken: ["founder hall", "founder mode", "control room", "command center"],
+    spoken: ["founder hall", "founder mode", "headquarters"],
     children: [
-      { key: "founder-home", label: "Home", path: "/control-room", audience: "FOUNDER", level: "AREA" },
+      { key: "founder-home", label: "Home", path: "/founder", audience: "FOUNDER", level: "AREA" },
+      { key: "founder-control-room", label: "Control Room", path: "/control-room", audience: "FOUNDER", level: "AREA", blurb: "Run and monitor Frass Hill.", spoken: ["control room", "command center"] },
+      { key: "founder-onboarding-room", label: "Onboarding Room", path: "/onboarding", audience: "FOUNDER", level: "AREA", blurb: "Inspect and manage the real onboarding experience.", spoken: ["onboarding room"] },
       { key: "founder-create", label: "Create & Media", path: "/studios", audience: "FOUNDER", level: "AREA" },
       { key: "founder-business", label: "Business", path: "/business-builder", audience: "FOUNDER", level: "AREA" },
       { key: "founder-vaults", label: "Vaults", path: "/vaults", audience: "FOUNDER", level: "AREA" },

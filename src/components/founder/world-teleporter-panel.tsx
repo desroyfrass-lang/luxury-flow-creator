@@ -27,6 +27,11 @@ import {
   type TeleporterAuditRow,
 } from "@/lib/founder/teleporter-audit.functions";
 import { openAuditSession } from "@/lib/founder/audit-session.functions";
+import { FOUNDER_ROOMS, TP_QUICK_JUMPS } from "@/lib/founder/founder-hall";
+
+const QUICK_JUMP_ROOMS = TP_QUICK_JUMPS.map((id) => FOUNDER_ROOMS.find((r) => r.id === id)).filter(
+  (r): r is (typeof FOUNDER_ROOMS)[number] => Boolean(r),
+);
 
 
 const GROUPS: { status: WorldStatus; heading: string }[] = [
@@ -166,6 +171,37 @@ export function WorldTeleporterPanel() {
         looking glass only — nothing here changes, renames, deletes or connects anything. Tap any
         page to visit it, then use the floating chip to come straight back here.
       </p>
+
+      {/* Founder Architecture Amendment — pinned jumps to the rooms used most,
+          including the real Onboarding Room. No duplicate Founder-only copies. */}
+      <div className="mt-4 rounded-2xl border border-[color:var(--gold)]/40 p-4">
+        <div className="text-[10px] uppercase tracking-[0.3em] text-[color:var(--gold)]">
+          Founder quick jumps
+        </div>
+        <div className="mt-3 flex flex-wrap gap-2">
+          {QUICK_JUMP_ROOMS.map((room) => (
+            <a
+              key={room.id}
+              href={room.path}
+              className="rounded-full border border-border px-3 py-1.5 text-xs hover:border-[color:var(--gold)]"
+              title={room.purpose}
+            >
+              <span aria-hidden className="mr-1">
+                {room.icon}
+              </span>
+              {room.label}
+            </a>
+          ))}
+          <a
+            href="/founder"
+            className="rounded-full border border-[color:var(--gold)]/60 px-3 py-1.5 text-xs text-[color:var(--gold)]"
+          >
+            🏛 Back to Founder Hall
+          </a>
+        </div>
+      </div>
+
+
 
       {/* Progress counter */}
       <div className="mt-5 rounded-2xl border border-border/70 p-4">
