@@ -34,14 +34,18 @@ const heading = "text-xs uppercase tracking-[0.25em] text-muted-foreground";
 export function QuickSellPanel({
   provider,
   launchPending = false,
+  workItemId = null,
 }: {
   provider?: string | null;
   /** FRASS-0462 — payments are intentionally off until Frass launches. */
   launchPending?: boolean;
+  /** Money Moves sent the member here: link what they list back to that work. */
+  workItemId?: string | null;
 }) {
   const qc = useQueryClient();
   const listFn = useServerFn(listMyListings);
   const createFn = useServerFn(createListing);
+  const linkWorkFn = useServerFn(updateWorkItem);
   const statusFn = useServerFn(setListingStatus);
   const ordersFn = useServerFn(listMyCardOrders);
   const orderStatusFn = useServerFn(setCardOrderStatus);
