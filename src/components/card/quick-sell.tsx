@@ -92,7 +92,18 @@ export function QuickSellPanel({
           is_quick_sell: true,
         },
       }),
-    onSuccess: () => {
+    onSuccess: async (listing) => {
+      // Money Moves sent this member here — tie the listing to that work item so
+      // Daily and the Workshop can show its real state instead of guessing.
+      if (workItemId && listing?.id) {
+        try {
+          await linkWorkFn({ data: { id: workItemId, sourceRef: listing.id } });
+          qc.invalidateQueries({ queryKey: ["work-items"] });
+          qc.invalidateQueries({ queryKey: ["daily-board"] });
+        } catch {
+          /* the listing is live either way — never block the sale on the link */
+        }
+      }
       qc.invalidateQueries({ queryKey: ["card-listings"] });
       setTitle("");
       setDescription("");
