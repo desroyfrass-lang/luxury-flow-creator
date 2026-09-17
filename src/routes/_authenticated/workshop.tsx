@@ -54,6 +54,7 @@ function WorkshopPage() {
   const updateFn = useServerFn(updateWorkItem);
   const stateFn = useServerFn(setWorkItemState);
   const vaultsFn = useServerFn(listMyVaults);
+  const cardOrdersFn = useServerFn(listMyCardOrders);
   const qc = useQueryClient();
 
   const [tab, setTab] = useState<Tab>("active");
