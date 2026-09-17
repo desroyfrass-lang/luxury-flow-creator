@@ -41,6 +41,11 @@ import type { CardOrder } from "@/lib/card-commerce.functions";
 import { IdentityGate } from "@/components/security/identity-gate";
 
 export const Route = createFileRoute("/_authenticated/workspace/wallet")({
+  // Money Moves hands the member over with ?section=sell&work=<work item id>.
+  validateSearch: (search: Record<string, unknown>): { section?: string; work?: string } => ({
+    ...(typeof search["section"] === "string" ? { section: search["section"] as string } : {}),
+    ...(typeof search["work"] === "string" ? { work: search["work"] as string } : {}),
+  }),
   head: () => ({
     meta: [
       { title: "Frass Wallet — Balance, Quick Sell, Invoices, Statements" },
@@ -81,7 +86,13 @@ function WalletHub() {
   const { data: receipts } = useQuery({ queryKey: ["financial-receipts"], queryFn: () => receiptsFn() });
 
 
-  const [section, setSection] = useState<WalletSectionId>("balance");
+  const search = Route.useSearch();
+  const workItemId = search.work ?? null;
+  const [section, setSection] = useState<WalletSectionId>(
+    (WALLET_SECTIONS.some((w) => w.id === search.section)
+      ? (search.section as WalletSectionId)
+      : "balance"),
+  );
   const launchMode = useLaunchMode();
   const launchPending = !launchMode.paymentsLive;
   const rows = useMemo(() => orders ?? [], [orders]);
@@ -166,7 +177,24 @@ function WalletHub() {
       )}
 
       {(section === "sell" || section === "items") && (
-        <QuickSellPanel provider={card?.payout_provider ?? null} launchPending={launchPending} />
+        <>
+          {workItemId && (
+            <section className="rounded-2xl border border-[color:var(--gold,#d4af37)]/40 bg-[color:var(--gold,#d4af37)]/[0.06] p-5">
+              <p className="text-xs uppercase tracking-[0.25em] text-[color:var(--gold,#d4af37)]">
+                Today&apos;s Money Move
+              </p>
+              <p className="mt-2 text-sm">
+                Put one thing up for sale. When you publish it, I save it to your work so you can
+                follow what happens next.
+              </p>
+            </section>
+          )}
+          <QuickSellPanel
+            provider={card?.payout_provider ?? null}
+            launchPending={launchPending}
+            workItemId={workItemId}
+          />
+        </>
       )}
 
       {section === "request" && (

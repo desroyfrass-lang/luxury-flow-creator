@@ -20,6 +20,8 @@ import {
   type WorkItem,
 } from "@/lib/daily/work.functions";
 import { listMyVaults } from "@/lib/vault-engine/vaults.functions";
+import { listMyCardOrders } from "@/lib/card-commerce.functions";
+import { MONEY_MOVE_SOURCE, saleStatus } from "@/lib/daily/money-move-link";
 
 export const Route = createFileRoute("/_authenticated/workshop")({
   validateSearch: (search: Record<string, unknown>): { item?: string } =>
@@ -54,6 +56,7 @@ function WorkshopPage() {
   const updateFn = useServerFn(updateWorkItem);
   const stateFn = useServerFn(setWorkItemState);
   const vaultsFn = useServerFn(listMyVaults);
+  const cardOrdersFn = useServerFn(listMyCardOrders);
   const qc = useQueryClient();
 
   const [tab, setTab] = useState<Tab>("active");
@@ -67,6 +70,11 @@ function WorkshopPage() {
 
   const { data: items, isLoading } = useQuery({ queryKey: ["work-items"], queryFn: () => listFn() });
   const { data: vaults } = useQuery({ queryKey: ["my-vaults"], queryFn: () => vaultsFn() });
+  const { data: cardOrders } = useQuery({ queryKey: ["card-orders"], queryFn: () => cardOrdersFn() });
+
+  /** Money Move sales carry their own honest status — the member never marks them done by hand. */
+  const saleOf = (i: WorkItem) =>
+    i.source_system === MONEY_MOVE_SOURCE ? saleStatus(i.source_ref, cardOrders ?? []) : null;
 
   const refresh = () => {
     void qc.invalidateQueries({ queryKey: ["work-items"] });
@@ -183,7 +191,13 @@ function WorkshopPage() {
             {i.status === "done" ? (
               <span className="rounded-full border border-border/70 px-2 py-0.5">Completed</span>
             ) : null}
+            {saleOf(i) ? (
+              <span className="rounded-full border border-[color:var(--gold)]/50 px-2 py-0.5 text-[color:var(--gold)]">
+                {saleOf(i)!.label}
+              </span>
+            ) : null}
           </div>
+          {saleOf(i) ? <p className="mt-2 text-sm text-muted-foreground">{saleOf(i)!.note}</p> : null}
           <div className="mt-4 flex flex-wrap gap-2">
             <button
               type="button"
@@ -192,7 +206,15 @@ function WorkshopPage() {
             >
               {i.status === "done" ? "View / edit" : "Continue"}
             </button>
-            {i.status === "active" ? (
+            {saleOf(i) ? (
+              <Link
+                to="/workspace/wallet"
+                search={{ section: "sell", work: i.id }}
+                className="rounded-full bg-[color:var(--gold)] px-4 py-2 text-xs font-semibold uppercase tracking-[0.2em] text-background"
+              >
+                Open selling tool
+              </Link>
+            ) : i.status === "active" ? (
               <button
                 type="button"
                 className="rounded-full bg-[color:var(--gold)] px-4 py-2 text-xs font-semibold uppercase tracking-[0.2em] text-background"

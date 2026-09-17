@@ -113,6 +113,8 @@ export const updateWorkItem = createServerFn({ method: "POST" })
       priority?: number;
       dueAt?: string | null;
       scheduledFor?: string | null;
+      /** Links the work item to the record its tool created (e.g. a listing). */
+      sourceRef?: string | null;
     }) => {
       if (!input?.id) throw new Error("Which piece of work?");
       return input;
@@ -132,6 +134,7 @@ export const updateWorkItem = createServerFn({ method: "POST" })
     if (data.priority !== undefined) patch["priority"] = Math.min(3, Math.max(1, Number(data.priority)));
     if (data.dueAt !== undefined) patch["due_at"] = data.dueAt || null;
     if (data.scheduledFor !== undefined) patch["scheduled_for"] = data.scheduledFor || null;
+    if (data.sourceRef !== undefined) patch["source_ref"] = data.sourceRef || null;
 
     const { data: row, error } = await sb
       .from("member_actions")
