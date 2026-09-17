@@ -113,6 +113,8 @@ export const updateWorkItem = createServerFn({ method: "POST" })
       priority?: number;
       dueAt?: string | null;
       scheduledFor?: string | null;
+      /** Links the work item to the record its tool created (e.g. a listing). */
+      sourceRef?: string | null;
     }) => {
       if (!input?.id) throw new Error("Which piece of work?");
       return input;
