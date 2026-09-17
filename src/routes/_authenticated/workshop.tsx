@@ -191,7 +191,13 @@ function WorkshopPage() {
             {i.status === "done" ? (
               <span className="rounded-full border border-border/70 px-2 py-0.5">Completed</span>
             ) : null}
+            {saleOf(i) ? (
+              <span className="rounded-full border border-[color:var(--gold)]/50 px-2 py-0.5 text-[color:var(--gold)]">
+                {saleOf(i)!.label}
+              </span>
+            ) : null}
           </div>
+          {saleOf(i) ? <p className="mt-2 text-sm text-muted-foreground">{saleOf(i)!.note}</p> : null}
           <div className="mt-4 flex flex-wrap gap-2">
             <button
               type="button"
@@ -200,7 +206,15 @@ function WorkshopPage() {
             >
               {i.status === "done" ? "View / edit" : "Continue"}
             </button>
-            {i.status === "active" ? (
+            {saleOf(i) ? (
+              <Link
+                to="/workspace/wallet"
+                search={{ section: "sell", work: i.id }}
+                className="rounded-full bg-[color:var(--gold)] px-4 py-2 text-xs font-semibold uppercase tracking-[0.2em] text-background"
+              >
+                Open selling tool
+              </Link>
+            ) : i.status === "active" ? (
               <button
                 type="button"
                 className="rounded-full bg-[color:var(--gold)] px-4 py-2 text-xs font-semibold uppercase tracking-[0.2em] text-background"
