@@ -26,6 +26,7 @@ import {
   setCardOrderStatus,
   setListingStatus,
 } from "@/lib/card-commerce.functions";
+import { updateWorkItem } from "@/lib/daily/work.functions";
 
 const panel = "rounded-2xl border border-border/60 bg-background/60 p-6 backdrop-blur";
 const heading = "text-xs uppercase tracking-[0.25em] text-muted-foreground";
