@@ -86,7 +86,13 @@ function WalletHub() {
   const { data: receipts } = useQuery({ queryKey: ["financial-receipts"], queryFn: () => receiptsFn() });
 
 
-  const [section, setSection] = useState<WalletSectionId>("balance");
+  const search = Route.useSearch();
+  const workItemId = search.work ?? null;
+  const [section, setSection] = useState<WalletSectionId>(
+    (WALLET_SECTIONS.some((w) => w.id === search.section)
+      ? (search.section as WalletSectionId)
+      : "balance"),
+  );
   const launchMode = useLaunchMode();
   const launchPending = !launchMode.paymentsLive;
   const rows = useMemo(() => orders ?? [], [orders]);
