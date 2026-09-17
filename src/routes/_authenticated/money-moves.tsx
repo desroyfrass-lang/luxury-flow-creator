@@ -3,11 +3,19 @@
 // Not a task list. Frassy's daily income strategy, with the reasoning shown.
 // ─────────────────────────────────────────────────────────────────────────────
 
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
-import { ArrowRight, Check, Clock, SkipForward, Sparkles } from "lucide-react";
+import { ArrowRight, Check, Clock, MessageCircle, SkipForward, Sparkles } from "lucide-react";
+import { createWorkItem, listWorkItems, setWorkItemState } from "@/lib/daily/work.functions";
+import { listMyCardOrders } from "@/lib/card-commerce.functions";
+import {
+  FIRST_SALE_MOVE,
+  MONEY_MOVE_SOURCE,
+  saleStatus,
+  saleToolHref,
+} from "@/lib/daily/money-move-link";
 import { SiteShell } from "@/components/site-shell";
 import { getMyProfile } from "@/lib/profiles.functions";
 import { getLaunchState, saveLaunchState } from "@/lib/business/accelerator.functions";
