@@ -52,17 +52,34 @@ export const getDailyBoard = createServerFn({ method: "GET" })
       return (data ?? []) as WorkItem[];
     }, [] as WorkItem[]);
 
+    // ── Money Move sales: the truthful state comes from real orders only ──────
+    const moveListingIds = items
+      .filter((i) => i.source_system === MONEY_MOVE_SOURCE && i.source_ref)
+      .map((i) => i.source_ref as string);
+    const moveOrders = await safe(async () => {
+      if (moveListingIds.length === 0) return [] as { listing_id: string | null; status: string | null }[];
+      const { data } = await sb
+        .from("card_orders")
+        .select("listing_id,status")
+        .eq("seller_id", userId)
+        .in("listing_id", moveListingIds);
+      return (data ?? []) as { listing_id: string | null; status: string | null }[];
+    }, [] as { listing_id: string | null; status: string | null }[]);
+
     const workCards: DailyCard[] = [];
     const doneToday: DailyCard[] = [];
     let overdue = 0;
     let dueToday = 0;
 
     for (const it of items) {
+      const isMove = it.source_system === MONEY_MOVE_SOURCE;
+      const status = isMove ? saleStatus(it.source_ref, moveOrders) : null;
       const card: DailyCard = {
         id: `work:${it.id}`,
         workItemId: it.id,
         title: it.title,
-        source: (it.source_system as DailySource) ?? "workshop",
+        source: isMove ? "money" : ((it.source_system as DailySource) ?? "workshop"),
+        ...(status ? { statusLabel: status.label, statusNote: status.note } : {}),
         sourceLabel: it.vault_id ? (vaultName.get(it.vault_id) ?? "Vault work") : (it.context || "Workshop"),
         priority: it.priority,
         score: scoreFor({
