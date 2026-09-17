@@ -177,7 +177,24 @@ function WalletHub() {
       )}
 
       {(section === "sell" || section === "items") && (
-        <QuickSellPanel provider={card?.payout_provider ?? null} launchPending={launchPending} />
+        <>
+          {workItemId && (
+            <section className="rounded-2xl border border-[color:var(--gold,#d4af37)]/40 bg-[color:var(--gold,#d4af37)]/[0.06] p-5">
+              <p className="text-xs uppercase tracking-[0.25em] text-[color:var(--gold,#d4af37)]">
+                Today&apos;s Money Move
+              </p>
+              <p className="mt-2 text-sm">
+                Put one thing up for sale. When you publish it, I save it to your work so you can
+                follow what happens next.
+              </p>
+            </section>
+          )}
+          <QuickSellPanel
+            provider={card?.payout_provider ?? null}
+            launchPending={launchPending}
+            workItemId={workItemId}
+          />
+        </>
       )}
 
       {section === "request" && (
