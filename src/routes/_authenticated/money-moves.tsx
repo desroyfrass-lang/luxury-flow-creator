@@ -136,6 +136,60 @@ function MoneyMovesPage() {
   const [partner, setPartner] = useState<PartnerProfile>(EMPTY_PROFILE);
   useEffect(() => setPartner(loadProfile()), []);
 
+  // ── Money Moves V1 — one move, started for real ────────────────────────────
+  const [showMore, setShowMore] = useState(false);
+  const navigate = useNavigate();
+  const qc = useQueryClient();
+  const workItemsFn = useServerFn(listWorkItems);
+  const createWorkFn = useServerFn(createWorkItem);
+  const workStateFn = useServerFn(setWorkItemState);
+  const cardOrdersFn = useServerFn(listMyCardOrders);
+
+  const workItems = useQuery({ queryKey: ["work-items"], queryFn: () => workItemsFn() });
+  const cardOrders = useQuery({ queryKey: ["card-orders"], queryFn: () => cardOrdersFn() });
+
+  /** The live Money Move, if the member already started one. Stops duplicates. */
+  const liveMove = useMemo(
+    () =>
+      (workItems.data ?? []).find(
+        (i) => i.source_system === MONEY_MOVE_SOURCE && i.status === "active",
+      ) ?? null,
+    [workItems.data],
+  );
+  const liveStatus = useMemo(
+    () => (liveMove ? saleStatus(liveMove.source_ref, cardOrders.data ?? []) : null),
+    [liveMove, cardOrders.data],
+  );
+
+  const startMove = useMutation({
+    mutationFn: () =>
+      createWorkFn({
+        data: {
+          title: FIRST_SALE_MOVE.title,
+          detail: FIRST_SALE_MOVE.detail,
+          context: "Money Moves",
+          sourceSystem: MONEY_MOVE_SOURCE,
+          href: saleToolHref(),
+          priority: 1,
+        },
+      }),
+    onSuccess: (item) => {
+      void qc.invalidateQueries({ queryKey: ["work-items"] });
+      void qc.invalidateQueries({ queryKey: ["daily-board"] });
+      void navigate({ to: "/workspace/wallet", search: { section: "sell", work: item.id } });
+    },
+    onError: () => setNote("I couldn't start that just now — try again in a moment."),
+  });
+
+  const notToday = useMutation({
+    mutationFn: (id: string) => workStateFn({ data: { id, action: "tomorrow" } }),
+    onSuccess: () => {
+      void qc.invalidateQueries({ queryKey: ["work-items"] });
+      void qc.invalidateQueries({ queryKey: ["daily-board"] });
+      setNote("Put back until tomorrow. Nothing lost.");
+    },
+  });
+
 
   useEffect(() => {
     if (!row.isSuccess || hydrated) return;
