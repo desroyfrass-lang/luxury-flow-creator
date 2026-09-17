@@ -41,6 +41,11 @@ import type { CardOrder } from "@/lib/card-commerce.functions";
 import { IdentityGate } from "@/components/security/identity-gate";
 
 export const Route = createFileRoute("/_authenticated/workspace/wallet")({
+  // Money Moves hands the member over with ?section=sell&work=<work item id>.
+  validateSearch: (search: Record<string, unknown>): { section?: string; work?: string } => ({
+    ...(typeof search["section"] === "string" ? { section: search["section"] as string } : {}),
+    ...(typeof search["work"] === "string" ? { work: search["work"] as string } : {}),
+  }),
   head: () => ({
     meta: [
       { title: "Frass Wallet — Balance, Quick Sell, Invoices, Statements" },
