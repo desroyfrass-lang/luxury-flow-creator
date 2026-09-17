@@ -27,6 +27,9 @@ export type DailyCard = {
   priority: number;
   score: number;
   completedAt?: string;
+  /** Truthful financial state of a linked Money Move (never "earned"). */
+  statusLabel?: string;
+  statusNote?: string;
 };
 
 export type DailyBoard = {
