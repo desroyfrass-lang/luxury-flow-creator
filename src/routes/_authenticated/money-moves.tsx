@@ -301,6 +301,95 @@ function MoneyMovesPage() {
 
         <LaunchModeBanner className="mt-5" />
 
+        {note && <p className="mt-4 rounded-2xl border border-white/12 bg-white/[0.04] px-4 py-3 text-sm">{note}</p>}
+
+        {/* ── ONE MOVE. THREE BUTTONS. ───────────────────────────────────────── */}
+        <section className="mt-6 rounded-3xl border border-[color:var(--gold,#d4af37)]/40 bg-[color:var(--gold,#d4af37)]/[0.06] p-6">
+          <p className="text-xs uppercase tracking-[0.2em] text-[color:var(--gold,#d4af37)]">
+            <Sparkles className="mr-1 inline h-3.5 w-3.5" /> Your move today
+          </p>
+
+          {liveMove ? (
+            <>
+              <h2 className="mt-2 font-display text-2xl uppercase tracking-[0.05em]">{liveMove.title}</h2>
+              {liveStatus && (
+                <>
+                  <p className="mt-3 inline-block rounded-full border border-white/20 bg-black/25 px-3 py-1 text-xs">
+                    {liveStatus.label}
+                  </p>
+                  <p className="mt-2 text-sm">{liveStatus.note}</p>
+                </>
+              )}
+              <p className="mt-2 text-xs text-muted-foreground">
+                Money is only counted as yours after Frass confirms it in your Financial Center.
+              </p>
+              <div className="mt-4 flex flex-wrap gap-2">
+                <Link
+                  to="/workspace/wallet"
+                  search={{ section: "sell", work: liveMove.id }}
+                  className="rounded-full bg-[color:var(--gold,#d4af37)] px-6 py-3 text-sm font-semibold text-black"
+                >
+                  Continue <ArrowRight className="ml-1 inline h-4 w-4" />
+                </Link>
+                <button
+                  onClick={() => notToday.mutate(liveMove.id)}
+                  disabled={notToday.isPending}
+                  className="rounded-full border border-white/12 px-5 py-3 text-sm text-muted-foreground hover:bg-white/5"
+                >
+                  <SkipForward className="mr-1 inline h-4 w-4" /> Not today
+                </button>
+                <Link
+                  to="/frassy"
+                  className="rounded-full border border-white/20 px-5 py-3 text-sm hover:bg-white/5"
+                >
+                  <MessageCircle className="mr-1 inline h-4 w-4" /> Talk to Frassy
+                </Link>
+              </div>
+            </>
+          ) : (
+            <>
+              <h2 className="mt-2 font-display text-2xl uppercase tracking-[0.05em]">
+                {FIRST_SALE_MOVE.title}
+              </h2>
+              <p className="mt-3 text-sm">{FIRST_SALE_MOVE.detail}</p>
+              <p className="mt-2 text-xs text-muted-foreground">
+                I save this to your work, then open your selling tool for you.
+              </p>
+              <div className="mt-4 flex flex-wrap gap-2">
+                <button
+                  onClick={() => startMove.mutate()}
+                  disabled={startMove.isPending}
+                  className="rounded-full bg-[color:var(--gold,#d4af37)] px-8 py-3 text-base font-semibold text-black disabled:opacity-60"
+                >
+                  {startMove.isPending ? "Starting…" : "Start"}
+                </button>
+                <button
+                  onClick={() => plan.highest && skipMove(plan.highest)}
+                  className="rounded-full border border-white/12 px-5 py-3 text-sm text-muted-foreground hover:bg-white/5"
+                >
+                  <SkipForward className="mr-1 inline h-4 w-4" /> Not today
+                </button>
+                <Link
+                  to="/frassy"
+                  className="rounded-full border border-white/20 px-5 py-3 text-sm hover:bg-white/5"
+                >
+                  <MessageCircle className="mr-1 inline h-4 w-4" /> Talk to Frassy
+                </Link>
+              </div>
+            </>
+          )}
+        </section>
+
+        <button
+          type="button"
+          onClick={() => setShowMore((v) => !v)}
+          className="mt-4 rounded-full border border-white/15 px-5 py-2 text-sm text-muted-foreground hover:bg-white/5"
+        >
+          {showMore ? "Hide the rest" : "Show me more"}
+        </button>
+
+        {showMore && (
+          <>
         {/* FRASS-0498 — Opportunity Sequencing: Now, Next, Later. */}
         <OpportunitySequence className="mt-5" />
 
@@ -355,8 +444,6 @@ function MoneyMovesPage() {
           </section>
         )}
 
-        {note && <p className="mt-4 rounded-2xl border border-white/12 bg-white/[0.04] px-4 py-3 text-sm">{note}</p>}
-
         {plan.blocked && (
           <p className="mt-6 rounded-3xl border border-amber-400/30 bg-amber-400/[0.07] px-5 py-4 text-sm text-amber-100">
             {plan.blocked}{" "}
@@ -366,10 +453,10 @@ function MoneyMovesPage() {
           </p>
         )}
 
-        {/* Today's highest value move */}
-        <section className="mt-6 rounded-3xl border border-[color:var(--gold,#d4af37)]/40 bg-[color:var(--gold,#d4af37)]/[0.06] p-6">
-          <p className="text-xs uppercase tracking-[0.2em] text-[color:var(--gold,#d4af37)]">
-            <Sparkles className="mr-1 inline h-3.5 w-3.5" /> Today's highest value move
+        {/* Today's highest value move (the full reasoning, kept out of the way) */}
+        <section className="mt-6 rounded-3xl border border-white/12 bg-white/[0.03] p-6">
+          <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">
+            Frassy's full reasoning
           </p>
           {plan.highest ? (
             <>
@@ -391,7 +478,7 @@ function MoneyMovesPage() {
               <div className="mt-4 flex flex-wrap gap-2">
                 <button
                   onClick={() => completeMove(plan.highest!)}
-                  className="rounded-full bg-[color:var(--gold,#d4af37)] px-5 py-2 text-sm font-semibold text-black"
+                  className="rounded-full border border-white/20 px-5 py-2 text-sm hover:bg-white/5"
                 >
                   <Check className="mr-1 inline h-4 w-4" /> I did this
                 </button>
@@ -415,6 +502,7 @@ function MoneyMovesPage() {
             <p className="mt-2 text-sm">{plan.coach}</p>
           )}
         </section>
+
 
         {/* FRASS-0480 — Build it. Monetize it. Every move ends at an earning outcome. */}
         <section className="mt-6 rounded-3xl border border-white/12 bg-white/[0.03] p-6">
