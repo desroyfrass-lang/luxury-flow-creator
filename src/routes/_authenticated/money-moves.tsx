@@ -827,6 +827,8 @@ function MoneyMovesPage() {
             ))}
           </div>
         </section>
+          </>
+        )}
 
         <p className="mt-8 text-xs text-muted-foreground">
           <Link to="/first-30-days" className="underline">
