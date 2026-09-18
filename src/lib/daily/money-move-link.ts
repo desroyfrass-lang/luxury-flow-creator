@@ -6,6 +6,8 @@
 // that may ever say money has cleared — nothing here declares an earning.
 // ─────────────────────────────────────────────────────────────────────────────
 
+import { moveById } from "@/lib/business/money-move-catalogue";
+
 /** Work items born in Money Moves carry this source. */
 export const MONEY_MOVE_SOURCE = "money-move";
 
@@ -72,9 +74,19 @@ export function saleStatus(sourceRef: string | null | undefined, orders: OrderLi
   };
 }
 
-/** The one Money Move V1 can actually carry all the way through. */
+/**
+ * The one Money Move V1 can actually carry all the way through.
+ * Its wording now comes from the Master Money Moves Library so the same move
+ * has one permanent identity everywhere. Behaviour is unchanged.
+ */
+export const FIRST_SALE_MOVE_ID = "mm.direct.frass-card-sale";
+
+const FIRST_SALE_ENTRY = moveById(FIRST_SALE_MOVE_ID);
+
 export const FIRST_SALE_MOVE = {
-  title: "Put one thing up for sale on your Frass Card",
+  id: FIRST_SALE_MOVE_ID,
+  title: FIRST_SALE_ENTRY?.title ?? "Put one thing up for sale on your Frass Card",
   detail:
+    FIRST_SALE_ENTRY?.purpose ??
     "Add a photo, a price and how many you have. It goes live on your card straight away, and anyone with your link can buy it.",
 };
