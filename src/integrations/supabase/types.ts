@@ -1789,6 +1789,45 @@ export type Database = {
         }
         Relationships: []
       }
+      fast_track_progress: {
+        Row: {
+          completed_at: string | null
+          created_at: string
+          id: string
+          owner_id: string
+          parent_move_id: string | null
+          status: string
+          title: string
+          track_key: string
+          updated_at: string
+          vault_key: string
+        }
+        Insert: {
+          completed_at?: string | null
+          created_at?: string
+          id?: string
+          owner_id?: string
+          parent_move_id?: string | null
+          status?: string
+          title: string
+          track_key: string
+          updated_at?: string
+          vault_key: string
+        }
+        Update: {
+          completed_at?: string | null
+          created_at?: string
+          id?: string
+          owner_id?: string
+          parent_move_id?: string | null
+          status?: string
+          title?: string
+          track_key?: string
+          updated_at?: string
+          vault_key?: string
+        }
+        Relationships: []
+      }
       financial_adjustments: {
         Row: {
           amount: number
