@@ -61,7 +61,13 @@ export const LIFECYCLE: { id: LifecycleStage; label: string; everyday: string; e
 ];
 
 export type FastTrack = {
+  /** Legacy position-based id — kept only so old browser ticks can migrate. */
   id: string;
+  /** Stable account-backed identity: ft.<vault-key>.<step-slug>. */
+  key: string;
+  /** Step 1 catalogue Money Move, only where safely determinable. */
+  parentMoveId: string | null;
+  vaultKey: string;
   title: string;
   minutes: number;
   /** Where in Frass this step actually happens. Never an invented destination. */
@@ -89,22 +95,29 @@ export type MoneyMove = {
   workshopTo: string;
 };
 
-const DONE_KEY = "frass.fasttrack.done.v1";
-
-export function loadDoneTracks(): string[] {
+/**
+ * DEPRECATED browser store. The Builder's account
+ * (public.fast_track_progress) is authoritative. This is read ONCE so old
+ * ticks can be moved into the account, then cleared. Never written again.
+ */
+export function loadLegacyDoneTracks(): string[] {
   if (typeof window === "undefined") return [];
   try {
-    return JSON.parse(window.localStorage.getItem(DONE_KEY) ?? "[]") as string[];
+    const raw = window.localStorage.getItem(FAST_TRACK_LEGACY_STORAGE_KEY);
+    if (!raw) return [];
+    return JSON.parse(raw) as string[];
   } catch {
     return [];
   }
 }
 
-export function toggleFastTrack(id: string): string[] {
-  const cur = loadDoneTracks();
-  const next = cur.includes(id) ? cur.filter((x) => x !== id) : [...cur, id];
-  if (typeof window !== "undefined") window.localStorage.setItem(DONE_KEY, JSON.stringify(next));
-  return next;
+export function clearLegacyDoneTracks(): void {
+  if (typeof window === "undefined") return;
+  try {
+    window.localStorage.removeItem(FAST_TRACK_LEGACY_STORAGE_KEY);
+  } catch {
+    /* nothing to clean up */
+  }
 }
 
 function stageFor(pct: number, completedMonetize: boolean): LifecycleStage {
