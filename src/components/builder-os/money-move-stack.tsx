@@ -132,7 +132,8 @@ export function MoneyMoveStack({ onNavigate }: { onNavigate?: (to: string) => vo
           move={m}
           open={open === m.id}
           onToggle={() => setOpen(open === m.id ? null : m.id)}
-          onTick={(id) => setDone(toggleFastTrack(id))}
+          onTick={onTick}
+          busy={save.isPending}
           onNavigate={onNavigate}
         />
       ))}
