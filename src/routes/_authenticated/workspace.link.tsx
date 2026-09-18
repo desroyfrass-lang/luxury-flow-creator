@@ -7,14 +7,15 @@ import { FrassLinkWidget } from "@/components/link/frass-link-widget";
 import { MemberIdentity } from "@/components/card/member-identity";
 import { getMyIntroducer, getMyLinkDashboard } from "@/lib/link.functions";
 import {
-import { WorkContextBanner } from "@/components/work/work-context-banner";
-import { parseWorkHandoff } from "@/lib/daily/work-handoff";
   BONUS_RULES,
   CONNECTION_PRINCIPLE,
   REFERRAL_STAGES,
   bonusLabel,
   stageLabel,
 } from "@/lib/frass-link";
+
+import { WorkContextBanner } from "@/components/work/work-context-banner";
+import { parseWorkHandoff } from "@/lib/daily/work-handoff";
 
 export const Route = createFileRoute("/_authenticated/workspace/link")({
   // Daily / Workshop can hand a work identity over: ?work=&move=&vault=&track=

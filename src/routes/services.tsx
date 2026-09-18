@@ -8,8 +8,6 @@ import { useMemo, useState } from "react";
 import { Search, ArrowRight, ShieldCheck } from "lucide-react";
 import { SiteShell } from "@/components/site-shell";
 import {
-import { WorkContextBanner } from "@/components/work/work-context-banner";
-import { parseWorkHandoff } from "@/lib/daily/work-handoff";
   ORCHESTRATIONS,
   SERVICES_PLAIN_ENGLISH,
   SERVICES_PRINCIPLE,
@@ -18,6 +16,9 @@ import { parseWorkHandoff } from "@/lib/daily/work-handoff";
   SERVICE_LAUNCH_ROADMAP,
   categoryById,
 } from "@/lib/services/marketplace";
+
+import { WorkContextBanner } from "@/components/work/work-context-banner";
+import { parseWorkHandoff } from "@/lib/daily/work-handoff";
 
 export const Route = createFileRoute("/services")({
   // Daily / Workshop can hand a work identity over: ?work=&move=&vault=&track=

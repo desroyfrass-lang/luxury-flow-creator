@@ -38,8 +38,6 @@ import {
   type HiddenAsset,
 } from "@/lib/business/hidden-assets";
 import {
-import { WorkContextBanner } from "@/components/work/work-context-banner";
-import { parseWorkHandoff } from "@/lib/daily/work-handoff";
   addAsset,
   listMyAssets,
   prepareMyListing,
@@ -48,6 +46,9 @@ import { parseWorkHandoff } from "@/lib/daily/work-handoff";
   saveAsset,
   signMyAssetPhotos,
 } from "@/lib/business/hidden-assets.functions";
+
+import { WorkContextBanner } from "@/components/work/work-context-banner";
+import { parseWorkHandoff } from "@/lib/daily/work-handoff";
 
 export const Route = createFileRoute("/_authenticated/workspace/first-venture")({
   // Daily / Workshop can hand a work identity over: ?work=&move=&vault=&track=

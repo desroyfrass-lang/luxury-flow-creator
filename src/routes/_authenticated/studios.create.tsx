@@ -9,8 +9,6 @@ import { supabase } from "@/integrations/supabase/client";
 import { useSeries, logStudioActivity } from "@/lib/studios/use-studios";
 import { Field, GoldButton, QuietButton, StudioCard, inputClass } from "@/components/studios/studio-ui";
 import {
-import { WorkContextBanner } from "@/components/work/work-context-banner";
-import { parseWorkHandoff } from "@/lib/daily/work-handoff";
   AGE_GROUPS,
   AUDIENCES,
   ASPECT_RATIOS,
@@ -18,6 +16,9 @@ import { parseWorkHandoff } from "@/lib/daily/work-handoff";
   FRASSY_DEVELOPMENT_OUTPUTS,
   PRODUCTION_TYPES,
 } from "@/lib/studios/studios";
+
+import { WorkContextBanner } from "@/components/work/work-context-banner";
+import { parseWorkHandoff } from "@/lib/daily/work-handoff";
 
 export const Route = createFileRoute("/_authenticated/studios/create")({
   // Daily / Workshop can hand a work identity over: ?work=&move=&vault=&track=
