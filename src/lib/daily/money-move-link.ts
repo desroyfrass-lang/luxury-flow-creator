@@ -6,6 +6,8 @@
 // that may ever say money has cleared — nothing here declares an earning.
 // ─────────────────────────────────────────────────────────────────────────────
 
+import { moveById } from "@/lib/business/money-move-catalogue";
+
 /** Work items born in Money Moves carry this source. */
 export const MONEY_MOVE_SOURCE = "money-move";
 
