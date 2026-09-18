@@ -20,6 +20,8 @@ import { parseWorkHandoff } from "@/lib/daily/work-handoff";
 } from "@/lib/studios/studios";
 
 export const Route = createFileRoute("/_authenticated/studios/create")({
+  // Daily / Workshop can hand a work identity over: ?work=&move=&vault=&track=
+  validateSearch: (search: Record<string, unknown>) => parseWorkHandoff(search),
   head: () => ({
     meta: [
       { title: "Create Production | Frassy Studios" },

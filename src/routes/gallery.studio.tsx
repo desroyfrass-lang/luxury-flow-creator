@@ -14,6 +14,8 @@ import { WorkContextBanner } from "@/components/work/work-context-banner";
 import { parseWorkHandoff } from "@/lib/daily/work-handoff";
 
 export const Route = createFileRoute("/gallery/studio")({
+  // Daily / Workshop can hand a work identity over: ?work=&move=&vault=&track=
+  validateSearch: (search: Record<string, unknown>) => parseWorkHandoff(search),
   component: StudioPage,
   head: () => ({
     meta: [

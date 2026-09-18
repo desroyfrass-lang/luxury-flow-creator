@@ -20,6 +20,8 @@ import { parseWorkHandoff } from "@/lib/daily/work-handoff";
 } from "@/lib/services/marketplace";
 
 export const Route = createFileRoute("/services")({
+  // Daily / Workshop can hand a work identity over: ?work=&move=&vault=&track=
+  validateSearch: (search: Record<string, unknown>) => parseWorkHandoff(search),
   head: () => ({
     meta: [
       { title: "Frass Services Marketplace — One Platform. Every Service." },
