@@ -13,11 +13,13 @@ import type { WorkItem } from "@/lib/daily/work.functions";
 import { MONEY_MOVE_SOURCE, saleStatus } from "@/lib/daily/money-move-link";
 import {
   DAY,
+  nextFastTrackCards,
   safe,
   scoreFor,
   startOfToday,
   type DailyBoard,
   type DailyCard,
+  type FastTrackRow,
   type Sb,
   type DailySource,
 } from "@/lib/daily/board-model";
