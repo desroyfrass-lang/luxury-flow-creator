@@ -307,7 +307,7 @@ function MoneyMovesPage() {
         {/* ── ONE MOVE. THREE BUTTONS. ───────────────────────────────────────── */}
         <section className="mt-6 rounded-3xl border border-[color:var(--gold,#d4af37)]/40 bg-[color:var(--gold,#d4af37)]/[0.06] p-6">
           <p className="text-xs uppercase tracking-[0.2em] text-[color:var(--gold,#d4af37)]">
-            <Sparkles className="mr-1 inline h-3.5 w-3.5" /> Your move today
+            <Sparkles className="mr-1 inline h-3.5 w-3.5" /> Recommended · Start here
           </p>
 
           {liveMove ? (
@@ -380,6 +380,9 @@ function MoneyMovesPage() {
             </>
           )}
         </section>
+
+        {/* The whole Library is open to everyone — never buried. */}
+        <MoneyMovesLibrary className="mt-10" />
 
         <button
           type="button"
