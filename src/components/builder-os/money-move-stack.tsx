@@ -2,24 +2,106 @@
 // A Money Move card opens in place and shows its Fast Tracks inside it.
 // There is no separate step list anywhere else in the Daily.
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useServerFn } from "@tanstack/react-start";
 import { ArrowRight, Check, ChevronDown, ChevronRight } from "lucide-react";
 import {
   LIFECYCLE,
+  clearLegacyDoneTracks,
+  loadLegacyDoneTracks,
   moneyMoves,
   nextFastTrack,
-  toggleFastTrack,
+  type FastTrack,
   type MoneyMove,
 } from "@/lib/builder-os/money-move-lifecycle";
+import {
+  importLegacyFastTracks,
+  listFastTrackProgress,
+  setFastTrackState,
+} from "@/lib/builder-os/fast-track.functions";
+import { BUSINESS_VAULTS } from "@/lib/business/vault-family";
+import { fastTrackKey, legacyFastTrackId, parentMoveIdForVault } from "@/lib/builder-os/fast-track-identity";
 import { PRIORITY_META, loadPriorities } from "@/lib/builder-os/vault-priority";
+
+/** Old browser ticks, translated to the account-backed identity, once. */
+function legacyRowsToImport() {
+  const legacy = new Set(loadLegacyDoneTracks());
+  if (legacy.size === 0) return [];
+  const rows: { trackKey: string; vaultKey: string; title: string; parentMoveId: string | null }[] = [];
+  for (const vault of BUSINESS_VAULTS) {
+    vault.moves.forEach((m, i) => {
+      if (!legacy.has(legacyFastTrackId(vault.key, i))) return;
+      rows.push({
+        trackKey: fastTrackKey(vault.key, m.title),
+        vaultKey: vault.key,
+        title: m.title,
+        parentMoveId: parentMoveIdForVault(vault.key),
+      });
+    });
+  }
+  return rows;
+}
 
 export function MoneyMoveStack({ onNavigate }: { onNavigate?: (to: string) => void }) {
   const [priorities] = useState(() => loadPriorities());
-  const [done, setDone] = useState<string[]>([]);
   const [open, setOpen] = useState<string | null>(null);
+  const qc = useQueryClient();
+  const listFn = useServerFn(listFastTrackProgress);
+  const saveFn = useServerFn(setFastTrackState);
+  const importFn = useServerFn(importLegacyFastTracks);
+  const migrated = useRef(false);
 
-  // `done` is only here to re-read localStorage after a tick.
-  const moves = useMemo(() => moneyMoves(priorities), [priorities, done]);
+  const { data: progress } = useQuery({
+    queryKey: ["fast-track-progress"],
+    queryFn: () => listFn(),
+  });
+
+  // One-time migration: the browser is no longer the source of truth.
+  useEffect(() => {
+    if (migrated.current || !progress) return;
+    migrated.current = true;
+    const rows = legacyRowsToImport();
+    if (rows.length === 0) {
+      clearLegacyDoneTracks();
+      return;
+    }
+    void importFn({ data: { tracks: rows } }).then(() => {
+      clearLegacyDoneTracks();
+      void qc.invalidateQueries({ queryKey: ["fast-track-progress"] });
+    });
+  }, [progress, importFn, qc]);
+
+  const save = useMutation({
+    mutationFn: (input: {
+      trackKey: string;
+      vaultKey: string;
+      title: string;
+      status: "active" | "done";
+      parentMoveId: string | null;
+    }) => saveFn({ data: input }),
+    onSuccess: () => {
+      void qc.invalidateQueries({ queryKey: ["fast-track-progress"] });
+      void qc.invalidateQueries({ queryKey: ["daily-board"] });
+    },
+  });
+
+  const doneKeys = useMemo(
+    () => new Set((progress ?? []).filter((p) => p.status === "done").map((p) => p.track_key)),
+    [progress],
+  );
+
+  const moves = useMemo(() => moneyMoves(priorities, doneKeys), [priorities, doneKeys]);
+
+  const onTick = (track: FastTrack) => {
+    save.mutate({
+      trackKey: track.key,
+      vaultKey: track.vaultKey,
+      title: track.title,
+      status: track.done ? "active" : "done",
+      parentMoveId: track.parentMoveId,
+    });
+  };
 
   if (moves.length === 0) {
     return (
