@@ -17,7 +17,12 @@ import {
   PRODUCTION_TYPES,
 } from "@/lib/studios/studios";
 
+import { WorkContextBanner } from "@/components/work/work-context-banner";
+import { parseWorkHandoff, validateHandoffSearch } from "@/lib/daily/work-handoff";
+
 export const Route = createFileRoute("/_authenticated/studios/create")({
+  // Daily / Workshop can hand a work identity over: ?work=&move=&vault=&track=
+  validateSearch: (search: Record<string, unknown>) => validateHandoffSearch(search),
   head: () => ({
     meta: [
       { title: "Create Production | Frassy Studios" },
@@ -183,6 +188,7 @@ function CreateProduction() {
 
   return (
     <>
+      <WorkContextBanner handoff={parseWorkHandoff(Route.useSearch())} className="mb-5" />
       <h1 className="font-display text-3xl uppercase tracking-tight">Create Production</h1>
       <p className="mt-1 text-sm text-muted-foreground">
         Four steps. Nothing generates and nothing publishes — this only plans the work.

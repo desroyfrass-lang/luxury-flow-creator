@@ -3,6 +3,7 @@
 
 import { Link } from "@tanstack/react-router";
 import type { DailyCard } from "@/lib/daily/board.functions";
+import { buildHandoffHref } from "@/lib/daily/work-handoff";
 
 function dueLabel(card: DailyCard): string | null {
   const when = card.dueAt ?? (card.scheduledFor ? `${card.scheduledFor}T00:00:00` : null);
@@ -59,7 +60,7 @@ export function WorkCard({
         {card.href ? (
           <Link
             // Daily cards carry a resolved destination string from the server.
-            to={card.href as never}
+            to={buildHandoffHref(card.href, card.workItemId ? { workItemId: card.workItemId } : {}) as never}
             className="rounded-full bg-[color:var(--gold)] px-4 py-2 text-xs font-semibold uppercase tracking-[0.2em] text-background"
           >
             Open

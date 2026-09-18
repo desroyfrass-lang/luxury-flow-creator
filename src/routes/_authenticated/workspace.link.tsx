@@ -14,7 +14,12 @@ import {
   stageLabel,
 } from "@/lib/frass-link";
 
+import { WorkContextBanner } from "@/components/work/work-context-banner";
+import { parseWorkHandoff, validateHandoffSearch } from "@/lib/daily/work-handoff";
+
 export const Route = createFileRoute("/_authenticated/workspace/link")({
+  // Daily / Workshop can hand a work identity over: ?work=&move=&vault=&track=
+  validateSearch: (search: Record<string, unknown>) => validateHandoffSearch(search),
   head: () => ({
     meta: [
       { title: "My Frass Link — Identity, Recruitment & Rewards" },
@@ -50,6 +55,7 @@ function LinkDashboard() {
 
   return (
     <main className="mx-auto max-w-5xl space-y-8 px-4 py-12">
+      <WorkContextBanner handoff={parseWorkHandoff(Route.useSearch())} />
       <header className="space-y-3">
         <p className={heading}>FRASS-0428 · Unified Identity, Recruitment & Rewards</p>
         <h1 className="text-3xl font-black uppercase tracking-tight">My Frass Link</h1>

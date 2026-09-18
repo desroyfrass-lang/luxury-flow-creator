@@ -17,7 +17,12 @@ import {
   categoryById,
 } from "@/lib/services/marketplace";
 
+import { WorkContextBanner } from "@/components/work/work-context-banner";
+import { parseWorkHandoff, validateHandoffSearch } from "@/lib/daily/work-handoff";
+
 export const Route = createFileRoute("/services")({
+  // Daily / Workshop can hand a work identity over: ?work=&move=&vault=&track=
+  validateSearch: (search: Record<string, unknown>) => validateHandoffSearch(search),
   head: () => ({
     meta: [
       { title: "Frass Services Marketplace — One Platform. Every Service." },
@@ -58,6 +63,7 @@ function ServicesMarketplace() {
   return (
     <SiteShell>
       <div className="mx-auto w-full max-w-6xl px-4 py-10 md:py-14">
+        <WorkContextBanner handoff={parseWorkHandoff(Route.useSearch())} className="mb-6" />
         <p className="text-xs uppercase tracking-[0.3em] text-muted-foreground">Frass Marketplace · Services</p>
         <h1 className="mt-2 font-display text-3xl uppercase tracking-[0.06em] md:text-5xl">
           One Platform. Every Service.
