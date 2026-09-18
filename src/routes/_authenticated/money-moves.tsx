@@ -71,6 +71,7 @@ import {
   monetizationSummary,
   monetizationTracks,
 } from "@/lib/business/monetization";
+import { MoneyMovesLibrary } from "@/components/business/money-moves-library";
 import { ViewModeFrame } from "@/components/view-mode/simplified-view";
 import { ViewModeToggle } from "@/components/view-mode/view-mode-toggle";
 
