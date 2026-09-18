@@ -48,6 +48,7 @@ import {
 } from "@/lib/business/hidden-assets.functions";
 
 import { WorkContextBanner } from "@/components/work/work-context-banner";
+import { linkWorkResult } from "@/lib/daily/work.functions";
 import { parseWorkHandoff, validateHandoffSearch } from "@/lib/daily/work-handoff";
 
 export const Route = createFileRoute("/_authenticated/workspace/first-venture")({
@@ -148,6 +149,9 @@ function FirstVenturePage() {
   const signFn = useServerFn(signMyAssetPhotos);
   const researchFn = useServerFn(researchMyAsset);
   const listingFn = useServerFn(prepareMyListing);
+  const linkResultFn = useServerFn(linkWorkResult);
+  // Daily / Workshop may have sent her here with one job in hand.
+  const handoff = parseWorkHandoff(Route.useSearch());
 
   const { data: assets = [], isLoading } = useQuery({
     queryKey: ["hidden-assets"],
@@ -212,7 +216,19 @@ function FirstVenturePage() {
           backPath: back,
         },
       }),
-    onSuccess: () => {
+    onSuccess: async (saved: { id?: string } | undefined) => {
+      // Only a genuinely saved piece is reported back to the original work item.
+      if (handoff.workItemId && saved?.id) {
+        try {
+          await linkResultFn({
+            data: { workItemId: handoff.workItemId, kind: "hidden-asset", resultRef: saved.id },
+          });
+          void qc.invalidateQueries({ queryKey: ["work-items"] });
+          void qc.invalidateQueries({ queryKey: ["daily-board"] });
+        } catch {
+          /* the piece is saved either way — never lose her work over a link */
+        }
+      }
       setName("");
       setNotes("");
       setFront(null);
@@ -271,7 +287,7 @@ function FirstVenturePage() {
 
   return (
     <main className="mx-auto w-full max-w-5xl space-y-6 px-4 py-10">
-      <WorkContextBanner handoff={parseWorkHandoff(Route.useSearch())} />
+      <WorkContextBanner handoff={handoff} />
       <header className="space-y-3">
         <p className={heading}>FRASS-P002-E · First Business Venture</p>
         <h1 className="font-display text-3xl sm:text-4xl">Your first business is something you already own</h1>

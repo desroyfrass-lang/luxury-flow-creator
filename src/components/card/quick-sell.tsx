@@ -26,7 +26,7 @@ import {
   setCardOrderStatus,
   setListingStatus,
 } from "@/lib/card-commerce.functions";
-import { updateWorkItem } from "@/lib/daily/work.functions";
+import { linkWorkResult, updateWorkItem } from "@/lib/daily/work.functions";
 
 const panel = "rounded-2xl border border-border/60 bg-background/60 p-6 backdrop-blur";
 const heading = "text-xs uppercase tracking-[0.25em] text-muted-foreground";
@@ -47,6 +47,7 @@ export function QuickSellPanel({
   const listFn = useServerFn(listMyListings);
   const createFn = useServerFn(createListing);
   const linkWorkFn = useServerFn(updateWorkItem);
+  const linkResultFn = useServerFn(linkWorkResult);
   const statusFn = useServerFn(setListingStatus);
   const ordersFn = useServerFn(listMyCardOrders);
   const orderStatusFn = useServerFn(setCardOrderStatus);
@@ -98,6 +99,10 @@ export function QuickSellPanel({
       if (workItemId && listing?.id) {
         try {
           await linkWorkFn({ data: { id: workItemId, sourceRef: listing.id } });
+          // Step 4: the same listing, recorded as the real saved result. No money implied.
+          await linkResultFn({
+            data: { workItemId, kind: "card-listing", resultRef: listing.id },
+          });
           qc.invalidateQueries({ queryKey: ["work-items"] });
           qc.invalidateQueries({ queryKey: ["daily-board"] });
         } catch {

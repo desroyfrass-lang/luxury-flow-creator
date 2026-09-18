@@ -3425,6 +3425,10 @@ export type Database = {
           is_sample: boolean
           owner_id: string
           priority: number
+          result_at: string | null
+          result_kind: string | null
+          result_label: string | null
+          result_ref: string | null
           scheduled_for: string | null
           snoozed_until: string | null
           source_ref: string | null
@@ -3445,6 +3449,10 @@ export type Database = {
           is_sample?: boolean
           owner_id?: string
           priority?: number
+          result_at?: string | null
+          result_kind?: string | null
+          result_label?: string | null
+          result_ref?: string | null
           scheduled_for?: string | null
           snoozed_until?: string | null
           source_ref?: string | null
@@ -3465,6 +3473,10 @@ export type Database = {
           is_sample?: boolean
           owner_id?: string
           priority?: number
+          result_at?: string | null
+          result_kind?: string | null
+          result_label?: string | null
+          result_ref?: string | null
           scheduled_for?: string | null
           snoozed_until?: string | null
           source_ref?: string | null

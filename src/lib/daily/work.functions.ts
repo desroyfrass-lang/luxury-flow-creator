@@ -9,6 +9,11 @@
 
 import { createServerFn } from "@tanstack/react-start";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
+import {
+  RESULT_KIND_SPECS,
+  isWorkResultKind,
+  type WorkResultKind,
+} from "@/lib/daily/work-result";
 
 export type WorkItem = {
   id: string;
@@ -27,6 +32,11 @@ export type WorkItem = {
   completed_at: string | null;
   href: string | null;
   is_sample: boolean;
+  /** Step 4 — a REAL saved thing a specialist tool created for this work. */
+  result_kind: string | null;
+  result_ref: string | null;
+  result_label: string | null;
+  result_at: string | null;
   created_at: string;
   updated_at: string;
 };
@@ -205,6 +215,71 @@ export const setWorkItemState = createServerFn({ method: "POST" })
       .from("member_actions")
       .update(patch)
       .eq("id", data.id)
+      .eq("owner_id", context.userId)
+      .select("*")
+      .single();
+    if (error) throw new Error(error.message);
+    return row as WorkItem;
+  });
+
+/**
+ * STEP 4 — a specialist tool reports the REAL thing it just saved.
+ *
+ * Both sides are proved before anything is written: the saved row must belong
+ * to this Builder, and the work item must belong to this Builder. A forged id
+ * from another account simply fails. This never touches money, payment,
+ * verification or completion — only "a real thing now exists".
+ */
+export const linkWorkResult = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((input: { workItemId: string; kind: string; resultRef: string }) => {
+    if (!input?.workItemId) throw new Error("Which piece of work?");
+    if (!isWorkResultKind(input.kind)) throw new Error("Unknown kind of result.");
+    const ref = (input.resultRef ?? "").trim();
+    if (!ref) throw new Error("Nothing was saved, so there is nothing to link.");
+    return { workItemId: input.workItemId, kind: input.kind as WorkResultKind, resultRef: ref };
+  })
+  .handler(async ({ data, context }): Promise<WorkItem> => {
+    const sb = context.supabase as unknown as Sb;
+    const spec = RESULT_KIND_SPECS[data.kind];
+
+    // 1. The saved row must exist AND belong to this Builder.
+    const columns = [
+      "id",
+      spec.titleColumn,
+      spec.ownerColumn,
+      spec.ownerVia?.column,
+    ].filter(Boolean) as string[];
+    let query = sb.from(spec.table).select([...new Set(columns)].join(",")).eq("id", data.resultRef);
+    if (spec.ownerColumn) query = query.eq(spec.ownerColumn, context.userId);
+    const { data: resultRow, error: resultError } = await query.maybeSingle();
+    if (resultError) throw new Error(resultError.message);
+    if (!resultRow) throw new Error("That saved item could not be found on your account.");
+
+    if (spec.ownerVia) {
+      const parentId = (resultRow as Record<string, unknown>)[spec.ownerVia.column];
+      if (!parentId) throw new Error("That saved item could not be found on your account.");
+      const { data: parent } = await sb
+        .from(spec.ownerVia.table)
+        .select("id")
+        .eq("id", parentId)
+        .eq(spec.ownerVia.ownerColumn, context.userId)
+        .maybeSingle();
+      if (!parent) throw new Error("That saved item could not be found on your account.");
+    }
+
+    const label = ((resultRow as Record<string, unknown>)[spec.titleColumn] as string | null) ?? null;
+
+    // 2. The work item must belong to this Builder too (owner filter + RLS).
+    const { data: row, error } = await sb
+      .from("member_actions")
+      .update({
+        result_kind: data.kind,
+        result_ref: data.resultRef,
+        result_label: label ? label.slice(0, 200) : null,
+        result_at: new Date().toISOString(),
+      })
+      .eq("id", data.workItemId)
       .eq("owner_id", context.userId)
       .select("*")
       .single();

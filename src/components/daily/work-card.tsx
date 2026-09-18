@@ -39,6 +39,15 @@ export function WorkCard({
           {card.detail ? (
             <p className="mt-1 text-sm text-muted-foreground break-words">{card.detail}</p>
           ) : null}
+          {/* Truthful state of the work: what was really saved or listed. Never money. */}
+          {card.statusLabel ? (
+            <p className="mt-2 inline-block rounded-full border border-border/70 px-3 py-1 text-xs">
+              {card.statusLabel}
+            </p>
+          ) : null}
+          {card.statusNote ? (
+            <p className="mt-2 text-sm text-muted-foreground break-words">{card.statusNote}</p>
+          ) : null}
           <div className="mt-2 flex flex-wrap items-center gap-2 text-[10px] uppercase tracking-[0.2em] text-muted-foreground">
             <span className="rounded-full border border-border/70 px-2 py-0.5">{card.sourceLabel}</span>
             {due ? (

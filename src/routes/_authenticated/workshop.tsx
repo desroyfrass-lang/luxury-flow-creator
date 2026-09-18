@@ -23,6 +23,7 @@ import { listMyVaults } from "@/lib/vault-engine/vaults.functions";
 import { listMyCardOrders } from "@/lib/card-commerce.functions";
 import { MONEY_MOVE_SOURCE, saleStatus } from "@/lib/daily/money-move-link";
 import { buildHandoffHref, destinationAcceptsWork } from "@/lib/daily/work-handoff";
+import { readWorkResult, resultStatus } from "@/lib/daily/work-result";
 
 export const Route = createFileRoute("/_authenticated/workshop")({
   validateSearch: (search: Record<string, unknown>): { item?: string } =>
@@ -73,9 +74,22 @@ function WorkshopPage() {
   const { data: vaults } = useQuery({ queryKey: ["my-vaults"], queryFn: () => vaultsFn() });
   const { data: cardOrders } = useQuery({ queryKey: ["card-orders"], queryFn: () => cardOrdersFn() });
 
-  /** Money Move sales carry their own honest status — the member never marks them done by hand. */
-  const saleOf = (i: WorkItem) =>
-    i.source_system === MONEY_MOVE_SOURCE ? saleStatus(i.source_ref, cardOrders ?? []) : null;
+  /**
+   * Money Move sales carry their own honest status — the member never marks them
+   * done by hand. Once a real listing exists it always wins; before that, a thing
+   * genuinely saved in another tool is the truthful state instead.
+   */
+  const saleOf = (i: WorkItem) => {
+    if (i.source_system !== MONEY_MOVE_SOURCE) return null;
+    if (!i.source_ref && readWorkResult(i)) return null;
+    return saleStatus(i.source_ref, cardOrders ?? []);
+  };
+
+  /** A real saved thing a specialist tool made for this work. Never money. */
+  const resultOf = (i: WorkItem) => {
+    const r = readWorkResult(i);
+    return r ? { ...resultStatus(r), result: r } : null;
+  };
 
   const refresh = () => {
     void qc.invalidateQueries({ queryKey: ["work-items"] });
@@ -197,8 +211,16 @@ function WorkshopPage() {
                 {saleOf(i)!.label}
               </span>
             ) : null}
+            {!saleOf(i) && resultOf(i) ? (
+              <span className="rounded-full border border-[color:var(--gold)]/50 px-2 py-0.5 text-[color:var(--gold)]">
+                {resultOf(i)!.label}
+              </span>
+            ) : null}
           </div>
           {saleOf(i) ? <p className="mt-2 text-sm text-muted-foreground">{saleOf(i)!.note}</p> : null}
+          {!saleOf(i) && resultOf(i) ? (
+            <p className="mt-2 text-sm text-muted-foreground">{resultOf(i)!.note}</p>
+          ) : null}
           <div className="mt-4 flex flex-wrap gap-2">
             <button
               type="button"
@@ -245,6 +267,15 @@ function WorkshopPage() {
                 className="rounded-full bg-[color:var(--gold)] px-4 py-2 text-xs font-semibold uppercase tracking-[0.2em] text-background"
               >
                 {destinationAcceptsWork(i.href) ? "Open the tool" : "Open"}
+              </Link>
+            ) : null}
+            {/* Reopen the real thing this work produced. Saved on the account, not this device. */}
+            {!saleOf(i) && resultOf(i) ? (
+              <Link
+                to={buildHandoffHref(resultOf(i)!.href, { workItemId: i.id }) as never}
+                className="rounded-full border border-[color:var(--gold)]/50 px-4 py-2 text-xs uppercase tracking-[0.2em] text-[color:var(--gold)]"
+              >
+                Open what you made
               </Link>
             ) : null}
             {i.vault_id ? (

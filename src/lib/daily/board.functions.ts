@@ -11,6 +11,7 @@ import { createServerFn } from "@tanstack/react-start";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import type { WorkItem } from "@/lib/daily/work.functions";
 import { MONEY_MOVE_SOURCE, saleStatus } from "@/lib/daily/money-move-link";
+import { readWorkResult, resultStatus } from "@/lib/daily/work-result";
 import {
   DAY,
   nextFastTrackCards,
@@ -75,7 +76,18 @@ export const getDailyBoard = createServerFn({ method: "GET" })
 
     for (const it of items) {
       const isMove = it.source_system === MONEY_MOVE_SOURCE;
-      const status = isMove ? saleStatus(it.source_ref, moveOrders) : null;
+      const sale = isMove ? saleStatus(it.source_ref, moveOrders) : null;
+      // A real saved thing a specialist tool made. It never means money.
+      const made = readWorkResult(it);
+      const madeStatus = made ? resultStatus(made) : null;
+      // A listing state wins once a listing exists; otherwise a genuinely saved
+      // result is the truthful state. Neither ever means money.
+      const status =
+        sale && it.source_ref
+          ? sale
+          : madeStatus
+            ? { label: madeStatus.label, note: madeStatus.note }
+            : sale;
       const card: DailyCard = {
         id: `work:${it.id}`,
         workItemId: it.id,
@@ -91,7 +103,7 @@ export const getDailyBoard = createServerFn({ method: "GET" })
           updatedAt: it.updated_at,
         }),
         ...(it.detail ? { detail: it.detail } : {}),
-        ...(it.href ? { href: it.href } : {}),
+        ...(it.href ? { href: it.href } : madeStatus ? { href: madeStatus.href } : {}),
         ...(it.vault_id && vaultName.get(it.vault_id) ? { vaultName: vaultName.get(it.vault_id)! } : {}),
         ...(it.due_at ? { dueAt: it.due_at } : {}),
         ...(it.scheduled_for ? { scheduledFor: it.scheduled_for } : {}),
