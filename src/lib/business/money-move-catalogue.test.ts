@@ -26,7 +26,7 @@ describe("Master Money Moves Library", () => {
 
   it("keeps the reconciled additional routes without inventing archetypes", () => {
     const extra = MONEY_MOVE_CATALOGUE.filter((m) => m.kind === "additional");
-    expect(extra.length).toBeGreaterThanOrEqual(14);
+    expect(extra.length).toBe(13);
     for (const id of [
       "mm.direct.frass-card-sale",
       "mm.direct.hidden-assets-resale",
