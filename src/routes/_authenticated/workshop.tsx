@@ -74,9 +74,16 @@ function WorkshopPage() {
   const { data: vaults } = useQuery({ queryKey: ["my-vaults"], queryFn: () => vaultsFn() });
   const { data: cardOrders } = useQuery({ queryKey: ["card-orders"], queryFn: () => cardOrdersFn() });
 
-  /** Money Move sales carry their own honest status — the member never marks them done by hand. */
-  const saleOf = (i: WorkItem) =>
-    i.source_system === MONEY_MOVE_SOURCE ? saleStatus(i.source_ref, cardOrders ?? []) : null;
+  /**
+   * Money Move sales carry their own honest status — the member never marks them
+   * done by hand. Once a real listing exists it always wins; before that, a thing
+   * genuinely saved in another tool is the truthful state instead.
+   */
+  const saleOf = (i: WorkItem) => {
+    if (i.source_system !== MONEY_MOVE_SOURCE) return null;
+    if (!i.source_ref && readWorkResult(i)) return null;
+    return saleStatus(i.source_ref, cardOrders ?? []);
+  };
 
   /** A real saved thing a specialist tool made for this work. Never money. */
   const resultOf = (i: WorkItem) => {
