@@ -48,6 +48,27 @@ export function parseWorkHandoff(search: Record<string, unknown>): WorkHandoff {
   return out;
 }
 
+/**
+ * The search shape a specialist route validates. Deliberately the SAME names as
+ * the URL, so the router round-trips the link without rewriting it.
+ */
+export type WorkHandoffSearch = {
+  work?: string;
+  move?: string;
+  vault?: string;
+  track?: string;
+};
+
+export function validateHandoffSearch(search: Record<string, unknown>): WorkHandoffSearch {
+  const h = parseWorkHandoff(search);
+  const out: WorkHandoffSearch = {};
+  if (h.workItemId) out.work = h.workItemId;
+  if (h.moveId) out.move = h.moveId;
+  if (h.vaultId) out.vault = h.vaultId;
+  if (h.trackKey) out.track = h.trackKey;
+  return out;
+}
+
 /** True when the destination actually carries something to recognise. */
 export function hasWorkHandoff(h: WorkHandoff): boolean {
   return Boolean(h.workItemId || h.moveId || h.vaultId || h.trackKey);

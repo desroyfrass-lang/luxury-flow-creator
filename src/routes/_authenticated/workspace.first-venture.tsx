@@ -48,11 +48,11 @@ import {
 } from "@/lib/business/hidden-assets.functions";
 
 import { WorkContextBanner } from "@/components/work/work-context-banner";
-import { parseWorkHandoff } from "@/lib/daily/work-handoff";
+import { parseWorkHandoff, validateHandoffSearch } from "@/lib/daily/work-handoff";
 
 export const Route = createFileRoute("/_authenticated/workspace/first-venture")({
   // Daily / Workshop can hand a work identity over: ?work=&move=&vault=&track=
-  validateSearch: (search: Record<string, unknown>) => parseWorkHandoff(search),
+  validateSearch: (search: Record<string, unknown>) => validateHandoffSearch(search),
   head: () => ({
     meta: [
       { title: "First Business Venture — Turn What You Own Into Income" },
@@ -271,7 +271,7 @@ function FirstVenturePage() {
 
   return (
     <main className="mx-auto w-full max-w-5xl space-y-6 px-4 py-10">
-      <WorkContextBanner handoff={Route.useSearch()} />
+      <WorkContextBanner handoff={parseWorkHandoff(Route.useSearch())} />
       <header className="space-y-3">
         <p className={heading}>FRASS-P002-E · First Business Venture</p>
         <h1 className="font-display text-3xl sm:text-4xl">Your first business is something you already own</h1>

@@ -177,7 +177,7 @@ function MoneyMovesPage() {
     onSuccess: (item) => {
       void qc.invalidateQueries({ queryKey: ["work-items"] });
       void qc.invalidateQueries({ queryKey: ["daily-board"] });
-      void navigate({ to: "/workspace/wallet", search: { section: "sell", workItemId: item.id } });
+      void navigate({ to: "/workspace/wallet", search: { section: "sell", work: item.id } });
     },
     onError: () => setNote("I couldn't start that just now — try again in a moment."),
   });
@@ -327,7 +327,7 @@ function MoneyMovesPage() {
               <div className="mt-4 flex flex-wrap gap-2">
                 <Link
                   to="/workspace/wallet"
-                  search={{ section: "sell", workItemId: liveMove.id }}
+                  search={{ section: "sell", work: liveMove.id }}
                   className="rounded-full bg-[color:var(--gold,#d4af37)] px-6 py-3 text-sm font-semibold text-black"
                 >
                   Continue <ArrowRight className="ml-1 inline h-4 w-4" />

@@ -12,11 +12,11 @@ import {
 import { slugify } from "@/lib/gallery/gallery";
 
 import { WorkContextBanner } from "@/components/work/work-context-banner";
-import { parseWorkHandoff } from "@/lib/daily/work-handoff";
+import { parseWorkHandoff, validateHandoffSearch } from "@/lib/daily/work-handoff";
 
 export const Route = createFileRoute("/gallery/studio")({
   // Daily / Workshop can hand a work identity over: ?work=&move=&vault=&track=
-  validateSearch: (search: Record<string, unknown>) => parseWorkHandoff(search),
+  validateSearch: (search: Record<string, unknown>) => validateHandoffSearch(search),
   component: StudioPage,
   head: () => ({
     meta: [
@@ -100,7 +100,7 @@ function StudioPage() {
         ) : null}
       </header>
       <div className="px-4 pt-4">
-        <WorkContextBanner handoff={Route.useSearch()} />
+        <WorkContextBanner handoff={parseWorkHandoff(Route.useSearch())} />
       </div>
       <ClientOnly fallback={<div className="p-10 text-sm text-muted-foreground">Opening the studio…</div>}>
         <DrawingCanvas onExport={handleExport} />

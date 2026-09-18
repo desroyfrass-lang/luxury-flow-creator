@@ -40,15 +40,19 @@ import {
 import type { CardOrder } from "@/lib/card-commerce.functions";
 import { IdentityGate } from "@/components/security/identity-gate";
 import { WorkContextBanner } from "@/components/work/work-context-banner";
-import { parseWorkHandoff } from "@/lib/daily/work-handoff";
+import {
+  parseWorkHandoff,
+  validateHandoffSearch,
+  type WorkHandoffSearch,
+} from "@/lib/daily/work-handoff";
 
 export const Route = createFileRoute("/_authenticated/workspace/wallet")({
   // Money Moves hands the member over with ?section=sell&work=<work item id>.
   validateSearch: (
     search: Record<string, unknown>,
-  ): { section?: string } & ReturnType<typeof parseWorkHandoff> => ({
+  ): { section?: string } & WorkHandoffSearch => ({
     ...(typeof search["section"] === "string" ? { section: search["section"] as string } : {}),
-    ...parseWorkHandoff(search),
+    ...validateHandoffSearch(search),
   }),
   head: () => ({
     meta: [
@@ -91,7 +95,7 @@ function WalletHub() {
 
 
   const search = Route.useSearch();
-  const workItemId = search.workItemId ?? null;
+  const workItemId = search.work ?? null;
   const [section, setSection] = useState<WalletSectionId>(
     (WALLET_SECTIONS.some((w) => w.id === search.section)
       ? (search.section as WalletSectionId)
@@ -115,7 +119,7 @@ function WalletHub() {
 
   return (
     <main className="mx-auto max-w-5xl space-y-6 px-5 py-10">
-      <WorkContextBanner handoff={search} />
+      <WorkContextBanner handoff={parseWorkHandoff(search)} />
       <header>
         <p className={heading}>
           <Wallet className="mr-2 inline h-3.5 w-3.5" /> Frass Wallet
