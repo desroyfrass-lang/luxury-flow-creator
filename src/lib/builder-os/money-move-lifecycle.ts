@@ -19,6 +19,12 @@ import {
   type PriorityMap,
   type VaultPriority,
 } from "@/lib/builder-os/vault-priority";
+import {
+  FAST_TRACK_LEGACY_STORAGE_KEY,
+  fastTrackKey,
+  legacyFastTrackId,
+  parentMoveIdForVault,
+} from "@/lib/builder-os/fast-track-identity";
 
 export type LifecycleStage =
   | "money-move"
@@ -132,17 +138,24 @@ function stageFor(pct: number, completedMonetize: boolean): LifecycleStage {
 export function moneyMoveForVault(
   vault: BusinessVault,
   priority: VaultPriority,
-  done: string[],
+  /** Finished Fast Tracks — account keys, plus legacy ids during migration. */
+  done: Iterable<string>,
 ): MoneyMove {
+  const doneSet = done instanceof Set ? done : new Set(done);
+  const parentMoveId = parentMoveIdForVault(vault.key);
   const fastTracks: FastTrack[] = vault.moves.map((m, i) => {
-    const id = `${vault.key}-${i}`;
+    const id = legacyFastTrackId(vault.key, i);
+    const key = fastTrackKey(vault.key, m.title);
     return {
       id,
+      key,
+      parentMoveId,
+      vaultKey: vault.key,
       title: m.title,
       minutes: m.minutes,
       to: m.to,
       stage: m.stage,
-      done: done.includes(id),
+      done: doneSet.has(key) || doneSet.has(id),
     };
   });
   const completed = fastTracks.filter((f) => f.done).length;
@@ -170,8 +183,12 @@ export function moneyMoveForVault(
  * The Daily's Money Move stack. Vault Priority decides what appears and in
  * which order — Future and Archived Vaults schedule nothing (FRASS-0469).
  */
-export function moneyMoves(map: PriorityMap, vaults: BusinessVault[] = BUSINESS_VAULTS): MoneyMove[] {
-  const done = loadDoneTracks();
+export function moneyMoves(
+  map: PriorityMap,
+  /** Finished Fast Track keys, read from the Builder's account. */
+  done: Iterable<string> = [],
+  vaults: BusinessVault[] = BUSINESS_VAULTS,
+): MoneyMove[] {
   return vaults
     .map((v) => moneyMoveForVault(v, priorityOf(map, v.key), done))
     .filter((m) => PRIORITY_META[m.priority].schedules)
