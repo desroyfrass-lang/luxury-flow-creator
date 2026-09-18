@@ -10,6 +10,8 @@ import {
   STYLUS_NOTE,
 } from "@/lib/gallery/studio";
 import { slugify } from "@/lib/gallery/gallery";
+import { WorkContextBanner } from "@/components/work/work-context-banner";
+import { parseWorkHandoff } from "@/lib/daily/work-handoff";
 
 export const Route = createFileRoute("/gallery/studio")({
   component: StudioPage,

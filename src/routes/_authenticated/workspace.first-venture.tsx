@@ -38,6 +38,8 @@ import {
   type HiddenAsset,
 } from "@/lib/business/hidden-assets";
 import {
+import { WorkContextBanner } from "@/components/work/work-context-banner";
+import { parseWorkHandoff } from "@/lib/daily/work-handoff";
   addAsset,
   listMyAssets,
   prepareMyListing,

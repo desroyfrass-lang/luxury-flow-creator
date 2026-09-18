@@ -9,6 +9,8 @@ import { supabase } from "@/integrations/supabase/client";
 import { useSeries, logStudioActivity } from "@/lib/studios/use-studios";
 import { Field, GoldButton, QuietButton, StudioCard, inputClass } from "@/components/studios/studio-ui";
 import {
+import { WorkContextBanner } from "@/components/work/work-context-banner";
+import { parseWorkHandoff } from "@/lib/daily/work-handoff";
   AGE_GROUPS,
   AUDIENCES,
   ASPECT_RATIOS,

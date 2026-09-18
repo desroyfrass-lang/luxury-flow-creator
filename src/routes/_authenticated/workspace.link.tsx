@@ -7,6 +7,8 @@ import { FrassLinkWidget } from "@/components/link/frass-link-widget";
 import { MemberIdentity } from "@/components/card/member-identity";
 import { getMyIntroducer, getMyLinkDashboard } from "@/lib/link.functions";
 import {
+import { WorkContextBanner } from "@/components/work/work-context-banner";
+import { parseWorkHandoff } from "@/lib/daily/work-handoff";
   BONUS_RULES,
   CONNECTION_PRINCIPLE,
   REFERRAL_STAGES,
