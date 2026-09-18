@@ -14,6 +14,13 @@ describe("work handoff contract", () => {
     expect(hasWorkHandoff({})).toBe(false);
   });
 
+  it("also reads the names the router round-trips after a reload", () => {
+    expect(parseWorkHandoff({ workItemId: "w1", moveId: "mm.direct.frass-card-sale" })).toEqual({
+      workItemId: "w1",
+      moveId: "mm.direct.frass-card-sale",
+    });
+  });
+
   it("preserves a destination's own query, such as the Wallet sell section", () => {
     const href = buildHandoffHref("/workspace/wallet?section=sell", { workItemId: "w1" });
     expect(href).toBe("/workspace/wallet?section=sell&work=w1");

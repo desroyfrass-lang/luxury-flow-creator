@@ -27,14 +27,20 @@ export const HANDOFF_PARAMS = {
   track: "track",
 } as const;
 
-/** Reads a handoff out of a route's search object. Unknown shapes are ignored. */
+/**
+ * Reads a handoff out of a route's search object. Both the short URL names
+ * (?work=) and the parsed names the router round-trips (?workItemId=) are
+ * accepted, so a link built by hand and a link built by the router behave the
+ * same after a reload. Unknown shapes are ignored.
+ */
 export function parseWorkHandoff(search: Record<string, unknown>): WorkHandoff {
-  const str = (k: string) => (typeof search[k] === "string" && search[k] ? (search[k] as string) : undefined);
+  const one = (k: string) => (typeof search[k] === "string" && search[k] ? (search[k] as string) : undefined);
+  const str = (...keys: string[]) => keys.map(one).find(Boolean);
   const out: WorkHandoff = {};
-  const w = str(HANDOFF_PARAMS.work);
-  const m = str(HANDOFF_PARAMS.move);
-  const v = str(HANDOFF_PARAMS.vault);
-  const t = str(HANDOFF_PARAMS.track);
+  const w = str(HANDOFF_PARAMS.work, "workItemId");
+  const m = str(HANDOFF_PARAMS.move, "moveId");
+  const v = str(HANDOFF_PARAMS.vault, "vaultId");
+  const t = str(HANDOFF_PARAMS.track, "trackKey");
   if (w) out.workItemId = w;
   if (m) out.moveId = m;
   if (v) out.vaultId = v;
