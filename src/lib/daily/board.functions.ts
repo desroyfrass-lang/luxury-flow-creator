@@ -237,6 +237,19 @@ export const getDailyBoard = createServerFn({ method: "GET" })
       return rows;
     }, [] as DailyCard[]);
 
+    // ── Fast Tracks: account-backed step progress (never money) ───────────────
+    const fastTrackRows = await safe(async () => {
+      const { data } = await sb
+        .from("fast_track_progress")
+        .select("track_key,vault_key,parent_move_id,title,status,updated_at")
+        .eq("owner_id", userId)
+        .order("updated_at", { ascending: false })
+        .limit(500);
+      return (data ?? []) as FastTrackRow[];
+    }, [] as FastTrackRow[]);
+    const fastTracks = nextFastTrackCards(fastTrackRows);
+    const fastTracksDone = fastTrackRows.filter((r) => r.status === "done").length;
+
     // ── Compose. TODAY is deliberately small. ─────────────────────────────────
     const candidates: DailyCard[] = [...workCards, ...vaultCards].sort((a, b) => b.score - a.score);
     const today = candidates.slice(0, 3);
@@ -257,6 +270,7 @@ export const getDailyBoard = createServerFn({ method: "GET" })
       opportunities,
       learn,
       frassHill,
+      fastTracks,
       doneToday,
       summary: {
         activeWork: workCards.length,
@@ -264,9 +278,11 @@ export const getDailyBoard = createServerFn({ method: "GET" })
         dueToday,
         completedToday: doneToday.length,
         vaults: vaults.length,
+        fastTracksDone,
         hasAnything:
           today.length + continueWork.length + schedule.length + moneyMoves.length +
-            opportunities.length + learn.length + frassHill.length + doneToday.length >
+            opportunities.length + learn.length + frassHill.length + fastTracks.length +
+            doneToday.length >
           0,
       },
     };

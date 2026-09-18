@@ -189,6 +189,12 @@ function DailyPage() {
               empty="Nothing dated in the next few days."
             />
             <Section
+              title="Fast Tracks"
+              note="The next step of the Money Moves you have already started"
+              cards={board.fastTracks}
+              empty="No Fast Track in progress. Open a Money Move and tick the first step."
+            />
+            <Section
               title="Money moves"
               cards={board.moneyMoves}
               empty="No money records yet, so there is nothing to recommend. Frass will never invent a number."
