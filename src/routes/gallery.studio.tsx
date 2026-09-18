@@ -98,6 +98,9 @@ function StudioPage() {
           <p className="mt-2 rounded-md bg-primary/10 px-3 py-1.5 text-xs text-primary">{status}</p>
         ) : null}
       </header>
+      <div className="px-4 pt-4">
+        <WorkContextBanner handoff={Route.useSearch()} />
+      </div>
       <ClientOnly fallback={<div className="p-10 text-sm text-muted-foreground">Opening the studio…</div>}>
         <DrawingCanvas onExport={handleExport} />
       </ClientOnly>

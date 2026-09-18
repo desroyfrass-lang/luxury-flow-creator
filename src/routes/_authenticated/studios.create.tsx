@@ -187,6 +187,7 @@ function CreateProduction() {
 
   return (
     <>
+      <WorkContextBanner handoff={Route.useSearch()} className="mb-5" />
       <h1 className="font-display text-3xl uppercase tracking-tight">Create Production</h1>
       <p className="mt-1 text-sm text-muted-foreground">
         Four steps. Nothing generates and nothing publishes — this only plans the work.
