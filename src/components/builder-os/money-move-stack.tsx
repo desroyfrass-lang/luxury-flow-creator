@@ -147,12 +147,14 @@ function MoneyMoveCard({
   onToggle,
   onTick,
   onNavigate,
+  busy,
 }: {
   move: MoneyMove;
   open: boolean;
   onToggle: () => void;
-  onTick: (id: string) => void;
+  onTick: (track: FastTrack) => void;
   onNavigate?: (to: string) => void;
+  busy?: boolean;
 }) {
   const next = nextFastTrack(move);
   const meta = PRIORITY_META[move.priority];
@@ -190,12 +192,14 @@ function MoneyMoveCard({
           <div className="ws-meta">⚡ Fast Tracks — the guided steps inside this Money Move.</div>
           <ul className="space-y-1">
             {move.fastTracks.map((f) => (
-              <li key={f.id} className="flex items-center gap-2">
+              <li key={f.key} className="flex items-center gap-2">
                 <button
                   type="button"
                   className={`ws-chip ${f.done ? "daily-chip-on" : ""}`}
                   aria-pressed={f.done}
-                  onClick={() => onTick(f.id)}
+                  aria-label={f.title}
+                  disabled={busy}
+                  onClick={() => onTick(f)}
                 >
                   <Check className="h-3.5 w-3.5" />
                 </button>
