@@ -77,6 +77,12 @@ function WorkshopPage() {
   const saleOf = (i: WorkItem) =>
     i.source_system === MONEY_MOVE_SOURCE ? saleStatus(i.source_ref, cardOrders ?? []) : null;
 
+  /** A real saved thing a specialist tool made for this work. Never money. */
+  const resultOf = (i: WorkItem) => {
+    const r = readWorkResult(i);
+    return r ? { ...resultStatus(r), result: r } : null;
+  };
+
   const refresh = () => {
     void qc.invalidateQueries({ queryKey: ["work-items"] });
     void qc.invalidateQueries({ queryKey: ["daily-board"] });
