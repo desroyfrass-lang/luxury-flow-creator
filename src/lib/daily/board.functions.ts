@@ -75,7 +75,11 @@ export const getDailyBoard = createServerFn({ method: "GET" })
 
     for (const it of items) {
       const isMove = it.source_system === MONEY_MOVE_SOURCE;
-      const status = isMove ? saleStatus(it.source_ref, moveOrders) : null;
+      const sale = isMove ? saleStatus(it.source_ref, moveOrders) : null;
+      // A real saved thing a specialist tool made. It never means money.
+      const made = readWorkResult(it);
+      const madeStatus = made ? resultStatus(made) : null;
+      const status = sale ?? (madeStatus ? { label: madeStatus.label, note: madeStatus.note } : null);
       const card: DailyCard = {
         id: `work:${it.id}`,
         workItemId: it.id,
