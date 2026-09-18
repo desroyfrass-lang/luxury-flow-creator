@@ -80,7 +80,14 @@ export const getDailyBoard = createServerFn({ method: "GET" })
       // A real saved thing a specialist tool made. It never means money.
       const made = readWorkResult(it);
       const madeStatus = made ? resultStatus(made) : null;
-      const status = sale ?? (madeStatus ? { label: madeStatus.label, note: madeStatus.note } : null);
+      // A listing state wins once a listing exists; otherwise a genuinely saved
+      // result is the truthful state. Neither ever means money.
+      const status =
+        sale && it.source_ref
+          ? sale
+          : madeStatus
+            ? { label: madeStatus.label, note: madeStatus.note }
+            : sale;
       const card: DailyCard = {
         id: `work:${it.id}`,
         workItemId: it.id,
