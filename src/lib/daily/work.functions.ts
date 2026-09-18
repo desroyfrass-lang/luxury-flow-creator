@@ -47,6 +47,28 @@ export const listWorkItems = createServerFn({ method: "GET" })
     return (data ?? []) as WorkItem[];
   });
 
+/**
+ * One work item by id, owner-scoped. Used by specialist tools so they can tell
+ * the member, in plain English, what they came there to do. Read only.
+ */
+export const getWorkItem = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((input: { id: string }) => {
+    if (!input?.id) throw new Error("Which piece of work?");
+    return { id: input.id };
+  })
+  .handler(async ({ data, context }): Promise<WorkItem | null> => {
+    const sb = context.supabase as unknown as Sb;
+    const { data: row, error } = await sb
+      .from("member_actions")
+      .select("*")
+      .eq("id", data.id)
+      .eq("owner_id", context.userId)
+      .maybeSingle();
+    if (error) throw new Error(error.message);
+    return (row ?? null) as WorkItem | null;
+  });
+
 export const createWorkItem = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator(
