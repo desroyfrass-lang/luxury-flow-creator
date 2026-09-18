@@ -32,6 +32,11 @@ export type WorkItem = {
   completed_at: string | null;
   href: string | null;
   is_sample: boolean;
+  /** Step 4 — a REAL saved thing a specialist tool created for this work. */
+  result_kind: string | null;
+  result_ref: string | null;
+  result_label: string | null;
+  result_at: string | null;
   created_at: string;
   updated_at: string;
 };
