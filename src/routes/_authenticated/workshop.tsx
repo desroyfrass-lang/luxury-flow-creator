@@ -204,8 +204,16 @@ function WorkshopPage() {
                 {saleOf(i)!.label}
               </span>
             ) : null}
+            {!saleOf(i) && resultOf(i) ? (
+              <span className="rounded-full border border-[color:var(--gold)]/50 px-2 py-0.5 text-[color:var(--gold)]">
+                {resultOf(i)!.label}
+              </span>
+            ) : null}
           </div>
           {saleOf(i) ? <p className="mt-2 text-sm text-muted-foreground">{saleOf(i)!.note}</p> : null}
+          {!saleOf(i) && resultOf(i) ? (
+            <p className="mt-2 text-sm text-muted-foreground">{resultOf(i)!.note}</p>
+          ) : null}
           <div className="mt-4 flex flex-wrap gap-2">
             <button
               type="button"
