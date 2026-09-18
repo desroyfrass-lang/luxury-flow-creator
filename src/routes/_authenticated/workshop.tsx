@@ -262,6 +262,15 @@ function WorkshopPage() {
                 {destinationAcceptsWork(i.href) ? "Open the tool" : "Open"}
               </Link>
             ) : null}
+            {/* Reopen the real thing this work produced. Saved on the account, not this device. */}
+            {!saleOf(i) && resultOf(i) ? (
+              <Link
+                to={buildHandoffHref(resultOf(i)!.href, { workItemId: i.id }) as never}
+                className="rounded-full border border-[color:var(--gold)]/50 px-4 py-2 text-xs uppercase tracking-[0.2em] text-[color:var(--gold)]"
+              >
+                Open what you made
+              </Link>
+            ) : null}
             {i.vault_id ? (
               <Link
                 to="/vaults/$vaultId"
