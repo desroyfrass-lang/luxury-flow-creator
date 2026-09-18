@@ -210,7 +210,7 @@ function WorkshopPage() {
             {saleOf(i) ? (
               <Link
                 to="/workspace/wallet"
-                search={{ section: "sell", work: i.id }}
+                search={{ section: "sell", workItemId: i.id }}
                 className="rounded-full bg-[color:var(--gold)] px-4 py-2 text-xs font-semibold uppercase tracking-[0.2em] text-background"
               >
                 Open selling tool
