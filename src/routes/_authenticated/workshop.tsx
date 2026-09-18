@@ -22,6 +22,7 @@ import {
 import { listMyVaults } from "@/lib/vault-engine/vaults.functions";
 import { listMyCardOrders } from "@/lib/card-commerce.functions";
 import { MONEY_MOVE_SOURCE, saleStatus } from "@/lib/daily/money-move-link";
+import { buildHandoffHref, destinationAcceptsWork } from "@/lib/daily/work-handoff";
 
 export const Route = createFileRoute("/_authenticated/workshop")({
   validateSearch: (search: Record<string, unknown>): { item?: string } =>
@@ -233,6 +234,19 @@ function WorkshopPage() {
                 Reopen
               </button>
             )}
+            {/* A work item that names a real tool launches that exact tool, carrying its work identity. */}
+            {!saleOf(i) && i.href ? (
+              <Link
+                // The destination is a resolved path produced on the server.
+                to={buildHandoffHref(i.href, {
+                  workItemId: i.id,
+                  ...(i.vault_id ? { vaultId: i.vault_id } : {}),
+                }) as never}
+                className="rounded-full bg-[color:var(--gold)] px-4 py-2 text-xs font-semibold uppercase tracking-[0.2em] text-background"
+              >
+                {destinationAcceptsWork(i.href) ? "Open the tool" : "Open"}
+              </Link>
+            ) : null}
             {i.vault_id ? (
               <Link
                 to="/vaults/$vaultId"
