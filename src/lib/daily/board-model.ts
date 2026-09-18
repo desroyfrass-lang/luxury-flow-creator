@@ -3,6 +3,8 @@
 // imports, types and server-function declarations.
 
 import type { WorkItem } from "@/lib/daily/work.functions";
+import { BUSINESS_VAULTS } from "@/lib/business/vault-family";
+import { fastTrackKey } from "@/lib/builder-os/fast-track-identity";
 
 export type DailySource =
   | "workshop"
@@ -10,7 +12,8 @@ export type DailySource =
   | "opportunity"
   | "academy"
   | "money"
-  | "frass-hill";
+  | "frass-hill"
+  | "fast-track";
 
 export type DailyCard = {
   id: string;
