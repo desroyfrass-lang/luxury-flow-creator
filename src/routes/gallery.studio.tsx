@@ -13,6 +13,8 @@ import { slugify } from "@/lib/gallery/gallery";
 
 import { WorkContextBanner } from "@/components/work/work-context-banner";
 import { parseWorkHandoff, validateHandoffSearch } from "@/lib/daily/work-handoff";
+import { linkWorkResult } from "@/lib/daily/work.functions";
+import { useServerFn } from "@tanstack/react-start";
 
 export const Route = createFileRoute("/gallery/studio")({
   // Daily / Workshop can hand a work identity over: ?work=&move=&vault=&track=
@@ -39,6 +41,8 @@ export const Route = createFileRoute("/gallery/studio")({
 
 function StudioPage() {
   const [status, setStatus] = useState<string | null>(null);
+  const handoff = parseWorkHandoff(Route.useSearch());
+  const linkResultFn = useServerFn(linkWorkResult);
 
   /** Sends the finished piece straight into the artist's gallery as a draft. */
   const handleExport = async (blob: Blob, thumbnail: string) => {
@@ -68,7 +72,7 @@ function StudioPage() {
       setStatus("The upload didn't complete. Your work is still safe on this device.");
       return;
     }
-    const { error } = await supabase.from("gallery_artworks").insert({
+    const { data: artwork, error } = await supabase.from("gallery_artworks").insert({
       gallery_id: gallery.id,
       title,
       slug: `${slugify(title)}-${Date.now().toString(36)}`,
@@ -78,7 +82,18 @@ function StudioPage() {
       availability: "not_for_sale",
       source: "studio",
       is_published: false,
-    });
+    }).select("id").single();
+
+    // Step 4: a real, saved artwork — reported back to the work that sent her here.
+    if (!error && artwork?.id && handoff.workItemId) {
+      try {
+        await linkResultFn({
+          data: { workItemId: handoff.workItemId, kind: "gallery-artwork", resultRef: artwork.id },
+        });
+      } catch {
+        /* the piece is filed either way */
+      }
+    }
     setStatus(
       error
         ? "Saved the image, but the listing didn't file. Try sending it again."
@@ -100,7 +115,7 @@ function StudioPage() {
         ) : null}
       </header>
       <div className="px-4 pt-4">
-        <WorkContextBanner handoff={parseWorkHandoff(Route.useSearch())} />
+        <WorkContextBanner handoff={handoff} />
       </div>
       <ClientOnly fallback={<div className="p-10 text-sm text-muted-foreground">Opening the studio…</div>}>
         <DrawingCanvas onExport={handleExport} />

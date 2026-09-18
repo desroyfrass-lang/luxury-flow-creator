@@ -19,6 +19,7 @@ import {
 
 import { WorkContextBanner } from "@/components/work/work-context-banner";
 import { parseWorkHandoff, validateHandoffSearch } from "@/lib/daily/work-handoff";
+import { linkWorkResult } from "@/lib/daily/work.functions";
 
 export const Route = createFileRoute("/_authenticated/studios/create")({
   // Daily / Workshop can hand a work identity over: ?work=&move=&vault=&track=
@@ -51,6 +52,8 @@ function CreateProduction() {
   const [understanding, setUnderstanding] = useState("");
   const [questions, setQuestions] = useState<string[]>([]);
   const interpretRequest = useServerFn(interpretProductionRequest);
+  const linkResultFn = useServerFn(linkWorkResult);
+  const handoff = parseWorkHandoff(Route.useSearch());
 
   const [form, setForm] = useState({
     series_id: "",
@@ -167,6 +170,17 @@ function CreateProduction() {
         notes: "Created inside Frassy Studios.",
       });
       await logStudioActivity("production.created", "production", data.id, { title: form.title });
+
+      // Step 4: a real, saved production — reported back to the originating work item.
+      if (handoff.workItemId) {
+        try {
+          await linkResultFn({
+            data: { workItemId: handoff.workItemId, kind: "studio-production", resultRef: data.id },
+          });
+        } catch {
+          /* the production is saved either way */
+        }
+      }
       await qc.invalidateQueries({ queryKey: ["studio"] });
 
       toast.success(
@@ -188,7 +202,7 @@ function CreateProduction() {
 
   return (
     <>
-      <WorkContextBanner handoff={parseWorkHandoff(Route.useSearch())} className="mb-5" />
+      <WorkContextBanner handoff={handoff} className="mb-5" />
       <h1 className="font-display text-3xl uppercase tracking-tight">Create Production</h1>
       <p className="mt-1 text-sm text-muted-foreground">
         Four steps. Nothing generates and nothing publishes — this only plans the work.
