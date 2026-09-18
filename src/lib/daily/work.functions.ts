@@ -9,6 +9,11 @@
 
 import { createServerFn } from "@tanstack/react-start";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
+import {
+  RESULT_KIND_SPECS,
+  isWorkResultKind,
+  type WorkResultKind,
+} from "@/lib/daily/work-result";
 
 export type WorkItem = {
   id: string;
