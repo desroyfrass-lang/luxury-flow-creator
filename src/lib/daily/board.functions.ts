@@ -11,6 +11,7 @@ import { createServerFn } from "@tanstack/react-start";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import type { WorkItem } from "@/lib/daily/work.functions";
 import { MONEY_MOVE_SOURCE, saleStatus } from "@/lib/daily/money-move-link";
+import { readWorkResult, resultStatus } from "@/lib/daily/work-result";
 import {
   DAY,
   nextFastTrackCards,
@@ -95,7 +96,7 @@ export const getDailyBoard = createServerFn({ method: "GET" })
           updatedAt: it.updated_at,
         }),
         ...(it.detail ? { detail: it.detail } : {}),
-        ...(it.href ? { href: it.href } : {}),
+        ...(it.href ? { href: it.href } : madeStatus ? { href: madeStatus.href } : {}),
         ...(it.vault_id && vaultName.get(it.vault_id) ? { vaultName: vaultName.get(it.vault_id)! } : {}),
         ...(it.due_at ? { dueAt: it.due_at } : {}),
         ...(it.scheduled_for ? { scheduledFor: it.scheduled_for } : {}),
