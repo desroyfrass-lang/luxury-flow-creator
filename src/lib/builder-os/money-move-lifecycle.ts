@@ -19,6 +19,12 @@ import {
   type PriorityMap,
   type VaultPriority,
 } from "@/lib/builder-os/vault-priority";
+import {
+  FAST_TRACK_LEGACY_STORAGE_KEY,
+  fastTrackKey,
+  legacyFastTrackId,
+  parentMoveIdForVault,
+} from "@/lib/builder-os/fast-track-identity";
 
 export type LifecycleStage =
   | "money-move"
@@ -61,7 +67,13 @@ export const LIFECYCLE: { id: LifecycleStage; label: string; everyday: string; e
 ];
 
 export type FastTrack = {
+  /** Legacy position-based id — kept only so old browser ticks can migrate. */
   id: string;
+  /** Stable account-backed identity: ft.<vault-key>.<step-slug>. */
+  key: string;
+  /** Step 1 catalogue Money Move, only where safely determinable. */
+  parentMoveId: string | null;
+  vaultKey: string;
   title: string;
   minutes: number;
   /** Where in Frass this step actually happens. Never an invented destination. */
@@ -89,22 +101,29 @@ export type MoneyMove = {
   workshopTo: string;
 };
 
-const DONE_KEY = "frass.fasttrack.done.v1";
-
-export function loadDoneTracks(): string[] {
+/**
+ * DEPRECATED browser store. The Builder's account
+ * (public.fast_track_progress) is authoritative. This is read ONCE so old
+ * ticks can be moved into the account, then cleared. Never written again.
+ */
+export function loadLegacyDoneTracks(): string[] {
   if (typeof window === "undefined") return [];
   try {
-    return JSON.parse(window.localStorage.getItem(DONE_KEY) ?? "[]") as string[];
+    const raw = window.localStorage.getItem(FAST_TRACK_LEGACY_STORAGE_KEY);
+    if (!raw) return [];
+    return JSON.parse(raw) as string[];
   } catch {
     return [];
   }
 }
 
-export function toggleFastTrack(id: string): string[] {
-  const cur = loadDoneTracks();
-  const next = cur.includes(id) ? cur.filter((x) => x !== id) : [...cur, id];
-  if (typeof window !== "undefined") window.localStorage.setItem(DONE_KEY, JSON.stringify(next));
-  return next;
+export function clearLegacyDoneTracks(): void {
+  if (typeof window === "undefined") return;
+  try {
+    window.localStorage.removeItem(FAST_TRACK_LEGACY_STORAGE_KEY);
+  } catch {
+    /* nothing to clean up */
+  }
 }
 
 function stageFor(pct: number, completedMonetize: boolean): LifecycleStage {
@@ -119,17 +138,24 @@ function stageFor(pct: number, completedMonetize: boolean): LifecycleStage {
 export function moneyMoveForVault(
   vault: BusinessVault,
   priority: VaultPriority,
-  done: string[],
+  /** Finished Fast Tracks — account keys, plus legacy ids during migration. */
+  done: Iterable<string>,
 ): MoneyMove {
+  const doneSet = done instanceof Set ? done : new Set(done);
+  const parentMoveId = parentMoveIdForVault(vault.key);
   const fastTracks: FastTrack[] = vault.moves.map((m, i) => {
-    const id = `${vault.key}-${i}`;
+    const id = legacyFastTrackId(vault.key, i);
+    const key = fastTrackKey(vault.key, m.title);
     return {
       id,
+      key,
+      parentMoveId,
+      vaultKey: vault.key,
       title: m.title,
       minutes: m.minutes,
       to: m.to,
       stage: m.stage,
-      done: done.includes(id),
+      done: doneSet.has(key) || doneSet.has(id),
     };
   });
   const completed = fastTracks.filter((f) => f.done).length;
@@ -157,8 +183,12 @@ export function moneyMoveForVault(
  * The Daily's Money Move stack. Vault Priority decides what appears and in
  * which order — Future and Archived Vaults schedule nothing (FRASS-0469).
  */
-export function moneyMoves(map: PriorityMap, vaults: BusinessVault[] = BUSINESS_VAULTS): MoneyMove[] {
-  const done = loadDoneTracks();
+export function moneyMoves(
+  map: PriorityMap,
+  /** Finished Fast Track keys, read from the Builder's account. */
+  done: Iterable<string> = [],
+  vaults: BusinessVault[] = BUSINESS_VAULTS,
+): MoneyMove[] {
   return vaults
     .map((v) => moneyMoveForVault(v, priorityOf(map, v.key), done))
     .filter((m) => PRIORITY_META[m.priority].schedules)

@@ -3,6 +3,8 @@
 // imports, types and server-function declarations.
 
 import type { WorkItem } from "@/lib/daily/work.functions";
+import { BUSINESS_VAULTS } from "@/lib/business/vault-family";
+import { fastTrackKey } from "@/lib/builder-os/fast-track-identity";
 
 export type DailySource =
   | "workshop"
@@ -10,7 +12,8 @@ export type DailySource =
   | "opportunity"
   | "academy"
   | "money"
-  | "frass-hill";
+  | "frass-hill"
+  | "fast-track";
 
 export type DailyCard = {
   id: string;
@@ -40,6 +43,8 @@ export type DailyBoard = {
   opportunities: DailyCard[];
   learn: DailyCard[];
   frassHill: DailyCard[];
+  /** Only the next step of Money Moves this Builder has actually started. */
+  fastTracks: DailyCard[];
   doneToday: DailyCard[];
   /** Honest counts so Frassy and the UI never guess. */
   summary: {
@@ -48,9 +53,55 @@ export type DailyBoard = {
     dueToday: number;
     completedToday: number;
     vaults: number;
+    fastTracksDone: number;
     hasAnything: boolean;
   };
 };
+
+export type FastTrackRow = {
+  track_key: string;
+  vault_key: string;
+  parent_move_id: string | null;
+  title: string;
+  status: string;
+  updated_at: string;
+};
+
+/**
+ * Daily = what to do today. So it shows ONE next Fast Track per Money Move the
+ * Builder has genuinely started — never the whole 154-step catalogue.
+ * These are context cards: they carry no work-item id and no money meaning.
+ */
+export function nextFastTrackCards(rows: FastTrackRow[], limit = 3): DailyCard[] {
+  const doneKeys = new Set(rows.filter((r) => r.status === "done").map((r) => r.track_key));
+  const touchedVaults = new Map<string, string>(); // vault key → most recent touch
+  for (const r of rows) {
+    const prev = touchedVaults.get(r.vault_key);
+    if (!prev || r.updated_at > prev) touchedVaults.set(r.vault_key, r.updated_at);
+  }
+
+  const cards: DailyCard[] = [];
+  for (const [vaultKey, touchedAt] of [...touchedVaults.entries()].sort((a, b) =>
+    b[1].localeCompare(a[1]),
+  )) {
+    const vault = BUSINESS_VAULTS.find((v) => v.key === vaultKey);
+    if (!vault) continue;
+    const next = vault.moves.find((m) => !doneKeys.has(fastTrackKey(vaultKey, m.title)));
+    if (!next) continue; // every step finished — nothing to nag about
+    cards.push({
+      id: `fast-track:${fastTrackKey(vaultKey, next.title)}`,
+      title: next.title,
+      detail: `Next Fast Track in ${vault.label.replace(/ Vault$/, "")} · about ${next.minutes} min`,
+      source: "fast-track",
+      sourceLabel: vault.label,
+      ...(next.to ? { href: next.to } : {}),
+      priority: 2,
+      score: scoreFor({ priority: 2, updatedAt: touchedAt }),
+    });
+    if (cards.length >= limit) break;
+  }
+  return cards;
+}
 
 export type Sb = { from: (t: string) => any };
 
