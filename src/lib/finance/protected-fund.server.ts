@@ -15,7 +15,6 @@
 // ─────────────────────────────────────────────────────────────────────────────
 
 import { allocateDirectCardSale } from "./allocation";
-import { PROVIDER_VERIFICATION_AVAILABLE } from "./money-truth";
 
 export type ProtectedFundPosting = {
   ownerId: string;
@@ -27,6 +26,12 @@ export type ProtectedFundPosting = {
   currency?: string;
   /** Proof from a payment provider. Without it, nothing is posted. */
   verifiedAt?: string | null;
+  /**
+   * The recorded provider confirmation that justifies this posting.
+   * Only the trusted webhook path can supply one, so no other caller —
+   * including any browser request — can ever post money.
+   */
+  confirmationId?: string | null;
 };
 
 export type ProtectedFundResult =
@@ -41,12 +46,13 @@ export const NO_VERIFICATION_REASON =
  * (owner, source kind, source reference) so a repeated confirmation can never
  * credit the same sale twice.
  *
- * Today this always refuses: verification does not exist yet (Slice 3).
+ * STEP 5 · SLICE 3 — this now succeeds, but ONLY when a recorded provider
+ * confirmation is supplied by the signed webhook path.
  */
 export async function postProtectedFundEntry(
   posting: ProtectedFundPosting,
 ): Promise<ProtectedFundResult> {
-  if (!PROVIDER_VERIFICATION_AVAILABLE || !posting.verifiedAt) {
+  if (!posting.confirmationId || !posting.verifiedAt) {
     return { posted: false, reason: NO_VERIFICATION_REASON };
   }
   if (!posting.ownerId || !posting.sourceRef) {
@@ -57,6 +63,7 @@ export async function postProtectedFundEntry(
   if (split.builderProtectedVault <= 0) {
     return { posted: false, reason: "Nothing to protect on a zero sale." };
   }
+
 
   const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
   const { data, error } = await supabaseAdmin
