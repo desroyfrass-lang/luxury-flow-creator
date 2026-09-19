@@ -48,6 +48,10 @@ export const createListing = createServerFn({ method: "POST" })
       { title: data.title, kind: data.kind },
     );
 
+    const { checkSaleCurrency } = await import("@/lib/finance/currency");
+    const saleCurrency = checkSaleCurrency(data.currency);
+    if (!saleCurrency.ok) throw new Error(saleCurrency.reason);
+
     const { data: row, error } = await context.supabase
       .from("card_listings")
       .insert({
@@ -57,7 +61,7 @@ export const createListing = createServerFn({ method: "POST" })
         description: data.description ?? null,
         image_url: data.image_url ?? null,
         price,
-        currency: data.currency.toUpperCase(),
+        currency: saleCurrency.currency,
         quantity: data.quantity ?? null,
         is_quick_sell: data.is_quick_sell ?? false,
         status: "live",
@@ -183,7 +187,12 @@ export const startCardCheckout = createServerFn({ method: "POST" })
       return { ok: false as const, reason: "This seller has not switched on payments yet." };
     }
 
-    const s = settle(Number(listing.price), data.quantity, card.payout_provider);
+    // The split is worked out in the listing's own transaction currency.
+    const { checkSaleCurrency } = await import("@/lib/finance/currency");
+    const listingCurrency = checkSaleCurrency(listing.currency);
+    if (!listingCurrency.ok) return { ok: false as const, reason: listingCurrency.reason };
+    const s = settle(Number(listing.price), data.quantity, card.payout_provider, listingCurrency.currency);
+
 
     const { data: order, error } = await supabaseAdmin
       .from("card_orders")
@@ -198,7 +207,7 @@ export const startCardCheckout = createServerFn({ method: "POST" })
         platform_fee: s.platformFee,
         processing_fee_estimate: s.processingFeeEstimate,
         net_to_seller: s.netToSeller,
-        currency: listing.currency,
+        currency: listingCurrency.currency,
         status: "pending",
         payout_provider: card.payout_provider,
       })
@@ -223,7 +232,7 @@ export const startCardCheckout = createServerFn({ method: "POST" })
       pay_url: card.payout_url,
       provider: card.payout_provider,
       total: s.gross,
-      currency: listing.currency,
+      currency: listingCurrency.currency,
     };
   });
 
@@ -240,6 +249,7 @@ export const startCardPayment = createServerFn({ method: "POST" })
       handle: string;
       kind: "money" | "gift" | "tip";
       amount: number;
+      currency?: string;
       note?: string;
       buyer_name?: string;
       buyer_email?: string;
@@ -249,6 +259,7 @@ export const startCardPayment = createServerFn({ method: "POST" })
           handle: z.string().trim().max(40),
           kind: z.enum(["money", "gift", "tip"]),
           amount: z.number().min(1).max(100_000),
+          currency: z.string().trim().length(3).optional(),
           note: z.string().trim().max(240).optional(),
           buyer_name: z.string().trim().max(120).optional(),
           buyer_email: z.string().trim().email().max(255).optional(),
@@ -283,7 +294,13 @@ export const startCardPayment = createServerFn({ method: "POST" })
       null,
       { handle: data.handle },
     );
-    const s = settle(amount, 1, card.payout_provider);
+    // Pay in the customer's own supported currency; USD is only the fallback.
+    const { checkSaleCurrency: checkPayCurrency, BASE_REPORTING_CURRENCY } = await import(
+      "@/lib/finance/currency"
+    );
+    const payCurrency = checkPayCurrency(data.currency ?? BASE_REPORTING_CURRENCY);
+    if (!payCurrency.ok) return { ok: false as const, reason: payCurrency.reason };
+    const s = settle(amount, 1, card.payout_provider, payCurrency.currency);
     const reference = `${data.kind}${data.note ? `: ${data.note}` : ""}`.slice(0, 240);
 
     const { data: order, error } = await supabaseAdmin
@@ -299,7 +316,7 @@ export const startCardPayment = createServerFn({ method: "POST" })
         platform_fee: s.platformFee,
         processing_fee_estimate: s.processingFeeEstimate,
         net_to_seller: s.netToSeller,
-        currency: "USD",
+        currency: payCurrency.currency,
         status: "pending",
         payout_provider: card.payout_provider,
         reference,
@@ -318,6 +335,6 @@ export const startCardPayment = createServerFn({ method: "POST" })
       pay_url: card.payout_url,
       provider: card.payout_provider,
       total: s.gross,
-      currency: "USD",
+      currency: payCurrency.currency,
     };
   });

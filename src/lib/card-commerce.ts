@@ -15,6 +15,8 @@
 // ─────────────────────────────────────────────────────────────────────────────
 
 import { DIRECT_CARD_ALLOCATION_NOTE, allocateDirectCardSale } from "./finance/allocation";
+import { BASE_REPORTING_CURRENCY, formatMoney } from "./finance/currency";
+
 
 export const CARD_COMMERCE_PRINCIPLE =
   "The Frass Card is both a digital identity and a mobile commerce platform. Payments are processed through the member's own connected payment account; every transaction still appears in the Financial Center, Wallet, statements, taxes and reports.";
@@ -76,6 +78,8 @@ export function estimateProcessingFee(gross: number, provider?: string | null): 
 
 export type CardSettlement = {
   gross: number;
+  /** The actual transaction currency (ISO 4217) — never assumed to be USD. */
+  currency: string;
   /** Everything Frass keeps on a direct card sale (service + Foundation). */
   platformFee: number;
   /** 5% Frass Card service / transaction allocation. */
@@ -95,15 +99,22 @@ export type CardSettlement = {
  * 0 Founder / 0 Co-Founder). The old shared 90/3/3/2/1/1 constitutional split
  * is no longer executable on this path.
  *
+ * The split is worked out in the currency the customer actually pays in.
  * Calculation only: nothing here is credited, and none of it is verified money.
  */
-export function settle(unitPrice: number, quantity: number, provider?: string | null): CardSettlement {
+export function settle(
+  unitPrice: number,
+  quantity: number,
+  provider?: string | null,
+  currency: string = BASE_REPORTING_CURRENCY,
+): CardSettlement {
   const round = (n: number) => Math.round(n * 100) / 100;
   const gross = round(Math.max(0, unitPrice) * Math.max(1, quantity));
-  const a = allocateDirectCardSale(gross);
+  const a = allocateDirectCardSale(gross, currency);
   const processingFeeEstimate = gross > 0 ? estimateProcessingFee(gross, provider) : 0;
   return {
     gross,
+    currency: a.currency,
     platformFee: a.frassTotal,
     frassCardService: a.frassCardService,
     foundation: a.foundation,
@@ -113,16 +124,15 @@ export function settle(unitPrice: number, quantity: number, provider?: string | 
   };
 }
 
+
 export const ALLOCATION_NOTE = DIRECT_CARD_ALLOCATION_NOTE;
 
 
-export function money(amount: number, currency = "USD"): string {
-  try {
-    return new Intl.NumberFormat("en-US", { style: "currency", currency }).format(amount);
-  } catch {
-    return `$${amount.toFixed(2)}`;
-  }
+/** Formats in the currency given; USD is only the fallback for legacy callers. */
+export function money(amount: number, currency = BASE_REPORTING_CURRENCY): string {
+  return formatMoney(amount, currency);
 }
+
 
 export function remaining(quantity: number | null, sold: number): number | null {
   if (quantity == null) return null;

@@ -15,6 +15,7 @@
 // ─────────────────────────────────────────────────────────────────────────────
 
 import { allocateDirectCardSale } from "./allocation";
+import { checkSaleCurrency } from "./currency";
 
 export type ProtectedFundPosting = {
   ownerId: string;
@@ -23,7 +24,12 @@ export type ProtectedFundPosting = {
   sourceKind: "card-order" | "card-payment";
   sourceRef: string;
   gross: number;
-  currency?: string;
+  /**
+   * The ACTUAL transaction currency of the sale (ISO 4217). Required — the
+   * protected 3% is kept in the money the customer really paid, never
+   * relabelled or converted.
+   */
+  currency: string;
   /** Proof from a payment provider. Without it, nothing is posted. */
   verifiedAt?: string | null;
   /**
@@ -33,6 +39,7 @@ export type ProtectedFundPosting = {
    */
   confirmationId?: string | null;
 };
+
 
 export type ProtectedFundResult =
   | { posted: true; id: string }
@@ -59,7 +66,10 @@ export async function postProtectedFundEntry(
     return { posted: false, reason: "A protected-fund entry needs an owner and a source." };
   }
 
-  const split = allocateDirectCardSale(posting.gross);
+  const supported = checkSaleCurrency(posting.currency);
+  if (!supported.ok) return { posted: false, reason: supported.reason };
+
+  const split = allocateDirectCardSale(posting.gross, supported.currency);
   if (split.builderProtectedVault <= 0) {
     return { posted: false, reason: "Nothing to protect on a zero sale." };
   }
@@ -77,7 +87,9 @@ export async function postProtectedFundEntry(
         transaction_type: "direct-card-sale",
         gross: split.gross,
         amount: split.builderProtectedVault,
-        currency: (posting.currency ?? "USD").toUpperCase(),
+        // The money is kept in the currency it was actually earned in.
+        currency: split.currency,
+
         state: "posted",
         verified_at: posting.verifiedAt,
         confirmation_id: posting.confirmationId,

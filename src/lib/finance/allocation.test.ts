@@ -67,6 +67,7 @@ describe("protected fund posting", () => {
       sourceKind: "card-order",
       sourceRef: "order-1",
       gross: 100,
+      currency: "USD",
     });
     expect(r.posted).toBe(false);
     expect(r).toMatchObject({ reason: NO_VERIFICATION_REASON });
@@ -78,6 +79,7 @@ describe("protected fund posting", () => {
       sourceKind: "card-order",
       sourceRef: "order-1",
       gross: 100,
+      currency: "USD",
       verifiedAt: new Date().toISOString(),
     });
     expect(r.posted).toBe(false);

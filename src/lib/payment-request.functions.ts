@@ -321,7 +321,14 @@ export const approvePaymentRequest = createServerFn({ method: "POST" })
     }
 
     const unit = Number(req.amount);
-    const s = settle(unit, req.quantity, card.payout_provider);
+    // The request's own transaction currency drives the split — never assumed USD.
+    const { checkSaleCurrency } = await import("@/lib/finance/currency");
+    const reqCurrency = checkSaleCurrency(req.currency);
+    if (!reqCurrency.ok) {
+      await release(reqCurrency.reason);
+      return { ok: false as const, reason: reqCurrency.reason };
+    }
+    const s = settle(unit, req.quantity, card.payout_provider, reqCurrency.currency);
 
     const { data: order, error } = await supabaseAdmin
       .from("card_orders")
@@ -336,7 +343,7 @@ export const approvePaymentRequest = createServerFn({ method: "POST" })
         platform_fee: s.platformFee,
         processing_fee_estimate: s.processingFeeEstimate,
         net_to_seller: s.netToSeller,
-        currency: req.currency,
+        currency: reqCurrency.currency,
         status: "pending",
         payout_provider: card.payout_provider,
         reference: `${req.kind}: ${req.title}`.slice(0, 240),
