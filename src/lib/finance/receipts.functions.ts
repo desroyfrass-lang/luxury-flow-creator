@@ -1,7 +1,7 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
-import { receiptKind, type Receipt } from "@/lib/finance/receipts";
+import { receiptKind, type Receipt, type ReceiptStatus } from "@/lib/finance/receipts";
 import { receiptStatusForOrder, unverifiedReceiptNote } from "@/lib/finance/money-truth";
 
 // ─────────────────────────────────────────────────────────────────────────────
