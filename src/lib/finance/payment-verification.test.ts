@@ -114,15 +114,14 @@ describe("payment verification — Slice 3", () => {
     expect(matchesOrder({ ...order, currency: "" }, { ...event, currency: "" }).ok).toBe(false);
   });
 
-  it("applies 90/3/5/2/0 in the original currency, never converted", () => {
+  it("applies 90/3/3/2/1/1 in the original currency, never converted", () => {
     for (const currency of ["USD", "GBP", "CAD", "EUR", "JMD"]) {
-      const a = allocateDirectCardSale(100, currency);
+      const a = allocateEarning(100, currency);
       expect(a.currency).toBe(currency);
-      expect([a.builderAvailable, a.builderProtectedVault, a.frassCardService, a.foundation]).toEqual([
-        90, 3, 5, 2,
+      expect([a.earner, a.infrastructure, a.reserve, a.foundation, a.founder, a.coFounder]).toEqual([
+        90, 3, 3, 2, 1, 1,
       ]);
-      expect(a.founder).toBe(0);
-      expect(a.coFounder).toBe(0);
+      expect(a.ecosystemTotal).toBe(10);
     }
   });
 
