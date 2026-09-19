@@ -15,6 +15,8 @@
 // ─────────────────────────────────────────────────────────────────────────────
 
 import { DIRECT_CARD_ALLOCATION_NOTE, allocateDirectCardSale } from "./finance/allocation";
+import { BASE_REPORTING_CURRENCY, formatMoney } from "./finance/currency";
+
 
 export const CARD_COMMERCE_PRINCIPLE =
   "The Frass Card is both a digital identity and a mobile commerce platform. Payments are processed through the member's own connected payment account; every transaction still appears in the Financial Center, Wallet, statements, taxes and reports.";
