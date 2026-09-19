@@ -170,10 +170,20 @@ function WalletHub() {
                 note="Your own record. Frass has not confirmed this with a payment provider."
               />
               <Stat label="Awaiting payment" value={money(s.pending, s.currency)} note="Started, not yet confirmed." />
-              <Stat label="Frass allocation" value={money(s.allocation, s.currency)} note="The constitutional 10%." />
-              <Stat label="Estimated to you" value={money(s.net, s.currency)} note="After allocation and processing." />
+              <Stat
+                label="Frass allocation (expected)"
+                value={money(s.allocation, s.currency)}
+                note="5% card service + 2% Foundation, once a payment is confirmed."
+              />
+              <Stat
+                label="Expected to you"
+                value={money(s.net, s.currency)}
+                note="Your 90% share after your provider's fee. Not confirmed money."
+              />
             </div>
             <p className="mt-4 text-xs text-muted-foreground">{ALLOCATION_NOTE}</p>
+            <p className="mt-1 text-xs text-muted-foreground">{EXPECTED_ALLOCATION_NOTE}</p>
+
           </section>
 
           <section className={panel}>
