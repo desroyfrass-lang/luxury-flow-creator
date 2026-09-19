@@ -1,7 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { createHmac } from "crypto";
 import {
-  DIRECT_SALE_CURRENCY,
   VERIFIED_LABEL,
   economicState,
   isSettled,
@@ -10,6 +9,12 @@ import {
 import { verifySignature } from "@/lib/finance/payment-verification.server";
 import { postProtectedFundEntry } from "@/lib/finance/protected-fund.server";
 import { saleStatus } from "@/lib/daily/money-move-link";
+import {
+  BASE_REPORTING_CURRENCY,
+  CONFIGURED_MARKET_CURRENCIES,
+  sumByCurrency,
+  usdEquivalent,
+} from "@/lib/finance/currency";
 import { DIRECT_CARD_ALLOCATION, allocateDirectCardSale } from "@/lib/finance/allocation";
 
 const SECRET = "test-secret-at-least-16-chars";
@@ -59,7 +64,7 @@ describe("payment verification — Slice 3", () => {
     expect(matchesOrder(order, { ...event, seller_id: "44444444-4444-4444-4444-444444444444" }).ok).toBe(false);
     expect(matchesOrder(null, event).ok).toBe(false);
     expect(matchesOrder({ ...order, status: "refunded" }, event).ok).toBe(false);
-    expect(DIRECT_SALE_CURRENCY).toBe("USD");
+    expect(BASE_REPORTING_CURRENCY).toBe("USD");
   });
 
   it("treats seller declaration and redirect as unverified", () => {
@@ -86,10 +91,92 @@ describe("payment verification — Slice 3", () => {
       sourceKind: "card-order" as const,
       sourceRef: order.id,
       gross: 100,
+      currency: "USD",
     };
     expect((await postProtectedFundEntry(base)).posted).toBe(false);
     // A faked verification date alone is not enough.
     expect((await postProtectedFundEntry({ ...base, verifiedAt: "2026-01-01" })).posted).toBe(false);
+  });
+
+  it("verifies a sale in its own supported currency, not only USD", () => {
+    for (const currency of ["USD", "GBP", "CAD", "EUR", "JMD"]) {
+      expect(CONFIGURED_MARKET_CURRENCIES).toContain(currency);
+      const o = { ...order, currency };
+      const e = { ...event, currency };
+      expect(matchesOrder(o, e).ok).toBe(true);
+      // Same amount, wrong currency — always refused.
+      expect(matchesOrder(o, { ...e, currency: currency === "USD" ? "GBP" : "USD" }).ok).toBe(false);
+      // Right currency, wrong amount — still refused.
+      expect(matchesOrder(o, { ...e, amount: 99.99 }).ok).toBe(false);
+    }
+    // A currency no market supports fails clearly instead of being relabelled.
+    expect(matchesOrder({ ...order, currency: "XYZ" }, { ...event, currency: "XYZ" }).ok).toBe(false);
+    expect(matchesOrder({ ...order, currency: "" }, { ...event, currency: "" }).ok).toBe(false);
+  });
+
+  it("applies 90/3/5/2/0 in the original currency, never converted", () => {
+    for (const currency of ["USD", "GBP", "CAD", "EUR", "JMD"]) {
+      const a = allocateDirectCardSale(100, currency);
+      expect(a.currency).toBe(currency);
+      expect([a.builderAvailable, a.builderProtectedVault, a.frassCardService, a.foundation]).toEqual([
+        90, 3, 5, 2,
+      ]);
+      expect(a.founder).toBe(0);
+      expect(a.coFounder).toBe(0);
+    }
+  });
+
+  it("never sums different currencies into one number", () => {
+    const totals = sumByCurrency([
+      { amount: 3, currency: "GBP" },
+      { amount: 3, currency: "USD" },
+      { amount: 1.5, currency: "GBP" },
+    ]);
+    expect(totals).toEqual([
+      { currency: "GBP", amount: 4.5 },
+      { currency: "USD", amount: 3 },
+    ]);
+  });
+
+  it("keeps the USD reporting equivalent separate and unavailable without FX provenance", () => {
+    expect(BASE_REPORTING_CURRENCY).toBe("USD");
+    expect(usdEquivalent({ amount: 90, currency: "GBP" })).toMatchObject({ available: false });
+    // A rate with no source or time is not trustworthy either.
+    expect(
+      usdEquivalent({ amount: 90, currency: "GBP" }, {
+        from: "GBP",
+        to: "USD",
+        rate: 1.25,
+        source: "",
+        asOf: "",
+      }),
+    ).toMatchObject({ available: false });
+    const withProvenance = usdEquivalent({ amount: 90, currency: "GBP" }, {
+      from: "GBP",
+      to: "USD",
+      rate: 1.25,
+      source: "connected provider",
+      asOf: "2026-09-19T00:00:00.000Z",
+    });
+    expect(withProvenance).toMatchObject({
+      available: true,
+      amount: 112.5,
+      currency: "USD",
+      source: "connected provider",
+    });
+  });
+
+  it("cannot post a protected-fund entry in an unsupported currency", async () => {
+    const posted = await postProtectedFundEntry({
+      ownerId: order.seller_id,
+      sourceKind: "card-order",
+      sourceRef: order.id,
+      gross: 100,
+      currency: "XYZ",
+      verifiedAt: "2026-01-01",
+      confirmationId: "c1",
+    });
+    expect(posted.posted).toBe(false);
   });
 
   it("keeps the Slice 2 USD allocation unchanged", () => {
