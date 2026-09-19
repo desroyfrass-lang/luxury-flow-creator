@@ -252,6 +252,7 @@ import { Route as LovableEmailQueueProcessRouteImport } from './routes/lovable/e
 import { Route as LovableEmailAuthWebhookRouteImport } from './routes/lovable/email/auth/webhook'
 import { Route as LovableEmailAuthPreviewRouteImport } from './routes/lovable/email/auth/preview'
 import { Route as FrassShapeGenderGoalsGoalRouteImport } from './routes/frass-shape.$gender.goals.$goal'
+import { Route as ApiPublicPaymentsStripeWebhookRouteImport } from './routes/api/public/payments/stripe-webhook'
 import { Route as ApiPublicPaymentsCardConfirmRouteImport } from './routes/api/public/payments/card-confirm'
 import { Route as AuthenticatedVaultsVaultIdCustomizeRouteImport } from './routes/_authenticated/vaults.$vaultId.customize'
 import { Route as AuthenticatedStudiosProductionIdRouteImport } from './routes/_authenticated/studios.production.$id'
@@ -1553,6 +1554,12 @@ const FrassShapeGenderGoalsGoalRoute =
     path: '/goals/$goal',
     getParentRoute: () => FrassShapeGenderRoute,
   } as any)
+const ApiPublicPaymentsStripeWebhookRoute =
+  ApiPublicPaymentsStripeWebhookRouteImport.update({
+    id: '/api/public/payments/stripe-webhook',
+    path: '/api/public/payments/stripe-webhook',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const ApiPublicPaymentsCardConfirmRoute =
   ApiPublicPaymentsCardConfirmRouteImport.update({
     id: '/api/public/payments/card-confirm',
@@ -1831,6 +1838,7 @@ export interface FileRoutesByFullPath {
   '/studios/production/$id': typeof AuthenticatedStudiosProductionIdRoute
   '/vaults/$vaultId/customize': typeof AuthenticatedVaultsVaultIdCustomizeRoute
   '/api/public/payments/card-confirm': typeof ApiPublicPaymentsCardConfirmRoute
+  '/api/public/payments/stripe-webhook': typeof ApiPublicPaymentsStripeWebhookRoute
   '/frass-shape/$gender/goals/$goal': typeof FrassShapeGenderGoalsGoalRoute
   '/lovable/email/auth/preview': typeof LovableEmailAuthPreviewRoute
   '/lovable/email/auth/webhook': typeof LovableEmailAuthWebhookRoute
@@ -2057,6 +2065,7 @@ export interface FileRoutesByTo {
   '/studios/production/$id': typeof AuthenticatedStudiosProductionIdRoute
   '/vaults/$vaultId/customize': typeof AuthenticatedVaultsVaultIdCustomizeRoute
   '/api/public/payments/card-confirm': typeof ApiPublicPaymentsCardConfirmRoute
+  '/api/public/payments/stripe-webhook': typeof ApiPublicPaymentsStripeWebhookRoute
   '/frass-shape/$gender/goals/$goal': typeof FrassShapeGenderGoalsGoalRoute
   '/lovable/email/auth/preview': typeof LovableEmailAuthPreviewRoute
   '/lovable/email/auth/webhook': typeof LovableEmailAuthWebhookRoute
@@ -2309,6 +2318,7 @@ export interface FileRoutesById {
   '/_authenticated/studios/production/$id': typeof AuthenticatedStudiosProductionIdRoute
   '/_authenticated/vaults/$vaultId/customize': typeof AuthenticatedVaultsVaultIdCustomizeRoute
   '/api/public/payments/card-confirm': typeof ApiPublicPaymentsCardConfirmRoute
+  '/api/public/payments/stripe-webhook': typeof ApiPublicPaymentsStripeWebhookRoute
   '/frass-shape/$gender/goals/$goal': typeof FrassShapeGenderGoalsGoalRoute
   '/lovable/email/auth/preview': typeof LovableEmailAuthPreviewRoute
   '/lovable/email/auth/webhook': typeof LovableEmailAuthWebhookRoute
@@ -2561,6 +2571,7 @@ export interface FileRouteTypes {
     | '/studios/production/$id'
     | '/vaults/$vaultId/customize'
     | '/api/public/payments/card-confirm'
+    | '/api/public/payments/stripe-webhook'
     | '/frass-shape/$gender/goals/$goal'
     | '/lovable/email/auth/preview'
     | '/lovable/email/auth/webhook'
@@ -2787,6 +2798,7 @@ export interface FileRouteTypes {
     | '/studios/production/$id'
     | '/vaults/$vaultId/customize'
     | '/api/public/payments/card-confirm'
+    | '/api/public/payments/stripe-webhook'
     | '/frass-shape/$gender/goals/$goal'
     | '/lovable/email/auth/preview'
     | '/lovable/email/auth/webhook'
@@ -3038,6 +3050,7 @@ export interface FileRouteTypes {
     | '/_authenticated/studios/production/$id'
     | '/_authenticated/vaults/$vaultId/customize'
     | '/api/public/payments/card-confirm'
+    | '/api/public/payments/stripe-webhook'
     | '/frass-shape/$gender/goals/$goal'
     | '/lovable/email/auth/preview'
     | '/lovable/email/auth/webhook'
@@ -3125,6 +3138,7 @@ export interface RootRouteChildren {
   DotlovableOauthConsentRoute: typeof DotlovableOauthConsentRoute
   Char91DotmcpChar93InvokeToolToolRoute: typeof Char91DotmcpChar93InvokeToolToolRoute
   ApiPublicPaymentsCardConfirmRoute: typeof ApiPublicPaymentsCardConfirmRoute
+  ApiPublicPaymentsStripeWebhookRoute: typeof ApiPublicPaymentsStripeWebhookRoute
   LovableEmailAuthPreviewRoute: typeof LovableEmailAuthPreviewRoute
   LovableEmailAuthWebhookRoute: typeof LovableEmailAuthWebhookRoute
   LovableEmailQueueProcessRoute: typeof LovableEmailQueueProcessRoute
@@ -4833,6 +4847,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof FrassShapeGenderGoalsGoalRouteImport
       parentRoute: typeof FrassShapeGenderRoute
     }
+    '/api/public/payments/stripe-webhook': {
+      id: '/api/public/payments/stripe-webhook'
+      path: '/api/public/payments/stripe-webhook'
+      fullPath: '/api/public/payments/stripe-webhook'
+      preLoaderRoute: typeof ApiPublicPaymentsStripeWebhookRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/public/payments/card-confirm': {
       id: '/api/public/payments/card-confirm'
       path: '/api/public/payments/card-confirm'
@@ -5594,6 +5615,7 @@ const rootRouteChildren: RootRouteChildren = {
   DotlovableOauthConsentRoute: DotlovableOauthConsentRoute,
   Char91DotmcpChar93InvokeToolToolRoute: Char91DotmcpChar93InvokeToolToolRoute,
   ApiPublicPaymentsCardConfirmRoute: ApiPublicPaymentsCardConfirmRoute,
+  ApiPublicPaymentsStripeWebhookRoute: ApiPublicPaymentsStripeWebhookRoute,
   LovableEmailAuthPreviewRoute: LovableEmailAuthPreviewRoute,
   LovableEmailAuthWebhookRoute: LovableEmailAuthWebhookRoute,
   LovableEmailQueueProcessRoute: LovableEmailQueueProcessRoute,
