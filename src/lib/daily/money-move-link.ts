@@ -12,6 +12,8 @@ import {
   SELLER_DECLARED_LABEL,
   SELLER_DECLARED_NOTE,
 } from "@/lib/finance/money-truth";
+import { VERIFIED_LABEL, VERIFIED_NOTE, economicState } from "@/lib/finance/payment-verification";
+
 
 /** Work items born in Money Moves carry this source. */
 export const MONEY_MOVE_SOURCE = "money-move";
