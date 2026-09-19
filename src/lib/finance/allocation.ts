@@ -7,13 +7,13 @@
 //
 // The Founder-approved rule for a Builder's OWN direct Frass Card sale:
 //
-//   £100 gross  =  £90 Builder available
-//                + £3  Builder Protected Vault / Project Fund (still the
-//                      Builder's own money, protected for their business)
-//                + £5  Frass Card service / transaction allocation
-//                + £2  Frass Foundation
-//                + £0  Founder personally
-//                + £0  Co-Founder personally
+//   $100 USD gross  =  $90 Builder available
+//                    + $3  Builder Protected Vault / Project Fund (still the
+//                          Builder's own money, protected for their business)
+//                    + $5  Frass Card service / transaction allocation
+//                    + $2  Frass Foundation
+//                    + $0  Founder personally
+//                    + $0  Co-Founder personally
 //
 // This rule applies to ONE transaction type only. Marketplace / Gallery
 // commerce, Shopify / Frass Kicks brand commerce, affiliate commission,

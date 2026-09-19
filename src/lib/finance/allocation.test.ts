@@ -25,7 +25,7 @@ describe("direct Frass Card allocation", () => {
     expect(a.coFounder).toBe(0);
   });
 
-  it("splits £100 as 90 / 3 / 5 / 2", () => {
+  it("splits $100 USD as 90 / 3 / 5 / 2", () => {
     const a = allocateDirectCardSale(100);
     expect(a.builderAvailable).toBe(90);
     expect(a.builderProtectedVault).toBe(3);
