@@ -11,7 +11,7 @@ import { NO_VERIFICATION_REASON, postProtectedFundEntry } from "./protected-fund
 
 describe("direct Frass Card allocation", () => {
   it("totals exactly 100%", () => {
-    const total = Object.values(DIRECT_CARD_ALLOCATION).reduce((a, b) => a + b, 0);
+    const total = Object.values<number>(DIRECT_CARD_ALLOCATION).reduce((a, b) => a + b, 0);
     expect(total).toBe(100);
     expect(DIRECT_CARD_BUILDER_TOTAL_PCT).toBe(93);
     expect(DIRECT_CARD_FRASS_TOTAL_PCT).toBe(7);
