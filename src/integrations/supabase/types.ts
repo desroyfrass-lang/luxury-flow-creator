@@ -963,6 +963,7 @@ export type Database = {
       builder_protected_fund_entries: {
         Row: {
           amount: number
+          confirmation_id: string | null
           created_at: string
           currency: string
           gross: number
@@ -980,6 +981,7 @@ export type Database = {
         }
         Insert: {
           amount?: number
+          confirmation_id?: string | null
           created_at?: string
           currency?: string
           gross?: number
@@ -997,6 +999,7 @@ export type Database = {
         }
         Update: {
           amount?: number
+          confirmation_id?: string | null
           created_at?: string
           currency?: string
           gross?: number
@@ -1012,7 +1015,15 @@ export type Database = {
           vault_id?: string | null
           verified_at?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "builder_protected_fund_entries_confirmation_id_fkey"
+            columns: ["confirmation_id"]
+            isOneToOne: false
+            referencedRelation: "payment_confirmations"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       business_card_events: {
         Row: {
@@ -1309,6 +1320,7 @@ export type Database = {
           id: string
           listing_id: string | null
           net_to_seller: number
+          payment_confirmation_id: string | null
           payout_provider: string | null
           platform_fee: number
           processing_fee_estimate: number
@@ -1319,6 +1331,7 @@ export type Database = {
           subtotal: number
           unit_price: number
           updated_at: string
+          verified_at: string | null
         }
         Insert: {
           buyer_email?: string | null
@@ -1328,6 +1341,7 @@ export type Database = {
           id?: string
           listing_id?: string | null
           net_to_seller?: number
+          payment_confirmation_id?: string | null
           payout_provider?: string | null
           platform_fee?: number
           processing_fee_estimate?: number
@@ -1338,6 +1352,7 @@ export type Database = {
           subtotal?: number
           unit_price?: number
           updated_at?: string
+          verified_at?: string | null
         }
         Update: {
           buyer_email?: string | null
@@ -1347,6 +1362,7 @@ export type Database = {
           id?: string
           listing_id?: string | null
           net_to_seller?: number
+          payment_confirmation_id?: string | null
           payout_provider?: string | null
           platform_fee?: number
           processing_fee_estimate?: number
@@ -1357,6 +1373,7 @@ export type Database = {
           subtotal?: number
           unit_price?: number
           updated_at?: string
+          verified_at?: string | null
         }
         Relationships: [
           {
@@ -1364,6 +1381,13 @@ export type Database = {
             columns: ["listing_id"]
             isOneToOne: false
             referencedRelation: "card_listings"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "card_orders_payment_confirmation_id_fkey"
+            columns: ["payment_confirmation_id"]
+            isOneToOne: false
+            referencedRelation: "payment_confirmations"
             referencedColumns: ["id"]
           },
         ]
@@ -4147,6 +4171,63 @@ export type Database = {
           status?: string
           user_id?: string
           vendor_id?: string
+        }
+        Relationships: []
+      }
+      payment_confirmations: {
+        Row: {
+          amount: number
+          created_at: string
+          currency: string
+          event_id: string
+          event_type: string
+          id: string
+          order_id: string | null
+          outcome: string
+          payload: Json
+          payment_request_id: string | null
+          provider: string
+          provider_payment_id: string | null
+          received_at: string
+          reject_reason: string | null
+          seller_id: string
+          signature_scheme: string
+        }
+        Insert: {
+          amount: number
+          created_at?: string
+          currency: string
+          event_id: string
+          event_type?: string
+          id?: string
+          order_id?: string | null
+          outcome?: string
+          payload?: Json
+          payment_request_id?: string | null
+          provider: string
+          provider_payment_id?: string | null
+          received_at?: string
+          reject_reason?: string | null
+          seller_id: string
+          signature_scheme?: string
+        }
+        Update: {
+          amount?: number
+          created_at?: string
+          currency?: string
+          event_id?: string
+          event_type?: string
+          id?: string
+          order_id?: string | null
+          outcome?: string
+          payload?: Json
+          payment_request_id?: string | null
+          provider?: string
+          provider_payment_id?: string | null
+          received_at?: string
+          reject_reason?: string | null
+          seller_id?: string
+          signature_scheme?: string
         }
         Relationships: []
       }
