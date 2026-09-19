@@ -76,31 +76,45 @@ export function estimateProcessingFee(gross: number, provider?: string | null): 
 
 export type CardSettlement = {
   gross: number;
+  /** Everything Frass keeps on a direct card sale (service + Foundation). */
   platformFee: number;
-  infrastructure: number;
-  reserve: number;
+  /** 5% Frass Card service / transaction allocation. */
+  frassCardService: number;
+  /** 2% Frass Foundation. */
   foundation: number;
+  /** 3% — the Builder's OWN money, protected for their project. */
+  protectedVault: number;
   processingFeeEstimate: number;
+  /** The Builder's spendable 90% share, less their provider's estimated fee. */
   netToSeller: number;
 };
 
+/**
+ * STEP 5 · SLICE 2 — a Builder's own direct Frass Card sale uses the
+ * direct-card allocation only (90 / 3 protected / 5 service / 2 Foundation /
+ * 0 Founder / 0 Co-Founder). The old shared 90/3/3/2/1/1 constitutional split
+ * is no longer executable on this path.
+ *
+ * Calculation only: nothing here is credited, and none of it is verified money.
+ */
 export function settle(unitPrice: number, quantity: number, provider?: string | null): CardSettlement {
   const round = (n: number) => Math.round(n * 100) / 100;
   const gross = round(Math.max(0, unitPrice) * Math.max(1, quantity));
-  const a = allocate(gross);
+  const a = allocateDirectCardSale(gross);
   const processingFeeEstimate = gross > 0 ? estimateProcessingFee(gross, provider) : 0;
   return {
     gross,
-    platformFee: a.platformTotal,
-    infrastructure: a.infrastructure,
-    reserve: a.reserve,
+    platformFee: a.frassTotal,
+    frassCardService: a.frassCardService,
     foundation: a.foundation,
+    protectedVault: a.builderProtectedVault,
     processingFeeEstimate,
-    netToSeller: round(a.net - processingFeeEstimate),
+    netToSeller: round(a.builderAvailable - processingFeeEstimate),
   };
 }
 
-export const ALLOCATION_NOTE = `${PLATFORM_ALLOCATION.creator}% creator · ${PLATFORM_ALLOCATION.total}% Frass ecosystem (${PLATFORM_ALLOCATION.infrastructure}% infrastructure · ${PLATFORM_ALLOCATION.reserve}% reserve · ${PLATFORM_ALLOCATION.foundation}% Foundation · ${PLATFORM_ALLOCATION.founder}% Founder · ${PLATFORM_ALLOCATION.coFounder}% Co-Founder) — the same ${PLATFORM_ALLOCATION.total}% constitutional allocation under the Frass Financial Constitution as every other Frass sale.`;
+export const ALLOCATION_NOTE = DIRECT_CARD_ALLOCATION_NOTE;
+
 
 export function money(amount: number, currency = "USD"): string {
   try {
