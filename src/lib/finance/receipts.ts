@@ -331,6 +331,12 @@ export type Receipt = {
   occurredAt: string;
   /** True when the row is derived from another table rather than stored directly. */
   derived?: boolean;
+  /**
+   * STEP 5 · SLICE 4 — whether a payment provider has actually confirmed this
+   * money. Absent means the record has no payment rail behind it at all.
+   * Verified is still not settled, available or paid out.
+   */
+  verification?: import("./money-truth").ReceiptVerification;
 };
 
 export type ReceiptLine = { label: string; value: string; kind: "gross" | "deduction" | "net" | "note" };
