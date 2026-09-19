@@ -59,15 +59,17 @@ export const getDailyBoard = createServerFn({ method: "GET" })
     const moveListingIds = items
       .filter((i) => i.source_system === MONEY_MOVE_SOURCE && i.source_ref)
       .map((i) => i.source_ref as string);
+    type MoveOrder = { listing_id: string | null; status: string | null; verified_at: string | null };
     const moveOrders = await safe(async () => {
-      if (moveListingIds.length === 0) return [] as { listing_id: string | null; status: string | null }[];
+      if (moveListingIds.length === 0) return [] as MoveOrder[];
       const { data } = await sb
         .from("card_orders")
-        .select("listing_id,status")
+        .select("listing_id,status,verified_at")
         .eq("seller_id", userId)
         .in("listing_id", moveListingIds);
-      return (data ?? []) as { listing_id: string | null; status: string | null }[];
-    }, [] as { listing_id: string | null; status: string | null }[]);
+      return (data ?? []) as MoveOrder[];
+    }, [] as MoveOrder[]);
+
 
     const workCards: DailyCard[] = [];
     const doneToday: DailyCard[] = [];
