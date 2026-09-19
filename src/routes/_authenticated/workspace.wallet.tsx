@@ -313,7 +313,7 @@ function WalletHub() {
               value={money(s.settled, s.currency)}
               note="What you marked as paid. Not verified by a payment provider."
             />
-            <Stat label="Frass allocation" value={money(s.allocation, s.currency)} note="Platform 10%." />
+            <Stat label="Frass allocation" value={money(s.allocation, s.currency)} note="5% Frass Card service + 2% Foundation. A further 3% is yours, protected." />
             <Stat label="Processing (est.)" value={money(s.processing, s.currency)} note="Card fees, estimated." />
             <Stat label="Net to you (est.)" value={money(s.net, s.currency)} note="What you likely declare." />
           </div>
