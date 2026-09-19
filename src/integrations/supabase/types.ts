@@ -354,6 +354,74 @@ export type Database = {
         }
         Relationships: []
       }
+      allocation_ledger_entries: {
+        Row: {
+          amount: number
+          beneficiary_id: string | null
+          beneficiary_kind: string
+          confirmation_id: string
+          created_at: string
+          currency: string
+          gross: number
+          id: string
+          note: string | null
+          order_id: string | null
+          rate_pct: number
+          share: string
+          source_kind: string
+          source_ref: string
+          state: string
+          transaction_type: string
+          verified_at: string
+        }
+        Insert: {
+          amount?: number
+          beneficiary_id?: string | null
+          beneficiary_kind: string
+          confirmation_id: string
+          created_at?: string
+          currency: string
+          gross?: number
+          id?: string
+          note?: string | null
+          order_id?: string | null
+          rate_pct?: number
+          share: string
+          source_kind?: string
+          source_ref: string
+          state?: string
+          transaction_type?: string
+          verified_at: string
+        }
+        Update: {
+          amount?: number
+          beneficiary_id?: string | null
+          beneficiary_kind?: string
+          confirmation_id?: string
+          created_at?: string
+          currency?: string
+          gross?: number
+          id?: string
+          note?: string | null
+          order_id?: string | null
+          rate_pct?: number
+          share?: string
+          source_kind?: string
+          source_ref?: string
+          state?: string
+          transaction_type?: string
+          verified_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "allocation_ledger_entries_confirmation_id_fkey"
+            columns: ["confirmation_id"]
+            isOneToOne: false
+            referencedRelation: "payment_confirmations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       artist_galleries: {
         Row: {
           accent: string
