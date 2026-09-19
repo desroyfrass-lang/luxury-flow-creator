@@ -18,6 +18,8 @@ import {
   settle,
   type ListingKind,
 } from "@/lib/card-commerce";
+import { EXPECTED_ALLOCATION_NOTE } from "@/lib/finance/allocation";
+
 import { uploadCardPhoto } from "@/lib/card-media";
 import {
   createListing,
