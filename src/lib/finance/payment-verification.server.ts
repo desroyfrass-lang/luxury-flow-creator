@@ -148,5 +148,19 @@ export async function recordPaymentConfirmation(
     confirmationId: confirmation.id,
   });
 
+  // …and all six universal shares are recorded permanently, exactly once.
+  // UNIQUE (confirmation_id, share) means a replayed event changes nothing.
+  const { postAllocationLedger } = await import("./allocation-ledger.server");
+  await postAllocationLedger({
+    confirmationId: confirmation.id,
+    orderId: confirmed.id,
+    sourceKind: "card-order",
+    sourceRef: confirmed.id,
+    earnerId: confirmed.seller_id,
+    gross: Number(confirmed.subtotal),
+    currency: confirmed.currency,
+    verifiedAt: confirmation.received_at,
+  });
+
   return { ok: true, duplicate: false, confirmationId: confirmation.id, orderId: confirmed.id };
 }

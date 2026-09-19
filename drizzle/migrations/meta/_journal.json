@@ -50,6 +50,13 @@
       "when": 1789847540694,
       "tag": "0006_tighten_permissive_read_policies",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1789849133775,
+      "tag": "0007_create_allocation_ledger_entries",
+      "breakpoints": true
     }
   ]
 }
