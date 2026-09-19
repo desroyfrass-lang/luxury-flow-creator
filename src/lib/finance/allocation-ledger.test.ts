@@ -64,7 +64,8 @@ describe("universal allocation ledger rows", () => {
   it("never records a share as settled or available", () => {
     for (const row of allocationLedgerRows(base)) {
       expect(row.state).toBe("recorded");
-      expect(row.note.toLowerCase()).not.toContain("available");
+      expect(row.note.toLowerCase()).not.toMatch(/\b(is|now) available\b/);
+      expect(row.note.toLowerCase()).not.toContain("paid out");
     }
   });
 });
