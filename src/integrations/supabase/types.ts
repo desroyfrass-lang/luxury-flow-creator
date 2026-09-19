@@ -960,6 +960,60 @@ export type Database = {
           },
         ]
       }
+      builder_protected_fund_entries: {
+        Row: {
+          amount: number
+          created_at: string
+          currency: string
+          gross: number
+          id: string
+          note: string | null
+          owner_id: string
+          rate_pct: number
+          source_kind: string
+          source_ref: string
+          state: string
+          transaction_type: string
+          updated_at: string
+          vault_id: string | null
+          verified_at: string | null
+        }
+        Insert: {
+          amount?: number
+          created_at?: string
+          currency?: string
+          gross?: number
+          id?: string
+          note?: string | null
+          owner_id?: string
+          rate_pct?: number
+          source_kind: string
+          source_ref: string
+          state?: string
+          transaction_type?: string
+          updated_at?: string
+          vault_id?: string | null
+          verified_at?: string | null
+        }
+        Update: {
+          amount?: number
+          created_at?: string
+          currency?: string
+          gross?: number
+          id?: string
+          note?: string | null
+          owner_id?: string
+          rate_pct?: number
+          source_kind?: string
+          source_ref?: string
+          state?: string
+          transaction_type?: string
+          updated_at?: string
+          vault_id?: string | null
+          verified_at?: string | null
+        }
+        Relationships: []
+      }
       business_card_events: {
         Row: {
           card_user_id: string

@@ -18,6 +18,8 @@ import {
   settle,
   type ListingKind,
 } from "@/lib/card-commerce";
+import { EXPECTED_ALLOCATION_NOTE } from "@/lib/finance/allocation";
+
 import { uploadCardPhoto } from "@/lib/card-media";
 import {
   createListing,
@@ -220,13 +222,17 @@ export function QuickSellPanel({
         </div>
 
         <div className="mt-4 rounded-xl border border-border/60 p-4 text-sm">
-          <p className="font-medium">On a {money(preview.gross)} sale</p>
+          <p className="font-medium">On a {money(preview.gross)} sale — expected split (not verified yet)</p>
           <ul className="mt-2 space-y-1 text-xs text-muted-foreground">
-            <li>Constitutional allocation: {money(preview.platformFee)} — {ALLOCATION_NOTE}</li>
+            <li className="text-foreground">Yours to use: {money(preview.netToSeller)} (90% less your provider&apos;s estimated fee)</li>
+            <li>Yours, protected in your Project Fund: {money(preview.protectedVault)} (3%)</li>
+            <li>Frass Card service: {money(preview.frassCardService)} (5%) · Frass Foundation: {money(preview.foundation)} (2%)</li>
             <li>Estimated processing fee: {money(preview.processingFeeEstimate)} (charged by your own provider, an estimate only)</li>
-            <li className="text-foreground">Estimated to you: {money(preview.netToSeller)}</li>
+            <li>{ALLOCATION_NOTE}</li>
+            <li>{EXPECTED_ALLOCATION_NOTE}</li>
           </ul>
         </div>
+
 
         {launchPending && (
           <div className="mt-4 rounded-xl border border-[color:var(--gold,#d4af37)]/35 bg-[color:var(--gold,#d4af37)]/[0.07] p-3 text-sm">
