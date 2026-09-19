@@ -10,12 +10,15 @@
 // the payment provider told Frass the money went through.
 // ─────────────────────────────────────────────────────────────────────────────
 
+import { checkSaleCurrency, normalizeCurrency } from "./currency";
+
 /**
  * MULTI-CURRENCY CORRECTION: US dollars are Frass's reporting currency only.
  * A sale is verified in the currency it was actually charged in — GBP verifies
  * as GBP, CAD as CAD — as long as that currency is supported for the market.
  */
 export { BASE_REPORTING_CURRENCY } from "./currency";
+
 
 /** How far out of date a signed event may be before it is treated as a replay. */
 export const SIGNATURE_TOLERANCE_SECONDS = 300;
