@@ -80,6 +80,8 @@ export async function postProtectedFundEntry(
         currency: (posting.currency ?? "USD").toUpperCase(),
         state: "posted",
         verified_at: posting.verifiedAt,
+        confirmation_id: posting.confirmationId,
+
       },
       { onConflict: "owner_id,source_kind,source_ref", ignoreDuplicates: true },
     )
