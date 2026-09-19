@@ -2,15 +2,16 @@ import { createServerFn } from "@tanstack/react-start";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 
 /**
- * A Builder's own Protected Project Fund — the 3% held back from their own
- * direct Frass Card sales. Read-only and owner-scoped: the browser can never
- * write one of these rows.
+ * The 3% Reserve Vault allocations recorded against this Builder's own
+ * verified sales. This money is held by FRASS as part of the universal 10%
+ * ecosystem allocation — it is not the Builder's money. Read-only and
+ * owner-scoped: the browser can never write one of these rows.
  *
  * Totals are reported PER CURRENCY. Money earned in different currencies is
  * never added into one number, and no US dollar equivalent is produced unless
  * a real exchange rate with a source and a time is available.
  */
-export const listMyProtectedFund = createServerFn({ method: "GET" })
+export const listMyReserveVaultEntries = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
     const { sumByCurrency, NO_FX_SOURCE_REASON } = await import("@/lib/finance/currency");
@@ -29,5 +30,6 @@ export const listMyProtectedFund = createServerFn({ method: "GET" })
       postedTotals: sumByCurrency(posted),
       /** Reporting equivalent stays separate, and honest when unavailable. */
       usdEquivalent: { available: false as const, reason: NO_FX_SOURCE_REASON },
+      ownedByFrass: true as const,
     };
   });
