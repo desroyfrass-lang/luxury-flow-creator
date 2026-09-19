@@ -65,22 +65,33 @@ const cents = (n: number | string) => Math.round(Number(n || 0) * 100);
 /**
  * Bind a provider event to exactly one order. Any mismatch is refused rather
  * than "best guessed" — a wrong match would invent money.
+ *
+ * Currency is matched EXACTLY against the order's own transaction currency.
+ * Nothing is converted, and no currency is assumed.
  */
 export function matchesOrder(
   order: OrderForVerification | null | undefined,
   event: PaymentConfirmationEvent,
+  providerCurrencies?: readonly string[] | null,
 ): MatchResult {
   if (!order) return { ok: false, reason: "No such order." };
   if (order.id !== event.order_id) return { ok: false, reason: "Order mismatch." };
   if (event.seller_id && event.seller_id !== order.seller_id) {
     return { ok: false, reason: "Seller mismatch." };
   }
-  if ((event.currency || "").toUpperCase() !== DIRECT_SALE_CURRENCY) {
-    return { ok: false, reason: "Direct Frass Card sales are verified in US dollars only." };
+  const orderCurrency = normalizeCurrency(order.currency);
+  const eventCurrency = normalizeCurrency(event.currency);
+  if (!orderCurrency || !eventCurrency) {
+    return { ok: false, reason: "A three-letter currency code is required." };
   }
-  if ((order.currency || "").toUpperCase() !== DIRECT_SALE_CURRENCY) {
-    return { ok: false, reason: "This order is not a US dollar direct card sale." };
+  if (orderCurrency !== eventCurrency) {
+    return {
+      ok: false,
+      reason: `This order was charged in ${orderCurrency}, but the payment says ${eventCurrency}.`,
+    };
   }
+  const supported = checkSaleCurrency(orderCurrency, providerCurrencies);
+  if (!supported.ok) return { ok: false, reason: supported.reason };
   if (cents(event.amount) !== cents(order.subtotal)) {
     return { ok: false, reason: "Amount does not match the order." };
   }
@@ -89,6 +100,7 @@ export function matchesOrder(
   }
   return { ok: true };
 }
+
 
 /** The truthful economic state of a direct card order. */
 export function economicState(order: {
