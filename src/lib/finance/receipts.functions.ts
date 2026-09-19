@@ -48,7 +48,7 @@ export const listMyReceipts = createServerFn({ method: "GET" })
       supabase
         .from("card_orders")
         .select(
-          "id, quantity, unit_price, subtotal, platform_fee, processing_fee_estimate, net_to_seller, currency, status, reference, created_at, buyer_name, card_listings(title, is_quick_sell)",
+          "id, quantity, unit_price, subtotal, platform_fee, processing_fee_estimate, net_to_seller, currency, status, verified_at, reference, created_at, buyer_name, card_listings(title, is_quick_sell)",
         )
         .eq("seller_id", userId)
         .order("created_at", { ascending: false })
