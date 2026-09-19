@@ -72,7 +72,7 @@ export const Route = createFileRoute("/product/$handle")({
     <SiteShell>
       <div className="mx-auto max-w-2xl py-32 px-6 text-center">
         <h1 className="font-display text-5xl">Error</h1>
-        <p className="mt-4 text-muted-foreground">{error.message}</p>
+        <p className="mt-4 text-muted-foreground">{String((error as Error)?.message ?? error)}</p>
       </div>
     </SiteShell>
   ),
