@@ -136,9 +136,9 @@ export async function recordPaymentConfirmation(
     .eq("id", confirmed.id)
     .is("verified_at", null);
 
-  // Only now may the Builder's own protected 3% be posted.
-  const { postProtectedFundEntry } = await import("./protected-fund.server");
-  await postProtectedFundEntry({
+  // Only now may the 3% ecosystem Reserve Vault allocation be recorded.
+  const { postReserveVaultEntry } = await import("./reserve-vault.server");
+  await postReserveVaultEntry({
     ownerId: confirmed.seller_id,
     sourceKind: "card-order",
     sourceRef: confirmed.id,
