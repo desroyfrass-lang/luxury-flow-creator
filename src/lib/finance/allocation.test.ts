@@ -1,68 +1,79 @@
 import { describe, expect, it } from "vitest";
 import {
-  DIRECT_CARD_ALLOCATION,
-  DIRECT_CARD_BUILDER_TOTAL_PCT,
-  DIRECT_CARD_FRASS_TOTAL_PCT,
-  allocateDirectCardSale,
-  usesDirectCardAllocation,
+  EARNER_TOTAL_PCT,
+  ECOSYSTEM_TOTAL_PCT,
+  UNIVERSAL_ALLOCATION,
+  allocateEarning,
+  usesUniversalAllocation,
 } from "./allocation";
 import { settle } from "@/lib/card-commerce";
-import { NO_VERIFICATION_REASON, postProtectedFundEntry } from "./protected-fund.server";
+import { NO_VERIFICATION_REASON, postReserveVaultEntry } from "./reserve-vault.server";
 
-describe("direct Frass Card allocation", () => {
+describe("universal Frass allocation", () => {
   it("totals exactly 100%", () => {
-    const total = Object.values<number>(DIRECT_CARD_ALLOCATION).reduce((a, b) => a + b, 0);
+    const total = Object.values<number>(UNIVERSAL_ALLOCATION).reduce((a, b) => a + b, 0);
     expect(total).toBe(100);
-    expect(DIRECT_CARD_BUILDER_TOTAL_PCT).toBe(93);
-    expect(DIRECT_CARD_FRASS_TOTAL_PCT).toBe(7);
+    expect(EARNER_TOTAL_PCT).toBe(90);
+    expect(ECOSYSTEM_TOTAL_PCT).toBe(10);
   });
 
-  it("pays the Founder and Co-Founder nothing personally", () => {
-    expect(DIRECT_CARD_ALLOCATION.founder).toBe(0);
-    expect(DIRECT_CARD_ALLOCATION.coFounder).toBe(0);
-    const a = allocateDirectCardSale(100);
-    expect(a.founder).toBe(0);
-    expect(a.coFounder).toBe(0);
-  });
-
-  it("splits $100 USD as 90 / 3 / 5 / 2", () => {
-    const a = allocateDirectCardSale(100);
-    expect(a.builderAvailable).toBe(90);
-    expect(a.builderProtectedVault).toBe(3);
-    expect(a.frassCardService).toBe(5);
+  it("splits $100 USD as 90 / 3 / 3 / 2 / 1 / 1", () => {
+    const a = allocateEarning(100);
+    expect(a.earner).toBe(90);
+    expect(a.infrastructure).toBe(3);
+    expect(a.reserve).toBe(3);
     expect(a.foundation).toBe(2);
-    expect(a.builderTotal).toBe(93);
-    expect(a.frassTotal).toBe(7);
+    expect(a.founder).toBe(1);
+    expect(a.coFounder).toBe(1);
+    expect(a.ecosystemTotal).toBe(10);
+  });
+
+  it("applies the percentages in the transaction's own currency", () => {
+    for (const c of ["USD", "GBP", "CAD", "EUR", "JMD"]) {
+      const a = allocateEarning(100, c);
+      expect(a.currency).toBe(c);
+      expect(a.earner).toBe(90);
+      expect(a.reserve).toBe(3);
+      expect(a.founder).toBe(1);
+    }
   });
 
   it("never claims to be verified money", () => {
-    expect(allocateDirectCardSale(100).verified).toBe(false);
+    expect(allocateEarning(100).verified).toBe(false);
   });
 
-  it("applies only to a Builder's own direct card sale", () => {
-    expect(usesDirectCardAllocation("direct-card-sale")).toBe(true);
-    for (const t of ["marketplace-sale", "shopify-brand-sale", "affiliate-commission", "referral-bonus", "grant"] as const) {
-      expect(usesDirectCardAllocation(t)).toBe(false);
+  it("applies to every earning transaction type", () => {
+    for (const t of [
+      "direct-card-sale",
+      "marketplace-sale",
+      "shopify-brand-sale",
+      "affiliate-commission",
+      "referral-bonus",
+      "grant",
+    ] as const) {
+      expect(usesUniversalAllocation(t)).toBe(true);
     }
   });
 });
 
 describe("card settlement preview", () => {
-  it("keeps 7% for Frass and shows the Builder's protected 3% separately", () => {
+  it("keeps 10% for the Frass ecosystem and names every share", () => {
     const s = settle(100, 1, "stripe");
     expect(s.gross).toBe(100);
-    expect(s.platformFee).toBe(7);
-    expect(s.frassCardService).toBe(5);
+    expect(s.platformFee).toBe(10);
+    expect(s.infrastructure).toBe(3);
+    expect(s.reserve).toBe(3);
     expect(s.foundation).toBe(2);
-    expect(s.protectedVault).toBe(3);
+    expect(s.founder).toBe(1);
+    expect(s.coFounder).toBe(1);
     // 90% less the seller's own provider fee estimate.
     expect(s.netToSeller).toBeCloseTo(90 - s.processingFeeEstimate, 2);
   });
 });
 
-describe("protected fund posting", () => {
-  it("refuses to credit anything while no payment is verified", async () => {
-    const r = await postProtectedFundEntry({
+describe("reserve vault posting", () => {
+  it("refuses to record anything while no payment is verified", async () => {
+    const r = await postReserveVaultEntry({
       ownerId: "00000000-0000-0000-0000-000000000001",
       sourceKind: "card-order",
       sourceRef: "order-1",
@@ -74,7 +85,7 @@ describe("protected fund posting", () => {
   });
 
   it("still refuses when a caller fakes a confirmation timestamp", async () => {
-    const r = await postProtectedFundEntry({
+    const r = await postReserveVaultEntry({
       ownerId: "00000000-0000-0000-0000-000000000001",
       sourceKind: "card-order",
       sourceRef: "order-1",
