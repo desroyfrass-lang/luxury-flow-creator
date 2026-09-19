@@ -442,7 +442,7 @@ function PaymentLinkPanel({
 
       <div className="card-shop-checkout mt-4">
         <label>
-          Amount (USD)
+          Amount
           <input inputMode="decimal" value={amount} onChange={(e) => setAmount(e.target.value)} />
         </label>
         <input

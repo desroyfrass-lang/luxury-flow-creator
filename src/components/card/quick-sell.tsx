@@ -19,6 +19,11 @@ import {
   type ListingKind,
 } from "@/lib/card-commerce";
 import { EXPECTED_ALLOCATION_NOTE } from "@/lib/finance/allocation";
+import {
+  BASE_REPORTING_CURRENCY,
+  CONFIGURED_MARKET_CURRENCIES,
+  REPORTING_CURRENCY_NOTE,
+} from "@/lib/finance/currency";
 
 import { uploadCardPhoto } from "@/lib/card-media";
 import {
@@ -62,6 +67,8 @@ export function QuickSellPanel({
   const [description, setDescription] = useState("");
   const [imageUrl, setImageUrl] = useState("");
   const [price, setPrice] = useState("");
+  // The customer pays in their own market currency; USD is only the default.
+  const [currency, setCurrency] = useState<string>(BASE_REPORTING_CURRENCY);
   const [quantity, setQuantity] = useState("1");
   const [uploading, setUploading] = useState(false);
 
@@ -79,7 +86,7 @@ export function QuickSellPanel({
   };
 
   const unlimited = UNLIMITED_KINDS.includes(kind);
-  const preview = settle(Number(price) || 0, 1, provider);
+  const preview = settle(Number(price) || 0, 1, provider, currency);
 
   const create = useMutation({
     mutationFn: () =>
@@ -90,7 +97,7 @@ export function QuickSellPanel({
           description: description.trim() || null,
           image_url: imageUrl.trim() || null,
           price: Number(price) || 0,
-          currency: "USD",
+          currency,
           quantity: unlimited ? null : Math.max(1, Number(quantity) || 1),
           is_quick_sell: true,
         },
@@ -201,8 +208,22 @@ export function QuickSellPanel({
           </div>
           <div className="grid grid-cols-2 gap-3">
             <div className="space-y-2">
-              <Label className="text-xs">Price (USD)</Label>
-              <Input inputMode="decimal" value={price} onChange={(e) => setPrice(e.target.value)} placeholder="45.00" />
+              <Label className="text-xs">Price</Label>
+              <div className="flex gap-2">
+                <Input inputMode="decimal" value={price} onChange={(e) => setPrice(e.target.value)} placeholder="45.00" />
+                <select
+                  aria-label="Currency"
+                  className="rounded-md border border-border/60 bg-background px-2 text-sm"
+                  value={currency}
+                  onChange={(e) => setCurrency(e.target.value)}
+                >
+                  {CONFIGURED_MARKET_CURRENCIES.map((c) => (
+                    <option key={c} value={c}>
+                      {c}
+                    </option>
+                  ))}
+                </select>
+              </div>
             </div>
             <div className="space-y-2">
               <Label className="text-xs">{unlimited ? "Unlimited" : "Quantity"}</Label>
@@ -222,14 +243,15 @@ export function QuickSellPanel({
         </div>
 
         <div className="mt-4 rounded-xl border border-border/60 p-4 text-sm">
-          <p className="font-medium">On a {money(preview.gross)} sale — expected split (not verified yet)</p>
+          <p className="font-medium">On a {money(preview.gross, preview.currency)} sale — expected split (not verified yet)</p>
           <ul className="mt-2 space-y-1 text-xs text-muted-foreground">
-            <li className="text-foreground">Yours to use: {money(preview.netToSeller)} (90% less your provider&apos;s estimated fee)</li>
-            <li>Yours, protected in your Project Fund: {money(preview.protectedVault)} (3%)</li>
-            <li>Frass Card service: {money(preview.frassCardService)} (5%) · Frass Foundation: {money(preview.foundation)} (2%)</li>
-            <li>Estimated processing fee: {money(preview.processingFeeEstimate)} (charged by your own provider, an estimate only)</li>
+            <li className="text-foreground">Yours to use: {money(preview.netToSeller, preview.currency)} (90% less your provider&apos;s estimated fee)</li>
+            <li>Yours, protected in your Project Fund: {money(preview.protectedVault, preview.currency)} (3%)</li>
+            <li>Frass Card service: {money(preview.frassCardService, preview.currency)} (5%) · Frass Foundation: {money(preview.foundation, preview.currency)} (2%)</li>
+            <li>Estimated processing fee: {money(preview.processingFeeEstimate, preview.currency)} (charged by your own provider, an estimate only)</li>
             <li>{ALLOCATION_NOTE}</li>
             <li>{EXPECTED_ALLOCATION_NOTE}</li>
+            <li>{REPORTING_CURRENCY_NOTE}</li>
           </ul>
         </div>
 

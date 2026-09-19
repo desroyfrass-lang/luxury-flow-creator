@@ -156,7 +156,7 @@ export function RequestPaymentPanel({
           </label>
           <div className="grid gap-3 sm:grid-cols-3">
             <label className="text-sm">
-              Amount (USD)
+              Amount
               <input inputMode="decimal" value={amount} placeholder="18.00" onChange={(e) => setAmount(e.target.value)} />
             </label>
             <label className="text-sm">

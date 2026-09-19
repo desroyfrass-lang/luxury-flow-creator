@@ -275,7 +275,7 @@ function SendMoneyPanel({
 
       <div className="card-shop-checkout">
         <label>
-          Amount (USD)
+          Amount
           <input inputMode="decimal" value={amount} onChange={(e) => setAmount(e.target.value)} />
         </label>
         <input placeholder="Your name (optional)" maxLength={120} value={from} onChange={(e) => setFrom(e.target.value)} />
