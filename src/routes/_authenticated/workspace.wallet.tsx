@@ -27,6 +27,8 @@ import { getMyCard } from "@/lib/card.functions";
 import { getMyProfile } from "@/lib/profiles.functions";
 import { listMyCardOrders } from "@/lib/card-commerce.functions";
 import { ALLOCATION_NOTE, money, providerLabel } from "@/lib/card-commerce";
+import { EXPECTED_ALLOCATION_NOTE } from "@/lib/finance/allocation";
+
 import { cardUrl } from "@/lib/card";
 import {
   WALLET_PRINCIPLE,
