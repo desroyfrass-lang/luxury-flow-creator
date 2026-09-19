@@ -406,6 +406,7 @@ export function explainReceipt(receipt: Receipt): string {
     parts.push(`${money(receipt.gross, c)} left your balance.`);
   }
 
+  if (receipt.verification) parts.push(receipt.verification.note);
   parts.push(RECEIPT_STATUS[receipt.status].plain);
   return parts.join(" ");
 }
