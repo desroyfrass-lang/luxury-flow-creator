@@ -66,19 +66,23 @@ export function CommerceHealth() {
           <>
             <div className="mt-5 grid gap-3 sm:grid-cols-3">
               <Metric
-                label="Success rate"
+                label="Reached the payment page"
                 value={rate == null ? "—" : `${rate}%`}
                 note={
                   rate == null
-                    ? "No payments have settled in this window yet."
+                    ? "No requests have closed in this window yet."
                     : tone === "good"
-                      ? "Healthy. Payments are landing."
+                      ? "Healthy. Customers are reaching the payment page."
                       : tone === "watch"
-                        ? "Worth watching — some Builders are not getting paid."
-                        : "Attention needed. Too many payments are failing."
+                        ? "Worth watching — some customers never reach the payment page."
+                        : "Attention needed. Too many requests never reach the payment page."
                 }
               />
-              <Metric label="Paid" value={money(data.paidValue, data.currency)} note={`${data.successful} completed`} />
+              <Metric
+                label="Handed over (not verified)"
+                value={money(data.handoffValue, data.currency)}
+                note={`${data.handedOff} sent to the seller's payment page. Frass has not confirmed any of it arrived.`}
+              />
               <Metric label="Still open" value={String(data.open)} note="Sent, not yet settled." />
             </div>
 
