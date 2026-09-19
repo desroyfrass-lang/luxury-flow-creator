@@ -42,6 +42,9 @@ export function isProviderVerified(_source: "card-order" | "payment-request"): b
 /**
  * Receipt status for a Frass Card order. A seller-declared "paid" produces a
  * PENDING receipt, never a settled one, so no balance can call it available.
+ *
+ * STEP 5 · SLICE 3 — a provider-verified order is still PENDING here: verified
+ * means the provider confirmed the money, not that it is settled or paid out.
  */
 export function receiptStatusForOrder(orderStatus: string): ReceiptStatus {
   switch (orderStatus) {
@@ -50,11 +53,14 @@ export function receiptStatusForOrder(orderStatus: string): ReceiptStatus {
     case "cancelled":
       return "cancelled";
     // "paid" is the seller's own declaration — awaiting verification.
+    // "verified" is provider-confirmed, but not settled or withdrawn.
+    case "verified":
     case "paid":
     default:
       return "pending";
   }
 }
+
 
 /** Extra plain-English line attached to receipts that came from a seller declaration. */
 export function unverifiedReceiptNote(orderStatus: string, existing: string | null): string | null {

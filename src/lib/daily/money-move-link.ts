@@ -12,6 +12,8 @@ import {
   SELLER_DECLARED_LABEL,
   SELLER_DECLARED_NOTE,
 } from "@/lib/finance/money-truth";
+import { VERIFIED_LABEL, VERIFIED_NOTE, economicState } from "@/lib/finance/payment-verification";
+
 
 /** Work items born in Money Moves carry this source. */
 export const MONEY_MOVE_SOURCE = "money-move";
@@ -25,7 +27,7 @@ export function saleToolHref(workItemId?: string | null): string {
   return `${SALE_TOOL_PATH}?${q.toString()}`;
 }
 
-export type SaleState = "not-listed" | "listed" | "awaiting" | "seller-declared";
+export type SaleState = "not-listed" | "listed" | "awaiting" | "seller-declared" | "verified";
 
 export type SaleStatus = {
   state: SaleState;
@@ -35,12 +37,13 @@ export type SaleStatus = {
   note: string;
 };
 
-type OrderLike = { listing_id: string | null; status: string | null };
+type OrderLike = { listing_id: string | null; status: string | null; verified_at?: string | null };
 
 /**
  * Truthful status of a Money Move sale, worked out from records that already
  * exist. A seller ticking "paid" is reported as seller-declared only — Frass
- * has not verified it and central finance has not cleared it.
+ * has not verified it. Only a provider confirmation recorded by the payment
+ * system reads as "Payment verified", and even that is not paid out yet.
  */
 export function saleStatus(sourceRef: string | null | undefined, orders: OrderLike[]): SaleStatus {
   if (!sourceRef) {
@@ -58,6 +61,9 @@ export function saleStatus(sourceRef: string | null | undefined, orders: OrderLi
       note: "Your item is for sale. Share your card link so someone can buy it.",
     };
   }
+  if (mine.some((o) => economicState(o) === "verified")) {
+    return { state: "verified", label: VERIFIED_LABEL, note: VERIFIED_NOTE };
+  }
   if (mine.some((o) => o.status === "pending")) {
     return {
       state: "awaiting",
@@ -72,6 +78,7 @@ export function saleStatus(sourceRef: string | null | undefined, orders: OrderLi
       note: SELLER_DECLARED_NOTE,
     };
   }
+
   return {
     state: "listed",
     label: "Live on your card",
