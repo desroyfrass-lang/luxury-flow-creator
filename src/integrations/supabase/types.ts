@@ -1328,6 +1328,9 @@ export type Database = {
           reference: string | null
           seller_id: string
           status: string
+          stripe_session_expires_at: string | null
+          stripe_session_id: string | null
+          stripe_session_url: string | null
           subtotal: number
           unit_price: number
           updated_at: string
@@ -1349,6 +1352,9 @@ export type Database = {
           reference?: string | null
           seller_id: string
           status?: string
+          stripe_session_expires_at?: string | null
+          stripe_session_id?: string | null
+          stripe_session_url?: string | null
           subtotal?: number
           unit_price?: number
           updated_at?: string
@@ -1370,6 +1376,9 @@ export type Database = {
           reference?: string | null
           seller_id?: string
           status?: string
+          stripe_session_expires_at?: string | null
+          stripe_session_id?: string | null
+          stripe_session_url?: string | null
           subtotal?: number
           unit_price?: number
           updated_at?: string

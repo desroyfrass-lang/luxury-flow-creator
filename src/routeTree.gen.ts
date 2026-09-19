@@ -85,6 +85,7 @@ import { Route as SocialMediaViralsCategoryRouteImport } from './routes/social-m
 import { Route as ProductHandleRouteImport } from './routes/product.$handle'
 import { Route as PlusSizeWomenRouteImport } from './routes/plus-size.women'
 import { Route as PlusSizeMenRouteImport } from './routes/plus-size.men'
+import { Route as PayResultRouteImport } from './routes/pay.result'
 import { Route as PayTokenRouteImport } from './routes/pay.$token'
 import { Route as LookbookStoryRouteImport } from './routes/lookbook.$story'
 import { Route as LiveGoRouteImport } from './routes/live.go'
@@ -638,6 +639,11 @@ const PlusSizeWomenRoute = PlusSizeWomenRouteImport.update({
 const PlusSizeMenRoute = PlusSizeMenRouteImport.update({
   id: '/plus-size/men',
   path: '/plus-size/men',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PayResultRoute = PayResultRouteImport.update({
+  id: '/pay/result',
+  path: '/pay/result',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PayTokenRoute = PayTokenRouteImport.update({
@@ -1726,6 +1732,7 @@ export interface FileRoutesByFullPath {
   '/live/go': typeof LiveGoRoute
   '/lookbook/$story': typeof LookbookStoryRoute
   '/pay/$token': typeof PayTokenRoute
+  '/pay/result': typeof PayResultRoute
   '/plus-size/men': typeof PlusSizeMenRoute
   '/plus-size/women': typeof PlusSizeWomenRoute
   '/product/$handle': typeof ProductHandleRoute
@@ -1954,6 +1961,7 @@ export interface FileRoutesByTo {
   '/live/go': typeof LiveGoRoute
   '/lookbook/$story': typeof LookbookStoryRoute
   '/pay/$token': typeof PayTokenRoute
+  '/pay/result': typeof PayResultRoute
   '/plus-size/men': typeof PlusSizeMenRoute
   '/plus-size/women': typeof PlusSizeWomenRoute
   '/product/$handle': typeof ProductHandleRoute
@@ -2206,6 +2214,7 @@ export interface FileRoutesById {
   '/live/go': typeof LiveGoRoute
   '/lookbook/$story': typeof LookbookStoryRoute
   '/pay/$token': typeof PayTokenRoute
+  '/pay/result': typeof PayResultRoute
   '/plus-size/men': typeof PlusSizeMenRoute
   '/plus-size/women': typeof PlusSizeWomenRoute
   '/product/$handle': typeof ProductHandleRoute
@@ -2459,6 +2468,7 @@ export interface FileRouteTypes {
     | '/live/go'
     | '/lookbook/$story'
     | '/pay/$token'
+    | '/pay/result'
     | '/plus-size/men'
     | '/plus-size/women'
     | '/product/$handle'
@@ -2687,6 +2697,7 @@ export interface FileRouteTypes {
     | '/live/go'
     | '/lookbook/$story'
     | '/pay/$token'
+    | '/pay/result'
     | '/plus-size/men'
     | '/plus-size/women'
     | '/product/$handle'
@@ -2938,6 +2949,7 @@ export interface FileRouteTypes {
     | '/live/go'
     | '/lookbook/$story'
     | '/pay/$token'
+    | '/pay/result'
     | '/plus-size/men'
     | '/plus-size/women'
     | '/product/$handle'
@@ -3129,6 +3141,7 @@ export interface RootRouteChildren {
   LegalLevelRoute: typeof LegalLevelRoute
   LinkHandleRoute: typeof LinkHandleRoute
   PayTokenRoute: typeof PayTokenRoute
+  PayResultRoute: typeof PayResultRoute
   PlusSizeMenRoute: typeof PlusSizeMenRoute
   PlusSizeWomenRoute: typeof PlusSizeWomenRoute
   ProductHandleRoute: typeof ProductHandleRoute
@@ -3676,6 +3689,13 @@ declare module '@tanstack/react-router' {
       path: '/plus-size/men'
       fullPath: '/plus-size/men'
       preLoaderRoute: typeof PlusSizeMenRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/pay/result': {
+      id: '/pay/result'
+      path: '/pay/result'
+      fullPath: '/pay/result'
+      preLoaderRoute: typeof PayResultRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/pay/$token': {
@@ -5606,6 +5626,7 @@ const rootRouteChildren: RootRouteChildren = {
   LegalLevelRoute: LegalLevelRoute,
   LinkHandleRoute: LinkHandleRoute,
   PayTokenRoute: PayTokenRoute,
+  PayResultRoute: PayResultRoute,
   PlusSizeMenRoute: PlusSizeMenRoute,
   PlusSizeWomenRoute: PlusSizeWomenRoute,
   ProductHandleRoute: ProductHandleRoute,

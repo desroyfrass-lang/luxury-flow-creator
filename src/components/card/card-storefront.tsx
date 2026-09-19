@@ -4,6 +4,7 @@ import { useServerFn } from "@tanstack/react-start";
 import { ShoppingBag } from "lucide-react";
 import { kindLabel, money, remaining } from "@/lib/card-commerce";
 import { startCardCheckout } from "@/lib/card-commerce.functions";
+import { startStripeCheckout } from "@/lib/finance/providers/stripe-checkout.functions";
 import { SecurityConfirmation } from "@/components/finance/security-confirmation";
 
 export type PublicListing = {
@@ -54,6 +55,7 @@ export function CardStorefront({
 
 function ListingCard({ listing, onSale }: { listing: PublicListing; onSale?: () => void }) {
   const checkoutFn = useServerFn(startCardCheckout);
+  const stripeCheckoutFn = useServerFn(startStripeCheckout);
   const [open, setOpen] = useState(false);
   const [qty, setQty] = useState(1);
   const [name, setName] = useState("");
@@ -74,15 +76,29 @@ function ListingCard({ listing, onSale }: { listing: PublicListing; onSale?: () 
           ...(email.trim() ? { buyer_email: email.trim() } : {}),
         },
       }),
-    onSuccess: (res) => {
+    onSuccess: async (res) => {
       if (!res.ok) {
         setMessage(res.reason);
         return;
       }
       onSale?.();
-      setMessage("Opening secure payment…");
       setSecured(res.order_id ?? null);
-      window.open(res.pay_url, "_blank", "noopener,noreferrer");
+      setMessage("Opening secure payment…");
+
+      // Preferred: Stripe's own hosted payment page, created on the server for
+      // this exact order. The browser never chooses the amount or the seller.
+      const stripe = await stripeCheckoutFn({ data: { order_id: res.order_id } }).catch(
+        () => null,
+      );
+      if (stripe?.ok) {
+        window.location.href = stripe.url;
+        return;
+      }
+      if (res.pay_url) {
+        window.open(res.pay_url, "_blank", "noopener,noreferrer");
+        return;
+      }
+      setMessage(stripe?.reason ?? "Payment could not be opened. Try again in a moment.");
     },
     onError: () => setMessage("Checkout could not be started. Try again in a moment."),
   });
