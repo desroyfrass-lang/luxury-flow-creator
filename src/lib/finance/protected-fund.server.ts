@@ -66,7 +66,10 @@ export async function postProtectedFundEntry(
     return { posted: false, reason: "A protected-fund entry needs an owner and a source." };
   }
 
-  const split = allocateDirectCardSale(posting.gross);
+  const supported = checkSaleCurrency(posting.currency);
+  if (!supported.ok) return { posted: false, reason: supported.reason };
+
+  const split = allocateDirectCardSale(posting.gross, supported.currency);
   if (split.builderProtectedVault <= 0) {
     return { posted: false, reason: "Nothing to protect on a zero sale." };
   }
@@ -84,7 +87,9 @@ export async function postProtectedFundEntry(
         transaction_type: "direct-card-sale",
         gross: split.gross,
         amount: split.builderProtectedVault,
-        currency: (posting.currency ?? "USD").toUpperCase(),
+        // The money is kept in the currency it was actually earned in.
+        currency: split.currency,
+
         state: "posted",
         verified_at: posting.verifiedAt,
         confirmation_id: posting.confirmationId,
