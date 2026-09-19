@@ -40,6 +40,13 @@ export function fromMinorUnits(minor: number, currency: string): number {
   return Math.round(minor) / 100;
 }
 
+/** Real money amount → smallest-unit integer, for the same currency only. */
+export function toMinorUnits(amount: number, currency: string): number {
+  const c = normalizeCurrency(currency) ?? "";
+  if (ZERO_DECIMAL.has(c)) return Math.round(amount);
+  return Math.round(amount * 100);
+}
+
 /** The metadata keys a Frass checkout must carry so an event can be bound. */
 export const ORDER_METADATA_KEY = "frass_order_id";
 export const SELLER_METADATA_KEY = "frass_seller_id";
