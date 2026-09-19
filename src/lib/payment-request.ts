@@ -110,7 +110,12 @@ export const REQUEST_STATUS: Record<RequestStatus, { label: string; plain: strin
   preparing: { label: "Preparing", plain: "The seller is still putting this together.", tone: "open" },
   awaiting_approval: { label: "Awaiting customer approval", plain: "Sent. Not approved yet — nothing has been charged.", tone: "open" },
   processing: { label: "Processing", plain: "Approved. The payment provider is finishing it right now.", tone: "open" },
-  successful: { label: "Successful", plain: "Paid, recorded, and receipted.", tone: "good" },
+  successful: {
+    label: "Approved — awaiting payment verification",
+    plain:
+      "The customer approved and was sent to the seller's own payment page. Frass has not verified that the money arrived.",
+    tone: "good",
+  },
   declined: { label: "Declined", plain: "The customer said no, or the provider refused it. Nothing was charged.", tone: "closed" },
   cancelled: { label: "Cancelled", plain: "The seller pulled it back before it was paid.", tone: "closed" },
   expired: { label: "Expired", plain: "It ran out of time before it was approved. Nothing was charged.", tone: "closed" },

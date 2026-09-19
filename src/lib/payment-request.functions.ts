@@ -475,16 +475,19 @@ export const getCommerceHealth = createServerFn({ method: "GET" })
       .gte("created_at", since);
     if (error) throw error;
 
+    // STEP 5 · SLICE 1 — "successful" here only means the customer approved and
+    // was handed to the seller's own payment page. That is a handoff, not proof
+    // that money arrived, so it is never reported as paid or verified value.
     const list = rows ?? [];
     const count = (s: string) => list.filter((r) => r.status === s).length;
-    const successful = count("successful");
+    const handedOff = count("successful");
     const declined = count("declined");
     const expired = count("expired");
     const cancelled = count("cancelled");
     const refunded = count("refunded");
     const open = list.filter((r) => ["preparing", "awaiting_approval", "processing"].includes(r.status)).length;
-    const settled = successful + declined + expired + cancelled + refunded;
-    const paidValue = list
+    const closed = handedOff + declined + expired + cancelled + refunded;
+    const handoffValue = list
       .filter((r) => r.status === "successful")
       .reduce((t, r) => t + Number(r.amount) * r.quantity, 0);
     const retried = list.filter((r) => (r.attempts ?? 0) > 1).length;
@@ -493,14 +496,18 @@ export const getCommerceHealth = createServerFn({ method: "GET" })
       days: data.days,
       total: list.length,
       open,
-      successful,
+      handedOff,
       declined,
       expired,
       cancelled,
       refunded,
       retried,
-      successRate: settled ? Math.round((successful / settled) * 1000) / 10 : null,
-      paidValue: Math.round(paidValue * 100) / 100,
+      /** Share of closed requests that reached the seller's payment page. */
+      handoffRate: closed ? Math.round((handedOff / closed) * 1000) / 10 : null,
+      /** Value handed over, awaiting verification. Never verified income. */
+      handoffValue: Math.round(handoffValue * 100) / 100,
+      /** No payment provider confirmation rail exists yet. */
+      verifiedValue: null as number | null,
       currency: list[0]?.currency ?? "USD",
     };
   });
