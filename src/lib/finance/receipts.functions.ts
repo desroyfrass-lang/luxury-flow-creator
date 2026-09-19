@@ -2,7 +2,11 @@ import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import { receiptKind, type Receipt, type ReceiptStatus } from "@/lib/finance/receipts";
-import { receiptStatusForOrder, unverifiedReceiptNote } from "@/lib/finance/money-truth";
+import {
+  receiptStatusForOrder,
+  receiptVerification,
+  unverifiedReceiptNote,
+} from "@/lib/finance/money-truth";
 
 // ─────────────────────────────────────────────────────────────────────────────
 // FRASS-0433 — Receipt retrieval.
@@ -44,7 +48,7 @@ export const listMyReceipts = createServerFn({ method: "GET" })
       supabase
         .from("card_orders")
         .select(
-          "id, quantity, unit_price, subtotal, platform_fee, processing_fee_estimate, net_to_seller, currency, status, reference, created_at, buyer_name, card_listings(title, is_quick_sell)",
+          "id, quantity, unit_price, subtotal, platform_fee, processing_fee_estimate, net_to_seller, currency, status, verified_at, reference, created_at, buyer_name, card_listings(title, is_quick_sell)",
         )
         .eq("seller_id", userId)
         .order("created_at", { ascending: false })
@@ -108,6 +112,8 @@ export const listMyReceipts = createServerFn({ method: "GET" })
         reference: o.reference,
         occurredAt: o.created_at,
         derived: true,
+        // STEP 5 · SLICE 4 — only the signed provider path can set verified_at.
+        verification: receiptVerification(o.status, o.verified_at),
       });
     }
 

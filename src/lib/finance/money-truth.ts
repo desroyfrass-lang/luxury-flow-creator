@@ -39,6 +39,57 @@ export function isProviderVerified(_source: "card-order" | "payment-request"): b
   return PROVIDER_VERIFICATION_AVAILABLE;
 }
 
+/* ── STEP 5 · SLICE 4 — verified money must READ as verified ──────────────
+ *
+ * Slice 3 built the signed provider door. But the money record itself still
+ * showed every open sale the same way: "Pending". A Builder could not tell a
+ * sale nobody has paid for from one a payment provider has actually confirmed.
+ *
+ * This adds the missing middle word. Receipt STATUS is untouched — a verified
+ * sale is still pending, because verified is not settled, not available and
+ * not paid out. Only the wording gains the truth.
+ */
+
+/** The signed confirmation door exists (Slice 3). Settlement still does not. */
+export const VERIFICATION_RAIL_EXISTS = true;
+
+export type ReceiptVerification = {
+  state: "awaiting-verification" | "seller-declared" | "verified";
+  label: string;
+  note: string;
+};
+
+/**
+ * The truthful verification line for a Frass Card order.
+ * `verifiedAt` is written ONLY by the signed provider confirmation path; a
+ * database trigger refuses it from any signed-in browser session.
+ */
+export function receiptVerification(
+  orderStatus: string | null | undefined,
+  verifiedAt: string | null | undefined,
+): ReceiptVerification {
+  if (verifiedAt || orderStatus === "verified") {
+    return {
+      state: "verified",
+      label: "Payment verified",
+      note: "The payment provider confirmed this money. It is verified — not settled, not available and not paid out to you yet.",
+    };
+  }
+  if (orderStatus === "paid") {
+    return { state: "seller-declared", label: SELLER_DECLARED_LABEL, note: SELLER_DECLARED_NOTE };
+  }
+  return {
+    state: "awaiting-verification",
+    label: AWAITING_VERIFICATION_LABEL,
+    note: AWAITING_VERIFICATION_NOTE,
+  };
+}
+
+/** Verified is never settled. Kept as its own rule so no surface can blur it. */
+export function isSettledVerification(_v: ReceiptVerification): boolean {
+  return false;
+}
+
 /**
  * Receipt status for a Frass Card order. A seller-declared "paid" produces a
  * PENDING receipt, never a settled one, so no balance can call it available.

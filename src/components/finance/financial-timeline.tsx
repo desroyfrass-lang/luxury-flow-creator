@@ -293,6 +293,18 @@ export function FinancialTimeline({ receipts }: { receipts: Receipt[] }) {
                             {new Date(r.occurredAt).toLocaleDateString()}
                           </span>
                         </span>
+                        {r.verification && (
+                          <span
+                            title={r.verification.note}
+                            className={`hidden rounded-full border px-2 py-0.5 text-[10px] uppercase tracking-[0.14em] sm:inline ${
+                              r.verification.state === "verified"
+                                ? toneClass.emerald
+                                : toneClass.zinc
+                            }`}
+                          >
+                            {r.verification.label}
+                          </span>
+                        )}
                         <span
                           className={`rounded-full border px-2 py-0.5 text-[10px] uppercase tracking-[0.14em] ${
                             toneClass[st.tone] ?? toneClass.zinc
