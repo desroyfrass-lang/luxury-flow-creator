@@ -15,6 +15,7 @@
 // ─────────────────────────────────────────────────────────────────────────────
 
 import { allocateDirectCardSale } from "./allocation";
+import { checkSaleCurrency } from "./currency";
 
 export type ProtectedFundPosting = {
   ownerId: string;
@@ -23,7 +24,12 @@ export type ProtectedFundPosting = {
   sourceKind: "card-order" | "card-payment";
   sourceRef: string;
   gross: number;
-  currency?: string;
+  /**
+   * The ACTUAL transaction currency of the sale (ISO 4217). Required — the
+   * protected 3% is kept in the money the customer really paid, never
+   * relabelled or converted.
+   */
+  currency: string;
   /** Proof from a payment provider. Without it, nothing is posted. */
   verifiedAt?: string | null;
   /**
@@ -33,6 +39,7 @@ export type ProtectedFundPosting = {
    */
   confirmationId?: string | null;
 };
+
 
 export type ProtectedFundResult =
   | { posted: true; id: string }
