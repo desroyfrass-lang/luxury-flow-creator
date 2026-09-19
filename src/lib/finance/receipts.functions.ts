@@ -112,6 +112,8 @@ export const listMyReceipts = createServerFn({ method: "GET" })
         reference: o.reference,
         occurredAt: o.created_at,
         derived: true,
+        // STEP 5 · SLICE 4 — only the signed provider path can set verified_at.
+        verification: receiptVerification(o.status, o.verified_at),
       });
     }
 
