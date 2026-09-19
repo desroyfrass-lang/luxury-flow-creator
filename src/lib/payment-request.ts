@@ -162,7 +162,7 @@ export const RECOVERY_PROMISE =
 export function recoveryMessage(status: string): string {
   switch (status as RequestStatus) {
     case "successful":
-      return "Good news — your payment went through. Your receipt is in your Financial Center.";
+      return "You approved this and were sent to the seller's own payment page. Frass records the request, but it does not confirm payment on the seller's behalf.";
     case "refunded":
       return "This payment went through and has since been refunded in full.";
     case "declined":

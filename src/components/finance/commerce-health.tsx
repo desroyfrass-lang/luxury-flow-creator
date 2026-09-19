@@ -28,7 +28,7 @@ export function CommerceHealth() {
     queryFn: () => healthFn({ data: { days } }),
   });
 
-  const rate = data?.successRate;
+  const rate = data?.handoffRate;
   const tone = rate == null ? "quiet" : rate >= 90 ? "good" : rate >= 70 ? "watch" : "poor";
 
   return (
