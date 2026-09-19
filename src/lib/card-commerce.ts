@@ -128,13 +128,11 @@ export function settle(
 export const ALLOCATION_NOTE = DIRECT_CARD_ALLOCATION_NOTE;
 
 
-export function money(amount: number, currency = "USD"): string {
-  try {
-    return new Intl.NumberFormat("en-US", { style: "currency", currency }).format(amount);
-  } catch {
-    return `$${amount.toFixed(2)}`;
-  }
+/** Formats in the currency given; USD is only the fallback for legacy callers. */
+export function money(amount: number, currency = BASE_REPORTING_CURRENCY): string {
+  return formatMoney(amount, currency);
 }
+
 
 export function remaining(quantity: number | null, sold: number): number | null {
   if (quantity == null) return null;
