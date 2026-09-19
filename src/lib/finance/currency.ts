@@ -16,7 +16,7 @@
 //      connected, the USD equivalent is simply unavailable.
 // ─────────────────────────────────────────────────────────────────────────────
 
-import { PRIMARY_MARKETS } from "@/lib/commerce/global-markets";
+import { MARKETS } from "@/lib/commerce/global-markets";
 
 /** The base/reporting currency only — never a checkout requirement. */
 export const BASE_REPORTING_CURRENCY = "USD";
@@ -39,7 +39,7 @@ export function normalizeCurrency(code: unknown): string | null {
  * euro area, which Frass serves without a single country market row.
  */
 export const CONFIGURED_MARKET_CURRENCIES: string[] = Array.from(
-  new Set([...PRIMARY_MARKETS.map((m) => m.currency.toUpperCase()), "EUR", "USD"]),
+  new Set([...MARKETS.map((m) => m.currency.toUpperCase()), "EUR", "USD"]),
 ).sort();
 
 export type CurrencySupport =
