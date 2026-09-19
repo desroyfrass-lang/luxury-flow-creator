@@ -183,7 +183,12 @@ export const startCardCheckout = createServerFn({ method: "POST" })
       return { ok: false as const, reason: "This seller has not switched on payments yet." };
     }
 
-    const s = settle(Number(listing.price), data.quantity, card.payout_provider);
+    // The split is worked out in the listing's own transaction currency.
+    const { checkSaleCurrency } = await import("@/lib/finance/currency");
+    const listingCurrency = checkSaleCurrency(listing.currency);
+    if (!listingCurrency.ok) return { ok: false as const, reason: listingCurrency.reason };
+    const s = settle(Number(listing.price), data.quantity, card.payout_provider, listingCurrency.currency);
+
 
     const { data: order, error } = await supabaseAdmin
       .from("card_orders")
