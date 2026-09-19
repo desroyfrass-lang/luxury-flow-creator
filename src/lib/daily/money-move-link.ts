@@ -7,6 +7,11 @@
 // ─────────────────────────────────────────────────────────────────────────────
 
 import { moveById } from "@/lib/business/money-move-catalogue";
+import {
+  AWAITING_VERIFICATION_LABEL,
+  SELLER_DECLARED_LABEL,
+  SELLER_DECLARED_NOTE,
+} from "@/lib/finance/money-truth";
 
 /** Work items born in Money Moves carry this source. */
 export const MONEY_MOVE_SOURCE = "money-move";
@@ -56,15 +61,15 @@ export function saleStatus(sourceRef: string | null | undefined, orders: OrderLi
   if (mine.some((o) => o.status === "pending")) {
     return {
       state: "awaiting",
-      label: "Awaiting payment confirmation",
-      note: "Someone started buying. The money is not confirmed yet, so nothing is counted as earned.",
+      label: AWAITING_VERIFICATION_LABEL,
+      note: "Someone started buying. No payment provider has confirmed the money, so nothing is counted.",
     };
   }
   if (mine.some((o) => o.status === "paid")) {
     return {
       state: "seller-declared",
-      label: "Marked paid by you — not verified",
-      note: "You marked this paid. Frass has not verified it, so it stays awaiting in your Financial Center.",
+      label: SELLER_DECLARED_LABEL,
+      note: SELLER_DECLARED_NOTE,
     };
   }
   return {

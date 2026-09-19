@@ -93,7 +93,10 @@ export const listMyReceipts = createServerFn({ method: "GET" })
         direction: "in",
         source: "frass-card",
         title: listing?.title ?? receiptKind(kind).label,
-        description: o.quantity > 1 ? `${o.quantity} × ${round(o.unit_price)}` : null,
+        description: unverifiedReceiptNote(
+          o.status,
+          o.quantity > 1 ? `${o.quantity} × ${round(o.unit_price)}` : null,
+        ),
         counterparty: o.buyer_name || null,
         gross: round(o.subtotal),
         platformAllocation: round(o.platform_fee),
