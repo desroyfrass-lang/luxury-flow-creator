@@ -43,6 +43,13 @@
       "when": 1789837751516,
       "tag": "0005_card_order_stripe_checkout_session",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1789847540694,
+      "tag": "0006_tighten_permissive_read_policies",
+      "breakpoints": true
     }
   ]
 }
