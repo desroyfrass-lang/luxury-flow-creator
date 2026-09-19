@@ -24,6 +24,9 @@
 // here is an EXPECTED allocation — what will happen once a payment is verified.
 // ─────────────────────────────────────────────────────────────────────────────
 
+import { BASE_REPORTING_CURRENCY, normalizeCurrency } from "./currency";
+
+
 export const TRANSACTION_TYPES = [
   "direct-card-sale",
   "marketplace-sale",
