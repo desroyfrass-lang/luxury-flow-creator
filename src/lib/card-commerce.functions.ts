@@ -85,7 +85,8 @@ export const setListingStatus = createServerFn({ method: "POST" })
 
 /** Buyer email stays server-side; a seller sees the name, never the address. */
 const ORDER_SELLER_COLUMNS =
-  "id, listing_id, seller_id, buyer_name, quantity, unit_price, subtotal, platform_fee, processing_fee_estimate, net_to_seller, currency, status, payout_provider, reference, created_at, updated_at";
+  "id, listing_id, seller_id, buyer_name, quantity, unit_price, subtotal, platform_fee, processing_fee_estimate, net_to_seller, currency, status, verified_at, payment_confirmation_id, payout_provider, reference, created_at, updated_at";
+
 
 export const listMyCardOrders = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
