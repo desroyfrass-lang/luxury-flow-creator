@@ -55,6 +55,7 @@ export function CardStorefront({
 
 function ListingCard({ listing, onSale }: { listing: PublicListing; onSale?: () => void }) {
   const checkoutFn = useServerFn(startCardCheckout);
+  const stripeCheckoutFn = useServerFn(startStripeCheckout);
   const [open, setOpen] = useState(false);
   const [qty, setQty] = useState(1);
   const [name, setName] = useState("");
