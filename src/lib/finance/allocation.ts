@@ -60,6 +60,11 @@ export const DIRECT_CARD_FRASS_TOTAL_PCT =
 
 export type DirectCardAllocation = {
   gross: number;
+  /**
+   * The ACTUAL transaction currency (ISO 4217). The percentages below are
+   * applied in this currency — nothing is converted before allocation.
+   */
+  currency: string;
   /** Builder's spendable share (90%) — expected, never available yet. */
   builderAvailable: number;
   /** Builder's protected project fund (3%) — the Builder's own money. */
@@ -84,10 +89,14 @@ export type DirectCardAllocation = {
 const round = (n: number) => Math.round((Number(n) || 0) * 100) / 100;
 
 /**
- * Work out the expected split of a Builder's own direct Frass Card sale.
- * Calculation only — this function never writes, credits or posts anything.
+ * Work out the expected split of a Builder's own direct Frass Card sale, in
+ * the currency the customer actually paid in. 100 GBP splits into 90/3/5/2 GBP;
+ * 100 JMD into 90/3/5/2 JMD. Calculation only — nothing is written or credited.
  */
-export function allocateDirectCardSale(gross: number): DirectCardAllocation {
+export function allocateDirectCardSale(
+  gross: number,
+  currency: string = BASE_REPORTING_CURRENCY,
+): DirectCardAllocation {
   const g = round(Math.max(0, gross));
   const pct = (p: number) => round((g * p) / 100);
   const builderAvailable = pct(DIRECT_CARD_ALLOCATION.builderAvailable);
@@ -96,6 +105,7 @@ export function allocateDirectCardSale(gross: number): DirectCardAllocation {
   const foundation = pct(DIRECT_CARD_ALLOCATION.foundation);
   return {
     gross: g,
+    currency: normalizeCurrency(currency) ?? BASE_REPORTING_CURRENCY,
     builderAvailable,
     builderProtectedVault,
     frassCardService,
@@ -107,6 +117,7 @@ export function allocateDirectCardSale(gross: number): DirectCardAllocation {
     verified: false,
   };
 }
+
 
 /** Is this transaction type governed by the direct Frass Card rule? */
 export function usesDirectCardAllocation(type: TransactionType): boolean {
