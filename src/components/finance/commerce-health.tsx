@@ -38,13 +38,13 @@ export function CommerceHealth() {
           <HeartPulse className="mr-2 inline h-3.5 w-3.5" /> Commerce health
         </h2>
         <p className="mt-2 text-sm text-muted-foreground">
-          Every payment in Frass has one — and only one — final outcome. This is the record of those
-          outcomes.
+          Every payment request in Frass has one — and only one — final outcome. This is the record
+          of those outcomes.
         </p>
         <p className="mt-1 text-xs text-muted-foreground">
-          <strong>Let's break it down:</strong> think of it as the pulse of the shop
-          till. A healthy pulse means money is landing cleanly. A weak one means Builders are being
-          let down somewhere, and it tells you exactly where.
+          <strong>Let's break it down:</strong> Frass hands the customer to the seller's own payment
+          page. It can see who got that far, but it cannot yet confirm the money arrived, so nothing
+          here is counted as verified income.
         </p>
 
         <div className="mt-4 flex flex-wrap gap-2">
