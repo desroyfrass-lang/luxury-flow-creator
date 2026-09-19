@@ -377,6 +377,9 @@ export function receiptBreakdown(receipt: Receipt): ReceiptLine[] {
     value: money(receipt.net, c),
     kind: "net",
   });
+  if (receipt.verification) {
+    lines.push({ label: "Payment check", value: receipt.verification.label, kind: "note" });
+  }
   lines.push({ label: "Status", value: RECEIPT_STATUS[receipt.status].label, kind: "note" });
   return lines;
 }
