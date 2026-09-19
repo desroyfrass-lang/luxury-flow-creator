@@ -1,36 +1,27 @@
 // ─────────────────────────────────────────────────────────────────────────────
-// STEP 5 · SLICE 2 — TRANSACTION-TYPE-AWARE ALLOCATION
+// UNIVERSAL FRASS ALLOCATION — the one canonical split.
 //
-// Different kinds of money are split differently. Before this file, one
-// constitutional 90/10 rule was applied to everything, including a Builder's
-// own direct Frass Card sale. That is no longer true.
+// Founder-approved economic correction: the universal 90/10 rule applies to
+// every applicable Frass earning transaction. There is no special
+// direct-personal-sale exception any more.
 //
-// The Founder-approved rule for a Builder's OWN direct Frass Card sale:
-//
-//   $100 USD gross  =  $90 Builder available
-//                    + $3  Builder Protected Vault / Project Fund (still the
-//                          Builder's own money, protected for their business)
-//                    + $5  Frass Card service / transaction allocation
+//   $100 USD gross  =  $90 Builder / Creator / earner
+//                    + $3  Frass infrastructure / platform
+//                    + $3  Reserve Vault (ecosystem-held, NOT the Builder's)
 //                    + $2  Frass Foundation
-//                    + $0  Founder personally
-//                    + $0  Co-Founder personally
+//                    + $1  Founder / Owner
+//                    + $1  Co-Founder
 //
-// The same percentages apply in whatever currency the customer actually paid:
-// 100 GBP = 90/3/5/2 GBP, 100 CAD = 90/3/5/2 CAD, 100 JMD = 90/3/5/2 JMD.
-// USD is only Frass's reporting currency; nothing is converted before the split.
+// MULTI-CURRENCY: the percentages are applied in the currency the customer
+// actually paid. 100 GBP splits into 90/3/3/2/1/1 GBP; 100 JMD into
+// 90/3/3/2/1/1 JMD. USD is Frass's reporting/base currency only — nothing is
+// converted before the split.
 //
-// This rule applies to ONE transaction type only. Marketplace / Gallery
-// commerce, Shopify / Frass Kicks brand commerce, affiliate commission,
-// referral bonuses and grants each keep their own economics, untouched here.
-
-//
-// IMPORTANT (Slice 1 truth carried forward): nothing in this file posts money.
-// Frass has no payment-provider confirmation rail yet, so every figure produced
-// here is an EXPECTED allocation — what will happen once a payment is verified.
+// IMPORTANT: nothing in this file posts money. Every figure is an EXPECTED
+// allocation until a payment provider confirms the payment.
 // ─────────────────────────────────────────────────────────────────────────────
 
 import { BASE_REPORTING_CURRENCY, normalizeCurrency } from "./currency";
-
 
 export const TRANSACTION_TYPES = [
   "direct-card-sale",
@@ -43,53 +34,50 @@ export const TRANSACTION_TYPES = [
 
 export type TransactionType = (typeof TRANSACTION_TYPES)[number];
 
-/** The only allocation table this slice makes authoritative. */
-export const DIRECT_CARD_ALLOCATION = {
-  /** Builder's own spendable share. */
-  builderAvailable: 90,
-  /** Builder's own money, protected for their project/business. */
-  builderProtectedVault: 3,
-  /** Frass Card service / transaction allocation. */
-  frassCardService: 5,
+/** The canonical universal allocation table. */
+export const UNIVERSAL_ALLOCATION = {
+  /** The Builder / Creator / earner's share. */
+  earner: 90,
+  /** Frass infrastructure / platform. */
+  infrastructure: 3,
+  /** Reserve Vault — ecosystem-held, never the Builder's own money. */
+  reserve: 3,
   /** Frass Foundation. */
   foundation: 2,
-  /** Owners take nothing personally from a Builder's own direct sale. */
-  founder: 0,
-  coFounder: 0,
+  /** Founder / Owner. */
+  founder: 1,
+  /** Co-Founder. */
+  coFounder: 1,
 } as const;
 
-/** What the Builder keeps in total (spendable + protected). */
-export const DIRECT_CARD_BUILDER_TOTAL_PCT =
-  DIRECT_CARD_ALLOCATION.builderAvailable + DIRECT_CARD_ALLOCATION.builderProtectedVault;
+/** Everything the Frass ecosystem keeps. */
+export const ECOSYSTEM_TOTAL_PCT =
+  UNIVERSAL_ALLOCATION.infrastructure +
+  UNIVERSAL_ALLOCATION.reserve +
+  UNIVERSAL_ALLOCATION.foundation +
+  UNIVERSAL_ALLOCATION.founder +
+  UNIVERSAL_ALLOCATION.coFounder;
 
-/** What Frass keeps in total from a direct card sale. */
-export const DIRECT_CARD_FRASS_TOTAL_PCT =
-  DIRECT_CARD_ALLOCATION.frassCardService + DIRECT_CARD_ALLOCATION.foundation;
+/** What the earner keeps. */
+export const EARNER_TOTAL_PCT = UNIVERSAL_ALLOCATION.earner;
 
-export type DirectCardAllocation = {
+export type UniversalAllocation = {
   gross: number;
-  /**
-   * The ACTUAL transaction currency (ISO 4217). The percentages below are
-   * applied in this currency — nothing is converted before allocation.
-   */
+  /** The ACTUAL transaction currency (ISO 4217); nothing is converted. */
   currency: string;
-  /** Builder's spendable share (90%) — expected, never available yet. */
-  builderAvailable: number;
-  /** Builder's protected project fund (3%) — the Builder's own money. */
-  builderProtectedVault: number;
-  /** Frass Card service allocation (5%). */
-  frassCardService: number;
-  /** Frass Foundation (2%). */
+  /** The Builder / Creator / earner's 90% — expected, not verified money. */
+  earner: number;
+  infrastructure: number;
+  /** Ecosystem Reserve Vault (3%) — Frass-held, not the Builder's money. */
+  reserve: number;
   foundation: number;
-  founder: 0;
-  coFounder: 0;
-  /** Everything Frass keeps (7%). */
-  frassTotal: number;
-  /** Everything the Builder keeps (93%). */
-  builderTotal: number;
+  founder: number;
+  coFounder: number;
+  /** Everything Frass keeps (10%). */
+  ecosystemTotal: number;
   /**
-   * Slice 1 rule: no payment provider has confirmed this money, so these are
-   * expected figures only. Never "available", "settled", "earned" or "paid".
+   * No payment provider has confirmed this money at calculation time, so these
+   * are expected figures. Never "available", "settled", "earned" or "paid".
    */
   verified: false;
 };
@@ -97,47 +85,47 @@ export type DirectCardAllocation = {
 const round = (n: number) => Math.round((Number(n) || 0) * 100) / 100;
 
 /**
- * Work out the expected split of a Builder's own direct Frass Card sale, in
- * the currency the customer actually paid in. 100 GBP splits into 90/3/5/2 GBP;
- * 100 JMD into 90/3/5/2 JMD. Calculation only — nothing is written or credited.
+ * Work out the expected universal split of an earning transaction, in the
+ * currency the customer actually paid. Calculation only — nothing is written
+ * or credited here.
  */
-export function allocateDirectCardSale(
+export function allocateEarning(
   gross: number,
   currency: string = BASE_REPORTING_CURRENCY,
-): DirectCardAllocation {
+): UniversalAllocation {
   const g = round(Math.max(0, gross));
   const pct = (p: number) => round((g * p) / 100);
-  const builderAvailable = pct(DIRECT_CARD_ALLOCATION.builderAvailable);
-  const builderProtectedVault = pct(DIRECT_CARD_ALLOCATION.builderProtectedVault);
-  const frassCardService = pct(DIRECT_CARD_ALLOCATION.frassCardService);
-  const foundation = pct(DIRECT_CARD_ALLOCATION.foundation);
+  const infrastructure = pct(UNIVERSAL_ALLOCATION.infrastructure);
+  const reserve = pct(UNIVERSAL_ALLOCATION.reserve);
+  const foundation = pct(UNIVERSAL_ALLOCATION.foundation);
+  const founder = pct(UNIVERSAL_ALLOCATION.founder);
+  const coFounder = pct(UNIVERSAL_ALLOCATION.coFounder);
   return {
     gross: g,
     currency: normalizeCurrency(currency) ?? BASE_REPORTING_CURRENCY,
-    builderAvailable,
-    builderProtectedVault,
-    frassCardService,
+    earner: pct(UNIVERSAL_ALLOCATION.earner),
+    infrastructure,
+    reserve,
     foundation,
-    founder: 0,
-    coFounder: 0,
-    frassTotal: round(frassCardService + foundation),
-    builderTotal: round(builderAvailable + builderProtectedVault),
+    founder,
+    coFounder,
+    ecosystemTotal: round(infrastructure + reserve + foundation + founder + coFounder),
     verified: false,
   };
 }
 
-
-/** Is this transaction type governed by the direct Frass Card rule? */
-export function usesDirectCardAllocation(type: TransactionType): boolean {
-  return type === "direct-card-sale";
+/** The universal rule applies to every listed transaction type. */
+export function usesUniversalAllocation(type: TransactionType): boolean {
+  return TRANSACTION_TYPES.includes(type);
 }
 
-/** Plain-English statement of the direct-card rule, used everywhere it is shown. */
-export const DIRECT_CARD_ALLOCATION_NOTE =
-  `On your own Frass Card sale: ${DIRECT_CARD_ALLOCATION.builderAvailable}% yours to use · ` +
-  `${DIRECT_CARD_ALLOCATION.builderProtectedVault}% yours, protected in your Project Fund · ` +
-  `${DIRECT_CARD_ALLOCATION.frassCardService}% Frass Card service · ` +
-  `${DIRECT_CARD_ALLOCATION.foundation}% Frass Foundation. The Founder and Co-Founder take nothing personally.`;
+/** Plain-English statement of the universal rule, used everywhere it is shown. */
+export const UNIVERSAL_ALLOCATION_NOTE =
+  `On every Frass earning: ${UNIVERSAL_ALLOCATION.earner}% yours · ` +
+  `${UNIVERSAL_ALLOCATION.infrastructure}% Frass infrastructure · ` +
+  `${UNIVERSAL_ALLOCATION.reserve}% Reserve Vault (held by Frass, not your money) · ` +
+  `${UNIVERSAL_ALLOCATION.foundation}% Frass Foundation · ` +
+  `${UNIVERSAL_ALLOCATION.founder}% Founder · ${UNIVERSAL_ALLOCATION.coFounder}% Co-Founder.`;
 
 export const EXPECTED_ALLOCATION_LABEL = "Expected allocation (not verified yet)";
 

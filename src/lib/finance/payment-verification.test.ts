@@ -7,7 +7,7 @@ import {
   matchesOrder,
 } from "@/lib/finance/payment-verification";
 import { verifySignature } from "@/lib/finance/payment-verification.server";
-import { postProtectedFundEntry } from "@/lib/finance/protected-fund.server";
+import { postReserveVaultEntry } from "@/lib/finance/reserve-vault.server";
 import { saleStatus } from "@/lib/daily/money-move-link";
 import {
   BASE_REPORTING_CURRENCY,
@@ -15,7 +15,7 @@ import {
   sumByCurrency,
   usdEquivalent,
 } from "@/lib/finance/currency";
-import { DIRECT_CARD_ALLOCATION, allocateDirectCardSale } from "@/lib/finance/allocation";
+import { UNIVERSAL_ALLOCATION, allocateEarning } from "@/lib/finance/allocation";
 
 const SECRET = "test-secret-at-least-16-chars";
 const order = {
@@ -85,7 +85,7 @@ describe("payment verification — Slice 3", () => {
     expect(`${s.label} ${s.note}`.toLowerCase()).not.toMatch(/settled|cleared|earned|withdrawn/);
   });
 
-  it("cannot post the protected 3% without a recorded provider confirmation", async () => {
+  it("cannot record the 3% Reserve Vault without a recorded provider confirmation", async () => {
     const base = {
       ownerId: order.seller_id,
       sourceKind: "card-order" as const,
@@ -93,9 +93,9 @@ describe("payment verification — Slice 3", () => {
       gross: 100,
       currency: "USD",
     };
-    expect((await postProtectedFundEntry(base)).posted).toBe(false);
+    expect((await postReserveVaultEntry(base)).posted).toBe(false);
     // A faked verification date alone is not enough.
-    expect((await postProtectedFundEntry({ ...base, verifiedAt: "2026-01-01" })).posted).toBe(false);
+    expect((await postReserveVaultEntry({ ...base, verifiedAt: "2026-01-01" })).posted).toBe(false);
   });
 
   it("verifies a sale in its own supported currency, not only USD", () => {
@@ -114,15 +114,14 @@ describe("payment verification — Slice 3", () => {
     expect(matchesOrder({ ...order, currency: "" }, { ...event, currency: "" }).ok).toBe(false);
   });
 
-  it("applies 90/3/5/2/0 in the original currency, never converted", () => {
+  it("applies 90/3/3/2/1/1 in the original currency, never converted", () => {
     for (const currency of ["USD", "GBP", "CAD", "EUR", "JMD"]) {
-      const a = allocateDirectCardSale(100, currency);
+      const a = allocateEarning(100, currency);
       expect(a.currency).toBe(currency);
-      expect([a.builderAvailable, a.builderProtectedVault, a.frassCardService, a.foundation]).toEqual([
-        90, 3, 5, 2,
+      expect([a.earner, a.infrastructure, a.reserve, a.foundation, a.founder, a.coFounder]).toEqual([
+        90, 3, 3, 2, 1, 1,
       ]);
-      expect(a.founder).toBe(0);
-      expect(a.coFounder).toBe(0);
+      expect(a.ecosystemTotal).toBe(10);
     }
   });
 
@@ -166,8 +165,8 @@ describe("payment verification — Slice 3", () => {
     });
   });
 
-  it("cannot post a protected-fund entry in an unsupported currency", async () => {
-    const posted = await postProtectedFundEntry({
+  it("cannot record a Reserve Vault entry in an unsupported currency", async () => {
+    const posted = await postReserveVaultEntry({
       ownerId: order.seller_id,
       sourceKind: "card-order",
       sourceRef: order.id,
@@ -179,13 +178,13 @@ describe("payment verification — Slice 3", () => {
     expect(posted.posted).toBe(false);
   });
 
-  it("keeps the Slice 2 USD allocation unchanged", () => {
-    const a = allocateDirectCardSale(100);
-    expect(a.builderAvailable).toBe(90);
-    expect(a.builderProtectedVault).toBe(3);
-    expect(a.frassCardService).toBe(5);
+  it("keeps the universal USD allocation unchanged", () => {
+    const a = allocateEarning(100);
+    expect(a.earner).toBe(90);
+    expect(a.infrastructure).toBe(3);
+    expect(a.reserve).toBe(3);
     expect(a.foundation).toBe(2);
-    expect(DIRECT_CARD_ALLOCATION.founder).toBe(0);
-    expect(DIRECT_CARD_ALLOCATION.coFounder).toBe(0);
+    expect(UNIVERSAL_ALLOCATION.founder).toBe(1);
+    expect(UNIVERSAL_ALLOCATION.coFounder).toBe(1);
   });
 });

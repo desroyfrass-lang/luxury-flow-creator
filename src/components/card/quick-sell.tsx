@@ -246,8 +246,8 @@ export function QuickSellPanel({
           <p className="font-medium">On a {money(preview.gross, preview.currency)} sale — expected split (not verified yet)</p>
           <ul className="mt-2 space-y-1 text-xs text-muted-foreground">
             <li className="text-foreground">Yours to use: {money(preview.netToSeller, preview.currency)} (90% less your provider&apos;s estimated fee)</li>
-            <li>Yours, protected in your Project Fund: {money(preview.protectedVault, preview.currency)} (3%)</li>
-            <li>Frass Card service: {money(preview.frassCardService, preview.currency)} (5%) · Frass Foundation: {money(preview.foundation, preview.currency)} (2%)</li>
+            <li>Frass ecosystem: {money(preview.platformFee, preview.currency)} (10% in total)</li>
+            <li>Frass infrastructure: {money(preview.infrastructure, preview.currency)} (3%) · Reserve Vault, held by Frass: {money(preview.reserve, preview.currency)} (3%) · Frass Foundation: {money(preview.foundation, preview.currency)} (2%) · Founder: {money(preview.founder, preview.currency)} (1%) · Co-Founder: {money(preview.coFounder, preview.currency)} (1%)</li>
             <li>Estimated processing fee: {money(preview.processingFeeEstimate, preview.currency)} (charged by your own provider, an estimate only)</li>
             <li>{ALLOCATION_NOTE}</li>
             <li>{EXPECTED_ALLOCATION_NOTE}</li>

@@ -14,7 +14,7 @@
 // account, the same way a market vendor keeps their own cash box.
 // ─────────────────────────────────────────────────────────────────────────────
 
-import { DIRECT_CARD_ALLOCATION_NOTE, allocateDirectCardSale } from "./finance/allocation";
+import { UNIVERSAL_ALLOCATION_NOTE, allocateEarning } from "./finance/allocation";
 import { BASE_REPORTING_CURRENCY, formatMoney } from "./finance/currency";
 
 
@@ -80,24 +80,27 @@ export type CardSettlement = {
   gross: number;
   /** The actual transaction currency (ISO 4217) — never assumed to be USD. */
   currency: string;
-  /** Everything Frass keeps on a direct card sale (service + Foundation). */
+  /** The whole 10% Frass ecosystem allocation. */
   platformFee: number;
-  /** 5% Frass Card service / transaction allocation. */
-  frassCardService: number;
+  /** 3% Frass infrastructure / platform. */
+  infrastructure: number;
+  /** 3% Reserve Vault — held by Frass, NOT the Builder's money. */
+  reserve: number;
   /** 2% Frass Foundation. */
   foundation: number;
-  /** 3% — the Builder's OWN money, protected for their project. */
-  protectedVault: number;
+  /** 1% Founder / Owner. */
+  founder: number;
+  /** 1% Co-Founder. */
+  coFounder: number;
   processingFeeEstimate: number;
-  /** The Builder's spendable 90% share, less their provider's estimated fee. */
+  /** The Builder's 90% share, less their provider's estimated fee. */
   netToSeller: number;
 };
 
 /**
- * STEP 5 · SLICE 2 — a Builder's own direct Frass Card sale uses the
- * direct-card allocation only (90 / 3 protected / 5 service / 2 Foundation /
- * 0 Founder / 0 Co-Founder). The old shared 90/3/3/2/1/1 constitutional split
- * is no longer executable on this path.
+ * The universal Frass allocation applies here, like everywhere else:
+ * 90 earner / 3 infrastructure / 3 Reserve Vault / 2 Foundation / 1 Founder /
+ * 1 Co-Founder.
  *
  * The split is worked out in the currency the customer actually pays in.
  * Calculation only: nothing here is credited, and none of it is verified money.
@@ -110,22 +113,25 @@ export function settle(
 ): CardSettlement {
   const round = (n: number) => Math.round(n * 100) / 100;
   const gross = round(Math.max(0, unitPrice) * Math.max(1, quantity));
-  const a = allocateDirectCardSale(gross, currency);
+  const a = allocateEarning(gross, currency);
   const processingFeeEstimate = gross > 0 ? estimateProcessingFee(gross, provider) : 0;
   return {
     gross,
     currency: a.currency,
-    platformFee: a.frassTotal,
-    frassCardService: a.frassCardService,
+    platformFee: a.ecosystemTotal,
+    infrastructure: a.infrastructure,
+    reserve: a.reserve,
     foundation: a.foundation,
-    protectedVault: a.builderProtectedVault,
+    founder: a.founder,
+    coFounder: a.coFounder,
     processingFeeEstimate,
-    netToSeller: round(a.builderAvailable - processingFeeEstimate),
+    netToSeller: round(a.earner - processingFeeEstimate),
   };
 }
 
 
-export const ALLOCATION_NOTE = DIRECT_CARD_ALLOCATION_NOTE;
+export const ALLOCATION_NOTE = UNIVERSAL_ALLOCATION_NOTE;
+
 
 
 /** Formats in the currency given; USD is only the fallback for legacy callers. */

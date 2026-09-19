@@ -175,7 +175,7 @@ function WalletHub() {
               <Stat
                 label="Frass allocation (expected)"
                 value={money(s.allocation, s.currency)}
-                note="5% card service + 2% Foundation, once a payment is confirmed."
+                note="The 10% ecosystem allocation, once a payment is confirmed."
               />
               <Stat
                 label="Expected to you"
@@ -313,7 +313,7 @@ function WalletHub() {
               value={money(s.settled, s.currency)}
               note="What you marked as paid. Not verified by a payment provider."
             />
-            <Stat label="Frass allocation" value={money(s.allocation, s.currency)} note="5% Frass Card service + 2% Foundation. A further 3% is yours, protected." />
+            <Stat label="Frass allocation" value={money(s.allocation, s.currency)} note="The 10% ecosystem allocation: 3% infrastructure, 3% Reserve Vault, 2% Foundation, 1% Founder, 1% Co-Founder." />
             <Stat label="Processing (est.)" value={money(s.processing, s.currency)} note="Card fees, estimated." />
             <Stat label="Net to you (est.)" value={money(s.net, s.currency)} note="What you likely declare." />
           </div>
