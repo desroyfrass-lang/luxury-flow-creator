@@ -2,6 +2,7 @@ import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import { receiptKind, type Receipt, type ReceiptStatus } from "@/lib/finance/receipts";
+import { receiptStatusForOrder, unverifiedReceiptNote } from "@/lib/finance/money-truth";
 
 // ─────────────────────────────────────────────────────────────────────────────
 // FRASS-0433 — Receipt retrieval.
@@ -15,18 +16,10 @@ import { receiptKind, type Receipt, type ReceiptStatus } from "@/lib/finance/rec
 
 const round = (n: number) => Math.round((Number(n) || 0) * 100) / 100;
 
-function orderStatus(status: string): ReceiptStatus {
-  switch (status) {
-    case "paid":
-      return "settled";
-    case "refunded":
-      return "refunded";
-    case "cancelled":
-      return "cancelled";
-    default:
-      return "pending";
-  }
-}
+// STEP 5 · SLICE 1 — a seller ticking "paid" is the seller's own word, not a
+// payment provider's confirmation. Those receipts stay PENDING (awaiting
+// verification) so no balance can call the money available.
+const orderStatus = receiptStatusForOrder;
 
 function orderKind(reference: string | null, quick: boolean): string {
   if (reference?.startsWith("gift")) return "gift_received";
@@ -100,7 +93,10 @@ export const listMyReceipts = createServerFn({ method: "GET" })
         direction: "in",
         source: "frass-card",
         title: listing?.title ?? receiptKind(kind).label,
-        description: o.quantity > 1 ? `${o.quantity} × ${round(o.unit_price)}` : null,
+        description: unverifiedReceiptNote(
+          o.status,
+          o.quantity > 1 ? `${o.quantity} × ${round(o.unit_price)}` : null,
+        ),
         counterparty: o.buyer_name || null,
         gross: round(o.subtotal),
         platformAllocation: round(o.platform_fee),

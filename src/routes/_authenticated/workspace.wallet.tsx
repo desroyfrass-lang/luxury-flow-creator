@@ -164,7 +164,11 @@ function WalletHub() {
               <Banknote className="mr-2 inline h-3.5 w-3.5" /> Available balance
             </h2>
             <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-              <Stat label="Settled" value={money(s.settled, s.currency)} note="Marked paid by you." />
+              <Stat
+                label="Marked paid — not verified"
+                value={money(s.settled, s.currency)}
+                note="Your own record. Frass has not confirmed this with a payment provider."
+              />
               <Stat label="Awaiting payment" value={money(s.pending, s.currency)} note="Started, not yet confirmed." />
               <Stat label="Frass allocation" value={money(s.allocation, s.currency)} note="The constitutional 10%." />
               <Stat label="Estimated to you" value={money(s.net, s.currency)} note="After allocation and processing." />
@@ -292,7 +296,11 @@ function WalletHub() {
             <Receipt className="mr-2 inline h-3.5 w-3.5" /> Taxes
           </h2>
           <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-            <Stat label="Gross received" value={money(s.settled, s.currency)} note="Everything paid to you." />
+            <Stat
+              label="Gross marked paid"
+              value={money(s.settled, s.currency)}
+              note="What you marked as paid. Not verified by a payment provider."
+            />
             <Stat label="Frass allocation" value={money(s.allocation, s.currency)} note="Platform 10%." />
             <Stat label="Processing (est.)" value={money(s.processing, s.currency)} note="Card fees, estimated." />
             <Stat label="Net to you (est.)" value={money(s.net, s.currency)} note="What you likely declare." />

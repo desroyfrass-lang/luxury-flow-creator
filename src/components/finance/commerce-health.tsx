@@ -28,7 +28,7 @@ export function CommerceHealth() {
     queryFn: () => healthFn({ data: { days } }),
   });
 
-  const rate = data?.successRate;
+  const rate = data?.handoffRate;
   const tone = rate == null ? "quiet" : rate >= 90 ? "good" : rate >= 70 ? "watch" : "poor";
 
   return (
@@ -38,13 +38,13 @@ export function CommerceHealth() {
           <HeartPulse className="mr-2 inline h-3.5 w-3.5" /> Commerce health
         </h2>
         <p className="mt-2 text-sm text-muted-foreground">
-          Every payment in Frass has one — and only one — final outcome. This is the record of those
-          outcomes.
+          Every payment request in Frass has one — and only one — final outcome. This is the record
+          of those outcomes.
         </p>
         <p className="mt-1 text-xs text-muted-foreground">
-          <strong>Let's break it down:</strong> think of it as the pulse of the shop
-          till. A healthy pulse means money is landing cleanly. A weak one means Builders are being
-          let down somewhere, and it tells you exactly where.
+          <strong>Let's break it down:</strong> Frass hands the customer to the seller's own payment
+          page. It can see who got that far, but it cannot yet confirm the money arrived, so nothing
+          here is counted as verified income.
         </p>
 
         <div className="mt-4 flex flex-wrap gap-2">
@@ -66,19 +66,23 @@ export function CommerceHealth() {
           <>
             <div className="mt-5 grid gap-3 sm:grid-cols-3">
               <Metric
-                label="Success rate"
+                label="Reached the payment page"
                 value={rate == null ? "—" : `${rate}%`}
                 note={
                   rate == null
-                    ? "No payments have settled in this window yet."
+                    ? "No requests have closed in this window yet."
                     : tone === "good"
-                      ? "Healthy. Payments are landing."
+                      ? "Healthy. Customers are reaching the payment page."
                       : tone === "watch"
-                        ? "Worth watching — some Builders are not getting paid."
-                        : "Attention needed. Too many payments are failing."
+                        ? "Worth watching — some customers never reach the payment page."
+                        : "Attention needed. Too many requests never reach the payment page."
                 }
               />
-              <Metric label="Paid" value={money(data.paidValue, data.currency)} note={`${data.successful} completed`} />
+              <Metric
+                label="Handed over (not verified)"
+                value={money(data.handoffValue, data.currency)}
+                note={`${data.handedOff} sent to the seller's payment page. Frass has not confirmed any of it arrived.`}
+              />
               <Metric label="Still open" value={String(data.open)} note="Sent, not yet settled." />
             </div>
 
