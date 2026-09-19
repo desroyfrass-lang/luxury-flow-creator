@@ -15,9 +15,14 @@
 //                    + $0  Founder personally
 //                    + $0  Co-Founder personally
 //
+// The same percentages apply in whatever currency the customer actually paid:
+// 100 GBP = 90/3/5/2 GBP, 100 CAD = 90/3/5/2 CAD, 100 JMD = 90/3/5/2 JMD.
+// USD is only Frass's reporting currency; nothing is converted before the split.
+//
 // This rule applies to ONE transaction type only. Marketplace / Gallery
 // commerce, Shopify / Frass Kicks brand commerce, affiliate commission,
 // referral bonuses and grants each keep their own economics, untouched here.
+
 //
 // IMPORTANT (Slice 1 truth carried forward): nothing in this file posts money.
 // Frass has no payment-provider confirmation rail yet, so every figure produced
