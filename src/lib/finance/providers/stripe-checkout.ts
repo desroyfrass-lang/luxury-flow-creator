@@ -18,9 +18,17 @@ import { ORDER_METADATA_KEY, SELLER_METADATA_KEY, toMinorUnits } from "./stripe"
 export const STRIPE_NOT_CONNECTED =
   "Stripe test payments are not connected yet.";
 
-/** A live key must never be used by this bridge. Test mode only, for now. */
+/**
+ * A live key must never be used by this bridge. Test mode only, for now.
+ * Accepts a standard test secret key (`sk_test_`) or a restricted test key
+ * (`rk_test_`), both of which Stripe only ever issues in test mode. Live keys
+ * (`sk_live_`, `rk_live_`) and every other format are refused.
+ */
 export function isTestSecretKey(key: string | null | undefined): boolean {
-  return typeof key === "string" && /^sk_test_[A-Za-z0-9_]{10,}$/.test(key.trim());
+  return (
+    typeof key === "string" &&
+    /^(?:sk|rk)_test_[A-Za-z0-9_]{10,}$/.test(key.trim())
+  );
 }
 
 export type OrderForCheckout = {

@@ -72,10 +72,18 @@ describe("Stripe test-mode checkout bridge — Slice 5", () => {
     expect(checkoutIdempotencyKey(ORDER)).toBe(`frass-card-order-${ORDER}`);
   });
 
-  it("accepts a Stripe TEST key only, and names the honest state without one", () => {
+  it("accepts Stripe TEST keys (sk_test_ and rk_test_), rejects live and malformed", () => {
+    // Standard and restricted TEST keys are both accepted.
     expect(isTestSecretKey("sk_test_51AbcdEfghIjklmnop")).toBe(true);
+    expect(isTestSecretKey("rk_test_51AbcdEfghIjklmnop")).toBe(true);
+    // Live keys of either flavor are refused.
     expect(isTestSecretKey("sk_live_51AbcdEfghIjklmnop")).toBe(false);
+    expect(isTestSecretKey("rk_live_51AbcdEfghIjklmnop")).toBe(false);
+    // Malformed / unrelated values are refused.
     expect(isTestSecretKey("")).toBe(false);
+    expect(isTestSecretKey("not-a-key")).toBe(false);
+    expect(isTestSecretKey("sk_test_short")).toBe(false);
+    expect(isTestSecretKey("pk_test_51AbcdEfghIjklmnop")).toBe(false);
     expect(isTestSecretKey(null)).toBe(false);
     expect(STRIPE_NOT_CONNECTED).toMatch(/not connected yet/i);
   });
