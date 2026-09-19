@@ -14,7 +14,7 @@
 // account, the same way a market vendor keeps their own cash box.
 // ─────────────────────────────────────────────────────────────────────────────
 
-import { DIRECT_CARD_ALLOCATION_NOTE, allocateDirectCardSale } from "./finance/allocation";
+import { UNIVERSAL_ALLOCATION_NOTE, allocateEarning } from "./finance/allocation";
 import { BASE_REPORTING_CURRENCY, formatMoney } from "./finance/currency";
 
 
