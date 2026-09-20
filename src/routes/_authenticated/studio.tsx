@@ -569,8 +569,8 @@ function StudioPage() {
         <main
           className={`fv-studio-stage relative mx-auto grid w-full min-w-0 max-w-[1600px] gap-5 overflow-x-clip px-3 py-5 sm:px-5 ${
             frassyOpen
-              ? "xl:grid-cols-[minmax(0,1fr)_minmax(390px,440px)]"
-              : "xl:grid-cols-[minmax(0,1fr)_320px]"
+              ? "min-[1180px]:grid-cols-[minmax(0,1fr)_minmax(500px,620px)]"
+              : "min-[1180px]:grid-cols-[minmax(0,1fr)_320px]"
           }`}
         >
           <div className="fv-ceiling-light" aria-hidden="true" />
