@@ -376,24 +376,37 @@ function StudioPage() {
         <main className="fv-studio-stage relative mx-auto grid max-w-[1600px] gap-5 px-3 py-5 sm:px-5 xl:grid-cols-[minmax(0,1fr)_320px]">
           <div className="fv-ceiling-light" aria-hidden="true" />
           <section className="relative z-10 min-w-0 space-y-3" aria-label="Command centre">
-            <div className="fv-main-monitor relative grid min-h-[34vh] place-items-center overflow-hidden p-5 sm:min-h-[38vh]">
+            <div className="fv-control-room relative min-h-[34vh] overflow-hidden sm:min-h-[38vh]">
+              <div className="fv-acoustic-wall fv-acoustic-wall-left" aria-hidden="true" />
+              <div className="fv-acoustic-wall fv-acoustic-wall-right" aria-hidden="true" />
+              <div className="fv-studio-speaker fv-speaker-left" aria-hidden="true"><span /><span /></div>
+              <div className="fv-studio-speaker fv-speaker-right" aria-hidden="true"><span /><span /></div>
+              <div className="fv-main-monitor absolute inset-x-[12%] top-5 bottom-[4.6rem] grid place-items-center overflow-hidden p-5 sm:inset-x-[14%] sm:top-6">
               {preview ? (
-                <div className="w-full max-w-xl text-center">
+                <div className="relative z-10 w-full max-w-xl text-center">
                   <p className="text-xs font-semibold text-accent">{preview.label}</p>
                   <audio controls src={preview.url} className="mt-3 w-full" />
                   <p className="mt-2 text-xs text-muted-foreground">Cleaned and verified. Not A1 Master approved.</p>
                 </div>
               ) : (
-                <div className="max-w-md text-center">
+                <div className="relative z-10 max-w-md text-center">
                   <span className="fv-monitor-orbit mx-auto grid h-20 w-20 place-items-center rounded-full"><MonitorPlay className="h-9 w-9 text-accent" /></span>
                   <p className="mt-5 font-display text-3xl normal-case leading-none sm:text-5xl">{active ? active.title : "Your next production"}</p>
                   <p className="mt-1 text-sm text-muted-foreground">{active ? `${task?.label ?? active.destination} · no verified output yet` : "Pick what you are making below."}</p>
                 </div>
               )}
-              <span className="fv-monitor-sheen pointer-events-none absolute inset-0" aria-hidden="true" />
+                <span className="fv-monitor-sheen pointer-events-none absolute inset-0" aria-hidden="true" />
               <div className="absolute bottom-3 left-4 hidden gap-2 text-xs uppercase text-muted-foreground sm:flex">
                 <span className="rounded-full border border-border bg-background/80 px-3 py-1">Preview</span>
                 <span className="rounded-full border border-border bg-background/80 px-3 py-1">{preview ? "Cleaned output" : "No output claimed"}</span>
+              </div>
+              </div>
+              <div className="fv-console-bridge absolute inset-x-[5%] bottom-0 h-[5.7rem] sm:inset-x-[8%]" aria-hidden="true">
+                <div className="fv-transport-strip">
+                  <span className="fv-transport-dot" /><span className="fv-transport-dot" /><span className="fv-transport-play">▶</span>
+                  <span className="fv-mini-wave"><i /><i /><i /><i /><i /><i /><i /><i /><i /></span>
+                  <span className="fv-level-meter"><i /><i /><i /><i /><i /></span>
+                </div>
               </div>
             </div>
 
@@ -627,14 +640,19 @@ function EditWorkspace({ directed, depth, audioLane }: { directed: boolean; dept
     return <p className="text-sm text-muted-foreground">Directed mode keeps editing out of your way. Move to Creator depth in Production to open the timeline and inspector.</p>;
   }
   return (
-    <div className="space-y-3">
-      <div>
+    <div className="fv-edit-console space-y-3">
+      <div className="fv-edit-transport flex items-center gap-3 rounded-full px-4 py-2">
+        <span className="fv-transport-button" aria-hidden="true">▶</span>
+        <span className="font-mono text-xs text-foreground">00:00:00</span>
+        <span className="min-w-0 flex-1 text-right text-xs text-muted-foreground">Timeline · {producer ? "Producer controls" : "Creator controls"}</span>
+      </div>
+      <div className="fv-track-bed rounded-2xl p-3">
         <h2 className="flex items-center gap-2 text-sm font-medium"><Scissors className="h-4 w-4 text-accent" /> Timeline</h2>
-        <div className="mt-2 space-y-2">
+        <div className="mt-3 space-y-2">
           {TIMELINE_TRACKS.slice(0, producer ? 4 : 2).map((track) => (
-            <div key={track.name} className="grid gap-2 sm:grid-cols-[140px_1fr]">
+            <div key={track.name} className="fv-track-row grid gap-2 rounded-xl p-2 sm:grid-cols-[140px_1fr]">
               <span className="truncate text-xs text-muted-foreground">{track.name}</span>
-              <div className="flex h-9 gap-1 rounded-sm bg-background p-1">{[3, 5, 2, 4].map((flex, i) => <span key={i} style={{ flex }} className={`${track.tone} rounded-sm`} />)}</div>
+              <div className="fv-waveform-lane flex h-9 items-center gap-1 rounded-lg px-2">{[8, 14, 20, 11, 24, 16, 9, 19, 13, 22, 10, 17, 7, 15, 21, 12].map((height, i) => <span key={i} className={`${track.tone} fv-wave-bar`} style={{ height }} />)}</div>
             </div>
           ))}
         </div>

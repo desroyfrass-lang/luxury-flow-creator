@@ -16,7 +16,7 @@ export function ControlDepthBar({
   const active = controlDepth(depth);
 
   return (
-    <section className="border-y border-border bg-card/40 px-3 py-4 sm:px-5">
+    <section className="fv-depth-console rounded-2xl px-3 py-4 sm:px-5">
       <div className="flex flex-wrap items-center justify-between gap-2">
         <h2 className="text-xs uppercase text-muted-foreground">Creator Control</h2>
         <p className="text-xs text-muted-foreground">
@@ -34,7 +34,7 @@ export function ControlDepthBar({
               variant="outline"
               disabled={disabled}
               onClick={() => onChange(d.id)}
-              className={`h-auto min-h-14 justify-start whitespace-normal px-3 py-3 text-left ${
+              className={`fv-depth-control h-auto min-h-14 justify-start whitespace-normal rounded-2xl px-3 py-3 text-left ${
                 on
                   ? "border-accent bg-accent/10 text-accent"
                   : "border-border bg-background/40 text-muted-foreground"
