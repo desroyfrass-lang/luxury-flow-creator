@@ -77,7 +77,7 @@ import {
 import { loadMomentum, momentumContext, readMomentum } from "@/lib/frassy/momentum";
 import { PlainEnglishMessage } from "@/components/frassy/everyday-language-toggle";
 import { useLearningLevel } from "@/hooks/use-learning-level";
-import { learningLevelContext } from "@/lib/frassy/learning-levels";
+import { learningLevelContext, levelMeta, type LearningLevel } from "@/lib/frassy/learning-levels";
 import {
   Conversation,
   ConversationContent,
@@ -1044,12 +1044,14 @@ export function FrassyChat({
                     >
                       {m.role === "assistant" &&
                       presentation === "studio" &&
-                      studioConversationPresentation.naturalResponses ? (
+                      !studioConversationPresentation.showExplanationLevels ? (
                         <MessageResponse>{m.content}</MessageResponse>
                       ) : m.role === "assistant" ? (
                         <PlainEnglishMessage
                           content={m.content}
-                          onRequestLevel={(next) => void send(`Explain that again at the "${next}" level.`)}
+                          onRequestLevel={(next: LearningLevel) =>
+                            void send(`Explain that again at the "${levelMeta(next).label}" level.`)
+                          }
                         />
                       ) : (
                         <p className="whitespace-pre-wrap">{m.content}</p>
@@ -1057,9 +1059,8 @@ export function FrassyChat({
                     </MessageContent>
 
                     {/* "Hear Frassy" only exists while playback is provably healthy. */}
-                    {(!studioConversationPresentation.showPerResponsePlayback ||
-                      presentation !== "studio") &&
-                      presentation !== "studio" &&
+                    {(presentation !== "studio" ||
+                      studioConversationPresentation.showPerResponsePlayback) &&
                       m.role === "assistant" &&
                       voice.voiceAvailable &&
                       voice.phase !== "recording" && (
