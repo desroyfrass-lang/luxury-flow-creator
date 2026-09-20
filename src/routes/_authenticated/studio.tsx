@@ -859,7 +859,7 @@ function StudioPage() {
           <img
             src={FV_STUDIOS_FRASSY_LOOK.image}
             alt="Frassy"
-            className="h-full w-full object-cover object-top"
+            className="h-full w-full object-cover object-[50%_14%]"
           />
         </button>
         <div className="fv-studio-surface fixed inset-x-0 bottom-0 z-30 bg-card/95 p-3 backdrop-blur lg:hidden">
