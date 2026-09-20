@@ -629,7 +629,6 @@ function StudioPage() {
               </div>
             </div>
 
-
             <div className="fv-action-deck grid grid-cols-[minmax(0,1fr)_auto] items-center gap-3 px-3 py-3 sm:flex">
               <Button
                 onClick={primary.onClick}
@@ -708,9 +707,7 @@ function StudioPage() {
                   </p>
                 </div>
               ) : null}
-              {tab === "edit" ? (
-                <EditWorkspace directed={directed} audioLane={audioLane} />
-              ) : null}
+              {tab === "edit" ? <EditWorkspace directed={directed} audioLane={audioLane} /> : null}
               {tab === "quality" ? (
                 <A1MasterPanel evidence={(evidenceQ.data ?? {}) as A1Evidence} />
               ) : null}
@@ -724,7 +721,6 @@ function StudioPage() {
                   </p>
                 )
               ) : null}
-
             </div>
           </section>
 
@@ -807,7 +803,6 @@ function StudioPage() {
                 </div>
               )}
             </div>
-
           </aside>
 
           <FrassyChat
@@ -1129,7 +1124,6 @@ function EditWorkspace({ directed, audioLane }: { directed: boolean; audioLane: 
     </div>
   );
 }
-
 
 function ResultDialog({
   surfaced,
