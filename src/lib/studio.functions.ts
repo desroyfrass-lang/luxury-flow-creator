@@ -32,9 +32,15 @@ export type StudioProject = {
   brief: string | null;
   /** FRASS-0407 / A1 — which control depth this production is shown at. */
   control_depth: string;
+  /** Bridge to the canonical production identity (studio_productions). */
+  production_id: string | null;
   created_at: string;
   updated_at: string;
 };
+
+/** One select list, so every path returns the same shape. */
+const PROJECT_COLUMNS =
+  "id, title, destination, status, brief, control_depth, production_id, created_at, updated_at";
 
 type Db = { from: (t: string) => any; rpc: (n: string, a: unknown) => any };
 
