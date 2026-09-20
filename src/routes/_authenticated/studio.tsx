@@ -46,7 +46,6 @@ import { ControlDepthBar } from "@/components/studio/control-depth-bar";
 import { A1MasterPanel } from "@/components/studio/a1-master-panel";
 import studioEntry from "@/assets/studio-entry.jpg";
 import frassyStudioLook from "@/assets/frassy-look-workshop.jpg.asset.json";
-import { requestTalk } from "@/lib/voice/dock-bus";
 import type { QualityReport } from "@/lib/studio/phone-content-mode";
 import { FREE_CAPABILITIES, formatDuration, unitLabel, usdFor, buildForecast } from "@/lib/studio/credits";
 import { A1_CLEAN_BUCKET, processA1Clean } from "@/lib/studio/a1-clean";
@@ -144,6 +143,7 @@ function StudioPage() {
   const [task, setTask] = useState<CreationDoor | null>(null);
   const [creating, setCreating] = useState(false);
   const [direction, setDirection] = useState("");
+  const [frassyOpenSignal, setFrassyOpenSignal] = useState(0);
   const [why, setWhy] = useState(false);
   const [surfaced, setSurfaced] = useState<Surfaced | null>(null);
   const [preview, setPreview] = useState<{ label: string; url: string } | null>(null);
@@ -299,6 +299,7 @@ function StudioPage() {
     "Mastering, music generation, image generation, video generation, animation and voice generation are not installed.",
     `Best next action: ${primary.label}`,
   ].join("\n");
+  const summonFrassy = () => setFrassyOpenSignal((signal) => signal + 1);
 
   return (
     <SiteShell>
@@ -445,7 +446,7 @@ function StudioPage() {
 
           {/* Frassy is always beside the work, never below it. */}
           <aside className="fv-frassy-station relative z-10 min-w-0" aria-label="Frassy, your AI director">
-            <button type="button" onClick={requestTalk} className="fv-frassy-portrait group relative mx-auto block w-full max-w-[19rem] overflow-hidden text-left" aria-label="Talk to Frassy in the studio">
+            <button type="button" onClick={summonFrassy} className="fv-frassy-portrait group relative mx-auto block w-full max-w-[19rem] overflow-hidden text-left" aria-label="Talk to Frassy in the studio">
               <span className="fv-frassy-halo absolute inset-x-[8%] bottom-[4%] h-[62%]" aria-hidden="true" />
               <img src={frassyStudioLook.url} alt="Frassy in her approved black and gold Builders look, standing at the studio console" className="relative z-10 aspect-[3/4] w-full object-cover object-top transition duration-500 group-hover:scale-[1.015]" />
               <span className="fv-frassy-call absolute inset-x-4 bottom-4 z-20 grid grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-3 rounded-full px-4 py-3">
@@ -470,13 +471,13 @@ function StudioPage() {
                   ))}
                 </div>
               )}
-              <Button variant="ghost" className="mt-2 min-h-11 w-full text-muted-foreground" onClick={requestTalk}><MessageCircle /> Open full conversation</Button>
+              <Button variant="ghost" className="mt-2 min-h-11 w-full text-muted-foreground" onClick={summonFrassy}><MessageCircle /> Open full conversation</Button>
             </div>
           </aside>
         </main>
 
         {/* Mobile: the current job's primary action stays in reach. */}
-        <button type="button" onClick={requestTalk} className="fv-frassy-mobile fixed bottom-[5.35rem] right-3 z-40 h-16 w-16 overflow-hidden rounded-full lg:hidden" aria-label="Talk to Frassy in the studio">
+        <button type="button" onClick={summonFrassy} className="fv-frassy-mobile fixed bottom-[5.35rem] right-3 z-40 h-16 w-16 overflow-hidden rounded-full lg:hidden" aria-label="Talk to Frassy in the studio">
           <img src={frassyStudioLook.url} alt="Frassy" className="h-full w-full object-cover object-top" />
         </button>
         <div className="fv-studio-surface fixed inset-x-0 bottom-0 z-30 bg-card/95 p-3 backdrop-blur lg:hidden">
@@ -484,7 +485,7 @@ function StudioPage() {
         </div>
       </div>
 
-      <FrassyChat hideBeacon tone="dark" workspaceContext={studioContext} />
+      <FrassyChat hideBeacon tone="dark" workspaceContext={studioContext} openSignal={frassyOpenSignal} />
 
       <ResultDialog
         surfaced={surfaced}

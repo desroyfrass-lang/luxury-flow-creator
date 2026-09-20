@@ -2604,8 +2604,10 @@ a.ps-row:hover { border-color: color-mix(in srgb, var(--gold) 60%, transparent);
   border: 1px solid oklch(0.95 0.08 88 / 0.55);
   background: var(--card);
   box-shadow: 0 0 0 4px oklch(0.86 0.12 82 / 0.08), 0 0 30px oklch(0.9 0.13 84 / 0.42), 0 12px 30px oklch(0.02 0.004 70 / 0.7);
-  animation: fv-frassy-alive 5.5s ease-in-out infinite;
+  transition: box-shadow 240ms ease, border-color 240ms ease;
 }
+.fv-frassy-mobile:hover,
+.fv-frassy-mobile:focus-visible { border-color: var(--accent); box-shadow: 0 0 0 4px oklch(0.86 0.12 82 / 0.12), 0 0 38px oklch(0.9 0.13 84 / 0.58), 0 12px 30px oklch(0.02 0.004 70 / 0.7); }
 
 /* Illuminated architectural edge under the header / above the floor. */
 .fv-studio-lightline {
@@ -2621,10 +2623,10 @@ a.ps-row:hover { border-color: color-mix(in srgb, var(--gold) 60%, transparent);
 
 /* Lights coming up as the entrance dissolves into the working room. */
 @keyframes fv-lights-up {
-  0% { filter: brightness(0.36) saturate(0.72); }
-  45% { filter: brightness(0.82) saturate(0.94); }
-  75% { filter: brightness(1.08) saturate(1.06); }
-  100% { filter: brightness(1) saturate(1); }
+  0% { opacity: 0.44; }
+  55% { opacity: 0.9; }
+  78% { opacity: 1; }
+  100% { opacity: 1; }
 }
 .fv-lights-up {
   animation: fv-lights-up 1100ms cubic-bezier(0.22, 0.61, 0.36, 1) both;
@@ -2640,6 +2642,8 @@ a.ps-row:hover { border-color: color-mix(in srgb, var(--gold) 60%, transparent);
   .fv-frassy-station { display: none; }
 }
 @media (max-width: 640px) {
+  .site-header-studio .site-header-socials,
+  .site-header-studio .site-header-signout { display: none; }
   .fv-studio-stage { padding-top: 0.75rem; }
   .fv-main-monitor { min-height: 29vh; border-radius: 1rem; }
   .fv-tool-drawer { border-radius: 0.85rem; }

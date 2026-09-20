@@ -97,7 +97,7 @@ function Header() {
   }, [menuOpen]);
 
   return (
-    <header className="sticky top-0 z-50">
+    <header className={`site-header sticky top-0 z-50 ${path === "/studio" ? "site-header-studio" : ""}`}>
       <div className="absolute inset-0 bg-background/70 backdrop-blur-xl border-b border-border/60" />
       <div className="relative mx-auto max-w-[1600px] px-6 lg:px-12 h-20 flex items-center justify-between gap-4">
         <div className="flex-1 hidden md:flex items-center gap-1">
@@ -119,7 +119,7 @@ function Header() {
           </div>
         </div>
         <div className="flex-1 flex items-center justify-end gap-2">
-          <div className="flex items-center gap-0.5 md:gap-1 mr-1 md:mr-2">
+          <div className="site-header-socials flex items-center gap-0.5 md:gap-1 mr-1 md:mr-2">
             {SOCIALS.map(({ href, label, Icon }) => (
               <a
                 key={label}
@@ -249,7 +249,7 @@ function HeaderSignOut() {
   return (
     <SignOutButton
       label="Sign out"
-      className="inline-flex h-10 shrink-0 items-center gap-1.5 rounded-full border border-border bg-background/70 px-3 text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground backdrop-blur transition hover:border-[color:var(--gold)] hover:text-foreground"
+      className="site-header-signout inline-flex h-10 shrink-0 items-center gap-1.5 rounded-full border border-border bg-background/70 px-3 text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground backdrop-blur transition hover:border-[color:var(--gold)] hover:text-foreground"
     />
   );
 }
@@ -554,7 +554,7 @@ export function SiteShell({
   }
 
   return (
-    <div className="relative min-h-screen">
+    <div className={`relative min-h-screen ${path === "/studio" ? "site-shell-studio overflow-x-clip" : ""}`}>
       {background && <LuxuryBackground />}
       {preHeader}
       <Header />

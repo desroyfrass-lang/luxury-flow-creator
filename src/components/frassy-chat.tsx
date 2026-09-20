@@ -155,7 +155,8 @@ export function FrassyChat({
   tone,
   hideBeacon = false,
   workspaceContext,
-}: { embedded?: boolean; tone?: "light" | "dark"; hideBeacon?: boolean; workspaceContext?: string } = {}) {
+  openSignal = 0,
+}: { embedded?: boolean; tone?: "light" | "dark"; hideBeacon?: boolean; workspaceContext?: string; openSignal?: number } = {}) {
   const navigate = useNavigate();
   const ctx = useFrassyContext();
   // FRASS-0551 — only the Founder Control Room stays dark. Every member surface
@@ -358,6 +359,10 @@ export function FrassyChat({
   useEffect(() => {
     if (open) inputRef.current?.focus();
   }, [open]);
+
+  useEffect(() => {
+    if (openSignal > 0 && !embedded) setOpen(true);
+  }, [embedded, openSignal]);
 
   // Abort any in-flight turn when the widget unmounts.
   useEffect(() => () => abortRef.current?.abort(), []);
