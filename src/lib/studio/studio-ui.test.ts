@@ -3,11 +3,12 @@ import { FV_STUDIOS_FRASSY_LOOK } from "@/lib/frassy/room-looks";
 import { studioPlaybackState } from "@/lib/studio/studio-ui";
 
 describe("FV Studios presentation truth", () => {
-  it("keeps the current portrait explicitly temporary until approved Studio artwork is supplied", () => {
+  it("uses the Founder-approved seated Studio look", () => {
     expect(FV_STUDIOS_FRASSY_LOOK.room).toBe("studio");
-    expect(FV_STUDIOS_FRASSY_LOOK.status).toBe("temporary");
-    expect(FV_STUDIOS_FRASSY_LOOK.position).toBe("portrait");
+    expect(FV_STUDIOS_FRASSY_LOOK.status).toBe("approved");
+    expect(FV_STUDIOS_FRASSY_LOOK.position).toBe("seated");
   });
+
 
   it("disables playback when no real media URL exists", () => {
     expect(studioPlaybackState(null)).toEqual({ playable: false, label: "No playable output yet" });
