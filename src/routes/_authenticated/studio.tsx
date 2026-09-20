@@ -767,8 +767,8 @@ function StudioPage() {
                   <span className="block truncate text-[11px] text-muted-foreground">
                     Tap to open our conversation — I know this production
                   </span>
-
                 </span>
+
                 <MessageCircle className="h-4 w-4 text-accent" />
               </span>
             </button>
