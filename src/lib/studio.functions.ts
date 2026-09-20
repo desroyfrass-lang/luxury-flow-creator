@@ -219,6 +219,14 @@ export const runStudioOperation = createServerFn({ method: "POST" })
         ? ` Not included: ${plan.blocked.map((b) => b.key).join(", ")} — ${plan.blocked[0]!.reason}`
         : "";
 
+    // Only installed work can ever be billed, so only installed work needs cover.
+    if (decision.ok && wallet.balance < billable) {
+      throw new Error(
+        `This needs ${billable.toLocaleString()} AI Credits and your balance is ${wallet.balance.toLocaleString()}. Top up, or ask me for a lighter version.`,
+      );
+    }
+
+
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const admin = supabaseAdmin as unknown as Db;
 
