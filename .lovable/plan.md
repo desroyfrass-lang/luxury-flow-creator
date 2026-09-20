@@ -6,6 +6,8 @@ Turn the existing `/studio` Frassy presentation into a spatial AI Director bay w
 ## Build
 - Replace the desktop chat-card composition with a borderless room bay: Frassy occupies a large, transparent set layer; transcript and composer occupy a separate glass conversation console beside her, never beneath or over her body.
 - Drive restrained rim light, halo, waveform, and breathing from the existing idle/listening/thinking/speaking states. Respect reduced-motion and do not alter or simulate movement within the approved character image.
+- Add a canonical Studio presence-state interface for approved idle, listening, thinking, speaking, gesturing, and working visuals or clips. This pass uses only whole-character entrance, settle, drift, lighting, and waveform effects; future approved pose or motion assets can drop into the same slot without rebuilding the room.
+- Keep the newly uploaded 1536×1024 transparent standing character board as a locked identity/motion reference only. Because it is a composite desktop/mobile board with labels and marks, do not crop, alter, or ship it as a state asset.
 - Use the spatial desktop bay only at widths where both production and conversation fit. At narrower desktop/tablet widths, switch fully to a closable bottom sheet with a dedicated upper character scene and lower transcript/composer stack.
 - Keep the same shared Frassy conversation, history, context, and voice implementation. Keep attachments behind the compact plus control, Free Try On hidden, and playback truthful.
 - Remove hard card framing, excess borders, text glow, and cramped utility styling from the Studio-only presentation.
@@ -25,3 +27,4 @@ Turn the existing `/studio` Frassy presentation into a spatial AI Director bay w
 ## Technical boundaries
 - Frontend presentation only: `frassy-chat.tsx`, Studio layout, Studio composer presentation, and Studio CSS as required.
 - No image generation, cropping, editing, regeneration, body-part animation, fake lip sync, new provider, backend, economics, role, or security changes.
+- Report separately which motion is real now and which states still require approved individual transparent assets or clips.
