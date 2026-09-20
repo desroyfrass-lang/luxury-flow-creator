@@ -309,7 +309,7 @@ function StudioPage() {
 
         {/* Compact, persistent studio header: where I am, what I'm on, what it costs. */}
         <header className="sticky top-0 z-30 border-b border-accent/25 bg-card/85 backdrop-blur">
-          <div className="mx-auto grid max-w-[1600px] grid-cols-[minmax(0,1fr)_auto] items-center gap-3 px-3 py-2 sm:px-5">
+          <div className="mx-auto grid max-w-[1600px] grid-cols-[minmax(0,1fr)_auto] items-center gap-3 px-3 pb-2 pt-11 sm:px-5">
             <div className="flex min-w-0 items-center gap-2">
               <span className="grid h-9 w-9 shrink-0 place-items-center rounded-md border border-accent/40 bg-accent/10"><Film className="h-4 w-4 text-accent" /></span>
               <select
