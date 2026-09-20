@@ -314,7 +314,7 @@ function StudioPage() {
               <select
                 aria-label="Current production"
                 value={active?.id ?? ""}
-                onChange={(e) => setActiveId(e.target.value)}
+                onChange={(e) => { setActiveId(e.target.value); setCreating(false); }}
                 className="h-10 min-w-0 max-w-[15rem] flex-1 rounded-md border border-input bg-background px-2 text-sm"
               >
                 <option value="">No production open</option>
