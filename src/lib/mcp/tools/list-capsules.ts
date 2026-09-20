@@ -16,7 +16,10 @@ export default defineTool({
     const admin = await requireAdmin(ctx, sb);
     if (!admin.ok) return { content: [{ type: "text", text: admin.err }], isError: true };
     let q = sb.from("capsules").select("id, handle, name, description, style, gender, occasion, season").order("name");
-    if (search) q = q.or(`name.ilike.%${search}%,handle.ilike.%${search}%`);
+    // Filter punctuation would change the meaning of the query expression, so
+    // only plain search characters survive, and the term is length-capped.
+    const term = (search ?? "").replace(/[^\p{L}\p{N} _'-]/gu, "").trim().slice(0, 80);
+    if (term) q = q.or(`name.ilike.%${term}%,handle.ilike.%${term}%`);
     const { data, error } = await q;
     if (error) return { content: [{ type: "text", text: error.message }], isError: true };
     return {

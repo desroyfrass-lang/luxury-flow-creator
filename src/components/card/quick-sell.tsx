@@ -135,7 +135,7 @@ export function QuickSellPanel({
   });
 
   const markOrder = useMutation({
-    mutationFn: (v: { id: string; status: "paid" | "cancelled" | "refunded" }) =>
+    mutationFn: (v: { id: string; status: "pending" | "cancelled" }) =>
       orderStatusFn({ data: v }),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["card-orders"] });
@@ -333,13 +333,13 @@ export function QuickSellPanel({
                   </p>
                 </div>
                 {o.status === "pending" && (
-                  <div className="flex gap-2">
-                    <button className="ws-chip text-xs" onClick={() => markOrder.mutate({ id: o.id, status: "paid" })}>
-                      Mark paid
-                    </button>
+                  <div className="flex flex-col items-end gap-1">
                     <button className="ws-chip text-xs" onClick={() => markOrder.mutate({ id: o.id, status: "cancelled" })}>
-                      Cancel
+                      Cancel order
                     </button>
+                    <span className="text-[11px] text-muted-foreground">
+                      Only the payment provider can confirm this as paid.
+                    </span>
                   </div>
                 )}
               </div>

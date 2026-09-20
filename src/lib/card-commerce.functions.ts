@@ -105,10 +105,13 @@ export const listMyCardOrders = createServerFn({ method: "GET" })
     return (data ?? []) as unknown as CardOrder[];
   });
 
+// A seller may withdraw their own unpaid order. A seller may NEVER declare an
+// order paid or refunded: money states come only from the payment provider's
+// signed confirmation, on the verification path, never from a person's claim.
 export const setCardOrderStatus = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((d: { id: string; status: "pending" | "paid" | "cancelled" | "refunded" }) =>
-    z.object({ id: z.string().uuid(), status: z.enum(["pending", "paid", "cancelled", "refunded"]) }).parse(d),
+  .inputValidator((d: { id: string; status: "pending" | "cancelled" }) =>
+    z.object({ id: z.string().uuid(), status: z.enum(["pending", "cancelled"]) }).parse(d),
   )
   .handler(async ({ context, data }) => {
     const { data: order, error } = await context.supabase
@@ -116,12 +119,15 @@ export const setCardOrderStatus = createServerFn({ method: "POST" })
       .update({ status: data.status })
       .eq("id", data.id)
       .eq("seller_id", context.userId)
+      // A confirmed payment is settled history; nobody may edit it afterwards.
+      .is("verified_at", null)
+      .in("status", ["pending", "cancelled"])
       .select(ORDER_SELLER_COLUMNS)
       .single();
     if (error) throw error;
 
-    // Cancelling or refunding returns the stock to the basket.
-    if ((data.status === "cancelled" || data.status === "refunded") && order?.listing_id) {
+    // Withdrawing the order returns the stock to the basket.
+    if (data.status === "cancelled" && order?.listing_id) {
       const { data: listing } = await context.supabase
         .from("card_listings")
         .select("sold, quantity")

@@ -36,6 +36,13 @@ export const Route = createFileRoute("/api/tts")({
   server: {
     handlers: {
       POST: async ({ request }) => {
+        // A paid speech call must belong to a signed-in person, verified here.
+        const { verifiedCallerId, SIGN_IN_REQUIRED } = await import(
+          "@/lib/api/require-caller.server"
+        );
+        const callerId = await verifiedCallerId(request);
+        if (!callerId) return new Response(SIGN_IN_REQUIRED, { status: 401 });
+
         const body = (await request.json().catch(() => ({}))) as Body;
 
         // Phase 2 guard: streaming playback stays off.

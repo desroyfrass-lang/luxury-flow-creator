@@ -567,7 +567,13 @@ export function receiptsCsv(receipts: Receipt[]): string {
     "status",
     "reference",
   ].join(",");
-  const esc = (v: unknown) => `"${String(v ?? "").replace(/"/g, '""')}"`;
+  // A cell that starts with = + - @ (or tab/CR) is read as a formula by
+  // spreadsheet software. Prefixing an apostrophe keeps it plain text.
+  const esc = (v: unknown) => {
+    const s = String(v ?? "");
+    const safe = /^[=+\-@\t\r]/.test(s) ? `'${s}` : s;
+    return `"${safe.replace(/"/g, '""')}"`;
+  };
   const rows = receipts.map((r) =>
     [
       r.occurredAt,
