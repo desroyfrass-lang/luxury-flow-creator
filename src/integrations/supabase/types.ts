@@ -8979,6 +8979,22 @@ export type Database = {
         Returns: number
       }
       expire_stale_payment_requests: { Args: never; Returns: number }
+      finalize_frass_native_a1_clean: {
+        Args: {
+          _engine_slug: string
+          _engine_version: string
+          _job_id: string
+          _output_bytes: number
+          _output_mime: string
+          _output_path: string
+          _processed_at: string
+          _source_bytes: number
+          _source_mime: string
+          _source_path: string
+          _user_id: string
+        }
+        Returns: Json
+      }
       gallery_is_public: { Args: { _gallery_id: string }; Returns: boolean }
       gallery_own_contact_email: {
         Args: { _gallery_id: string }
