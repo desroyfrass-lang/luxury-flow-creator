@@ -779,7 +779,7 @@ function StudioPage() {
               <img
                 src={FV_STUDIOS_FRASSY_LOOK.image}
                 alt={FV_STUDIOS_FRASSY_LOOK.alt}
-                className="relative z-10 aspect-[3/4] w-full object-cover object-top transition duration-500 group-hover:scale-[1.015]"
+                className="relative z-10 aspect-[3/4] w-full object-contain object-bottom transition duration-500 group-hover:scale-[1.015]"
               />
               <span className="fv-frassy-call absolute inset-x-4 bottom-4 z-20 grid grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-3 rounded-full px-4 py-3">
                 <span className="h-2 w-2 rounded-full bg-accent shadow-[0_0_14px_var(--gold)]" />
@@ -859,7 +859,7 @@ function StudioPage() {
           <img
             src={FV_STUDIOS_FRASSY_LOOK.image}
             alt="Frassy"
-            className="h-full w-full object-cover object-top"
+            className="h-full w-full object-cover object-[50%_14%]"
           />
         </button>
         <div className="fv-studio-surface fixed inset-x-0 bottom-0 z-30 bg-card/95 p-3 backdrop-blur lg:hidden">

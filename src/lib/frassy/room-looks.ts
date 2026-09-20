@@ -1,9 +1,8 @@
 // One canonical Frassy, presented appropriately for each room.
 // A room look is locked and explicit: it never rotates automatically and never
-// changes Frassy's identity. FV Studios currently uses the approved Workshop
-// portrait only as a temporary visual until the Founder supplies the approved
-// transparent Studio derivative.
-import temporaryStudioPortrait from "@/assets/frassy-look-workshop.jpg.asset.json";
+// changes Frassy's identity. FV Studios now uses the Founder-approved seated
+// transparent derivative of the locked character board.
+import seatedStudioLook from "@/assets/frassy-fv-studios-seated.png.asset.json";
 
 export type FrassyRoomLook = {
   id: string;
@@ -15,10 +14,10 @@ export type FrassyRoomLook = {
 };
 
 export const FV_STUDIOS_FRASSY_LOOK: FrassyRoomLook = {
-  id: "fv-studios-temporary-workshop-portrait",
+  id: "fv-studios-approved-seated",
   room: "studio",
-  image: temporaryStudioPortrait.url,
-  alt: "Frassy beside the FV Studios console",
-  status: "temporary",
-  position: "portrait",
+  image: seatedStudioLook.url,
+  alt: "Frassy seated in her FV Studios chair",
+  status: "approved",
+  position: "seated",
 };

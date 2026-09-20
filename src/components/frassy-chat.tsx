@@ -777,7 +777,7 @@ export function FrassyChat({
             alt={presentation === "studio" ? "Frassy" : ""}
             className={
               presentation === "studio"
-                ? "h-12 w-12 rounded-full object-cover object-top"
+                ? "h-12 w-12 rounded-full object-cover object-[50%_14%]"
                 : "h-6 w-6 object-contain"
             }
           />
