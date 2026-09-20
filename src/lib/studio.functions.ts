@@ -206,10 +206,23 @@ export const runStudioOperation = createServerFn({ method: "POST" })
       .select("id, slug, label, capabilities, status, enabled, engine_type, priority, founder_preferred");
     const engines = (providerRows ?? []) as any[];
 
-    const capability = capabilityForOperation(lines[0]?.key ?? "");
-    const decision = capability
-      ? routeToEngine(capability, engines, { allowExternalFallback: data.allowExternalFallback === true })
-      : ({ ok: false, capability: "finishing", state: "not_installed", reason: "This operation has no engine mapped yet, so nothing can run and nothing is charged." } as const);
+    // Machines are independent. An uninstalled machine (mastering, for example)
+    // must never stop an installed one (audio restoration) from doing its own
+    // work. Uninstalled steps are dropped from the bill and reported plainly.
+    const plan = planOperations(lines, engines, {
+      allowExternalFallback: data.allowExternalFallback === true,
+    });
+    const decision = plan.decision;
+    const runnableKeys = new Set(plan.runnable.map((r) => r.key));
+    const billableLines = lines.filter((l) => runnableKeys.has(l.key));
+    const billable = billableLines.reduce((sum, l) => sum + l.credits, 0);
+    const capability = plan.runnable[0]
+      ? plan.runnable[0].capability
+      : capabilityForOperation(lines[0]?.key ?? "");
+    const notInstalledNote =
+      plan.blocked.length > 0
+        ? ` Not included: ${plan.blocked.map((b) => b.key).join(", ")} — ${plan.blocked[0]!.reason}`
+        : "";
 
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const admin = supabaseAdmin as unknown as Db;
