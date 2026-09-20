@@ -816,14 +816,8 @@ function StudioPage() {
                   ))}
                 </div>
               )}
-              <Button
-                variant="ghost"
-                className="mt-2 min-h-11 w-full text-muted-foreground"
-                onClick={summonFrassy}
-              >
-                <MessageCircle /> Open full conversation
-              </Button>
             </div>
+
           </aside>
 
           <FrassyChat
