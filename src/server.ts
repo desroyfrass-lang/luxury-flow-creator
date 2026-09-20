@@ -44,6 +44,11 @@ export default {
       const response = await handler.fetch(request, env, ctx);
       return await normalizeCatastrophicSsrResponse(response);
     } catch (error) {
+      // The visitor closed the tab or navigated away before the page finished.
+      // Nothing is broken, so do not log it or render the error page.
+      if (isClientAbort(error) || request.signal.aborted) {
+        return new Response(null, { status: 499 });
+      }
       console.error(error);
       return new Response(renderErrorPage(), {
         status: 500,
