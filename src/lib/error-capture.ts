@@ -4,7 +4,17 @@
 let lastCapturedError: { error: unknown; at: number } | undefined;
 const TTL_MS = 5_000;
 
+// A client that navigates away mid-response aborts the request. That is normal
+// browser behaviour, not an application fault, so it must never be recorded.
+export function isClientAbort(error: unknown): boolean {
+  if (!error || typeof error !== "object") return false;
+  const candidate = error as { name?: unknown; cause?: unknown };
+  if (candidate.name === "AbortError") return true;
+  return isClientAbort(candidate.cause);
+}
+
 function record(error: unknown) {
+  if (isClientAbort(error)) return;
   lastCapturedError = { error, at: Date.now() };
 }
 
