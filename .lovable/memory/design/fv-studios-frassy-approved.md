@@ -1,28 +1,28 @@
 ---
 name: FV Studios approved Frassy look and room reference
-description: Founder-approved FV Studios Frassy character board (face, long locs, studio attire, jewelry) and approved room/UX reference image for the FV Studios experience
+description: Founder-approved FV Studios Frassy character board, the approved seated in-room render, and the approved room/UX reference image
 type: design
 ---
 
 # FV Studios — approved Frassy look (locked)
 
-Approved reference asset: `src/assets/frassy-fv-studios-character-board.png.asset.json`
-(Founder-supplied character board, 20 Sep 2026.)
+Reference board: `src/assets/frassy-fv-studios-character-board.png.asset.json`
+Shipping in-room render (APPROVED, 20 Sep 2026): `src/assets/frassy-fv-studios-seated.png.asset.json`
+— transparent PNG, full figure, seated in the black + gold FV STUDIOS chair.
+Used by `FV_STUDIOS_FRASSY_LOOK` in `src/lib/frassy/room-looks.ts` (status: approved, position: seated).
 
-This is the APPROVED FV Studios Frassy. Preserve exactly:
+Preserve exactly:
 - her face and expression
 - long locs with gold loc cuffs
-- FRASS STUDIOS white crop top, black cargo/oversized pants, black FV STUDIOS jacket
+- FRASS STUDIOS white crop top, black cargo pants, black jacket
 - gold jewelry: hoops, layered chains, stacked bangles
 - body proportions and overall identity
-- black/white FV sneakers
+- black/gold/white FV sneakers
 
 Rules:
-- NEVER regenerate, redesign, restyle or "improve" this Frassy.
+- NEVER regenerate, redesign, restyle, crop or "improve" this Frassy.
 - Do not invent a different face for any room. Canonical identity is constant.
-- Room-specific looks may change attire/lighting only where the Founder approves; FV Studios is locked to the look above.
 - Weekly/random outfit rotation is NOT active.
-- The character board is a multi-panel reference sheet, not a shippable portrait. A single cropped/standing render approved by the Founder is still required before it becomes the in-room Frassy image.
 
 # FV Studios — approved room / UX reference
 
@@ -32,8 +32,8 @@ Use as visual and UX direction only, never a literal copy and never a replacemen
 - purple + gold lighting as real light (glow, reflections, edge light), black/charcoal anchor
 - real recording-studio atmosphere: console, monitors, speakers, mic, acoustic depth
 - rounded, luxury, glass-like interface; no enterprise/DOS card stacks
-- Frassy visibly present in the room, seated/standing in her station
-- Frassy conversation panel integrated into the room (online state, Talk to Frassy, chat, quick actions) — must use the ONE existing shared Frassy chat/voice system, never a second assistant
-- Left rail room navigation and bottom destination tiles are inspiration for hierarchy, not a mandate to rebuild existing navigation
+- Frassy visibly present in the room, seated in her station
+- Frassy conversation panel integrated into the room — must use the ONE existing shared Frassy chat/voice system
+- Left rail room navigation and bottom tiles are inspiration for hierarchy, not a mandate to rebuild navigation
 
 Do not embed either reference image as page artwork.
