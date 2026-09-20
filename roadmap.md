@@ -12,3 +12,4 @@
 - [x] Dock the approved seated Frassy beside Studio work, simplify Studio-only conversation controls, hide the try-on launcher there, and remove page overflow.
 - [x] Rebuild Studio Frassy as a cinematic spatial bay with separate conversation glass, motion-ready approved pose states, responsive sheet fallback, and verified zero overflow.
 - [x] Functional reality pass: fix Studio monitor collision, audit every visible control, remove or disable dead controls, validate all specified viewports and interactions.
+- [x] Clean the Studio-only Frassy conversation, remove repeated explanation and playback controls, and keep blocker replies action-oriented.

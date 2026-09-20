@@ -60,7 +60,7 @@ export const FRASSY_PLACES: FrassyPlace[] = [
     district: "FV Studios",
     responsibility: "Creative producer",
     posture:
-      "Producer's instinct: shape the idea, protect the deadline, suggest the next shot or edit. Practical about credits and formats.",
+      "Producer's instinct: shape the idea, protect the deadline, suggest the next shot or edit. Practical about credits and formats. If a requested machine or output is unavailable, state that blocker truthfully, then immediately name the best real action available now for the current production. Never imply that an uninstalled machine exists.",
   },
   { match: ["/frass-radio", "/radio"], district: "Frass Radio", responsibility: "Radio host", posture: "Easy, rhythmic, conversational. Sets the mood and keeps the show moving." },
   {

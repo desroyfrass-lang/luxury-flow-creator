@@ -77,13 +77,13 @@ import {
 import { loadMomentum, momentumContext, readMomentum } from "@/lib/frassy/momentum";
 import { PlainEnglishMessage } from "@/components/frassy/everyday-language-toggle";
 import { useLearningLevel } from "@/hooks/use-learning-level";
-import { learningLevelContext, levelMeta, type LearningLevel } from "@/lib/frassy/learning-levels";
+import { learningLevelContext } from "@/lib/frassy/learning-levels";
 import {
   Conversation,
   ConversationContent,
   ConversationScrollButton,
 } from "@/components/ai-elements/conversation";
-import { Message, MessageContent } from "@/components/ai-elements/message";
+import { Message, MessageContent, MessageResponse } from "@/components/ai-elements/message";
 import {
   FV_STUDIOS_FRASSY_LOOK,
   studioPresenceFor,
@@ -1041,12 +1041,12 @@ export function FrassyChat({
                           : "frassy-bubble px-0 py-1 text-[color:var(--ws-ink)]"
                       }
                     >
-                      {m.role === "assistant" ? (
+                      {m.role === "assistant" && presentation === "studio" ? (
+                        <MessageResponse>{m.content}</MessageResponse>
+                      ) : m.role === "assistant" ? (
                         <PlainEnglishMessage
                           content={m.content}
-                          onRequestLevel={(next: LearningLevel) =>
-                            void send(`Explain that again at the "${levelMeta(next).label}" level.`)
-                          }
+                          onRequestLevel={(next) => void send(`Explain that again at the "${next}" level.`)}
                         />
                       ) : (
                         <p className="whitespace-pre-wrap">{m.content}</p>
@@ -1054,7 +1054,8 @@ export function FrassyChat({
                     </MessageContent>
 
                     {/* "Hear Frassy" only exists while playback is provably healthy. */}
-                    {m.role === "assistant" &&
+                    {presentation !== "studio" &&
+                      m.role === "assistant" &&
                       voice.voiceAvailable &&
                       voice.phase !== "recording" && (
                         <button

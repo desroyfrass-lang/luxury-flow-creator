@@ -5,3 +5,9 @@ export function studioPlaybackState(outputUrl?: string | null) {
     label: playable ? "Play current output" : "No playable output yet",
   } as const;
 }
+
+export const studioConversationPresentation = {
+  naturalResponses: true,
+  showExplanationLevels: false,
+  showPerResponsePlayback: false,
+} as const;

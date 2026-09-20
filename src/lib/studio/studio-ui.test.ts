@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { FV_STUDIOS_FRASSY_LOOK } from "@/lib/frassy/room-looks";
-import { studioPlaybackState } from "@/lib/studio/studio-ui";
+import { studioPlaybackState, studioConversationPresentation } from "@/lib/studio/studio-ui";
 
 describe("FV Studios presentation truth", () => {
   it("uses the Founder-approved seated Studio look", () => {
@@ -19,6 +19,14 @@ describe("FV Studios presentation truth", () => {
     expect(studioPlaybackState("https://media.example/output.wav")).toEqual({
       playable: true,
       label: "Play current output",
+    });
+  });
+
+  it("keeps the normal Studio conversation free of repeated response controls", () => {
+    expect(studioConversationPresentation).toEqual({
+      naturalResponses: true,
+      showExplanationLevels: false,
+      showPerResponsePlayback: false,
     });
   });
 });
