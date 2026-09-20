@@ -40,6 +40,13 @@ export const Route = createFileRoute("/api/stt")({
   server: {
     handlers: {
       POST: async ({ request }) => {
+        // A paid transcription must belong to a signed-in person, verified here.
+        const { verifiedCallerId, SIGN_IN_REQUIRED } = await import(
+          "@/lib/api/require-caller.server"
+        );
+        const callerId = await verifiedCallerId(request);
+        if (!callerId) return new Response(SIGN_IN_REQUIRED, { status: 401 });
+
         const key = process.env.LOVABLE_API_KEY;
         if (!key) return new Response("STT not configured", { status: 500 });
 
