@@ -652,7 +652,7 @@ function EditWorkspace({ directed, depth, audioLane }: { directed: boolean; dept
           {TIMELINE_TRACKS.slice(0, producer ? 4 : 2).map((track) => (
             <div key={track.name} className="fv-track-row grid gap-2 rounded-xl p-2 sm:grid-cols-[140px_1fr]">
               <span className="truncate text-xs text-muted-foreground">{track.name}</span>
-              <div className="fv-waveform-lane flex h-9 items-center gap-1 rounded-lg px-2">{[8, 14, 20, 11, 24, 16, 9, 19, 13, 22, 10, 17, 7, 15, 21, 12].map((height, i) => <span key={i} className={`${track.tone} fv-wave-bar`} style={{ height }} />)}</div>
+              <div className="fv-waveform-lane flex h-9 items-center gap-1 rounded-lg px-2">{["h-2", "h-3.5", "h-5", "h-3", "h-6", "h-4", "h-2.5", "h-5", "h-3.5", "h-5.5", "h-2.5", "h-4", "h-2", "h-4", "h-5", "h-3"].map((height, i) => <span key={i} className={`${track.tone} fv-wave-bar ${height}`} />)}</div>
             </div>
           ))}
         </div>

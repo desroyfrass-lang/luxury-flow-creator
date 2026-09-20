@@ -2376,8 +2376,8 @@ a.ps-row:hover { border-color: color-mix(in srgb, var(--gold) 60%, transparent);
 
 /* ─────────────────────────────────────────────────────────────────────────────
    FV Studios — immersive luxury control room.
-   Charcoal is the architecture; champagne gold appears as practical light,
-   reflection and console energy rather than flat brown fill.
+   Charcoal is the architecture; champagne gold is practical light and rich
+   purple is ambient light. Neither accent becomes a flat panel fill.
    ───────────────────────────────────────────────────────────────────────── */
 .fv-studio,
 .fv-studio-surface {
@@ -2398,15 +2398,19 @@ a.ps-row:hover { border-color: color-mix(in srgb, var(--gold) 60%, transparent);
   --border: oklch(0.9 0.08 84 / 0.16);
   --input: oklch(0.9 0.06 84 / 0.23);
   --ring: oklch(0.88 0.13 82);
+  --fv-purple: oklch(0.67 0.22 306);
+  --fv-purple-soft: oklch(0.58 0.17 306 / 0.22);
+  --fv-gold-light: oklch(0.91 0.13 84);
   color: var(--foreground);
 }
 
 .fv-studio {
   background-color: var(--background);
   background-image:
-    radial-gradient(ellipse 80% 38% at 50% 2%, oklch(0.9 0.13 84 / 0.18), transparent 65%),
-    radial-gradient(ellipse 46% 58% at 8% 38%, oklch(0.79 0.12 78 / 0.09), transparent 72%),
-    radial-gradient(ellipse 44% 55% at 94% 34%, oklch(0.9 0.11 86 / 0.11), transparent 72%),
+    radial-gradient(ellipse 72% 34% at 50% 0%, oklch(0.93 0.13 86 / 0.16), transparent 67%),
+    radial-gradient(ellipse 48% 62% at 3% 40%, oklch(0.58 0.22 304 / 0.19), transparent 72%),
+    radial-gradient(ellipse 42% 58% at 98% 34%, oklch(0.65 0.22 310 / 0.16), transparent 72%),
+    radial-gradient(ellipse 65% 25% at 50% 100%, oklch(0.69 0.2 307 / 0.09), transparent 70%),
     linear-gradient(180deg, oklch(0.14 0.012 70) 0%, oklch(0.09 0.006 70) 70%, oklch(0.125 0.012 72) 100%);
   background-attachment: fixed;
   isolation: isolate;
@@ -2420,7 +2424,7 @@ a.ps-row:hover { border-color: color-mix(in srgb, var(--gold) 60%, transparent);
   pointer-events: none;
   background:
     linear-gradient(115deg, transparent 12%, oklch(0.88 0.1 84 / 0.045) 28%, transparent 44%),
-    repeating-linear-gradient(90deg, transparent 0 12.4%, oklch(0.88 0.08 84 / 0.025) 12.5%, transparent 12.6% 25%);
+    repeating-linear-gradient(90deg, transparent 0 12.4%, oklch(0.68 0.2 306 / 0.035) 12.5%, transparent 12.6% 25%);
 }
 
 .fv-arrival-light {
@@ -2468,8 +2472,8 @@ a.ps-row:hover { border-color: color-mix(in srgb, var(--gold) 60%, transparent);
 .fv-studio-tab:hover { color: var(--foreground); background: oklch(1 0 0 / 0.035); }
 .fv-studio-tab.is-active {
   color: var(--accent);
-  background: linear-gradient(180deg, oklch(0.86 0.12 82 / 0.1), transparent);
-  text-shadow: 0 0 20px oklch(0.88 0.13 84 / 0.55);
+  background: linear-gradient(180deg, oklch(0.66 0.2 306 / 0.12), oklch(0.86 0.12 82 / 0.06), transparent);
+  text-shadow: 0 0 18px oklch(0.68 0.21 306 / 0.45);
 }
 .fv-studio-tab.is-active::after {
   content: "";
@@ -2477,8 +2481,8 @@ a.ps-row:hover { border-color: color-mix(in srgb, var(--gold) 60%, transparent);
   inset: auto 18% 1px;
   height: 2px;
   border-radius: 999px;
-  background: var(--accent);
-  box-shadow: 0 0 10px var(--gold), 0 0 24px oklch(0.87 0.13 82 / 0.65);
+  background: linear-gradient(90deg, var(--fv-purple), var(--accent), var(--fv-purple));
+  box-shadow: 0 0 10px var(--gold), 0 0 24px oklch(0.67 0.22 306 / 0.55);
 }
 
 .fv-studio-stage::after {
@@ -2499,21 +2503,96 @@ a.ps-row:hover { border-color: color-mix(in srgb, var(--gold) 60%, transparent);
   inset: -1rem 14% auto;
   height: 1px;
   background: linear-gradient(90deg, transparent, oklch(0.96 0.08 88 / 0.95), transparent);
-  box-shadow: 0 0 18px oklch(0.92 0.13 86 / 0.55), 0 0 70px 16px oklch(0.86 0.12 82 / 0.11);
+  box-shadow: 0 0 18px oklch(0.92 0.13 86 / 0.55), 0 0 70px 16px oklch(0.86 0.12 82 / 0.11), 0 34px 90px 28px oklch(0.62 0.21 306 / 0.08);
+}
+
+.fv-control-room {
+  border-radius: 1.75rem 1.75rem 2.5rem 2.5rem;
+  background:
+    radial-gradient(ellipse 34% 70% at 8% 55%, oklch(0.61 0.22 306 / 0.18), transparent 72%),
+    radial-gradient(ellipse 34% 70% at 92% 55%, oklch(0.61 0.22 306 / 0.18), transparent 72%),
+    radial-gradient(ellipse 62% 35% at 50% 3%, oklch(0.91 0.12 84 / 0.17), transparent 70%),
+    linear-gradient(180deg, oklch(0.155 0.018 300), oklch(0.065 0.008 290) 64%, oklch(0.12 0.018 300));
+  box-shadow: inset 0 1px 0 oklch(1 0 0 / 0.09), inset 0 -30px 70px oklch(0.54 0.19 306 / 0.09), 0 28px 75px oklch(0.02 0.008 300 / 0.78);
+}
+.fv-control-room::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(90deg, oklch(0.65 0.22 306 / 0.1), transparent 18% 82%, oklch(0.65 0.22 306 / 0.1));
+  box-shadow: inset 0 0 0 1px oklch(0.92 0.1 86 / 0.09);
+  border-radius: inherit;
+}
+.fv-acoustic-wall {
+  position: absolute;
+  inset-block: 8% 22%;
+  width: 11%;
+  opacity: 0.76;
+  background: repeating-linear-gradient(90deg, oklch(0.25 0.026 302 / 0.72) 0 7px, oklch(0.09 0.009 300 / 0.92) 7px 13px);
+  box-shadow: inset 0 0 22px oklch(0.67 0.22 306 / 0.13), 0 0 32px oklch(0.62 0.2 306 / 0.1);
+}
+.fv-acoustic-wall-left { left: 0; transform: perspective(280px) rotateY(18deg); transform-origin: left; }
+.fv-acoustic-wall-right { right: 0; transform: perspective(280px) rotateY(-18deg); transform-origin: right; }
+.fv-studio-speaker {
+  position: absolute;
+  z-index: 3;
+  top: 18%;
+  width: clamp(2.5rem, 6%, 4.5rem);
+  aspect-ratio: 0.54;
+  display: grid;
+  place-items: center;
+  align-content: space-evenly;
+  border-radius: 1.1rem;
+  border: 1px solid oklch(0.78 0.16 306 / 0.2);
+  background: linear-gradient(145deg, oklch(0.2 0.022 302), oklch(0.055 0.006 300));
+  box-shadow: inset 0 1px 0 oklch(1 0 0 / 0.08), 0 0 26px oklch(0.65 0.22 306 / 0.16), 0 16px 26px oklch(0.02 0.005 300 / 0.75);
+}
+.fv-speaker-left { left: 5%; }
+.fv-speaker-right { right: 5%; }
+.fv-studio-speaker span {
+  display: block;
+  width: 68%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  border: 1px solid oklch(0.86 0.1 84 / 0.17);
+  background: radial-gradient(circle, oklch(0.08 0.01 300) 18%, oklch(0.25 0.03 302) 23%, oklch(0.055 0.006 300) 65%);
+  box-shadow: inset 0 0 12px oklch(0 0 0 / 0.8), 0 0 13px oklch(0.66 0.22 306 / 0.12);
 }
 
 .fv-main-monitor {
   border: 1px solid oklch(0.92 0.06 86 / 0.13);
   border-radius: 1.25rem;
   background:
-    radial-gradient(ellipse 65% 78% at 50% 44%, oklch(0.81 0.1 78 / 0.12), transparent 68%),
-    linear-gradient(145deg, oklch(0.19 0.017 72 / 0.92), oklch(0.065 0.005 70 / 0.98) 58%, oklch(0.14 0.012 72 / 0.95));
+    radial-gradient(ellipse 65% 78% at 50% 44%, oklch(0.66 0.21 306 / 0.11), transparent 68%),
+    linear-gradient(145deg, oklch(0.18 0.022 302 / 0.94), oklch(0.055 0.006 292 / 0.99) 58%, oklch(0.13 0.02 302 / 0.96));
   box-shadow:
     inset 0 1px 0 oklch(1 0 0 / 0.1),
     inset 0 -35px 85px oklch(0.02 0.005 70 / 0.58),
     0 24px 70px oklch(0.02 0.005 70 / 0.72),
-    0 0 70px oklch(0.86 0.12 82 / 0.1);
+    0 0 28px oklch(0.9 0.12 84 / 0.12), 0 0 75px oklch(0.64 0.22 306 / 0.21);
 }
+
+.fv-console-bridge {
+  z-index: 4;
+  border-radius: 2.3rem 2.3rem 0.8rem 0.8rem;
+  transform: perspective(300px) rotateX(11deg);
+  transform-origin: bottom;
+  background: linear-gradient(180deg, oklch(0.22 0.027 302 / 0.96), oklch(0.065 0.008 295 / 0.98));
+  border-top: 1px solid oklch(0.93 0.1 86 / 0.25);
+  box-shadow: inset 0 1px 0 oklch(1 0 0 / 0.09), 0 -10px 38px oklch(0.62 0.21 306 / 0.12), 0 -2px 24px oklch(0.9 0.12 84 / 0.13), 0 18px 38px oklch(0.02 0.005 300 / 0.8);
+}
+.fv-transport-strip { position: absolute; inset: 1.35rem 9% auto; display: flex; align-items: center; gap: 0.55rem; }
+.fv-transport-dot { width: 0.45rem; height: 0.45rem; border-radius: 50%; background: var(--fv-purple); box-shadow: 0 0 10px var(--fv-purple); }
+.fv-transport-play { display: grid; place-items: center; width: 1.8rem; height: 1.8rem; border-radius: 50%; color: var(--accent-foreground); background: var(--accent); box-shadow: 0 0 16px oklch(0.9 0.12 84 / 0.35); font-size: 0.58rem; }
+.fv-mini-wave { display: flex; flex: 1; align-items: center; justify-content: center; gap: 3px; height: 2rem; border-radius: 999px; background: oklch(0.04 0.006 300 / 0.78); }
+.fv-mini-wave i { width: 2px; height: 35%; border-radius: 2px; background: var(--fv-purple); box-shadow: 0 0 6px oklch(0.67 0.22 306 / 0.55); }
+.fv-mini-wave i:nth-child(2n) { height: 68%; background: var(--accent); }
+.fv-mini-wave i:nth-child(3n) { height: 90%; }
+.fv-level-meter { display: flex; align-items: end; gap: 2px; height: 1.75rem; }
+.fv-level-meter i { width: 3px; height: 32%; border-radius: 2px; background: var(--accent); box-shadow: 0 0 5px oklch(0.9 0.12 84 / 0.45); }
+.fv-level-meter i:nth-child(2), .fv-level-meter i:nth-child(4) { height: 74%; }
+.fv-level-meter i:nth-child(3) { height: 100%; background: var(--fv-purple); }
 
 .fv-monitor-sheen {
   background: linear-gradient(118deg, transparent 10%, oklch(1 0 0 / 0.035) 35%, transparent 52%);
@@ -2539,8 +2618,8 @@ a.ps-row:hover { border-color: color-mix(in srgb, var(--gold) 60%, transparent);
   border: 1px solid oklch(0.98 0.06 90 / 0.65);
   border-radius: 999px;
   color: var(--accent-foreground);
-  background: linear-gradient(135deg, oklch(0.96 0.075 90), oklch(0.83 0.14 79) 56%, oklch(0.91 0.1 86));
-  box-shadow: inset 0 1px 0 oklch(1 0 0 / 0.75), inset 0 -8px 18px oklch(0.52 0.12 70 / 0.16), 0 9px 25px oklch(0.03 0.006 70 / 0.55), 0 0 28px oklch(0.88 0.14 83 / 0.3);
+  background: linear-gradient(135deg, oklch(0.97 0.07 90), oklch(0.86 0.13 80) 56%, oklch(0.91 0.1 86));
+  box-shadow: inset 0 1px 0 oklch(1 0 0 / 0.75), inset 0 -8px 18px oklch(0.52 0.12 70 / 0.16), 0 9px 25px oklch(0.03 0.006 70 / 0.55), 0 0 28px oklch(0.88 0.14 83 / 0.3), 0 0 58px oklch(0.65 0.22 306 / 0.15);
   transition: transform 260ms var(--ease-luxury), box-shadow 260ms ease, filter 260ms ease;
 }
 .fv-primary-action:hover,
@@ -2562,8 +2641,8 @@ a.ps-row:hover { border-color: color-mix(in srgb, var(--gold) 60%, transparent);
   position: relative;
   overflow: hidden;
   border: 1px solid oklch(0.9 0.07 84 / 0.1);
-  border-radius: 0.9rem;
-  background: linear-gradient(145deg, oklch(0.24 0.018 72 / 0.62), oklch(0.1 0.008 70 / 0.84));
+  border-radius: 1.4rem;
+  background: radial-gradient(circle at 12% 18%, oklch(0.64 0.21 306 / 0.09), transparent 32%), linear-gradient(145deg, oklch(0.2 0.02 300 / 0.72), oklch(0.075 0.008 295 / 0.9));
   box-shadow: inset 0 1px 0 oklch(1 0 0 / 0.07), 0 12px 28px oklch(0.03 0.005 70 / 0.3);
   transition: transform 280ms var(--ease-luxury), border-color 280ms ease, box-shadow 280ms ease;
 }
@@ -2580,7 +2659,7 @@ a.ps-row:hover { border-color: color-mix(in srgb, var(--gold) 60%, transparent);
   color: var(--foreground);
   transform: translateY(-3px);
   border-color: oklch(0.9 0.11 84 / 0.3);
-  box-shadow: inset 0 1px 0 oklch(1 0 0 / 0.1), 0 18px 38px oklch(0.03 0.005 70 / 0.48), 0 0 35px oklch(0.86 0.12 82 / 0.1);
+  box-shadow: inset 0 1px 0 oklch(1 0 0 / 0.1), 0 18px 38px oklch(0.03 0.005 70 / 0.48), 0 0 28px oklch(0.86 0.12 82 / 0.1), 0 0 48px oklch(0.64 0.22 306 / 0.12);
 }
 
 .fv-frassy-station { align-self: start; }
@@ -2588,7 +2667,7 @@ a.ps-row:hover { border-color: color-mix(in srgb, var(--gold) 60%, transparent);
 .fv-frassy-portrait img { mask-image: linear-gradient(to bottom, black 0 79%, transparent 100%); }
 .fv-frassy-halo {
   border-radius: 50%;
-  background: radial-gradient(circle, oklch(0.91 0.13 85 / 0.34), oklch(0.82 0.12 78 / 0.1) 43%, transparent 72%);
+  background: radial-gradient(circle at 52% 35%, oklch(0.91 0.13 85 / 0.32), oklch(0.65 0.22 306 / 0.2) 46%, transparent 74%);
   filter: blur(22px);
   animation: fv-frassy-alive 5.5s ease-in-out infinite;
 }
@@ -2601,9 +2680,9 @@ a.ps-row:hover { border-color: color-mix(in srgb, var(--gold) 60%, transparent);
 .fv-director-console { border-top: 1px solid oklch(0.9 0.09 84 / 0.18); }
 .fv-phone-console { background: radial-gradient(ellipse at 50% 0%, oklch(0.86 0.11 82 / 0.08), transparent 58%); }
 .fv-frassy-mobile {
-  border: 1px solid oklch(0.95 0.08 88 / 0.55);
+  border: 1px solid oklch(0.78 0.16 306 / 0.55);
   background: var(--card);
-  box-shadow: 0 0 0 4px oklch(0.86 0.12 82 / 0.08), 0 0 30px oklch(0.9 0.13 84 / 0.42), 0 12px 30px oklch(0.02 0.004 70 / 0.7);
+  box-shadow: 0 0 0 3px oklch(0.86 0.12 82 / 0.1), 0 0 24px oklch(0.9 0.13 84 / 0.35), 0 0 45px oklch(0.65 0.22 306 / 0.32), 0 12px 30px oklch(0.02 0.004 70 / 0.7);
   transition: box-shadow 240ms ease, border-color 240ms ease;
 }
 .fv-frassy-mobile:hover,
@@ -2614,12 +2693,25 @@ a.ps-row:hover { border-color: color-mix(in srgb, var(--gold) 60%, transparent);
   background-image: linear-gradient(
     90deg,
     transparent,
-    oklch(0.88 0.12 82 / 0.75) 18%,
+    oklch(0.65 0.22 306 / 0.8) 18%,
     oklch(0.94 0.08 86 / 0.95) 50%,
-    oklch(0.88 0.12 82 / 0.75) 82%,
+    oklch(0.65 0.22 306 / 0.8) 82%,
     transparent
   );
 }
+
+.fv-depth-console,
+.fv-track-bed {
+  background: linear-gradient(145deg, oklch(0.18 0.022 302 / 0.78), oklch(0.07 0.008 295 / 0.88));
+  box-shadow: inset 0 1px 0 oklch(1 0 0 / 0.07), inset 0 -1px 0 oklch(0.65 0.22 306 / 0.18);
+}
+.fv-depth-control { border-color: oklch(0.7 0.14 306 / 0.15); transition: transform 220ms ease, box-shadow 220ms ease, border-color 220ms ease; }
+.fv-depth-control:hover { transform: translateY(-2px); box-shadow: 0 8px 20px oklch(0.03 0.006 300 / 0.45), 0 0 22px oklch(0.65 0.22 306 / 0.1); }
+.fv-edit-transport { background: oklch(0.055 0.008 296 / 0.9); box-shadow: inset 0 1px 0 oklch(0.9 0.12 84 / 0.13), 0 0 26px oklch(0.64 0.22 306 / 0.08); }
+.fv-transport-button { display: grid; place-items: center; width: 1.8rem; height: 1.8rem; border-radius: 50%; color: var(--accent-foreground); background: var(--accent); box-shadow: 0 0 15px oklch(0.9 0.12 84 / 0.3); font-size: 0.6rem; }
+.fv-track-row { background: oklch(0.06 0.008 298 / 0.72); box-shadow: inset 0 0 0 1px oklch(0.7 0.16 306 / 0.08); }
+.fv-waveform-lane { background: repeating-linear-gradient(90deg, transparent 0 11%, oklch(0.68 0.18 306 / 0.06) 11.2%, transparent 11.5%), oklch(0.04 0.006 295 / 0.9); }
+.fv-wave-bar { flex: 1; min-width: 2px; max-width: 6px; border-radius: 999px; box-shadow: 0 0 6px oklch(0.65 0.22 306 / 0.2); }
 
 /* Lights coming up as the entrance dissolves into the working room. */
 @keyframes fv-lights-up {
@@ -2645,7 +2737,13 @@ a.ps-row:hover { border-color: color-mix(in srgb, var(--gold) 60%, transparent);
   .site-header-studio .site-header-socials,
   .site-header-studio .site-header-signout { display: none; }
   .fv-studio-stage { padding-top: 0.75rem; }
-  .fv-main-monitor { min-height: 29vh; border-radius: 1rem; }
+  .fv-control-room { min-height: 30vh; border-radius: 1.15rem 1.15rem 1.6rem 1.6rem; }
+  .fv-main-monitor { inset-inline: 14%; bottom: 4.2rem; min-height: 0; border-radius: 0.85rem; }
+  .fv-studio-speaker { top: 22%; width: 8%; border-radius: 0.6rem; }
+  .fv-speaker-left { left: 3%; }
+  .fv-speaker-right { right: 3%; }
+  .fv-console-bridge { inset-inline: 6%; height: 4.8rem; }
+  .fv-transport-strip { inset: 1rem 8% auto; }
   .fv-tool-drawer { border-radius: 0.85rem; }
   .fv-action-deck { border-radius: 0.85rem; }
 }
