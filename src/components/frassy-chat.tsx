@@ -89,6 +89,7 @@ import {
   studioPresenceFor,
   type FrassyStudioPresenceState,
 } from "@/lib/frassy/room-looks";
+import { studioConversationPresentation } from "@/lib/studio/studio-ui";
 
 type ProductCard = {
   handle: string;
@@ -1041,7 +1042,9 @@ export function FrassyChat({
                           : "frassy-bubble px-0 py-1 text-[color:var(--ws-ink)]"
                       }
                     >
-                      {m.role === "assistant" && presentation === "studio" ? (
+                      {m.role === "assistant" &&
+                      presentation === "studio" &&
+                      studioConversationPresentation.naturalResponses ? (
                         <MessageResponse>{m.content}</MessageResponse>
                       ) : m.role === "assistant" ? (
                         <PlainEnglishMessage
@@ -1054,7 +1057,9 @@ export function FrassyChat({
                     </MessageContent>
 
                     {/* "Hear Frassy" only exists while playback is provably healthy. */}
-                    {presentation !== "studio" &&
+                    {(!studioConversationPresentation.showPerResponsePlayback ||
+                      presentation !== "studio") &&
+                      presentation !== "studio" &&
                       m.role === "assistant" &&
                       voice.voiceAvailable &&
                       voice.phase !== "recording" && (
