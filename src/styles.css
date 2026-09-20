@@ -304,6 +304,75 @@
   background: var(--gold);
 }
 
+/* ===== FV Studios creator room ===== */
+.fv-arrival {
+  position: relative;
+  height: min(82vh, 820px);
+  min-height: 590px;
+  overflow: hidden;
+  isolation: isolate;
+  background: var(--background);
+}
+
+.fv-arrival-image {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
+  object-position: center;
+  filter: saturate(0.84) contrast(1.08);
+  animation: fv-arrival-settle 1600ms var(--ease-luxury) both;
+}
+
+.fv-arrival-shade {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background:
+    linear-gradient(90deg, oklch(0.07 0.01 80 / 0.9), oklch(0.07 0.01 80 / 0.28) 62%, oklch(0.07 0.01 80 / 0.5)),
+    linear-gradient(0deg, var(--background), transparent 55%, oklch(0.07 0.01 80 / 0.22));
+}
+
+.fv-arrival-copy {
+  position: absolute;
+  inset: auto 0 0;
+  margin-inline: auto;
+  width: min(100%, 1600px);
+  padding: clamp(2rem, 6vw, 6rem);
+  animation: fade-up 900ms var(--ease-luxury) 180ms both;
+}
+
+.fv-workbench {
+  margin-top: -1px;
+  box-shadow: 0 -70px 100px color-mix(in oklab, var(--background) 90%, transparent);
+}
+
+.fv-preview-monitor {
+  background:
+    linear-gradient(90deg, transparent 49.8%, color-mix(in oklab, var(--border) 50%, transparent) 50%, transparent 50.2%),
+    linear-gradient(0deg, transparent 49.8%, color-mix(in oklab, var(--border) 50%, transparent) 50%, transparent 50.2%),
+    radial-gradient(circle at 50% 42%, color-mix(in oklab, var(--gold) 8%, transparent), transparent 44%),
+    var(--background);
+}
+
+@keyframes fv-arrival-settle {
+  from { opacity: 0; transform: scale(1.05); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@media (max-width: 640px) {
+  .fv-arrival { height: 72vh; min-height: 540px; }
+  .fv-arrival-image { object-position: 60% center; }
+  .fv-arrival-copy { padding: 1.5rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fv-arrival-image,
+  .fv-arrival-copy { animation: none; }
+}
+
 @media (max-width: 640px) {
   .media-hero-stage { height: 105vh; min-height: 620px; }
   .media-hero-sticky { height: 64vh; min-height: 390px; }
