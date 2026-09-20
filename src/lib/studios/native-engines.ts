@@ -266,19 +266,11 @@ export function planOperations(
     runnable,
     blocked,
     decision:
-      decision ??
-      blocked[0]
-        ? (decision ?? {
-            ok: false,
-            capability: (blocked[0]?.capability ?? "finishing") as NativeCapability,
-            state: "not_installed",
-            reason: blocked[0]?.reason ?? "Nothing in this request has an installed engine.",
-          })
-        : {
-            ok: false,
-            capability: "finishing",
-            state: "not_installed",
-            reason: "Nothing in this request has an installed engine.",
-          },
+      decision ?? {
+        ok: false,
+        capability: (blocked[0]?.capability ?? "finishing") as NativeCapability,
+        state: "not_installed",
+        reason: blocked[0]?.reason ?? "Nothing in this request has an installed engine.",
+      },
   };
 }
