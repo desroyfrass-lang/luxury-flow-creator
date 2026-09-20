@@ -765,8 +765,9 @@ function StudioPage() {
                     Frassy · Studio Director
                   </span>
                   <span className="block truncate text-[11px] text-muted-foreground">
-                    Tap to talk — I know this production
+                    Tap to open our conversation — I know this production
                   </span>
+
                 </span>
                 <MessageCircle className="h-4 w-4 text-accent" />
               </span>
