@@ -5152,6 +5152,13 @@ a.ps-row:hover {
     animation: none;
   }
 }
+@media (max-width: 767px) {
+  /* The site header stacks into two rows on small screens (124px tall). */
+  .fv-studio-header {
+    top: 124px;
+  }
+}
+
 @media (max-width: 1179px) {
   .fv-frassy-station {
     display: none;
@@ -5205,10 +5212,6 @@ a.ps-row:hover {
   }
   .fv-studio-stage {
     padding-top: 0.75rem;
-  }
-  /* The site header stacks into two rows on small screens (124px). */
-  .fv-studio-header {
-    top: 124px;
   }
   .fv-control-room {
     border-radius: 1.15rem;
