@@ -25,7 +25,7 @@ import { formatDuration, unitLabel, usdFor } from "@/lib/studio/credits";
 type Props = {
   balance: number;
   running: boolean;
-  onRun: (report: QualityReport) => void;
+  onRun: (report: QualityReport, file: File) => void;
 };
 
 export function PhoneContentMode({ balance, running, onRun }: Props) {
@@ -38,6 +38,7 @@ export function PhoneContentMode({ balance, running, onRun }: Props) {
   const [includeUpscale, setIncludeUpscale] = useState(false);
   const [analysing, setAnalysing] = useState(false);
   const [learning, setLearning] = useState(false);
+  const [sourceFile, setSourceFile] = useState<File | null>(null);
 
   useEffect(() => {
     setPreference(readPreference());
@@ -61,6 +62,7 @@ export function PhoneContentMode({ balance, running, onRun }: Props) {
     setLearning(false);
     try {
       const p = await probeFile(file);
+      setSourceFile(file);
       const d = detectPhoneMedia(p);
       setProbe(p);
       setDetection(d);
@@ -132,7 +134,7 @@ export function PhoneContentMode({ balance, running, onRun }: Props) {
         <input
           ref={inputRef}
           type="file"
-          accept="video/*,audio/*"
+          accept="audio/wav,audio/x-wav,audio/mpeg,audio/mp4,audio/webm,audio/ogg,video/*"
           className="hidden"
           onChange={(e) => {
             const f = e.target.files?.[0];
@@ -290,15 +292,17 @@ export function PhoneContentMode({ balance, running, onRun }: Props) {
 
                   <div className="mt-4 flex flex-wrap gap-2">
                     <button
-                      disabled={running || !affordable}
+                      disabled={running || !affordable || !sourceFile || !sourceFile.type.startsWith("audio/")}
                       onClick={() => {
-                        onRun(report);
+                        if (sourceFile) onRun(report, sourceFile);
                         setLearning(true);
                       }}
                       className="rounded-lg bg-amber-300/90 px-4 py-2 text-[11px] font-medium uppercase tracking-widest text-black disabled:opacity-40"
                     >
-                      {affordable
-                        ? `Approve — ${report.forecast.total.toLocaleString()} credits`
+                      {sourceFile && !sourceFile.type.startsWith("audio/")
+                        ? "A1 Clean currently accepts audio files"
+                        : affordable
+                        ? "Run real A1 Clean"
                         : "Not enough credits"}
                     </button>
                     <button

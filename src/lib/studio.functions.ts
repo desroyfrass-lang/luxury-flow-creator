@@ -219,7 +219,7 @@ export const runStudioOperation = createServerFn({ method: "POST" })
     if (data.projectId) {
       const { data: project } = await sb
         .from("studio_projects")
-        .select("production_id")
+        .select("production_id,title,destination")
         .eq("id", data.projectId)
         .eq("user_id", context.userId)
         .maybeSingle();
@@ -228,7 +228,7 @@ export const runStudioOperation = createServerFn({ method: "POST" })
       if (!productionId) {
         const { data: canonical, error: canonicalError } = await admin
           .from("studio_productions")
-          .insert({ title: "Studio production", status: "development", created_by: context.userId })
+          .insert({ title: project.title, status: "development", destinations: [project.destination], created_by: context.userId })
           .select("id")
           .single();
         if (canonicalError) throw new Error(canonicalError.message);
