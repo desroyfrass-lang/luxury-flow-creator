@@ -246,7 +246,7 @@ function StudioPage() {
 
             <div className="grid min-h-[520px] xl:grid-cols-[minmax(0,1fr)_380px]">
               <div className="min-w-0 border-b border-border xl:border-b-0 xl:border-r">
-                <div className="fv-preview-monitor relative grid aspect-video min-h-[320px] place-items-center overflow-hidden bg-background">
+                <div className="fv-preview-monitor relative grid min-h-[280px] place-items-center overflow-hidden bg-background sm:aspect-video sm:min-h-[320px]">
                   <div className="absolute inset-5 border border-border/70" aria-hidden="true" />
                   <div className="relative z-10 max-w-lg px-6 text-center"><MonitorPlay className="mx-auto h-12 w-12 text-accent/55" /><p className="mt-4 text-lg">{active ? active.title : "No production on the monitor"}</p><p className="mt-2 text-sm text-muted-foreground">{active ? `Workspace open for ${active.destination}. No verified media output yet.` : "Choose a creation door or select an existing production."}</p></div>
                   <div className="absolute bottom-3 left-4 flex gap-2 text-xs uppercase text-muted-foreground"><span className="rounded-full border border-border bg-background/80 px-3 py-1">Preview</span><span className="rounded-full border border-border bg-background/80 px-3 py-1">No output claimed</span></div>
