@@ -36,7 +36,6 @@ import { describeIntake, useUploadQueue, type UploadQueue } from "@/lib/workspac
 import { usePushToTalk } from "@/hooks/use-push-to-talk";
 import { FrassyAvatar, type FrassyMood } from "@/components/workspace/frassy-avatar";
 
-
 export type ComposerTool =
   | "files"
   | "folders"
@@ -100,6 +99,8 @@ export type FrassyComposerProps = {
   studio?: boolean;
   /** Lets the surrounding workspace observe intake (Vault, Projects, Search). */
   onIntake?: (summary: string, queue: UploadQueue) => void;
+  /** Keep upload choices in the + menu instead of repeating them as a chip wall. */
+  showToolRail?: boolean;
   /**
    * Built-in voice: a microphone beside the + (dictate straight into the box)
    * and a pause/play control at the far end for Frassy's speech, plus the
@@ -127,6 +128,7 @@ export function FrassyComposer({
   studio = true,
   onIntake,
   voice = false,
+  showToolRail = true,
 }: FrassyComposerProps) {
   const queue = useUploadQueue();
   const [menuOpen, setMenuOpen] = useState(false);
@@ -157,7 +159,9 @@ export function FrassyComposer({
     const created = queue.enqueue(files, source);
     if (!created.length) return;
     const summary = describeIntake(created);
-    setNote(`Received ${summary}. Processing in the background — I'll index and link it to this project.`);
+    setNote(
+      `Received ${summary}. Processing in the background — I'll index and link it to this project.`,
+    );
     window.setTimeout(() => setNote(null), 4200);
     onIntake?.(summary, queue);
   };
@@ -218,7 +222,6 @@ export function FrassyComposer({
         ? "thinking"
         : "idle";
 
-
   return (
     <div
       className={`ws-composer ${dragging ? "ws-composer-drag" : ""}`}
@@ -264,54 +267,61 @@ export function FrassyComposer({
 
       {/* FRASS-0551 — the intake bar wraps so nothing is ever pushed off screen,
           and talking to Frassy is the first control the member sees. */}
-      <div className="ws-toolbar">
-        {/* FRASS-0552 — the voice control is present on every surface: the host
+      {showToolRail ? (
+        <div className="ws-toolbar">
+          {/* FRASS-0552 — the voice control is present on every surface: the host
             passes its own mic, otherwise the composer's built-in one is used. */}
-        {(onMic || voice) && (
-          <button
-            type="button"
-            className={`ws-chip ${micActive || ptt.phase === "recording" ? "ws-chip-live" : ""}`}
-            onClick={onMic ?? (() => void toggleDictation())}
-            disabled={onMic ? micAvailable === false : !ptt.voiceAvailable}
-            aria-label="Talk to Frassy"
-            title="Talk to Frassy"
-            style={{ fontWeight: 600 }}
-          >
-            <Mic className="h-3.5 w-3.5" />
-            <span>
-              {micActive || ptt.phase === "recording"
-                ? "Listening — tap to send"
-                : ptt.phase === "transcribing"
-                  ? "Catching your words…"
-                  : "Talk to Frassy"}
-            </span>
-          </button>
-        )}
-
-        {tools.map((t) => {
-          const meta = TOOL_META[t];
-          const Icon = meta.icon;
-          return (
-            <button key={t} type="button" className="ws-chip" onClick={() => openPicker(t)} title={meta.label}>
-              <Icon className="h-3.5 w-3.5" />
-              <span>{meta.label}</span>
+          {(onMic || voice) && (
+            <button
+              type="button"
+              className={`ws-chip ${micActive || ptt.phase === "recording" ? "ws-chip-live" : ""}`}
+              onClick={onMic ?? (() => void toggleDictation())}
+              disabled={onMic ? micAvailable === false : !ptt.voiceAvailable}
+              aria-label="Talk to Frassy"
+              title="Talk to Frassy"
+              style={{ fontWeight: 600 }}
+            >
+              <Mic className="h-3.5 w-3.5" />
+              <span>
+                {micActive || ptt.phase === "recording"
+                  ? "Listening — tap to send"
+                  : ptt.phase === "transcribing"
+                    ? "Catching your words…"
+                    : "Talk to Frassy"}
+              </span>
             </button>
-          );
-        })}
-        {studio && (
-          <Link to="/studio" className="ws-chip" title="FV Studios">
-            <Clapperboard className="h-3.5 w-3.5" />
-            <span>FV Studios</span>
-          </Link>
-        )}
-        {queue.stats.total > 0 && (
-          <span className="ws-chip pointer-events-none">
-            <Layers className="h-3.5 w-3.5" />
-            {queue.stats.ready}/{queue.stats.total}
-          </span>
-        )}
-      </div>
+          )}
 
+          {tools.map((t) => {
+            const meta = TOOL_META[t];
+            const Icon = meta.icon;
+            return (
+              <button
+                key={t}
+                type="button"
+                className="ws-chip"
+                onClick={() => openPicker(t)}
+                title={meta.label}
+              >
+                <Icon className="h-3.5 w-3.5" />
+                <span>{meta.label}</span>
+              </button>
+            );
+          })}
+          {studio && (
+            <Link to="/studio" className="ws-chip" title="FV Studios">
+              <Clapperboard className="h-3.5 w-3.5" />
+              <span>FV Studios</span>
+            </Link>
+          )}
+          {queue.stats.total > 0 && (
+            <span className="ws-chip pointer-events-none">
+              <Layers className="h-3.5 w-3.5" />
+              {queue.stats.ready}/{queue.stats.total}
+            </span>
+          )}
+        </div>
+      ) : null}
 
       <form
         className="ws-composer-row"
@@ -417,7 +427,12 @@ export function FrassyComposer({
             <Square className="h-4 w-4" />
           </button>
         ) : (
-          <button type="submit" className="ws-send" aria-label="Send" disabled={!value.trim() || loading}>
+          <button
+            type="submit"
+            className="ws-send"
+            aria-label="Send"
+            disabled={!value.trim() || loading}
+          >
             <Send className="h-4 w-4" />
           </button>
         )}
@@ -435,7 +450,6 @@ export function FrassyComposer({
           </button>
         )}
       </form>
-
     </div>
   );
 }

@@ -11,19 +11,28 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Search, User, Instagram, Music2, Youtube, Facebook, Menu, X, Sparkles, KeyRound, LogOut, Settings, Sun } from "lucide-react";
+import {
+  Search,
+  User,
+  Instagram,
+  Music2,
+  Youtube,
+  Facebook,
+  Menu,
+  X,
+  Sparkles,
+  KeyRound,
+  LogOut,
+  Settings,
+  Sun,
+} from "lucide-react";
 import { openTheDaily } from "@/components/workspace/daily-gate";
 import { ForUsLink } from "@/components/for-us-link";
 
 import { useCartSync } from "@/hooks/use-cart-sync";
 import { KidsFooter, KidsNav } from "@/components/kids-world/kids-nav";
 
-import {
-  activeGlobal,
-  areaNavFor,
-  globalNavFor,
-  type NavNode,
-} from "@/lib/navigation/hierarchy";
+import { activeGlobal, areaNavFor, globalNavFor, type NavNode } from "@/lib/navigation/hierarchy";
 
 import { useSiteText } from "@/hooks/use-site-text";
 import { useIsAdmin } from "@/hooks/use-is-admin";
@@ -38,7 +47,6 @@ import symbolLogo from "@/assets/frass-logo-symbol.asset.json";
 // Every item below comes from the one authoritative registry so the menus,
 // Frassy and the breadcrumb can never disagree about where a place lives.
 const ADMIN_ITEM = { to: "/admin", slot: "nav-admin", fallback: "Admin" } as const;
-
 
 const SOCIALS = [
   { href: "https://instagram.com", label: "Instagram", Icon: Instagram },
@@ -97,7 +105,9 @@ function Header() {
   }, [menuOpen]);
 
   return (
-    <header className={`site-header sticky top-0 z-50 ${path === "/studio" ? "site-header-studio" : ""}`}>
+    <header
+      className={`site-header sticky top-0 z-50 ${path === "/studio" ? "site-header-studio" : ""}`}
+    >
       <div className="absolute inset-0 bg-background/70 backdrop-blur-xl border-b border-border/60" />
       <div className="relative mx-auto max-w-[1600px] px-6 lg:px-12 h-20 flex items-center justify-between gap-4">
         <div className="flex-1 hidden md:flex items-center gap-1">
@@ -155,19 +165,19 @@ function Header() {
             >
               {menuOpen ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
             </button>
-              {menuOpen && (
-                <div className="absolute right-0 mt-3 max-h-[75vh] w-72 overflow-y-auto rounded-2xl border border-border/70 bg-background/95 backdrop-blur-xl shadow-2xl p-2 z-50">
-                  <ForUsLink
-                    className="nav-glow block rounded-xl px-4 py-3 text-xs uppercase tracking-[0.25em] text-[color:var(--gold)] transition-colors hover:bg-foreground/5"
-                    activeClassName="bg-foreground/5"
-                  />
-                  {globals.map((node) => (
-                    <MenuGroup key={node.key} node={node} />
-                  ))}
-                  <div className="my-1 h-px bg-border/60" />
-                  <MobileAccountLinks />
-                </div>
-              )}
+            {menuOpen && (
+              <div className="absolute right-0 mt-3 max-h-[75vh] w-72 overflow-y-auto rounded-2xl border border-border/70 bg-background/95 backdrop-blur-xl shadow-2xl p-2 z-50">
+                <ForUsLink
+                  className="nav-glow block rounded-xl px-4 py-3 text-xs uppercase tracking-[0.25em] text-[color:var(--gold)] transition-colors hover:bg-foreground/5"
+                  activeClassName="bg-foreground/5"
+                />
+                {globals.map((node) => (
+                  <MenuGroup key={node.key} node={node} />
+                ))}
+                <div className="my-1 h-px bg-border/60" />
+                <MobileAccountLinks />
+              </div>
+            )}
           </div>
           <CartDrawer />
         </div>
@@ -184,7 +194,9 @@ function Header() {
               key={node.key}
               to={node.path as never}
               className={`nav-glow shrink-0 whitespace-nowrap rounded-full px-3 py-1.5 text-[10px] uppercase tracking-[0.2em] ${
-                here?.key === node.key ? "bg-foreground/10 text-foreground" : "text-muted-foreground"
+                here?.key === node.key
+                  ? "bg-foreground/10 text-foreground"
+                  : "text-muted-foreground"
               }`}
             >
               {node.label}
@@ -218,7 +230,6 @@ function Header() {
           </div>
         </div>
       )}
-
     </header>
   );
 }
@@ -315,7 +326,10 @@ function BuilderAccountMenu() {
           </div>
         ))}
         <DropdownMenuSeparator />
-        <DropdownMenuItem onClick={handleSignOut} className="rounded-xl cursor-pointer text-xs uppercase tracking-[0.2em]">
+        <DropdownMenuItem
+          onClick={handleSignOut}
+          className="rounded-xl cursor-pointer text-xs uppercase tracking-[0.2em]"
+        >
           <LogOut className="h-4 w-4 mr-2" />
           Sign out
         </DropdownMenuItem>
@@ -365,7 +379,9 @@ function MobileAccountLinks() {
               className="nav-glow block rounded-xl px-4 py-3 text-xs uppercase tracking-[0.25em] text-muted-foreground transition-colors hover:bg-foreground/5"
               activeProps={{ className: "text-foreground bg-foreground/5" }}
             >
-              <span aria-hidden className="mr-2">{item.glyph}</span>
+              <span aria-hidden className="mr-2">
+                {item.glyph}
+              </span>
               {item.label}
             </Link>
           ))}
@@ -407,7 +423,9 @@ function GlobalNavItem({ node, active }: { node: NavNode; active: boolean }) {
         }`}
       >
         {node.label}
-        {active && <span className="absolute left-3 right-3 -bottom-0.5 h-px bg-[color:var(--gold)]" />}
+        {active && (
+          <span className="absolute left-3 right-3 -bottom-0.5 h-px bg-[color:var(--gold)]" />
+        )}
       </Link>
       {open && children.length > 0 && (
         <div className="absolute left-0 top-full z-50 w-72 rounded-2xl border border-border/70 bg-background/95 p-2 shadow-2xl backdrop-blur-xl">
@@ -456,10 +474,9 @@ function MenuGroup({ node }: { node: NavNode }) {
   );
 }
 
-
 function FreeTryOnFab() {
   const path = useRouterState({ select: (r) => r.location.pathname });
-  if (path.startsWith("/try-on")) return null;
+  if (path === "/studio" || path.startsWith("/try-on")) return null;
   return (
     <Link
       to="/capsules"
@@ -497,16 +514,41 @@ function Footer() {
           </form>
         </div>
         {[
-          { title: "Shop", links: [["Frass Kicks", "/frass-kicks"], ["Frass Drip", "/frass-drip"], ["Bare Drip", "/bare-drip"]] },
-          { title: "Help", links: [["Welcome Hall", "/welcome-hall"], ["Visual Search", "/visual-search"], ["Rewards", "/rewards"]] },
-          { title: "Brand", links: [["Frass Hill", "/frass-hill"], ["Lookbook", "/lookbook"], ["For Us", "/for-us"]] },
+          {
+            title: "Shop",
+            links: [
+              ["Frass Kicks", "/frass-kicks"],
+              ["Frass Drip", "/frass-drip"],
+              ["Bare Drip", "/bare-drip"],
+            ],
+          },
+          {
+            title: "Help",
+            links: [
+              ["Welcome Hall", "/welcome-hall"],
+              ["Visual Search", "/visual-search"],
+              ["Rewards", "/rewards"],
+            ],
+          },
+          {
+            title: "Brand",
+            links: [
+              ["Frass Hill", "/frass-hill"],
+              ["Lookbook", "/lookbook"],
+              ["For Us", "/for-us"],
+            ],
+          },
         ].map((col) => (
           <div key={col.title}>
-            <h4 className="text-xs uppercase tracking-[0.3em] text-muted-foreground">{col.title}</h4>
+            <h4 className="text-xs uppercase tracking-[0.3em] text-muted-foreground">
+              {col.title}
+            </h4>
             <ul className="mt-4 space-y-2 text-sm">
               {col.links.map(([label, href]) => (
                 <li key={label}>
-                  <Link to={href as never} className="hover:text-[color:var(--gold)] transition">{label}</Link>
+                  <Link to={href as never} className="hover:text-[color:var(--gold)] transition">
+                    {label}
+                  </Link>
                 </li>
               ))}
             </ul>
@@ -554,7 +596,9 @@ export function SiteShell({
   }
 
   return (
-    <div className={`relative min-h-screen ${path === "/studio" ? "site-shell-studio overflow-x-clip" : ""}`}>
+    <div
+      className={`relative min-h-screen ${path === "/studio" ? "site-shell-studio overflow-x-clip" : ""}`}
+    >
       {background && <LuxuryBackground />}
       {preHeader}
       <Header />
@@ -564,4 +608,3 @@ export function SiteShell({
     </div>
   );
 }
-
