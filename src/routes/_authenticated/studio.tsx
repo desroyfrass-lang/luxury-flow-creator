@@ -7,7 +7,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { toast } from "sonner";
 import {
   ArrowRight,
@@ -33,6 +33,8 @@ import {
   Volume2,
   Wand2,
   MessageCircle,
+  Pause,
+  Play,
 } from "lucide-react";
 import { SiteShell } from "@/components/site-shell";
 import { FrassyChat } from "@/components/frassy-chat";
@@ -45,7 +47,7 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } f
 import { ControlDepthBar } from "@/components/studio/control-depth-bar";
 import { A1MasterPanel } from "@/components/studio/a1-master-panel";
 import studioEntry from "@/assets/studio-entry.jpg";
-import frassyStudioLook from "@/assets/frassy-look-workshop.jpg.asset.json";
+import { FV_STUDIOS_FRASSY_LOOK } from "@/lib/frassy/room-looks";
 import type { QualityReport } from "@/lib/studio/phone-content-mode";
 import { FREE_CAPABILITIES, formatDuration, unitLabel, usdFor, buildForecast } from "@/lib/studio/credits";
 import { A1_CLEAN_BUCKET, processA1Clean } from "@/lib/studio/a1-clean";
@@ -144,11 +146,14 @@ function StudioPage() {
   const [creating, setCreating] = useState(false);
   const [direction, setDirection] = useState("");
   const [frassyOpenSignal, setFrassyOpenSignal] = useState(0);
+  const [frassyOpen, setFrassyOpen] = useState(false);
+  const [playing, setPlaying] = useState(false);
   const [why, setWhy] = useState(false);
   const [surfaced, setSurfaced] = useState<Surfaced | null>(null);
   const [preview, setPreview] = useState<{ label: string; url: string } | null>(null);
   const [credits, setCredits] = useState(false);
   const [further, setFurther] = useState(false);
+  const audioRef = useRef<HTMLAudioElement>(null);
 
   // The cinematic entrance dissolves on its own; the working dashboard is
   // already mounted underneath at eye level.
@@ -286,7 +291,7 @@ function StudioPage() {
     ? { label: task ? "Open this production" : "Choose what you're making", onClick: () => { setTab("create"); if (task) add.mutate(); } }
     : audioLane
       ? { label: "Enhance Phone Recording", onClick: () => { setTab("create"); document.getElementById("fv-workspace")?.querySelector<HTMLInputElement>('input[type="file"]')?.click(); } }
-      : { label: "Ask Frassy for the next step", onClick: () => document.getElementById("director-direction")?.focus() };
+      : { label: "Ask Frassy for the next step", onClick: summonFrassy };
 
   const studioContext = [
     "FV Studios",
@@ -299,7 +304,19 @@ function StudioPage() {
     "Mastering, music generation, image generation, video generation, animation and voice generation are not installed.",
     `Best next action: ${primary.label}`,
   ].join("\n");
-  const summonFrassy = () => setFrassyOpenSignal((signal) => signal + 1);
+  function summonFrassy() {
+    setFrassyOpenSignal((signal) => signal + 1);
+  }
+
+  async function togglePreviewPlayback() {
+    const audio = audioRef.current;
+    if (!preview || !audio) {
+      setSurfaced({ kind: "blocked", title: "No playable output yet", body: "Finish a verified audio output first. Nothing was played or charged." });
+      return;
+    }
+    if (audio.paused) await audio.play();
+    else audio.pause();
+  }
 
   return (
     <SiteShell>
@@ -385,12 +402,12 @@ function StudioPage() {
               {preview ? (
                 <div className="fv-monitor-content relative z-10 w-full max-w-xl text-center">
                   <p className="text-xs font-semibold text-accent">{preview.label}</p>
-                  <audio controls src={preview.url} className="mt-3 w-full" />
+                  <audio ref={audioRef} controls src={preview.url} onPlay={() => setPlaying(true)} onPause={() => setPlaying(false)} onEnded={() => setPlaying(false)} className="mt-3 w-full" />
                   <p className="mt-2 text-xs text-muted-foreground">Cleaned and verified. Not A1 Master approved.</p>
                 </div>
               ) : (
                 <div className="fv-monitor-content relative z-10 max-w-md text-center">
-                  <span className="fv-monitor-orbit mx-auto grid h-20 w-20 place-items-center rounded-full"><MonitorPlay className="h-9 w-9 text-accent" /></span>
+                  <Button type="button" variant="ghost" disabled aria-label="No playable output yet" title="No playable output yet" className="fv-monitor-orbit mx-auto grid h-20 w-20 place-items-center rounded-full disabled:opacity-70"><Play className="h-8 w-8 text-accent" /></Button>
                   <p className="mt-5 font-display text-3xl normal-case leading-none sm:text-5xl">{active ? active.title : "Your next production"}</p>
                   <p className="mt-1 text-sm text-muted-foreground">{active ? `${task?.label ?? active.destination} · no verified output yet` : "Pick what you are making below."}</p>
                 </div>
@@ -401,11 +418,12 @@ function StudioPage() {
                 <span className="rounded-full border border-border bg-background/80 px-3 py-1">{preview ? "Cleaned output" : "No output claimed"}</span>
               </div>
               </div>
-              <div className="fv-console-bridge absolute inset-x-[5%] bottom-0 h-[5.7rem] sm:inset-x-[8%]" aria-hidden="true">
+              <div className="fv-console-bridge absolute inset-x-[5%] bottom-0 h-[5.7rem] sm:inset-x-[8%]">
                 <div className="fv-transport-strip">
-                  <span className="fv-transport-dot" /><span className="fv-transport-dot" /><span className="fv-transport-play">▶</span>
-                  <span className="fv-mini-wave"><i /><i /><i /><i /><i /><i /><i /><i /><i /></span>
-                  <span className="fv-level-meter"><i /><i /><i /><i /><i /></span>
+                  <span className="fv-transport-dot" aria-hidden="true" /><span className="fv-transport-dot" aria-hidden="true" />
+                  <Button type="button" variant="ghost" onClick={() => void togglePreviewPlayback()} disabled={!preview} aria-label={preview ? (playing ? "Pause current output" : "Play current output") : "No playable output yet"} title={preview ? (playing ? "Pause current output" : "Play current output") : "No playable output yet"} className="fv-transport-play h-9 w-9 rounded-full p-0">{playing ? <Pause /> : <Play />}</Button>
+                  <span className="fv-mini-wave" aria-hidden="true"><i /><i /><i /><i /><i /><i /><i /><i /><i /></span>
+                  <span className="fv-level-meter" aria-hidden="true"><i /><i /><i /><i /><i /></span>
                 </div>
               </div>
             </div>
@@ -435,7 +453,7 @@ function StudioPage() {
                   onChoose={chooseDoor}
                   onOpen={() => add.mutate()}
                   onRunClean={(report, file) => runPhone.mutate({ report, file })}
-                  onAskFrassy={() => document.getElementById("director-direction")?.focus()}
+                   onAskFrassy={summonFrassy}
                 />
               ) : null}
               {tab === "production" ? (
@@ -458,10 +476,10 @@ function StudioPage() {
           </section>
 
           {/* Frassy is always beside the work, never below it. */}
-          <aside className="fv-frassy-station relative z-10 min-w-0" aria-label="Frassy, your AI director">
+          <aside className={`fv-frassy-station relative z-10 min-w-0 ${frassyOpen ? "is-summoned" : ""}`} aria-label="Frassy, your AI director">
             <button type="button" onClick={summonFrassy} className="fv-frassy-portrait group relative mx-auto block w-full max-w-[19rem] overflow-hidden text-left" aria-label="Talk to Frassy in the studio">
               <span className="fv-frassy-halo absolute inset-x-[8%] bottom-[4%] h-[62%]" aria-hidden="true" />
-              <img src={frassyStudioLook.url} alt="Frassy in her approved black and gold Builders look, standing at the studio console" className="relative z-10 aspect-[3/4] w-full object-cover object-top transition duration-500 group-hover:scale-[1.015]" />
+               <img src={FV_STUDIOS_FRASSY_LOOK.image} alt={FV_STUDIOS_FRASSY_LOOK.alt} className="relative z-10 aspect-[3/4] w-full object-cover object-top transition duration-500 group-hover:scale-[1.015]" />
               <span className="fv-frassy-call absolute inset-x-4 bottom-4 z-20 grid grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-3 rounded-full px-4 py-3">
                 <span className="h-2 w-2 rounded-full bg-accent shadow-[0_0_14px_var(--gold)]" />
                 <span className="min-w-0"><span className="block text-xs font-semibold text-foreground">Frassy · Studio Director</span><span className="block truncate text-[11px] text-muted-foreground">Tap to talk — I know this production</span></span>
@@ -491,14 +509,14 @@ function StudioPage() {
 
         {/* Mobile: the current job's primary action stays in reach. */}
         <button type="button" onClick={summonFrassy} className="fv-frassy-mobile fixed bottom-[5.35rem] right-3 z-40 h-16 w-16 overflow-hidden rounded-full lg:hidden" aria-label="Talk to Frassy in the studio">
-          <img src={frassyStudioLook.url} alt="Frassy" className="h-full w-full object-cover object-top" />
+           <img src={FV_STUDIOS_FRASSY_LOOK.image} alt="Frassy" className="h-full w-full object-cover object-top" />
         </button>
         <div className="fv-studio-surface fixed inset-x-0 bottom-0 z-30 bg-card/95 p-3 backdrop-blur lg:hidden">
           <Button onClick={primary.onClick} className="fv-primary-action min-h-12 w-full">{primary.label} <ArrowRight /></Button>
         </div>
       </div>
 
-      <FrassyChat hideBeacon tone="dark" workspaceContext={studioContext} openSignal={frassyOpenSignal} />
+      <FrassyChat hideBeacon tone="dark" workspaceContext={studioContext} openSignal={frassyOpenSignal} presentation="studio" onOpenChange={setFrassyOpen} />
 
       <ResultDialog
         surfaced={surfaced}
