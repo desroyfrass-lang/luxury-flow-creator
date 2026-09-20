@@ -78,6 +78,13 @@ import { loadMomentum, momentumContext, readMomentum } from "@/lib/frassy/moment
 import { PlainEnglishMessage } from "@/components/frassy/everyday-language-toggle";
 import { useLearningLevel } from "@/hooks/use-learning-level";
 import { learningLevelContext, levelMeta, type LearningLevel } from "@/lib/frassy/learning-levels";
+import {
+  Conversation,
+  ConversationContent,
+  ConversationScrollButton,
+} from "@/components/ai-elements/conversation";
+import { Message, MessageContent } from "@/components/ai-elements/message";
+import { FV_STUDIOS_FRASSY_LOOK } from "@/lib/frassy/room-looks";
 
 type ProductCard = {
   handle: string;
@@ -118,7 +125,6 @@ type Msg = {
   proof?: AuditProof | null;
 };
 
-
 // FRASS-0553 — when a page embeds Frassy inline (The Daily, Workshop), the
 // embedded surface owns the dock microphone; otherwise the floating panel does.
 let embeddedSurfaces = 0;
@@ -156,7 +162,17 @@ export function FrassyChat({
   hideBeacon = false,
   workspaceContext,
   openSignal = 0,
-}: { embedded?: boolean; tone?: "light" | "dark"; hideBeacon?: boolean; workspaceContext?: string; openSignal?: number } = {}) {
+  presentation = "default",
+  onOpenChange,
+}: {
+  embedded?: boolean;
+  tone?: "light" | "dark";
+  hideBeacon?: boolean;
+  workspaceContext?: string;
+  openSignal?: number;
+  presentation?: "default" | "studio";
+  onOpenChange?: (open: boolean) => void;
+} = {}) {
   const navigate = useNavigate();
   const ctx = useFrassyContext();
   // FRASS-0551 — only the Founder Control Room stays dark. Every member surface
@@ -194,9 +210,7 @@ export function FrassyChat({
     const prior = loadTranscript(transcriptScope);
     // Empty is meaningful: it is a fresh card. Always replace the rendered
     // transcript so the previous card can never remain visible or be resent.
-    setMessages(
-      prior.map((t: FrassyTurn) => ({ id: nextId(), role: t.role, content: t.content })),
-    );
+    setMessages(prior.map((t: FrassyTurn) => ({ id: nextId(), role: t.role, content: t.content })));
   }, [transcriptScope]);
   useEffect(() => {
     // Route changes and state updates finish in separate React passes. Without
@@ -238,7 +252,6 @@ export function FrassyChat({
     [auditCard?.key, ledgerGroups],
   );
 
-
   // FRASS-0572A — say out loud which engine is answering here.
   useEffect(() => {
     publishEngineDiagnostics({
@@ -251,7 +264,6 @@ export function FrassyChat({
       path: ctx.pathname,
     });
   }, [auditCard, messages.length, ctx.pathname]);
-
 
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
@@ -283,7 +295,9 @@ export function FrassyChat({
     }
     lastRecordedSpeechRun.current = voice.speechRunId;
     setMessages((prev) => {
-      if (prev.some((message) => message.role === "assistant" && message.content.trim() === spoken)) {
+      if (
+        prev.some((message) => message.role === "assistant" && message.content.trim() === spoken)
+      ) {
         return prev;
       }
       return [...prev, { id: nextId(), role: "assistant", content: spoken }];
@@ -296,7 +310,6 @@ export function FrassyChat({
     if (ctx.pathname === "/welcome-hall") setOpen(true);
   }, [ctx.pathname]);
 
-  const scrollRef = useRef<HTMLDivElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const abortRef = useRef<AbortController | null>(null);
@@ -358,16 +371,14 @@ export function FrassyChat({
   );
 
   useEffect(() => {
-    scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" });
-  }, [messages, loading]);
-
-  useEffect(() => {
     if (open) inputRef.current?.focus();
   }, [open]);
 
   useEffect(() => {
     if (openSignal > 0 && !embedded) setOpen(true);
   }, [embedded, openSignal]);
+
+  useEffect(() => onOpenChange?.(open), [onOpenChange, open]);
 
   // Abort any in-flight turn when the widget unmounts.
   useEffect(() => () => abortRef.current?.abort(), []);
@@ -531,7 +542,6 @@ export function FrassyChat({
           timestamp?: string;
           proof?: AuditProof;
         };
-
       };
 
       // Stale-turn guard: a superseded or stopped turn can never write to the UI.
@@ -575,7 +585,6 @@ export function FrassyChat({
             ? { key: data.navigate.key, label: data.navigate.label, path: data.navigate.path }
             : null,
           proof: data.auditReceipt?.proof ?? null,
-
         },
       ]);
 
@@ -602,7 +611,6 @@ export function FrassyChat({
           content: reply,
         });
       }
-
 
       // FRASS-0513 — Frassy performs the navigation herself. A member is never
       // asked to type a path; if the place needs a session, she routes through
@@ -746,14 +754,16 @@ export function FrassyChat({
       data-frassy-panel
       data-frassy-phase={startup.phase}
       aria-busy={startup.phase === "verifying" || startup.phase === "recovering"}
-      className={`${startup.phase === "verifying" || startup.phase === "recovering" ? "invisible pointer-events-none" : "visible"} frass-workspace ${dark ? "ws-dark" : ""} ${
+      className={`${presentation !== "studio" && (startup.phase === "verifying" || startup.phase === "recovering") ? "invisible pointer-events-none" : "visible"} frass-workspace ${dark ? "ws-dark" : ""} ${presentation === "studio" ? "frassy-studio-conversation" : ""} ${
         expanded
           ? "fixed inset-3 z-[60] flex flex-col overflow-hidden rounded-lg border border-[color:var(--ws-line)] shadow-2xl sm:inset-6"
           : embedded || auditCard
             ? auditCard
               ? "relative mx-auto mt-10 flex min-h-[520px] w-[calc(100%-2rem)] max-w-6xl flex-col overflow-hidden rounded-lg border border-[color:var(--ws-line)]"
               : "flex h-[min(820px,86vh)] min-h-[520px] w-full max-w-full flex-col overflow-hidden rounded-lg border border-[color:var(--ws-line)]"
-            : "fixed bottom-6 right-6 z-50 flex h-[min(620px,78vh)] w-[min(420px,calc(100vw-3rem))] max-w-full flex-col overflow-hidden rounded-lg border border-[color:var(--ws-line)] shadow-2xl"
+            : presentation === "studio"
+              ? "fixed bottom-24 right-3 top-[7.5rem] z-50 flex w-[min(520px,calc(100vw-1.5rem))] max-w-full flex-col overflow-hidden rounded-[1.75rem] lg:bottom-5 lg:right-5 lg:top-[8.5rem]"
+              : "fixed bottom-6 right-6 z-50 flex h-[min(620px,78vh)] w-[min(420px,calc(100vw-3rem))] max-w-full flex-col overflow-hidden rounded-lg border border-[color:var(--ws-line)] shadow-2xl"
       }`}
       style={{ background: "var(--ws-panel)", color: "var(--ws-ink)" }}
     >
@@ -762,10 +772,20 @@ export function FrassyChat({
         className="grid shrink-0 grid-cols-[minmax(0,1fr)_auto] items-center gap-2 border-b border-[color:var(--ws-line)] px-4 py-3"
       >
         <div className="flex min-w-0 items-center gap-3">
-          <img src={symbolAsset.url} alt="" className="h-6 w-6 object-contain" />
+          <img
+            src={presentation === "studio" ? FV_STUDIOS_FRASSY_LOOK.image : symbolAsset.url}
+            alt={presentation === "studio" ? "Frassy" : ""}
+            className={
+              presentation === "studio"
+                ? "h-12 w-12 rounded-full object-cover object-top"
+                : "h-6 w-6 object-contain"
+            }
+          />
           <div>
-            <div className="text-sm text-[color:var(--ws-ink)]">Frassy</div>
-            <div className="text-[10px] uppercase tracking-[0.3em] text-[color:var(--ws-soft)]">
+            <div className="text-sm font-semibold text-[color:var(--ws-ink)]">
+              {presentation === "studio" ? "Frassy · Studio Director" : "Frassy"}
+            </div>
+            <div className="text-xs text-[color:var(--ws-soft)]">
               {voice.phase === "recording"
                 ? "Listening…"
                 : voice.phase === "transcribing"
@@ -906,186 +926,190 @@ export function FrassyChat({
         </div>
       </header>
 
-      <div
-        ref={scrollRef}
+      <Conversation
         data-frassy-transcript
-        className={`frassy-transcript min-h-0 flex-1 space-y-5 px-4 py-5 pb-8 ${auditCard ? "overflow-visible" : "overflow-y-auto"}`}
+        className={`frassy-transcript min-h-0 flex-1 ${auditCard ? "overflow-visible" : ""}`}
       >
-        {/* FRASS-0551 — conversation first: the room is never an empty box. */}
-        {(startup.greeting || (!messages.length && startup.phase === "greeted")) && (
-          <div className="frassy-bubble w-fit max-w-[min(46rem,95%)] rounded-lg bg-[color:var(--ws-accent-bg)] px-4 py-3 text-sm leading-relaxed text-[color:var(--ws-ink)]">
-            <p className="whitespace-pre-wrap">
-              {startup.greeting ??
-                "I'm right here. Tell me what you'd like to do — talk or type, whichever suits you."}
-            </p>
-          </div>
-        )}
+        <ConversationContent className="gap-5 px-4 py-5 pb-8">
+          {/* FRASS-0551 — conversation first: the room is never an empty box. */}
+          {(startup.greeting || (!messages.length && startup.phase === "greeted")) && (
+            <div className="frassy-bubble w-fit max-w-[min(46rem,95%)] rounded-lg bg-[color:var(--ws-accent-bg)] px-4 py-3 text-sm leading-relaxed text-[color:var(--ws-ink)]">
+              <p className="whitespace-pre-wrap">
+                {startup.greeting ??
+                  "I'm right here. Tell me what you'd like to do — talk or type, whichever suits you."}
+              </p>
+            </div>
+          )}
 
-        {startup.notice && (
-          <div className="rounded-sm border border-[color:var(--gold)]/30 bg-[color:var(--gold)]/10 px-3 py-2 text-xs text-[color:var(--ws-ink)]">
-            {startup.notice}
-          </div>
-        )}
+          {startup.notice && (
+            <div className="rounded-sm border border-[color:var(--gold)]/30 bg-[color:var(--gold)]/10 px-3 py-2 text-xs text-[color:var(--ws-ink)]">
+              {startup.notice}
+            </div>
+          )}
 
-        {/* FRASS-0573 — ONE continuous conversation. Earlier card reviews are not
+          {/* FRASS-0573 — ONE continuous conversation. Earlier card reviews are not
             a separate little box: they are the same thread, same bubbles, same
             size, flowing straight into today's live turns. */}
-        {ledgerGroups.map((g) => (
-          <div key={g.cardKey} className="space-y-5">
-            <p className="text-[10px] uppercase tracking-[0.25em] text-[color:var(--gold)]">
-              {formatCardNumber(g.cardNumber)} · {g.cardTitle} · {g.cardPath}
-            </p>
-            {g.entries.map((e) => (
-              <div
-                key={e.id}
-                className={
-                  e.role === "user"
-                    ? "frassy-bubble ml-auto w-fit max-w-[min(42rem,92%)] rounded-lg bg-[color:var(--gold)]/15 px-4 py-3 text-sm leading-relaxed text-[color:var(--ws-ink)]"
-                    : "frassy-bubble w-fit max-w-[min(46rem,95%)] rounded-lg bg-[color:var(--ws-accent-bg)] px-4 py-3 text-sm leading-relaxed text-[color:var(--ws-ink)]"
-                }
-              >
-                <p className="whitespace-pre-wrap">{e.content}</p>
-              </div>
-            ))}
-          </div>
-        ))}
-
-
-        {messages
-          .filter(
-            (message) =>
-              !auditCard ||
-              !currentLedgerTurns.has(`${message.role}\u0000${message.content.trim()}`),
-          )
-          .map((m) => (
-          <div key={m.id}>
-            <div
-              className={
-                m.role === "user"
-                  ? "frassy-bubble ml-auto w-fit max-w-[min(42rem,92%)] rounded-lg bg-[color:var(--gold)]/15 px-4 py-3 text-sm leading-relaxed text-[color:var(--ws-ink)]"
-                  : "frassy-bubble w-fit max-w-[min(46rem,95%)] rounded-lg bg-[color:var(--ws-accent-bg)] px-4 py-3 text-sm leading-relaxed text-[color:var(--ws-ink)]"
-              }
-            >
-              {m.role === "assistant" ? (
-                <PlainEnglishMessage
-                  content={m.content}
-                  onRequestLevel={(next: LearningLevel) =>
-                    void send(`Explain that again at the "${levelMeta(next).label}" level.`)
+          {ledgerGroups.map((g) => (
+            <div key={g.cardKey} className="space-y-5">
+              <p className="text-[10px] uppercase tracking-[0.25em] text-[color:var(--gold)]">
+                {formatCardNumber(g.cardNumber)} · {g.cardTitle} · {g.cardPath}
+              </p>
+              {g.entries.map((e) => (
+                <div
+                  key={e.id}
+                  className={
+                    e.role === "user"
+                      ? "frassy-bubble ml-auto w-fit max-w-[min(42rem,92%)] rounded-lg bg-[color:var(--gold)]/15 px-4 py-3 text-sm leading-relaxed text-[color:var(--ws-ink)]"
+                      : "frassy-bubble w-fit max-w-[min(46rem,95%)] rounded-lg bg-[color:var(--ws-accent-bg)] px-4 py-3 text-sm leading-relaxed text-[color:var(--ws-ink)]"
                   }
-                />
-              ) : (
-                <p className="whitespace-pre-wrap">{m.content}</p>
-              )}
-            </div>
-
-            {/* "Hear Frassy" only exists while playback is provably healthy. */}
-            {m.role === "assistant" && voice.voiceAvailable && voice.phase !== "recording" && (
-              <button
-                type="button"
-                onClick={() => void voice.speak(m.content)}
-                disabled={voice.phase === "speaking"}
-                className="mt-2 inline-flex items-center gap-1.5 rounded-sm border border-[color:var(--ws-line)] px-2 py-1 text-[10px] uppercase tracking-[0.2em] text-[color:var(--ws-soft)] hover:text-[color:var(--ws-ink)] disabled:opacity-40"
-              >
-                <Volume2 className="h-3 w-3" /> Hear Frassy
-              </button>
-            )}
-
-            {!!m.products?.length && (
-              <div className="mt-3 grid grid-cols-2 gap-2">
-                {m.products.map((p) => (
-                  <a
-                    key={`${m.id}-${p.handle}`}
-                    href={p.url}
-                    className="group overflow-hidden rounded-sm border border-[color:var(--ws-line)] hover:border-[color:var(--gold)]/50"
-                  >
-                    {p.image ? (
-                      <img
-                        src={p.image}
-                        alt={p.title}
-                        loading="lazy"
-                        className="h-24 w-full object-cover"
-                      />
-                    ) : (
-                      <div className="flex h-24 items-center justify-center bg-[color:var(--ws-accent-bg)]">
-                        <ShoppingBag className="h-5 w-5 text-[color:var(--ws-soft)]" />
-                      </div>
-                    )}
-                    <div className="px-2 py-2">
-                      <div className="truncate text-[11px] text-[color:var(--ws-ink)]">
-                        {p.title}
-                      </div>
-                      <div className="mt-0.5 text-[10px] text-[color:var(--ws-soft)]">
-                        {p.currency} {p.price}
-                      </div>
-                    </div>
-                  </a>
-                ))}
-              </div>
-            )}
-
-            {m.place && (
-              <button
-                type="button"
-                onClick={() => void navigate({ to: m.place!.path } as never)}
-                className="mt-3 inline-flex items-center gap-2 rounded-sm border border-[color:var(--gold)]/60 bg-[color:var(--gold)]/10 px-3 py-2 text-[10px] font-bold uppercase tracking-[0.25em] text-[color:var(--gold)]"
-              >
-                Open {m.place.label} <ArrowRight className="h-3 w-3" />
-              </button>
-            )}
-
-            {/* FRASS-0578 — Founder proof. Exactly what the model was told about
-                the card, and exactly what it replied BEFORE any server cleanup. */}
-            {m.proof && (
-              <details className="mt-3 rounded-sm border border-[color:var(--ws-line)] px-3 py-2 text-[11px] text-[color:var(--ws-soft)]">
-                <summary className="cursor-pointer text-[10px] font-bold uppercase tracking-[0.25em] text-[color:var(--ws-soft)]">
-                  Developer details · raw model input & output
-                  {m.proof.strippedAnything ? " · cleanup applied" : " · nothing stripped"}
-                </summary>
-                <div className="mt-2 text-[color:var(--ws-ink)]">Card payload sent to the model</div>
-                <pre className="mt-1 whitespace-pre-wrap break-words text-[10px] leading-relaxed">
-                  {m.proof.promptIdentity}
-                </pre>
-                <div className="mt-3 text-[color:var(--ws-ink)]">Raw model reply (unfiltered)</div>
-                <pre className="mt-1 whitespace-pre-wrap break-words text-[10px] leading-relaxed">
-                  {m.proof.rawModelReply}
-                </pre>
-              </details>
-            )}
-
-
-            {m.order && (
-              <div className="mt-3 rounded-sm border border-[color:var(--ws-line)] px-3 py-3 text-xs text-[color:var(--ws-soft)]">
-                <div className="text-[color:var(--ws-ink)]">{m.order.name}</div>
-                <div className="mt-1">
-                  {m.order.financial_status} · {m.order.fulfillment_status} · {m.order.currency}{" "}
-                  {m.order.total}
+                >
+                  <p className="whitespace-pre-wrap">{e.content}</p>
                 </div>
-                {m.order.tracking.map((t) => (
-                  <a
-                    key={t.number}
-                    href={t.url}
-                    className="mt-2 block text-[color:var(--gold)] hover:underline"
-                  >
-                    Track {t.number} ({t.company})
-                  </a>
-                ))}
-              </div>
-            )}
-          </div>
+              ))}
+            </div>
           ))}
 
-        {loading && (
-          <div className="w-fit rounded-lg bg-[color:var(--ws-accent-bg)] px-3 py-2 text-sm text-[color:var(--ws-soft)]">
-            Typing…
-          </div>
-        )}
+          {messages
+            .filter(
+              (message) =>
+                !auditCard ||
+                !currentLedgerTurns.has(`${message.role}\u0000${message.content.trim()}`),
+            )
+            .map((m) => (
+              <Message key={m.id} from={m.role}>
+                <MessageContent
+                  className={
+                    m.role === "user"
+                      ? "frassy-bubble bg-primary px-4 py-3 text-primary-foreground"
+                      : "frassy-bubble px-0 py-1 text-[color:var(--ws-ink)]"
+                  }
+                >
+                  {m.role === "assistant" ? (
+                    <PlainEnglishMessage
+                      content={m.content}
+                      onRequestLevel={(next: LearningLevel) =>
+                        void send(`Explain that again at the "${levelMeta(next).label}" level.`)
+                      }
+                    />
+                  ) : (
+                    <p className="whitespace-pre-wrap">{m.content}</p>
+                  )}
+                </MessageContent>
 
-        {(error || voice.voiceError) && (
-          <div className="rounded-sm border border-red-500/30 bg-red-500/10 px-3 py-2 text-xs text-[color:var(--ws-ink)]">
-            {error ?? voice.voiceError}
-          </div>
-        )}
-      </div>
+                {/* "Hear Frassy" only exists while playback is provably healthy. */}
+                {m.role === "assistant" && voice.voiceAvailable && voice.phase !== "recording" && (
+                  <button
+                    type="button"
+                    onClick={() => void voice.speak(m.content)}
+                    disabled={voice.phase === "speaking"}
+                    className="mt-2 inline-flex items-center gap-1.5 rounded-sm border border-[color:var(--ws-line)] px-2 py-1 text-[10px] uppercase tracking-[0.2em] text-[color:var(--ws-soft)] hover:text-[color:var(--ws-ink)] disabled:opacity-40"
+                  >
+                    <Volume2 className="h-3 w-3" /> Hear Frassy
+                  </button>
+                )}
+
+                {!!m.products?.length && (
+                  <div className="mt-3 grid grid-cols-2 gap-2">
+                    {m.products.map((p) => (
+                      <a
+                        key={`${m.id}-${p.handle}`}
+                        href={p.url}
+                        className="group overflow-hidden rounded-sm border border-[color:var(--ws-line)] hover:border-[color:var(--gold)]/50"
+                      >
+                        {p.image ? (
+                          <img
+                            src={p.image}
+                            alt={p.title}
+                            loading="lazy"
+                            className="h-24 w-full object-cover"
+                          />
+                        ) : (
+                          <div className="flex h-24 items-center justify-center bg-[color:var(--ws-accent-bg)]">
+                            <ShoppingBag className="h-5 w-5 text-[color:var(--ws-soft)]" />
+                          </div>
+                        )}
+                        <div className="px-2 py-2">
+                          <div className="truncate text-[11px] text-[color:var(--ws-ink)]">
+                            {p.title}
+                          </div>
+                          <div className="mt-0.5 text-[10px] text-[color:var(--ws-soft)]">
+                            {p.currency} {p.price}
+                          </div>
+                        </div>
+                      </a>
+                    ))}
+                  </div>
+                )}
+
+                {m.place && (
+                  <button
+                    type="button"
+                    onClick={() => void navigate({ to: m.place!.path } as never)}
+                    className="mt-3 inline-flex items-center gap-2 rounded-sm border border-[color:var(--gold)]/60 bg-[color:var(--gold)]/10 px-3 py-2 text-[10px] font-bold uppercase tracking-[0.25em] text-[color:var(--gold)]"
+                  >
+                    Open {m.place.label} <ArrowRight className="h-3 w-3" />
+                  </button>
+                )}
+
+                {/* FRASS-0578 — Founder proof. Exactly what the model was told about
+                the card, and exactly what it replied BEFORE any server cleanup. */}
+                {m.proof && (
+                  <details className="mt-3 rounded-sm border border-[color:var(--ws-line)] px-3 py-2 text-[11px] text-[color:var(--ws-soft)]">
+                    <summary className="cursor-pointer text-[10px] font-bold uppercase tracking-[0.25em] text-[color:var(--ws-soft)]">
+                      Developer details · raw model input & output
+                      {m.proof.strippedAnything ? " · cleanup applied" : " · nothing stripped"}
+                    </summary>
+                    <div className="mt-2 text-[color:var(--ws-ink)]">
+                      Card payload sent to the model
+                    </div>
+                    <pre className="mt-1 whitespace-pre-wrap break-words text-[10px] leading-relaxed">
+                      {m.proof.promptIdentity}
+                    </pre>
+                    <div className="mt-3 text-[color:var(--ws-ink)]">
+                      Raw model reply (unfiltered)
+                    </div>
+                    <pre className="mt-1 whitespace-pre-wrap break-words text-[10px] leading-relaxed">
+                      {m.proof.rawModelReply}
+                    </pre>
+                  </details>
+                )}
+
+                {m.order && (
+                  <div className="mt-3 rounded-sm border border-[color:var(--ws-line)] px-3 py-3 text-xs text-[color:var(--ws-soft)]">
+                    <div className="text-[color:var(--ws-ink)]">{m.order.name}</div>
+                    <div className="mt-1">
+                      {m.order.financial_status} · {m.order.fulfillment_status} · {m.order.currency}{" "}
+                      {m.order.total}
+                    </div>
+                    {m.order.tracking.map((t) => (
+                      <a
+                        key={t.number}
+                        href={t.url}
+                        className="mt-2 block text-[color:var(--gold)] hover:underline"
+                      >
+                        Track {t.number} ({t.company})
+                      </a>
+                    ))}
+                  </div>
+                )}
+              </Message>
+            ))}
+
+          {loading && (
+            <div className="w-fit rounded-lg bg-[color:var(--ws-accent-bg)] px-3 py-2 text-sm text-[color:var(--ws-soft)]">
+              Typing…
+            </div>
+          )}
+
+          {(error || voice.voiceError) && (
+            <div className="rounded-sm border border-red-500/30 bg-red-500/10 px-3 py-2 text-xs text-[color:var(--ws-ink)]">
+              {error ?? voice.voiceError}
+            </div>
+          )}
+        </ConversationContent>
+        <ConversationScrollButton aria-label="Scroll to latest message" />
+      </Conversation>
 
       {/* FRASS-0551 — Voice confidence: the member always knows where the
           conversation is. Listening · Transcribing · Thinking · Speaking. */}

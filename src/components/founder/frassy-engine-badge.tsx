@@ -34,6 +34,9 @@ export function FrassyEngineBadge() {
 
   if (!isAdmin) return null;
   if (pathname.startsWith("/auth") || pathname.startsWith("/api")) return null;
+  // FV Studios is a creator room. Developer telemetry never floats over the
+  // production or Frassy conversation there.
+  if (pathname === "/studio") return null;
 
   const card = resolveAuditCard(pathname);
   const pipeline = frassyPipelineFor(pathname);

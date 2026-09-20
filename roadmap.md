@@ -8,3 +8,4 @@
 - [x] Re-light FV Studios with champagne-gold practical light and restrained purple ambience inspired by the Founder references.
 - [x] Give the main monitor, audio Edit mode, controls, and Frassy station a real production-studio visual language.
 - [x] Validate the gold-purple room at 1280×900 and 390×844 without page-level overflow.
+- [x] Repair FV Studios Frassy summoning, integrated conversation, honest playback, and crisp text without changing production systems.
