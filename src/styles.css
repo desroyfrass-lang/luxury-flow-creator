@@ -4576,7 +4576,7 @@ a.ps-row:hover {
 }
 
 .fv-control-room {
-  border-radius: 1.75rem 1.75rem 2.5rem 2.5rem;
+  border-radius: 1.75rem;
   background:
     radial-gradient(ellipse 34% 70% at 8% 55%, oklch(0.61 0.22 306 / 0.18), transparent 72%),
     radial-gradient(ellipse 34% 70% at 92% 55%, oklch(0.61 0.22 306 / 0.18), transparent 72%),
@@ -4690,8 +4690,10 @@ a.ps-row:hover {
 }
 
 .fv-console-bridge {
+  position: relative;
   z-index: 4;
-  border-radius: 2.3rem 2.3rem 0.8rem 0.8rem;
+  min-width: 0;
+  border-radius: 1.25rem;
   background: linear-gradient(180deg, oklch(0.22 0.027 302 / 0.96), oklch(0.065 0.008 295 / 0.98));
   border-top: 1px solid oklch(0.93 0.1 86 / 0.25);
   box-shadow:
@@ -4700,13 +4702,6 @@ a.ps-row:hover {
     0 -2px 24px oklch(0.9 0.12 84 / 0.13),
     0 18px 38px oklch(0.02 0.005 300 / 0.8);
 }
-.fv-transport-strip {
-  position: absolute;
-  inset: 1.35rem 9% auto;
-  display: flex;
-  align-items: center;
-  gap: 0.55rem;
-}
 .fv-transport-dot {
   width: 0.45rem;
   height: 0.45rem;
@@ -4714,64 +4709,18 @@ a.ps-row:hover {
   background: var(--fv-purple);
   box-shadow: 0 0 10px var(--fv-purple);
 }
-.fv-transport-play {
-  display: grid;
-  place-items: center;
-  border-radius: 50%;
-  color: var(--accent-foreground);
-  background: var(--accent);
-  box-shadow: 0 0 16px oklch(0.9 0.12 84 / 0.35);
-}
-.fv-transport-play:disabled {
-  color: var(--muted-foreground);
-  background: var(--muted);
-  box-shadow: none;
-  opacity: 0.78;
-}
-.fv-mini-wave {
-  display: flex;
-  flex: 1;
-  align-items: center;
-  justify-content: center;
-  gap: 3px;
-  height: 2rem;
+
+.fv-status-pill {
+  overflow: hidden;
   border-radius: 999px;
-  background: oklch(0.04 0.006 300 / 0.78);
+  border: 1px solid oklch(0.9 0.1 84 / 0.22);
+  background: oklch(0.05 0.006 300 / 0.72);
+  padding: 0.25rem 0.75rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
-.fv-mini-wave i {
-  width: 2px;
-  height: 35%;
-  border-radius: 2px;
-  background: var(--fv-purple);
-  box-shadow: 0 0 6px oklch(0.67 0.22 306 / 0.55);
-}
-.fv-mini-wave i:nth-child(2n) {
-  height: 68%;
-  background: var(--accent);
-}
-.fv-mini-wave i:nth-child(3n) {
-  height: 90%;
-}
-.fv-level-meter {
-  display: flex;
-  align-items: end;
-  gap: 2px;
-  height: 1.75rem;
-}
-.fv-level-meter i {
-  width: 3px;
-  height: 32%;
-  border-radius: 2px;
-  background: var(--accent);
-  box-shadow: 0 0 5px oklch(0.9 0.12 84 / 0.45);
-}
-.fv-level-meter i:nth-child(2),
-.fv-level-meter i:nth-child(4) {
-  height: 74%;
-}
-.fv-level-meter i:nth-child(3) {
-  height: 100%;
-  background: var(--fv-purple);
+.fv-room-stack {
+  grid-template-rows: minmax(0, 1fr) auto;
 }
 
 .fv-monitor-sheen {
@@ -4963,7 +4912,7 @@ a.ps-row:hover {
   display: grid;
   place-items: end center;
   transform-origin: 50% 100%;
-  animation: fv-frassy-presence 6.5s ease-in-out infinite;
+  animation: fv-frassy-presence 11s ease-in-out infinite;
 }
 .frassy-studio-presence img {
   position: relative;
@@ -5131,12 +5080,6 @@ a.ps-row:hover {
 }
 
 .fv-depth-console,
-.fv-track-bed {
-  background: linear-gradient(145deg, oklch(0.18 0.022 302 / 0.78), oklch(0.07 0.008 295 / 0.88));
-  box-shadow:
-    inset 0 1px 0 oklch(1 0 0 / 0.07),
-    inset 0 -1px 0 oklch(0.65 0.22 306 / 0.18);
-}
 .fv-depth-control {
   border-color: oklch(0.7 0.14 306 / 0.15);
   transition:
@@ -5149,44 +5092,6 @@ a.ps-row:hover {
   box-shadow:
     0 8px 20px oklch(0.03 0.006 300 / 0.45),
     0 0 22px oklch(0.65 0.22 306 / 0.1);
-}
-.fv-edit-transport {
-  background: oklch(0.055 0.008 296 / 0.9);
-  box-shadow:
-    inset 0 1px 0 oklch(0.9 0.12 84 / 0.13),
-    0 0 26px oklch(0.64 0.22 306 / 0.08);
-}
-.fv-transport-button {
-  display: grid;
-  place-items: center;
-  width: 1.8rem;
-  height: 1.8rem;
-  border-radius: 50%;
-  color: var(--accent-foreground);
-  background: var(--accent);
-  box-shadow: 0 0 15px oklch(0.9 0.12 84 / 0.3);
-  font-size: 0.6rem;
-}
-.fv-track-row {
-  background: oklch(0.06 0.008 298 / 0.72);
-  box-shadow: inset 0 0 0 1px oklch(0.7 0.16 306 / 0.08);
-}
-.fv-waveform-lane {
-  background:
-    repeating-linear-gradient(
-      90deg,
-      transparent 0 11%,
-      oklch(0.68 0.18 306 / 0.06) 11.2%,
-      transparent 11.5%
-    ),
-    oklch(0.04 0.006 295 / 0.9);
-}
-.fv-wave-bar {
-  flex: 1;
-  min-width: 2px;
-  max-width: 6px;
-  border-radius: 999px;
-  box-shadow: 0 0 6px oklch(0.65 0.22 306 / 0.2);
 }
 
 /* Lights coming up as the entrance dissolves into the working room. */
@@ -5224,7 +5129,7 @@ a.ps-row:hover {
     transform: translate3d(0, 0, 0) scale(1);
   }
   50% {
-    transform: translate3d(0, -3px, 0) scale(1.006);
+    transform: translate3d(0, -1.5px, 0);
   }
 }
 @keyframes fv-frassy-wave {
@@ -5247,6 +5152,13 @@ a.ps-row:hover {
     animation: none;
   }
 }
+@media (max-width: 767px) {
+  /* The site header stacks into two rows on small screens (124px tall). */
+  .fv-studio-header {
+    top: 124px;
+  }
+}
+
 @media (max-width: 1179px) {
   .fv-frassy-station {
     display: none;
@@ -5302,17 +5214,13 @@ a.ps-row:hover {
     padding-top: 0.75rem;
   }
   .fv-control-room {
-    min-height: 30vh;
-    border-radius: 1.15rem 1.15rem 1.6rem 1.6rem;
+    border-radius: 1.15rem;
   }
   .fv-main-monitor {
-    inset-inline: 14%;
-    bottom: 4.2rem;
-    min-height: 0;
     border-radius: 0.85rem;
   }
-  .fv-monitor-content {
-    transform: translateY(-0.75rem);
+  .fv-room-stack {
+    padding-inline: 12%;
   }
   .fv-monitor-content .font-display {
     font-size: 2rem;
@@ -5328,13 +5236,6 @@ a.ps-row:hover {
   }
   .fv-speaker-right {
     right: 3%;
-  }
-  .fv-console-bridge {
-    inset-inline: 6%;
-    height: 4.8rem;
-  }
-  .fv-transport-strip {
-    inset: 1rem 8% auto;
   }
   .fv-tool-drawer {
     border-radius: 0.85rem;

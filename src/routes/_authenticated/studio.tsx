@@ -27,13 +27,10 @@ import {
   Scissors,
   Send,
   Shield,
-  SlidersHorizontal,
   Sparkles,
   Upload,
-  Volume2,
   Wand2,
   MessageCircle,
-  Pause,
   Play,
 } from "lucide-react";
 import { SiteShell } from "@/components/site-shell";
@@ -190,13 +187,6 @@ type Surfaced =
   | { kind: "working"; title: string; body: string }
   | { kind: "blocked"; title: string; body: string }
   | { kind: "done"; title: string; body: string };
-
-const TIMELINE_TRACKS = [
-  { name: "V2 · Titles & graphics", tone: "bg-accent/25" },
-  { name: "V1 · Main footage", tone: "bg-chrome/20" },
-  { name: "A1 · Voice", tone: "bg-primary/20" },
-  { name: "A2 · Music", tone: "bg-muted-foreground/20" },
-];
 
 function StudioPage() {
   const wallet = useServerFn(getWallet);
@@ -449,20 +439,6 @@ function StudioPage() {
     setFrassyOpenSignal((signal) => signal + 1);
   }
 
-  async function togglePreviewPlayback() {
-    const audio = audioRef.current;
-    if (!preview || !audio) {
-      setSurfaced({
-        kind: "blocked",
-        title: "No playable output yet",
-        body: "Finish a verified audio output first. Nothing was played or charged.",
-      });
-      return;
-    }
-    if (audio.paused) await audio.play();
-    else audio.pause();
-  }
-
   return (
     <SiteShell>
       <div
@@ -495,7 +471,8 @@ function StudioPage() {
         ) : null}
 
         {/* Compact, persistent studio header: where I am, what I'm on, what it costs. */}
-        <header className="fv-studio-header sticky top-0 z-30 backdrop-blur-xl">
+        {/* Sits below the pinned site header (h-20) so nothing stacks on top of the tabs. */}
+        <header className="fv-studio-header sticky top-20 z-30 backdrop-blur-xl">
           <div className="mx-auto grid max-w-[1600px] grid-cols-[minmax(0,1fr)_auto] items-center gap-3 px-3 pb-2 pt-11 sm:px-5">
             <div className="flex min-w-0 items-center gap-2">
               <span className="fv-console-icon grid h-9 w-9 shrink-0 place-items-center rounded-full">
@@ -575,7 +552,7 @@ function StudioPage() {
         >
           <div className="fv-ceiling-light" aria-hidden="true" />
           <section className="relative z-10 min-w-0 space-y-3" aria-label="Command centre">
-            <div className="fv-control-room relative min-h-[34vh] overflow-hidden sm:min-h-[38vh]">
+            <div className="fv-control-room relative overflow-hidden">
               <div className="fv-acoustic-wall fv-acoustic-wall-left" aria-hidden="true" />
               <div className="fv-acoustic-wall fv-acoustic-wall-right" aria-hidden="true" />
               <div className="fv-studio-speaker fv-speaker-left" aria-hidden="true">
@@ -586,90 +563,68 @@ function StudioPage() {
                 <span />
                 <span />
               </div>
-              <div className="fv-main-monitor absolute inset-x-[12%] top-5 bottom-[4.6rem] grid place-items-center overflow-hidden p-5 sm:inset-x-[14%] sm:top-6">
-                {preview ? (
-                  <div className="fv-monitor-content relative z-10 w-full max-w-xl text-center">
-                    <p className="text-xs font-semibold text-accent">{preview.label}</p>
-                    <audio
-                      ref={audioRef}
-                      controls
-                      src={preview.url}
-                      onPlay={() => setPlaying(true)}
-                      onPause={() => setPlaying(false)}
-                      onEnded={() => setPlaying(false)}
-                      className="mt-3 w-full"
-                    />
-                    <p className="mt-2 text-xs text-muted-foreground">
-                      Cleaned and verified. Not A1 Master approved.
-                    </p>
-                  </div>
-                ) : (
-                  <div className="fv-monitor-content relative z-10 max-w-md text-center">
-                    <Button
-                      type="button"
-                      variant="ghost"
-                      disabled
-                      aria-label="No playable output yet"
-                      title="No playable output yet"
-                      className="fv-monitor-orbit mx-auto grid h-20 w-20 place-items-center rounded-full disabled:opacity-70"
-                    >
-                      <Play className="h-8 w-8 text-accent" />
-                    </Button>
-                    <p className="mt-5 font-display text-3xl normal-case leading-none sm:text-5xl">
+              {/* Reserved rows: the monitor and the status bar never sit on top
+                  of each other, whatever the production is called. */}
+              <div className="fv-room-stack relative z-10 grid min-w-0 gap-3 px-[9%] py-5 sm:py-6">
+                <div className="fv-main-monitor grid min-h-[12rem] min-w-0 place-items-center overflow-hidden p-4 sm:min-h-[15rem] sm:p-6">
+                  <div className="fv-monitor-content relative z-10 w-full min-w-0 max-w-2xl text-center">
+                    <p className="break-words font-display text-2xl normal-case leading-tight sm:text-4xl">
                       {active ? active.title : "Your next production"}
                     </p>
-                    <p className="mt-1 text-sm text-muted-foreground">
+                    <p className="mt-1 break-words text-sm text-muted-foreground">
                       {active
-                        ? `${task?.label ?? active.destination} · no verified output yet`
+                        ? `${task?.label ?? active.destination} · ${preview ? "cleaned output ready" : "no verified output yet"}`
                         : "Pick what you are making below."}
                     </p>
+                    {preview ? (
+                      <div className="mt-4">
+                        <p className="text-xs font-semibold text-accent">{preview.label}</p>
+                        <audio
+                          ref={audioRef}
+                          controls
+                          src={preview.url}
+                          onPlay={() => setPlaying(true)}
+                          onPause={() => setPlaying(false)}
+                          onEnded={() => setPlaying(false)}
+                          className="mt-2 w-full"
+                        />
+                        <p className="mt-2 text-xs text-muted-foreground">
+                          Cleaned and verified. Not A1 Master approved.
+                        </p>
+                      </div>
+                    ) : (
+                      <div className="mt-4">
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          disabled
+                          aria-label="No playable output yet"
+                          title="No playable output yet"
+                          className="fv-monitor-orbit mx-auto grid h-16 w-16 place-items-center rounded-full disabled:opacity-70"
+                        >
+                          <Play className="h-7 w-7 text-accent" />
+                        </Button>
+                        <p className="mt-2 text-xs text-muted-foreground">
+                          No playable output yet.
+                        </p>
+                      </div>
+                    )}
                   </div>
-                )}
-                <span
-                  className="fv-monitor-sheen pointer-events-none absolute inset-0"
-                  aria-hidden="true"
-                />
-                <div className="absolute bottom-3 left-4 hidden gap-2 text-xs uppercase text-muted-foreground sm:flex">
-                  <span className="rounded-full border border-border bg-background/80 px-3 py-1">
-                    Preview
-                  </span>
-                  <span className="rounded-full border border-border bg-background/80 px-3 py-1">
-                    {preview ? "Cleaned output" : "No output claimed"}
-                  </span>
+                  <span
+                    className="fv-monitor-sheen pointer-events-none absolute inset-0"
+                    aria-hidden="true"
+                  />
                 </div>
-              </div>
-              <div className="fv-console-bridge absolute inset-x-[5%] bottom-0 h-[5.7rem] sm:inset-x-[8%]">
-                <div className="fv-transport-strip">
-                  <span className="fv-transport-dot" aria-hidden="true" />
-                  <span className="fv-transport-dot" aria-hidden="true" />
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    onClick={() => void togglePreviewPlayback()}
-                    disabled={!playback.playable}
-                    aria-label={playing ? "Pause current output" : playback.label}
-                    title={playing ? "Pause current output" : playback.label}
-                    className="fv-transport-play h-9 w-9 rounded-full p-0"
-                  >
-                    {playing ? <Pause /> : <Play />}
-                  </Button>
-                  <span className="fv-mini-wave" aria-hidden="true">
-                    <i />
-                    <i />
-                    <i />
-                    <i />
-                    <i />
-                    <i />
-                    <i />
-                    <i />
-                    <i />
-                  </span>
-                  <span className="fv-level-meter" aria-hidden="true">
-                    <i />
-                    <i />
-                    <i />
-                    <i />
-                    <i />
+                {/* Status only — no control here pretends to do anything. */}
+                <div className="fv-console-bridge flex min-w-0 flex-wrap items-center gap-x-3 gap-y-2 px-4 py-3 text-xs uppercase text-muted-foreground">
+                  <span className="fv-transport-dot shrink-0" aria-hidden="true" />
+                  <span className="shrink-0">Preview</span>
+                  <span className="fv-status-pill min-w-0">
+                    {playback.playable
+                      ? playing
+                        ? "Playing cleaned output"
+                        : "Cleaned output ready"
+                      : playback.label}
                   </span>
                 </div>
               </div>
@@ -753,13 +708,20 @@ function StudioPage() {
                   </p>
                 </div>
               ) : null}
-              {tab === "edit" ? (
-                <EditWorkspace directed={directed} depth={currentDepth} audioLane={audioLane} />
-              ) : null}
+              {tab === "edit" ? <EditWorkspace directed={directed} audioLane={audioLane} /> : null}
               {tab === "quality" ? (
                 <A1MasterPanel evidence={(evidenceQ.data ?? {}) as A1Evidence} />
               ) : null}
-              {tab === "export" ? <ExportWatermarkPanel /> : null}
+              {tab === "export" ? (
+                preview ? (
+                  <ExportWatermarkPanel />
+                ) : (
+                  <p className="text-sm text-muted-foreground">
+                    Export opens once this production has a verified output. Finish Enhance Phone
+                    Recording first — nothing here can export or charge you yet.
+                  </p>
+                )
+              ) : null}
             </div>
           </section>
 
@@ -790,9 +752,10 @@ function StudioPage() {
                     Frassy · Studio Director
                   </span>
                   <span className="block truncate text-[11px] text-muted-foreground">
-                    Tap to talk — I know this production
+                    Tap to open our conversation — I know this production
                   </span>
                 </span>
+
                 <MessageCircle className="h-4 w-4 text-accent" />
               </span>
             </button>
@@ -840,13 +803,6 @@ function StudioPage() {
                   ))}
                 </div>
               )}
-              <Button
-                variant="ghost"
-                className="mt-2 min-h-11 w-full text-muted-foreground"
-                onClick={summonFrassy}
-              >
-                <MessageCircle /> Open full conversation
-              </Button>
             </div>
           </aside>
 
@@ -1141,90 +1097,31 @@ function CreateWorkspace({
   );
 }
 
-function EditWorkspace({
-  directed,
-  depth,
-  audioLane,
-}: {
-  directed: boolean;
-  depth: ControlDepthId;
-  audioLane: boolean;
-}) {
-  const producer = depth === "producer" || depth === "pro";
+function EditWorkspace({ directed, audioLane }: { directed: boolean; audioLane: boolean }) {
   if (directed) {
     return (
       <p className="text-sm text-muted-foreground">
-        Directed mode keeps editing out of your way. Move to Creator depth in Production to open the
-        timeline and inspector.
+        Directed mode keeps editing out of your way. Move to Creator depth in Production to see what
+        editing is available.
       </p>
     );
   }
+  // Truthful state: no editing machine is installed, so nothing here pretends
+  // to be a timeline, transport or mixer you can operate.
   return (
-    <div className="fv-edit-console space-y-3">
-      <div className="fv-edit-transport flex items-center gap-3 rounded-full px-4 py-2">
-        <span className="fv-transport-button" aria-hidden="true">
-          ▶
-        </span>
-        <span className="font-mono text-xs text-foreground">00:00:00</span>
-        <span className="min-w-0 flex-1 text-right text-xs text-muted-foreground">
-          Timeline · {producer ? "Producer controls" : "Creator controls"}
-        </span>
-      </div>
-      <div className="fv-track-bed rounded-2xl p-3">
-        <h2 className="flex items-center gap-2 text-sm font-medium">
-          <Scissors className="h-4 w-4 text-accent" /> Timeline
-        </h2>
-        <div className="mt-3 space-y-2">
-          {TIMELINE_TRACKS.slice(0, producer ? 4 : 2).map((track) => (
-            <div
-              key={track.name}
-              className="fv-track-row grid gap-2 rounded-xl p-2 sm:grid-cols-[140px_1fr]"
-            >
-              <span className="truncate text-xs text-muted-foreground">{track.name}</span>
-              <div className="fv-waveform-lane flex h-9 items-center gap-1 rounded-lg px-2">
-                {[
-                  "h-2",
-                  "h-3.5",
-                  "h-5",
-                  "h-3",
-                  "h-6",
-                  "h-4",
-                  "h-2.5",
-                  "h-5",
-                  "h-3.5",
-                  "h-5.5",
-                  "h-2.5",
-                  "h-4",
-                  "h-2",
-                  "h-4",
-                  "h-5",
-                  "h-3",
-                ].map((height, i) => (
-                  <span key={i} className={`${track.tone} fv-wave-bar ${height}`} />
-                ))}
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-      <details className="border-t border-border pt-3">
-        <summary className="flex min-h-11 cursor-pointer items-center gap-2 text-sm font-medium">
-          <SlidersHorizontal className="h-4 w-4 text-accent" /> Inspector
-        </summary>
-        <p className="mt-2 text-sm text-muted-foreground">
-          Select a clip to adjust transform, colour, timing and blend. Nothing is selected yet.
-        </p>
-      </details>
-      {producer && audioLane ? (
-        <details className="border-t border-border pt-3">
-          <summary className="flex min-h-11 cursor-pointer items-center gap-2 text-sm font-medium">
-            <Volume2 className="h-4 w-4 text-accent" /> Mixer
-          </summary>
-          <p className="mt-2 text-sm text-muted-foreground">
-            Tracks, EQ and levels appear here once audio is in the timeline.
-          </p>
-        </details>
-      ) : null}
+    <div className="space-y-2">
+      <h2 className="flex items-center gap-2 text-sm font-medium">
+        <Scissors className="h-4 w-4 text-accent" /> Editing
+      </h2>
+      <p className="text-sm text-muted-foreground">
+        The Frass editing machine is NOT INSTALLED yet, so there is no timeline, transport or mixer
+        to operate here and nothing can be charged.
+      </p>
+      <p className="text-sm text-muted-foreground">
+        {audioLane
+          ? "For audio you can still run Enhance Phone Recording in Create, and the cleaned file stays yours."
+          : "You can still plan this production with Frassy, and bring finished files in through Assets."}
+      </p>
     </div>
   );
 }
@@ -1296,7 +1193,7 @@ function ResultDialog({
                     : "Not enough credits"}
               </Button>
               <Button variant="outline" className="min-h-12" onClick={onClose}>
-                Back
+                Close
               </Button>
               <Button variant="ghost" className="min-h-12" onClick={onWhy}>
                 Why?
@@ -1325,7 +1222,7 @@ function ResultDialog({
               {surfaced.kind === "blocked" ? (
                 <>
                   <Button variant="outline" className="min-h-12" onClick={onClose}>
-                    Back
+                    Close
                   </Button>
                   <Button
                     className="min-h-12 bg-accent text-accent-foreground hover:bg-accent/90"
