@@ -575,7 +575,7 @@ function StudioPage() {
         >
           <div className="fv-ceiling-light" aria-hidden="true" />
           <section className="relative z-10 min-w-0 space-y-3" aria-label="Command centre">
-            <div className="fv-control-room relative min-h-[34vh] overflow-hidden sm:min-h-[38vh]">
+            <div className="fv-control-room relative overflow-hidden">
               <div className="fv-acoustic-wall fv-acoustic-wall-left" aria-hidden="true" />
               <div className="fv-acoustic-wall fv-acoustic-wall-right" aria-hidden="true" />
               <div className="fv-studio-speaker fv-speaker-left" aria-hidden="true">
@@ -586,94 +586,73 @@ function StudioPage() {
                 <span />
                 <span />
               </div>
-              <div className="fv-main-monitor absolute inset-x-[12%] top-5 bottom-[4.6rem] grid place-items-center overflow-hidden p-5 sm:inset-x-[14%] sm:top-6">
-                {preview ? (
-                  <div className="fv-monitor-content relative z-10 w-full max-w-xl text-center">
-                    <p className="text-xs font-semibold text-accent">{preview.label}</p>
-                    <audio
-                      ref={audioRef}
-                      controls
-                      src={preview.url}
-                      onPlay={() => setPlaying(true)}
-                      onPause={() => setPlaying(false)}
-                      onEnded={() => setPlaying(false)}
-                      className="mt-3 w-full"
-                    />
-                    <p className="mt-2 text-xs text-muted-foreground">
-                      Cleaned and verified. Not A1 Master approved.
-                    </p>
-                  </div>
-                ) : (
-                  <div className="fv-monitor-content relative z-10 max-w-md text-center">
-                    <Button
-                      type="button"
-                      variant="ghost"
-                      disabled
-                      aria-label="No playable output yet"
-                      title="No playable output yet"
-                      className="fv-monitor-orbit mx-auto grid h-20 w-20 place-items-center rounded-full disabled:opacity-70"
-                    >
-                      <Play className="h-8 w-8 text-accent" />
-                    </Button>
-                    <p className="mt-5 font-display text-3xl normal-case leading-none sm:text-5xl">
+              {/* Reserved rows: the monitor and the status bar never sit on top
+                  of each other, whatever the production is called. */}
+              <div className="fv-room-stack relative z-10 grid min-w-0 gap-3 px-[9%] py-5 sm:py-6">
+                <div className="fv-main-monitor grid min-h-[12rem] min-w-0 place-items-center overflow-hidden p-4 sm:min-h-[15rem] sm:p-6">
+                  <div className="fv-monitor-content relative z-10 w-full min-w-0 max-w-2xl text-center">
+                    <p className="break-words font-display text-2xl normal-case leading-tight sm:text-4xl">
                       {active ? active.title : "Your next production"}
                     </p>
-                    <p className="mt-1 text-sm text-muted-foreground">
+                    <p className="mt-1 break-words text-sm text-muted-foreground">
                       {active
-                        ? `${task?.label ?? active.destination} · no verified output yet`
+                        ? `${task?.label ?? active.destination} · ${preview ? "cleaned output ready" : "no verified output yet"}`
                         : "Pick what you are making below."}
                     </p>
+                    {preview ? (
+                      <div className="mt-4">
+                        <p className="text-xs font-semibold text-accent">{preview.label}</p>
+                        <audio
+                          ref={audioRef}
+                          controls
+                          src={preview.url}
+                          onPlay={() => setPlaying(true)}
+                          onPause={() => setPlaying(false)}
+                          onEnded={() => setPlaying(false)}
+                          className="mt-2 w-full"
+                        />
+                        <p className="mt-2 text-xs text-muted-foreground">
+                          Cleaned and verified. Not A1 Master approved.
+                        </p>
+                      </div>
+                    ) : (
+                      <div className="mt-4">
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          disabled
+                          aria-label="No playable output yet"
+                          title="No playable output yet"
+                          className="fv-monitor-orbit mx-auto grid h-16 w-16 place-items-center rounded-full disabled:opacity-70"
+                        >
+                          <Play className="h-7 w-7 text-accent" />
+                        </Button>
+                        <p className="mt-2 text-xs text-muted-foreground">
+                          No playable output yet.
+                        </p>
+                      </div>
+                    )}
                   </div>
-                )}
-                <span
-                  className="fv-monitor-sheen pointer-events-none absolute inset-0"
-                  aria-hidden="true"
-                />
-                <div className="absolute bottom-3 left-4 hidden gap-2 text-xs uppercase text-muted-foreground sm:flex">
-                  <span className="rounded-full border border-border bg-background/80 px-3 py-1">
-                    Preview
-                  </span>
-                  <span className="rounded-full border border-border bg-background/80 px-3 py-1">
-                    {preview ? "Cleaned output" : "No output claimed"}
-                  </span>
+                  <span
+                    className="fv-monitor-sheen pointer-events-none absolute inset-0"
+                    aria-hidden="true"
+                  />
                 </div>
-              </div>
-              <div className="fv-console-bridge absolute inset-x-[5%] bottom-0 h-[5.7rem] sm:inset-x-[8%]">
-                <div className="fv-transport-strip">
-                  <span className="fv-transport-dot" aria-hidden="true" />
-                  <span className="fv-transport-dot" aria-hidden="true" />
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    onClick={() => void togglePreviewPlayback()}
-                    disabled={!playback.playable}
-                    aria-label={playing ? "Pause current output" : playback.label}
-                    title={playing ? "Pause current output" : playback.label}
-                    className="fv-transport-play h-9 w-9 rounded-full p-0"
-                  >
-                    {playing ? <Pause /> : <Play />}
-                  </Button>
-                  <span className="fv-mini-wave" aria-hidden="true">
-                    <i />
-                    <i />
-                    <i />
-                    <i />
-                    <i />
-                    <i />
-                    <i />
-                    <i />
-                    <i />
-                  </span>
-                  <span className="fv-level-meter" aria-hidden="true">
-                    <i />
-                    <i />
-                    <i />
-                    <i />
-                    <i />
+                {/* Status only — no control here pretends to do anything. */}
+                <div className="fv-console-bridge flex min-w-0 flex-wrap items-center gap-x-3 gap-y-2 px-4 py-3 text-xs uppercase text-muted-foreground">
+                  <span className="fv-transport-dot shrink-0" aria-hidden="true" />
+                  <span className="shrink-0">Preview</span>
+                  <span className="fv-status-pill min-w-0">
+                    {playback.playable
+                      ? playing
+                        ? "Playing cleaned output"
+                        : "Cleaned output ready"
+                      : playback.label}
                   </span>
                 </div>
               </div>
             </div>
+
 
             <div className="fv-action-deck grid grid-cols-[minmax(0,1fr)_auto] items-center gap-3 px-3 py-3 sm:flex">
               <Button
