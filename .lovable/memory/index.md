@@ -101,6 +101,7 @@ FRASS-0573: every Frassy audit reply is permanently committed to the Founder Aud
 - [FINAL LOVABLE DIRECTIVE](FINAL_LOVABLE_DIRECTIVE.md) — Active commissioning charter: stop designing, start building; Builder experience is the north star; decision filter is "which choice creates the best Builder experience?"
 - [Frass OS Constitution v1.0](FRASS_OS_CONSTITUTION.md) — Foundational charter: mission, vision, Builder principles, district definitions, and constitutional oaths for every future contributor
 - [Original Frass visual direction](mem://design/original-frass-visual-direction) — Dark streetwear direction, block letters, chrome/gold brand cues, real uploaded logo assets
+- [FV Studios approved Frassy + room reference](mem://design/fv-studios-frassy-approved) — Locked FV Studios Frassy identity (face, long locs, studio attire, jewelry) and approved purple/gold studio room & conversation-panel reference
 - [Frass Vision Studios](mem://features/frass-vision-studios) — FRASS-0407 rebrand: full name vs FV Studios shorthand, usage rules, Studio District home
 - [Frass Vision Studios Network](mem://features/frass-vision-studios-network) — FRASS-0410: label/film/publishing company, royalty participation only on works published through the Network, Vision Partners, one modular Creator Agreement
 
