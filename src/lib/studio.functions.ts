@@ -194,11 +194,6 @@ export const runStudioOperation = createServerFn({ method: "POST" })
     const seconds = forecast.seconds;
 
     const wallet = await ensureWallet(sb, context.userId);
-    if (wallet.balance < total) {
-      throw new Error(
-        `This needs ${total.toLocaleString()} AI Credits and your balance is ${wallet.balance.toLocaleString()}. Top up, or ask me for a lighter version.`,
-      );
-    }
 
     // Which machine does this need, and is it installed?
     const { data: providerRows } = await sb
