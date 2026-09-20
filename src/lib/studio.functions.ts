@@ -30,6 +30,8 @@ export type StudioProject = {
   destination: string;
   status: string;
   brief: string | null;
+  /** FRASS-0407 / A1 — which control depth this production is shown at. */
+  control_depth: string;
   created_at: string;
   updated_at: string;
 };
@@ -96,7 +98,7 @@ export const listStudioProjects = createServerFn({ method: "GET" })
     const sb = context.supabase as unknown as Db;
     const { data, error } = await sb
       .from("studio_projects")
-      .select("id, title, destination, status, brief, created_at, updated_at")
+      .select("id, title, destination, status, brief, control_depth, created_at, updated_at")
       .eq("user_id", context.userId)
       .order("updated_at", { ascending: false });
     if (error) throw new Error(error.message);
@@ -119,7 +121,7 @@ export const createStudioProject = createServerFn({ method: "POST" })
     const { data: row, error } = await sb
       .from("studio_projects")
       .insert({ ...data, user_id: context.userId })
-      .select("id, title, destination, status, brief, created_at, updated_at")
+      .select("id, title, destination, status, brief, control_depth, created_at, updated_at")
       .single();
     if (error) throw new Error(error.message);
     return row as StudioProject;
