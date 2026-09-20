@@ -308,7 +308,7 @@ export const runStudioOperation = createServerFn({ method: "POST" })
 export const prepareA1CleanJob = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((input: { jobId: string }) => {
-    if (!input?.jobId) throw new Error("Which A1 Clean job?");
+    if (!input?.jobId) throw new Error("Which Enhance Phone Recording job?");
     return input;
   })
   .handler(async ({ data, context }) => {
@@ -318,10 +318,10 @@ export const prepareA1CleanJob = createServerFn({ method: "POST" })
       .select("id,production_id,created_by,engine_slug,engine_type,status,charge_state")
       .eq("id", data.jobId).maybeSingle();
     if (error) throw new Error(error.message);
-    if (!job || job.created_by !== context.userId) throw new Error("That A1 Clean job is not yours.");
+    if (!job || job.created_by !== context.userId) throw new Error("That Enhance Phone Recording job is not yours.");
     if (!job.production_id) throw new Error("This job is not linked to a canonical production.");
-    if (job.engine_type !== A1_CLEAN_ENGINE.type || job.engine_slug !== A1_CLEAN_ENGINE.slug) throw new Error("That job is not assigned to FRASS Native A1 Clean.");
-    if (job.status !== "queued" || job.charge_state !== "unbilled") throw new Error("That job is not waiting for a new A1 Clean output.");
+    if (job.engine_type !== A1_CLEAN_ENGINE.type || job.engine_slug !== A1_CLEAN_ENGINE.slug) throw new Error("That job is not assigned to Enhance Phone Recording.");
+    if (job.status !== "queued" || job.charge_state !== "unbilled") throw new Error("That job is not waiting for a new Enhance Phone Recording output.");
     return { ...a1StoragePaths(context.userId, job.id), engine: A1_CLEAN_ENGINE };
   });
 
