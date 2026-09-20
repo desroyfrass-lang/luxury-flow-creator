@@ -170,7 +170,7 @@ export const runStudioOperation = createServerFn({ method: "POST" })
     const { assertMatchesServerTotal, assertWithinRule } = await import(
       "@/lib/finance/guardrails.server"
     );
-    const { capabilityForOperation, routeToEngine } = await import("@/lib/studios/native-engines");
+    const { capabilityForOperation, planOperations } = await import("@/lib/studios/native-engines");
 
     // Rebuild the bill from the server's own rate card.
     const forecast = buildForecast(
@@ -263,7 +263,7 @@ export const runStudioOperation = createServerFn({ method: "POST" })
         engine_type: decision.ok ? decision.ownership : "external_fallback",
         status: jobStatus,
         prompt: data.request.slice(0, 1000),
-        estimated_cost_credits: total,
+        estimated_cost_credits: billable,
         charge_state: "unbilled",
         created_by: context.userId,
         production_id: productionId,
@@ -277,16 +277,16 @@ export const runStudioOperation = createServerFn({ method: "POST" })
       user_id: context.userId,
       project_id: data.projectId ?? null,
       job_id: job.id,
-      operation_key: lines[0]?.key ?? "composite",
+      operation_key: plan.runnable[0]?.key ?? lines[0]?.key ?? "composite",
       label: data.label,
       request: data.request.slice(0, 1000),
-      estimated_credits: total,
+      estimated_credits: billable,
       actual_credits: 0,
       status: decision.ok ? "waiting" : "blocked",
       verified: false,
-      blocked_reason: decision.ok ? null : decision.reason,
+      blocked_reason: decision.ok ? (notInstalledNote.trim() || null) : decision.reason,
       processing_ms: Math.round(seconds * 1000),
-      output: { lines },
+      output: { lines, billable: billableLines, notInstalled: plan.blocked },
     });
     if (opErr) throw new Error(opErr.message);
 
@@ -296,10 +296,10 @@ export const runStudioOperation = createServerFn({ method: "POST" })
       engine: decision.ok ? decision.engine.label : null,
       ownership: decision.ok ? decision.ownership : null,
       charged: 0,
-      quoted: total,
+      quoted: billable,
       balance: wallet.balance as number,
       message: decision.ok
-        ? `Approved and queued with ${decision.engine.label}. No credits taken — you are charged only when a finished, verified result comes back.`
+        ? `Approved and queued with ${decision.engine.label}. No credits taken — you are charged only when a finished, verified result comes back.${notInstalledNote}`
         : decision.reason,
       receipts: [] as Array<{ label: string; credits: number }>,
     };
