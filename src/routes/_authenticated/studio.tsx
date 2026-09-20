@@ -43,6 +43,10 @@ import { A1MasterPanel } from "@/components/studio/a1-master-panel";
 import studioEntry from "@/assets/studio-entry.jpg";
 import type { QualityReport } from "@/lib/studio/phone-content-mode";
 import { FREE_CAPABILITIES, formatDuration, unitLabel, usdFor } from "@/lib/studio/credits";
+import { buildForecast } from "@/lib/studio/credits";
+import { A1_CLEAN_BUCKET, processA1Clean } from "@/lib/studio/a1-clean";
+import { supabase } from "@/integrations/supabase/client";
+import type { A1Evidence } from "@/lib/studio/a1-standard";
 import { DIRECTOR_EXAMPLES, planFromDirection, type DirectorPlan } from "@/lib/studio/director";
 import {
   createStudioProject,
@@ -50,6 +54,9 @@ import {
   listLedger,
   listStudioProjects,
   runStudioOperation,
+  prepareA1CleanJob,
+  finalizeA1CleanJob,
+  getStudioA1Evidence,
   setStudioControlDepth,
 } from "@/lib/studio.functions";
 import { controlDepth, depthIndex, describeDepthChange, type ControlDepthId } from "@/lib/studio/control-depths";
@@ -97,6 +104,9 @@ function StudioPage() {
   const createProject = useServerFn(createStudioProject);
   const runOp = useServerFn(runStudioOperation);
   const setDepth = useServerFn(setStudioControlDepth);
+  const prepareClean = useServerFn(prepareA1CleanJob);
+  const finalizeClean = useServerFn(finalizeA1CleanJob);
+  const evidenceFn = useServerFn(getStudioA1Evidence);
   const qc = useQueryClient();
   const workbenchRef = useRef<HTMLDivElement>(null);
   const creationRef = useRef<HTMLDivElement>(null);
@@ -116,6 +126,7 @@ function StudioPage() {
 
   const projects = projectsQ.data ?? [];
   const active = useMemo(() => projects.find((p) => p.id === activeId) ?? projects[0] ?? null, [projects, activeId]);
+  const evidenceQ = useQuery({ queryKey: ["studio-a1-evidence", active?.production_id], queryFn: () => evidenceFn({ data: { productionId: active?.production_id } }), enabled: Boolean(active?.production_id) });
   const currentDepth = controlDepth(active?.control_depth).id;
   const currentDepthIndex = depthIndex(currentDepth);
   const w = walletQ.data;
@@ -170,12 +181,25 @@ function StudioPage() {
   });
 
   const runPhone = useMutation({
-    mutationFn: (report: QualityReport) => runOp({ data: { projectId: active?.id, request: `Phone Content Mode™ — ${report.preset.label} (${report.minutes} min)`, label: `Phone Content Mode™ · ${report.preset.label}`, lines: report.forecast.lines.map((l) => ({ key: l.key, label: l.label, credits: l.credits, qty: l.qty })), total: report.forecast.total, seconds: report.forecast.seconds } }),
+    mutationFn: async ({ report, file }: { report: QualityReport; file: File }) => {
+      if (!active) throw new Error("Open a production first.");
+      const forecast = buildForecast("FRASS Native A1 Clean", [{ key: "voice-enhance", qty: report.minutes }]);
+      const queued = await runOp({ data: { projectId: active.id, request: `FRASS Native A1 Clean — ${report.preset.label} (${report.minutes} min)`, label: "FRASS Native A1 Clean", lines: forecast.lines.map((l) => ({ key: l.key, label: l.label, credits: l.credits, qty: l.qty })), total: forecast.total, seconds: forecast.seconds } });
+      if (queued.status === "blocked") throw new Error(queued.message);
+      const prepared = await prepareClean({ data: { jobId: queued.jobId } });
+      const output = await processA1Clean(file);
+      const sourceUpload = await supabase.storage.from(A1_CLEAN_BUCKET).upload(prepared.source, file, { contentType: file.type, upsert: false });
+      if (sourceUpload.error) throw new Error(`Source preservation failed: ${sourceUpload.error.message}`);
+      const outputUpload = await supabase.storage.from(A1_CLEAN_BUCKET).upload(prepared.output, output, { contentType: "audio/wav", upsert: false });
+      if (outputUpload.error) { await supabase.storage.from(A1_CLEAN_BUCKET).remove([prepared.source]); throw new Error(`Processed output upload failed: ${outputUpload.error.message}`); }
+      return finalizeClean({ data: { jobId: queued.jobId, sourcePath: prepared.source, outputPath: prepared.output, sourceMime: file.type, sourceBytes: file.size, outputBytes: output.size, processedAt: new Date().toISOString() } });
+    },
     onSuccess: (r) => {
-      if (r.status === "blocked") toast.warning(r.message);
-      else toast.success(`Not enhanced yet — ${r.message}`);
+      toast.success(`A1 Clean verified. ${r.charged.toLocaleString()} credits charged once.`);
       void qc.invalidateQueries({ queryKey: ["ai-wallet"] });
       void qc.invalidateQueries({ queryKey: ["ai-ledger"] });
+      void qc.invalidateQueries({ queryKey: ["studio-projects"] });
+      void qc.invalidateQueries({ queryKey: ["studio-a1-evidence"] });
     },
     onError: (e: Error) => toast.error(e.message),
   });
@@ -268,13 +292,13 @@ function StudioPage() {
           <section className="mt-5 grid gap-5 xl:grid-cols-[minmax(0,1fr)_360px]">
             <div className="space-y-5">
               <StudioTimeline simple={currentDepthIndex === 0} />
-              <details className="border border-border bg-card/40" open={currentDepthIndex > 0}><summary className="flex min-h-14 cursor-pointer list-none items-center justify-between px-5"><span className="flex items-center gap-2 text-sm font-medium"><Smartphone className="text-accent" /> Input & A1 Clean</span><span className="text-xs text-muted-foreground">Analyse phone audio or video</span></summary><div className="border-t border-border p-4"><PhoneContentMode balance={w?.balance ?? 0} running={runPhone.isPending} onRun={(report) => runPhone.mutate(report)} /></div></details>
+               <details className="border border-border bg-card/40" open={currentDepthIndex > 0}><summary className="flex min-h-14 cursor-pointer list-none items-center justify-between px-5"><span className="flex items-center gap-2 text-sm font-medium"><Smartphone className="text-accent" /> Input & A1 Clean</span><span className="text-xs text-muted-foreground">Real audio restoration runs on this device</span></summary><div className="border-t border-border p-4"><PhoneContentMode balance={w?.balance ?? 0} running={runPhone.isPending} onRun={(report, file) => runPhone.mutate({ report, file })} /></div></details>
               {currentDepthIndex >= 1 ? <ManualWorkspace depth={currentDepth} /> : null}
               <details className="border border-border bg-card/40"><summary className="flex min-h-14 cursor-pointer list-none items-center justify-between px-5"><span className="flex items-center gap-2 text-sm font-medium"><Upload className="text-accent" /> Export & Deliver</span><span className="text-xs text-muted-foreground">Watermark and delivery choices</span></summary><div className="border-t border-border p-4"><ExportWatermarkPanel /></div></details>
             </div>
 
             <aside className="space-y-4">
-              <A1MasterPanel />
+               <A1MasterPanel evidence={(evidenceQ.data ?? {}) as A1Evidence} />
               <InfoDrawer balance={w?.balance ?? 0} today={w?.today_used ?? 0} month={w?.month_used ?? 0} projected={projected} ledger={ledgerQ.data ?? []} />
               <details className="border border-border bg-card/40"><summary className="flex min-h-14 cursor-pointer list-none items-center gap-2 px-4 text-sm font-medium"><Wand2 className="text-accent" /> Free in the Studio</summary><ul className="space-y-2 border-t border-border p-4 text-sm text-muted-foreground">{FREE_CAPABILITIES.map((f) => <li key={f}>· {f}</li>)}</ul></details>
               <details className="border border-border bg-card/40"><summary className="flex min-h-14 cursor-pointer list-none items-center gap-2 px-4 text-sm font-medium"><Sparkles className="text-accent" /> Take it further</summary><div className="space-y-3 border-t border-border p-4"><p className="text-sm text-muted-foreground">Business and earning possibilities belong beside finished work, not in front of creation.</p>{active ? <CreationOpportunities kind="video" /> : <p className="text-sm text-muted-foreground">Open a production to see relevant possibilities.</p>}<Button variant="outline" asChild className="w-full"><Link to="/business-builder">Open Business Builder <ChevronRight /></Link></Button></div></details>
