@@ -475,7 +475,7 @@ function StudioPage() {
       />
 
       <Dialog open={credits} onOpenChange={setCredits}>
-        <DialogContent>
+        <DialogContent className="fv-studio-surface">
           <DialogHeader><DialogTitle>Credits & receipts</DialogTitle><DialogDescription>{(w?.balance ?? 0).toLocaleString()} credits available.</DialogDescription></DialogHeader>
           <div className="grid grid-cols-3 gap-2 text-center text-sm">
             <div><p className="text-xs text-muted-foreground">Today</p><p>{(w?.today_used ?? 0).toLocaleString()}</p></div>
@@ -494,7 +494,7 @@ function StudioPage() {
       </Dialog>
 
       <Dialog open={further} onOpenChange={setFurther}>
-        <DialogContent>
+        <DialogContent className="fv-studio-surface">
           <DialogHeader><DialogTitle>Take it further</DialogTitle><DialogDescription>Business and earning possibilities sit beside finished work, never in front of creation.</DialogDescription></DialogHeader>
           {active ? <CreationOpportunities kind="video" /> : <p className="text-sm text-muted-foreground">Open a production to see relevant possibilities.</p>}
           <Button variant="outline" asChild className="min-h-12 w-full"><Link to="/business-builder">Open Business Builder <ChevronRight /></Link></Button>
