@@ -202,3 +202,4 @@ FRASS-0573: every Frassy audit reply is permanently committed to the Founder Aud
 - [FRASS-0570 World Teleporter](mem://features/frass-0570-world-teleporter) — Founder-only read-only route inspection tab in the Control Room, teleport + return chip
 - [FRASS-0573 Founder Audit Ledger](mem://features/frass-0573-founder-audit-ledger) — Persistent conversation log: card number, route, timestamp, searchable, Founder-delete only
 - [Founder Hall headquarters](mem://features/founder-hall-headquarters) — One HQ many protected rooms; Control Room as a room; Onboarding Room via Founder TP
+- [FV Studios commissioning pass 1](mem://features/fv-studios-commissioning-pass-1) — canonical studio_productions identity, Frass-native engine registry (native-first routing, NOT INSTALLED honesty), verified-output credit truth
