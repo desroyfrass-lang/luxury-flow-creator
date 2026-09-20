@@ -62,7 +62,7 @@ import { A1_CLEAN_BUCKET, processA1Clean } from "@/lib/studio/a1-clean";
 import { supabase } from "@/integrations/supabase/client";
 import type { A1Evidence } from "@/lib/studio/a1-standard";
 import { DIRECTOR_EXAMPLES, planFromDirection, type DirectorPlan } from "@/lib/studio/director";
-import { studioPlaybackState } from "@/lib/studio/studio-ui";
+import { studioActionContext, studioPlaybackState } from "@/lib/studio/studio-ui";
 import {
   createStudioProject,
   getWallet,
@@ -434,6 +434,7 @@ function StudioPage() {
     "Installed machine: Enhance Phone Recording for audio restoration.",
     "Mastering, music generation, image generation, video generation, animation and voice generation are not installed.",
     `Best next action: ${primary.label}`,
+    studioActionContext(primary.label),
   ].join("\n");
   function summonFrassy() {
     setFrassyOpenSignal((signal) => signal + 1);
