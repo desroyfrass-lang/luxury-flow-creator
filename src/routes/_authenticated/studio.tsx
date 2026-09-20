@@ -54,6 +54,7 @@ import { A1_CLEAN_BUCKET, processA1Clean } from "@/lib/studio/a1-clean";
 import { supabase } from "@/integrations/supabase/client";
 import type { A1Evidence } from "@/lib/studio/a1-standard";
 import { DIRECTOR_EXAMPLES, planFromDirection, type DirectorPlan } from "@/lib/studio/director";
+import { studioPlaybackState } from "@/lib/studio/studio-ui";
 import {
   createStudioProject,
   getWallet,
@@ -175,6 +176,7 @@ function StudioPage() {
   const w = walletQ.data;
   const projected = w ? Math.round((w.month_used / new Date().getDate()) * 30) : 0;
   const audioLane = task?.lane === "audio" || active?.destination === "podcast";
+  const playback = studioPlaybackState(preview?.url);
 
   const chooseDoor = (door: CreationDoor) => {
     setTask(door);
@@ -421,7 +423,7 @@ function StudioPage() {
               <div className="fv-console-bridge absolute inset-x-[5%] bottom-0 h-[5.7rem] sm:inset-x-[8%]">
                 <div className="fv-transport-strip">
                   <span className="fv-transport-dot" aria-hidden="true" /><span className="fv-transport-dot" aria-hidden="true" />
-                  <Button type="button" variant="ghost" onClick={() => void togglePreviewPlayback()} disabled={!preview} aria-label={preview ? (playing ? "Pause current output" : "Play current output") : "No playable output yet"} title={preview ? (playing ? "Pause current output" : "Play current output") : "No playable output yet"} className="fv-transport-play h-9 w-9 rounded-full p-0">{playing ? <Pause /> : <Play />}</Button>
+                  <Button type="button" variant="ghost" onClick={() => void togglePreviewPlayback()} disabled={!playback.playable} aria-label={playing ? "Pause current output" : playback.label} title={playing ? "Pause current output" : playback.label} className="fv-transport-play h-9 w-9 rounded-full p-0">{playing ? <Pause /> : <Play />}</Button>
                   <span className="fv-mini-wave" aria-hidden="true"><i /><i /><i /><i /><i /><i /><i /><i /><i /></span>
                   <span className="fv-level-meter" aria-hidden="true"><i /><i /><i /><i /><i /></span>
                 </div>
