@@ -133,6 +133,10 @@ export const createStudioProject = createServerFn({ method: "POST" })
  * FRASS-0474 — the browser may say *what* work to do, never *what it costs*.
  * The forecast is rebuilt here from the official rate card, and a client total
  * that disagrees halts the run and is recorded as a security alert.
+ *
+ * COMMISSIONING PASS 1 — credit truth. Approving a forecast no longer takes
+ * credits. This creates a job and stops. Credits move only in
+ * settleStudioJob(), and only against a verified output from a real engine.
  */
 export const runStudioOperation = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
@@ -144,6 +148,8 @@ export const runStudioOperation = createServerFn({ method: "POST" })
       lines: Array<{ key: string; label: string; credits: number; qty: number }>;
       total: number;
       seconds: number;
+      /** Outside engines are a fallback; they are never assumed. */
+      allowExternalFallback?: boolean;
     }) => {
       if (!Array.isArray(input.lines) || input.lines.length === 0)
         throw new Error("Nothing to run.");
@@ -158,6 +164,7 @@ export const runStudioOperation = createServerFn({ method: "POST" })
     const { assertMatchesServerTotal, assertWithinRule } = await import(
       "@/lib/finance/guardrails.server"
     );
+    const { capabilityForOperation, routeToEngine } = await import("@/lib/studios/native-engines");
 
     // Rebuild the bill from the server's own rate card.
     const forecast = buildForecast(
@@ -187,51 +194,181 @@ export const runStudioOperation = createServerFn({ method: "POST" })
       );
     }
 
+    // Which machine does this need, and is it installed?
+    const { data: providerRows } = await sb
+      .from("studio_providers")
+      .select("id, slug, label, capabilities, status, enabled, engine_type, priority, founder_preferred");
+    const engines = (providerRows ?? []) as any[];
+
+    const capability = capabilityForOperation(lines[0]?.key ?? "");
+    const decision = capability
+      ? routeToEngine(capability, engines, { allowExternalFallback: data.allowExternalFallback === true })
+      : ({ ok: false, capability: "finishing", state: "not_installed", reason: "This operation has no engine mapped yet, so nothing can run and nothing is charged." } as const);
+
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const admin = supabaseAdmin as unknown as Db;
 
-    const receipts: Array<{ label: string; credits: number }> = [];
-    for (const line of lines) {
-      const { error } = await admin.from("ai_credit_ledger").insert({
-        user_id: context.userId,
-        direction: "debit",
-        amount: line.credits,
-        operation_key: line.key,
-        label: line.label,
-        project_id: data.projectId ?? null,
-        description: data.request.slice(0, 400),
-        processing_ms: Math.round((seconds * 1000 * line.credits) / Math.max(1, total)),
-      });
-      if (error) throw new Error(error.message);
-      receipts.push({ label: line.label, credits: line.credits });
-    }
+    const jobStatus = decision.ok ? "queued" : "awaiting_engine";
+    const { data: job, error: jobErr } = await admin
+      .from("studio_generation_jobs")
+      .insert({
+        job_type: capability ?? "finishing",
+        provider: decision.ok ? decision.engine.slug : null,
+        engine_slug: decision.ok ? decision.engine.slug : null,
+        engine_type: decision.ok ? decision.ownership : "external_fallback",
+        status: jobStatus,
+        prompt: data.request.slice(0, 1000),
+        estimated_cost_credits: total,
+        charge_state: "unbilled",
+        created_by: context.userId,
+        error: decision.ok ? null : decision.reason,
+      })
+      .select("id")
+      .single();
+    if (jobErr) throw new Error(jobErr.message);
 
     const { error: opErr } = await admin.from("studio_operations").insert({
       user_id: context.userId,
       project_id: data.projectId ?? null,
+      job_id: job.id,
       operation_key: lines[0]?.key ?? "composite",
       label: data.label,
       request: data.request.slice(0, 1000),
       estimated_credits: total,
-      actual_credits: total,
-      status: "complete",
+      actual_credits: 0,
+      status: decision.ok ? "waiting" : "blocked",
+      verified: false,
+      blocked_reason: decision.ok ? null : decision.reason,
       processing_ms: Math.round(seconds * 1000),
       output: { lines },
     });
     if (opErr) throw new Error(opErr.message);
 
-    const { data: updated, error: wErr } = await admin
+    return {
+      jobId: job.id as string,
+      status: decision.ok ? ("waiting" as const) : ("blocked" as const),
+      engine: decision.ok ? decision.engine.label : null,
+      ownership: decision.ok ? decision.ownership : null,
+      charged: 0,
+      quoted: total,
+      balance: wallet.balance as number,
+      message: decision.ok
+        ? `Approved and queued with ${decision.engine.label}. No credits taken — you are charged only when a finished, verified result comes back.`
+        : decision.reason,
+      receipts: [] as Array<{ label: string; credits: number }>,
+    };
+  });
+
+/**
+ * Settle one job.
+ *
+ * This is the ONLY path that takes credits for studio work. It refuses unless
+ * the job carries a verified output produced by a real engine, and the unique
+ * idempotency key on the job means a replay can never bill twice.
+ */
+export const settleStudioJob = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((input: { jobId: string }) => {
+    if (!input?.jobId) throw new Error("Which job?");
+    return { jobId: input.jobId };
+  })
+  .handler(async ({ data, context }) => {
+    const sb = context.supabase as unknown as Db;
+    const { decideCharge, chargeIdempotencyKey } = await import("@/lib/studio/job-truth");
+
+    const { data: job, error } = await sb
+      .from("studio_generation_jobs")
+      .select(
+        "id, job_type, status, estimated_cost_credits, verified_output_url, verified_at, engine_slug, engine_type, charge_state, created_by",
+      )
+      .eq("id", data.jobId)
+      .maybeSingle();
+    if (error) throw new Error(error.message);
+    if (!job || job.created_by !== context.userId) throw new Error("That job is not yours.");
+
+    const lifecycle =
+      job.status === "awaiting_engine"
+        ? "awaiting_engine"
+        : job.status === "failed"
+          ? "failed"
+          : job.verified_output_url && job.verified_at
+            ? "verified"
+            : "running";
+
+    const decision = decideCharge({
+      forecastCredits: Number(job.estimated_cost_credits ?? 0),
+      lifecycle,
+      output: job.verified_output_url
+        ? {
+            fileUrl: job.verified_output_url,
+            engineSlug: job.engine_slug ?? "unknown",
+            ownership: job.engine_type ?? "external_fallback",
+            verifiedAt: job.verified_at,
+          }
+        : null,
+      alreadyCharged: job.charge_state === "charged",
+    });
+
+    if (decision.charge <= 0) {
+      return { charged: 0, status: decision.status, reason: decision.reason };
+    }
+
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const admin = supabaseAdmin as unknown as Db;
+
+    // The unique index on idempotency_key is the real guard: a second attempt
+    // to mark this job charged simply fails, so no double billing is possible.
+    const { data: claimed, error: claimErr } = await admin
+      .from("studio_generation_jobs")
+      .update({
+        charge_state: "charged",
+        idempotency_key: chargeIdempotencyKey(job.id),
+        actual_cost_credits: decision.charge,
+        status: "complete",
+        completed_at: new Date().toISOString(),
+      })
+      .eq("id", job.id)
+      .eq("charge_state", "unbilled")
+      .select("id")
+      .maybeSingle();
+    if (claimErr || !claimed) {
+      return {
+        charged: 0,
+        status: "complete" as const,
+        reason: "Already charged once for this job. A repeat cannot bill twice.",
+      };
+    }
+
+    const wallet = await ensureWallet(sb, context.userId);
+    await admin.from("ai_credit_ledger").insert({
+      user_id: context.userId,
+      direction: "debit",
+      amount: decision.charge,
+      operation_key: job.job_type,
+      label: `Studio job ${job.job_type}`,
+      description: `Verified result from ${job.engine_slug ?? "engine"}`,
+    });
+    const { data: updated } = await admin
       .from("ai_credit_wallets")
       .update({
-        balance: wallet.balance - total,
-        lifetime_used: wallet.lifetime_used + total,
+        balance: wallet.balance - decision.charge,
+        lifetime_used: wallet.lifetime_used + decision.charge,
       })
       .eq("user_id", context.userId)
       .select("balance")
       .single();
-    if (wErr) throw new Error(wErr.message);
 
-    return { charged: total, balance: updated.balance as number, receipts };
+    await admin
+      .from("studio_operations")
+      .update({ status: "complete", verified: true, actual_credits: decision.charge })
+      .eq("job_id", job.id);
+
+    return {
+      charged: decision.charge,
+      status: "complete" as const,
+      reason: decision.reason,
+      balance: updated?.balance as number,
+    };
   });
 
 /** Founder AI Credit Center — platform-wide usage. */
