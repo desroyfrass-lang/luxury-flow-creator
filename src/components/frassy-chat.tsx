@@ -78,6 +78,13 @@ import { loadMomentum, momentumContext, readMomentum } from "@/lib/frassy/moment
 import { PlainEnglishMessage } from "@/components/frassy/everyday-language-toggle";
 import { useLearningLevel } from "@/hooks/use-learning-level";
 import { learningLevelContext, levelMeta, type LearningLevel } from "@/lib/frassy/learning-levels";
+import {
+  Conversation,
+  ConversationContent,
+  ConversationScrollButton,
+} from "@/components/ai-elements/conversation";
+import { Message, MessageContent } from "@/components/ai-elements/message";
+import { FV_STUDIOS_FRASSY_LOOK } from "@/lib/frassy/room-looks";
 
 type ProductCard = {
   handle: string;
@@ -156,7 +163,17 @@ export function FrassyChat({
   hideBeacon = false,
   workspaceContext,
   openSignal = 0,
-}: { embedded?: boolean; tone?: "light" | "dark"; hideBeacon?: boolean; workspaceContext?: string; openSignal?: number } = {}) {
+  presentation = "default",
+  onOpenChange,
+}: {
+  embedded?: boolean;
+  tone?: "light" | "dark";
+  hideBeacon?: boolean;
+  workspaceContext?: string;
+  openSignal?: number;
+  presentation?: "default" | "studio";
+  onOpenChange?: (open: boolean) => void;
+} = {}) {
   const navigate = useNavigate();
   const ctx = useFrassyContext();
   // FRASS-0551 — only the Founder Control Room stays dark. Every member surface
@@ -296,7 +313,6 @@ export function FrassyChat({
     if (ctx.pathname === "/welcome-hall") setOpen(true);
   }, [ctx.pathname]);
 
-  const scrollRef = useRef<HTMLDivElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const abortRef = useRef<AbortController | null>(null);
@@ -358,16 +374,14 @@ export function FrassyChat({
   );
 
   useEffect(() => {
-    scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" });
-  }, [messages, loading]);
-
-  useEffect(() => {
     if (open) inputRef.current?.focus();
   }, [open]);
 
   useEffect(() => {
     if (openSignal > 0 && !embedded) setOpen(true);
   }, [embedded, openSignal]);
+
+  useEffect(() => onOpenChange?.(open), [onOpenChange, open]);
 
   // Abort any in-flight turn when the widget unmounts.
   useEffect(() => () => abortRef.current?.abort(), []);
@@ -746,14 +760,16 @@ export function FrassyChat({
       data-frassy-panel
       data-frassy-phase={startup.phase}
       aria-busy={startup.phase === "verifying" || startup.phase === "recovering"}
-      className={`${startup.phase === "verifying" || startup.phase === "recovering" ? "invisible pointer-events-none" : "visible"} frass-workspace ${dark ? "ws-dark" : ""} ${
+      className={`${presentation !== "studio" && (startup.phase === "verifying" || startup.phase === "recovering") ? "invisible pointer-events-none" : "visible"} frass-workspace ${dark ? "ws-dark" : ""} ${presentation === "studio" ? "frassy-studio-conversation" : ""} ${
         expanded
           ? "fixed inset-3 z-[60] flex flex-col overflow-hidden rounded-lg border border-[color:var(--ws-line)] shadow-2xl sm:inset-6"
           : embedded || auditCard
             ? auditCard
               ? "relative mx-auto mt-10 flex min-h-[520px] w-[calc(100%-2rem)] max-w-6xl flex-col overflow-hidden rounded-lg border border-[color:var(--ws-line)]"
               : "flex h-[min(820px,86vh)] min-h-[520px] w-full max-w-full flex-col overflow-hidden rounded-lg border border-[color:var(--ws-line)]"
-            : "fixed bottom-6 right-6 z-50 flex h-[min(620px,78vh)] w-[min(420px,calc(100vw-3rem))] max-w-full flex-col overflow-hidden rounded-lg border border-[color:var(--ws-line)] shadow-2xl"
+            : presentation === "studio"
+              ? "fixed bottom-24 right-3 top-[7.5rem] z-50 flex w-[min(520px,calc(100vw-1.5rem))] max-w-full flex-col overflow-hidden rounded-[1.75rem] lg:bottom-5 lg:right-5 lg:top-[8.5rem]"
+              : "fixed bottom-6 right-6 z-50 flex h-[min(620px,78vh)] w-[min(420px,calc(100vw-3rem))] max-w-full flex-col overflow-hidden rounded-lg border border-[color:var(--ws-line)] shadow-2xl"
       }`}
       style={{ background: "var(--ws-panel)", color: "var(--ws-ink)" }}
     >
@@ -762,10 +778,14 @@ export function FrassyChat({
         className="grid shrink-0 grid-cols-[minmax(0,1fr)_auto] items-center gap-2 border-b border-[color:var(--ws-line)] px-4 py-3"
       >
         <div className="flex min-w-0 items-center gap-3">
-          <img src={symbolAsset.url} alt="" className="h-6 w-6 object-contain" />
+          <img
+            src={presentation === "studio" ? FV_STUDIOS_FRASSY_LOOK.image : symbolAsset.url}
+            alt={presentation === "studio" ? "Frassy" : ""}
+            className={presentation === "studio" ? "h-12 w-12 rounded-full object-cover object-top" : "h-6 w-6 object-contain"}
+          />
           <div>
-            <div className="text-sm text-[color:var(--ws-ink)]">Frassy</div>
-            <div className="text-[10px] uppercase tracking-[0.3em] text-[color:var(--ws-soft)]">
+            <div className="text-sm font-semibold text-[color:var(--ws-ink)]">{presentation === "studio" ? "Frassy · Studio Director" : "Frassy"}</div>
+            <div className="text-xs text-[color:var(--ws-soft)]">
               {voice.phase === "recording"
                 ? "Listening…"
                 : voice.phase === "transcribing"
@@ -906,11 +926,11 @@ export function FrassyChat({
         </div>
       </header>
 
-      <div
-        ref={scrollRef}
+      <Conversation
         data-frassy-transcript
-        className={`frassy-transcript min-h-0 flex-1 space-y-5 px-4 py-5 pb-8 ${auditCard ? "overflow-visible" : "overflow-y-auto"}`}
+        className={`frassy-transcript min-h-0 flex-1 ${auditCard ? "overflow-visible" : ""}`}
       >
+        <ConversationContent className="gap-5 px-4 py-5 pb-8">
         {/* FRASS-0551 — conversation first: the room is never an empty box. */}
         {(startup.greeting || (!messages.length && startup.phase === "greeted")) && (
           <div className="frassy-bubble w-fit max-w-[min(46rem,95%)] rounded-lg bg-[color:var(--ws-accent-bg)] px-4 py-3 text-sm leading-relaxed text-[color:var(--ws-ink)]">
@@ -958,14 +978,8 @@ export function FrassyChat({
               !currentLedgerTurns.has(`${message.role}\u0000${message.content.trim()}`),
           )
           .map((m) => (
-          <div key={m.id}>
-            <div
-              className={
-                m.role === "user"
-                  ? "frassy-bubble ml-auto w-fit max-w-[min(42rem,92%)] rounded-lg bg-[color:var(--gold)]/15 px-4 py-3 text-sm leading-relaxed text-[color:var(--ws-ink)]"
-                  : "frassy-bubble w-fit max-w-[min(46rem,95%)] rounded-lg bg-[color:var(--ws-accent-bg)] px-4 py-3 text-sm leading-relaxed text-[color:var(--ws-ink)]"
-              }
-            >
+          <Message key={m.id} from={m.role}>
+            <MessageContent className={m.role === "user" ? "frassy-bubble bg-primary px-4 py-3 text-primary-foreground" : "frassy-bubble px-0 py-1 text-[color:var(--ws-ink)]"}>
               {m.role === "assistant" ? (
                 <PlainEnglishMessage
                   content={m.content}
@@ -976,7 +990,7 @@ export function FrassyChat({
               ) : (
                 <p className="whitespace-pre-wrap">{m.content}</p>
               )}
-            </div>
+            </MessageContent>
 
             {/* "Hear Frassy" only exists while playback is provably healthy. */}
             {m.role === "assistant" && voice.voiceAvailable && voice.phase !== "recording" && (
@@ -1071,7 +1085,7 @@ export function FrassyChat({
                 ))}
               </div>
             )}
-          </div>
+          </Message>
           ))}
 
         {loading && (
@@ -1085,7 +1099,9 @@ export function FrassyChat({
             {error ?? voice.voiceError}
           </div>
         )}
-      </div>
+        </ConversationContent>
+        <ConversationScrollButton aria-label="Scroll to latest message" />
+      </Conversation>
 
       {/* FRASS-0551 — Voice confidence: the member always knows where the
           conversation is. Listening · Transcribing · Thinking · Speaking. */}
