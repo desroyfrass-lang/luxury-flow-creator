@@ -1,21 +1,26 @@
-# FV Studios Frassy Functional Repair
+# FV Studios Frassy Station Repair
 
 ## Goal
-Make canonical Frassy visibly come forward inside FV Studios, restore working text and voice controls, make playback truthful, and sharpen Studio text without changing production, billing, security, or machine behavior.
+Replace the generic overlay with a room-integrated Frassy station that keeps the Studio work visible, presents the approved seated Frassy at useful scale, simplifies conversation controls, and removes Studio-only obstructions without changing shared Frassy behavior or protected systems.
 
 ## Build
-- Add a reusable room-look presentation definition that keeps Frassy’s canonical identity fixed and locks an FV Studios look without daily or weekly rotation.
-- Reuse the approved Workshop image for now because the current asset inventory has no approved long-loc, FV Studio-specific full-body look; keep one replaceable Studio image slot for Founder-approved artwork later.
-- Extend the existing shared Frassy conversation with a Studio presentation mode rather than creating a second assistant: integrated rounded glass surface, Frassy image, clear voice state, readable transcript, and contextual Studio memory.
-- Make portrait tap, mobile portrait, Open conversation, Plan with Frassy, and the main Ask Frassy action summon that same in-place conversation.
-- Keep the production monitor visible beside/behind the conversation and make Frassy’s visual station expand toward the work.
-- Hide normal diagnostics and developer proof in Studio unless an explicit diagnostics control is opened.
-- Replace decorative play controls with one real media control: play/pause the verified preview when available; otherwise disable it and display “No playable output yet.”
-- Audit visible primary Studio actions so each performs its action or gives an immediate truthful blocked explanation.
-- Remove Studio text glow, text-bearing transformed ancestors, excessive tiny tracking, and blur-heavy layers around copy while retaining glow on non-text surfaces and edges.
+- Keep the existing shared Frassy conversation, history, context, text, and voice system; change only its `studio` presentation.
+- On desktop, dock the open station into the Studio grid so the production monitor and controls remain visible and compress rather than being covered.
+- On mobile, use a full-width bottom sheet with a clear close/minimize path and room for critical Studio navigation.
+- Present the approved seated Studio Frassy at useful scale beside the transcript, with status that plainly shows listening, thinking, speaking, or unavailable.
+- Simplify the Studio composer to text, Talk to Frassy, send, and one compact Attach control; remove the primary voice-feedback strip and generic action-chip wall in Studio only.
+- Keep portrait tap, Ask Frassy, Open conversation, and Plan with Frassy connected to this one shared station.
+- Hide the universal Free Try On launcher on `/studio` only and remove the Studio header’s voice-feedback shortcut.
+- Fix page-wide overflow and keep text crisp without changing the established purple/gold room direction.
+- Preserve truthful playback: only verified media plays; otherwise the control remains disabled as “No playable output yet.”
+
+## Technical details
+- Pass the Studio open state into the route layout so the desktop grid allocates a dedicated Frassy column only while summoned.
+- Keep Studio-specific markup and classes conditional on `presentation="studio"`; default and embedded Frassy surfaces retain their current controls and layout.
+- Use the existing approved seated PNG through `FV_STUDIOS_FRASSY_LOOK`; no image editing or generation.
 
 ## Validation
-- Add focused regression tests for Studio Frassy summoning, contextual text composition, truthful voice state, and playable-output gating.
-- Run focused tests and type checking; verify the automatic build result.
-- Test authenticated 1280×900 and 390×844: both Frassy entry points, text send/reply, microphone state or truthful unavailable state, playback gating, hidden diagnostics, crisp text, visible production, and no page overflow.
+- Add or update focused regression coverage for Studio presentation and route-specific launcher visibility where practical.
+- Run tests, type checking, lint, and verify the automatic build result.
+- Test authenticated 1280×900 and 390×844: seated Frassy scale, both summoning paths, text send/reply, microphone state or truthful unavailable state, production visibility, disabled playback truth, close/minimize, crisp text, and zero page overflow.
 - Do not deploy or publish.
