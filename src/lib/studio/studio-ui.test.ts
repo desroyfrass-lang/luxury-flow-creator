@@ -25,11 +25,11 @@ describe("FV Studios presentation truth", () => {
     });
   });
 
-  it("keeps the normal Studio conversation free of repeated response controls", () => {
+  it("keeps Studio response capabilities behind one closed secondary control", () => {
     expect(studioConversationPresentation).toEqual({
       naturalResponses: true,
-      showExplanationLevels: false,
-      showPerResponsePlayback: false,
+      responseOptionsMenu: true,
+      responseOptionsDefaultOpen: false,
     });
   });
 

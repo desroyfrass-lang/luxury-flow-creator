@@ -83,7 +83,7 @@ import {
   ConversationContent,
   ConversationScrollButton,
 } from "@/components/ai-elements/conversation";
-import { Message, MessageContent, MessageResponse } from "@/components/ai-elements/message";
+import { Message, MessageContent } from "@/components/ai-elements/message";
 import {
   FV_STUDIOS_FRASSY_LOOK,
   studioPresenceFor,
@@ -989,7 +989,7 @@ export function FrassyChat({
           >
             <ConversationContent className="gap-5 px-4 py-5 pb-8">
               {/* FRASS-0551 — conversation first: the room is never an empty box. */}
-              {(startup.greeting || (!messages.length && startup.phase === "greeted")) && (
+              {!messages.length && (startup.greeting || startup.phase === "greeted") && (
                 <div className="frassy-bubble w-fit max-w-[min(46rem,95%)] rounded-lg bg-[color:var(--ws-accent-bg)] px-4 py-3 text-sm leading-relaxed text-[color:var(--ws-ink)]">
                   <p className="whitespace-pre-wrap">
                     {startup.greeting ??
@@ -1042,15 +1042,39 @@ export function FrassyChat({
                           : "frassy-bubble px-0 py-1 text-[color:var(--ws-ink)]"
                       }
                     >
-                      {m.role === "assistant" &&
-                      presentation === "studio" &&
-                      !studioConversationPresentation.showExplanationLevels ? (
-                        <MessageResponse>{m.content}</MessageResponse>
-                      ) : m.role === "assistant" ? (
+                      {m.role === "assistant" ? (
                         <PlainEnglishMessage
                           content={m.content}
+                          presentation={
+                            presentation === "studio" &&
+                            studioConversationPresentation.responseOptionsMenu
+                              ? "response-menu"
+                              : "default"
+                          }
                           onRequestLevel={(next: LearningLevel) =>
                             void send(`Explain that again at the "${levelMeta(next).label}" level.`)
+                          }
+                          onHear={
+                            presentation === "studio" && voice.voiceAvailable
+                              ? () => void voice.speak(m.content)
+                              : undefined
+                          }
+                          hearDisabled={
+                            voice.phase === "speaking" ||
+                            voice.phase === "recording" ||
+                            voice.phase === "transcribing" ||
+                            loading
+                          }
+                          hearUnavailableReason={
+                            !voice.voiceAvailable
+                              ? "Response playback is unavailable"
+                              : voice.phase === "speaking"
+                                ? "Frassy is already speaking"
+                                : voice.phase === "recording" || voice.phase === "transcribing"
+                                  ? "Finish the current voice turn first"
+                                  : loading
+                                    ? "Wait for Frassy to finish this reply"
+                                    : "Response playback is unavailable"
                           }
                         />
                       ) : (
@@ -1059,8 +1083,7 @@ export function FrassyChat({
                     </MessageContent>
 
                     {/* "Hear Frassy" only exists while playback is provably healthy. */}
-                    {(presentation !== "studio" ||
-                      studioConversationPresentation.showPerResponsePlayback) &&
+                    {presentation !== "studio" &&
                       m.role === "assistant" &&
                       voice.voiceAvailable &&
                       voice.phase !== "recording" && (
