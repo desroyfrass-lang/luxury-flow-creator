@@ -135,7 +135,7 @@ export function QuickSellPanel({
   });
 
   const markOrder = useMutation({
-    mutationFn: (v: { id: string; status: "paid" | "cancelled" | "refunded" }) =>
+    mutationFn: (v: { id: string; status: "pending" | "cancelled" }) =>
       orderStatusFn({ data: v }),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["card-orders"] });
