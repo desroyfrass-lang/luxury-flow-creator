@@ -505,3 +505,53 @@ export const setStudioControlDepth = createServerFn({ method: "POST" })
     if (error) throw new Error(error.message);
     return row as StudioProject;
   });
+
+/**
+ * Bridge a studio project to the canonical production identity.
+ *
+ * studio_productions is the canonical record — briefs, scripts, scenes,
+ * characters, masters and distribution already hang off it. A project that was
+ * created before this bridge keeps working untouched; calling this once links
+ * it. Nothing is copied, converted or destroyed.
+ */
+export const ensureCanonicalProduction = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((input: { projectId: string }) => {
+    if (!input?.projectId) throw new Error("Which production?");
+    return { projectId: input.projectId };
+  })
+  .handler(async ({ data, context }) => {
+    const sb = context.supabase as unknown as Db;
+    const { bridgePayload, productionRef } = await import("@/lib/studios/production-identity");
+
+    const { data: project, error } = await sb
+      .from("studio_projects")
+      .select(PROJECT_COLUMNS)
+      .eq("id", data.projectId)
+      .eq("user_id", context.userId)
+      .maybeSingle();
+    if (error) throw new Error(error.message);
+    if (!project) throw new Error("That production is not yours.");
+
+    const ref = productionRef(project as StudioProject);
+    if (ref.kind === "canonical") return { productionId: ref.productionId, created: false };
+
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const admin = supabaseAdmin as unknown as Db;
+
+    const { data: production, error: insErr } = await admin
+      .from("studio_productions")
+      .insert(bridgePayload(project as StudioProject, context.userId))
+      .select("id")
+      .single();
+    if (insErr) throw new Error(insErr.message);
+
+    const { error: linkErr } = await admin
+      .from("studio_projects")
+      .update({ production_id: production.id })
+      .eq("id", data.projectId)
+      .eq("user_id", context.userId);
+    if (linkErr) throw new Error(linkErr.message);
+
+    return { productionId: production.id as string, created: true };
+  });
