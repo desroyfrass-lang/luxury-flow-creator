@@ -170,7 +170,7 @@ export const runStudioOperation = createServerFn({ method: "POST" })
     const { assertMatchesServerTotal, assertWithinRule } = await import(
       "@/lib/finance/guardrails.server"
     );
-    const { capabilityForOperation, routeToEngine } = await import("@/lib/studios/native-engines");
+    const { capabilityForOperation, planOperations } = await import("@/lib/studios/native-engines");
 
     // Rebuild the bill from the server's own rate card.
     const forecast = buildForecast(
@@ -194,11 +194,6 @@ export const runStudioOperation = createServerFn({ method: "POST" })
     const seconds = forecast.seconds;
 
     const wallet = await ensureWallet(sb, context.userId);
-    if (wallet.balance < total) {
-      throw new Error(
-        `This needs ${total.toLocaleString()} AI Credits and your balance is ${wallet.balance.toLocaleString()}. Top up, or ask me for a lighter version.`,
-      );
-    }
 
     // Which machine does this need, and is it installed?
     const { data: providerRows } = await sb
@@ -206,10 +201,31 @@ export const runStudioOperation = createServerFn({ method: "POST" })
       .select("id, slug, label, capabilities, status, enabled, engine_type, priority, founder_preferred");
     const engines = (providerRows ?? []) as any[];
 
-    const capability = capabilityForOperation(lines[0]?.key ?? "");
-    const decision = capability
-      ? routeToEngine(capability, engines, { allowExternalFallback: data.allowExternalFallback === true })
-      : ({ ok: false, capability: "finishing", state: "not_installed", reason: "This operation has no engine mapped yet, so nothing can run and nothing is charged." } as const);
+    // Machines are independent. An uninstalled machine (mastering, for example)
+    // must never stop an installed one (audio restoration) from doing its own
+    // work. Uninstalled steps are dropped from the bill and reported plainly.
+    const plan = planOperations(lines, engines, {
+      allowExternalFallback: data.allowExternalFallback === true,
+    });
+    const decision = plan.decision;
+    const runnableKeys = new Set(plan.runnable.map((r) => r.key));
+    const billableLines = lines.filter((l) => runnableKeys.has(l.key));
+    const billable = billableLines.reduce((sum, l) => sum + l.credits, 0);
+    const capability = plan.runnable[0]
+      ? plan.runnable[0].capability
+      : capabilityForOperation(lines[0]?.key ?? "");
+    const notInstalledNote =
+      plan.blocked.length > 0
+        ? ` Not included: ${plan.blocked.map((b) => b.key).join(", ")} — ${plan.blocked[0]!.reason}`
+        : "";
+
+    // Only installed work can ever be billed, so only installed work needs cover.
+    if (decision.ok && wallet.balance < billable) {
+      throw new Error(
+        `This needs ${billable.toLocaleString()} AI Credits and your balance is ${wallet.balance.toLocaleString()}. Top up, or ask me for a lighter version.`,
+      );
+    }
+
 
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const admin = supabaseAdmin as unknown as Db;
@@ -247,7 +263,7 @@ export const runStudioOperation = createServerFn({ method: "POST" })
         engine_type: decision.ok ? decision.ownership : "external_fallback",
         status: jobStatus,
         prompt: data.request.slice(0, 1000),
-        estimated_cost_credits: total,
+        estimated_cost_credits: billable,
         charge_state: "unbilled",
         created_by: context.userId,
         production_id: productionId,
@@ -261,16 +277,16 @@ export const runStudioOperation = createServerFn({ method: "POST" })
       user_id: context.userId,
       project_id: data.projectId ?? null,
       job_id: job.id,
-      operation_key: lines[0]?.key ?? "composite",
+      operation_key: plan.runnable[0]?.key ?? lines[0]?.key ?? "composite",
       label: data.label,
       request: data.request.slice(0, 1000),
-      estimated_credits: total,
+      estimated_credits: billable,
       actual_credits: 0,
       status: decision.ok ? "waiting" : "blocked",
       verified: false,
-      blocked_reason: decision.ok ? null : decision.reason,
+      blocked_reason: decision.ok ? (notInstalledNote.trim() || null) : decision.reason,
       processing_ms: Math.round(seconds * 1000),
-      output: { lines },
+      output: { lines, billable: billableLines, notInstalled: plan.blocked },
     });
     if (opErr) throw new Error(opErr.message);
 
@@ -280,10 +296,10 @@ export const runStudioOperation = createServerFn({ method: "POST" })
       engine: decision.ok ? decision.engine.label : null,
       ownership: decision.ok ? decision.ownership : null,
       charged: 0,
-      quoted: total,
+      quoted: billable,
       balance: wallet.balance as number,
       message: decision.ok
-        ? `Approved and queued with ${decision.engine.label}. No credits taken — you are charged only when a finished, verified result comes back.`
+        ? `Approved and queued with ${decision.engine.label}. No credits taken — you are charged only when a finished, verified result comes back.${notInstalledNote}`
         : decision.reason,
       receipts: [] as Array<{ label: string; credits: number }>,
     };
