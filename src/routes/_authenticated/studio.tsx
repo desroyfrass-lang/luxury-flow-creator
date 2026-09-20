@@ -36,7 +36,11 @@ import {
   listLedger,
   listStudioProjects,
   runStudioOperation,
+  setStudioControlDepth,
 } from "@/lib/studio.functions";
+import { ControlDepthBar } from "@/components/studio/control-depth-bar";
+import { A1MasterPanel } from "@/components/studio/a1-master-panel";
+import { controlDepth, describeDepthChange, type ControlDepthId } from "@/lib/studio/control-depths";
 
 export const Route = createFileRoute("/_authenticated/studio")({
   head: () => ({
@@ -93,6 +97,7 @@ function StudioPage() {
   const projectsFn = useServerFn(listStudioProjects);
   const createProject = useServerFn(createStudioProject);
   const runOp = useServerFn(runStudioOperation);
+  const setDepth = useServerFn(setStudioControlDepth);
   const qc = useQueryClient();
 
   const walletQ = useQuery({ queryKey: ["ai-wallet"], queryFn: () => wallet() });
@@ -150,6 +155,20 @@ function StudioPage() {
       );
       void qc.invalidateQueries({ queryKey: ["ai-wallet"] });
       void qc.invalidateQueries({ queryKey: ["ai-ledger"] });
+    },
+    onError: (e: Error) => toast.error(e.message),
+  });
+
+  // FRASS-0407 / A1 — depth is a change of view on the same production.
+  const depth = useMutation({
+    mutationFn: (next: ControlDepthId) => {
+      if (!active) throw new Error("Create a production first.");
+      return setDepth({ data: { projectId: active.id, depth: next } });
+    },
+    onSuccess: (p) => {
+      const change = describeDepthChange(controlDepth(active?.control_depth).id, controlDepth(p.control_depth).id);
+      toast.success(change.message);
+      void qc.invalidateQueries({ queryKey: ["studio-projects"] });
     },
     onError: (e: Error) => toast.error(e.message),
   });
@@ -317,6 +336,15 @@ function StudioPage() {
                   </div>
                 </div>
               </div>
+
+              <ControlDepthBar
+                depth={controlDepth(active?.control_depth).id}
+                productionTitle={active?.title ?? null}
+                disabled={!active || depth.isPending}
+                onChange={(next) => depth.mutate(next)}
+              />
+
+              <A1MasterPanel />
 
               {/* AI Director */}
               <Panel title="AI Director" icon={Sparkles}>
