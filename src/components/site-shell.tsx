@@ -459,7 +459,7 @@ function MenuGroup({ node }: { node: NavNode }) {
 
 function FreeTryOnFab() {
   const path = useRouterState({ select: (r) => r.location.pathname });
-  if (path.startsWith("/try-on")) return null;
+  if (path === "/studio" || path.startsWith("/try-on")) return null;
   return (
     <Link
       to="/capsules"

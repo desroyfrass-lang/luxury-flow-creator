@@ -100,6 +100,8 @@ export type FrassyComposerProps = {
   studio?: boolean;
   /** Lets the surrounding workspace observe intake (Vault, Projects, Search). */
   onIntake?: (summary: string, queue: UploadQueue) => void;
+  /** Keep upload choices in the + menu instead of repeating them as a chip wall. */
+  showToolRail?: boolean;
   /**
    * Built-in voice: a microphone beside the + (dictate straight into the box)
    * and a pause/play control at the far end for Frassy's speech, plus the
@@ -127,6 +129,7 @@ export function FrassyComposer({
   studio = true,
   onIntake,
   voice = false,
+  showToolRail = true,
 }: FrassyComposerProps) {
   const queue = useUploadQueue();
   const [menuOpen, setMenuOpen] = useState(false);
@@ -264,7 +267,7 @@ export function FrassyComposer({
 
       {/* FRASS-0551 — the intake bar wraps so nothing is ever pushed off screen,
           and talking to Frassy is the first control the member sees. */}
-      <div className="ws-toolbar">
+      {showToolRail ? <div className="ws-toolbar">
         {/* FRASS-0552 — the voice control is present on every surface: the host
             passes its own mic, otherwise the composer's built-in one is used. */}
         {(onMic || voice) && (
@@ -310,7 +313,7 @@ export function FrassyComposer({
             {queue.stats.ready}/{queue.stats.total}
           </span>
         )}
-      </div>
+      </div> : null}
 
 
       <form

@@ -9,3 +9,4 @@
 - [x] Give the main monitor, audio Edit mode, controls, and Frassy station a real production-studio visual language.
 - [x] Validate the gold-purple room at 1280×900 and 390×844 without page-level overflow.
 - [x] Repair FV Studios Frassy summoning, integrated conversation, honest playback, and crisp text without changing production systems.
+- [x] Dock the approved seated Frassy beside Studio work, simplify Studio-only conversation controls, hide the try-on launcher there, and remove page overflow.

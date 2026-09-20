@@ -748,6 +748,18 @@ export function FrassyChat({
     );
   }
 
+  const studioVoiceLabel = !voice.voiceAvailable
+    ? "Voice unavailable"
+    : voice.phase === "recording"
+      ? "Listening — tap to send"
+      : voice.phase === "transcribing"
+        ? "Catching your words…"
+        : voice.phase === "speaking"
+          ? "Speaking — tap to stop"
+          : loading
+            ? "Thinking…"
+            : "Talk to Frassy";
+
   return (
     <div
       ref={panelRef}
@@ -762,7 +774,7 @@ export function FrassyChat({
               ? "relative mx-auto mt-10 flex min-h-[520px] w-[calc(100%-2rem)] max-w-6xl flex-col overflow-hidden rounded-lg border border-[color:var(--ws-line)]"
               : "flex h-[min(820px,86vh)] min-h-[520px] w-full max-w-full flex-col overflow-hidden rounded-lg border border-[color:var(--ws-line)]"
             : presentation === "studio"
-              ? "fixed bottom-24 right-3 top-[7.5rem] z-50 flex w-[min(520px,calc(100vw-1.5rem))] max-w-full flex-col overflow-hidden rounded-[1.75rem] lg:bottom-5 lg:right-5 lg:top-[8.5rem]"
+              ? "fixed inset-x-0 bottom-0 z-50 flex h-[min(78dvh,760px)] min-w-0 flex-col overflow-hidden rounded-t-[1.5rem] xl:sticky xl:inset-auto xl:top-[9.5rem] xl:z-20 xl:h-[calc(100dvh-11rem)] xl:max-h-[760px] xl:w-full xl:self-start xl:rounded-[1.5rem]"
               : "fixed bottom-6 right-6 z-50 flex h-[min(620px,78vh)] w-[min(420px,calc(100vw-3rem))] max-w-full flex-col overflow-hidden rounded-lg border border-[color:var(--ws-line)] shadow-2xl"
       }`}
       style={{ background: "var(--ws-panel)", color: "var(--ws-ink)" }}
@@ -786,17 +798,19 @@ export function FrassyChat({
               {presentation === "studio" ? "Frassy · Studio Director" : "Frassy"}
             </div>
             <div className="text-xs text-[color:var(--ws-soft)]">
-              {voice.phase === "recording"
-                ? "Listening…"
-                : voice.phase === "transcribing"
-                  ? "Transcribing…"
-                  : voice.phase === "speaking"
-                    ? "Speaking…"
-                    : loading
-                      ? "Thinking…"
-                      : startup.presence === "working"
-                        ? "Nearby"
-                        : "Waiting"}
+              {presentation === "studio"
+                ? studioVoiceLabel
+                : voice.phase === "recording"
+                  ? "Listening…"
+                  : voice.phase === "transcribing"
+                    ? "Transcribing…"
+                    : voice.phase === "speaking"
+                      ? "Speaking…"
+                      : loading
+                        ? "Thinking…"
+                        : startup.presence === "working"
+                          ? "Nearby"
+                          : "Waiting"}
             </div>
             {auditCard ? (
               <div
@@ -823,25 +837,28 @@ export function FrassyChat({
           </div>
         </div>
         <div data-frassy-voice className="flex shrink-0 items-center gap-1">
-          {/* FRASS-0558 §9 — one voice control, always green, always here. */}
+          {/* FRASS-0558 §9 — one voice control with a truthful live state. */}
           <button
             type="button"
             onClick={() => void toggleMic()}
             title="Talk to Frassy"
-            className={`mr-1 inline-flex items-center gap-1 rounded-full border px-2.5 py-1 text-[9px] font-semibold uppercase tracking-[0.18em] transition ${
-              conversationLive
+            disabled={!voice.voiceAvailable}
+            className={`mr-1 inline-flex items-center gap-1 rounded-full border px-2.5 py-1 text-[9px] font-semibold uppercase tracking-[0.08em] transition disabled:cursor-not-allowed disabled:opacity-55 ${
+              !voice.voiceAvailable
+                ? "border-[color:var(--ws-line)] text-[color:var(--ws-soft)]"
+                : conversationLive
                 ? "border-emerald-400 bg-emerald-500/15 text-emerald-400"
                 : "border-emerald-500/60 text-emerald-500 hover:bg-emerald-500/10"
             }`}
           >
             <Mic className="h-3 w-3" />
-            {voice.phase === "recording"
-              ? "Listening"
-              : voice.phase === "transcribing" || loading
-                ? "Thinking"
-                : voice.phase === "speaking"
-                  ? "Speaking"
-                  : "Talk to Frassy"}
+            {presentation === "studio" ? studioVoiceLabel : voice.phase === "recording"
+                ? "Listening"
+                : voice.phase === "transcribing" || loading
+                  ? "Thinking"
+                  : voice.phase === "speaking"
+                    ? "Speaking"
+                    : "Talk to Frassy"}
           </button>
 
           {/* FRASS-0558 §10 — a clear exit. Voice stops, the mic closes, the
@@ -858,8 +875,8 @@ export function FrassyChat({
             </button>
           )}
 
-          {/* Voice: tap to let Frassy speak her replies aloud, or mute her. */}
-          <button
+          {/* Voice preference stays secondary in Studio; other rooms retain it here. */}
+          {presentation !== "studio" ? <button
             type="button"
             onClick={toggleReplyVoice}
             title={
@@ -875,7 +892,7 @@ export function FrassyChat({
           >
             {speakReplies ? <Volume2 className="h-3 w-3" /> : <VolumeX className="h-3 w-3" />}
             {speakReplies ? "Voice on" : "Muted"}
-          </button>
+          </button> : null}
 
           {loading && (
             <button
@@ -887,7 +904,7 @@ export function FrassyChat({
             </button>
           )}
           {/* FRASS-0557 §5 — Expand for long work, restore for quick asks. */}
-          <button
+          {presentation !== "studio" ? <button
             type="button"
             aria-label={
               expanded ? "Restore Frassy to compact size" : "Expand Frassy to full screen"
@@ -897,8 +914,8 @@ export function FrassyChat({
             className="rounded-sm p-2 text-[color:var(--ws-soft)] hover:bg-[color:var(--ws-accent-bg)] hover:text-[color:var(--ws-ink)]"
           >
             {expanded ? <Minimize2 className="h-4 w-4" /> : <Maximize2 className="h-4 w-4" />}
-          </button>
-          <button
+          </button> : null}
+          {presentation !== "studio" ? <button
             type="button"
             aria-label="Clear conversation"
             onClick={() => {
@@ -909,7 +926,7 @@ export function FrassyChat({
             className="rounded-sm p-2 text-[color:var(--ws-soft)] hover:bg-[color:var(--ws-accent-bg)] hover:text-[color:var(--ws-ink)]"
           >
             <Trash2 className="h-4 w-4" />
-          </button>
+          </button> : null}
           {!embedded && !auditCard && (
             <button
               type="button"
@@ -926,6 +943,14 @@ export function FrassyChat({
         </div>
       </header>
 
+      <div className={presentation === "studio" ? "frassy-studio-body min-h-0 flex-1" : "contents"}>
+        {presentation === "studio" ? (
+          <div className="frassy-studio-director" aria-label="Frassy, FV Studios AI Director">
+            <div className="frassy-studio-director-light" aria-hidden="true" />
+            <img src={FV_STUDIOS_FRASSY_LOOK.image} alt={FV_STUDIOS_FRASSY_LOOK.alt} />
+            <p>AI Director</p>
+          </div>
+        ) : null}
       <Conversation
         data-frassy-transcript
         className={`frassy-transcript min-h-0 flex-1 ${auditCard ? "overflow-visible" : ""}`}
@@ -1110,6 +1135,7 @@ export function FrassyChat({
         </ConversationContent>
         <ConversationScrollButton aria-label="Scroll to latest message" />
       </Conversation>
+      </div>
 
       {/* FRASS-0551 — Voice confidence: the member always knows where the
           conversation is. Listening · Transcribing · Thinking · Speaking. */}
@@ -1138,9 +1164,9 @@ export function FrassyChat({
       ) : null}
 
       {/* FRASS-0412 — temporary launch feedback program */}
-      <div className="shrink-0 border-t border-[color:var(--ws-line)] px-3 py-2">
+      {presentation !== "studio" ? <div className="shrink-0 border-t border-[color:var(--ws-line)] px-3 py-2">
         <VoiceFeedbackButton source="chat" />
-      </div>
+      </div> : null}
 
       <div data-frassy-composer className="shrink-0">
         <FrassyComposer
@@ -1152,6 +1178,9 @@ export function FrassyChat({
           onMic={() => void toggleMic()}
           micAvailable={voice.voiceAvailable}
           micActive={voice.phase === "recording"}
+          tools={presentation === "studio" ? ["files", "audio", "documents"] : undefined}
+          studio={presentation !== "studio"}
+          showToolRail={presentation !== "studio"}
         />
       </div>
     </div>

@@ -39,7 +39,6 @@ import {
 import { SiteShell } from "@/components/site-shell";
 import { FrassyChat } from "@/components/frassy-chat";
 import { PhoneContentMode } from "@/components/studio/phone-content-mode";
-import { VoiceFeedbackButton } from "@/components/feedback/voice-feedback";
 import { CreationOpportunities } from "@/components/creation/opportunity-panel";
 import { ExportWatermarkPanel } from "@/components/studio/export-watermark";
 import { Button } from "@/components/ui/button";
@@ -534,9 +533,6 @@ function StudioPage() {
                   </Link>
                 </Button>
               ) : null}
-              <div className="hidden sm:block">
-                <VoiceFeedbackButton source="studio" />
-              </div>
             </div>
           </div>
           <nav
@@ -570,7 +566,13 @@ function StudioPage() {
         </header>
 
         {/* Command centre — one screen, one current job. */}
-        <main className="fv-studio-stage relative mx-auto grid max-w-[1600px] gap-5 px-3 py-5 sm:px-5 xl:grid-cols-[minmax(0,1fr)_320px]">
+        <main
+          className={`fv-studio-stage relative mx-auto grid w-full min-w-0 max-w-[1600px] gap-5 overflow-x-clip px-3 py-5 sm:px-5 ${
+            frassyOpen
+              ? "xl:grid-cols-[minmax(0,1fr)_minmax(390px,440px)]"
+              : "xl:grid-cols-[minmax(0,1fr)_320px]"
+          }`}
+        >
           <div className="fv-ceiling-light" aria-hidden="true" />
           <section className="relative z-10 min-w-0 space-y-3" aria-label="Command centre">
             <div className="fv-control-room relative min-h-[34vh] overflow-hidden sm:min-h-[38vh]">
@@ -763,7 +765,7 @@ function StudioPage() {
 
           {/* Frassy is always beside the work, never below it. */}
           <aside
-            className={`fv-frassy-station relative z-10 min-w-0 ${frassyOpen ? "is-summoned" : ""}`}
+            className={`fv-frassy-station relative z-10 min-w-0 ${frassyOpen ? "hidden" : ""}`}
             aria-label="Frassy, your AI director"
           >
             <button
@@ -847,6 +849,15 @@ function StudioPage() {
               </Button>
             </div>
           </aside>
+
+          <FrassyChat
+            hideBeacon
+            tone="dark"
+            workspaceContext={studioContext}
+            openSignal={frassyOpenSignal}
+            presentation="studio"
+            onOpenChange={setFrassyOpen}
+          />
         </main>
 
         {/* Mobile: the current job's primary action stays in reach. */}
@@ -868,15 +879,6 @@ function StudioPage() {
           </Button>
         </div>
       </div>
-
-      <FrassyChat
-        hideBeacon
-        tone="dark"
-        workspaceContext={studioContext}
-        openSignal={frassyOpenSignal}
-        presentation="studio"
-        onOpenChange={setFrassyOpen}
-      />
 
       <ResultDialog
         surfaced={surfaced}
