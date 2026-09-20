@@ -1111,93 +1111,35 @@ function CreateWorkspace({
   );
 }
 
-function EditWorkspace({
-  directed,
-  depth,
-  audioLane,
-}: {
-  directed: boolean;
-  depth: ControlDepthId;
-  audioLane: boolean;
-}) {
-  const producer = depth === "producer" || depth === "pro";
+function EditWorkspace({ directed, audioLane }: { directed: boolean; audioLane: boolean }) {
   if (directed) {
     return (
       <p className="text-sm text-muted-foreground">
-        Directed mode keeps editing out of your way. Move to Creator depth in Production to open the
-        timeline and inspector.
+        Directed mode keeps editing out of your way. Move to Creator depth in Production to see what
+        editing is available.
       </p>
     );
   }
+  // Truthful state: no editing machine is installed, so nothing here pretends
+  // to be a timeline, transport or mixer you can operate.
   return (
-    <div className="fv-edit-console space-y-3">
-      <div className="fv-edit-transport flex items-center gap-3 rounded-full px-4 py-2">
-        <span className="fv-transport-button" aria-hidden="true">
-          ▶
-        </span>
-        <span className="font-mono text-xs text-foreground">00:00:00</span>
-        <span className="min-w-0 flex-1 text-right text-xs text-muted-foreground">
-          Timeline · {producer ? "Producer controls" : "Creator controls"}
-        </span>
-      </div>
-      <div className="fv-track-bed rounded-2xl p-3">
-        <h2 className="flex items-center gap-2 text-sm font-medium">
-          <Scissors className="h-4 w-4 text-accent" /> Timeline
-        </h2>
-        <div className="mt-3 space-y-2">
-          {TIMELINE_TRACKS.slice(0, producer ? 4 : 2).map((track) => (
-            <div
-              key={track.name}
-              className="fv-track-row grid gap-2 rounded-xl p-2 sm:grid-cols-[140px_1fr]"
-            >
-              <span className="truncate text-xs text-muted-foreground">{track.name}</span>
-              <div className="fv-waveform-lane flex h-9 items-center gap-1 rounded-lg px-2">
-                {[
-                  "h-2",
-                  "h-3.5",
-                  "h-5",
-                  "h-3",
-                  "h-6",
-                  "h-4",
-                  "h-2.5",
-                  "h-5",
-                  "h-3.5",
-                  "h-5.5",
-                  "h-2.5",
-                  "h-4",
-                  "h-2",
-                  "h-4",
-                  "h-5",
-                  "h-3",
-                ].map((height, i) => (
-                  <span key={i} className={`${track.tone} fv-wave-bar ${height}`} />
-                ))}
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-      <details className="border-t border-border pt-3">
-        <summary className="flex min-h-11 cursor-pointer items-center gap-2 text-sm font-medium">
-          <SlidersHorizontal className="h-4 w-4 text-accent" /> Inspector
-        </summary>
-        <p className="mt-2 text-sm text-muted-foreground">
-          Select a clip to adjust transform, colour, timing and blend. Nothing is selected yet.
-        </p>
-      </details>
-      {producer && audioLane ? (
-        <details className="border-t border-border pt-3">
-          <summary className="flex min-h-11 cursor-pointer items-center gap-2 text-sm font-medium">
-            <Volume2 className="h-4 w-4 text-accent" /> Mixer
-          </summary>
-          <p className="mt-2 text-sm text-muted-foreground">
-            Tracks, EQ and levels appear here once audio is in the timeline.
-          </p>
-        </details>
-      ) : null}
+    <div className="space-y-2">
+      <h2 className="flex items-center gap-2 text-sm font-medium">
+        <Scissors className="h-4 w-4 text-accent" /> Editing
+      </h2>
+      <p className="text-sm text-muted-foreground">
+        The Frass editing machine is NOT INSTALLED yet, so there is no timeline, transport or mixer
+        to operate here and nothing can be charged.
+      </p>
+      <p className="text-sm text-muted-foreground">
+        {audioLane
+          ? "For audio you can still run Enhance Phone Recording in Create, and the cleaned file stays yours."
+          : "You can still plan this production with Frassy, and bring finished files in through Assets."}
+      </p>
     </div>
   );
 }
+
 
 function ResultDialog({
   surfaced,
