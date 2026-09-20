@@ -2375,44 +2375,239 @@ a.ps-row:hover { border-color: color-mix(in srgb, var(--gold) 60%, transparent);
 .daily-layout-check { display: flex !important; align-items: center; gap: 0.5rem; font-size: 0.85rem; }
 
 /* ─────────────────────────────────────────────────────────────────────────────
-   FV Studios — the working room is WARMLY LIT, gold-led.
-   Black stays as an anchoring accent (frames, contrast), never the mood.
-   Scoped tokens so shared components inherit the lit room instead of the
-   global night palette. Contrast targets: body text >= 7:1 on panels.
+   FV Studios — immersive luxury control room.
+   Charcoal is the architecture; champagne gold appears as practical light,
+   reflection and console energy rather than flat brown fill.
    ───────────────────────────────────────────────────────────────────────── */
 .fv-studio,
 .fv-studio-surface {
-  --background: oklch(0.31 0.019 68);
-  --foreground: oklch(0.975 0.012 88);
-  --card: oklch(0.375 0.024 70);
-  --card-foreground: oklch(0.975 0.012 88);
-  --popover: oklch(0.375 0.024 70);
-  --popover-foreground: oklch(0.975 0.012 88);
-  --secondary: oklch(0.42 0.026 72);
-  --secondary-foreground: oklch(0.975 0.012 88);
-  --muted: oklch(0.42 0.026 72);
-  --muted-foreground: oklch(0.87 0.022 84);
-  --primary: oklch(0.975 0.012 88);
-  --primary-foreground: oklch(0.24 0.018 66);
-  --accent: oklch(0.84 0.135 80);
-  --accent-foreground: oklch(0.22 0.02 64);
-  --border: oklch(0.88 0.07 82 / 0.28);
-  --input: oklch(0.88 0.07 82 / 0.34);
-  --ring: oklch(0.86 0.13 80);
+  --background: oklch(0.105 0.008 70);
+  --foreground: oklch(0.97 0.012 88);
+  --card: oklch(0.16 0.012 70);
+  --card-foreground: oklch(0.97 0.012 88);
+  --popover: oklch(0.15 0.012 70);
+  --popover-foreground: oklch(0.97 0.012 88);
+  --secondary: oklch(0.205 0.014 72);
+  --secondary-foreground: oklch(0.97 0.012 88);
+  --muted: oklch(0.21 0.012 72);
+  --muted-foreground: oklch(0.77 0.025 84);
+  --primary: oklch(0.9 0.095 84);
+  --primary-foreground: oklch(0.14 0.014 68);
+  --accent: oklch(0.86 0.12 82);
+  --accent-foreground: oklch(0.15 0.016 68);
+  --border: oklch(0.9 0.08 84 / 0.16);
+  --input: oklch(0.9 0.06 84 / 0.23);
+  --ring: oklch(0.88 0.13 82);
   color: var(--foreground);
 }
 
-/* Ambient house lights: warm gold wash from above, soft practicals at the
-   sides, so zones read without adding any extra UI. */
 .fv-studio {
   background-color: var(--background);
   background-image:
-    radial-gradient(120% 70% at 50% -10%, oklch(0.9 0.11 84 / 0.24), transparent 62%),
-    radial-gradient(60% 45% at 8% 22%, oklch(0.86 0.12 78 / 0.13), transparent 70%),
-    radial-gradient(60% 45% at 92% 18%, oklch(0.86 0.12 78 / 0.11), transparent 70%),
-    linear-gradient(180deg, oklch(0.34 0.022 70) 0%, oklch(0.29 0.017 66) 58%, oklch(0.25 0.014 64) 100%);
+    radial-gradient(ellipse 80% 38% at 50% 2%, oklch(0.9 0.13 84 / 0.18), transparent 65%),
+    radial-gradient(ellipse 46% 58% at 8% 38%, oklch(0.79 0.12 78 / 0.09), transparent 72%),
+    radial-gradient(ellipse 44% 55% at 94% 34%, oklch(0.9 0.11 86 / 0.11), transparent 72%),
+    linear-gradient(180deg, oklch(0.14 0.012 70) 0%, oklch(0.09 0.006 70) 70%, oklch(0.125 0.012 72) 100%);
   background-attachment: fixed;
+  isolation: isolate;
 }
+
+.fv-studio::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    linear-gradient(115deg, transparent 12%, oklch(0.88 0.1 84 / 0.045) 28%, transparent 44%),
+    repeating-linear-gradient(90deg, transparent 0 12.4%, oklch(0.88 0.08 84 / 0.025) 12.5%, transparent 12.6% 25%);
+}
+
+.fv-arrival-light {
+  background:
+    radial-gradient(ellipse 42% 26% at 50% 8%, oklch(0.92 0.12 86 / 0.32), transparent 72%),
+    linear-gradient(180deg, transparent 35%, oklch(0.83 0.1 80 / 0.13) 100%);
+}
+
+.fv-studio-header {
+  border-bottom: 1px solid oklch(0.9 0.09 84 / 0.12);
+  background: linear-gradient(180deg, oklch(0.09 0.007 70 / 0.96), oklch(0.12 0.011 72 / 0.88));
+  box-shadow: 0 18px 55px oklch(0.04 0.008 70 / 0.65), 0 8px 40px oklch(0.82 0.1 80 / 0.045);
+}
+
+.fv-console-icon,
+.fv-door-icon {
+  border: 1px solid oklch(0.9 0.1 84 / 0.25);
+  background: radial-gradient(circle at 35% 25%, oklch(0.93 0.08 88 / 0.16), oklch(0.16 0.016 72 / 0.72));
+  box-shadow: inset 0 1px 0 oklch(1 0 0 / 0.1), 0 0 24px oklch(0.84 0.12 80 / 0.09);
+}
+
+.fv-production-select,
+.fv-director-input {
+  border: 1px solid oklch(0.9 0.08 84 / 0.16);
+  background: oklch(0.07 0.006 70 / 0.72);
+  color: var(--foreground);
+  box-shadow: inset 0 1px 8px oklch(0.02 0.004 70 / 0.75), 0 1px 0 oklch(0.95 0.08 86 / 0.06);
+}
+
+.fv-production-select:focus,
+.fv-director-input:focus {
+  border-color: oklch(0.9 0.12 84 / 0.62);
+  box-shadow: 0 0 0 3px oklch(0.86 0.12 82 / 0.1), 0 0 30px oklch(0.86 0.12 82 / 0.1);
+}
+
+.fv-studio-nav {
+  scrollbar-width: none;
+}
+.fv-studio-nav::-webkit-scrollbar { display: none; }
+.fv-studio-tab {
+  position: relative;
+  border-radius: 999px;
+  transition: color 240ms ease, background-color 240ms ease, text-shadow 240ms ease;
+}
+.fv-studio-tab:hover { color: var(--foreground); background: oklch(1 0 0 / 0.035); }
+.fv-studio-tab.is-active {
+  color: var(--accent);
+  background: linear-gradient(180deg, oklch(0.86 0.12 82 / 0.1), transparent);
+  text-shadow: 0 0 20px oklch(0.88 0.13 84 / 0.55);
+}
+.fv-studio-tab.is-active::after {
+  content: "";
+  position: absolute;
+  inset: auto 18% 1px;
+  height: 2px;
+  border-radius: 999px;
+  background: var(--accent);
+  box-shadow: 0 0 10px var(--gold), 0 0 24px oklch(0.87 0.13 82 / 0.65);
+}
+
+.fv-studio-stage::after {
+  content: "";
+  position: absolute;
+  z-index: 0;
+  inset: auto 4% -2rem;
+  height: 8rem;
+  pointer-events: none;
+  background: radial-gradient(ellipse, oklch(0.86 0.1 82 / 0.14), transparent 68%);
+  filter: blur(12px);
+  transform: perspective(280px) rotateX(63deg);
+}
+
+.fv-ceiling-light {
+  position: absolute;
+  z-index: 0;
+  inset: -1rem 14% auto;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, oklch(0.96 0.08 88 / 0.95), transparent);
+  box-shadow: 0 0 18px oklch(0.92 0.13 86 / 0.55), 0 0 70px 16px oklch(0.86 0.12 82 / 0.11);
+}
+
+.fv-main-monitor {
+  border: 1px solid oklch(0.92 0.06 86 / 0.13);
+  border-radius: 1.25rem;
+  background:
+    radial-gradient(ellipse 65% 78% at 50% 44%, oklch(0.81 0.1 78 / 0.12), transparent 68%),
+    linear-gradient(145deg, oklch(0.19 0.017 72 / 0.92), oklch(0.065 0.005 70 / 0.98) 58%, oklch(0.14 0.012 72 / 0.95));
+  box-shadow:
+    inset 0 1px 0 oklch(1 0 0 / 0.1),
+    inset 0 -35px 85px oklch(0.02 0.005 70 / 0.58),
+    0 24px 70px oklch(0.02 0.005 70 / 0.72),
+    0 0 70px oklch(0.86 0.12 82 / 0.1);
+}
+
+.fv-monitor-sheen {
+  background: linear-gradient(118deg, transparent 10%, oklch(1 0 0 / 0.035) 35%, transparent 52%);
+}
+.fv-monitor-orbit {
+  border: 1px solid oklch(0.9 0.11 84 / 0.3);
+  background: radial-gradient(circle, oklch(0.86 0.12 82 / 0.16), transparent 70%);
+  box-shadow: 0 0 35px oklch(0.88 0.13 84 / 0.18), inset 0 0 20px oklch(0.88 0.13 84 / 0.08);
+}
+
+.fv-action-deck,
+.fv-tool-drawer,
+.fv-director-console {
+  border-radius: 1rem;
+  background: linear-gradient(145deg, oklch(0.2 0.015 72 / 0.78), oklch(0.105 0.008 70 / 0.86));
+  box-shadow: inset 0 1px 0 oklch(1 0 0 / 0.075), 0 18px 45px oklch(0.03 0.005 70 / 0.4);
+  backdrop-filter: blur(18px);
+}
+.fv-action-deck { border-bottom: 1px solid oklch(0.9 0.09 84 / 0.22); }
+.fv-tool-drawer { border-top: 1px solid oklch(0.9 0.07 84 / 0.12); }
+
+.fv-primary-action {
+  border: 1px solid oklch(0.98 0.06 90 / 0.65);
+  border-radius: 999px;
+  color: var(--accent-foreground);
+  background: linear-gradient(135deg, oklch(0.96 0.075 90), oklch(0.83 0.14 79) 56%, oklch(0.91 0.1 86));
+  box-shadow: inset 0 1px 0 oklch(1 0 0 / 0.75), inset 0 -8px 18px oklch(0.52 0.12 70 / 0.16), 0 9px 25px oklch(0.03 0.006 70 / 0.55), 0 0 28px oklch(0.88 0.14 83 / 0.3);
+  transition: transform 260ms var(--ease-luxury), box-shadow 260ms ease, filter 260ms ease;
+}
+.fv-primary-action:hover,
+.fv-primary-action:focus-visible {
+  filter: brightness(1.08);
+  transform: translateY(-1px);
+  box-shadow: inset 0 1px 0 oklch(1 0 0 / 0.85), 0 12px 30px oklch(0.03 0.006 70 / 0.6), 0 0 34px oklch(0.9 0.14 84 / 0.55), 0 0 70px oklch(0.86 0.12 82 / 0.2);
+}
+.fv-secondary-control {
+  border: 1px solid oklch(0.9 0.1 84 / 0.3);
+  color: var(--foreground);
+  background: linear-gradient(180deg, oklch(0.27 0.02 74 / 0.78), oklch(0.14 0.012 70 / 0.9));
+  box-shadow: inset 0 1px 0 oklch(1 0 0 / 0.12), 0 0 22px oklch(0.87 0.12 82 / 0.08);
+}
+.fv-secondary-control:hover { border-color: oklch(0.92 0.1 86 / 0.55); background: oklch(0.25 0.02 74 / 0.9); }
+.fv-quiet-action { border-radius: 999px; color: var(--muted-foreground); }
+
+.fv-studio-door {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid oklch(0.9 0.07 84 / 0.1);
+  border-radius: 0.9rem;
+  background: linear-gradient(145deg, oklch(0.24 0.018 72 / 0.62), oklch(0.1 0.008 70 / 0.84));
+  box-shadow: inset 0 1px 0 oklch(1 0 0 / 0.07), 0 12px 28px oklch(0.03 0.005 70 / 0.3);
+  transition: transform 280ms var(--ease-luxury), border-color 280ms ease, box-shadow 280ms ease;
+}
+.fv-studio-door::after {
+  content: "";
+  position: absolute;
+  inset: auto 12% 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, oklch(0.9 0.12 84 / 0.65), transparent);
+  opacity: 0.4;
+}
+.fv-studio-door:hover,
+.fv-studio-door:focus-visible {
+  color: var(--foreground);
+  transform: translateY(-3px);
+  border-color: oklch(0.9 0.11 84 / 0.3);
+  box-shadow: inset 0 1px 0 oklch(1 0 0 / 0.1), 0 18px 38px oklch(0.03 0.005 70 / 0.48), 0 0 35px oklch(0.86 0.12 82 / 0.1);
+}
+
+.fv-frassy-station { align-self: start; }
+.fv-frassy-portrait { border-radius: 1.25rem 1.25rem 3rem 3rem; filter: drop-shadow(0 28px 40px oklch(0.02 0.005 70 / 0.68)); }
+.fv-frassy-portrait img { mask-image: linear-gradient(to bottom, black 0 79%, transparent 100%); }
+.fv-frassy-halo {
+  border-radius: 50%;
+  background: radial-gradient(circle, oklch(0.91 0.13 85 / 0.34), oklch(0.82 0.12 78 / 0.1) 43%, transparent 72%);
+  filter: blur(22px);
+  animation: fv-frassy-alive 5.5s ease-in-out infinite;
+}
+.fv-frassy-call {
+  border: 1px solid oklch(0.92 0.08 86 / 0.25);
+  background: oklch(0.08 0.007 70 / 0.82);
+  box-shadow: inset 0 1px 0 oklch(1 0 0 / 0.1), 0 8px 30px oklch(0.03 0.005 70 / 0.7), 0 0 22px oklch(0.88 0.12 83 / 0.12);
+  backdrop-filter: blur(16px);
+}
+.fv-director-console { border-top: 1px solid oklch(0.9 0.09 84 / 0.18); }
+.fv-phone-console { background: radial-gradient(ellipse at 50% 0%, oklch(0.86 0.11 82 / 0.08), transparent 58%); }
+.fv-frassy-mobile {
+  border: 1px solid oklch(0.95 0.08 88 / 0.55);
+  background: var(--card);
+  box-shadow: 0 0 0 4px oklch(0.86 0.12 82 / 0.08), 0 0 30px oklch(0.9 0.13 84 / 0.42), 0 12px 30px oklch(0.02 0.004 70 / 0.7);
+  transition: box-shadow 240ms ease, border-color 240ms ease;
+}
+.fv-frassy-mobile:hover,
+.fv-frassy-mobile:focus-visible { border-color: var(--accent); box-shadow: 0 0 0 4px oklch(0.86 0.12 82 / 0.12), 0 0 38px oklch(0.9 0.13 84 / 0.58), 0 12px 30px oklch(0.02 0.004 70 / 0.7); }
 
 /* Illuminated architectural edge under the header / above the floor. */
 .fv-studio-lightline {
@@ -2428,13 +2623,29 @@ a.ps-row:hover { border-color: color-mix(in srgb, var(--gold) 60%, transparent);
 
 /* Lights coming up as the entrance dissolves into the working room. */
 @keyframes fv-lights-up {
-  0% { filter: brightness(0.42) saturate(0.8); }
-  55% { filter: brightness(0.92) saturate(1.02); }
-  100% { filter: brightness(1) saturate(1); }
+  0% { opacity: 0.44; }
+  55% { opacity: 0.9; }
+  78% { opacity: 1; }
+  100% { opacity: 1; }
 }
 .fv-lights-up {
   animation: fv-lights-up 1100ms cubic-bezier(0.22, 0.61, 0.36, 1) both;
 }
+@keyframes fv-frassy-alive {
+  0%, 100% { transform: translateY(0); opacity: 0.82; }
+  50% { transform: translateY(-4px); opacity: 1; }
+}
 @media (prefers-reduced-motion: reduce) {
-  .fv-lights-up { animation: none; }
+  .fv-lights-up, .fv-frassy-halo, .fv-frassy-mobile { animation: none; }
+}
+@media (max-width: 1279px) {
+  .fv-frassy-station { display: none; }
+}
+@media (max-width: 640px) {
+  .site-header-studio .site-header-socials,
+  .site-header-studio .site-header-signout { display: none; }
+  .fv-studio-stage { padding-top: 0.75rem; }
+  .fv-main-monitor { min-height: 29vh; border-radius: 1rem; }
+  .fv-tool-drawer { border-radius: 0.85rem; }
+  .fv-action-deck { border-radius: 0.85rem; }
 }

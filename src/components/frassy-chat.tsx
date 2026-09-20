@@ -153,7 +153,10 @@ function beaconInviteFor(pathname: string): string {
 export function FrassyChat({
   embedded = false,
   tone,
-}: { embedded?: boolean; tone?: "light" | "dark" } = {}) {
+  hideBeacon = false,
+  workspaceContext,
+  openSignal = 0,
+}: { embedded?: boolean; tone?: "light" | "dark"; hideBeacon?: boolean; workspaceContext?: string; openSignal?: number } = {}) {
   const navigate = useNavigate();
   const ctx = useFrassyContext();
   // FRASS-0551 — only the Founder Control Room stays dark. Every member surface
@@ -168,13 +171,18 @@ export function FrassyChat({
   const [auditCard, setAuditCard] = useState<ReturnType<typeof resolveAuditCard>>(null);
   const [auditContextMismatch, setAuditContextMismatch] = useState(false);
   useEffect(() => {
+    if (workspaceContext) {
+      setAuditCard(null);
+      setAuditContextMismatch(false);
+      return;
+    }
     const active = resolveAuditCard(ctx.pathname);
     setAuditCard(active);
     setAuditContextMismatch(isStaleTeleport(ctx.pathname));
     // A Teleporter audit is a permanent page journal, never a floating box the
     // Founder can lose while Frassy is still speaking.
     if (active) setOpen(true);
-  }, [ctx.pathname]);
+  }, [ctx.pathname, workspaceContext]);
   const transcriptScope = auditCard ? `teleporter.${auditCard.key}` : undefined;
 
   // FRASS-0476B — one shared conversation history. A refresh or a change of
@@ -357,6 +365,10 @@ export function FrassyChat({
     if (open) inputRef.current?.focus();
   }, [open]);
 
+  useEffect(() => {
+    if (openSignal > 0 && !embedded) setOpen(true);
+  }, [embedded, openSignal]);
+
   // Abort any in-flight turn when the widget unmounts.
   useEffect(() => () => abortRef.current?.abort(), []);
 
@@ -487,6 +499,7 @@ export function FrassyChat({
           momentumContext:
             momentumContext(readMomentum(readBalanceSignals() ?? NO_SIGNALS, loadMomentum())) ||
             undefined,
+          memoryContext: workspaceContext || undefined,
           stream: false,
         }),
       });
@@ -685,6 +698,7 @@ export function FrassyChat({
   // (the Frass logo), listening (a microphone), thinking (a gentle pulse) and
   // speaking (the logo with a live waveform). One tap starts a conversation.
   if (!open && !embedded && !auditCard) {
+    if (hideBeacon) return null;
     const listening = voice.phase === "recording";
     const speaking = voice.phase === "speaking";
     const thinking = voice.phase === "transcribing" || loading;

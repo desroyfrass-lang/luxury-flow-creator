@@ -22,6 +22,7 @@ import {
 } from "@/lib/studio/phone-content-mode";
 import { formatDuration, unitLabel, usdFor } from "@/lib/studio/credits";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
 
 type Props = {
   balance: number;
@@ -86,7 +87,7 @@ export function PhoneContentMode({ balance, running, onRun }: Props) {
   const affordable = report ? balance >= report.forecast.total : true;
 
   return (
-    <section className="rounded-2xl border border-accent/30 bg-card/80 p-5">
+    <section className="fv-phone-console p-1 sm:p-2">
       <header className="flex flex-wrap items-start justify-between gap-4">
         <div>
           <p className="text-[11px] uppercase tracking-[0.35em] text-accent">FRASS-0406</p>
@@ -108,17 +109,20 @@ export function PhoneContentMode({ balance, running, onRun }: Props) {
                 ["off", "Disabled"],
               ] as Array<[PhoneModePreference, string]>
             ).map(([value, label]) => (
-              <button
+              <Button
                 key={value}
+                type="button"
+                variant="ghost"
+                size="sm"
                 onClick={() => setPref(value)}
-                className={`rounded-full border px-3 py-1 text-[10px] uppercase tracking-widest transition ${
+                className={`rounded-full px-3 py-1 text-[10px] transition ${
                   preference === value
-                    ? "border-accent/60 bg-accent/20 text-accent"
-                    : "border-border text-muted-foreground hover:border-accent/50"
+                    ? "bg-accent/20 text-accent shadow-[inset_0_-1px_0_var(--gold)]"
+                    : "text-muted-foreground"
                 }`}
               >
                 {label}
-              </button>
+              </Button>
             ))}
           </div>
         </div>
@@ -126,12 +130,12 @@ export function PhoneContentMode({ balance, running, onRun }: Props) {
 
       {/* Analyse */}
       <div className="mt-5 flex flex-wrap items-center gap-3">
-        <button
+        <Button
           onClick={() => inputRef.current?.click()}
-          className="rounded-xl border border-accent/50 bg-accent/15 px-4 py-2 text-xs uppercase tracking-widest text-accent hover:bg-accent/25"
+          className="fv-primary-action min-h-12 px-5 text-sm"
         >
           {analysing ? "Analysing…" : "Analyse a recording"}
-        </button>
+        </Button>
         <input
           ref={inputRef}
           type="file"

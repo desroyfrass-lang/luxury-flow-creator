@@ -32,6 +32,7 @@ import {
   Upload,
   Volume2,
   Wand2,
+  MessageCircle,
 } from "lucide-react";
 import { SiteShell } from "@/components/site-shell";
 import { FrassyChat } from "@/components/frassy-chat";
@@ -44,6 +45,7 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } f
 import { ControlDepthBar } from "@/components/studio/control-depth-bar";
 import { A1MasterPanel } from "@/components/studio/a1-master-panel";
 import studioEntry from "@/assets/studio-entry.jpg";
+import frassyStudioLook from "@/assets/frassy-look-workshop.jpg.asset.json";
 import type { QualityReport } from "@/lib/studio/phone-content-mode";
 import { FREE_CAPABILITIES, formatDuration, unitLabel, usdFor, buildForecast } from "@/lib/studio/credits";
 import { A1_CLEAN_BUCKET, processA1Clean } from "@/lib/studio/a1-clean";
@@ -141,6 +143,7 @@ function StudioPage() {
   const [task, setTask] = useState<CreationDoor | null>(null);
   const [creating, setCreating] = useState(false);
   const [direction, setDirection] = useState("");
+  const [frassyOpenSignal, setFrassyOpenSignal] = useState(0);
   const [why, setWhy] = useState(false);
   const [surfaced, setSurfaced] = useState<Surfaced | null>(null);
   const [preview, setPreview] = useState<{ label: string; url: string } | null>(null);
@@ -285,9 +288,22 @@ function StudioPage() {
       ? { label: "Enhance Phone Recording", onClick: () => { setTab("create"); document.getElementById("fv-workspace")?.querySelector<HTMLInputElement>('input[type="file"]')?.click(); } }
       : { label: "Ask Frassy for the next step", onClick: () => document.getElementById("director-direction")?.focus() };
 
+  const studioContext = [
+    "FV Studios",
+    `Current production: ${active?.title ?? "none open"}`,
+    `Creation type: ${task?.label ?? active?.destination ?? "not chosen"}`,
+    `Current workspace: ${tab}`,
+    `Control depth: ${controlDepth(active?.control_depth).label}`,
+    `Output status: ${preview ? "a cleaned and verified output is in preview; it is not mastered" : "no verified output yet"}`,
+    "Installed machine: Enhance Phone Recording for audio restoration.",
+    "Mastering, music generation, image generation, video generation, animation and voice generation are not installed.",
+    `Best next action: ${primary.label}`,
+  ].join("\n");
+  const summonFrassy = () => setFrassyOpenSignal((signal) => signal + 1);
+
   return (
     <SiteShell>
-      <div className={`fv-studio min-h-screen pb-24 text-foreground lg:pb-0 ${arrival ? "" : "fv-lights-up"}`}>
+      <div className={`fv-studio min-h-screen overflow-x-clip pb-24 text-foreground lg:pb-0 ${arrival ? "" : "fv-lights-up"}`}>
         {arrival ? (
           <button
             type="button"
@@ -296,8 +312,8 @@ function StudioPage() {
             className="fixed inset-0 z-50 animate-fade-in cursor-pointer"
           >
             <img src={studioEntry} alt="Eye-level entrance into the FV Studios production room" className="h-full w-full object-cover" fetchPriority="high" />
-            <span className="absolute inset-0 bg-[color:var(--ink)]/80" aria-hidden="true" />
-            <span className="absolute inset-0 bg-gradient-to-b from-accent/25 via-transparent to-accent/10" aria-hidden="true" />
+            <span className="absolute inset-0 bg-[color:var(--ink)]/75" aria-hidden="true" />
+            <span className="fv-arrival-light absolute inset-0" aria-hidden="true" />
             <span className="absolute inset-0 grid place-items-center px-6 text-center">
               <span className="block">
                 <span className="block font-display text-4xl uppercase leading-none sm:text-6xl">Frass Vision Studios</span>
@@ -308,15 +324,15 @@ function StudioPage() {
         ) : null}
 
         {/* Compact, persistent studio header: where I am, what I'm on, what it costs. */}
-        <header className="sticky top-0 z-30 border-b border-accent/25 bg-card/85 backdrop-blur">
+        <header className="fv-studio-header sticky top-0 z-30 backdrop-blur-xl">
           <div className="mx-auto grid max-w-[1600px] grid-cols-[minmax(0,1fr)_auto] items-center gap-3 px-3 pb-2 pt-11 sm:px-5">
             <div className="flex min-w-0 items-center gap-2">
-              <span className="grid h-9 w-9 shrink-0 place-items-center rounded-md border border-accent/40 bg-accent/10"><Film className="h-4 w-4 text-accent" /></span>
+              <span className="fv-console-icon grid h-9 w-9 shrink-0 place-items-center rounded-full"><Film className="h-4 w-4 text-accent" /></span>
               <select
                 aria-label="Current production"
                 value={active?.id ?? ""}
                 onChange={(e) => { setActiveId(e.target.value); setCreating(false); }}
-                className="h-10 min-w-0 max-w-[15rem] flex-1 rounded-md border border-input bg-background px-2 text-sm"
+                className="fv-production-select h-10 min-w-0 max-w-[19rem] flex-1 rounded-full px-4 text-sm"
               >
                 <option value="">No production open</option>
                 {projects.map((p) => <option key={p.id} value={p.id}>{p.title}</option>)}
@@ -326,14 +342,14 @@ function StudioPage() {
             <div className="flex shrink-0 items-center gap-2">
               <Button variant="ghost" size="sm" onClick={() => setCredits(true)} className="h-10">{(w?.balance ?? 0).toLocaleString()} cr</Button>
               {isAdmin === true ? (
-                <Button size="sm" asChild className="h-10 bg-accent text-accent-foreground hover:bg-accent/90">
+                <Button size="sm" asChild className="fv-secondary-control h-10 rounded-full">
                   <Link to="/studios" aria-label="Founder Originals"><Shield className="h-4 w-4" /> <span className="hidden sm:inline">Founder Originals</span></Link>
                 </Button>
               ) : null}
               <div className="hidden sm:block"><VoiceFeedbackButton source="studio" /></div>
             </div>
           </div>
-          <nav aria-label="Studio sections" className="mx-auto flex max-w-[1600px] gap-1 overflow-x-auto px-3 pb-2 sm:px-5">
+          <nav aria-label="Studio sections" className="fv-studio-nav mx-auto flex max-w-[1600px] gap-1 overflow-x-auto px-3 pb-2 sm:px-5">
             {TABS.map((t) => {
               const Icon = t.icon;
               const on = t.id === tab;
@@ -343,13 +359,13 @@ function StudioPage() {
                   type="button"
                   onClick={() => setTab(t.id)}
                   aria-current={on ? "page" : undefined}
-                  className={`flex min-h-11 shrink-0 items-center gap-2 rounded-md px-3 text-sm ${on ? "bg-accent/15 text-accent" : "text-muted-foreground hover:text-foreground"}`}
+                  className={`fv-studio-tab flex min-h-11 shrink-0 items-center gap-2 px-3 text-sm ${on ? "is-active" : "text-muted-foreground"}`}
                 >
                   <Icon className="h-4 w-4" /> {t.label}
                 </button>
               );
             })}
-            <button type="button" onClick={() => setFurther(true)} className="ml-auto flex min-h-11 shrink-0 items-center gap-2 rounded-md px-3 text-sm text-muted-foreground hover:text-foreground">
+            <button type="button" onClick={() => setFurther(true)} className="fv-studio-tab ml-auto flex min-h-11 shrink-0 items-center gap-2 px-3 text-sm text-muted-foreground">
               <ChevronRight className="h-4 w-4" /> Take it further
             </button>
           </nav>
@@ -357,38 +373,39 @@ function StudioPage() {
         </header>
 
         {/* Command centre — one screen, one current job. */}
-        <main className="mx-auto grid max-w-[1600px] gap-4 px-3 py-4 sm:px-5 xl:grid-cols-[minmax(0,1fr)_360px]">
-          <section className="min-w-0 space-y-3" aria-label="Command centre">
-            <div className="relative grid min-h-[32vh] place-items-center overflow-hidden rounded-lg border border-accent/25 bg-card/80 p-5 shadow-[0_18px_60px_-30px_var(--gold)]">
+        <main className="fv-studio-stage relative mx-auto grid max-w-[1600px] gap-5 px-3 py-5 sm:px-5 xl:grid-cols-[minmax(0,1fr)_320px]">
+          <div className="fv-ceiling-light" aria-hidden="true" />
+          <section className="relative z-10 min-w-0 space-y-3" aria-label="Command centre">
+            <div className="fv-main-monitor relative grid min-h-[34vh] place-items-center overflow-hidden p-5 sm:min-h-[38vh]">
               {preview ? (
                 <div className="w-full max-w-xl text-center">
-                  <p className="text-xs uppercase text-accent">{preview.label}</p>
+                  <p className="text-xs font-semibold text-accent">{preview.label}</p>
                   <audio controls src={preview.url} className="mt-3 w-full" />
                   <p className="mt-2 text-xs text-muted-foreground">Cleaned and verified. Not A1 Master approved.</p>
                 </div>
               ) : (
                 <div className="max-w-md text-center">
-                  <MonitorPlay className="mx-auto h-10 w-10 text-accent/55" />
-                  <p className="mt-3 text-lg">{active ? active.title : "No production open"}</p>
+                  <span className="fv-monitor-orbit mx-auto grid h-20 w-20 place-items-center rounded-full"><MonitorPlay className="h-9 w-9 text-accent" /></span>
+                  <p className="mt-5 font-display text-3xl normal-case leading-none sm:text-5xl">{active ? active.title : "Your next production"}</p>
                   <p className="mt-1 text-sm text-muted-foreground">{active ? `${task?.label ?? active.destination} · no verified output yet` : "Pick what you are making below."}</p>
                 </div>
               )}
-              <span className="pointer-events-none absolute inset-x-8 top-0 h-px bg-gradient-to-r from-transparent via-accent/70 to-transparent" aria-hidden="true" />
+              <span className="fv-monitor-sheen pointer-events-none absolute inset-0" aria-hidden="true" />
               <div className="absolute bottom-3 left-4 hidden gap-2 text-xs uppercase text-muted-foreground sm:flex">
                 <span className="rounded-full border border-border bg-background/80 px-3 py-1">Preview</span>
                 <span className="rounded-full border border-border bg-background/80 px-3 py-1">{preview ? "Cleaned output" : "No output claimed"}</span>
               </div>
             </div>
 
-            <div className="flex flex-wrap items-center gap-2 rounded-lg border border-accent/45 bg-accent/15 p-3">
-              <Button onClick={primary.onClick} className="min-h-12 flex-1 bg-accent text-accent-foreground hover:bg-accent/90 sm:flex-none">
+            <div className="fv-action-deck grid grid-cols-[minmax(0,1fr)_auto] items-center gap-3 px-3 py-3 sm:flex">
+              <Button onClick={primary.onClick} className="fv-primary-action min-h-14 min-w-0 text-base sm:min-w-72">
                 {primary.label} <ArrowRight />
               </Button>
-              {active ? <Button variant="outline" className="min-h-12" onClick={() => { setTask(null); setCreating(true); setTab("create"); }}><Plus /> New production</Button> : null}
-              <span className="text-xs text-muted-foreground">Nothing runs and nothing is charged until you approve it.</span>
+              {active ? <Button variant="ghost" className="fv-quiet-action min-h-12 shrink-0" onClick={() => { setTask(null); setCreating(true); setTab("create"); }}><Plus /> <span className="hidden sm:inline">New production</span></Button> : null}
+              <span className="col-span-2 text-xs text-muted-foreground sm:ml-auto">Nothing runs or charges before approval.</span>
             </div>
 
-            <div id="fv-workspace" className="rounded-lg border border-border bg-card/70 p-3 sm:p-4">
+            <div id="fv-workspace" className="fv-tool-drawer p-4 sm:p-5">
               {tab === "create" ? (
                 <CreateWorkspace
                   task={task}
@@ -428,19 +445,24 @@ function StudioPage() {
           </section>
 
           {/* Frassy is always beside the work, never below it. */}
-          <aside className="min-w-0 space-y-3" aria-label="Frassy, your AI director">
-            <div className="rounded-lg border border-accent/25 bg-card/85 p-4 shadow-[0_14px_50px_-32px_var(--gold)]">
-              <div className="flex items-center gap-3">
-                <span className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-accent/15"><Sparkles className="text-accent" /></span>
-                <div className="min-w-0"><p className="text-xs uppercase text-accent">At the console</p><h2 className="truncate font-display text-lg uppercase">Frassy · AI Director</h2></div>
-              </div>
+          <aside className="fv-frassy-station relative z-10 min-w-0" aria-label="Frassy, your AI director">
+            <button type="button" onClick={summonFrassy} className="fv-frassy-portrait group relative mx-auto block w-full max-w-[19rem] overflow-hidden text-left" aria-label="Talk to Frassy in the studio">
+              <span className="fv-frassy-halo absolute inset-x-[8%] bottom-[4%] h-[62%]" aria-hidden="true" />
+              <img src={frassyStudioLook.url} alt="Frassy in her approved black and gold Builders look, standing at the studio console" className="relative z-10 aspect-[3/4] w-full object-cover object-top transition duration-500 group-hover:scale-[1.015]" />
+              <span className="fv-frassy-call absolute inset-x-4 bottom-4 z-20 grid grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-3 rounded-full px-4 py-3">
+                <span className="h-2 w-2 rounded-full bg-accent shadow-[0_0_14px_var(--gold)]" />
+                <span className="min-w-0"><span className="block text-xs font-semibold text-foreground">Frassy · Studio Director</span><span className="block truncate text-[11px] text-muted-foreground">Tap to talk — I know this production</span></span>
+                <MessageCircle className="h-4 w-4 text-accent" />
+              </span>
+            </button>
+            <div className="fv-director-console mt-[-1rem] p-4 pt-7">
               <form
-                className="mt-3"
+                className=""
                 onSubmit={(e) => { e.preventDefault(); if (!direction.trim()) return; setWhy(false); setSurfaced({ kind: "forecast", plan: planFromDirection(direction) }); }}
               >
-                <label className="text-sm text-muted-foreground" htmlFor="director-direction">What should Frassy do?</label>
-                <textarea id="director-direction" rows={3} value={direction} onChange={(e) => setDirection(e.target.value)} placeholder="Clean up this interview and cut it to 30 seconds…" className="mt-2 w-full resize-none rounded-md border border-input bg-background p-3 text-sm outline-none focus:border-accent" />
-                <Button type="submit" disabled={!direction.trim()} className="mt-2 min-h-12 w-full bg-accent text-accent-foreground hover:bg-accent/90"><Send /> Show me the plan and the cost</Button>
+                <label className="text-sm text-muted-foreground" htmlFor="director-direction">Direct this production</label>
+                <textarea id="director-direction" rows={3} value={direction} onChange={(e) => setDirection(e.target.value)} placeholder="Tell Frassy what you want to make…" className="fv-director-input mt-2 w-full resize-none rounded-lg p-3 text-sm outline-none" />
+                <Button type="submit" disabled={!direction.trim()} className="fv-secondary-control mt-2 min-h-12 w-full"><Send /> Show my plan and cost</Button>
               </form>
               {directed ? null : (
                 <div className="mt-3 flex flex-wrap gap-2">
@@ -449,19 +471,21 @@ function StudioPage() {
                   ))}
                 </div>
               )}
-              <details className="mt-3 border-t border-border pt-3">
-                <summary className="min-h-11 cursor-pointer text-sm font-medium">Open full conversation with Frassy</summary>
-                <div className="mt-3"><FrassyChat embedded tone="dark" /></div>
-              </details>
+              <Button variant="ghost" className="mt-2 min-h-11 w-full text-muted-foreground" onClick={summonFrassy}><MessageCircle /> Open full conversation</Button>
             </div>
           </aside>
         </main>
 
         {/* Mobile: the current job's primary action stays in reach. */}
-        <div className="fv-studio-surface fixed inset-x-0 bottom-0 z-30 border-t border-accent/30 bg-card/95 p-3 backdrop-blur lg:hidden">
-          <Button onClick={primary.onClick} className="min-h-12 w-full bg-accent text-accent-foreground hover:bg-accent/90">{primary.label} <ArrowRight /></Button>
+        <button type="button" onClick={summonFrassy} className="fv-frassy-mobile fixed bottom-[5.35rem] right-3 z-40 h-16 w-16 overflow-hidden rounded-full lg:hidden" aria-label="Talk to Frassy in the studio">
+          <img src={frassyStudioLook.url} alt="Frassy" className="h-full w-full object-cover object-top" />
+        </button>
+        <div className="fv-studio-surface fixed inset-x-0 bottom-0 z-30 bg-card/95 p-3 backdrop-blur lg:hidden">
+          <Button onClick={primary.onClick} className="fv-primary-action min-h-12 w-full">{primary.label} <ArrowRight /></Button>
         </div>
       </div>
+
+      <FrassyChat hideBeacon tone="dark" workspaceContext={studioContext} openSignal={frassyOpenSignal} />
 
       <ResultDialog
         surfaced={surfaced}
@@ -536,12 +560,12 @@ function CreateWorkspace({
     return (
       <div>
         <h2 className="text-sm font-medium">What are we making today?</h2>
-        <div className="mt-3 grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
           {CREATION_DOORS.map((door) => {
             const Icon = door.icon;
             return (
-              <Button key={door.id} variant="outline" onClick={() => onChoose(door)} className="h-auto min-h-16 justify-start whitespace-normal p-3 text-left">
-                <Icon className="h-5 w-5 shrink-0 text-accent" />
+              <Button key={door.id} variant="ghost" onClick={() => onChoose(door)} className="fv-studio-door h-auto min-h-24 justify-start whitespace-normal p-4 text-left">
+                <span className="fv-door-icon grid h-11 w-11 shrink-0 place-items-center rounded-full"><Icon className="h-5 w-5 text-accent" /></span>
                 <span className="min-w-0"><span className="block text-sm">{door.label}</span><span className="block text-xs font-normal text-muted-foreground">{door.note}</span></span>
               </Button>
             );
@@ -573,8 +597,8 @@ function CreateWorkspace({
           {CREATION_DOORS.map((door) => {
             const Icon = door.icon;
             return (
-              <Button key={door.id} variant="outline" onClick={() => onChoose(door)} className="h-auto min-h-14 justify-start whitespace-normal p-3 text-left">
-                <Icon className="h-5 w-5 shrink-0 text-accent" /> <span className="text-sm">{door.label}</span>
+              <Button key={door.id} variant="ghost" onClick={() => onChoose(door)} className="fv-studio-door h-auto min-h-20 justify-start whitespace-normal p-3 text-left">
+                <span className="fv-door-icon grid h-10 w-10 shrink-0 place-items-center rounded-full"><Icon className="h-5 w-5 text-accent" /></span> <span className="text-sm">{door.label}</span>
               </Button>
             );
           })}
