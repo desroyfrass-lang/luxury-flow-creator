@@ -982,241 +982,241 @@ export function FrassyChat({
           </div>
         ) : null}
         <div className={presentation === "studio" ? "frassy-studio-dialogue" : "contents"}>
-        <Conversation
-          data-frassy-transcript
-          className={`frassy-transcript min-h-0 flex-1 ${auditCard ? "overflow-visible" : ""}`}
-        >
-          <ConversationContent className="gap-5 px-4 py-5 pb-8">
-            {/* FRASS-0551 — conversation first: the room is never an empty box. */}
-            {(startup.greeting || (!messages.length && startup.phase === "greeted")) && (
-              <div className="frassy-bubble w-fit max-w-[min(46rem,95%)] rounded-lg bg-[color:var(--ws-accent-bg)] px-4 py-3 text-sm leading-relaxed text-[color:var(--ws-ink)]">
-                <p className="whitespace-pre-wrap">
-                  {startup.greeting ??
-                    "I'm right here. Tell me what you'd like to do — talk or type, whichever suits you."}
-                </p>
-              </div>
-            )}
+          <Conversation
+            data-frassy-transcript
+            className={`frassy-transcript min-h-0 flex-1 ${auditCard ? "overflow-visible" : ""}`}
+          >
+            <ConversationContent className="gap-5 px-4 py-5 pb-8">
+              {/* FRASS-0551 — conversation first: the room is never an empty box. */}
+              {(startup.greeting || (!messages.length && startup.phase === "greeted")) && (
+                <div className="frassy-bubble w-fit max-w-[min(46rem,95%)] rounded-lg bg-[color:var(--ws-accent-bg)] px-4 py-3 text-sm leading-relaxed text-[color:var(--ws-ink)]">
+                  <p className="whitespace-pre-wrap">
+                    {startup.greeting ??
+                      "I'm right here. Tell me what you'd like to do — talk or type, whichever suits you."}
+                  </p>
+                </div>
+              )}
 
-            {startup.notice && (
-              <div className="rounded-sm border border-[color:var(--gold)]/30 bg-[color:var(--gold)]/10 px-3 py-2 text-xs text-[color:var(--ws-ink)]">
-                {startup.notice}
-              </div>
-            )}
+              {startup.notice && (
+                <div className="rounded-sm border border-[color:var(--gold)]/30 bg-[color:var(--gold)]/10 px-3 py-2 text-xs text-[color:var(--ws-ink)]">
+                  {startup.notice}
+                </div>
+              )}
 
-            {/* FRASS-0573 — ONE continuous conversation. Earlier card reviews are not
+              {/* FRASS-0573 — ONE continuous conversation. Earlier card reviews are not
             a separate little box: they are the same thread, same bubbles, same
             size, flowing straight into today's live turns. */}
-            {ledgerGroups.map((g) => (
-              <div key={g.cardKey} className="space-y-5">
-                <p className="text-[10px] uppercase tracking-[0.25em] text-[color:var(--gold)]">
-                  {formatCardNumber(g.cardNumber)} · {g.cardTitle} · {g.cardPath}
-                </p>
-                {g.entries.map((e) => (
-                  <div
-                    key={e.id}
-                    className={
-                      e.role === "user"
-                        ? "frassy-bubble ml-auto w-fit max-w-[min(42rem,92%)] rounded-lg bg-[color:var(--gold)]/15 px-4 py-3 text-sm leading-relaxed text-[color:var(--ws-ink)]"
-                        : "frassy-bubble w-fit max-w-[min(46rem,95%)] rounded-lg bg-[color:var(--ws-accent-bg)] px-4 py-3 text-sm leading-relaxed text-[color:var(--ws-ink)]"
-                    }
-                  >
-                    <p className="whitespace-pre-wrap">{e.content}</p>
-                  </div>
-                ))}
-              </div>
-            ))}
+              {ledgerGroups.map((g) => (
+                <div key={g.cardKey} className="space-y-5">
+                  <p className="text-[10px] uppercase tracking-[0.25em] text-[color:var(--gold)]">
+                    {formatCardNumber(g.cardNumber)} · {g.cardTitle} · {g.cardPath}
+                  </p>
+                  {g.entries.map((e) => (
+                    <div
+                      key={e.id}
+                      className={
+                        e.role === "user"
+                          ? "frassy-bubble ml-auto w-fit max-w-[min(42rem,92%)] rounded-lg bg-[color:var(--gold)]/15 px-4 py-3 text-sm leading-relaxed text-[color:var(--ws-ink)]"
+                          : "frassy-bubble w-fit max-w-[min(46rem,95%)] rounded-lg bg-[color:var(--ws-accent-bg)] px-4 py-3 text-sm leading-relaxed text-[color:var(--ws-ink)]"
+                      }
+                    >
+                      <p className="whitespace-pre-wrap">{e.content}</p>
+                    </div>
+                  ))}
+                </div>
+              ))}
 
-            {messages
-              .filter(
-                (message) =>
-                  !auditCard ||
-                  !currentLedgerTurns.has(`${message.role}\u0000${message.content.trim()}`),
-              )
-              .map((m) => (
-                <Message key={m.id} from={m.role}>
-                  <MessageContent
-                    className={
-                      m.role === "user"
-                        ? "frassy-bubble bg-primary px-4 py-3 text-primary-foreground"
-                        : "frassy-bubble px-0 py-1 text-[color:var(--ws-ink)]"
-                    }
-                  >
-                    {m.role === "assistant" ? (
-                      <PlainEnglishMessage
-                        content={m.content}
-                        onRequestLevel={(next: LearningLevel) =>
-                          void send(`Explain that again at the "${levelMeta(next).label}" level.`)
-                        }
-                      />
-                    ) : (
-                      <p className="whitespace-pre-wrap">{m.content}</p>
+              {messages
+                .filter(
+                  (message) =>
+                    !auditCard ||
+                    !currentLedgerTurns.has(`${message.role}\u0000${message.content.trim()}`),
+                )
+                .map((m) => (
+                  <Message key={m.id} from={m.role}>
+                    <MessageContent
+                      className={
+                        m.role === "user"
+                          ? "frassy-bubble bg-primary px-4 py-3 text-primary-foreground"
+                          : "frassy-bubble px-0 py-1 text-[color:var(--ws-ink)]"
+                      }
+                    >
+                      {m.role === "assistant" ? (
+                        <PlainEnglishMessage
+                          content={m.content}
+                          onRequestLevel={(next: LearningLevel) =>
+                            void send(`Explain that again at the "${levelMeta(next).label}" level.`)
+                          }
+                        />
+                      ) : (
+                        <p className="whitespace-pre-wrap">{m.content}</p>
+                      )}
+                    </MessageContent>
+
+                    {/* "Hear Frassy" only exists while playback is provably healthy. */}
+                    {m.role === "assistant" &&
+                      voice.voiceAvailable &&
+                      voice.phase !== "recording" && (
+                        <button
+                          type="button"
+                          onClick={() => void voice.speak(m.content)}
+                          disabled={voice.phase === "speaking"}
+                          className="mt-2 inline-flex items-center gap-1.5 rounded-sm border border-[color:var(--ws-line)] px-2 py-1 text-[10px] uppercase tracking-[0.2em] text-[color:var(--ws-soft)] hover:text-[color:var(--ws-ink)] disabled:opacity-40"
+                        >
+                          <Volume2 className="h-3 w-3" /> Hear Frassy
+                        </button>
+                      )}
+
+                    {!!m.products?.length && (
+                      <div className="mt-3 grid grid-cols-2 gap-2">
+                        {m.products.map((p) => (
+                          <a
+                            key={`${m.id}-${p.handle}`}
+                            href={p.url}
+                            className="group overflow-hidden rounded-sm border border-[color:var(--ws-line)] hover:border-[color:var(--gold)]/50"
+                          >
+                            {p.image ? (
+                              <img
+                                src={p.image}
+                                alt={p.title}
+                                loading="lazy"
+                                className="h-24 w-full object-cover"
+                              />
+                            ) : (
+                              <div className="flex h-24 items-center justify-center bg-[color:var(--ws-accent-bg)]">
+                                <ShoppingBag className="h-5 w-5 text-[color:var(--ws-soft)]" />
+                              </div>
+                            )}
+                            <div className="px-2 py-2">
+                              <div className="truncate text-[11px] text-[color:var(--ws-ink)]">
+                                {p.title}
+                              </div>
+                              <div className="mt-0.5 text-[10px] text-[color:var(--ws-soft)]">
+                                {p.currency} {p.price}
+                              </div>
+                            </div>
+                          </a>
+                        ))}
+                      </div>
                     )}
-                  </MessageContent>
 
-                  {/* "Hear Frassy" only exists while playback is provably healthy. */}
-                  {m.role === "assistant" &&
-                    voice.voiceAvailable &&
-                    voice.phase !== "recording" && (
+                    {m.place && (
                       <button
                         type="button"
-                        onClick={() => void voice.speak(m.content)}
-                        disabled={voice.phase === "speaking"}
-                        className="mt-2 inline-flex items-center gap-1.5 rounded-sm border border-[color:var(--ws-line)] px-2 py-1 text-[10px] uppercase tracking-[0.2em] text-[color:var(--ws-soft)] hover:text-[color:var(--ws-ink)] disabled:opacity-40"
+                        onClick={() => void navigate({ to: m.place!.path } as never)}
+                        className="mt-3 inline-flex items-center gap-2 rounded-sm border border-[color:var(--gold)]/60 bg-[color:var(--gold)]/10 px-3 py-2 text-[10px] font-bold uppercase tracking-[0.25em] text-[color:var(--gold)]"
                       >
-                        <Volume2 className="h-3 w-3" /> Hear Frassy
+                        Open {m.place.label} <ArrowRight className="h-3 w-3" />
                       </button>
                     )}
 
-                  {!!m.products?.length && (
-                    <div className="mt-3 grid grid-cols-2 gap-2">
-                      {m.products.map((p) => (
-                        <a
-                          key={`${m.id}-${p.handle}`}
-                          href={p.url}
-                          className="group overflow-hidden rounded-sm border border-[color:var(--ws-line)] hover:border-[color:var(--gold)]/50"
-                        >
-                          {p.image ? (
-                            <img
-                              src={p.image}
-                              alt={p.title}
-                              loading="lazy"
-                              className="h-24 w-full object-cover"
-                            />
-                          ) : (
-                            <div className="flex h-24 items-center justify-center bg-[color:var(--ws-accent-bg)]">
-                              <ShoppingBag className="h-5 w-5 text-[color:var(--ws-soft)]" />
-                            </div>
-                          )}
-                          <div className="px-2 py-2">
-                            <div className="truncate text-[11px] text-[color:var(--ws-ink)]">
-                              {p.title}
-                            </div>
-                            <div className="mt-0.5 text-[10px] text-[color:var(--ws-soft)]">
-                              {p.currency} {p.price}
-                            </div>
-                          </div>
-                        </a>
-                      ))}
-                    </div>
-                  )}
-
-                  {m.place && (
-                    <button
-                      type="button"
-                      onClick={() => void navigate({ to: m.place!.path } as never)}
-                      className="mt-3 inline-flex items-center gap-2 rounded-sm border border-[color:var(--gold)]/60 bg-[color:var(--gold)]/10 px-3 py-2 text-[10px] font-bold uppercase tracking-[0.25em] text-[color:var(--gold)]"
-                    >
-                      Open {m.place.label} <ArrowRight className="h-3 w-3" />
-                    </button>
-                  )}
-
-                  {/* FRASS-0578 — Founder proof. Exactly what the model was told about
+                    {/* FRASS-0578 — Founder proof. Exactly what the model was told about
                 the card, and exactly what it replied BEFORE any server cleanup. */}
-                  {m.proof && (
-                    <details className="mt-3 rounded-sm border border-[color:var(--ws-line)] px-3 py-2 text-[11px] text-[color:var(--ws-soft)]">
-                      <summary className="cursor-pointer text-[10px] font-bold uppercase tracking-[0.25em] text-[color:var(--ws-soft)]">
-                        Developer details · raw model input & output
-                        {m.proof.strippedAnything ? " · cleanup applied" : " · nothing stripped"}
-                      </summary>
-                      <div className="mt-2 text-[color:var(--ws-ink)]">
-                        Card payload sent to the model
+                    {m.proof && (
+                      <details className="mt-3 rounded-sm border border-[color:var(--ws-line)] px-3 py-2 text-[11px] text-[color:var(--ws-soft)]">
+                        <summary className="cursor-pointer text-[10px] font-bold uppercase tracking-[0.25em] text-[color:var(--ws-soft)]">
+                          Developer details · raw model input & output
+                          {m.proof.strippedAnything ? " · cleanup applied" : " · nothing stripped"}
+                        </summary>
+                        <div className="mt-2 text-[color:var(--ws-ink)]">
+                          Card payload sent to the model
+                        </div>
+                        <pre className="mt-1 whitespace-pre-wrap break-words text-[10px] leading-relaxed">
+                          {m.proof.promptIdentity}
+                        </pre>
+                        <div className="mt-3 text-[color:var(--ws-ink)]">
+                          Raw model reply (unfiltered)
+                        </div>
+                        <pre className="mt-1 whitespace-pre-wrap break-words text-[10px] leading-relaxed">
+                          {m.proof.rawModelReply}
+                        </pre>
+                      </details>
+                    )}
+
+                    {m.order && (
+                      <div className="mt-3 rounded-sm border border-[color:var(--ws-line)] px-3 py-3 text-xs text-[color:var(--ws-soft)]">
+                        <div className="text-[color:var(--ws-ink)]">{m.order.name}</div>
+                        <div className="mt-1">
+                          {m.order.financial_status} · {m.order.fulfillment_status} ·{" "}
+                          {m.order.currency} {m.order.total}
+                        </div>
+                        {m.order.tracking.map((t) => (
+                          <a
+                            key={t.number}
+                            href={t.url}
+                            className="mt-2 block text-[color:var(--gold)] hover:underline"
+                          >
+                            Track {t.number} ({t.company})
+                          </a>
+                        ))}
                       </div>
-                      <pre className="mt-1 whitespace-pre-wrap break-words text-[10px] leading-relaxed">
-                        {m.proof.promptIdentity}
-                      </pre>
-                      <div className="mt-3 text-[color:var(--ws-ink)]">
-                        Raw model reply (unfiltered)
-                      </div>
-                      <pre className="mt-1 whitespace-pre-wrap break-words text-[10px] leading-relaxed">
-                        {m.proof.rawModelReply}
-                      </pre>
-                    </details>
-                  )}
+                    )}
+                  </Message>
+                ))}
 
-                  {m.order && (
-                    <div className="mt-3 rounded-sm border border-[color:var(--ws-line)] px-3 py-3 text-xs text-[color:var(--ws-soft)]">
-                      <div className="text-[color:var(--ws-ink)]">{m.order.name}</div>
-                      <div className="mt-1">
-                        {m.order.financial_status} · {m.order.fulfillment_status} ·{" "}
-                        {m.order.currency} {m.order.total}
-                      </div>
-                      {m.order.tracking.map((t) => (
-                        <a
-                          key={t.number}
-                          href={t.url}
-                          className="mt-2 block text-[color:var(--gold)] hover:underline"
-                        >
-                          Track {t.number} ({t.company})
-                        </a>
-                      ))}
-                    </div>
-                  )}
-                </Message>
-              ))}
+              {loading && (
+                <div className="w-fit rounded-lg bg-[color:var(--ws-accent-bg)] px-3 py-2 text-sm text-[color:var(--ws-soft)]">
+                  Typing…
+                </div>
+              )}
 
-            {loading && (
-              <div className="w-fit rounded-lg bg-[color:var(--ws-accent-bg)] px-3 py-2 text-sm text-[color:var(--ws-soft)]">
-                Typing…
-              </div>
-            )}
+              {(error || voice.voiceError) && (
+                <div className="rounded-sm border border-red-500/30 bg-red-500/10 px-3 py-2 text-xs text-[color:var(--ws-ink)]">
+                  {error ?? voice.voiceError}
+                </div>
+              )}
+            </ConversationContent>
+            <ConversationScrollButton aria-label="Scroll to latest message" />
+          </Conversation>
 
-            {(error || voice.voiceError) && (
-              <div className="rounded-sm border border-red-500/30 bg-red-500/10 px-3 py-2 text-xs text-[color:var(--ws-ink)]">
-                {error ?? voice.voiceError}
-              </div>
-            )}
-          </ConversationContent>
-          <ConversationScrollButton aria-label="Scroll to latest message" />
-        </Conversation>
-
-      {/* FRASS-0551 — Voice confidence: the member always knows where the
+          {/* FRASS-0551 — Voice confidence: the member always knows where the
           conversation is. Listening · Transcribing · Thinking · Speaking. */}
-      {(voice.phase !== "idle" || loading) && (
-        <div
-          className="frassy-state shrink-0"
-          style={{ color: "var(--gold)" }}
-          role="status"
-          aria-live="polite"
-        >
-          <span className="frassy-state-dot" aria-hidden />
-          {voice.phase === "recording"
-            ? "🎤 Listening"
-            : voice.phase === "transcribing"
-              ? "✍️ Catching your words"
-              : voice.phase === "speaking"
-                ? "🗣️ Speaking"
-                : "🧠 Thinking"}
-        </div>
-      )}
+          {(voice.phase !== "idle" || loading) && (
+            <div
+              className="frassy-state shrink-0"
+              style={{ color: "var(--gold)" }}
+              role="status"
+              aria-live="polite"
+            >
+              <span className="frassy-state-dot" aria-hidden />
+              {voice.phase === "recording"
+                ? "🎤 Listening"
+                : voice.phase === "transcribing"
+                  ? "✍️ Catching your words"
+                  : voice.phase === "speaking"
+                    ? "🗣️ Speaking"
+                    : "🧠 Thinking"}
+            </div>
+          )}
 
-      {voice.isSpeaking || voice.isPaused ? (
-        <div className="shrink-0 border-t border-[color:var(--ws-line)] px-3 py-2">
-          <SpeechControls />
-        </div>
-      ) : null}
+          {voice.isSpeaking || voice.isPaused ? (
+            <div className="shrink-0 border-t border-[color:var(--ws-line)] px-3 py-2">
+              <SpeechControls />
+            </div>
+          ) : null}
 
-      {/* FRASS-0412 — temporary launch feedback program */}
-      {presentation !== "studio" ? (
-        <div className="shrink-0 border-t border-[color:var(--ws-line)] px-3 py-2">
-          <VoiceFeedbackButton source="chat" />
-        </div>
-      ) : null}
+          {/* FRASS-0412 — temporary launch feedback program */}
+          {presentation !== "studio" ? (
+            <div className="shrink-0 border-t border-[color:var(--ws-line)] px-3 py-2">
+              <VoiceFeedbackButton source="chat" />
+            </div>
+          ) : null}
 
-      <div data-frassy-composer className="shrink-0">
-        <FrassyComposer
-          value={input}
-          onChange={setInput}
-          onSend={() => void send()}
-          loading={loading}
-          placeholder="Ask Frassy anything…"
-          onMic={() => void toggleMic()}
-          micAvailable={voice.voiceAvailable}
-          micActive={voice.phase === "recording"}
-          tools={presentation === "studio" ? ["files", "audio", "documents"] : undefined}
-          studio={presentation !== "studio"}
-          showToolRail={presentation !== "studio"}
-        />
-      </div>
+          <div data-frassy-composer className="shrink-0">
+            <FrassyComposer
+              value={input}
+              onChange={setInput}
+              onSend={() => void send()}
+              loading={loading}
+              placeholder="Ask Frassy anything…"
+              onMic={() => void toggleMic()}
+              micAvailable={voice.voiceAvailable}
+              micActive={voice.phase === "recording"}
+              tools={presentation === "studio" ? ["files", "audio", "documents"] : undefined}
+              studio={presentation !== "studio"}
+              showToolRail={presentation !== "studio"}
+            />
+          </div>
         </div>
       </div>
     </div>

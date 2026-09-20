@@ -14,12 +14,7 @@ export type FrassyRoomLook = {
 };
 
 export type FrassyStudioPresenceState =
-  | "idle"
-  | "listening"
-  | "thinking"
-  | "speaking"
-  | "gesturing"
-  | "working";
+  "idle" | "listening" | "thinking" | "speaking" | "gesturing" | "working";
 
 export type FrassyStudioPresenceAsset = FrassyRoomLook & {
   kind: "image" | "video";
@@ -48,8 +43,7 @@ export const FV_STUDIOS_FRASSY_PRESENCE: readonly FrassyStudioPresenceAsset[] = 
 
 export function studioPresenceFor(state: FrassyStudioPresenceState): FrassyStudioPresenceAsset {
   return (
-    FV_STUDIOS_FRASSY_PRESENCE.find((asset) => asset.states.includes(state)) ??
-    {
+    FV_STUDIOS_FRASSY_PRESENCE.find((asset) => asset.states.includes(state)) ?? {
       ...FV_STUDIOS_FRASSY_LOOK,
       kind: "image",
       states: ["idle"],
