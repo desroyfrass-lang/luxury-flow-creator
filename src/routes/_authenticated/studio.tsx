@@ -724,7 +724,17 @@ function StudioPage() {
               {tab === "quality" ? (
                 <A1MasterPanel evidence={(evidenceQ.data ?? {}) as A1Evidence} />
               ) : null}
-              {tab === "export" ? <ExportWatermarkPanel /> : null}
+              {tab === "export" ? (
+                preview ? (
+                  <ExportWatermarkPanel />
+                ) : (
+                  <p className="text-sm text-muted-foreground">
+                    Export opens once this production has a verified output. Finish Enhance Phone
+                    Recording first — nothing here can export or charge you yet.
+                  </p>
+                )
+              ) : null}
+
             </div>
           </section>
 
