@@ -5415,6 +5415,73 @@ export type Database = {
         }
         Relationships: []
       }
+      studio_a1_evidence: {
+        Row: {
+          asset_id: string | null
+          check_id: string
+          created_at: string
+          created_by: string
+          id: string
+          job_id: string | null
+          machine_slug: string | null
+          note: string | null
+          production_id: string
+          state: string
+          updated_at: string
+          verified_at: string | null
+        }
+        Insert: {
+          asset_id?: string | null
+          check_id: string
+          created_at?: string
+          created_by: string
+          id?: string
+          job_id?: string | null
+          machine_slug?: string | null
+          note?: string | null
+          production_id: string
+          state: string
+          updated_at?: string
+          verified_at?: string | null
+        }
+        Update: {
+          asset_id?: string | null
+          check_id?: string
+          created_at?: string
+          created_by?: string
+          id?: string
+          job_id?: string | null
+          machine_slug?: string | null
+          note?: string | null
+          production_id?: string
+          state?: string
+          updated_at?: string
+          verified_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "studio_a1_evidence_asset_id_fkey"
+            columns: ["asset_id"]
+            isOneToOne: false
+            referencedRelation: "studio_assets"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "studio_a1_evidence_job_id_fkey"
+            columns: ["job_id"]
+            isOneToOne: false
+            referencedRelation: "studio_generation_jobs"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "studio_a1_evidence_production_id_fkey"
+            columns: ["production_id"]
+            isOneToOne: false
+            referencedRelation: "studio_productions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       studio_activity_log: {
         Row: {
           action: string
@@ -5630,6 +5697,72 @@ export type Database = {
             columns: ["series_id"]
             isOneToOne: false
             referencedRelation: "studio_series"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      studio_audio_versions: {
+        Row: {
+          byte_size: number
+          created_at: string
+          engine_slug: string | null
+          engine_type: string | null
+          engine_version: string | null
+          id: string
+          job_id: string
+          mime_type: string
+          owner_id: string
+          processed_at: string | null
+          production_id: string
+          storage_bucket: string
+          storage_path: string
+          version_kind: string
+        }
+        Insert: {
+          byte_size: number
+          created_at?: string
+          engine_slug?: string | null
+          engine_type?: string | null
+          engine_version?: string | null
+          id?: string
+          job_id: string
+          mime_type: string
+          owner_id: string
+          processed_at?: string | null
+          production_id: string
+          storage_bucket?: string
+          storage_path: string
+          version_kind: string
+        }
+        Update: {
+          byte_size?: number
+          created_at?: string
+          engine_slug?: string | null
+          engine_type?: string | null
+          engine_version?: string | null
+          id?: string
+          job_id?: string
+          mime_type?: string
+          owner_id?: string
+          processed_at?: string | null
+          production_id?: string
+          storage_bucket?: string
+          storage_path?: string
+          version_kind?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "studio_audio_versions_job_id_fkey"
+            columns: ["job_id"]
+            isOneToOne: false
+            referencedRelation: "studio_generation_jobs"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "studio_audio_versions_production_id_fkey"
+            columns: ["production_id"]
+            isOneToOne: false
+            referencedRelation: "studio_productions"
             referencedColumns: ["id"]
           },
         ]
