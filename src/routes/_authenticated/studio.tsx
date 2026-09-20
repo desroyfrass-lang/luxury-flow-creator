@@ -150,9 +150,10 @@ function StudioPage() {
     onSuccess: (r) => {
       setPlan(null);
       setDirection("");
-      toast.success(
-        `Done — ${r.charged.toLocaleString()} AI Credits used. ${r.balance.toLocaleString()} remaining.`,
-      );
+      // Credit truth: approving a forecast never charges. Only a verified
+      // result from a real engine does.
+      if (r.status === "blocked") toast.warning(r.message);
+      else toast.success(r.message);
       void qc.invalidateQueries({ queryKey: ["ai-wallet"] });
       void qc.invalidateQueries({ queryKey: ["ai-ledger"] });
     },
@@ -173,7 +174,9 @@ function StudioPage() {
     onError: (e: Error) => toast.error(e.message),
   });
 
-  // FRASS-0406 — Phone Content Mode™ runs through the same credit pipeline.
+  // FRASS-0406 — Phone Content Mode™ runs through the same truthful job
+  // contract. Analysis and the forecast are real today; enhancement is not
+  // claimed, and nothing is charged, until an engine returns verified media.
   const runPhone = useMutation({
     mutationFn: (report: QualityReport) =>
       runOp({
@@ -192,9 +195,8 @@ function StudioPage() {
         },
       }),
     onSuccess: (r) => {
-      toast.success(
-        `Enhanced — ${r.charged.toLocaleString()} AI Credits used. ${r.balance.toLocaleString()} remaining.`,
-      );
+      if (r.status === "blocked") toast.warning(r.message);
+      else toast.success(`Not enhanced yet — ${r.message}`);
       void qc.invalidateQueries({ queryKey: ["ai-wallet"] });
       void qc.invalidateQueries({ queryKey: ["ai-ledger"] });
     },
