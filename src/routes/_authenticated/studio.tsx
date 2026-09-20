@@ -287,7 +287,7 @@ function StudioPage() {
 
   return (
     <SiteShell>
-      <div className="fv-studio min-h-screen bg-background pb-24 text-foreground lg:pb-0">
+      <div className={`fv-studio min-h-screen pb-24 text-foreground lg:pb-0 ${arrival ? "" : "fv-lights-up"}`}>
         {arrival ? (
           <button
             type="button"
@@ -296,19 +296,20 @@ function StudioPage() {
             className="fixed inset-0 z-50 animate-fade-in cursor-pointer"
           >
             <img src={studioEntry} alt="Eye-level entrance into the FV Studios production room" className="h-full w-full object-cover" fetchPriority="high" />
-            <span className="absolute inset-0 bg-background/70" aria-hidden="true" />
+            <span className="absolute inset-0 bg-[color:var(--ink)]/80" aria-hidden="true" />
+            <span className="absolute inset-0 bg-gradient-to-b from-accent/25 via-transparent to-accent/10" aria-hidden="true" />
             <span className="absolute inset-0 grid place-items-center px-6 text-center">
               <span className="block">
                 <span className="block font-display text-4xl uppercase leading-none sm:text-6xl">Frass Vision Studios</span>
-                <span className="mt-3 block text-sm text-muted-foreground">Entering the studio…</span>
+                <span className="mt-3 block text-sm text-accent">Bringing the lights up…</span>
               </span>
             </span>
           </button>
         ) : null}
 
         {/* Compact, persistent studio header: where I am, what I'm on, what it costs. */}
-        <header className="sticky top-0 z-30 border-b border-border bg-background/95 backdrop-blur">
-          <div className="mx-auto grid max-w-[1600px] grid-cols-[minmax(0,1fr)_auto] items-center gap-3 px-3 py-2 sm:px-5">
+        <header className="sticky top-0 z-30 border-b border-accent/25 bg-card/85 backdrop-blur">
+          <div className="mx-auto grid max-w-[1600px] grid-cols-[minmax(0,1fr)_auto] items-center gap-3 px-3 pb-2 pt-11 sm:px-5">
             <div className="flex min-w-0 items-center gap-2">
               <span className="grid h-9 w-9 shrink-0 place-items-center rounded-md border border-accent/40 bg-accent/10"><Film className="h-4 w-4 text-accent" /></span>
               <select
@@ -352,12 +353,13 @@ function StudioPage() {
               <ChevronRight className="h-4 w-4" /> Take it further
             </button>
           </nav>
+          <span className="fv-studio-lightline block h-px w-full" aria-hidden="true" />
         </header>
 
         {/* Command centre — one screen, one current job. */}
         <main className="mx-auto grid max-w-[1600px] gap-4 px-3 py-4 sm:px-5 xl:grid-cols-[minmax(0,1fr)_360px]">
           <section className="min-w-0 space-y-3" aria-label="Command centre">
-            <div className="relative grid min-h-[32vh] place-items-center overflow-hidden rounded-lg border border-border bg-card/40 p-5">
+            <div className="relative grid min-h-[32vh] place-items-center overflow-hidden rounded-lg border border-accent/25 bg-card/80 p-5 shadow-[0_18px_60px_-30px_var(--gold)]">
               {preview ? (
                 <div className="w-full max-w-xl text-center">
                   <p className="text-xs uppercase text-accent">{preview.label}</p>
@@ -371,13 +373,14 @@ function StudioPage() {
                   <p className="mt-1 text-sm text-muted-foreground">{active ? `${task?.label ?? active.destination} · no verified output yet` : "Pick what you are making below."}</p>
                 </div>
               )}
+              <span className="pointer-events-none absolute inset-x-8 top-0 h-px bg-gradient-to-r from-transparent via-accent/70 to-transparent" aria-hidden="true" />
               <div className="absolute bottom-3 left-4 hidden gap-2 text-xs uppercase text-muted-foreground sm:flex">
                 <span className="rounded-full border border-border bg-background/80 px-3 py-1">Preview</span>
                 <span className="rounded-full border border-border bg-background/80 px-3 py-1">{preview ? "Cleaned output" : "No output claimed"}</span>
               </div>
             </div>
 
-            <div className="flex flex-wrap items-center gap-2 rounded-lg border border-accent/30 bg-accent/[0.05] p-3">
+            <div className="flex flex-wrap items-center gap-2 rounded-lg border border-accent/45 bg-accent/15 p-3">
               <Button onClick={primary.onClick} className="min-h-12 flex-1 bg-accent text-accent-foreground hover:bg-accent/90 sm:flex-none">
                 {primary.label} <ArrowRight />
               </Button>
@@ -385,7 +388,7 @@ function StudioPage() {
               <span className="text-xs text-muted-foreground">Nothing runs and nothing is charged until you approve it.</span>
             </div>
 
-            <div id="fv-workspace" className="rounded-lg border border-border bg-card/35 p-3 sm:p-4">
+            <div id="fv-workspace" className="rounded-lg border border-border bg-card/70 p-3 sm:p-4">
               {tab === "create" ? (
                 <CreateWorkspace
                   task={task}
@@ -426,7 +429,7 @@ function StudioPage() {
 
           {/* Frassy is always beside the work, never below it. */}
           <aside className="min-w-0 space-y-3" aria-label="Frassy, your AI director">
-            <div className="rounded-lg border border-border bg-card/55 p-4">
+            <div className="rounded-lg border border-accent/25 bg-card/85 p-4 shadow-[0_14px_50px_-32px_var(--gold)]">
               <div className="flex items-center gap-3">
                 <span className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-accent/15"><Sparkles className="text-accent" /></span>
                 <div className="min-w-0"><p className="text-xs uppercase text-accent">At the console</p><h2 className="truncate font-display text-lg uppercase">Frassy · AI Director</h2></div>
@@ -455,7 +458,7 @@ function StudioPage() {
         </main>
 
         {/* Mobile: the current job's primary action stays in reach. */}
-        <div className="fixed inset-x-0 bottom-0 z-30 border-t border-border bg-background/95 p-3 backdrop-blur lg:hidden">
+        <div className="fv-studio-surface fixed inset-x-0 bottom-0 z-30 border-t border-accent/30 bg-card/95 p-3 backdrop-blur lg:hidden">
           <Button onClick={primary.onClick} className="min-h-12 w-full bg-accent text-accent-foreground hover:bg-accent/90">{primary.label} <ArrowRight /></Button>
         </div>
       </div>
@@ -472,7 +475,7 @@ function StudioPage() {
       />
 
       <Dialog open={credits} onOpenChange={setCredits}>
-        <DialogContent>
+        <DialogContent className="fv-studio-surface">
           <DialogHeader><DialogTitle>Credits & receipts</DialogTitle><DialogDescription>{(w?.balance ?? 0).toLocaleString()} credits available.</DialogDescription></DialogHeader>
           <div className="grid grid-cols-3 gap-2 text-center text-sm">
             <div><p className="text-xs text-muted-foreground">Today</p><p>{(w?.today_used ?? 0).toLocaleString()}</p></div>
@@ -491,7 +494,7 @@ function StudioPage() {
       </Dialog>
 
       <Dialog open={further} onOpenChange={setFurther}>
-        <DialogContent>
+        <DialogContent className="fv-studio-surface">
           <DialogHeader><DialogTitle>Take it further</DialogTitle><DialogDescription>Business and earning possibilities sit beside finished work, never in front of creation.</DialogDescription></DialogHeader>
           {active ? <CreationOpportunities kind="video" /> : <p className="text-sm text-muted-foreground">Open a production to see relevant possibilities.</p>}
           <Button variant="outline" asChild className="min-h-12 w-full"><Link to="/business-builder">Open Business Builder <ChevronRight /></Link></Button>
@@ -641,7 +644,7 @@ function ResultDialog({
   const open = surfaced !== null;
   return (
     <Dialog open={open} onOpenChange={(v) => { if (!v) onClose(); }}>
-      <DialogContent className="max-h-[85vh] overflow-auto">
+      <DialogContent className="fv-studio-surface max-h-[85vh] overflow-auto">
         {surfaced?.kind === "forecast" ? (
           <>
             <DialogHeader><DialogTitle>Here is the plan and the cost</DialogTitle><DialogDescription>{surfaced.plan.understanding}</DialogDescription></DialogHeader>

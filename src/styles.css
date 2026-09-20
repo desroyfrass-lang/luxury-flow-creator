@@ -2373,3 +2373,68 @@ a.ps-row:hover { border-color: color-mix(in srgb, var(--gold) 60%, transparent);
   font-size: 0.85rem;
 }
 .daily-layout-check { display: flex !important; align-items: center; gap: 0.5rem; font-size: 0.85rem; }
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   FV Studios — the working room is WARMLY LIT, gold-led.
+   Black stays as an anchoring accent (frames, contrast), never the mood.
+   Scoped tokens so shared components inherit the lit room instead of the
+   global night palette. Contrast targets: body text >= 7:1 on panels.
+   ───────────────────────────────────────────────────────────────────────── */
+.fv-studio,
+.fv-studio-surface {
+  --background: oklch(0.31 0.019 68);
+  --foreground: oklch(0.975 0.012 88);
+  --card: oklch(0.375 0.024 70);
+  --card-foreground: oklch(0.975 0.012 88);
+  --popover: oklch(0.375 0.024 70);
+  --popover-foreground: oklch(0.975 0.012 88);
+  --secondary: oklch(0.42 0.026 72);
+  --secondary-foreground: oklch(0.975 0.012 88);
+  --muted: oklch(0.42 0.026 72);
+  --muted-foreground: oklch(0.87 0.022 84);
+  --primary: oklch(0.975 0.012 88);
+  --primary-foreground: oklch(0.24 0.018 66);
+  --accent: oklch(0.84 0.135 80);
+  --accent-foreground: oklch(0.22 0.02 64);
+  --border: oklch(0.88 0.07 82 / 0.28);
+  --input: oklch(0.88 0.07 82 / 0.34);
+  --ring: oklch(0.86 0.13 80);
+  color: var(--foreground);
+}
+
+/* Ambient house lights: warm gold wash from above, soft practicals at the
+   sides, so zones read without adding any extra UI. */
+.fv-studio {
+  background-color: var(--background);
+  background-image:
+    radial-gradient(120% 70% at 50% -10%, oklch(0.9 0.11 84 / 0.24), transparent 62%),
+    radial-gradient(60% 45% at 8% 22%, oklch(0.86 0.12 78 / 0.13), transparent 70%),
+    radial-gradient(60% 45% at 92% 18%, oklch(0.86 0.12 78 / 0.11), transparent 70%),
+    linear-gradient(180deg, oklch(0.34 0.022 70) 0%, oklch(0.29 0.017 66) 58%, oklch(0.25 0.014 64) 100%);
+  background-attachment: fixed;
+}
+
+/* Illuminated architectural edge under the header / above the floor. */
+.fv-studio-lightline {
+  background-image: linear-gradient(
+    90deg,
+    transparent,
+    oklch(0.88 0.12 82 / 0.75) 18%,
+    oklch(0.94 0.08 86 / 0.95) 50%,
+    oklch(0.88 0.12 82 / 0.75) 82%,
+    transparent
+  );
+}
+
+/* Lights coming up as the entrance dissolves into the working room. */
+@keyframes fv-lights-up {
+  0% { filter: brightness(0.42) saturate(0.8); }
+  55% { filter: brightness(0.92) saturate(1.02); }
+  100% { filter: brightness(1) saturate(1); }
+}
+.fv-lights-up {
+  animation: fv-lights-up 1100ms cubic-bezier(0.22, 0.61, 0.36, 1) both;
+}
+@media (prefers-reduced-motion: reduce) {
+  .fv-lights-up { animation: none; }
+}
