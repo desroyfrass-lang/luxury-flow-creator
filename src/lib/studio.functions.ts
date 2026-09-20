@@ -215,6 +215,29 @@ export const runStudioOperation = createServerFn({ method: "POST" })
     const admin = supabaseAdmin as unknown as Db;
 
     const jobStatus = decision.ok ? "queued" : "awaiting_engine";
+    let productionId: string | null = null;
+    if (data.projectId) {
+      const { data: project } = await sb
+        .from("studio_projects")
+        .select("production_id")
+        .eq("id", data.projectId)
+        .eq("user_id", context.userId)
+        .maybeSingle();
+      if (!project) throw new Error("That production is not yours.");
+      productionId = project.production_id;
+      if (!productionId) {
+        const { data: canonical, error: canonicalError } = await admin
+          .from("studio_productions")
+          .insert({ title: "Studio production", status: "development", created_by: context.userId })
+          .select("id")
+          .single();
+        if (canonicalError) throw new Error(canonicalError.message);
+        productionId = canonical.id as string;
+        const { error: bridgeError } = await admin.from("studio_projects").update({ production_id: productionId }).eq("id", data.projectId).eq("user_id", context.userId);
+        if (bridgeError) throw new Error(bridgeError.message);
+      }
+    }
+
     const { data: job, error: jobErr } = await admin
       .from("studio_generation_jobs")
       .insert({
@@ -227,6 +250,7 @@ export const runStudioOperation = createServerFn({ method: "POST" })
         estimated_cost_credits: total,
         charge_state: "unbilled",
         created_by: context.userId,
+        production_id: productionId,
         error: decision.ok ? null : decision.reason,
       })
       .select("id")
@@ -263,6 +287,53 @@ export const runStudioOperation = createServerFn({ method: "POST" })
         : decision.reason,
       receipts: [] as Array<{ label: string; credits: number }>,
     };
+  });
+
+export const prepareA1CleanJob = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((input: { jobId: string }) => {
+    if (!input?.jobId) throw new Error("Which A1 Clean job?");
+    return input;
+  })
+  .handler(async ({ data, context }) => {
+    const sb = context.supabase as unknown as Db;
+    const { A1_CLEAN_ENGINE, a1StoragePaths } = await import("@/lib/studio/a1-clean");
+    const { data: job, error } = await sb.from("studio_generation_jobs")
+      .select("id,production_id,created_by,engine_slug,engine_type,status,charge_state")
+      .eq("id", data.jobId).maybeSingle();
+    if (error) throw new Error(error.message);
+    if (!job || job.created_by !== context.userId) throw new Error("That A1 Clean job is not yours.");
+    if (!job.production_id) throw new Error("This job is not linked to a canonical production.");
+    if (job.engine_type !== A1_CLEAN_ENGINE.type || job.engine_slug !== A1_CLEAN_ENGINE.slug) throw new Error("That job is not assigned to FRASS Native A1 Clean.");
+    if (job.status !== "queued" || job.charge_state !== "unbilled") throw new Error("That job is not waiting for a new A1 Clean output.");
+    return { ...a1StoragePaths(context.userId, job.id), engine: A1_CLEAN_ENGINE };
+  });
+
+export const finalizeA1CleanJob = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((input: { jobId: string; sourcePath: string; outputPath: string; sourceMime: string; sourceBytes: number; outputBytes: number; processedAt: string }) => input)
+  .handler(async ({ data, context }) => {
+    const { A1_CLEAN_ENGINE, isAcceptedA1Audio } = await import("@/lib/studio/a1-clean");
+    if (!isAcceptedA1Audio(data.sourceMime, data.sourceBytes) || data.outputBytes <= 44) throw new Error("The stored audio evidence is invalid.");
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { data: result, error } = await (supabaseAdmin as any).rpc("finalize_frass_native_a1_clean", {
+      _job_id: data.jobId, _user_id: context.userId, _source_path: data.sourcePath, _output_path: data.outputPath,
+      _source_mime: data.sourceMime, _output_mime: "audio/wav", _source_bytes: data.sourceBytes, _output_bytes: data.outputBytes,
+      _engine_slug: A1_CLEAN_ENGINE.slug, _engine_version: A1_CLEAN_ENGINE.version, _processed_at: data.processedAt,
+    });
+    if (error) throw new Error(error.message);
+    return result as { charged: number; replayed: boolean; assetId: string; balance: number; verifiedAt: string };
+  });
+
+export const getStudioA1Evidence = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((input: { productionId?: string | null }) => input)
+  .handler(async ({ data, context }) => {
+    if (!data.productionId) return {};
+    const sb = context.supabase as unknown as Db;
+    const { data: rows, error } = await sb.from("studio_a1_evidence").select("check_id,state,note").eq("production_id", data.productionId).eq("created_by", context.userId);
+    if (error) throw new Error(error.message);
+    return Object.fromEntries((rows ?? []).map((r: any) => [r.check_id, { state: r.state, note: r.note ?? undefined }]));
   });
 
 /**
