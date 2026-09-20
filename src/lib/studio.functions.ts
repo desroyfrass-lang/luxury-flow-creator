@@ -104,7 +104,7 @@ export const listStudioProjects = createServerFn({ method: "GET" })
     const sb = context.supabase as unknown as Db;
     const { data, error } = await sb
       .from("studio_projects")
-      .select("id, title, destination, status, brief, control_depth, created_at, updated_at")
+      .select(PROJECT_COLUMNS)
       .eq("user_id", context.userId)
       .order("updated_at", { ascending: false });
     if (error) throw new Error(error.message);
@@ -127,7 +127,7 @@ export const createStudioProject = createServerFn({ method: "POST" })
     const { data: row, error } = await sb
       .from("studio_projects")
       .insert({ ...data, user_id: context.userId })
-      .select("id, title, destination, status, brief, control_depth, created_at, updated_at")
+      .select(PROJECT_COLUMNS)
       .single();
     if (error) throw new Error(error.message);
     return row as StudioProject;
@@ -500,7 +500,7 @@ export const setStudioControlDepth = createServerFn({ method: "POST" })
       .update({ control_depth: data.depth })
       .eq("id", data.projectId)
       .eq("user_id", context.userId)
-      .select("id, title, destination, status, brief, control_depth, created_at, updated_at")
+      .select(PROJECT_COLUMNS)
       .single();
     if (error) throw new Error(error.message);
     return row as StudioProject;
