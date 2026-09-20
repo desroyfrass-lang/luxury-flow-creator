@@ -110,7 +110,12 @@ export function usePushToTalk(owner = "frassy") {
       }
       const form = new FormData();
       form.append("file", blob, "recording.wav");
-      const res = await fetch("/api/stt", { method: "POST", body: form });
+      const { voiceAuthHeaders } = await import("@/lib/voice/voice-request-auth");
+      const res = await fetch("/api/stt", {
+        method: "POST",
+        headers: await voiceAuthHeaders(),
+        body: form,
+      });
       if (!res.ok) {
         const detail = await res.text().catch(() => "");
         setVoiceError(detail.slice(0, 140) || "I couldn't transcribe that. Try again?");

@@ -182,9 +182,10 @@ export function isSpeechActive(): boolean {
 // FRASS-0522 — the caller may say how Frassy feels (tone), never who she is.
 // The voice itself is resolved server-side from the Founder-approved record.
 async function fetchChunk(text: string, tone: VoiceTone): Promise<string> {
+  const { voiceAuthHeaders } = await import("./voice-request-auth");
   const res = await fetch("/api/tts", {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: { "Content-Type": "application/json", ...(await voiceAuthHeaders()) },
     body: JSON.stringify({ text, tone }),
   });
   if (!res.ok) throw new Error(`tts ${res.status}`);
