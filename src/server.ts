@@ -46,7 +46,7 @@ export default {
     try {
       const handler = await getServerEntry();
       const response = await handler.fetch(request, env, ctx);
-      return await normalizeCatastrophicSsrResponse(response);
+      return await normalizeCatastrophicSsrResponse(response, request);
     } catch (error) {
       // The visitor closed the tab or navigated away before the page finished.
       // Nothing is broken, so do not log it or render the error page.
