@@ -5167,20 +5167,15 @@ a.ps-row:hover {
 }
 @media (min-width: 1280px) {
   .frassy-studio-body {
-    grid-template-columns: minmax(8.5rem, 40%) minmax(0, 1fr);
+    grid-template-rows: minmax(15rem, 42%) minmax(0, 1fr);
   }
   .frassy-studio-director {
-    min-height: 0;
-    border-right: 1px solid var(--ws-line);
-    border-bottom: 0;
+    min-height: 15rem;
   }
   .frassy-studio-director img {
-    position: sticky;
-    top: 1rem;
-    height: auto;
-    max-height: 100%;
-    width: 100%;
-    align-self: end;
+    height: 100%;
+    max-height: 20rem;
+    width: 76%;
   }
   .frassy-studio-conversation [data-frassy-toolbar] {
     padding-inline: 0.85rem;
