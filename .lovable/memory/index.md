@@ -28,6 +28,7 @@ Brand name is always "Frass" (two s's) — never "Fras". Applies to Frass Hill, 
 FRASS-0564: never write "in plain English" anywhere; vary lead-ins ("Here's what this means…"). Level 🔵 is "Guided Walkthrough".
 FRASS-0568: one Founder headquarters — 🎛️ Founder Control Room at /control-room; /command and /founder redirect there. Never build a second Founder dashboard.
 Stay true to the original Frass Kicks aesthetic.
+FV Studios Frassy look is Founder-approved and locked (face, long locs, studio attire, jewelry) — never regenerate or redesign her.
 Frass Hill imagery is photorealistic and cinematic — no cartoon art (except the husband hero, Bob Marley graffiti, and kids sections).
 Creator platform is "Frass Vision Studios" (shorthand "FV Studios") — never "Frassy Studio".
 Frass Hill: discovery before destination — every destination is experienced from a distance before interaction; movement, not navigation.
@@ -101,6 +102,7 @@ FRASS-0573: every Frassy audit reply is permanently committed to the Founder Aud
 - [FINAL LOVABLE DIRECTIVE](FINAL_LOVABLE_DIRECTIVE.md) — Active commissioning charter: stop designing, start building; Builder experience is the north star; decision filter is "which choice creates the best Builder experience?"
 - [Frass OS Constitution v1.0](FRASS_OS_CONSTITUTION.md) — Foundational charter: mission, vision, Builder principles, district definitions, and constitutional oaths for every future contributor
 - [Original Frass visual direction](mem://design/original-frass-visual-direction) — Dark streetwear direction, block letters, chrome/gold brand cues, real uploaded logo assets
+- [FV Studios approved Frassy + room reference](mem://design/fv-studios-frassy-approved) — Locked FV Studios Frassy identity (face, long locs, studio attire, jewelry) and approved purple/gold studio room & conversation-panel reference
 - [Frass Vision Studios](mem://features/frass-vision-studios) — FRASS-0407 rebrand: full name vs FV Studios shorthand, usage rules, Studio District home
 - [Frass Vision Studios Network](mem://features/frass-vision-studios-network) — FRASS-0410: label/film/publishing company, royalty participation only on works published through the Network, Vision Partners, one modular Creator Agreement
 
