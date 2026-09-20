@@ -13,6 +13,19 @@ export type FrassyRoomLook = {
   position: "portrait" | "standing" | "seated";
 };
 
+export type FrassyStudioPresenceState =
+  | "idle"
+  | "listening"
+  | "thinking"
+  | "speaking"
+  | "gesturing"
+  | "working";
+
+export type FrassyStudioPresenceAsset = FrassyRoomLook & {
+  kind: "image" | "video";
+  states: readonly FrassyStudioPresenceState[];
+};
+
 export const FV_STUDIOS_FRASSY_LOOK: FrassyRoomLook = {
   id: "fv-studios-approved-seated",
   room: "studio",
@@ -21,3 +34,21 @@ export const FV_STUDIOS_FRASSY_LOOK: FrassyRoomLook = {
   status: "approved",
   position: "seated",
 };
+
+// One stable room contract for future Founder-approved poses or motion clips.
+// The current seated derivative is the truthful fallback for every state; no
+// automatic rotation or invented animation is implied by this registry.
+export const FV_STUDIOS_FRASSY_PRESENCE: readonly FrassyStudioPresenceAsset[] = [
+  {
+    ...FV_STUDIOS_FRASSY_LOOK,
+    kind: "image",
+    states: ["idle", "listening", "thinking", "speaking", "gesturing", "working"],
+  },
+];
+
+export function studioPresenceFor(state: FrassyStudioPresenceState): FrassyStudioPresenceAsset {
+  return (
+    FV_STUDIOS_FRASSY_PRESENCE.find((asset) => asset.states.includes(state)) ??
+    FV_STUDIOS_FRASSY_PRESENCE[0]
+  );
+}

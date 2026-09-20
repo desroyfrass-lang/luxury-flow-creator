@@ -84,7 +84,11 @@ import {
   ConversationScrollButton,
 } from "@/components/ai-elements/conversation";
 import { Message, MessageContent } from "@/components/ai-elements/message";
-import { FV_STUDIOS_FRASSY_LOOK } from "@/lib/frassy/room-looks";
+import {
+  FV_STUDIOS_FRASSY_LOOK,
+  studioPresenceFor,
+  type FrassyStudioPresenceState,
+} from "@/lib/frassy/room-looks";
 
 type ProductCard = {
   handle: string;
@@ -759,12 +763,23 @@ export function FrassyChat({
           : loading
             ? "Thinking…"
             : "Talk to Frassy";
+  const studioPresenceState: FrassyStudioPresenceState =
+    voice.phase === "recording"
+      ? "listening"
+      : voice.phase === "transcribing" || loading
+        ? "thinking"
+        : voice.phase === "speaking"
+          ? "speaking"
+          : "idle";
+  const studioPresence = studioPresenceFor(studioPresenceState);
 
   return (
     <div
       ref={panelRef}
       data-frassy-panel
       data-frassy-phase={startup.phase}
+      data-voice-phase={voice.phase}
+      data-presence-state={studioPresenceState}
       aria-busy={startup.phase === "verifying" || startup.phase === "recovering"}
       className={`${presentation !== "studio" && (startup.phase === "verifying" || startup.phase === "recovering") ? "invisible pointer-events-none" : "visible"} frass-workspace ${dark ? "ws-dark" : ""} ${presentation === "studio" ? "frassy-studio-conversation" : ""} ${
         expanded
@@ -774,7 +789,7 @@ export function FrassyChat({
               ? "relative mx-auto mt-10 flex min-h-[520px] w-[calc(100%-2rem)] max-w-6xl flex-col overflow-hidden rounded-lg border border-[color:var(--ws-line)]"
               : "flex h-[min(820px,86vh)] min-h-[520px] w-full max-w-full flex-col overflow-hidden rounded-lg border border-[color:var(--ws-line)]"
             : presentation === "studio"
-              ? "fixed inset-x-0 bottom-0 z-50 flex h-[min(78dvh,760px)] min-w-0 flex-col overflow-hidden rounded-t-[1.5rem] xl:sticky xl:inset-auto xl:top-[9.5rem] xl:z-20 xl:h-[calc(100dvh-11rem)] xl:max-h-[760px] xl:w-full xl:self-start xl:rounded-[1.5rem]"
+              ? "fixed inset-x-0 bottom-0 z-50 flex h-[min(82dvh,780px)] min-w-0 flex-col overflow-hidden rounded-t-[1.5rem] min-[1180px]:sticky min-[1180px]:inset-auto min-[1180px]:top-[9.5rem] min-[1180px]:z-20 min-[1180px]:h-[calc(100dvh-11rem)] min-[1180px]:max-h-[780px] min-[1180px]:w-full min-[1180px]:self-start min-[1180px]:rounded-[1.5rem]"
               : "fixed bottom-6 right-6 z-50 flex h-[min(620px,78vh)] w-[min(420px,calc(100vw-3rem))] max-w-full flex-col overflow-hidden rounded-lg border border-[color:var(--ws-line)] shadow-2xl"
       }`}
       style={{ background: "var(--ws-panel)", color: "var(--ws-ink)" }}
@@ -955,10 +970,18 @@ export function FrassyChat({
         {presentation === "studio" ? (
           <div className="frassy-studio-director" aria-label="Frassy, FV Studios AI Director">
             <div className="frassy-studio-director-light" aria-hidden="true" />
-            <img src={FV_STUDIOS_FRASSY_LOOK.image} alt={FV_STUDIOS_FRASSY_LOOK.alt} />
-            <p>AI Director</p>
+            <div className="frassy-studio-presence">
+              <img src={studioPresence.image} alt={studioPresence.alt} />
+            </div>
+            <div className="frassy-studio-voicewave" aria-hidden="true">
+              {[0, 1, 2, 3, 4, 5, 6].map((bar) => (
+                <span key={bar} style={{ animationDelay: `${bar * 90}ms` }} />
+              ))}
+            </div>
+            <p>AI Director · {studioVoiceLabel}</p>
           </div>
         ) : null}
+        <div className={presentation === "studio" ? "frassy-studio-dialogue" : "contents"}>
         <Conversation
           data-frassy-transcript
           className={`frassy-transcript min-h-0 flex-1 ${auditCard ? "overflow-visible" : ""}`}
@@ -1145,7 +1168,6 @@ export function FrassyChat({
           </ConversationContent>
           <ConversationScrollButton aria-label="Scroll to latest message" />
         </Conversation>
-      </div>
 
       {/* FRASS-0551 — Voice confidence: the member always knows where the
           conversation is. Listening · Transcribing · Thinking · Speaking. */}
@@ -1194,6 +1216,8 @@ export function FrassyChat({
           studio={presentation !== "studio"}
           showToolRail={presentation !== "studio"}
         />
+      </div>
+        </div>
       </div>
     </div>
   );
