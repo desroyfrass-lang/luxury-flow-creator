@@ -1,25 +1,27 @@
-# FV Studios creator-room revamp
+# FV Studios Luxury Control Room Redesign
 
 ## Goal
-Rework the existing `/studio` screen into one cinematic, eye-level production room where creating and directing work is immediately obvious, while preserving every current production, commissioning, credit-safety, and quality-truth behavior.
+Replace the flat brown dashboard appearance with one immersive black-and-charcoal studio console illuminated by restrained champagne-gold light, while preserving the current one-job workflow and all existing behavior.
 
-## What will change
-- Add an immersive studio arrival that naturally gives way to the working console without becoming a separate splash screen.
-- Make “What are we making today?” the front door, with six purposeful creation choices that open the existing production-creation flow with the correct production type.
-- Recompose the existing tools around a large central preview, production selector, one Frassy director surface, contextual controls, and a timeline below.
-- Apply real progressive disclosure: Directed stays minimal; Creator reveals manual edit tools; Producer adds inspector/mixer controls; Pro exposes the full console. The same production remains active throughout.
-- Move Library, Phone Content/A1 Clean, A1 quality detail, export/watermark, credits/receipts, and Business Builder into clear contextual locations without deleting functionality.
-- Add a private Founder Originals room entrance for authorized Founder/Admin users, linking into the existing protected `/studios` production system and its Series Bibles, canon, characters, locations, voices, scenes, assets, and production memory. Keep FRASS Chronicles, Frass Street, Frassy Street, and I Am Not My Hair distinct; never create parallel production records.
-- Replace dead-looking controls with working actions, real navigation, or truthful unavailable states.
-- Keep tablet/mobile controls large and ordered around the current task.
+## Build
+- Recompose the current screen around one large studio monitor, an integrated Frassy director console, and one visually dominant next action.
+- Restyle navigation as a slim illuminated studio rail; convert supporting tools into floating glass modules and drawers rather than bordered card stacks.
+- Redesign creation choices as spacious studio doors with light, depth, and tactile movement.
+- Add a practical-light entrance transition: ceiling light, monitor backlight, console edge, and floor reflection come up after entry.
+- Use premium display hierarchy for the current production and calmer readable text for controls.
+- Keep all results, approvals, processing states, blockers, and outputs in the existing immediate dialogs and preview area.
+- Preserve Enhance Phone Recording wording and keep mastering separate and unavailable.
 
 ## Technical details
-- Frontend-only changes to the existing `/studio` route and focused studio presentation components/styles.
-- Reuse the current create-project action, production selector, Director forecast/approval, Phone Content flow, control-depth persistence, A1 evaluator, timeline, watermark options, receipts, and links.
-- Reuse the existing server-protected Founder/Admin studio routes and gate the new entrance from server-verified role status; do not duplicate their backend or weaken access control.
-- No changes to database schema, server functions, engine routing, job verification, credit charging, canonical production identity, payments, security, or provider connections.
-- Verify all six creation doors create through the existing production path, depth-based visibility behaves correctly, and commissioning tests remain green.
+- Scope changes to `/studio` presentation styles and studio-facing presentation components only.
+- Keep server calls, data structures, billing logic, security checks, machine routing, evidence, and role gates unchanged.
+- Add semantic, studio-scoped visual classes and animations in the global design system.
+- Remove whole-page horizontal overflow while retaining an internally scrollable navigation rail.
+- Respect reduced-motion preferences.
 
 ## Validation
-- Run focused studio tests, TypeScript checks, and the application build.
-- Verify authenticated desktop and mobile `/studio` views and exercise creation/depth controls in preview without publishing.
+- Run focused studio tests, type checking, and the automatic build check.
+- Capture signed-in screenshots at 1280×900 and 390×844.
+- Confirm the page is charcoal plus luminous champagne-gold, not stacked brown cards or enterprise software.
+- Confirm the primary next action is immediately dominant, no scroll hunt is needed, and no page-level horizontal scrollbar exists.
+- Do not deploy or publish.
