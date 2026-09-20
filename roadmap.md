@@ -10,3 +10,4 @@
 - [x] Validate the gold-purple room at 1280×900 and 390×844 without page-level overflow.
 - [x] Repair FV Studios Frassy summoning, integrated conversation, honest playback, and crisp text without changing production systems.
 - [x] Dock the approved seated Frassy beside Studio work, simplify Studio-only conversation controls, hide the try-on launcher there, and remove page overflow.
+- [ ] Rebuild Studio Frassy as a cinematic spatial bay with separate conversation glass, motion-ready approved pose states, responsive sheet fallback, and verified zero overflow.
