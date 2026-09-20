@@ -305,6 +305,11 @@ export function PhoneContentMode({ balance, running, onRun }: Props) {
                     </p>
                   )}
 
+                  <p className="mt-3 text-xs text-muted-foreground">
+                    Improve a recording made on your phone — reduce unwanted noise, improve clarity,
+                    and prepare it for production. The result is cleaned and restored, not mastered.
+                  </p>
+
                   <div className="mt-4 flex flex-wrap gap-2">
                     <button
                       disabled={running || !affordable || !sourceFile || !sourceFile.type.startsWith("audio/")}
