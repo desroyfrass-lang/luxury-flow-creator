@@ -263,7 +263,7 @@ export function PhoneContentMode({ balance, running, onRun }: Props) {
                     {report.forecast.lines.map((l) => (
                       <div
                         key={l.key}
-                        className="flex items-baseline justify-between gap-3 border-b border-white/5 pb-1.5"
+                        className="flex items-baseline justify-between gap-3 border-b border-border pb-1.5"
                       >
                         <span className="text-xs text-foreground">
                           {l.label}{" "}
