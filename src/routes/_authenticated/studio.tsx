@@ -139,6 +139,7 @@ function StudioPage() {
   const [newTitle, setNewTitle] = useState("");
   const [destination, setDestination] = useState("podcast");
   const [task, setTask] = useState<CreationDoor | null>(null);
+  const [creating, setCreating] = useState(false);
   const [direction, setDirection] = useState("");
   const [why, setWhy] = useState(false);
   const [surfaced, setSurfaced] = useState<Surfaced | null>(null);
@@ -179,6 +180,7 @@ function StudioPage() {
     onSuccess: (p) => {
       setNewTitle("");
       setActiveId(p.id);
+      setCreating(false);
       void qc.invalidateQueries({ queryKey: ["studio-projects"] });
       setSurfaced({ kind: "done", title: "Production open", body: "Nothing was charged — opening a production is always free. Your next step is waiting in the command centre." });
     },
@@ -276,7 +278,7 @@ function StudioPage() {
     onError: (e: Error) => setSurfaced({ kind: "blocked", title: "A1 Clean did not finish", body: `${e.message} Nothing was charged.` }),
   });
 
-  const needsProduction = !active;
+  const needsProduction = !active || creating;
   const primary = needsProduction
     ? { label: task ? "Open this production" : "Choose what you're making", onClick: () => { setTab("create"); if (task) add.mutate(); } }
     : audioLane
@@ -324,7 +326,7 @@ function StudioPage() {
               <Button variant="ghost" size="sm" onClick={() => setCredits(true)} className="h-10">{(w?.balance ?? 0).toLocaleString()} cr</Button>
               {isAdmin === true ? (
                 <Button size="sm" asChild className="h-10 bg-accent text-accent-foreground hover:bg-accent/90">
-                  <Link to="/studios"><Shield className="h-4 w-4" /> <span className="hidden sm:inline">Founder Originals</span></Link>
+                  <Link to="/studios" aria-label="Founder Originals"><Shield className="h-4 w-4" /> <span className="hidden sm:inline">Founder Originals</span></Link>
                 </Button>
               ) : null}
               <div className="hidden sm:block"><VoiceFeedbackButton source="studio" /></div>
@@ -379,7 +381,7 @@ function StudioPage() {
               <Button onClick={primary.onClick} className="min-h-12 flex-1 bg-accent text-accent-foreground hover:bg-accent/90 sm:flex-none">
                 {primary.label} <ArrowRight />
               </Button>
-              {active ? <Button variant="outline" className="min-h-12" onClick={() => { setTask(null); setTab("create"); }}><Plus /> New production</Button> : null}
+              {active ? <Button variant="outline" className="min-h-12" onClick={() => { setTask(null); setCreating(true); setTab("create"); }}><Plus /> New production</Button> : null}
               <span className="text-xs text-muted-foreground">Nothing runs and nothing is charged until you approve it.</span>
             </div>
 
@@ -387,6 +389,7 @@ function StudioPage() {
               {tab === "create" ? (
                 <CreateWorkspace
                   task={task}
+                  creating={creating}
                   active={active}
                   audioLane={audioLane}
                   newTitle={newTitle}
@@ -507,10 +510,11 @@ function StudioPage() {
 }
 
 function CreateWorkspace({
-  task, active, audioLane, newTitle, destination, adding, balance, running,
+  task, creating, active, audioLane, newTitle, destination, adding, balance, running,
   onTitle, onDestination, onChoose, onOpen, onRunClean, onAskFrassy,
 }: {
   task: CreationDoor | null;
+  creating: boolean;
   active: { id: string; title: string; destination: string } | null;
   audioLane: boolean;
   newTitle: string;
@@ -525,7 +529,7 @@ function CreateWorkspace({
   onRunClean: (report: QualityReport, file: File) => void;
   onAskFrassy: () => void;
 }) {
-  if (!task && !active) {
+  if ((!task && !active) || (creating && !task)) {
     return (
       <div>
         <h2 className="text-sm font-medium">What are we making today?</h2>
@@ -544,7 +548,7 @@ function CreateWorkspace({
     );
   }
 
-  if (!active) {
+  if (!active || creating) {
     return (
       <div className="grid gap-3 md:grid-cols-[minmax(0,1fr)_200px_auto]">
         <label className="grid gap-1 text-sm text-muted-foreground">Name this {task?.label}
@@ -554,6 +558,24 @@ function CreateWorkspace({
           <select value={destination} onChange={(e) => onDestination(e.target.value)} className="h-12 rounded-md border border-input bg-background px-3 text-foreground">{DESTINATIONS.map((d) => <option key={d} value={d}>{d}</option>)}</select>
         </label>
         <Button disabled={adding} onClick={onOpen} className="mt-auto min-h-12 bg-accent text-accent-foreground hover:bg-accent/90"><Plus /> {adding ? "Opening…" : "Open production"}</Button>
+      </div>
+    );
+  }
+
+  if (!task) {
+    return (
+      <div>
+        <h2 className="text-sm font-medium">What kind of work is this?</h2>
+        <div className="mt-3 grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
+          {CREATION_DOORS.map((door) => {
+            const Icon = door.icon;
+            return (
+              <Button key={door.id} variant="outline" onClick={() => onChoose(door)} className="h-auto min-h-14 justify-start whitespace-normal p-3 text-left">
+                <Icon className="h-5 w-5 shrink-0 text-accent" /> <span className="text-sm">{door.label}</span>
+              </Button>
+            );
+          })}
+        </div>
       </div>
     );
   }
