@@ -213,3 +213,72 @@ const OPERATION_CAPABILITY: Record<string, NativeCapability> = {
 export function capabilityForOperation(operationKey: string): NativeCapability | null {
   return OPERATION_CAPABILITY[operationKey] ?? null;
 }
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Machine independence.
+//
+// A requested chain can touch several machines. One uninstalled machine (for
+// example finishing/mastering) must NEVER stop an installed machine (for
+// example audio restoration) from doing its own, separate piece of work.
+// Uninstalled work is dropped from the bill and reported honestly.
+// ─────────────────────────────────────────────────────────────────────────────
+
+export type PlannedLine = { key: string; credits?: number };
+
+export type CapabilityPlan = {
+  /** Lines whose machine is installed and may actually run. */
+  runnable: Array<{ key: string; capability: NativeCapability }>;
+  /** Lines whose machine is NOT INSTALLED — never run, never charged. */
+  blocked: Array<{ key: string; capability: NativeCapability | null; reason: string }>;
+  /** The engine that will carry this job, when anything can run at all. */
+  decision: EngineDecision;
+};
+
+export function planOperations(
+  lines: PlannedLine[],
+  engines: EngineRow[],
+  options: EngineRoutingOptions = {},
+): CapabilityPlan {
+  const runnable: CapabilityPlan["runnable"] = [];
+  const blocked: CapabilityPlan["blocked"] = [];
+  let decision: EngineDecision | null = null;
+
+  for (const line of lines) {
+    const capability = capabilityForOperation(line.key);
+    if (!capability) {
+      blocked.push({
+        key: line.key,
+        capability: null,
+        reason: "This step has no engine mapped yet, so it cannot run and is not charged.",
+      });
+      continue;
+    }
+    const routed = routeToEngine(capability, engines, options);
+    if (routed.ok) {
+      runnable.push({ key: line.key, capability });
+      if (!decision) decision = routed;
+    } else {
+      blocked.push({ key: line.key, capability, reason: routed.reason });
+    }
+  }
+
+  return {
+    runnable,
+    blocked,
+    decision:
+      decision ??
+      blocked[0]
+        ? (decision ?? {
+            ok: false,
+            capability: (blocked[0]?.capability ?? "finishing") as NativeCapability,
+            state: "not_installed",
+            reason: blocked[0]?.reason ?? "Nothing in this request has an installed engine.",
+          })
+        : {
+            ok: false,
+            capability: "finishing",
+            state: "not_installed",
+            reason: "Nothing in this request has an installed engine.",
+          },
+  };
+}
