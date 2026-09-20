@@ -1,6 +1,10 @@
 import { describe, expect, it } from "vitest";
 import { FV_STUDIOS_FRASSY_LOOK } from "@/lib/frassy/room-looks";
-import { studioPlaybackState } from "@/lib/studio/studio-ui";
+import {
+  studioActionContext,
+  studioConversationPresentation,
+  studioPlaybackState,
+} from "@/lib/studio/studio-ui";
 
 describe("FV Studios presentation truth", () => {
   it("uses the Founder-approved seated Studio look", () => {
@@ -8,7 +12,6 @@ describe("FV Studios presentation truth", () => {
     expect(FV_STUDIOS_FRASSY_LOOK.status).toBe("approved");
     expect(FV_STUDIOS_FRASSY_LOOK.position).toBe("seated");
   });
-
 
   it("disables playback when no real media URL exists", () => {
     expect(studioPlaybackState(null)).toEqual({ playable: false, label: "No playable output yet" });
@@ -20,5 +23,21 @@ describe("FV Studios presentation truth", () => {
       playable: true,
       label: "Play current output",
     });
+  });
+
+  it("keeps the normal Studio conversation free of repeated response controls", () => {
+    expect(studioConversationPresentation).toEqual({
+      naturalResponses: true,
+      showExplanationLevels: false,
+      showPerResponsePlayback: false,
+    });
+  });
+
+  it("pairs a truthful Studio blocker with the real next action", () => {
+    const context = studioActionContext("Enhance Phone Recording");
+
+    expect(context).toContain("truthful blocker");
+    expect(context).toContain("Best available action now: Enhance Phone Recording");
+    expect(context).toContain("No uninstalled machine is described as available.");
   });
 });
