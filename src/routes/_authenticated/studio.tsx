@@ -27,13 +27,10 @@ import {
   Scissors,
   Send,
   Shield,
-  SlidersHorizontal,
   Sparkles,
   Upload,
-  Volume2,
   Wand2,
   MessageCircle,
-  Pause,
   Play,
 } from "lucide-react";
 import { SiteShell } from "@/components/site-shell";
@@ -190,13 +187,6 @@ type Surfaced =
   | { kind: "working"; title: string; body: string }
   | { kind: "blocked"; title: string; body: string }
   | { kind: "done"; title: string; body: string };
-
-const TIMELINE_TRACKS = [
-  { name: "V2 · Titles & graphics", tone: "bg-accent/25" },
-  { name: "V1 · Main footage", tone: "bg-chrome/20" },
-  { name: "A1 · Voice", tone: "bg-primary/20" },
-  { name: "A2 · Music", tone: "bg-muted-foreground/20" },
-];
 
 function StudioPage() {
   const wallet = useServerFn(getWallet);
@@ -719,7 +709,7 @@ function StudioPage() {
                 </div>
               ) : null}
               {tab === "edit" ? (
-                <EditWorkspace directed={directed} depth={currentDepth} audioLane={audioLane} />
+                <EditWorkspace directed={directed} audioLane={audioLane} />
               ) : null}
               {tab === "quality" ? (
                 <A1MasterPanel evidence={(evidenceQ.data ?? {}) as A1Evidence} />
