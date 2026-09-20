@@ -2739,6 +2739,8 @@ a.ps-row:hover { border-color: color-mix(in srgb, var(--gold) 60%, transparent);
   .fv-studio-stage { padding-top: 0.75rem; }
   .fv-control-room { min-height: 30vh; border-radius: 1.15rem 1.15rem 1.6rem 1.6rem; }
   .fv-main-monitor { inset-inline: 14%; bottom: 4.2rem; min-height: 0; border-radius: 0.85rem; }
+  .fv-monitor-content { transform: translateY(-0.75rem); }
+  .fv-monitor-content .font-display { font-size: 2rem; line-height: 1; }
   .fv-studio-speaker { top: 22%; width: 8%; border-radius: 0.6rem; }
   .fv-speaker-left { left: 3%; }
   .fv-speaker-right { right: 3%; }

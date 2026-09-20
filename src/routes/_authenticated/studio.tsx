@@ -383,13 +383,13 @@ function StudioPage() {
               <div className="fv-studio-speaker fv-speaker-right" aria-hidden="true"><span /><span /></div>
               <div className="fv-main-monitor absolute inset-x-[12%] top-5 bottom-[4.6rem] grid place-items-center overflow-hidden p-5 sm:inset-x-[14%] sm:top-6">
               {preview ? (
-                <div className="relative z-10 w-full max-w-xl text-center">
+                <div className="fv-monitor-content relative z-10 w-full max-w-xl text-center">
                   <p className="text-xs font-semibold text-accent">{preview.label}</p>
                   <audio controls src={preview.url} className="mt-3 w-full" />
                   <p className="mt-2 text-xs text-muted-foreground">Cleaned and verified. Not A1 Master approved.</p>
                 </div>
               ) : (
-                <div className="relative z-10 max-w-md text-center">
+                <div className="fv-monitor-content relative z-10 max-w-md text-center">
                   <span className="fv-monitor-orbit mx-auto grid h-20 w-20 place-items-center rounded-full"><MonitorPlay className="h-9 w-9 text-accent" /></span>
                   <p className="mt-5 font-display text-3xl normal-case leading-none sm:text-5xl">{active ? active.title : "Your next production"}</p>
                   <p className="mt-1 text-sm text-muted-foreground">{active ? `${task?.label ?? active.destination} · no verified output yet` : "Pick what you are making below."}</p>
