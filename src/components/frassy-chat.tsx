@@ -975,7 +975,7 @@ export function FrassyChat({
             </div>
             <div className="frassy-studio-voicewave" aria-hidden="true">
               {[0, 1, 2, 3, 4, 5, 6].map((bar) => (
-                <span key={bar} style={{ animationDelay: `${bar * 90}ms` }} />
+                <span key={bar} />
               ))}
             </div>
             <p>AI Director · {studioVoiceLabel}</p>

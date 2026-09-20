@@ -49,6 +49,10 @@ export const FV_STUDIOS_FRASSY_PRESENCE: readonly FrassyStudioPresenceAsset[] = 
 export function studioPresenceFor(state: FrassyStudioPresenceState): FrassyStudioPresenceAsset {
   return (
     FV_STUDIOS_FRASSY_PRESENCE.find((asset) => asset.states.includes(state)) ??
-    FV_STUDIOS_FRASSY_PRESENCE[0]
+    {
+      ...FV_STUDIOS_FRASSY_LOOK,
+      kind: "image",
+      states: ["idle"],
+    }
   );
 }
