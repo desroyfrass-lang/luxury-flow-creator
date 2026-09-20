@@ -1198,7 +1198,7 @@ function ResultDialog({
                     : "Not enough credits"}
               </Button>
               <Button variant="outline" className="min-h-12" onClick={onClose}>
-                Back
+                Close
               </Button>
               <Button variant="ghost" className="min-h-12" onClick={onWhy}>
                 Why?
@@ -1227,7 +1227,7 @@ function ResultDialog({
               {surfaced.kind === "blocked" ? (
                 <>
                   <Button variant="outline" className="min-h-12" onClick={onClose}>
-                    Back
+                    Close
                   </Button>
                   <Button
                     className="min-h-12 bg-accent text-accent-foreground hover:bg-accent/90"
