@@ -335,3 +335,30 @@ export const grantCredits = createServerFn({ method: "POST" })
 
     return { granted: data.amount, email: data.email };
   });
+
+/**
+ * FRASS-0407 / A1 — change the control depth of one production.
+ *
+ * A depth change is a change of view only. Nothing is restarted, converted or
+ * flattened: only this one column moves, and only for the owner's own project.
+ */
+export const setStudioControlDepth = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((input: { projectId: string; depth: string }) => {
+    const allowed = ["directed", "creator", "producer", "pro"];
+    if (!input?.projectId) throw new Error("Which production?");
+    if (!allowed.includes(input.depth)) throw new Error("Unknown control depth.");
+    return { projectId: input.projectId, depth: input.depth };
+  })
+  .handler(async ({ data, context }): Promise<StudioProject> => {
+    const sb = context.supabase as unknown as Db;
+    const { data: row, error } = await sb
+      .from("studio_projects")
+      .update({ control_depth: data.depth })
+      .eq("id", data.projectId)
+      .eq("user_id", context.userId)
+      .select("id, title, destination, status, brief, control_depth, created_at, updated_at")
+      .single();
+    if (error) throw new Error(error.message);
+    return row as StudioProject;
+  });
