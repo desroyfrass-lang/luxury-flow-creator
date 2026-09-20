@@ -171,13 +171,18 @@ export function FrassyChat({
   const [auditCard, setAuditCard] = useState<ReturnType<typeof resolveAuditCard>>(null);
   const [auditContextMismatch, setAuditContextMismatch] = useState(false);
   useEffect(() => {
+    if (workspaceContext) {
+      setAuditCard(null);
+      setAuditContextMismatch(false);
+      return;
+    }
     const active = resolveAuditCard(ctx.pathname);
     setAuditCard(active);
     setAuditContextMismatch(isStaleTeleport(ctx.pathname));
     // A Teleporter audit is a permanent page journal, never a floating box the
     // Founder can lose while Frassy is still speaking.
     if (active) setOpen(true);
-  }, [ctx.pathname]);
+  }, [ctx.pathname, workspaceContext]);
   const transcriptScope = auditCard ? `teleporter.${auditCard.key}` : undefined;
 
   // FRASS-0476B — one shared conversation history. A refresh or a change of
