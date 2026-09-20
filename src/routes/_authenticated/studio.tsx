@@ -227,12 +227,12 @@ function StudioPage() {
   const runPhone = useMutation({
     mutationFn: async ({ report, file }: { report: QualityReport; file: File }) => {
       if (!active) throw new Error("Open a production first.");
-      const forecast = buildForecast("FRASS Native A1 Clean", [{ key: "voice-enhance", qty: report.minutes }]);
+      const forecast = buildForecast("Enhance Phone Recording", [{ key: "voice-enhance", qty: report.minutes }]);
       const queued = await runOp({
         data: {
           projectId: active.id,
-          request: `FRASS Native A1 Clean — ${report.preset.label} (${report.minutes} min)`,
-          label: "FRASS Native A1 Clean",
+          request: `Enhance Phone Recording — ${report.preset.label} (${report.minutes} min)`,
+          label: "Enhance Phone Recording",
           lines: forecast.lines.map((l) => ({ key: l.key, label: l.label, credits: l.credits, qty: l.qty })),
           total: forecast.total,
           seconds: forecast.seconds,
@@ -262,9 +262,9 @@ function StudioPage() {
       const signed = await supabase.storage.from(A1_CLEAN_BUCKET).createSignedUrl(prepared.output, 3600);
       return { verified, url: signed.data?.signedUrl ?? null };
     },
-    onMutate: () => setSurfaced({ kind: "working", title: "A1 Clean is running", body: "Your recording is being cleaned on this device. The source file is kept untouched." }),
+    onMutate: () => setSurfaced({ kind: "working", title: "Enhance Phone Recording is running", body: "Your recording is being cleaned on this device. The source file is kept untouched." }),
     onSuccess: ({ verified, url }) => {
-      if (url) setPreview({ label: "A1 Clean — cleaned audio", url });
+      if (url) setPreview({ label: "Enhance Phone Recording — cleaned audio", url });
       setSurfaced({
         kind: "done",
         title: "Cleaned and verified",
@@ -275,14 +275,14 @@ function StudioPage() {
       void qc.invalidateQueries({ queryKey: ["studio-projects"] });
       void qc.invalidateQueries({ queryKey: ["studio-a1-evidence"] });
     },
-    onError: (e: Error) => setSurfaced({ kind: "blocked", title: "A1 Clean did not finish", body: `${e.message} Nothing was charged.` }),
+    onError: (e: Error) => setSurfaced({ kind: "blocked", title: "Enhance Phone Recording did not finish", body: `${e.message} Nothing was charged.` }),
   });
 
   const needsProduction = !active || creating;
   const primary = needsProduction
     ? { label: task ? "Open this production" : "Choose what you're making", onClick: () => { setTab("create"); if (task) add.mutate(); } }
     : audioLane
-      ? { label: "Upload audio for A1 Clean", onClick: () => { setTab("create"); document.getElementById("fv-workspace")?.querySelector<HTMLInputElement>('input[type="file"]')?.click(); } }
+      ? { label: "Enhance Phone Recording", onClick: () => { setTab("create"); document.getElementById("fv-workspace")?.querySelector<HTMLInputElement>('input[type="file"]')?.click(); } }
       : { label: "Ask Frassy for the next step", onClick: () => document.getElementById("director-direction")?.focus() };
 
   return (

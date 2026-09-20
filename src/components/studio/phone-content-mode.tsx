@@ -318,9 +318,9 @@ export function PhoneContentMode({ balance, running, onRun }: Props) {
                       className="rounded-lg bg-accent px-4 py-2 text-[11px] font-medium uppercase tracking-widest text-accent-foreground disabled:opacity-40"
                     >
                       {sourceFile && !sourceFile.type.startsWith("audio/")
-                        ? "A1 Clean currently accepts audio files"
+                        ? "Enhance Phone Recording currently accepts audio files"
                         : affordable
-                        ? "Run real A1 Clean"
+                        ? "Enhance Phone Recording"
                         : "Not enough credits"}
                     </button>
                     <button
