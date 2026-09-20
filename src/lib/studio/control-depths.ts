@@ -81,7 +81,7 @@ export const CROSS_CUTTING_HELPERS = [
   },
   {
     id: "phone-content-mode",
-    label: "Phone Content Mode / A1 Clean",
+    label: "Phone Content Mode / Enhance Phone Recording",
     everyday: "Recording and input clean-up, so the gear you own is never the limit.",
   },
   {

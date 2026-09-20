@@ -305,6 +305,11 @@ export function PhoneContentMode({ balance, running, onRun }: Props) {
                     </p>
                   )}
 
+                  <p className="mt-3 text-xs text-muted-foreground">
+                    Improve a recording made on your phone — reduce unwanted noise, improve clarity,
+                    and prepare it for production. The result is cleaned and restored, not mastered.
+                  </p>
+
                   <div className="mt-4 flex flex-wrap gap-2">
                     <button
                       disabled={running || !affordable || !sourceFile || !sourceFile.type.startsWith("audio/")}
@@ -318,9 +323,9 @@ export function PhoneContentMode({ balance, running, onRun }: Props) {
                       className="rounded-lg bg-accent px-4 py-2 text-[11px] font-medium uppercase tracking-widest text-accent-foreground disabled:opacity-40"
                     >
                       {sourceFile && !sourceFile.type.startsWith("audio/")
-                        ? "A1 Clean currently accepts audio files"
+                        ? "Enhance Phone Recording currently accepts audio files"
                         : affordable
-                        ? "Run real A1 Clean"
+                        ? "Enhance Phone Recording"
                         : "Not enough credits"}
                     </button>
                     <button

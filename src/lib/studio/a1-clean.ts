@@ -54,7 +54,7 @@ function encodeWav(channels: Float32Array[], sampleRate: number): Blob {
 export async function processA1Clean(file: File): Promise<Blob> {
   if (!isAcceptedA1Audio(file.type, file.size)) throw new Error("Use a supported audio file under 20 MB.");
   const Ctx = window.AudioContext || (window as typeof window & { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
-  if (!Ctx) throw new Error("This browser cannot run the A1 Clean audio machine.");
+  if (!Ctx) throw new Error("This browser cannot run the Enhance Phone Recording machine.");
   const decoder = new Ctx();
   try {
     const decoded = await decoder.decodeAudioData(await file.arrayBuffer());
