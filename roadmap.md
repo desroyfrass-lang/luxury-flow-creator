@@ -13,3 +13,4 @@
 - [x] Rebuild Studio Frassy as a cinematic spatial bay with separate conversation glass, motion-ready approved pose states, responsive sheet fallback, and verified zero overflow.
 - [x] Functional reality pass: fix Studio monitor collision, audit every visible control, remove or disable dead controls, validate all specified viewports and interactions.
 - [x] Clean the Studio-only Frassy conversation, remove repeated explanation and playback controls, and keep blocker replies action-oriented.
+- [x] Refine Studio Frassy replies with one closed response-options menu, restore existing explanation/hearing capabilities, and repair collision and duplicate transcript rendering.
