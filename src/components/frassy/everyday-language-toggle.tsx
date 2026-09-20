@@ -118,7 +118,9 @@ export function PlainEnglishMessage({
               disabled={!onHear || hearDisabled}
               onSelect={() => onHear?.()}
               className="min-h-11"
-              title={!onHear || hearDisabled ? hearUnavailableReason : "Hear Frassy read this response"}
+              title={
+                !onHear || hearDisabled ? hearUnavailableReason : "Hear Frassy read this response"
+              }
             >
               <Volume2 aria-hidden="true" />
               <span className="min-w-0 flex-1">Hear Frassy</span>
