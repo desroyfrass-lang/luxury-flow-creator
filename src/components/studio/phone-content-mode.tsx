@@ -21,6 +21,7 @@ import {
   type QualityReport,
 } from "@/lib/studio/phone-content-mode";
 import { formatDuration, unitLabel, usdFor } from "@/lib/studio/credits";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
 type Props = {
   balance: number;
@@ -147,8 +148,22 @@ export function PhoneContentMode({ balance, running, onRun }: Props) {
         </p>
       </div>
 
-      {detection && probe && (
-        <div className="mt-5 space-y-4">
+      <Dialog
+        open={Boolean(detection && probe)}
+        onOpenChange={(o) => {
+          if (!o) {
+            setDetection(null);
+            setProbe(null);
+            setEngaged(false);
+          }
+        }}
+      >
+        <DialogContent className="max-h-[85vh] max-w-2xl overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>What Frassy found in your recording</DialogTitle>
+          </DialogHeader>
+        {detection && probe && (
+        <div className="space-y-4">
           {/* Detection */}
           <div className="rounded-xl border border-white/10 bg-black/40 p-4">
             <p className="text-sm text-white/85">
@@ -296,6 +311,9 @@ export function PhoneContentMode({ balance, running, onRun }: Props) {
                       onClick={() => {
                         if (sourceFile) onRun(report, sourceFile);
                         setLearning(true);
+                        setDetection(null);
+                        setProbe(null);
+                        setEngaged(false);
                       }}
                       className="rounded-lg bg-amber-300/90 px-4 py-2 text-[11px] font-medium uppercase tracking-widest text-black disabled:opacity-40"
                     >
@@ -335,7 +353,9 @@ export function PhoneContentMode({ balance, running, onRun }: Props) {
             </>
           )}
         </div>
-      )}
+        )}
+        </DialogContent>
+      </Dialog>
 
       <footer className="mt-5 border-t border-white/10 pt-4">
         <p className="text-[10px] uppercase tracking-[0.25em] text-white/35">
