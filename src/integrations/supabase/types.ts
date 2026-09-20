@@ -7067,6 +7067,7 @@ export type Database = {
       studio_projects: {
         Row: {
           brief: string | null
+          control_depth: string
           created_at: string
           destination: string
           id: string
@@ -7078,6 +7079,7 @@ export type Database = {
         }
         Insert: {
           brief?: string | null
+          control_depth?: string
           created_at?: string
           destination?: string
           id?: string
@@ -7089,6 +7091,7 @@ export type Database = {
         }
         Update: {
           brief?: string | null
+          control_depth?: string
           created_at?: string
           destination?: string
           id?: string

@@ -64,6 +64,13 @@
       "when": 1789865785950,
       "tag": "0008_bind_published_gallery_art_read_policy",
       "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1789871750460,
+      "tag": "0009_studio_project_control_depth",
+      "breakpoints": true
     }
   ]
 }
