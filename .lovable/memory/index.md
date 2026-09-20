@@ -28,6 +28,7 @@ Brand name is always "Frass" (two s's) — never "Fras". Applies to Frass Hill, 
 FRASS-0564: never write "in plain English" anywhere; vary lead-ins ("Here's what this means…"). Level 🔵 is "Guided Walkthrough".
 FRASS-0568: one Founder headquarters — 🎛️ Founder Control Room at /control-room; /command and /founder redirect there. Never build a second Founder dashboard.
 Stay true to the original Frass Kicks aesthetic.
+FV Studios Frassy look is Founder-approved and locked (face, long locs, studio attire, jewelry) — never regenerate or redesign her.
 Frass Hill imagery is photorealistic and cinematic — no cartoon art (except the husband hero, Bob Marley graffiti, and kids sections).
 Creator platform is "Frass Vision Studios" (shorthand "FV Studios") — never "Frassy Studio".
 Frass Hill: discovery before destination — every destination is experienced from a distance before interaction; movement, not navigation.
