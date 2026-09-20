@@ -6060,13 +6060,17 @@ export type Database = {
           actual_cost_credits: number | null
           asset_id: string | null
           cancelled_at: string | null
+          charge_state: string
           completed_at: string | null
           cost_credits: number
           created_at: string
           created_by: string | null
+          engine_slug: string | null
+          engine_type: string
           error: string | null
           estimated_cost_credits: number | null
           id: string
+          idempotency_key: string | null
           job_type: string
           model_reference: string | null
           output: Json
@@ -6081,18 +6085,24 @@ export type Database = {
           status: string
           target_kind: string | null
           updated_at: string
+          verified_at: string | null
+          verified_output_url: string | null
         }
         Insert: {
           actual_cost_credits?: number | null
           asset_id?: string | null
           cancelled_at?: string | null
+          charge_state?: string
           completed_at?: string | null
           cost_credits?: number
           created_at?: string
           created_by?: string | null
+          engine_slug?: string | null
+          engine_type?: string
           error?: string | null
           estimated_cost_credits?: number | null
           id?: string
+          idempotency_key?: string | null
           job_type: string
           model_reference?: string | null
           output?: Json
@@ -6107,18 +6117,24 @@ export type Database = {
           status?: string
           target_kind?: string | null
           updated_at?: string
+          verified_at?: string | null
+          verified_output_url?: string | null
         }
         Update: {
           actual_cost_credits?: number | null
           asset_id?: string | null
           cancelled_at?: string | null
+          charge_state?: string
           completed_at?: string | null
           cost_credits?: number
           created_at?: string
           created_by?: string | null
+          engine_slug?: string | null
+          engine_type?: string
           error?: string | null
           estimated_cost_credits?: number | null
           id?: string
+          idempotency_key?: string | null
           job_type?: string
           model_reference?: string | null
           output?: Json
@@ -6133,6 +6149,8 @@ export type Database = {
           status?: string
           target_kind?: string | null
           updated_at?: string
+          verified_at?: string | null
+          verified_output_url?: string | null
         }
         Relationships: [
           {
@@ -6431,9 +6449,11 @@ export type Database = {
       studio_operations: {
         Row: {
           actual_credits: number | null
+          blocked_reason: string | null
           created_at: string
           estimated_credits: number
           id: string
+          job_id: string | null
           label: string
           operation_key: string
           output: Json
@@ -6442,12 +6462,15 @@ export type Database = {
           request: string | null
           status: string
           user_id: string
+          verified: boolean
         }
         Insert: {
           actual_credits?: number | null
+          blocked_reason?: string | null
           created_at?: string
           estimated_credits?: number
           id?: string
+          job_id?: string | null
           label: string
           operation_key: string
           output?: Json
@@ -6456,12 +6479,15 @@ export type Database = {
           request?: string | null
           status?: string
           user_id: string
+          verified?: boolean
         }
         Update: {
           actual_credits?: number | null
+          blocked_reason?: string | null
           created_at?: string
           estimated_credits?: number
           id?: string
+          job_id?: string | null
           label?: string
           operation_key?: string
           output?: Json
@@ -6470,8 +6496,16 @@ export type Database = {
           request?: string | null
           status?: string
           user_id?: string
+          verified?: boolean
         }
         Relationships: [
+          {
+            foreignKeyName: "studio_operations_job_id_fkey"
+            columns: ["job_id"]
+            isOneToOne: false
+            referencedRelation: "studio_generation_jobs"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "studio_operations_project_id_fkey"
             columns: ["project_id"]
@@ -7071,6 +7105,7 @@ export type Database = {
           created_at: string
           destination: string
           id: string
+          production_id: string | null
           status: string
           timeline: Json
           title: string
@@ -7083,6 +7118,7 @@ export type Database = {
           created_at?: string
           destination?: string
           id?: string
+          production_id?: string | null
           status?: string
           timeline?: Json
           title: string
@@ -7095,13 +7131,22 @@ export type Database = {
           created_at?: string
           destination?: string
           id?: string
+          production_id?: string | null
           status?: string
           timeline?: Json
           title?: string
           updated_at?: string
           user_id?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "studio_projects_production_id_fkey"
+            columns: ["production_id"]
+            isOneToOne: false
+            referencedRelation: "studio_productions"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       studio_providers: {
         Row: {
@@ -7111,6 +7156,7 @@ export type Database = {
           cost_rating: number | null
           created_at: string
           enabled: boolean
+          engine_type: string
           founder_preferred: boolean
           id: string
           label: string
@@ -7130,6 +7176,7 @@ export type Database = {
           cost_rating?: number | null
           created_at?: string
           enabled?: boolean
+          engine_type?: string
           founder_preferred?: boolean
           id?: string
           label: string
@@ -7149,6 +7196,7 @@ export type Database = {
           cost_rating?: number | null
           created_at?: string
           enabled?: boolean
+          engine_type?: string
           founder_preferred?: boolean
           id?: string
           label?: string
