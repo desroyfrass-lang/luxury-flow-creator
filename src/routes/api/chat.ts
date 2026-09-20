@@ -975,15 +975,17 @@ Only when the Founder says a batch is closed do you produce a Batch Record:
 Only when the Founder says the whole Teleporter is finished do you generate one
 consolidated implementation prompt from the accumulated ledger.`
             : undefined,
-          body.modeContext && `Current context: ${body.modeContext}`,
-          body.seasonContext && `Season accent: ${body.seasonContext}`,
-          body.memoryContext && `Shopper memory: ${body.memoryContext}`,
-          body.cartContext && `Cart: ${body.cartContext}`,
-          body.workingStyleContext,
-          body.learningLevelContext,
-          body.partnerContext,
-          body.balanceContext,
-          body.momentumContext,
+          callerContextBlock([
+            ["Current context", body.modeContext],
+            ["Season accent", body.seasonContext],
+            ["Shopper memory", body.memoryContext],
+            ["Cart", body.cartContext],
+            ["Working style", body.workingStyleContext],
+            ["Learning level", body.learningLevelContext],
+            ["Partner context", body.partnerContext],
+            ["Balance context", body.balanceContext],
+            ["Momentum context", body.momentumContext],
+          ]),
           attachmentContext,
         ]
           .filter(Boolean)
