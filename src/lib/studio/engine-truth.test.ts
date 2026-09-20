@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import {
+  planOperations,
   routeToEngine,
   engineBoard,
   capabilityForOperation,
@@ -168,5 +169,45 @@ describe("canonical production identity", () => {
     expect(ref.kind).toBe("legacy_project");
     expect(needsCanonicalBridge(project)).toBe(true);
     expect(needsCanonicalBridge({ id: "p3", title: "Three", production_id: "prod-3" })).toBe(false);
+  });
+});
+
+
+describe("machine independence — A1 Clean does not need mastering", () => {
+  const restoration = engine({
+    id: "a1",
+    slug: "frass_a1_clean_web_audio_v1",
+    label: "FRASS Native A1 Clean",
+    capabilities: ["audioRestoration"],
+    engine_type: "frass_native",
+    priority: 1,
+  });
+
+  it("runs restoration even though the finishing machine is absent", () => {
+    const plan = planOperations([{ key: "voice-enhance" }, { key: "phone-noise" }], [restoration]);
+    expect(plan.decision.ok).toBe(true);
+    if (plan.decision.ok) expect(plan.decision.ownership).toBe("frass_native");
+    expect(plan.runnable.map((r) => r.key)).toEqual(["voice-enhance", "phone-noise"]);
+    expect(plan.blocked).toHaveLength(0);
+  });
+
+  it("keeps a bundled mastering step out of the run and out of the bill", () => {
+    const plan = planOperations([{ key: "voice-enhance" }, { key: "ai-master" }], [restoration]);
+    expect(plan.decision.ok).toBe(true);
+    expect(plan.runnable.map((r) => r.key)).toEqual(["voice-enhance"]);
+    expect(plan.blocked[0]?.capability).toBe("finishing");
+    expect(plan.blocked[0]?.reason).toContain("NOT INSTALLED");
+  });
+
+  it("still refuses a mastering-only request", () => {
+    const plan = planOperations([{ key: "ai-master" }], [restoration]);
+    expect(plan.decision.ok).toBe(false);
+    expect(plan.runnable).toHaveLength(0);
+  });
+
+  it("reports an unmapped step honestly instead of guessing a machine", () => {
+    const plan = planOperations([{ key: "nonsense-op" }], [restoration]);
+    expect(plan.decision.ok).toBe(false);
+    expect(plan.blocked[0]?.capability).toBeNull();
   });
 });
