@@ -153,7 +153,9 @@ function beaconInviteFor(pathname: string): string {
 export function FrassyChat({
   embedded = false,
   tone,
-}: { embedded?: boolean; tone?: "light" | "dark" } = {}) {
+  hideBeacon = false,
+  workspaceContext,
+}: { embedded?: boolean; tone?: "light" | "dark"; hideBeacon?: boolean; workspaceContext?: string } = {}) {
   const navigate = useNavigate();
   const ctx = useFrassyContext();
   // FRASS-0551 — only the Founder Control Room stays dark. Every member surface
@@ -487,6 +489,7 @@ export function FrassyChat({
           momentumContext:
             momentumContext(readMomentum(readBalanceSignals() ?? NO_SIGNALS, loadMomentum())) ||
             undefined,
+          memoryContext: workspaceContext || undefined,
           stream: false,
         }),
       });
@@ -685,6 +688,7 @@ export function FrassyChat({
   // (the Frass logo), listening (a microphone), thinking (a gentle pulse) and
   // speaking (the logo with a live waveform). One tap starts a conversation.
   if (!open && !embedded && !auditCard) {
+    if (hideBeacon) return null;
     const listening = voice.phase === "recording";
     const speaking = voice.phase === "speaking";
     const thinking = voice.phase === "transcribing" || loading;
