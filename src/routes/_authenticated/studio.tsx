@@ -449,20 +449,6 @@ function StudioPage() {
     setFrassyOpenSignal((signal) => signal + 1);
   }
 
-  async function togglePreviewPlayback() {
-    const audio = audioRef.current;
-    if (!preview || !audio) {
-      setSurfaced({
-        kind: "blocked",
-        title: "No playable output yet",
-        body: "Finish a verified audio output first. Nothing was played or charged.",
-      });
-      return;
-    }
-    if (audio.paused) await audio.play();
-    else audio.pause();
-  }
-
   return (
     <SiteShell>
       <div
