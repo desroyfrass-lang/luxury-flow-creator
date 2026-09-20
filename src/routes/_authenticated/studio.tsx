@@ -471,7 +471,9 @@ function StudioPage() {
         ) : null}
 
         {/* Compact, persistent studio header: where I am, what I'm on, what it costs. */}
-        <header className="fv-studio-header sticky top-0 z-30 backdrop-blur-xl">
+        {/* Sits below the pinned site header (h-20) so nothing stacks on top of the tabs. */}
+        <header className="fv-studio-header sticky top-20 z-30 backdrop-blur-xl">
+
           <div className="mx-auto grid max-w-[1600px] grid-cols-[minmax(0,1fr)_auto] items-center gap-3 px-3 pb-2 pt-11 sm:px-5">
             <div className="flex min-w-0 items-center gap-2">
               <span className="fv-console-icon grid h-9 w-9 shrink-0 place-items-center rounded-full">
