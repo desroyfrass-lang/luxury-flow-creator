@@ -4088,6 +4088,8 @@ export type Database = {
           issue_text: string | null
           page_path: string
           page_title: string | null
+          tester_experience: string | null
+          tester_status: string | null
           user_id: string | null
         }
         Insert: {
@@ -4097,6 +4099,8 @@ export type Database = {
           issue_text?: string | null
           page_path: string
           page_title?: string | null
+          tester_experience?: string | null
+          tester_status?: string | null
           user_id?: string | null
         }
         Update: {
@@ -4106,6 +4110,8 @@ export type Database = {
           issue_text?: string | null
           page_path?: string
           page_title?: string | null
+          tester_experience?: string | null
+          tester_status?: string | null
           user_id?: string | null
         }
         Relationships: []
