@@ -1,128 +1,179 @@
-# Login & Access Recovery — Diagnosis and Plan (read-only)
+# Login & Access Recovery — Final Specification (plan only, nothing built)
 
-Legend: **[V]** verified in current code or database this turn · **[D]** from existing recovery notes · **[P]** proposal only · **[U]** could not be verified yet.
+Legend: **[V]** verified in current code or database · **[D]** from recovery notes · **[P]** proposal · **[F?]** still needs Founder approval.
+Rule of the whole workstream: **AUTHENTICATION → ROLE → PERMISSIONS → DESTINATION → EXPERIENCE.**
 
-## A. Executive diagnosis
+## Verified facts this plan rests on
 
-- **[V]** There is one sign-in lock (the private area wrapper) and one Founder lock (`requireFounderRoute`). The Founder lock covers only 4 page groups: `/control-room`, `/founder`, `/admin/*`, `/studios/*`.
-- **[V]** Several other internal pages sit behind the sign-in lock only and check "is Founder?" inside the page after it has started drawing: `/frassy`, `/global-operations`, `/payment-providers`. Any signed-in person reaches those pages; they are told "no" by the page, not stopped at the door.
-- **[V]** The database has exactly **one** role row: one `admin` (the Founder). No `tester`, `staff`, `partner`, etc. is held by anyone. Sheldon therefore has no role today and gets the plain signed-in member experience.
-- **[V]** The Founder check only asks "admin?". `super_admin` is listed in menus but is not recognised by the server check.
-- **[V]** Every sign-in, sign-up and Google return sends people to `/welcome-hall?arrival=first`, whoever they are. There is no per-role landing.
-- **[U]** The exact cause of "clicking icons opened internal areas without signing in" is not yet proven. Section G lists the three likely causes in the code. The first build step is to reproduce it, not to guess.
+- **[V]** Only one role row exists in the database: one `admin` (the Founder). Nobody holds any other role. Sheldon holds none.
+- **[V]** There are two Founder checks, and they disagree:
+  - The app's Founder lock (`checkIsAdmin` → `requireFounderRoute`) accepts **admin only**.
+  - The database treats **admin OR super_admin** as Founder level: inside `has_role` (who may look up other people's roles), inside `is_studio_staff()`, and in some policies.
+- **[V]** Some older database policies also let `staff` and `designer` write to certain tables (migration 20260722200134). Nobody holds those roles today, so there is no live exposure. It is still a hidden door.
+- **[V]** The server Founder lock sits before the page draws on only four page groups: `/control-room`, `/founder`, `/admin/*`, `/studios/*`.
+- **[V]** These pages sit behind sign-in only and decide "Founder?" inside the page after it starts drawing: `/frassy`, `/global-operations`, `/payment-providers`.
+- **[V]** These pages sit behind sign-in only, and no role check was found: `/commerce-simulation`, `/visual-review`, `/blueprints`, `/builder-hall`, `/financial-center`, `/manufacturing`, `/launch-accelerator`. Whether each is internal is **[F?]**.
+- **[V]** The sign-in page `/auth` says "Owner access", "Enter the Founder Control Room", and "First sign-up becomes the site owner" to everyone. The ownership claim itself was already removed from the server **[D, Atlas Phase 1]**, so the wording is false and misleading.
+- **[V]** Every sign-in goes to `/welcome-hall?arrival=first`, whatever the role.
+- **[V]** The private-area wrapper lets people in on a **saved browser session** if the live check errors.
+- **[V]** The menu's "is Founder" answer is cached for 60 seconds, and the cache isn't tied to which account is signed in.
 
-Plain English: the building has a front door lock and a lock on four Founder rooms. A few other staff rooms only have a "Staff only" sign on the inside wall, and there is no such thing as a "tester" badge yet.
+## 1. Final role model [P]
 
-## B. Current auth/access architecture
+| Role | Who | Stored as |
+|---|---|---|
+| Visitor | Not signed in | nothing |
+| Member / Customer | Signed in, no role | nothing (no row) |
+| Tester | Sheldon, for now | new `tester` role + allowlist of experiences |
+| Founder / Owner | Desroy | existing `admin` (super_admin folded in) |
 
-- **[V]** Sign-in page `/auth`: email+password, sign-up, Google, password reset → `/reset-password`. Accepts only safe `next=/...` values.
-- **[V]** After sign-in: a full page reload to `/welcome-hall?arrival=first&next=…`. Welcome Hall decides where to go next.
-- **[V]** Private wrapper `_authenticated/route.tsx`: runs only in the browser, calls `getUser()`, and **falls back to the saved session if that call errors**, then lets the person in. Otherwise it sends them to `/auth?next=…`.
-- **[V]** `WelcomeGate`: sends members who haven't met Frassy to `/onboarding`. If the check fails, it **lets them in** (by design).
-- **[V]** Founder lock `requireFounderRoute` → server `checkIsAdmin` → `has_role(uid,'admin')`. If the answer isn't "yes", it redirects to `/welcome-hall`. This is correct and server-verified.
-- **[V]** Menus: `site-shell.tsx` uses `useIsAdmin` for visibility, and `accountMenuGroups(roles)` builds the profile menu. This only hides links; it does not lock anything.
-- **[V]** Teleporter baseline lives in `src/lib/founder/world-teleporter.ts`, `teleporter-audit*`, `audit-registry.ts`. Not to be touched.
+- Admin Workspace work: done by the Founder only, for now. Admin = Staff = Super Admin, per your ruling; no separate job is proven in code.
+- Builder = Partner: one business identity, not an access power. Deferred.
+- Moderator: kept as a word in the list; given no powers now.
 
-## C. Current role inventory (mapped to real jobs)
-
-| Role string | Held by anyone? [V] | Real job in code | Verdict [P] |
-|---|---|---|---|
-| admin | 1 (Founder) | The only role the server checks for Founder power | Keep as the Founder/Owner role |
-| super_admin | 0 | Menu label only; server ignores it | Redundant — fold into Founder |
-| staff | 0 | Menu shows "Approvals" only | Not needed now |
-| moderator | 0 | Same as staff today | Keep in type for future For Us / Kids moderation; do not use now |
-| designer / affiliate / partner / ambassador | 0 | Business/workspace roles (`BUSINESS_ROLES`), Money Moves, Frass Hill menu | Business identity, not access power — review later |
-| customer | 0 | Default; not stored | Same as "signed in, no role" |
-| tester | does not exist | — | Add (the only new role) |
-
-## D. Proposed minimal role model [P]
-
-1. **Visitor** — not signed in. Public shop/world pages only.
-2. **Member** — signed in, no role. Their own Daily, Workshop, Vault, archive. Nothing internal.
-3. **Tester** — Member, plus access to the specific commissioned experiences named on a Founder-owned list. No Founder or Admin powers.
-4. **Founder/Owner** — existing `admin`. Everything.
-
-No other roles are added. `super_admin`, `staff`, and `moderator` stay in the database list but are not given any power in this workstream.
-
-## E. Sheldon Tester access matrix [P — needs your confirmation]
+## 2. Sheldon Tester permission matrix [P]
 
 | Area | Tester |
 |---|---|
-| Public site, shop, worlds | Yes |
-| Welcome Hall, onboarding, own Daily, Workshop, Vault | Yes (as a member, own data only) |
-| Commissioned experiences to test (e.g. FV Studios `/studio`) | Yes — only items on the Tester list |
-| Leave feedback (existing page feedback) | Yes |
-| Founder Control Room, Founder Hall, `/frassy` command centre, Teleporter | No |
-| `/admin/*`, Roles & Access, Frassy Studios `/studios/*` | No |
-| Global Operations, Payment Providers, Financial audit, other people's data | No |
-| Real money/payment actions | No (test mode only, if listed) |
+| Public site, shop, worlds, checkout (test mode only) | Yes |
+| Sign-up, Welcome Hall, Frassy interview, onboarding | Yes |
+| Start My Day / Daily, Workshop, own Vault | Yes, own data only, when on allowlist |
+| Commissioned experiences (e.g. FV Studios `/studio`) | Only items on allowlist |
+| Page feedback / voice feedback | Yes |
+| Founder Hall, Founder Control Room, Teleporter | No |
+| Admin Workspace (`/admin/*`), Roles & Access, Frassy Studios `/studios/*` | No |
+| `/frassy` command centre, Global Operations, Payment Providers, financial audit/center internals | No |
+| Other people's data, Founder notes, real payouts | No |
 
-## F. Route/door audit findings
+The allowlist is a short list of experience names. It is owned by the Founder and changed only through the existing Roles & Access page.
 
-- **[V] Locked properly (server, before drawing):** `/control-room`, `/founder`, `/admin` and all 25 `/admin.*` pages, `/studios` and all 21 `/studios.*` pages.
-- **[V] Sign-in lock only, Founder check inside the page:** `/frassy`, `/global-operations`, `/payment-providers`.
-- **[V] Sign-in lock only, no role check found by search:** `/commerce-simulation`, `/visual-review`, `/blueprints`, `/builder-hall`, `/financial-center`, `/manufacturing`, `/launch-accelerator`. [U] Whether each one is member-safe or internal needs a page-by-page read.
-- **[V] Redirects:** `/command` → `/control-room` (still Founder-locked); `/room` → `/workshop` or `/daily`. Safe.
-- **[V] Public top-level pages that also host Founder bits:** `welcome-hall.tsx`, `gateway.tsx`, and components such as the teleport return chip and simulation bar. [U] Whether these reveal Founder controls to non-Founders needs a check.
-- **[V]** Server functions: `listUsersWithRoles`, `grantRole`, `revokeRole`, and `listPageFeedback` check admin on the server. [U] The server functions behind the three "inside-the-page" pages have not all been read yet.
+## 3. Member/Customer flow [P]
 
-## G. Likely root causes of unauthorized/random access (ranked, not yet proven)
+```text
+/auth (plain "Sign in / Create account", no owner wording)
+  -> Welcome Hall (first arrival or returning)
+  -> Frassy interview (if not yet met)  -> Start My Day / Daily
+  -> one primary action per screen; Frassy advances to the next
+```
 
-1. **[V mechanism]** Pages with a check inside the page draw their frame first and then decide. With a slow or failed check you can briefly see internal layout, or all of it if the check errors.
-2. **[V mechanism]** The private wrapper trusts the **saved session in the browser** when the live check errors. An expired or stale session can pass the wrapper. Founder rooms are still protected by the server check, but sign-in-only pages are not.
-3. **[V mechanism]** Menu visibility uses cached "is admin" answers (60-second cache keyed only on "has session"). After switching accounts on the same browser, Founder icons can show for up to a minute. Server-locked rooms still bounce the visitor; sign-in-only rooms do not.
-4. **[U]** Public pages rendering Founder chips or panels based on browser state.
+A member never sees an internal door. Typing an internal address sends them to Welcome Hall **before** anything internal draws.
 
-Build step 1 reproduces each one with a signed-out browser, a member account, and account switching, and records which one Sheldon actually hit.
+## 4. Founder flow [P]
 
-## H. Files/objects likely touched in a future build [P]
+Same sign-in page. Once the server confirms Founder, Welcome Hall offers Founder Hall as the next action. It is not the default for everyone. Founder Control Room and the Teleporter stay behind the server Founder lock. Ownership is granted only by the Founder, inside Roles & Access. It is never claimed at sign-up.
 
-- DB migration: add `tester` to `app_role`. Add a small Founder-managed `tester_access` list (experience keys), with grants and RLS. Optionally treat `super_admin` as Founder inside `has_role` checks.
-- `src/lib/roles.ts`: add `tester` to the role list.
-- `src/lib/founder/route-guard.ts`: reuse as is. Add a sibling `requireTesterOrFounderRoute` that uses the same pattern.
-- New `checkAccess` server function next to `src/lib/admin.functions.ts`.
-- Add a server lock before drawing (`beforeLoad`) to: `frassy.tsx`, `global-operations.tsx`, `payment-providers.tsx`, plus any page from F that is confirmed internal.
-- `src/routes/_authenticated/route.tsx` is integration-managed. Only discuss the saved-session fallback; don't rewrite it without your approval.
-- `src/hooks/use-is-admin.ts` and `use-my-roles.ts`: key the cache on the user id and clear it on sign-out.
-- `src/lib/navigation/account-menu.ts` and `use-my-roles.ts`: add a "Testing" group. Remove the unused `super_admin`/`staff` branches.
-- `src/routes/auth.tsx` / Welcome Hall: land Testers on a "What to test" list. Reuse the existing Welcome Hall; no new page.
-- `src/lib/navigation/hierarchy.ts`: mark audience for tester items.
-- Reuse: `requireFounderRoute`, `has_role`, `accountMenuGroups`, `WelcomeGate`, `secure-sign-out.tsx`, the Roles & Access page (`admin.roles.tsx`) for granting Tester.
+## 5. Exact auth → authorization sequence [P]
 
-## I. Verification matrix (after build)
+1. **Authentication:** the live user check. If it fails, the person counts as signed out. A saved browser session alone never unlocks an internal page. **[F?]** Keep the saved-session fallback for member pages only?
+2. **Role:** a single server answer from a new `getMyAccess()` function returns `{ founder, tester, testerAllowlist }`. Founder = admin or super_admin, the same rule the database already uses.
+3. **Permissions:** each protected page declares what it needs: `founder`, `tester:<experience>`, or `member`.
+4. **Destination:** decided in the page's before-drawing step (`beforeLoad`). A refusal sends the person to Welcome Hall.
+5. **Experience:** only then does the page draw. Menus are built from the same answer, and they are for display only.
 
-Personas: Visitor, Member, Tester (Sheldon test account), Founder.
-For each persona, test every locked and sign-in-only page from F:
+## 6. Route/door protection rules [P]
 
-- Direct URL typed in the address bar.
-- Hard refresh on the page.
-- Deep link with query values (for example `?next=`, `?daily=1`).
-- Click every nav/menu icon on desktop 1280 and on mobile 390.
-- Sign out, then press Back.
-- Expired session (clear the token, keep the page open).
-- Switch from the Founder account to the Tester account in the same browser.
+- Every internal page gets a before-drawing server check. Any check inside the page itself is removed or kept only as a second layer.
+- The allowed guards are exactly two, both built on `requireFounderRoute`: `requireFounderRoute` and `requireTesterExperience(key)`. No ad-hoc checks inside pages.
+- Every server function behind an internal page repeats the server check.
+- Redirects and aliases (`/command`, `/admin/`, `/room`) must land on a guarded page. They already do **[V]**.
+- Menus and icons come from one registry (`hierarchy.ts` / `account-menu.ts`) and are filtered by the same access answer.
+- The access cache is tied to the user id, and it is cleared on sign-out and on account switch.
+- Old database policies that name `staff` or `designer` are either rewritten to the single Founder rule or explicitly kept **[F?]**.
 
-Also call the related server functions directly as each persona and expect a refusal where access is denied. Expected outcomes follow table E. Pass means a redirect happens **before** any internal content draws.
+## 7. Bypass reproduction and test plan (done first, no code changes)
 
-## J. Safe implementation sequence [P]
+Personas: signed out, Member test account, Founder. Tester is added after step 4 of section 10.
+For each page from the verified list, on desktop 1280 and mobile 390:
 
-1. Reproduce and prove the root cause (no code changes). Report back.
-2. Lock the confirmed internal pages with the existing server Founder lock. Stop for your review.
-3. Fix the menu cache on account switch and sign-out. Stop.
-4. Add the Tester role, the Tester list, and Founder granting through the existing Roles & Access page. Stop.
-5. Add Tester landing and the "Testing" menu group. Stop.
-6. Run the full matrix in I. Report.
+- Click every icon and menu item.
+- Type the address directly.
+- Hard refresh.
+- Deep link with `?next=` and similar values.
+- Press Back after sign-out.
+- Expire the session with the page open.
+- Switch accounts from Founder to Member in the same browser within 60 seconds.
+- Load a public page that shows Founder chips.
 
-Launch blockers: steps 1–2 (the inside-the-page Founder checks) and step 4 (so Sheldon can test without Founder power). Post-launch cleanup: folding `super_admin`/`staff`, reviewing business roles, and future moderator work.
+Record screenshots and network calls. Name which cause was actually hit:
+- (a) the check inside the page,
+- (b) the saved-session fallback,
+- (c) the stale "is Founder" cache,
+- (d) a public page showing Founder bits,
+- (e) something else.
 
-## K. Not touched in this workstream
+Report the result before any fix.
 
-The 201-card Teleporter and its audit, the payment/allocation ledger, Stripe webhook and test bridge, FV Studios / Frassy presentation, A1 / Enhance Phone Recording, `has_role` executability, integration-managed Supabase files, the Frassy AI backend, the Music Engine, and deployment.
+## 8. Legacy role mapping [P]
 
-## L. Questions before Build mode
+| String | Evidence | Decision |
+|---|---|---|
+| admin | Founder lock, 1 holder | Keep = Founder |
+| super_admin | Database treats it as admin; app doesn't; 0 holders | Consolidate into Founder (app accepts both; stop granting it) |
+| staff | Menu "Approvals"; old policies; 0 holders | Consolidate into Founder; deprecate |
+| moderator | Menu only; 0 holders | Defer (future community/Kids) |
+| partner | Business menu, Money Moves; 0 holders | Builder = Partner; defer as business identity |
+| designer | Merch studio link; old write policies; 0 holders | Legacy; defer, remove write power [F?] |
+| affiliate / ambassador | Business menu labels, "Soon"; 0 holders | Legacy; defer |
+| customer | Never stored | Same as Member; stop using |
+| tester | Missing | Add |
 
-1. Which exact experiences should Sheldon test first? (FV Studios `/studio` only, or also Daily/Workshop, For Us, Kids, shop checkout in test mode?)
-2. Should the private-area wrapper stop trusting the saved session when the live check fails? This makes access stricter but may sign people out during network blips.
-3. Is `super_admin` meant to be anyone other than you? If not, may it be removed from menus?
-4. Should Testers see a visible "Tester" badge, and should their feedback go to a separate Founder inbox?
-5. Pages like `/commerce-simulation`, `/visual-review`, `/blueprints`, `/builder-hall`: are these internal (Founder-only) or member pages?
+The enum values themselves stay in the database, since removing them is risky and they are unused. Deprecation happens in code and grants.
+
+## 9. Files and data likely to change [P]
+
+- **Database:**
+  - Add `tester` to `app_role`.
+  - New `tester_access(user_id, experience_key)` table with grants and RLS (Founder writes; the Tester reads their own rows).
+  - Rewrite the staff/designer policies **[F?]**.
+- `src/lib/roles.ts`: add `tester`.
+- `src/lib/admin.functions.ts`: `checkIsAdmin` accepts admin or super_admin. Add `getMyAccess`.
+- `src/lib/founder/route-guard.ts`: add `requireTesterExperience`.
+- Before-drawing guards on `frassy.tsx`, `global-operations.tsx`, `payment-providers.tsx`, and any page from the confirmed-internal list.
+- `src/hooks/use-is-admin.ts`, `use-my-roles.ts`, `use-workspace-roles.ts`: tie the cache to the user; clear it on sign-out.
+- `src/lib/navigation/account-menu.ts`, `hierarchy.ts`, `site-shell.tsx`: add a "Testing" group; remove the staff/super_admin branches.
+- `src/routes/auth.tsx`: neutral sign-in wording only.
+- `src/routes/_authenticated/workspace.tsx`: drop the ROLE_META labels for consolidated roles.
+- Welcome Hall continuation (`src/lib/welcome-hall/continuation.ts`): role-aware next action.
+- `src/routes/_authenticated/admin.roles.tsx`: grant/revoke Tester and edit the allowlist (reuse the existing page).
+- `src/routes/_authenticated/route.tsx`: integration-managed. Change it only if the section 5 **[F?]** is approved.
+
+## 10. Implementation sequence (stop for approval after each)
+
+1. Reproduce the bypass (section 7) and report.
+2. Unify the Founder rule (admin or super_admin) and add before-drawing guards to the confirmed internal pages.
+3. Fix the access cache and sign-out/account-switch clearing.
+4. Neutral `/auth` wording.
+5. Tester role, allowlist table, and granting in Roles & Access.
+6. Tester destination and "Testing" menu group.
+7. Old policy cleanup **[F?]**.
+8. Full acceptance run.
+
+## 11. Acceptance criteria
+
+- Signed out: every internal address goes to sign-in or Welcome Hall with no internal content drawn, including on refresh and deep links.
+- Member: no internal door visible or reachable; own Daily/Workshop works.
+- Tester: only allowlisted experiences plus the member journey. Every Founder/Admin address refuses, and so do their server functions.
+- Founder: everything works; the 201-card Teleporter audit still passes unchanged.
+- Account switch: no Founder icons remain after switching.
+- Back after sign-out: no protected content.
+- `/auth` has no owner wording.
+- Tests, typecheck, and build pass. Nothing is deployed without approval.
+
+## 12. Non-goals
+
+- The Teleporter, 201-card baseline and its audit.
+- Payments, allocations, Stripe, and the ledger.
+- FV Studios / Frassy presentation, A1 / Enhance Phone Recording, and the Music Engine.
+- The Frassy AI backend and integration-managed auth files (unless approved).
+- Moderator powers and business-role redesign.
+- New pages or duplicate routes. Removing enum values. Deployment.
+
+## Founder decisions still needed
+
+1. Sheldon's first allowlist (FV Studios only? Daily/Workshop? For Us? Kids? test-mode checkout?).
+2. Remove the saved-session fallback for internal pages only, or everywhere?
+3. Which of `/commerce-simulation`, `/visual-review`, `/blueprints`, `/builder-hall`, `/financial-center`, `/manufacturing`, `/launch-accelerator` are Founder-only?
+4. Rewrite the old staff/designer database write permissions now (recommended), or later?
+5. Should Tester feedback go to a separate Founder inbox, with a visible "Tester" badge?
+
+Note: roadmap entry for this workstream will be added when Build mode starts (plan mode allows editing only this plan).
