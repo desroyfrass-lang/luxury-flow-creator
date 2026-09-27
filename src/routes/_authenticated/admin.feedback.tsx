@@ -83,17 +83,22 @@ function FeedbackAdminPage() {
                   )}
                 </div>
                 <div className="flex items-center gap-2">
-                  {item.helpful === true && (
+                  {item.tester_status && (
+                    <span className="rounded-sm border border-[color:var(--gold)]/50 px-2.5 py-1 text-[10px] uppercase tracking-[0.2em] text-[color:var(--gold)]">
+                      Tester · {item.tester_status === "works" ? "Works" : item.tester_status === "problem" ? "Problem" : "Confused"}
+                    </span>
+                  )}
+                  {!item.tester_status && item.helpful === true && (
                     <span className="inline-flex items-center gap-1 rounded-sm bg-emerald-500/10 px-2.5 py-1 text-[10px] uppercase tracking-[0.2em] text-emerald-400">
                       <ThumbsUp className="h-3 w-3" /> Helpful
                     </span>
                   )}
-                  {item.helpful === false && (
+                  {!item.tester_status && item.helpful === false && (
                     <span className="inline-flex items-center gap-1 rounded-sm bg-red-500/10 px-2.5 py-1 text-[10px] uppercase tracking-[0.2em] text-red-400">
                       <ThumbsDown className="h-3 w-3" /> Not helpful
                     </span>
                   )}
-                  {item.helpful === null && (
+                  {!item.tester_status && item.helpful === null && (
                     <span className="inline-flex items-center gap-1 rounded-sm bg-white/5 px-2.5 py-1 text-[10px] uppercase tracking-[0.2em] text-muted-foreground">
                       <MessageSquare className="h-3 w-3" /> Issue only
                     </span>
