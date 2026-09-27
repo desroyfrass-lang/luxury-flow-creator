@@ -14,4 +14,4 @@
 - [x] Functional reality pass: fix Studio monitor collision, audit every visible control, remove or disable dead controls, validate all specified viewports and interactions.
 - [x] Clean the Studio-only Frassy conversation, remove repeated explanation and playback controls, and keep blocker replies action-oriented.
 - [x] Refine Studio Frassy replies with one closed response-options menu, restore existing explanation/hearing capabilities, and repair collision and duplicate transcript rendering.
-- [ ] Login & Access Recovery Step 1 (approved): reproduce access bypass + inventory every Founder/internal route's live server check. Report only; no repairs.
+- [x] Login & Access Recovery Step 1 (approved): reproduce access bypass + inventory every Founder/internal route's live server check. Report only; no repairs.
