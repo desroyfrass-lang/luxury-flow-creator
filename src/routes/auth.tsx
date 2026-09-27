@@ -81,15 +81,15 @@ function AuthPage() {
       <div className="mx-auto max-w-md px-6 py-24">
         <div className="mb-10 text-center">
           <div className="text-[11px] uppercase tracking-[0.3em] text-[color:var(--gold)]">
-            Owner access
+            Frass account
           </div>
           <h1 className="mt-3 font-display text-5xl">
-            {mode === "signin" ? "Sign in" : "Create owner account"}
+            {mode === "signin" ? "Sign in" : "Create your account"}
           </h1>
           <p className="mt-3 text-sm text-muted-foreground">
             {mode === "signin"
-              ? "Enter the Founder Control Room."
-              : "First sign-up becomes the site owner."}
+              ? "Good to see you again. One account for all of Frass."
+              : "One account for Frass Kicks and Frass Hill."}
           </p>
         </div>
 
@@ -136,7 +136,7 @@ function AuthPage() {
         <div className="mt-6 space-y-3 text-center text-xs text-muted-foreground">
           {mode === "signin" ? (
             <button onClick={() => setMode("signup")} className="hover:text-[color:var(--gold)] underline">
-              First time? Create the owner account
+              First time? Create your account
             </button>
           ) : (
             <button onClick={() => setMode("signin")} className="hover:text-[color:var(--gold)] underline">
