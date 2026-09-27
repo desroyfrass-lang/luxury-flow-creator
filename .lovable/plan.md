@@ -157,8 +157,12 @@ Report before any repair.
 - `src/lib/roles.ts`: add `tester`.
 - `src/lib/admin.functions.ts`: `checkIsAdmin` accepts admin or super_admin; add `getMyAccess`.
 - `src/lib/founder/route-guard.ts`: add `requireTesterExperience`.
-- Before-drawing guards: `frassy.tsx`, `global-operations.tsx`, `payment-providers.tsx`, `commerce-simulation.tsx`, `visual-review.tsx`, `blueprints.tsx`. Founder-level parts of `financial-center.tsx`, per the split in section 6.
-- `src/hooks/use-is-admin.ts`, `use-my-roles.ts`, `use-workspace-roles.ts`: tie the cache to the user; clear it on sign-out.
+- Live Founder guard (live sign-in + live server role check, no fallback) on every Founder/internal destination confirmed by the step-1 inventory, including `frassy.tsx`, `global-operations.tsx`, `payment-providers.tsx`, `commerce-simulation.tsx`, `visual-review.tsx`, `blueprints.tsx`, `control-room.tsx`, `admin*.tsx`, `founder*.tsx`, `studios*.tsx`.
+- `financial-center.tsx` / `src/lib/finance/financial-center.ts`: remove Business, Commerce Health, owner rows and the Payment Provider link from the member page; truthful empty states instead of $0 "available" placeholders; member-submitted receipts labelled MEMBER SUBMITTED — PENDING VERIFICATION. Presentation/access only — no money machinery changes.
+- `src/hooks/use-is-admin.ts`, `use-my-roles.ts`, `use-workspace-roles.ts`: key role caches by user id; clear on sign-out and account change.
+- `src/lib/security/sensitive-actions.ts`: tie identity re-confirmation to the user id; clear on account change.
+- `src/routes/__root.tsx`: one app-wide account-change listener that refreshes the router and clears the previous user's cache.
+- `src/routes/fresh-start.tsx`: route sign-out through `useSecureSignOut` (`src/components/secure-sign-out.tsx`).
 - `src/lib/navigation/account-menu.ts`, `hierarchy.ts`, `site-shell.tsx`: add a "Testing" group and a visible Tester badge; remove the staff/super_admin branches.
 - `src/routes/auth.tsx`: neutral sign-in wording only.
 - `src/routes/_authenticated/workspace.tsx`: drop the labels for consolidated roles.
@@ -167,30 +171,33 @@ Report before any repair.
 - **[FD]** Feedback reuse, with no new feedback system:
   - `src/components/page-feedback.tsx`, `src/lib/feedback.functions.ts`, `src/lib/launch-feedback*.ts`, the voice feedback flow
   - existing `/admin/feedback` and `/admin/launch-feedback`, extended with a Founder-only Tester view
-- `src/routes/_authenticated/route.tsx`: integration-managed. Changed only if separately approved to enforce section 5.
+- **Not changed:** `src/routes/_authenticated/route.tsx` (integration-managed; not required for this architecture).
 
 ## 10. Implementation sequence (stop and report for approval after each)
 
-1. Reproduce the bypass (section 7) and report. **Not authorized by this update.**
-2. Unify the Founder rule (admin or super_admin) and add before-drawing guards to the Founder-only pages.
-3. Fix the access cache and clear it on sign-out and account switch.
-4. Neutral `/auth` wording.
-5. Tester role, allowlist table, and granting in Roles & Access.
-6. Tester destination, "Testing" menu group, Tester badge, and a Founder-only Tester feedback view (reusing existing feedback).
-7. Remove the legacy staff/designer write permissions **[FD]**.
-8. Full acceptance run.
+1. Reproduce the bypass (section 7) **and inventory every Founder/internal route, proving which already has a live server check.** Report. No repairs.
+2. Unify the Founder rule (admin or super_admin) and add the live Founder guard to every Founder/internal destination from the inventory.
+3. Session hygiene: user-id-keyed role cache, user-tied identity re-confirmation, app-wide account-change refresh, all sign-outs through secure sign-out (including `fresh-start`).
+4. Financial Center access split and truthful labelling (no money machinery changes).
+5. Neutral `/auth` wording.
+6. Tester role, allowlist table, and granting in Roles & Access.
+7. Tester destination, "Testing" menu group, Tester badge, and a Founder-only Tester feedback view (reusing existing feedback).
+8. Remove the legacy staff/designer write permissions **[FD]**.
+9. Full acceptance run.
 
 ## 11. Acceptance criteria
 
 - Signed out: every internal address goes to sign-in or Welcome Hall with no internal content drawn, including after refresh and from deep links.
-- Member: no internal door is visible or reachable. Their own Daily and Workshop work.
-- Tester: sees only the allowlisted experiences plus the member journey, and sees the Tester badge. Every Founder/Admin address refuses, and so do its server functions. Checkout is test mode only.
+- Member: no internal door is visible or reachable. Their own Daily, Workshop, Financial Center, Builder Hall and Launch Accelerator work with own data only.
+- Tester: sees only the allowlisted experiences plus the member journey, and sees the Tester badge. No Financial Center, Builder Hall, Manufacturing or Launch Accelerator in the initial scope. Every Founder/Admin address refuses, and so do its server functions. Checkout is test mode only.
 - Tester feedback: records page context, appears only in the Founder Tester view, and can be marked for retest.
 - Founder: everything works. The 201-card Teleporter audit still passes unchanged.
-- No saved session alone opens a privileged page.
-- Account switch leaves no Founder icons behind. Back after sign-out shows no protected content.
+- No saved session alone opens a privileged page; with the live check failing, privileged content stays hidden.
+- Founder → Member switch within 60 seconds: no Founder icons, views or skipped identity re-confirmation remain. Back after sign-out shows no protected content.
+- Financial Center: no Founder administration on the member page; no $0 shown as available money; member-submitted receipts never counted or shown as verified, available, settled or paid.
 - `/auth` has no owner wording.
 - No legacy staff/designer write permission remains. The enum values remain.
+- Integration-managed wrapper unchanged.
 - Tests, typecheck, and build pass. Nothing is deployed without approval.
 
 ## 12. Non-goals
