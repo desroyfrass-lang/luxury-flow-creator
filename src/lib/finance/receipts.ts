@@ -348,7 +348,7 @@ export function receiptBreakdown(receipt: Receipt): ReceiptLine[] {
   const c = receipt.currency;
   const lines: ReceiptLine[] = [
     {
-      label: receipt.direction === "out" ? "Amount" : "Amount received",
+      label: receipt.direction === "out" ? "Amount" : receipt.status === "pending" ? "Amount recorded" : "Amount received",
       value: money(receipt.gross, c),
       kind: "gross",
     },
@@ -373,7 +373,7 @@ export function receiptBreakdown(receipt: Receipt): ReceiptLine[] {
   }
 
   lines.push({
-    label: receipt.direction === "out" ? "Net out" : "Net to you",
+    label: receipt.direction === "out" ? "Net out" : receipt.status === "pending" ? "Net recorded (not available)" : "Net to you",
     value: money(receipt.net, c),
     kind: "net",
   });
