@@ -285,7 +285,7 @@ export type ReceiptStatus = "pending" | "settled" | "refunded" | "withdrawn" | "
 export const RECEIPT_STATUS: Record<ReceiptStatus, { label: string; plain: string; tone: string }> = {
   pending: {
     label: "Pending",
-    plain: "The payment has been made but hasn't finished clearing yet. It can't be withdrawn until it settles.",
+    plain: "This is a pending record, not proof of payment or money available to withdraw. Check its source and payment verification separately.",
     tone: "amber",
   },
   settled: {
@@ -348,7 +348,7 @@ export function receiptBreakdown(receipt: Receipt): ReceiptLine[] {
   const c = receipt.currency;
   const lines: ReceiptLine[] = [
     {
-      label: receipt.direction === "out" ? "Amount" : "Amount received",
+      label: receipt.direction === "out" ? "Amount" : receipt.status === "pending" ? "Amount recorded" : "Amount received",
       value: money(receipt.gross, c),
       kind: "gross",
     },
@@ -373,7 +373,7 @@ export function receiptBreakdown(receipt: Receipt): ReceiptLine[] {
   }
 
   lines.push({
-    label: receipt.direction === "out" ? "Net out" : "Net to you",
+    label: receipt.direction === "out" ? "Net out" : receipt.status === "pending" ? "Net recorded (not available)" : "Net to you",
     value: money(receipt.net, c),
     kind: "net",
   });
@@ -395,18 +395,19 @@ export function explainReceipt(receipt: Receipt): string {
     parts.push(`The full amount was ${money(receipt.gross, c)}.`);
     if (receipt.platformAllocation > 0) {
       parts.push(
-        `Frass kept ${money(receipt.platformAllocation, c)} — the constitutional ${PLATFORM_ALLOCATION.total}% platform allocation, which already includes the Founder and Co-Founder share.`,
+        `The recorded platform allocation is ${money(receipt.platformAllocation, c)}. This is not proof that payment has cleared.`,
       );
     }
     if (receipt.processingFee > 0) {
       parts.push(`The card processor charged ${money(receipt.processingFee, c)} to move the money.`);
     }
-    parts.push(`That left ${money(receipt.net, c)} for you.`);
+    parts.push(`The recorded net amount is ${money(receipt.net, c)}; check its payment status before treating it as received money.`);
   } else {
-    parts.push(`${money(receipt.gross, c)} left your balance.`);
+    parts.push(`${money(receipt.gross, c)} was recorded as outgoing; check its status before treating it as a completed transfer.`);
   }
 
   if (receipt.verification) parts.push(receipt.verification.note);
+  else if (receipt.status === "pending") parts.push(receipt.derived ? "Recorded — pending verification." : "Member submitted — pending verification.");
   parts.push(RECEIPT_STATUS[receipt.status].plain);
   return parts.join(" ");
 }

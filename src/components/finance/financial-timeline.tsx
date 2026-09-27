@@ -10,8 +10,6 @@ import {
   receiptBreakdown,
   receiptKind,
   receiptsCsv,
-  reconcile,
-  reconciliationStatement,
   RECEIPT_KINDS,
   RECEIPT_STATUS,
   TIMELINE_FILTERS,
@@ -29,6 +27,12 @@ const toneClass: Record<string, string> = {
   zinc: "border-white/20 text-muted-foreground",
 };
 
+function paymentLabel(receipt: Receipt): string {
+  if (receipt.verification) return receipt.verification.label;
+  if (receipt.status === "pending") return receipt.derived ? "Recorded — pending verification" : "Member submitted — pending verification";
+  return RECEIPT_STATUS[receipt.status].label;
+}
+
 export function ReceiptDetail({ receipt }: { receipt: Receipt }) {
   const kind = receiptKind(receipt.kind);
   const lines = receiptBreakdown(receipt);
@@ -43,6 +47,7 @@ export function ReceiptDetail({ receipt }: { receipt: Receipt }) {
       <p className="mt-1 text-sm font-semibold">{receipt.title}</p>
       {receipt.counterparty && <p className="text-xs text-muted-foreground">With {receipt.counterparty}</p>}
 
+      <p className="mt-2 text-xs text-muted-foreground">{paymentLabel(receipt)}{receipt.status === "pending" ? " · Not available to withdraw" : ""}</p>
       <dl className="mt-3 space-y-1.5 text-sm">
         {lines.map((l) => (
           <div
@@ -74,7 +79,7 @@ export function ReceiptDetail({ receipt }: { receipt: Receipt }) {
 function answer(question: string, receipts: Receipt[]): string {
   const q = question.trim().toLowerCase();
   if (!q) return "";
-  const t = reconcile(receipts);
+  const currency = receipts[0]?.currency ?? "USD";
 
   const monthly = receipts.filter(
     (r) => new Date(r.occurredAt).getMonth() === new Date().getMonth() && new Date(r.occurredAt).getFullYear() === new Date().getFullYear(),
@@ -83,41 +88,41 @@ function answer(question: string, receipts: Receipt[]): string {
   if (q.includes("pending")) {
     const p = receipts.filter((r) => r.status === "pending");
     return p.length
-      ? `You have ${p.length} pending receipt${p.length === 1 ? "" : "s"} worth ${money(t.pending, t.currency)}. ${RECEIPT_STATUS.pending.plain}`
-      : "Nothing is pending right now — everything on your account has settled.";
+      ? `You have ${p.length} pending record${p.length === 1 ? "" : "s"}. These may be member-submitted, seller-marked or provider-verified; none is settled or available here.`
+      : "No pending records appear in this receipt view.";
   }
   if (q.includes("gift")) {
     const g = monthly.filter((r) => r.kind === "gift_received");
     const sum = g.reduce((s, r) => s + r.net, 0);
-    return `${g.length} gift${g.length === 1 ? "" : "s"} this month, ${money(sum, t.currency)} after the constitutional allocation.`;
+    return `${g.length} recorded gift${g.length === 1 ? "" : "s"} this month, ${money(sum, currency)} after recorded deductions. Check each payment state before treating it as received money.`;
   }
   if (q.includes("quick sell") || q.includes("quicksell")) {
     const s = receipts.filter((r) => r.kind === "quick_sell");
-    return `Quick Sell has brought in ${money(
+    return `Quick Sell has ${money(
       s.reduce((a, r) => a + r.net, 0),
-      t.currency,
-    )} across ${s.length} sale${s.length === 1 ? "" : "s"}.`;
+      currency,
+    )} recorded across ${s.length} sale${s.length === 1 ? "" : "s"}. Recorded is not verified or settled.`;
   }
   if (q.includes("withdraw")) {
     const w = receipts.filter((r) => r.kind === "withdrawal");
     return w.length
-      ? `${w.length} withdrawal${w.length === 1 ? "" : "s"} totalling ${money(t.withdrawn, t.currency)}. A withdrawal moves money you already own out to your own bank — it is not a fee.`
-      : "You haven't withdrawn anything yet. Withdrawals move available money to your own bank account.";
+      ? `${w.length} withdrawal record${w.length === 1 ? "" : "s"} appear in your history. Check each record's status; this view does not confirm a bank payout.`
+      : "No withdrawal records appear here. This page cannot initiate a payout.";
   }
   if (q.includes("affiliate") || q.includes("commission")) {
     const c = receipts.filter((r) => r.kind === "affiliate_commission");
-    return `Affiliate commission so far: ${money(
+    return `Recorded affiliate commission: ${money(
       c.reduce((a, r) => a + r.net, 0),
-      t.currency,
-    )} across ${c.length} attributed order${c.length === 1 ? "" : "s"}.`;
+      currency,
+    )} across ${c.length} attributed order${c.length === 1 ? "" : "s"}. Check each status before treating it as paid.`;
   }
   if (q.includes("balance") || q.includes("where") || q.includes("came from") || q.includes("explain")) {
     const latest = receipts[0];
     return latest
-      ? `${reconciliationStatement(t)} Your most recent movement: ${explainReceipt(latest)}`
-      : reconciliationStatement(t);
+      ? `Your most recent record: ${explainReceipt(latest)} This receipt view does not confirm a withdrawable balance.`
+      : "No receipts are recorded yet. A withdrawable balance cannot be confirmed here.";
   }
-  return `${reconciliationStatement(t)} Ask me about gifts, Quick Sell, affiliate commission, pending money or withdrawals and I'll break it down.`;
+  return "Ask me about your recorded gifts, Quick Sell, affiliate commissions, pending records or withdrawals. A record does not confirm money is available.";
 }
 
 export function FinancialTimeline({ receipts }: { receipts: Receipt[] }) {
@@ -133,8 +138,8 @@ export function FinancialTimeline({ receipts }: { receipts: Receipt[] }) {
     () => filterReceipts(receipts, { filter, range, kind: kind || null, query }),
     [receipts, filter, range, kind, query],
   );
-  const totals = reconcile(rows);
   const months = groupByMonth(rows);
+  const currency = rows[0]?.currency ?? "USD";
   const kindsPresent = useMemo(
     () => RECEIPT_KINDS.filter((k) => receipts.some((r) => r.kind === k.id)),
     [receipts],
@@ -152,23 +157,8 @@ export function FinancialTimeline({ receipts }: { receipts: Receipt[] }) {
 
   return (
     <div className="space-y-5">
-      <div className="grid gap-3 sm:grid-cols-4">
-        {[
-          { label: "Available", value: totals.available, note: "Yours to withdraw now." },
-          { label: "Pending", value: totals.pending, note: "Still clearing." },
-          { label: "Money in", value: totals.lifetimeIn, note: "Net received." },
-          { label: "Money out", value: totals.lifetimeOut, note: "Sent, refunded or withdrawn." },
-        ].map((c) => (
-          <div key={c.label} className="rounded-xl border border-border/60 bg-background/60 p-4">
-            <p className="text-[10px] uppercase tracking-[0.22em] text-muted-foreground">{c.label}</p>
-            <p className="mt-1 text-xl font-black tabular-nums">{money(c.value, totals.currency)}</p>
-            <p className="text-[11px] text-muted-foreground">{c.note}</p>
-          </div>
-        ))}
-      </div>
-
       <p className="text-xs leading-relaxed text-muted-foreground">
-        <strong>Reconciliation:</strong> {reconciliationStatement(totals)}
+        Receipts show recorded activity and its payment checks. No withdrawable balance is confirmed on this page.
       </p>
 
       <div className="flex flex-wrap items-center gap-2">
@@ -266,13 +256,12 @@ export function FinancialTimeline({ receipts }: { receipts: Receipt[] }) {
                 <h3 className="text-xs uppercase tracking-[0.22em] text-muted-foreground">{m.month}</h3>
                 <span className="text-xs tabular-nums text-muted-foreground">
                   {m.net >= 0 ? "+" : "−"}
-                  {money(Math.abs(m.net), totals.currency)}
+                   {money(Math.abs(m.net), currency)} recorded
                 </span>
               </header>
               <ul className="divide-y divide-border/50">
                 {m.items.map((r) => {
                   const k = receiptKind(r.kind);
-                  const st = RECEIPT_STATUS[r.status];
                   const isOpen = open === r.id;
                   return (
                     <li key={r.id} className="py-2.5">
@@ -293,24 +282,12 @@ export function FinancialTimeline({ receipts }: { receipts: Receipt[] }) {
                             {new Date(r.occurredAt).toLocaleDateString()}
                           </span>
                         </span>
-                        {r.verification && (
-                          <span
-                            title={r.verification.note}
-                            className={`hidden rounded-full border px-2 py-0.5 text-[10px] uppercase tracking-[0.14em] sm:inline ${
-                              r.verification.state === "verified"
-                                ? toneClass.emerald
-                                : toneClass.zinc
-                            }`}
-                          >
-                            {r.verification.label}
-                          </span>
-                        )}
                         <span
                           className={`rounded-full border px-2 py-0.5 text-[10px] uppercase tracking-[0.14em] ${
-                            toneClass[st.tone] ?? toneClass.zinc
+                             r.verification?.state === "verified" ? toneClass.emerald : toneClass.zinc
                           }`}
                         >
-                          {st.label}
+                          {paymentLabel(r)}
                         </span>
                         <span
                           className={`w-24 text-right text-sm font-semibold tabular-nums ${
