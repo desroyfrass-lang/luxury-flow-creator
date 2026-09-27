@@ -1,3 +1,4 @@
+import { requireFounderRoute } from "@/lib/founder/route-guard";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { SiteShell } from "@/components/site-shell";
@@ -47,6 +48,7 @@ export const Route = createFileRoute("/_authenticated/payment-providers")({
       { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
+  beforeLoad: () => requireFounderRoute(),
   component: PaymentProviderCenter,
 });
 

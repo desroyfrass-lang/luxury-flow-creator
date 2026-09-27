@@ -3,12 +3,12 @@ import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import { z } from "zod";
 
 async function assertAdmin(supabase: any, userId: string) {
-  const { data, error } = await supabase.rpc("has_role", {
-    _user_id: userId,
-    _role: "admin",
-  });
-  if (error) throw error;
-  if (!data) throw new Error("Admin role required");
+  for (const role of ["admin", "super_admin"]) {
+    const { data, error } = await supabase.rpc("has_role", { _user_id: userId, _role: role });
+    if (error) throw error;
+    if (data) return;
+  }
+  throw new Error("Admin role required");
 }
 
 export type BriefingTask = {

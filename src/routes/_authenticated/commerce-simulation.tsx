@@ -1,3 +1,4 @@
+import { requireFounderRoute } from "@/lib/founder/route-guard";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useMemo } from "react";
 import { CheckCircle2, ShieldCheck, XCircle } from "lucide-react";
@@ -34,6 +35,7 @@ export const Route = createFileRoute("/_authenticated/commerce-simulation")({
       { name: "robots", content: "noindex,nofollow" },
     ],
   }),
+  beforeLoad: () => requireFounderRoute(),
   component: CommerceSimulationPage,
 });
 
