@@ -86,20 +86,43 @@ A member never sees an internal door. If they type an internal address, they are
    - Protected, internal and privileged pages require a live sign-in check **and** a live permission check.
    - A saved browser session alone never unlocks a privileged or internal area, and never grants elevated permission.
    - Member convenience may keep a fallback for non-privileged continuity only. It never substitutes for authorization or exposes protected data.
-   - The integration-managed sign-in wrapper is not modified in this plan update. How to apply this rule to it is decided at build time with approval.
+   - **[FD]** `src/routes/_authenticated/route.tsx` (integration-managed member wrapper) stays unchanged. **[V]** It falls back to the saved browser session when the live check errors; that fallback serves non-privileged member continuity only.
+   - **[FD]** Every Founder/internal/privileged destination separately requires a LIVE sign-in and a LIVE server role check before anything draws. No saved-session fallback satisfies it. On a live-check error, content stays hidden or refused.
+   - **[FD]** The server stays the final authority: server functions behind privileged pages repeat the permission check.
+   - **[FD]** Session hygiene fixed in this workstream: role cache keyed by user id and cleared on account change or sign-out; identity re-confirmation tied to the user and cleared on account change; one app-wide account-change refresh; every sign-out (including `fresh-start`) through secure sign-out.
+   - **[FD]** Wrapper modification is not required and happens only with Nicolle's separate later approval.
 2. **Role [P]:** one server answer from a new `getMyAccess()` returns `{ founder, tester, testerAllowlist }`. Founder means admin or super_admin — the same rule the database already uses.
 3. **Permissions [P]:** each protected page declares what it needs: `founder`, `tester:<experience>`, or `member`.
-4. **Destination [P]:** decided in the before-drawing step (`beforeLoad`). A refused visitor goes to Welcome Hall.
+4. **Destination [P]:** decided before drawing. A refused visitor goes to Welcome Hall.
 5. **Experience [P]:** only then does the page draw. Menus use the same answer, for display only.
+
+Expected behaviour **[FD]**:
+
+| Situation | Member pages | Founder/internal pages |
+|---|---|---|
+| Live sign-in works | Open | Live server role check, then open or refuse |
+| Network/auth error | Layout may show; data fails safely with retry | "Can't confirm access"; nothing drawn |
+| Session expired | Silent refresh, else sign-in | Sign-in or refusal; never opened from saved session |
+| Signed out | Sign-in | Sign-in |
+| Founder → Member switch within 60 s | New person's view immediately | Founder view gone; re-confirmation required again |
+| Back after sign-out | Sign-in / signed-out page | Same |
+| Hard refresh / deep link | Member gate | Live Founder check before any content |
 
 ## 6. Route/door protection rules
 
-- **[FD] Founder-only now:** `/commerce-simulation`, `/visual-review`, `/blueprints`, plus the existing `/control-room`, `/founder`, `/admin/*`, `/studios/*`, `/frassy`, `/global-operations`, `/payment-providers`.
-- **[FD] Protected but UNASSIGNED** until recovery establishes their real purpose: `/builder-hall`, `/manufacturing`, `/launch-accelerator`. They keep the sign-in requirement, are not given to Testers, and are not classified as member or Founder-only yet.
-- **[FD] Financial Center is split into two permission levels:**
-  - "My money / my financial information": may eventually be member-facing, for that person's own data only.
-  - FRASS Founder-level financial administration, audit and control: Founder-only.
-  - The two levels are never collapsed into one. How today's single `/financial-center` page divides between them is **[F?]**, to be settled from recovery evidence.
+- **[FD] Founder-only now:** `/commerce-simulation`, `/visual-review`, `/blueprints`, plus the existing `/control-room`, `/founder`, `/admin/*`, `/studios/*`, `/frassy`, `/global-operations`, `/payment-providers`. The full list is confirmed by the step-1 inventory, not assumed.
+- **[FD] Member-oriented (none Founder-only, none in Sheldon's initial scope):**
+  - `/builder-hall` — **BURIED / DUPLICATE** of Welcome Hall; consolidation candidate. Member access for now; useful machinery and links preserved until consolidation is separately approved. Its `/frassy` link needs correction in appropriate future work, because `/frassy` is Founder-only.
+  - `/manufacturing` — Creator Manufacturing Network concept; **PARTIAL / BLUEPRINT ONLY**, not commissioned (guide and static network, no proven persistent machinery). Member access conceptually. Never described as commissioned.
+  - `/launch-accelerator` — own-data business coaching; **REAL member flow, full commissioning not proven**. Member access, own data only. Not in Tester scope unless deliberately allowlisted later.
+- **[FD] Financial Center:**
+  - `/financial-center` is the canonical member money home, for that person's own financial information only, and becomes the single member money destination. Useful `/workspace/wallet` functions are consolidated into it later, preserving real machinery and data, with no duplicate doors.
+  - Founder Business, Commerce Health, owner controls and Payment Provider administration belong in the existing Founder systems (`/admin/financial-audit`, Payment Provider Center). No new Founder financial room.
+  - Member-submitted receipts stay only as **MEMBER SUBMITTED — PENDING VERIFICATION** and never count or show as verified, available, settled or paid until FRASS verifies them.
+  - Placeholder $0 balances never pose as available money; use truthful empty states ("No verified money yet").
+  - Money truth: potential ≠ real; forecast ≠ income; verified ≠ settled/available/paid.
+  - Owner-share trusted-storage repair belongs to the separate money workstream. Payments, Stripe, allocation ledger, payouts and settlement are not touched.
+  - Sheldon gets no Financial Center in his initial Tester scope.
 - **[P]** Every internal page gets a server check before it draws. Checks inside the page stay only as a second layer.
 - **[P]** Only two guards are allowed: `requireFounderRoute` and `requireTesterExperience(key)`, both following the same pattern. No ad-hoc checks inside pages.
 - **[P]** Every server function behind an internal page repeats the server check.
