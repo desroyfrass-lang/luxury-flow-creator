@@ -16,6 +16,7 @@ export const IDENTITY_QUERY_PREFIXES = [
   "is-admin-status",
   "my-roles",
   "workspace-roles",
+  "tester-commissions",
 ] as const;
 
 let currentUserId: string | null = null;
