@@ -86,20 +86,43 @@ A member never sees an internal door. If they type an internal address, they are
    - Protected, internal and privileged pages require a live sign-in check **and** a live permission check.
    - A saved browser session alone never unlocks a privileged or internal area, and never grants elevated permission.
    - Member convenience may keep a fallback for non-privileged continuity only. It never substitutes for authorization or exposes protected data.
-   - The integration-managed sign-in wrapper is not modified in this plan update. How to apply this rule to it is decided at build time with approval.
+   - **[FD]** `src/routes/_authenticated/route.tsx` (integration-managed member wrapper) stays unchanged. **[V]** It falls back to the saved browser session when the live check errors; that fallback serves non-privileged member continuity only.
+   - **[FD]** Every Founder/internal/privileged destination separately requires a LIVE sign-in and a LIVE server role check before anything draws. No saved-session fallback satisfies it. On a live-check error, content stays hidden or refused.
+   - **[FD]** The server stays the final authority: server functions behind privileged pages repeat the permission check.
+   - **[FD]** Session hygiene fixed in this workstream: role cache keyed by user id and cleared on account change or sign-out; identity re-confirmation tied to the user and cleared on account change; one app-wide account-change refresh; every sign-out (including `fresh-start`) through secure sign-out.
+   - **[FD]** Wrapper modification is not required and happens only with Nicolle's separate later approval.
 2. **Role [P]:** one server answer from a new `getMyAccess()` returns `{ founder, tester, testerAllowlist }`. Founder means admin or super_admin — the same rule the database already uses.
 3. **Permissions [P]:** each protected page declares what it needs: `founder`, `tester:<experience>`, or `member`.
-4. **Destination [P]:** decided in the before-drawing step (`beforeLoad`). A refused visitor goes to Welcome Hall.
+4. **Destination [P]:** decided before drawing. A refused visitor goes to Welcome Hall.
 5. **Experience [P]:** only then does the page draw. Menus use the same answer, for display only.
+
+Expected behaviour **[FD]**:
+
+| Situation | Member pages | Founder/internal pages |
+|---|---|---|
+| Live sign-in works | Open | Live server role check, then open or refuse |
+| Network/auth error | Layout may show; data fails safely with retry | "Can't confirm access"; nothing drawn |
+| Session expired | Silent refresh, else sign-in | Sign-in or refusal; never opened from saved session |
+| Signed out | Sign-in | Sign-in |
+| Founder → Member switch within 60 s | New person's view immediately | Founder view gone; re-confirmation required again |
+| Back after sign-out | Sign-in / signed-out page | Same |
+| Hard refresh / deep link | Member gate | Live Founder check before any content |
 
 ## 6. Route/door protection rules
 
-- **[FD] Founder-only now:** `/commerce-simulation`, `/visual-review`, `/blueprints`, plus the existing `/control-room`, `/founder`, `/admin/*`, `/studios/*`, `/frassy`, `/global-operations`, `/payment-providers`.
-- **[FD] Protected but UNASSIGNED** until recovery establishes their real purpose: `/builder-hall`, `/manufacturing`, `/launch-accelerator`. They keep the sign-in requirement, are not given to Testers, and are not classified as member or Founder-only yet.
-- **[FD] Financial Center is split into two permission levels:**
-  - "My money / my financial information": may eventually be member-facing, for that person's own data only.
-  - FRASS Founder-level financial administration, audit and control: Founder-only.
-  - The two levels are never collapsed into one. How today's single `/financial-center` page divides between them is **[F?]**, to be settled from recovery evidence.
+- **[FD] Founder-only now:** `/commerce-simulation`, `/visual-review`, `/blueprints`, plus the existing `/control-room`, `/founder`, `/admin/*`, `/studios/*`, `/frassy`, `/global-operations`, `/payment-providers`. The full list is confirmed by the step-1 inventory, not assumed.
+- **[FD] Member-oriented (none Founder-only, none in Sheldon's initial scope):**
+  - `/builder-hall` — **BURIED / DUPLICATE** of Welcome Hall; consolidation candidate. Member access for now; useful machinery and links preserved until consolidation is separately approved. Its `/frassy` link needs correction in appropriate future work, because `/frassy` is Founder-only.
+  - `/manufacturing` — Creator Manufacturing Network concept; **PARTIAL / BLUEPRINT ONLY**, not commissioned (guide and static network, no proven persistent machinery). Member access conceptually. Never described as commissioned.
+  - `/launch-accelerator` — own-data business coaching; **REAL member flow, full commissioning not proven**. Member access, own data only. Not in Tester scope unless deliberately allowlisted later.
+- **[FD] Financial Center:**
+  - `/financial-center` is the canonical member money home, for that person's own financial information only, and becomes the single member money destination. Useful `/workspace/wallet` functions are consolidated into it later, preserving real machinery and data, with no duplicate doors.
+  - Founder Business, Commerce Health, owner controls and Payment Provider administration belong in the existing Founder systems (`/admin/financial-audit`, Payment Provider Center). No new Founder financial room.
+  - Member-submitted receipts stay only as **MEMBER SUBMITTED — PENDING VERIFICATION** and never count or show as verified, available, settled or paid until FRASS verifies them.
+  - Placeholder $0 balances never pose as available money; use truthful empty states ("No verified money yet").
+  - Money truth: potential ≠ real; forecast ≠ income; verified ≠ settled/available/paid.
+  - Owner-share trusted-storage repair belongs to the separate money workstream. Payments, Stripe, allocation ledger, payouts and settlement are not touched.
+  - Sheldon gets no Financial Center in his initial Tester scope.
 - **[P]** Every internal page gets a server check before it draws. Checks inside the page stay only as a second layer.
 - **[P]** Only two guards are allowed: `requireFounderRoute` and `requireTesterExperience(key)`, both following the same pattern. No ad-hoc checks inside pages.
 - **[P]** Every server function behind an internal page repeats the server check.
@@ -157,8 +180,12 @@ Report before any repair.
 - `src/lib/roles.ts`: add `tester`.
 - `src/lib/admin.functions.ts`: `checkIsAdmin` accepts admin or super_admin; add `getMyAccess`.
 - `src/lib/founder/route-guard.ts`: add `requireTesterExperience`.
-- Before-drawing guards: `frassy.tsx`, `global-operations.tsx`, `payment-providers.tsx`, `commerce-simulation.tsx`, `visual-review.tsx`, `blueprints.tsx`. Founder-level parts of `financial-center.tsx`, per the split in section 6.
-- `src/hooks/use-is-admin.ts`, `use-my-roles.ts`, `use-workspace-roles.ts`: tie the cache to the user; clear it on sign-out.
+- Live Founder guard (live sign-in + live server role check, no fallback) on every Founder/internal destination confirmed by the step-1 inventory, including `frassy.tsx`, `global-operations.tsx`, `payment-providers.tsx`, `commerce-simulation.tsx`, `visual-review.tsx`, `blueprints.tsx`, `control-room.tsx`, `admin*.tsx`, `founder*.tsx`, `studios*.tsx`.
+- `financial-center.tsx` / `src/lib/finance/financial-center.ts`: remove Business, Commerce Health, owner rows and the Payment Provider link from the member page; truthful empty states instead of $0 "available" placeholders; member-submitted receipts labelled MEMBER SUBMITTED — PENDING VERIFICATION. Presentation/access only — no money machinery changes.
+- `src/hooks/use-is-admin.ts`, `use-my-roles.ts`, `use-workspace-roles.ts`: key role caches by user id; clear on sign-out and account change.
+- `src/lib/security/sensitive-actions.ts`: tie identity re-confirmation to the user id; clear on account change.
+- `src/routes/__root.tsx`: one app-wide account-change listener that refreshes the router and clears the previous user's cache.
+- `src/routes/fresh-start.tsx`: route sign-out through `useSecureSignOut` (`src/components/secure-sign-out.tsx`).
 - `src/lib/navigation/account-menu.ts`, `hierarchy.ts`, `site-shell.tsx`: add a "Testing" group and a visible Tester badge; remove the staff/super_admin branches.
 - `src/routes/auth.tsx`: neutral sign-in wording only.
 - `src/routes/_authenticated/workspace.tsx`: drop the labels for consolidated roles.
@@ -167,50 +194,58 @@ Report before any repair.
 - **[FD]** Feedback reuse, with no new feedback system:
   - `src/components/page-feedback.tsx`, `src/lib/feedback.functions.ts`, `src/lib/launch-feedback*.ts`, the voice feedback flow
   - existing `/admin/feedback` and `/admin/launch-feedback`, extended with a Founder-only Tester view
-- `src/routes/_authenticated/route.tsx`: integration-managed. Changed only if separately approved to enforce section 5.
+- **Not changed:** `src/routes/_authenticated/route.tsx` (integration-managed; not required for this architecture).
 
 ## 10. Implementation sequence (stop and report for approval after each)
 
-1. Reproduce the bypass (section 7) and report. **Not authorized by this update.**
-2. Unify the Founder rule (admin or super_admin) and add before-drawing guards to the Founder-only pages.
-3. Fix the access cache and clear it on sign-out and account switch.
-4. Neutral `/auth` wording.
-5. Tester role, allowlist table, and granting in Roles & Access.
-6. Tester destination, "Testing" menu group, Tester badge, and a Founder-only Tester feedback view (reusing existing feedback).
-7. Remove the legacy staff/designer write permissions **[FD]**.
-8. Full acceptance run.
+1. Reproduce the bypass (section 7) **and inventory every Founder/internal route, proving which already has a live server check.** Report. No repairs.
+2. Unify the Founder rule (admin or super_admin) and add the live Founder guard to every Founder/internal destination from the inventory.
+3. Session hygiene: user-id-keyed role cache, user-tied identity re-confirmation, app-wide account-change refresh, all sign-outs through secure sign-out (including `fresh-start`).
+4. Financial Center access split and truthful labelling (no money machinery changes).
+5. Neutral `/auth` wording.
+6. Tester role, allowlist table, and granting in Roles & Access.
+7. Tester destination, "Testing" menu group, Tester badge, and a Founder-only Tester feedback view (reusing existing feedback).
+8. Remove the legacy staff/designer write permissions **[FD]**.
+9. Full acceptance run.
 
 ## 11. Acceptance criteria
 
 - Signed out: every internal address goes to sign-in or Welcome Hall with no internal content drawn, including after refresh and from deep links.
-- Member: no internal door is visible or reachable. Their own Daily and Workshop work.
-- Tester: sees only the allowlisted experiences plus the member journey, and sees the Tester badge. Every Founder/Admin address refuses, and so do its server functions. Checkout is test mode only.
+- Member: no internal door is visible or reachable. Their own Daily, Workshop, Financial Center, Builder Hall and Launch Accelerator work with own data only.
+- Tester: sees only the allowlisted experiences plus the member journey, and sees the Tester badge. No Financial Center, Builder Hall, Manufacturing or Launch Accelerator in the initial scope. Every Founder/Admin address refuses, and so do its server functions. Checkout is test mode only.
 - Tester feedback: records page context, appears only in the Founder Tester view, and can be marked for retest.
 - Founder: everything works. The 201-card Teleporter audit still passes unchanged.
-- No saved session alone opens a privileged page.
-- Account switch leaves no Founder icons behind. Back after sign-out shows no protected content.
+- No saved session alone opens a privileged page; with the live check failing, privileged content stays hidden.
+- Founder → Member switch within 60 seconds: no Founder icons, views or skipped identity re-confirmation remain. Back after sign-out shows no protected content.
+- Financial Center: no Founder administration on the member page; no $0 shown as available money; member-submitted receipts never counted or shown as verified, available, settled or paid.
 - `/auth` has no owner wording.
 - No legacy staff/designer write permission remains. The enum values remain.
+- Integration-managed wrapper unchanged.
 - Tests, typecheck, and build pass. Nothing is deployed without approval.
 
 ## 12. Non-goals
 
 - The Teleporter, the 201-card baseline, and its audit.
-- Payments, allocations, Stripe, and the ledger.
+- Payments, Stripe, the allocation ledger, payouts, and settlement (including inside Financial Center).
+- Owner-share trusted-storage repair (separate money workstream).
+- Wallet → Financial Center consolidation (later, separately approved).
+- Builder Hall → Welcome Hall consolidation and its `/frassy` link correction (later, separately approved).
+- Commissioning `/manufacturing` or completing `/launch-accelerator` commissioning.
 - FV Studios / Frassy presentation, A1 / Enhance Phone Recording, and the Music Engine.
-- The Frassy AI backend and integration-managed auth files (unless separately approved).
+- The Frassy AI backend and integration-managed auth files, including `_authenticated/route.tsx` (unless Nicolle separately approves).
 - Moderator powers and a business-role redesign.
-- New pages, duplicate routes, or a duplicate feedback system.
+- New pages, duplicate routes, a new Founder financial room, or a duplicate feedback system.
 - Removing enum values. Creating another Founder account or changing the Founder login.
-- Classifying `/builder-hall`, `/manufacturing`, or `/launch-accelerator` before recovery.
 - For Us and Kids tester access.
 - Deployment.
 
-## Still unresolved (needs Founder decision)
+## Resolved Founder decisions (formerly unresolved)
 
-1. The canonical purpose of `/builder-hall`, `/manufacturing`, and `/launch-accelerator`. Established by recovery; they stay protected and unassigned until then.
-2. How today's `/financial-center` page divides between "my money" and Founder financial administration.
-3. Exactly how the live-check rule is applied to the integration-managed sign-in wrapper. Decided at build time.
+1. **[FD]** `/builder-hall`, `/manufacturing`, `/launch-accelerator` classified as member-oriented; none is Founder-only; none is in Sheldon's initial scope (section 6).
+2. **[FD]** `/financial-center` is the member's own money home; Founder financial administration stays in existing Founder systems (section 6).
+3. **[FD]** Integration-managed wrapper stays unchanged; privileged destinations add their own live checks (section 5).
+
+No planning questions remain open. Build still requires Nicolle's separate approval of this final plan.
 
 Note: the roadmap entry for this workstream will be added when Build mode starts. Plan mode allows editing only this plan.
 
