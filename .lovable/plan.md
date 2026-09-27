@@ -196,21 +196,26 @@ Report before any repair.
 ## 12. Non-goals
 
 - The Teleporter, the 201-card baseline, and its audit.
-- Payments, allocations, Stripe, and the ledger.
+- Payments, Stripe, the allocation ledger, payouts, and settlement (including inside Financial Center).
+- Owner-share trusted-storage repair (separate money workstream).
+- Wallet → Financial Center consolidation (later, separately approved).
+- Builder Hall → Welcome Hall consolidation and its `/frassy` link correction (later, separately approved).
+- Commissioning `/manufacturing` or completing `/launch-accelerator` commissioning.
 - FV Studios / Frassy presentation, A1 / Enhance Phone Recording, and the Music Engine.
-- The Frassy AI backend and integration-managed auth files (unless separately approved).
+- The Frassy AI backend and integration-managed auth files, including `_authenticated/route.tsx` (unless Nicolle separately approves).
 - Moderator powers and a business-role redesign.
-- New pages, duplicate routes, or a duplicate feedback system.
+- New pages, duplicate routes, a new Founder financial room, or a duplicate feedback system.
 - Removing enum values. Creating another Founder account or changing the Founder login.
-- Classifying `/builder-hall`, `/manufacturing`, or `/launch-accelerator` before recovery.
 - For Us and Kids tester access.
 - Deployment.
 
-## Still unresolved (needs Founder decision)
+## Resolved Founder decisions (formerly unresolved)
 
-1. The canonical purpose of `/builder-hall`, `/manufacturing`, and `/launch-accelerator`. Established by recovery; they stay protected and unassigned until then.
-2. How today's `/financial-center` page divides between "my money" and Founder financial administration.
-3. Exactly how the live-check rule is applied to the integration-managed sign-in wrapper. Decided at build time.
+1. **[FD]** `/builder-hall`, `/manufacturing`, `/launch-accelerator` classified as member-oriented; none is Founder-only; none is in Sheldon's initial scope (section 6).
+2. **[FD]** `/financial-center` is the member's own money home; Founder financial administration stays in existing Founder systems (section 6).
+3. **[FD]** Integration-managed wrapper stays unchanged; privileged destinations add their own live checks (section 5).
+
+No planning questions remain open. Build still requires Nicolle's separate approval of this final plan.
 
 Note: the roadmap entry for this workstream will be added when Build mode starts. Plan mode allows editing only this plan.
 
