@@ -26,7 +26,7 @@ import { listMyReceipts } from "@/lib/finance/receipts.functions";
 import { getMyCard } from "@/lib/card.functions";
 import { getMyProfile } from "@/lib/profiles.functions";
 import { listMyCardOrders } from "@/lib/card-commerce.functions";
-import { ALLOCATION_NOTE, money, providerLabel } from "@/lib/card-commerce";
+import { money, providerLabel } from "@/lib/card-commerce";
 
 import { cardUrl } from "@/lib/card";
 import {
