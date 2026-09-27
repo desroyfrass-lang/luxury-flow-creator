@@ -9071,6 +9071,7 @@ export type Database = {
         | "partner"
         | "ambassador"
         | "customer"
+        | "tester"
       logo_placement:
         | "chest_left"
         | "chest_center"
@@ -9249,6 +9250,7 @@ export const Constants = {
         "partner",
         "ambassador",
         "customer",
+        "tester",
       ],
       logo_placement: [
         "chest_left",
