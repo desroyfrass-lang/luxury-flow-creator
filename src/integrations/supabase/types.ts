@@ -8316,6 +8316,30 @@ export type Database = {
         }
         Relationships: []
       }
+      tester_commissions: {
+        Row: {
+          created_at: string
+          experience: string
+          granted_by: string | null
+          id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          experience: string
+          granted_by?: string | null
+          id?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          experience?: string
+          granted_by?: string | null
+          id?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       trust_verifications: {
         Row: {
           badge: string
@@ -9011,6 +9035,10 @@ export type Database = {
         }
         Returns: boolean
       }
+      has_tester_commission: {
+        Args: { _experience: string; _user_id: string }
+        Returns: boolean
+      }
       is_studio_staff: { Args: never; Returns: boolean }
       match_product_visuals: {
         Args: {
@@ -9071,6 +9099,7 @@ export type Database = {
         | "partner"
         | "ambassador"
         | "customer"
+        | "tester"
       logo_placement:
         | "chest_left"
         | "chest_center"
@@ -9249,6 +9278,7 @@ export const Constants = {
         "partner",
         "ambassador",
         "customer",
+        "tester",
       ],
       logo_placement: [
         "chest_left",
