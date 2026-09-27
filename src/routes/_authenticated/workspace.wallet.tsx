@@ -89,7 +89,7 @@ function WalletHub() {
   const receiptsFn = useServerFn(listMyReceipts);
 
   const { data: card } = useQuery({ queryKey: ["my-business-card"], queryFn: () => cardFn() });
-  const { data: orders } = useQuery({ queryKey: ["card-orders"], queryFn: () => ordersFn() });
+  const { data: orders, isPending: ordersPending, isError: ordersError } = useQuery({ queryKey: ["card-orders"], queryFn: () => ordersFn() });
   const { data: profile } = useQuery({ queryKey: ["my-profile"], queryFn: () => profileFn() });
   const { data: receipts } = useQuery({ queryKey: ["financial-receipts"], queryFn: () => receiptsFn() });
 
@@ -158,6 +158,8 @@ function WalletHub() {
 
       {section === "balance" && (
         <>
+          {ordersPending ? <p role="status" className="text-sm text-muted-foreground">Gathering your card records…</p> : ordersError ? <p role="alert" className="text-sm text-destructive">Card records could not be confirmed. Please try again later.</p> : (
+          <>
           <section className={panel}>
             <h2 className={heading}>
                <Banknote className="mr-2 inline h-3.5 w-3.5" /> Recorded card activity — not available balance
@@ -194,6 +196,8 @@ function WalletHub() {
                <Stat label="Tips recorded" value={money(s.tips, s.currency)} note="Tip-labelled order records, not confirmed income." />
             </div>
           </section>
+          </>
+          )}
         </>
       )}
 
