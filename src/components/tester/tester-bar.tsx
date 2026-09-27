@@ -61,7 +61,7 @@ export function TesterBar() {
   };
 
   return (
-    <div className="fixed bottom-4 left-4 z-[60] max-w-xs rounded-xl border border-border bg-background/95 p-3 text-xs shadow-lg backdrop-blur">
+    <div data-tester-bar="" aria-label="Tester journey" className="fixed bottom-4 left-4 z-[60] max-w-xs rounded-xl border border-border bg-background/95 p-3 text-xs shadow-lg backdrop-blur">
       <div className="flex items-center justify-between gap-2">
         <span className="rounded-full border border-[color:var(--gold)]/60 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.25em] text-[color:var(--gold)]">
           Tester
