@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { supabase } from "@/integrations/supabase/client";
+import { useQueryClient } from "@tanstack/react-query";
+import { secureSignOutCleanup } from "@/components/secure-sign-out";
 
 /**
  * FRASS-0471 — Clean Arrival Test Route.
@@ -31,19 +32,13 @@ export const Route = createFileRoute("/fresh-start")({
 
 function FreshStart() {
   const [done, setDone] = useState(false);
+  const queryClient = useQueryClient();
 
   useEffect(() => {
     let alive = true;
     const wipe = async () => {
-      try {
-        await supabase.auth.signOut({ scope: "global" });
-      } catch {
-        try {
-          await supabase.auth.signOut();
-        } catch {
-          /* already signed out */
-        }
-      }
+      // Step 3 — the same secure exit every sign-out uses, then forget saved preferences.
+      await secureSignOutCleanup(queryClient);
       try {
         localStorage.clear();
         sessionStorage.clear();
@@ -56,7 +51,7 @@ function FreshStart() {
     return () => {
       alive = false;
     };
-  }, []);
+  }, [queryClient]);
 
   return (
     <main className="min-h-screen bg-background">

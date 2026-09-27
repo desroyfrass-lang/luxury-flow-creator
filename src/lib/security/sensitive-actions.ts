@@ -113,8 +113,13 @@ type Ledger = Record<string, { at: number; method: VerificationMethod; uid: stri
 // by the app-wide identity watcher; with no known owner nothing counts.
 let verificationOwner: string | null = null;
 export function setVerificationOwner(uid: string | null) {
-  if (uid !== verificationOwner) clearVerifications();
   verificationOwner = uid;
+  if (typeof window === "undefined") return;
+  // Drop every confirmation that was not given by this person.
+  const ledger = read();
+  const kept: Ledger = {};
+  for (const [k, v] of Object.entries(ledger)) if (uid && v?.uid === uid) kept[k] = v;
+  write(kept);
 }
 
 function read(): Ledger {

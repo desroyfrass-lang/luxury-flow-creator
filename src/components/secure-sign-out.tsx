@@ -1,5 +1,6 @@
 import { useNavigate } from "@tanstack/react-router";
-import { useQueryClient } from "@tanstack/react-query";
+import { useQueryClient, type QueryClient } from "@tanstack/react-query";
+import { purgeIdentityState } from "@/lib/auth/identity-watch";
 import { LogOut } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -11,25 +12,31 @@ import { supabase } from "@/integrations/supabase/client";
  * data, closes Founder and Partner access, and leaves nothing recoverable with
  * the browser's Back button.
  */
+/** The shared cleanup every exit uses (also Fresh Start). Does not navigate. */
+export async function secureSignOutCleanup(queryClient: QueryClient) {
+  // 1. Stop anything still fetching before its session disappears.
+  await queryClient.cancelQueries();
+  // 2. Forget Founder/role answers and identity confirmations, then drop all cache.
+  purgeIdentityState(queryClient);
+  queryClient.clear();
+  // 3. Forget per-session hosting/greeting state so the next member is new.
+  try {
+    sessionStorage.clear();
+  } catch {
+    /* private mode — nothing cached to clear */
+  }
+  // 4. End the authenticated session everywhere this token is valid.
+  await supabase.auth.signOut({ scope: "global" }).catch(async () => {
+    await supabase.auth.signOut().catch(() => undefined);
+  });
+}
+
 export function useSecureSignOut() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
   return async () => {
-    // 1. Stop anything still fetching before its session disappears.
-    await queryClient.cancelQueries();
-    // 2. Drop every cached answer that belonged to this member.
-    queryClient.clear();
-    // 3. Forget per-session hosting/greeting state so the next member is new.
-    try {
-      sessionStorage.clear();
-    } catch {
-      /* private mode — nothing cached to clear */
-    }
-    // 4. End the authenticated session everywhere this token is valid.
-    await supabase.auth.signOut({ scope: "global" }).catch(async () => {
-      await supabase.auth.signOut();
-    });
+    await secureSignOutCleanup(queryClient);
     // 5. REPLACE, so Back cannot restore an authenticated screen.
     navigate({ to: "/signed-out", replace: true });
   };
