@@ -30,7 +30,6 @@ import { money, providerLabel } from "@/lib/card-commerce";
 
 import { cardUrl } from "@/lib/card";
 import {
-  WALLET_PRINCIPLE,
   WALLET_SECTIONS,
   orderKindLabel,
   referenceKind,
@@ -126,7 +125,7 @@ function WalletHub() {
           <Wallet className="mr-2 inline h-3.5 w-3.5" /> Frass Wallet
         </p>
         <h1 className="mt-2 text-3xl font-black uppercase tracking-tight">Your counter</h1>
-        <p className="mt-2 max-w-2xl text-sm text-muted-foreground">{WALLET_PRINCIPLE}</p>
+        <p className="mt-2 max-w-2xl text-sm text-muted-foreground">Your card selling tools and order records live here. For your financial record, visit the Financial Center.</p>
         <p className="mt-1 max-w-2xl text-xs text-muted-foreground">
           <strong>Here's how it works:</strong> your Frass Card is the shopfront window;
           this counter holds selling tools and recorded activity. Your Financial Center holds your receipts.
@@ -152,7 +151,7 @@ function WalletHub() {
             onClick={() => setSection(w.id)}
             title={w.plain}
           >
-            {w.label}
+             {w.id === "balance" ? "Recorded activity" : w.label}
           </button>
         ))}
       </nav>
@@ -276,22 +275,18 @@ function WalletHub() {
           </p>
           <p className="mt-2 text-sm text-muted-foreground">
             {section === "withdraw"
-              ? "Frass never holds your money, so there is nothing here to release. Payments land in your own account and you withdraw to your bank from there."
+               ? "There is no Frass withdrawal here. Check with your own payment provider whether a payment has arrived and whether it can be moved to your bank."
                : "Card activity is recorded here when someone uses your Pay, Gift, Tip or Shop doors. A record is not proof that a deposit arrived."}
           </p>
           <p className="mt-1 text-xs text-muted-foreground">
             <strong>Let's break it down:</strong> Frass is the market stall and the
-            receipt book, never the cash box.
+             receipt book, never the cash box. A seller-marked order is not proof of a deposit.
           </p>
-          <a
-            className="ws-chip mt-4 inline-flex"
-            href={card?.payout_url || "#"}
-            target="_blank"
-            rel="noreferrer"
-            aria-disabled={!card?.payout_url}
-          >
-            Open my payment account
-          </a>
+           {card?.payout_url && (
+             <a className="ws-chip mt-4 inline-flex" href={card.payout_url} target="_blank" rel="noreferrer">
+               Open my payment account
+             </a>
+           )}
         </section>
       )}
 
@@ -346,7 +341,7 @@ function WalletHub() {
           </p>
           <p className="mt-2 text-sm text-muted-foreground">
             {card?.commerce_enabled && card?.payout_url
-              ? "Your card is a working point of sale right now."
+               ? "Your card's payment doors are enabled. A completed provider payment must still be confirmed separately."
               : "Payments are switched off, so the Shop, Pay, Gift and Tip doors stay closed on your card."}
           </p>
           <Link className="ws-chip mt-4 inline-flex" to="/workspace/card">
