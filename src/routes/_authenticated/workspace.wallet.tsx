@@ -27,7 +27,6 @@ import { getMyCard } from "@/lib/card.functions";
 import { getMyProfile } from "@/lib/profiles.functions";
 import { listMyCardOrders } from "@/lib/card-commerce.functions";
 import { ALLOCATION_NOTE, money, providerLabel } from "@/lib/card-commerce";
-import { EXPECTED_ALLOCATION_NOTE } from "@/lib/finance/allocation";
 
 import { cardUrl } from "@/lib/card";
 import {
@@ -62,12 +61,12 @@ export const Route = createFileRoute("/_authenticated/workspace/wallet")({
       {
         name: "description",
         content:
-          "Everything financial in one place: available balance, withdraw, deposit, payment history, Quick Sell, invoices, payment links, gifts, tips, taxes and statements.",
+          "Quick Sell, payment requests, recorded card orders, receipts and statements. Recorded activity is not a withdrawable balance.",
       },
       { property: "og:title", content: "Frass Wallet" },
       {
         property: "og:description",
-        content: "Balance, Quick Sell, invoices, payment links, gifts, tips, taxes and statements.",
+          content: "Quick Sell, payment links, receipts and recorded activity.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
@@ -130,8 +129,7 @@ function WalletHub() {
         <p className="mt-2 max-w-2xl text-sm text-muted-foreground">{WALLET_PRINCIPLE}</p>
         <p className="mt-1 max-w-2xl text-xs text-muted-foreground">
           <strong>Here's how it works:</strong> your Frass Card is the shopfront window;
-          the Wallet is the counter behind it. Everything financial lives here — nothing financial
-          lives on the card itself.
+          this counter holds selling tools and recorded activity. Your Financial Center holds your receipts.
         </p>
         <div className="mt-4 flex flex-wrap gap-2">
           <Link className="ws-chip" to="/workspace/card">
@@ -163,7 +161,7 @@ function WalletHub() {
         <>
           <section className={panel}>
             <h2 className={heading}>
-              <Banknote className="mr-2 inline h-3.5 w-3.5" /> Available balance
+               <Banknote className="mr-2 inline h-3.5 w-3.5" /> Recorded card activity — not available balance
             </h2>
             <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
               <Stat
@@ -183,8 +181,7 @@ function WalletHub() {
                 note="Your 90% share after your provider's fee. Not confirmed money."
               />
             </div>
-            <p className="mt-4 text-xs text-muted-foreground">{ALLOCATION_NOTE}</p>
-            <p className="mt-1 text-xs text-muted-foreground">{EXPECTED_ALLOCATION_NOTE}</p>
+             <p className="mt-4 text-xs text-muted-foreground">These are order records and estimates, not verified, settled or withdrawable money. Review each payment in your Financial Center.</p>
 
           </section>
 
@@ -193,9 +190,9 @@ function WalletHub() {
               <Gift className="mr-2 inline h-3.5 w-3.5" /> Where it came from
             </h2>
             <div className="mt-4 grid gap-3 sm:grid-cols-3">
-              <Stat label="Sales" value={money(s.sales, s.currency)} note="Items sold from your card." />
-              <Stat label="Gifts" value={money(s.gifts, s.currency)} note="Sent with a note." />
-              <Stat label="Tips" value={money(s.tips, s.currency)} note="Thank-yous for your work." />
+               <Stat label="Sales recorded" value={money(s.sales, s.currency)} note="Card order records, not confirmed income." />
+               <Stat label="Gifts recorded" value={money(s.gifts, s.currency)} note="Gift-labelled order records, not confirmed income." />
+               <Stat label="Tips recorded" value={money(s.tips, s.currency)} note="Tip-labelled order records, not confirmed income." />
             </div>
           </section>
         </>
@@ -238,7 +235,7 @@ function WalletHub() {
             FRASS-0433 — every movement carries a receipt. Click any line to see where the money came
             from, what was deducted and why.
           </p>
-          <FinancialTimeline receipts={receipts ?? []} />
+           {receipts ? <FinancialTimeline receipts={receipts} /> : <p role="status" className="text-sm text-muted-foreground">Gathering your receipts…</p>}
         </section>
       )}
 
@@ -280,7 +277,7 @@ function WalletHub() {
           <p className="mt-2 text-sm text-muted-foreground">
             {section === "withdraw"
               ? "Frass never holds your money, so there is nothing here to release. Payments land in your own account and you withdraw to your bank from there."
-              : "Deposits arrive the moment someone uses the Pay, Gift, Tip or Shop doors on your Frass Card. Each one is recorded here as it happens."}
+               : "Card activity is recorded here when someone uses your Pay, Gift, Tip or Shop doors. A record is not proof that a deposit arrived."}
           </p>
           <p className="mt-1 text-xs text-muted-foreground">
             <strong>Let's break it down:</strong> Frass is the market stall and the
@@ -313,9 +310,9 @@ function WalletHub() {
               value={money(s.settled, s.currency)}
               note="What you marked as paid. Not verified by a payment provider."
             />
-            <Stat label="Frass allocation" value={money(s.allocation, s.currency)} note="The 10% ecosystem allocation: 3% infrastructure, 3% Reserve Vault, 2% Foundation, 1% Founder, 1% Co-Founder." />
+             <Stat label="Frass allocation (expected)" value={money(s.allocation, s.currency)} note="Estimated platform allocation on these card orders, not confirmed money." />
             <Stat label="Processing (est.)" value={money(s.processing, s.currency)} note="Card fees, estimated." />
-            <Stat label="Net to you (est.)" value={money(s.net, s.currency)} note="What you likely declare." />
+             <Stat label="Net recorded (est.)" value={money(s.net, s.currency)} note="Order estimate, not confirmed income or tax advice." />
           </div>
           <p className="mt-4 text-xs text-muted-foreground">
             These are records, not tax advice. Estimates are always labelled as estimates — take the
