@@ -107,7 +107,20 @@ export function actionsByArea(area: SensitiveArea): SensitiveAction[] {
 const KEY = "frass.identity.verified.v1";
 const TIMEOUT_KEY = "frass.identity.timeout.v1";
 
-type Ledger = Record<string, { at: number; method: VerificationMethod }>;
+type Ledger = Record<string, { at: number; method: VerificationMethod; uid: string }>;
+
+// Step 3 — a confirmation belongs to the person who gave it. The owner is set
+// by the app-wide identity watcher; with no known owner nothing counts.
+let verificationOwner: string | null = null;
+export function setVerificationOwner(uid: string | null) {
+  verificationOwner = uid;
+  if (typeof window === "undefined") return;
+  // Drop every confirmation that was not given by this person.
+  const ledger = read();
+  const kept: Ledger = {};
+  for (const [k, v] of Object.entries(ledger)) if (uid && v?.uid === uid) kept[k] = v;
+  write(kept);
+}
 
 function read(): Ledger {
   if (typeof window === "undefined") return {};
@@ -149,13 +162,14 @@ export function isVerified(actionId: string): boolean {
   const action = sensitiveAction(actionId);
   if (!action) return false;
   const entry = read()[actionId];
-  if (!entry) return false;
+  if (!entry || !verificationOwner || entry.uid !== verificationOwner) return false;
   return Date.now() - entry.at < ttlFor(action) * 60_000;
 }
 
 export function recordVerification(actionId: string, method: VerificationMethod) {
+  if (!verificationOwner) return;
   const ledger = read();
-  ledger[actionId] = { at: Date.now(), method };
+  ledger[actionId] = { at: Date.now(), method, uid: verificationOwner };
   write(ledger);
 }
 
