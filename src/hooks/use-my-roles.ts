@@ -1,35 +1,17 @@
-import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
-import { supabase } from "@/integrations/supabase/client";
+import { useAuthUserId } from "@/lib/auth/identity-watch";
 import { listMyRoles } from "@/lib/roles.functions";
 import type { AppRole } from "@/lib/roles";
 
 /** Roles held by the signed-in user (empty when signed out). */
 export function useMyRoles() {
-  const [hasSession, setHasSession] = useState(false);
-  const [ready, setReady] = useState(false);
+  const { userId, ready } = useAuthUserId();
+  const hasSession = Boolean(userId);
   const rolesFn = useServerFn(listMyRoles);
 
-  useEffect(() => {
-    let mounted = true;
-    supabase.auth.getSession().then(({ data }) => {
-      if (!mounted) return;
-      setHasSession(Boolean(data.session));
-      setReady(true);
-    });
-    const { data: sub } = supabase.auth.onAuthStateChange((_e, session) => {
-      setHasSession(Boolean(session));
-      setReady(true);
-    });
-    return () => {
-      mounted = false;
-      sub.subscription.unsubscribe();
-    };
-  }, []);
-
   const query = useQuery({
-    queryKey: ["my-roles", hasSession],
+    queryKey: ["my-roles", userId],
     queryFn: () => rolesFn(),
     enabled: ready && hasSession,
     staleTime: 60_000,
