@@ -5,12 +5,16 @@ import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 export const checkIsAdmin = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
-    const { data, error } = await context.supabase.rpc("has_role", {
-      _user_id: context.userId,
-      _role: "admin",
-    });
-    if (error) throw error;
-    return Boolean(data);
+    // FRASS Step 2 — one Founder rule: admin OR super_admin, checked live.
+    for (const role of ["admin", "super_admin"] as const) {
+      const { data, error } = await context.supabase.rpc("has_role", {
+        _user_id: context.userId,
+        _role: role,
+      });
+      if (error) throw error;
+      if (data) return true;
+    }
+    return false;
   });
 
 // Atlas Recovery Phase 1 — the self-service "claim site ownership" bootstrap

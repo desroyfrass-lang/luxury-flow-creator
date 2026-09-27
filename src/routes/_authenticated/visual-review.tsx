@@ -1,3 +1,4 @@
+import { requireFounderRoute } from "@/lib/founder/route-guard";
 import { createFileRoute } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import {
@@ -37,6 +38,7 @@ export const Route = createFileRoute("/_authenticated/visual-review")({
       { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
+  beforeLoad: () => requireFounderRoute(),
   component: VisualReviewPage,
 });
 

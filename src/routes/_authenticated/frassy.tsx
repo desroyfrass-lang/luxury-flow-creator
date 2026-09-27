@@ -1,3 +1,4 @@
+import { requireFounderRoute } from "@/lib/founder/route-guard";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
@@ -40,6 +41,7 @@ export const Route = createFileRoute("/_authenticated/frassy")({
       { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
+  beforeLoad: () => requireFounderRoute(),
   component: FrassyDeskPage,
 });
 

@@ -1,3 +1,4 @@
+import { requireFounderRoute } from "@/lib/founder/route-guard";
 // ─────────────────────────────────────────────────────────────────────────────
 // FRASS-0532-B — Member Success Blueprints
 //
@@ -48,6 +49,7 @@ export const Route = createFileRoute("/_authenticated/blueprints")({
       { name: "robots", content: "noindex,nofollow" },
     ],
   }),
+  beforeLoad: () => requireFounderRoute(),
   component: BlueprintsPage,
 });
 
