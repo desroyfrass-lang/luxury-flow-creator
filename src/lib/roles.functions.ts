@@ -26,11 +26,12 @@ export const listMyRoles = createServerFn({ method: "GET" })
 export const listUsersWithRoles = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
-    const { data: isAdmin } = await context.supabase.rpc("has_role", {
-      _user_id: context.userId,
-      _role: "admin",
-    });
-    if (!isAdmin) throw new Error("Forbidden");
+    // Step 8 — Founder rule: admin OR super_admin, checked live on the server.
+    const [a, s] = await Promise.all([
+      context.supabase.rpc("has_role", { _user_id: context.userId, _role: "admin" }),
+      context.supabase.rpc("has_role", { _user_id: context.userId, _role: "super_admin" }),
+    ]);
+    if (a.error || s.error || !(a.data || s.data)) throw new Error("Forbidden");
 
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const { data: authUsers, error: authErr } = await supabaseAdmin.auth.admin.listUsers({
@@ -63,11 +64,12 @@ export const grantRole = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((data: unknown) => roleSchema.parse(data))
   .handler(async ({ context, data }) => {
-    const { data: isAdmin } = await context.supabase.rpc("has_role", {
-      _user_id: context.userId,
-      _role: "admin",
-    });
-    if (!isAdmin) throw new Error("Forbidden");
+    // Step 8 — Founder rule: admin OR super_admin, checked live on the server.
+    const [a, s] = await Promise.all([
+      context.supabase.rpc("has_role", { _user_id: context.userId, _role: "admin" }),
+      context.supabase.rpc("has_role", { _user_id: context.userId, _role: "super_admin" }),
+    ]);
+    if (a.error || s.error || !(a.data || s.data)) throw new Error("Forbidden");
 
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const { error } = await supabaseAdmin
@@ -82,11 +84,12 @@ export const revokeRole = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((data: unknown) => roleSchema.parse(data))
   .handler(async ({ context, data }) => {
-    const { data: isAdmin } = await context.supabase.rpc("has_role", {
-      _user_id: context.userId,
-      _role: "admin",
-    });
-    if (!isAdmin) throw new Error("Forbidden");
+    // Step 8 — Founder rule: admin OR super_admin, checked live on the server.
+    const [a, s] = await Promise.all([
+      context.supabase.rpc("has_role", { _user_id: context.userId, _role: "admin" }),
+      context.supabase.rpc("has_role", { _user_id: context.userId, _role: "super_admin" }),
+    ]);
+    if (a.error || s.error || !(a.data || s.data)) throw new Error("Forbidden");
 
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const { error } = await supabaseAdmin
