@@ -1,40 +1,78 @@
-# Daily + Workshop Consolidation and Safe Legacy Cleanup (PLAN ONLY)
+# Daily + Workshop Consolidation and Safe Legacy Cleanup (PLAN ONLY, revised)
 
-Nothing is built, deleted or deployed by this plan. Each phase below needs its own Founder approval. Sheldon is not assigned.
+Nothing is built, deleted or deployed by this plan. Each phase needs its own Founder approval. Sheldon is not assigned. There is no production deployment without separate approval.
 
 ## A. What exists today (verified read-only)
-- **Black Daily (REAL, current):** `/daily` → `src/routes/_authenticated/daily.tsx`. Built on 28 Aug 2026 (commit 515fe977). It reads real work through `src/lib/daily/board.functions.ts` + `board-model.ts`, with cards from `src/components/daily/work-card.tsx`. Every Daily entrance leads here, including the "Open the Daily" event (`src/components/workspace/daily-gate.tsx`) and `/room?daily=1`.
-- **White Daily (BURIED, original):** `src/components/workspace/frass-daily.tsx` (1,560 lines, the `FrassDaily` component). Nothing imports it any more, so no page opens it. The blueprints it depends on are still present: `src/lib/daily/blueprints.ts`, `kanko.ts`, `mother.ts`, `tradesperson.ts`, `time-roi.ts`, `customization*.ts`, `conversational.ts`, plus `src/components/workspace/daily-customization.tsx` and `daily-layout-panel.tsx`.
-- **Workshop (REAL):** `/workshop` → `src/routes/_authenticated/workshop.tsx`. Hand-off from Daily to Workshop is `src/lib/daily/work-handoff.ts` (tested), with results in `work-result.ts` and records in `work.functions.ts`.
-- **Legacy (LEGACY):** `/room` redirects to `/workshop` or `/daily` (`room.tsx`). `/room-classic` keeps the old My Workspace room (`workspace-room.tsx`), which is not linked from member menus. `/workspace/daily-design` is the layout designer.
-- **Known issue (not fixed):** the Tester panel doesn't appear on the Daily page (`src/components/tester/tester-bar.tsx`).
+- **Current black Daily (REAL):** `/daily` → `src/routes/_authenticated/daily.tsx` (commit 515fe977, 28 Aug 2026). It uses real machinery: `src/lib/daily/board.functions.ts`, `board-model.ts`, `work.functions.ts`, `work-result.ts`, `work-handoff.ts` (tested), `money-move-link.ts`, `src/components/daily/work-card.tsx`. Every Daily entrance leads here (`daily-gate.tsx`, `/room?daily=1`).
+- **Original white Daily (BURIED):** `src/components/workspace/frass-daily.tsx` (1,560 lines, `FrassDaily`). Nothing imports it.
+- **Personalization pieces (PARTIAL):** `src/lib/daily/blueprints.ts`, `kanko.ts`, `mother.ts`, `tradesperson.ts`, `time-roi.ts`, `customization.ts`, `customization.functions.ts`, `conversational.ts`, `src/components/workspace/daily-customization.tsx`, `daily-layout-panel.tsx`, `/workspace/daily-design`.
+- **Workshop (REAL):** `/workshop` → `src/routes/_authenticated/workshop.tsx`. Routes that genuinely accept a work hand-off are listed in `WIRED_SPECIALIST_PATHS`.
+- **Legacy:** `/room` redirect (`room.tsx`); `/room-classic` → `workspace-room.tsx` (not linked in member menus). References to `/frass-daily` and `/founder/daily` need checking (see Phase 1).
+- **Frassy assets:** the shared character in `src/lib/frassy/character.ts`; room looks in `src/lib/frassy/room-looks.ts` (FV Studios seated look is approved); earlier looks exist, including `frassy-look-daily.jpg` and `frassy-look-workshop.jpg`. Today the Daily uses only a small avatar (`frassy-avatar.tsx`).
+- **Known Step 9 defect:** the Tester panel doesn't show on Daily (`src/components/tester/tester-bar.tsx`). It is not fixed here.
 
-## B. What we're aiming for
-One Daily with the white Daily's look and features: Celebrate, briefing, priorities, workload, Delegate to Frassy, approvals, opportunities, goals, performance, activity and Continue. It shows only the member's real records, never sample people. Every Open or Continue button goes straight into the one Workshop and carries the work item with it. There will be no second Daily and no second Workshop.
+## B. Target experience
+Welcome Hall / Frassy interview → Start My Day (light white/ivory, mobile-first, rich, real data) → one primary action → Workshop → actual work → save, reload, continue → complete → Daily updates → next action.
+- **Daily** = what should I do today (orchestration).
+- **Workshop** = do it (execution). There are no duplicate Workshop tools inside Daily.
+- **Frassy** = the brain and orchestrator, present in both.
+- **My AI** = an optional long-form thinking companion. It never replaces Frassy.
 
-## C. Phases (each needs separate approval)
-1. **Side-by-side review (read-only preview):** give the Founder a preview-only way to view the white Daily next to the black one. Nothing changes for members.
-2. **Data rewiring:** replace the white Daily's persona and sample inputs with the real board data (`getDailyBoard`, work items, Money Moves, Fast Tracks). Sample data stays blocked for signed-in members.
-3. **Workshop connection:** send every white-Daily action through `buildHandoffHref` into `/workshop` or the tool that owns the record. Done, Tomorrow and Dismiss use `setWorkItemState`.
-4. **Swap:** `/daily` renders the restored white Daily. Keep the black layout as a fallback until the Founder accepts the swap.
-5. **Tester panel on Daily:** fix it only if approved as a separate item.
-6. **Safe legacy cleanup:** archive rather than delete. Keep the `/room` redirects. Retire `/room-classic` and unused black-Daily pieces only after the swap passes acceptance.
+The goal is not to restore the old white Daily wholesale. It is to recover its richer experience, keep the current real board and data machinery, and connect cleanly to the one Workshop.
 
-## D. Protections that stay in place
-Founder checks on the server (admin OR super_admin), the identity watcher, safe aliases, the truthful Financial Center, Tester commissions, and all existing records. No schema changes are expected. If one turns out to be needed, it is reported first.
+## C. Recovery matrix (Phase 1 output, read-only)
+Go through `frass-daily.tsx` section by section. Label each part **KEEP / CONNECT / CONSOLIDATE / RETIRE**, and separate real machinery and data from presentation, placeholders, local-only state and old Founder/member mixing. The sections to cover:
+Celebrate/wins · briefing · priorities · workload · Delegate to Frassy · approvals · opportunities · goals / Vision Maps · performance · recent activity · Continue · evening reflection · project progress · Founder executive panels (`src/lib/workspace/founder-os.ts`) · personalized Dailies/blueprints (Kanko, Mother, Tradesperson and others) · layout designer/customization · navigation · visual treatment.
+For each row, record: data source (real table or function, or sample/persona), where it lives in the canonical Daily, and what's missing.
+Phase 1 also confirms the final spec with the Founder before any building starts.
 
-## E. Uncertain items (need a read-only check before Phase 2)
-- Which parts of `frass-daily.tsx` read persona or sample data rather than props. This has to be checked line by line.
-- Whether the white Daily styling (bright surfaces) still fits the current design tokens in `src/styles.css`. The dark streetwear memory rule conflicts with a white Daily, so the Founder decides.
-- Whether the Founder executive panels (`src/lib/workspace/founder-os.ts`) still match the Control Room.
+## D. Daily → Workshop contract (must be proven end to end)
+Daily picks real work → one primary action opens the correct Workshop item and context (through `buildHandoffHref` / `parseWorkHandoff`) → the Workshop does the work → SAVE → RELOAD keeps it → CONTINUE → COMPLETE (`setWorkItemState`) → Daily immediately shows the result and progress → next priority.
+Just opening the Workshop does not count as acceptance.
 
-## F. Risks
-- Showing sample data to real members. Guard: tests that fail if persona data renders for a signed-in user.
-- Broken links during the swap. Guard: a link crawl across all Daily entrances.
-- Losing the black Daily's real-data board. Guard: reuse it as the data source, not replace it.
+## E. Frassy presence and function
+- One Frassy identity, with approved presentations for each room. Daily and the general Workshop share one **Executive Assistant Frassy**: glasses, middle part, smooth hair in a low ponytail with soft curls at the ends, cream business-casual suit or FRASS top, and tablet/iPad/notepad/coffee planning props.
+- Two approved poses: **standing**, and **seated at a desk with legs crossed** holding planning materials. She has a substantial full-body or seated presence, not a tiny avatar.
+- Approved assets and identity are recovered and reused first. Any new pose goes to the Founder for approval, and no random replacement Frassy is used. FV Studios keeps its Studio Frassy. Specialist rooms may get their own approved looks later.
+- The presentation is ready for animation, reusing the `room-looks.ts` presence-state pattern. Full lip-sync and body animation come later and do not block this work.
+- Function: members talk to Frassy without leaving Daily. She briefs, helps prioritize, explains why, takes and organizes notes, celebrates progress, and recognizes completed work where the current machinery supports it.
 
-## G. Out of scope
-Deployment, Sheldon, Merch Studio, the `/admin` loop, the Founder Hall menu link, finance or payments changes.
+## F. Split-screen "Open My AI" planning mode (working label)
+Daily normally opens with Frassy and today's plan. For deep planning the member picks "Open My AI":
+- **Left:** Daily + Frassy + current priority, notes and progress.
+- **Right:** the member's own connected or uploaded AI workspace.
+- If no personal AI is connected, it shows a truthful Connect / Open My AI state. There is no fake AI.
 
-## H. Acceptance tests
-Signed-out users are sent to sign-in. Member: first visit and returning visit; picks a Daily task, it hands off to the Workshop, saves, reloads and is still there, is completed, and the next task appears. Frassy responds. Money Moves and Fast Tracks show real data only. Tester: sees only commissioned steps and the panel shows on Daily (if Phase 5 is approved). Founder: executive panels are visible and nothing protected leaks to others. Mobile layout works. The legacy `/room` and `/room?daily=1` redirects still work, with no dead links. Tests, typecheck and build pass.
+Flow: MEET FRASSY → PLAN TODAY → DEEP THINKING → SPLIT SCREEN → CAPTURE USEFUL RESULT → FRASSY ORGANIZES → CREATE/UPDATE REAL WORK ITEM → SEND TO WORKSHOP → EXECUTE → SAVE → DAILY UPDATES.
+The captured result travels with the work item, so the member never has to re-explain it. Phase 1 identifies which capture and connection machinery already exists and which is missing. No saving of data is invented before that is known.
+
+## G. Personalized Dailies
+Separate Kanko, Mother or Tradesperson Daily applications are not kept automatically. Each is audited. Reusable personalization intelligence and blueprints are kept inside ONE canonical Daily. Obsolete persona and sample implementations are retired.
+
+## H. Safe cleanup rule
+AUDIT → preserve unique machinery and data → update or redirect what depends on it → verify the replacement → DELETE the obsolete page or code (with separate approval).
+- Aliases such as `/room` stay only while old links genuinely need a redirect.
+- `/room-classic` is a strong retirement candidate, after a dependency check.
+- Stale references to `/frass-daily` and `/founder/daily` are cleaned up after proving nothing depends on them.
+- `frass-daily.tsx` is retired only after its approved features live in canonical `/daily`.
+- This becomes the model for a later site-wide Legacy & Dead Page Cleanup Pass. No unrelated systems are touched here.
+
+## I. Phases (each separately approvable)
+1. Recovery matrix + final spec confirmation (read-only).
+2. Build the consolidated canonical Daily on the existing real machinery.
+3. Prove the Daily → Workshop loop end to end: save, reload, continue, complete, update.
+4. Light visual system + mobile Focus Mode + Executive Assistant Frassy presence + talking to Frassy inside Daily.
+5. Split-screen My AI planning, capture and hand-off (only after Phase 1 confirms the machinery).
+6. Tester panel on Daily + role and security acceptance.
+7. Redirect or update old incoming links.
+8. Deletion of obsolete Daily and workspace pages and components, proven safe dependency by dependency.
+9. Founder acceptance.
+
+## J. Protections that stay in place
+Founder checks on the server (admin OR super_admin), the identity watcher, safe aliases, the truthful Financial Center, Tester commissions, existing records, and no sample data for signed-in members. Any schema change is reported for approval first.
+
+## K. Acceptance tests
+Signed-out, ordinary Member, Tester and Founder. First-time and returning visits. Real Money Moves and Fast Tracks, with no sample or fake data. Frassy presence and conversation. Split-screen shows a truthful state, and the captured result is handed off. Mobile. Old-link redirects. No dead links and no protected leakage. The Tester panel appears on Daily. The full Daily → Workshop persistence loop. Tests, typecheck and build pass.
+
+## L. Out of scope
+Deployment, Sheldon, Merch Studio, the `/admin` loop, the Founder Hall menu link, finance and payments, unrelated legacy pages.
