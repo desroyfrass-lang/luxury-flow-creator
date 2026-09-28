@@ -1,40 +1,40 @@
-# Read-only navigation trace: Founder Feedback and Roles & Access
+# Daily + Workshop Consolidation and Safe Legacy Cleanup (PLAN ONLY)
 
-No changes made. This is a report based on the current code. Nothing was run as Nicolle, and her identity check was not bypassed.
+Nothing is built, deleted or deployed by this plan. Each phase below needs its own Founder approval. Sheldon is not assigned.
 
-## A. Founder Feedback (/admin/feedback): reachable, but hard to find
-- **Profile menu:** not listed. The Founder group in the profile menu has only Control Room, Frassy Studios, Site Management and Roles & Access.
-- **Founder Hall:** no Feedback card.
-- **Visible path 1 (Control Room):** open the profile menu (top right, same on desktop and in the mobile menu) → **Founder Control Room** → the **Business** door → **Commissioning** section → the **Builder insights** card. That card opens Page feedback.
-- **Visible path 2 (her own Daily, Founder view only):** My Workspace → the Founder tab **Launch Feedback** → **Page feedback**.
-- **Visible path 3:** inside any other admin page (for example Roles & Access), the gold row of links at the top includes **Feedback**.
-- **Tester reports:** yes, this is the same inbox. Tester reports show here with a gold label "Tester · Works / Problem / Confused". The two saved test reports should appear. Only admin or super_admin accounts can open it, and the server checks this live.
+## A. What exists today (verified read-only)
+- **Black Daily (REAL, current):** `/daily` → `src/routes/_authenticated/daily.tsx`. Built on 28 Aug 2026 (commit 515fe977). It reads real work through `src/lib/daily/board.functions.ts` + `board-model.ts`, with cards from `src/components/daily/work-card.tsx`. Every Daily entrance leads here, including the "Open the Daily" event (`src/components/workspace/daily-gate.tsx`) and `/room?daily=1`.
+- **White Daily (BURIED, original):** `src/components/workspace/frass-daily.tsx` (1,560 lines, the `FrassDaily` component). Nothing imports it any more, so no page opens it. The blueprints it depends on are still present: `src/lib/daily/blueprints.ts`, `kanko.ts`, `mother.ts`, `tradesperson.ts`, `time-roi.ts`, `customization*.ts`, `conversational.ts`, plus `src/components/workspace/daily-customization.tsx` and `daily-layout-panel.tsx`.
+- **Workshop (REAL):** `/workshop` → `src/routes/_authenticated/workshop.tsx`. Hand-off from Daily to Workshop is `src/lib/daily/work-handoff.ts` (tested), with results in `work-result.ts` and records in `work.functions.ts`.
+- **Legacy (LEGACY):** `/room` redirects to `/workshop` or `/daily` (`room.tsx`). `/room-classic` keeps the old My Workspace room (`workspace-room.tsx`), which is not linked from member menus. `/workspace/daily-design` is the layout designer.
+- **Known issue (not fixed):** the Tester panel doesn't appear on the Daily page (`src/components/tester/tester-bar.tsx`).
 
-## B. Roles & Access (/admin/roles): visible
-- **Profile menu:** top right → group **Founder Hall** → **Roles & Access**. The same list appears in the mobile menu sheet. It only shows when the account holds admin or super_admin.
-- **Founder Hall** (/founder): the **Security & Access** card.
-- **Control Room:** Business → Commissioning → the **Admin roles** card.
-- **Daily Founder tab:** Founder Control Room → **Roles**.
+## B. What we're aiming for
+One Daily with the white Daily's look and features: Celebrate, briefing, priorities, workload, Delegate to Frassy, approvals, opportunities, goals, performance, activity and Continue. It shows only the member's real records, never sample people. Every Open or Continue button goes straight into the one Workshop and carries the work item with it. There will be no second Daily and no second Workshop.
 
-## C. What Nicolle should click right now
-1. Sign in and open the **profile / account menu** (top right; on a phone it is inside the menu).
-2. Under **Founder Hall**, click **Roles & Access**. (Pass the identity check if it asks.)
-3. On that page, in the gold link row near the top, click **Feedback**.
+## C. Phases (each needs separate approval)
+1. **Side-by-side review (read-only preview):** give the Founder a preview-only way to view the white Daily next to the black one. Nothing changes for members.
+2. **Data rewiring:** replace the white Daily's persona and sample inputs with the real board data (`getDailyBoard`, work items, Money Moves, Fast Tracks). Sample data stays blocked for signed-in members.
+3. **Workshop connection:** send every white-Daily action through `buildHandoffHref` into `/workshop` or the tool that owns the record. Done, Tomorrow and Dismiss use `setWorkItemState`.
+4. **Swap:** `/daily` renders the restored white Daily. Keep the black layout as a fallback until the Founder accepts the swap.
+5. **Tester panel on Daily:** fix it only if approved as a separate item.
+6. **Safe legacy cleanup:** archive rather than delete. Keep the `/room` redirects. Retire `/room-classic` and unused black-Daily pieces only after the swap passes acceptance.
 
-Both pages are reached in two clicks, with no hunting needed. She can also type the addresses `/admin/roles` and `/admin/feedback` directly.
+## D. Protections that stay in place
+Founder checks on the server (admin OR super_admin), the identity watcher, safe aliases, the truthful Financial Center, Tester commissions, and all existing records. No schema changes are expected. If one turns out to be needed, it is reported first.
 
-## D. Navigation defects found (reported, not fixed)
-1. **"Site Management" / "Admin" is a loop.** It points to `/admin`, but that address sends you straight back to the Control Room. So the gold admin link row, which is the only full list including Feedback, never appears unless you first enter a specific admin page. This is most likely why Nicolle could not find Feedback.
-2. **Feedback has no entry in the profile menu or Founder Hall.** It is only reachable through a card labelled "Builder insights", which doesn't use the word Feedback, or through the Daily Founder tabs.
-3. **Founder Hall itself isn't in the profile menu.** The menu group is named "Founder Hall", but it has no link to the Founder Hall page. The only link to it is inside the Teleporter panel.
-4. Minor: the "Owner · Operator" role summary lists "Admin Console" pointing to the Control Room, which duplicates the entry above it.
+## E. Uncertain items (need a read-only check before Phase 2)
+- Which parts of `frass-daily.tsx` read persona or sample data rather than props. This has to be checked line by line.
+- Whether the white Daily styling (bright surfaces) still fits the current design tokens in `src/styles.css`. The dark streetwear memory rule conflicts with a white Daily, so the Founder decides.
+- Whether the Founder executive panels (`src/lib/workspace/founder-os.ts`) still match the Control Room.
 
-## Technical details
-- Profile menu: `src/lib/navigation/account-menu.ts` (Founder group appears only for admin or super_admin).
-- Founder Hall cards: `src/lib/founder/founder-hall.ts` ("security" → /admin/roles; "site-management" → /admin; no feedback entry).
-- `/admin` redirect: `src/routes/_authenticated/admin.index.tsx` → /control-room.
-- Admin link row: `src/routes/_authenticated/admin.tsx` (it only draws on /admin/* child pages).
-- Control Room cards: `src/components/founder/commissioning-panel.tsx` (Builder insights, Admin roles), under the Business group in `src/lib/founder/command-center.ts`.
-- Daily Founder tabs: `src/lib/workspace/founder-os.ts` (feedback, command).
+## F. Risks
+- Showing sample data to real members. Guard: tests that fail if persona data renders for a signed-in user.
+- Broken links during the swap. Guard: a link crawl across all Daily entrances.
+- Losing the black Daily's real-data board. Guard: reuse it as the data source, not replace it.
 
-No Step 9 repair, no Sheldon assignment, no deployment.
+## G. Out of scope
+Deployment, Sheldon, Merch Studio, the `/admin` loop, the Founder Hall menu link, finance or payments changes.
+
+## H. Acceptance tests
+Signed-out users are sent to sign-in. Member: first visit and returning visit; picks a Daily task, it hands off to the Workshop, saves, reloads and is still there, is completed, and the next task appears. Frassy responds. Money Moves and Fast Tracks show real data only. Tester: sees only commissioned steps and the panel shows on Daily (if Phase 5 is approved). Founder: executive panels are visible and nothing protected leaks to others. Mobile layout works. The legacy `/room` and `/room?daily=1` redirects still work, with no dead links. Tests, typecheck and build pass.
