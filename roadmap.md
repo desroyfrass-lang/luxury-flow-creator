@@ -15,3 +15,4 @@
 - [x] Clean the Studio-only Frassy conversation, remove repeated explanation and playback controls, and keep blocker replies action-oriented.
 - [x] Refine Studio Frassy replies with one closed response-options menu, restore existing explanation/hearing capabilities, and repair collision and duplicate transcript rendering.
 - [x] Login & Access Recovery Step 1 (approved): reproduce access bypass + inventory every Founder/internal route's live server check. Report only; no repairs.
+- [ ] Narrow navigation repair (approved): make the existing /admin/feedback inbox visibly reachable as "Tester Feedback" from the Founder/Admin nav. No new feedback system; no other defect repairs.
