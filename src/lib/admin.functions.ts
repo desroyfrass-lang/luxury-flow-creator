@@ -33,7 +33,7 @@ export const listPageFeedback = createServerFn({ method: "GET" })
 
     const { data, error } = await context.supabase
       .from("page_feedback")
-      .select("id, page_path, page_title, helpful, issue_text, user_id, created_at")
+      .select("id, page_path, page_title, helpful, issue_text, user_id, created_at, tester_status, tester_experience")
       .order("created_at", { ascending: false })
       .limit(200);
 

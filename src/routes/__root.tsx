@@ -36,6 +36,7 @@ import { DailyGate } from "@/components/workspace/daily-gate";
 import { ConstructionMode } from "@/components/construction/blueprint-mode";
 
 import { AuthIdentityWatcher } from "@/lib/auth/identity-watch";
+import { TesterBar } from "@/components/tester/tester-bar";
 import { RewardsRibbon } from "@/components/rewards-ribbon";
 import { FrassTrail } from "@/components/frass-trail";
 import { ViewModeProvider } from "@/lib/view-mode/view-mode";
@@ -170,6 +171,7 @@ function RootComponent() {
         <Outlet />
         <WelcomeLinkClaim />
         <Toaster position="top-center" />
+        <TesterBar />
         {/* FRASS-0558 — one Frassy. She only floats where the page has no conversation of its own. */}
         <FrassyCompanion />
         <FrassyHost />
