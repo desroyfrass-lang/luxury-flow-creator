@@ -25,11 +25,12 @@ export const checkIsAdmin = createServerFn({ method: "GET" })
 export const listPageFeedback = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
-    const { data: isAdmin } = await context.supabase.rpc("has_role", {
-      _user_id: context.userId,
-      _role: "admin",
-    });
-    if (!isAdmin) throw new Error("Forbidden");
+    // Step 8 — Founder rule: admin OR super_admin, checked live on the server.
+    const [a, s] = await Promise.all([
+      context.supabase.rpc("has_role", { _user_id: context.userId, _role: "admin" }),
+      context.supabase.rpc("has_role", { _user_id: context.userId, _role: "super_admin" }),
+    ]);
+    if (a.error || s.error || !(a.data || s.data)) throw new Error("Forbidden");
 
     const { data, error } = await context.supabase
       .from("page_feedback")
