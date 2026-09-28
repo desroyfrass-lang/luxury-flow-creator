@@ -77,6 +77,7 @@ export function accountMenuGroups(roles: AppRole[]): AccountMenuGroup[] {
         { to: "/studios", label: "Frassy Studios", glyph: "🎞", plain: "The production house." },
         { to: "/admin", label: "Site Management", glyph: "🛠", plain: "Everyday admin tools." },
         { to: "/admin/roles", label: "Roles & Access", glyph: "🗝", plain: "Who may open what." },
+        { to: "/admin/feedback", label: "Tester Feedback", glyph: "💬", plain: "Reports from testers and page feedback." },
       ],
     });
   }
