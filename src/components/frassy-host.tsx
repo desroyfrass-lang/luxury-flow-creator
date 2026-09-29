@@ -94,25 +94,23 @@ export function FrassyHost() {
     setPhase("enter");
 
 
-    const reduced =
-      typeof window !== "undefined" &&
-      window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
-
-    const readMs = Math.min(3000, 2000 + dest.welcome.length * 12);
-
-    timers.current.push(setTimeout(() => setPhase("speak"), reduced ? 60 : 350));
-    timers.current.push(setTimeout(() => setPhase("depart"), readMs));
-    timers.current.push(
-      setTimeout(() => {
-        setGreeting(null);
-        setPhase("enter");
-      }, readMs + 700),
-    );
-
   }, [pathname]);
 
-
-  useEffect(() => () => clearTimers(), []);
+  // Keep the timer tied to the greeting itself. StrictMode may replay effects:
+  // the destination is already marked seen, but the active greeting still
+  // needs fresh timers after its first cleanup.
+  useEffect(() => {
+    if (!greeting) return;
+    const reduced = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
+    const readMs = Math.min(3000, 2000 + greeting.welcome.length * 12);
+    timers.current.push(setTimeout(() => setPhase("speak"), reduced ? 60 : 350));
+    timers.current.push(setTimeout(() => setPhase("depart"), readMs));
+    timers.current.push(setTimeout(() => {
+      setGreeting(null);
+      setPhase("enter");
+    }, readMs + 700));
+    return () => clearTimers();
+  }, [greeting]);
 
   // Step 2 — while she is on stage, every other Frassy surface stands down.
   useEffect(() => {
@@ -161,7 +159,7 @@ export function FrassyHost() {
 
   return (
     <div
-      className="fixed inset-0 z-[60] flex items-center justify-center overflow-hidden px-5 py-[max(4rem,env(safe-area-inset-top))]"
+      className="fixed inset-0 z-[55] flex items-center justify-center overflow-hidden px-5 py-[max(4rem,env(safe-area-inset-top))]"
       role="dialog"
       aria-live="polite"
       aria-label={`Frassy welcomes you to ${greeting.label}`}
