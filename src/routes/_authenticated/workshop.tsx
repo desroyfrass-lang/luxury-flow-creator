@@ -10,7 +10,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { SiteShell } from "@/components/site-shell";
 import {
   createWorkItem,
@@ -129,6 +129,25 @@ function WorkshopPage() {
     onSuccess: refresh,
   });
 
+  // Phase 3: arriving from Daily with ?item=… opens THAT work with its saved
+  // title and notes filled in (previously the editor opened blank, so Save
+  // failed or wiped the notes). Seeded once per item, from the account record.
+  const seededFor = useRef<string | null>(null);
+  useEffect(() => {
+    if (!focusId || !items || seededFor.current === focusId) return;
+    const it = items.find((i) => i.id === focusId);
+    if (!it) return;
+    seededFor.current = focusId;
+    setEditing(it.id);
+    setEditTitle(it.title);
+    setEditDetail(it.detail ?? "");
+    if (it.status === "done") setTab("completed");
+    else if (it.status !== "active") setTab("recent");
+    requestAnimationFrame(() =>
+      document.getElementById(`work-${it.id}`)?.scrollIntoView({ block: "center" }),
+    );
+  }, [focusId, items]);
+
   const active = useMemo(() => (items ?? []).filter((i) => i.status === "active"), [items]);
   const completed = useMemo(() => (items ?? []).filter((i) => i.status === "done"), [items]);
   const recent = useMemo(
@@ -156,7 +175,7 @@ function WorkshopPage() {
   }
 
   const row = (i: WorkItem) => (
-    <div key={i.id} className="rounded-2xl border border-border/70 bg-background/70 p-4">
+    <div key={i.id} id={`work-${i.id}`} className="rounded-2xl border border-border/70 bg-background/70 p-4">
       {editing === i.id ? (
         <div className="grid gap-2">
           <input
