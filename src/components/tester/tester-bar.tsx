@@ -14,7 +14,7 @@ import type { TesterExperience } from "@/lib/roles";
 
 /** Journey order and the existing Member pages each experience lives on. */
 const JOURNEY: { exp: TesterExperience; label: string; to: string }[] = [
-  { exp: "welcome_hall", label: "Welcome Hall", to: "/welcome-hall?welcome=daily" },
+  { exp: "welcome_hall", label: "Welcome Hall", to: "/welcome-hall" },
   { exp: "onboarding", label: "Frassy interview", to: "/onboarding" },
   { exp: "daily", label: "Start My Day", to: "/daily" },
   { exp: "workshop", label: "Workshop", to: "/workshop" },
@@ -73,6 +73,7 @@ export function TesterBar() {
           <li key={s.exp}>
             <Link
               to={s.to}
+              {...(s.exp === "welcome_hall" ? { search: { welcome: "daily" as const } } : {})}
               className={`block rounded px-2 py-1 hover:bg-foreground/5 ${here?.exp === s.exp ? "text-[color:var(--gold)]" : "text-foreground/80"}`}
             >
               {i + 1}. {s.label}

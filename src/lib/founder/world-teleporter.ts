@@ -374,9 +374,9 @@ export const WORLD_ROUTES: WorldRoute[] = [
     "component": "ArrivalPage",
     "file": "arrival.tsx",
     "district": "Arrival & Welcome",
-    "status": "built",
+    "status": "retired",
     "refs": 0,
-    "redirect": false
+    "redirect": true
   },
   {
     "path": "/auth",
