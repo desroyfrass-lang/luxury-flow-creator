@@ -136,7 +136,7 @@ export function DailyWelcomeCeremony({ next = SAFE_MEMBER_DESTINATION }: { next?
       <div className="mt-7 flex items-start gap-5">
         <FrassyLook room="hall" size={112} showCaption={false} />
         <div className="space-y-4">
-          {(mounted ? script.lines.slice(0, line + 1) : []).map((l, i) => (
+          {script.lines.slice(0, mounted ? line + 1 : 1).map((l, i) => (
             <p
               key={i}
               className={

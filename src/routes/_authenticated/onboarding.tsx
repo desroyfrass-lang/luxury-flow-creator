@@ -33,6 +33,7 @@ import {
 
 import { stageById, stageIndex, stagesFor, trackMinutes, trackOf } from "@/lib/journey";
 import { useIsAdminStatus } from "@/hooks/use-is-admin";
+import { useAuthUserId } from "@/lib/auth/identity-watch";
 import { LaunchReadiness } from "@/components/launch-readiness";
 import { FounderWalkthrough } from "@/components/founder/founder-walkthrough";
 import { COMMISSIONING_PHASES } from "@/lib/commissioning";
@@ -85,6 +86,7 @@ type ThreadMessage = {
 const JOURNAL_SCOPE = "journey";
 
 function OnboardingPage({ reviewMode = false }: { reviewMode?: boolean }) {
+  const { userId } = useAuthUserId();
   const loadJourney = useServerFn(getBuilderJourney);
   const reviewJourney = useServerFn(getJourneyReview);
   const jumpStage = useServerFn(setJourneyStage);
@@ -94,8 +96,9 @@ function OnboardingPage({ reviewMode = false }: { reviewMode?: boolean }) {
   const { isAdmin, loading: roleLoading } = useIsAdminStatus();
 
   const { data, isLoading, isError, refetch } = useQuery({
-    queryKey: reviewMode ? ["founder-interview-review"] : ["builder-journey"],
+    queryKey: reviewMode ? ["founder-interview-review", userId] : ["builder-journey", userId],
     queryFn: () => reviewMode ? reviewJourney() : loadJourney(),
+    enabled: Boolean(userId),
     retry: reviewMode ? false : 3,
   });
 
@@ -363,7 +366,7 @@ function OnboardingPage({ reviewMode = false }: { reviewMode?: boolean }) {
     if (voice.phase === "idle" && !busy) await voice.startRecording();
   }
 
-  if (reviewMode && (isError || (!isLoading && (roleLoading || isAdmin !== true)))) {
+  if (reviewMode && (isError || (!isLoading && !roleLoading && isAdmin !== true))) {
     return <SiteShell><main className="mx-auto max-w-3xl px-6 py-16 text-sm text-muted-foreground">This review is restricted to the Founder. <Link to="/daily" className="underline">Back to Daily</Link></main></SiteShell>;
   }
 
