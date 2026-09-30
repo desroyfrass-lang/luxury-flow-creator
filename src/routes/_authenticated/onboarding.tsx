@@ -494,30 +494,62 @@ function OnboardingPage() {
               Enter the Builder Hall
             </Link>
           )}
+          <div className="mt-8 space-y-8">
+            {/* FRASS-0519 — the Founder walks the same front door, with validation attached. */}
+            {isAdmin && isOwnerTrack && (
+              <FounderWalkthrough stepId={stage.id} stepLabel={stage.title} />
+            )}
+
+            {isOwnerTrack && (
+              <LaunchReadiness
+                eyebrow="Commissioning Dashboard"
+                heading="Platform Readiness"
+                completedStageIds={Object.keys(data?.stageProgress ?? {}).filter(
+                  (id) => trackOf(id) === "owner",
+                )}
+                onSelectStage={async (stageId) => {
+                  await jumpStage({ data: { stageId } });
+                  await refetch();
+                }}
+              />
+            )}
+          </div>
         </aside>
 
-        <div className="space-y-8">
-          {/* FRASS-0519 — the Founder walks the same front door, with validation attached. */}
-          {isAdmin && isOwnerTrack && (
-            <FounderWalkthrough stepId={stage.id} stepLabel={stage.title} />
-          )}
-
-          {isOwnerTrack && (
-            <LaunchReadiness
-              eyebrow="Commissioning Dashboard"
-              heading="Platform Readiness"
-              completedStageIds={Object.keys(data?.stageProgress ?? {}).filter(
-                (id) => trackOf(id) === "owner",
-              )}
-              onSelectStage={async (stageId) => {
-                await jumpStage({ data: { stageId } });
-                await refetch();
-              }}
+        <div className="grid gap-4 lg:grid-cols-[minmax(280px,380px)_1fr] lg:gap-8">
+          {/* Standing EA Frassy — interview/presentation state */}
+          <figure className="relative hidden overflow-hidden rounded-sm border border-border lg:sticky lg:top-24 lg:block lg:h-[calc(100vh-8rem)]">
+            <img
+              src={frassyStanding.url}
+              alt="Frassy, your guide, standing ready with her tablet"
+              className="h-full w-full object-cover object-top"
             />
-          )}
+          </figure>
 
           {/* Conversation */}
-          <section className="min-h-[70vh] rounded-sm border border-border bg-background/40">
+          <section className="flex min-h-[calc(100vh-8rem)] flex-col rounded-sm border border-border bg-background/40">
+            <div className="flex items-center gap-3 border-b border-border px-4 py-3 sm:px-6">
+              <img
+                src={frassyStanding.url}
+                alt=""
+                className="h-14 w-14 shrink-0 rounded-full border border-[color:var(--gold)]/50 object-cover object-top lg:hidden"
+              />
+              <div className="min-w-0 flex-1">
+                <div className="text-[11px] uppercase tracking-[0.3em] text-[color:var(--gold)]">
+                  Frassy
+                </div>
+                <div className="truncate text-xs text-muted-foreground">
+                  {completedCount} of {stages.length} {isOwnerTrack ? "steps" : "chapters"} · saved
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={() => setJourneyOpen(true)}
+                className="shrink-0 rounded-full border border-[color:var(--gold)]/60 px-4 py-2 text-[11px] font-bold uppercase tracking-[0.2em] text-[color:var(--gold)] hover:bg-[color:var(--gold)]/10"
+              >
+                Journey
+              </button>
+            </div>
             {isOwnerTrack && diagnostics && (
               <details
                 className="border-b border-[color:var(--gold)]/30 bg-[color:var(--gold)]/5 px-6 py-4"
