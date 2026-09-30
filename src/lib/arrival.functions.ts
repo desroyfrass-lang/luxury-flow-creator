@@ -42,7 +42,7 @@ export const getHillEntry = createServerFn({ method: "GET" })
       throw new Error("Could not check your arrival just now.");
     }
     return {
-      returning: Boolean(memory.data) && (journey.data?.status === "complete" || Boolean(admin.data) || Boolean(superAdmin.data)),
+      returning: journey.data?.status === "complete" || (Boolean(memory.data) && (Boolean(admin.data) || Boolean(superAdmin.data))),
     };
   });
 
