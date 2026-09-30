@@ -99,6 +99,8 @@ function OnboardingPage() {
   }, []);
   const [diagnostics, setDiagnostics] = useState<ConversationDiagnostics | null>(null);
   const [draft, setDraft] = useState("");
+  // Presentation only: Journey/Progress secondary view.
+  const [journeyOpen, setJourneyOpen] = useState(false);
   // Frassy speaks her replies aloud unless the Founder mutes her.
   const [speakReplies, setSpeakReplies] = useState(true);
   const voice = usePushToTalk();
