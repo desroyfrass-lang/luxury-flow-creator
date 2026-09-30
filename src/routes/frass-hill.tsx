@@ -2,12 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { GatewayNav } from "@/components/gateway-nav";
 import { DailyWelcomeGate } from "@/components/welcome-hall/daily-welcome-gate";
-import { useNavigate } from "@tanstack/react-router";
-import { useEffect } from "react";
-import { supabase } from "@/integrations/supabase/client";
-import { getHillEntry } from "@/lib/arrival.functions";
-import { useServerFn } from "@tanstack/react-start";
-import { welcomedToday } from "@/lib/welcome-hall/daily-welcome";
+import { FirstOverlook } from "@/components/hill/first-overlook";
 import { HillSightlines } from "@/components/hill-sightlines";
 import { StudioEntryCard } from "@/components/studio-entry-card";
 import {
@@ -82,29 +77,11 @@ export const Route = createFileRoute("/frass-hill")({
   component: HillEntry,
 });
 
+// Deliberate exploration: the front door (Enter Frass Hill) owns the
+// Frassy/Daily journey decision. Here the town simply opens, after the
+// once-a-day Welcome Hall greeting (which returns the member here).
 function HillEntry() {
-  const navigate = useNavigate();
-  const hillEntry = useServerFn(getHillEntry);
-  const [showPlan, setShowPlan] = useState(false);
-  useEffect(() => {
-    let alive = true;
-    void (async () => {
-      const { data } = await supabase.auth.getSession();
-      if (!alive) return;
-      if (!data.session) { setShowPlan(true); return; }
-      try {
-        const entry = await hillEntry();
-        if (!alive) return;
-        if (!entry.returning) navigate({ to: "/welcome-hall", search: { arrival: "first" }, replace: true });
-        else if (welcomedToday()) navigate({ to: "/daily", replace: true });
-        else navigate({ to: "/welcome-hall", search: { welcome: "daily" }, replace: true });
-      } catch {
-        if (alive) navigate({ to: "/welcome-hall", search: { arrival: "first" }, replace: true });
-      }
-    })();
-    return () => { alive = false; };
-  }, [hillEntry, navigate]);
-  return showPlan ? <DailyWelcomeGate><FrassHillPage /></DailyWelcomeGate> : <main className="min-h-screen bg-background" />;
+  return <DailyWelcomeGate><FrassHillPage /></DailyWelcomeGate>;
 }
 
 function FrassHillPage() {
@@ -123,6 +100,7 @@ function FrassHillPage() {
   return (
     <div className="min-h-screen bg-background">
       <GatewayNav mode="world" />
+      <FirstOverlook onLook={lookAt} />
 
       <section className="relative overflow-hidden">
         <img
