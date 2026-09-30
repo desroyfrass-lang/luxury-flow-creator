@@ -37,6 +37,7 @@ import { FounderWalkthrough } from "@/components/founder/founder-walkthrough";
 import { COMMISSIONING_PHASES } from "@/lib/commissioning";
 import { usePushToTalk } from "@/hooks/use-push-to-talk";
 import { Copy, Volume2, VolumeX } from "lucide-react";
+import frassyStanding from "@/assets/frassy-standing-ea.png.asset.json";
 
 export const Route = createFileRoute("/_authenticated/onboarding")({
   head: () => ({
@@ -553,7 +554,6 @@ function OnboardingPage() {
             {isOwnerTrack && diagnostics && (
               <details
                 className="border-b border-[color:var(--gold)]/30 bg-[color:var(--gold)]/5 px-6 py-4"
-                open
               >
                 <summary className="cursor-pointer text-[10px] font-bold uppercase tracking-[0.24em] text-[color:var(--gold)]">
                   Founder routing diagnostics · temporary
@@ -602,11 +602,11 @@ function OnboardingPage() {
                 </dl>
               </details>
             )}
-            <header className="border-b border-border px-6 py-5">
+            <header className="border-b border-border px-4 py-4 sm:px-6">
               <div className="text-[11px] uppercase tracking-[0.3em] text-muted-foreground">
                 {isOwnerTrack ? stage.chapter : `Chapter ${idx + 1} · ${stage.chapter}`}
               </div>
-              <h2 className="mt-2 font-display text-2xl">{stage.title}</h2>
+              <h2 className="mt-1 font-display text-xl sm:text-2xl">{stage.title}</h2>
               <p className="mt-1 text-sm text-muted-foreground">{stage.purpose}</p>
 
               <div className="mt-4 flex flex-wrap items-center gap-3">
@@ -644,7 +644,7 @@ function OnboardingPage() {
               </div>
             </header>
 
-            <div className="space-y-6 px-6 py-8">
+            <div className="flex-1 space-y-6 px-4 py-6 sm:px-6">
               {isLoading && (
                 <p className="text-sm text-muted-foreground">Bringing your journey back…</p>
               )}
@@ -709,7 +709,7 @@ function OnboardingPage() {
               <div ref={endRef} />
             </div>
 
-            <div className="border-t border-border px-6 py-4">
+            <div className="sticky bottom-0 border-t border-border bg-background px-4 py-3 sm:px-6">
               {(voice.voiceError) && (
                 <p className="mb-2 text-xs text-destructive">{voice.voiceError}</p>
               )}
