@@ -65,6 +65,32 @@ export type ConversationDiagnostics = {
   historyMessages: number;
 };
 
+/** Founder preview of the existing interview record. No journey initialization or writes. */
+export const getJourneyReview = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }): Promise<JourneyState> => {
+    const checks = await Promise.all((["admin", "super_admin"] as const).map((_role) =>
+      context.supabase.rpc("has_role", { _user_id: context.userId, _role })
+    ));
+    if (checks.some((check) => check.error) || !checks.some((check) => check.data)) throw new Error("Forbidden");
+    const [journey, messages, memory] = await Promise.all([
+      context.supabase.from("builder_journeys").select("status,current_stage,stage_progress").eq("user_id", context.userId).maybeSingle(),
+      context.supabase.from("builder_journey_messages").select("id,role,content,stage,created_at").eq("user_id", context.userId).order("created_at", { ascending: true }),
+      context.supabase.from("builder_memory").select("category,key,value").eq("user_id", context.userId).order("created_at", { ascending: true }),
+    ]);
+    if (journey.error || messages.error || memory.error) throw new Error("Could not read your interview.");
+    return {
+      status: journey.data?.status ?? "not_started",
+      currentStage: journey.data?.current_stage ?? FIRST_OWNER_STAGE,
+      stageProgress: (journey.data?.stage_progress && typeof journey.data.stage_progress === "object" && !Array.isArray(journey.data.stage_progress) ? journey.data.stage_progress : {}) as JourneyState["stageProgress"],
+      startedAt: "",
+      lastActiveAt: "",
+      completedAt: null,
+      messages: (messages.data ?? []) as JourneyMessage[],
+      memory: (memory.data ?? []) as BuilderMemoryEntry[],
+    };
+  });
+
 export const getBuilderJourney = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }): Promise<JourneyState> => {

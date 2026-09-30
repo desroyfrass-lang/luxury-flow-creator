@@ -172,6 +172,9 @@ function FounderPanel() {
         <Link to="/admin/feedback" className={link}>
           Tester Feedback
         </Link>
+        <Link to="/onboarding" search={{ review: "founder" }} className={link}>
+          Review Frassy interview
+        </Link>
       </div>
     </section>
   );

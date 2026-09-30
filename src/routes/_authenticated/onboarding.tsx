@@ -12,6 +12,7 @@ import {
   setJourneyStage,
   startJourneyTrack,
   journeyOpening,
+  getJourneyReview,
   type ConversationDiagnostics,
   type JourneyMessage,
 } from "@/lib/journey.functions";
@@ -32,6 +33,7 @@ import {
 
 import { stageById, stageIndex, stagesFor, trackMinutes, trackOf } from "@/lib/journey";
 import { useIsAdminStatus } from "@/hooks/use-is-admin";
+import { useAuthUserId } from "@/lib/auth/identity-watch";
 import { LaunchReadiness } from "@/components/launch-readiness";
 import { FounderWalkthrough } from "@/components/founder/founder-walkthrough";
 import { COMMISSIONING_PHASES } from "@/lib/commissioning";
@@ -40,6 +42,9 @@ import { Copy, Volume2, VolumeX } from "lucide-react";
 import frassyStanding from "@/assets/frassy-standing-ea.png.asset.json";
 
 export const Route = createFileRoute("/_authenticated/onboarding")({
+  validateSearch: (search: Record<string, unknown>): { review?: "founder" } => ({
+    ...(search["review"] === "founder" ? { review: "founder" as const } : {}),
+  }),
   head: () => ({
     meta: [
       { title: "Founder Commissioning | Frass OS" },
@@ -59,8 +64,13 @@ export const Route = createFileRoute("/_authenticated/onboarding")({
       { name: "robots", content: "noindex,nofollow" },
     ],
   }),
-  component: OnboardingPage,
+  component: OnboardingEntry,
 });
+
+function OnboardingEntry() {
+  const { review } = Route.useSearch();
+  return <OnboardingPage reviewMode={review === "founder"} />;
+}
 
 type ThreadMessage = {
   key: string;
@@ -75,17 +85,21 @@ type ThreadMessage = {
 
 const JOURNAL_SCOPE = "journey";
 
-function OnboardingPage() {
+function OnboardingPage({ reviewMode = false }: { reviewMode?: boolean }) {
+  const { userId } = useAuthUserId();
   const loadJourney = useServerFn(getBuilderJourney);
+  const reviewJourney = useServerFn(getJourneyReview);
   const jumpStage = useServerFn(setJourneyStage);
   const takeTurn = useServerFn(journeyTurn);
   const switchTrack = useServerFn(startJourneyTrack);
   const openConversation = useServerFn(journeyOpening);
   const { isAdmin, loading: roleLoading } = useIsAdminStatus();
 
-  const { data, isLoading, refetch } = useQuery({
-    queryKey: ["builder-journey"],
-    queryFn: () => loadJourney(),
+  const { data, isLoading, isError, refetch } = useQuery({
+    queryKey: reviewMode ? ["founder-interview-review", userId] : ["builder-journey", userId],
+    queryFn: () => reviewMode ? reviewJourney() : loadJourney(),
+    enabled: Boolean(userId),
+    retry: reviewMode ? false : 3,
   });
 
   const [busy, setBusy] = useState(false);
@@ -95,8 +109,9 @@ function OnboardingPage() {
   // a message can only change status, never disappear.
   const [journal, setJournal] = useState<JournalEntry[]>([]);
   useEffect(() => {
+    if (reviewMode) return;
     setJournal(loadJournal(JOURNAL_SCOPE));
-  }, []);
+  }, [reviewMode]);
   const [diagnostics, setDiagnostics] = useState<ConversationDiagnostics | null>(null);
   const [draft, setDraft] = useState("");
   // Presentation only: Journey/Progress secondary view.
@@ -139,7 +154,7 @@ function OnboardingPage() {
       at: m.created_at,
       status: "synced" as const,
     }));
-    const fromJournal: ThreadMessage[] = journal
+    const fromJournal: ThreadMessage[] = (reviewMode ? [] : journal)
       .filter((e) => !(e.serverId && savedIds.has(e.serverId)))
       .filter((e) => !isTeleporterAuditTurn(e.content))
       .map((e) => ({
@@ -152,7 +167,7 @@ function OnboardingPage() {
         clientId: e.clientId,
       }));
     return [...fromServer, ...fromJournal].sort((a, b) => a.at.localeCompare(b.at));
-  }, [data?.messages, journal]);
+  }, [data?.messages, journal, reviewMode]);
 
   // FRASS-0572A — publish which engine is answering, so the Founder can see it.
   const auditTurnsFiltered = useMemo(
@@ -162,6 +177,7 @@ function OnboardingPage() {
     [data?.messages],
   );
   useEffect(() => {
+    if (reviewMode) return;
     publishEngineDiagnostics({
       pipeline: "journey",
       mode: "journey",
@@ -171,7 +187,7 @@ function OnboardingPage() {
       path: "/onboarding",
     });
     return () => clearEngineDiagnostics();
-  }, [messages.length, auditTurnsFiltered]);
+  }, [messages.length, auditTurnsFiltered, reviewMode]);
 
   const messagesRef = useRef<ThreadMessage[]>(messages);
   messagesRef.current = messages;
@@ -193,7 +209,7 @@ function OnboardingPage() {
 
   // Founders land in the Commissioning Journey, not the Builder Journey.
   useEffect(() => {
-    if (isLoading || roleLoading || !data || founderRef.current || isAdmin !== true) return;
+    if (reviewMode || isLoading || roleLoading || !data || founderRef.current || isAdmin !== true) return;
     if (trackOf(data.currentStage) === "owner") {
       founderRef.current = true;
       return;
@@ -203,13 +219,13 @@ function OnboardingPage() {
       await switchTrack({ data: { track: "owner" } });
       await refetch();
     })();
-  }, [isLoading, roleLoading, data, isAdmin, switchTrack, refetch]);
+  }, [reviewMode, isLoading, roleLoading, data, isAdmin, switchTrack, refetch]);
 
   // FRASS-0563 — Frassy always speaks first. If this conversation has no
   // messages yet, she opens it herself (aloud when voice is permitted) rather
   // than leaving a new member staring at an empty box.
   useEffect(() => {
-    if (isLoading || roleLoading || !data || openedRef.current) return;
+    if (reviewMode || isLoading || roleLoading || !data || openedRef.current) return;
     if (messages.length > 0) return;
     openedRef.current = true;
     setBusy(true);
@@ -235,7 +251,7 @@ function OnboardingPage() {
         openedRef.current = false;
       })
       .finally(() => setBusy(false));
-  }, [isLoading, roleLoading, data, messages.length, openConversation, refetch, speakReplies, voice]);
+  }, [reviewMode, isLoading, roleLoading, data, messages.length, openConversation, refetch, speakReplies, voice]);
 
   /**
    * Delivers one Founder message. The message is already in the journal under
@@ -322,6 +338,7 @@ function OnboardingPage() {
   // Nothing is lost to a dropped connection: anything still unsaved is sent
   // again by itself as soon as the network comes back.
   useEffect(() => {
+    if (reviewMode) return;
     if (typeof window === "undefined") return;
     const onOnline = () => {
       const stuck = loadJournal(JOURNAL_SCOPE).filter(
@@ -334,7 +351,7 @@ function OnboardingPage() {
     };
     window.addEventListener("online", onOnline);
     return () => window.removeEventListener("online", onOnline);
-  }, [deliver]);
+  }, [deliver, reviewMode]);
 
   async function toggleMic() {
     if (voice.phase === "speaking") {
@@ -347,6 +364,10 @@ function OnboardingPage() {
       return;
     }
     if (voice.phase === "idle" && !busy) await voice.startRecording();
+  }
+
+  if (reviewMode && (isError || (!isLoading && !roleLoading && isAdmin !== true))) {
+    return <SiteShell><main className="mx-auto max-w-3xl px-6 py-16 text-sm text-muted-foreground">This review is restricted to the Founder. <Link to="/daily" className="underline">Back to Daily</Link></main></SiteShell>;
   }
 
   return (
@@ -442,7 +463,7 @@ function OnboardingPage() {
                   )}
                   <button
                     type="button"
-                    disabled={busy || (!done && i > idx)}
+                    disabled={reviewMode || busy || (!done && i > idx)}
                     onClick={async () => {
                       await jumpStage({ data: { stageId: s.id } });
                       await refetch();
@@ -480,7 +501,7 @@ function OnboardingPage() {
             </div>
           )}
 
-          {isOwnerTrack && (
+          {!reviewMode && isOwnerTrack && (
             <Link
               to="/control-room"
               className="mt-8 block rounded-sm border border-border px-4 py-3 text-center text-[11px] font-bold uppercase tracking-[0.28em] text-muted-foreground hover:border-[color:var(--gold)] hover:text-[color:var(--gold)]"
@@ -489,7 +510,7 @@ function OnboardingPage() {
             </Link>
           )}
 
-          {finished && (
+          {!reviewMode && finished && (
             <Link
               to="/builder-hall"
               className="mt-8 block rounded-sm border border-[color:var(--gold)] px-4 py-3 text-center text-[11px] font-bold uppercase tracking-[0.28em] text-[color:var(--gold)]"
@@ -499,11 +520,11 @@ function OnboardingPage() {
           )}
           <div className="mt-8 space-y-8">
             {/* FRASS-0519 — the Founder walks the same front door, with validation attached. */}
-            {isAdmin && isOwnerTrack && (
+            {!reviewMode && isAdmin && isOwnerTrack && (
               <FounderWalkthrough stepId={stage.id} stepLabel={stage.title} />
             )}
 
-            {isOwnerTrack && (
+            {!reviewMode && isOwnerTrack && (
               <LaunchReadiness
                 eyebrow="Commissioning Dashboard"
                 heading="Platform Readiness"
@@ -542,7 +563,7 @@ function OnboardingPage() {
                   Frassy
                 </div>
                 <div className="truncate text-xs text-muted-foreground">
-                  {completedCount} of {stages.length} {isOwnerTrack ? "steps" : "chapters"} · saved
+                  {reviewMode ? "Founder review · read only" : `${completedCount} of ${stages.length} ${isOwnerTrack ? "steps" : "chapters"} · saved`}
                 </div>
               </div>
               <button
@@ -650,6 +671,7 @@ function OnboardingPage() {
               {isLoading && (
                 <p className="text-sm text-muted-foreground">Bringing your journey back…</p>
               )}
+              {reviewMode && !isLoading && messages.length === 0 && <p className="text-sm text-muted-foreground">No conversation saved yet.</p>}
               {messages.map((m) => (
                 <div key={m.key} className={m.role === "user" ? "flex justify-end" : ""}>
                   <div
@@ -689,7 +711,7 @@ function OnboardingPage() {
                       >
                         <Copy className="h-3 w-3" /> Copy
                       </button>
-                      {m.status === "failed" && m.role === "user" && m.clientId && (
+                      {!reviewMode && m.status === "failed" && m.role === "user" && m.clientId && (
                         <button
                           type="button"
                           disabled={busy}
@@ -711,7 +733,7 @@ function OnboardingPage() {
               <div ref={endRef} />
             </div>
 
-            <div className="sticky bottom-0 border-t border-border bg-background px-4 py-3 sm:px-6">
+            {reviewMode ? <div className="sticky bottom-0 border-t border-border bg-background px-4 py-4 text-sm text-muted-foreground sm:px-6">Review only. Nothing you do here changes your journey. <Link to="/daily" className="underline">Back to Daily</Link></div> : <div className="sticky bottom-0 border-t border-border bg-background px-4 py-3 sm:px-6">
               {(voice.voiceError) && (
                 <p className="mb-2 text-xs text-destructive">{voice.voiceError}</p>
               )}
@@ -725,7 +747,7 @@ function OnboardingPage() {
                 micAvailable={voice.voiceAvailable}
                 micActive={voice.phase === "recording"}
               />
-            </div>
+            </div>}
           </section>
         </div>
       </div>

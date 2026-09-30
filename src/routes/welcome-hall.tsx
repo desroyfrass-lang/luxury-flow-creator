@@ -126,8 +126,15 @@ function useArrivalStage() {
 }
 
 function WelcomeHallPage() {
-  const stage = useArrivalStage();
   const search = Route.useSearch();
+  if (search.welcome === "daily") {
+    return <main className="flex min-h-screen items-center justify-center bg-background px-4 py-8 text-foreground"><div className="w-full max-w-4xl"><DailyWelcomeCeremony next={search.next ?? SAFE_MEMBER_DESTINATION} /></div></main>;
+  }
+  return <InformationalWelcomeHall search={search} />;
+}
+
+function InformationalWelcomeHall({ search }: { search: { arrival?: "first"; next?: string } }) {
+  const stage = useArrivalStage();
   const [sound, setSound] = useState(false);
   const { roles, signedIn, loading: rolesLoading } = useMyRoles();
   const canEnterFounderHall = roles.includes("admin") || roles.includes("super_admin");
@@ -179,11 +186,6 @@ function WelcomeHallPage() {
 
 
       {/* FRASS-0569 — 🌅 Welcome Hall One. Frassy greets first; the Daily follows. */}
-      {search.welcome === "daily" && (
-        <div className="mx-auto max-w-[1100px] px-6 pt-24 lg:px-10">
-          <DailyWelcomeCeremony next={search.next ?? SAFE_MEMBER_DESTINATION} />
-        </div>
-      )}
       {/* The gates */}
       <header
         className="relative min-h-[86vh] overflow-hidden"

@@ -26,6 +26,26 @@ export type ArrivalState = {
 const MEMORY_CATEGORY = "arrival";
 const MEMORY_KEY = "first_arrival_at";
 
+/** Read-only entry decision. The first-arrival marker is written only by the ceremony. */
+export const getHillEntry = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }) => {
+    const userId = context.userId;
+    const [memory, journey, admin, superAdmin] = await Promise.all([
+      context.supabase.from("builder_memory").select("id").eq("user_id", userId)
+        .eq("category", MEMORY_CATEGORY).eq("key", MEMORY_KEY).maybeSingle(),
+      context.supabase.from("builder_journeys").select("status").eq("user_id", userId).maybeSingle(),
+      context.supabase.rpc("has_role", { _user_id: userId, _role: "admin" }),
+      context.supabase.rpc("has_role", { _user_id: userId, _role: "super_admin" }),
+    ]);
+    if (memory.error || journey.error || admin.error || superAdmin.error) {
+      throw new Error("Could not check your arrival just now.");
+    }
+    return {
+      returning: journey.data?.status === "complete" || (Boolean(memory.data) && (Boolean(admin.data) || Boolean(superAdmin.data))),
+    };
+  });
+
 /**
  * Reads arrival state and records the first arrival in the same call, so the
  * welcome can never fire twice for the same account.

@@ -9,6 +9,7 @@ import { stopSpeech } from "@/lib/voice/speech-manager";
 import { speakWithGuarantee } from "@/lib/frassy/speak-guarantee";
 import { PlatformProtectionBanner } from "@/components/founder/platform-protection-banner";
 import frassyGold from "@/assets/frassy-gold.png.asset.json";
+import { welcomedToday } from "@/lib/welcome-hall/daily-welcome";
 
 /**
  * FRASS-0466 — First Arrival, now an arrival state of the Welcome Hall.
@@ -86,7 +87,8 @@ export function FirstArrivalCeremony({ next }: { next?: string }) {
       // (or the page they were explicitly heading to). Unfinished ordinary
       // journeys continue the existing onboarding interview.
       if (state.returnToDaily) {
-        navigate({
+        if (welcomedToday()) navigate({ to: next ?? "/daily", replace: true });
+        else navigate({
           to: "/welcome-hall",
           search: { welcome: "daily" as const, ...(next ? { next } : {}) },
           replace: true,
@@ -94,7 +96,7 @@ export function FirstArrivalCeremony({ next }: { next?: string }) {
       } else {
         navigate({ to: next ?? "/onboarding", replace: true });
       }
-    }, 1600);
+    }, 0);
     return () => clearTimeout(t);
   }, [state, navigate, next]);
 
@@ -133,10 +135,7 @@ export function FirstArrivalCeremony({ next }: { next?: string }) {
 
   if (!state.firstArrival) {
     return (
-      <Shell>
-        <h1 className="font-display text-4xl">Welcome back.</h1>
-        <p className="mt-3 text-sm text-muted-foreground">Taking you back to where you left off…</p>
-      </Shell>
+      <Shell><p className="text-sm text-muted-foreground">Opening your day…</p></Shell>
     );
   }
 
