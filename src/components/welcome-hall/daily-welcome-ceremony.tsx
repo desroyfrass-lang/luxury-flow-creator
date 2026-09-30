@@ -224,14 +224,7 @@ export function DailyWelcomeCeremony({ next = SAFE_MEMBER_DESTINATION }: { next?
           onClick={() => leave(destination)}
           className="lux-press inline-flex items-center gap-2 rounded-sm border border-[color:var(--hill-gold)] bg-[color:var(--hill-gold)] px-7 py-3.5 text-[11px] font-bold uppercase tracking-[0.3em] text-[color:var(--ink)]"
         >
-          {copy("welcome.continue")} <ArrowRight className="h-3.5 w-3.5" />
-        </button>
-        <button
-          type="button"
-          onClick={() => leave(destination)}
-          className="lux-press rounded-sm border border-border px-7 py-3.5 text-[11px] font-bold uppercase tracking-[0.3em] hover:border-[color:var(--hill-gold)]"
-        >
-          {copy("welcome.skip")}
+          Start my day <ArrowRight className="h-3.5 w-3.5" />
         </button>
       </div>
 

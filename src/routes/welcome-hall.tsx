@@ -132,6 +132,11 @@ function WelcomeHallPage() {
   const { roles, signedIn, loading: rolesLoading } = useMyRoles();
   const canEnterFounderHall = roles.includes("admin") || roles.includes("super_admin");
 
+  // Keep the daily return separate from the informational gate and its animation.
+  if (search.welcome === "daily") {
+    return <main className="flex min-h-screen items-center justify-center bg-background px-4 py-8 text-foreground"><div className="w-full max-w-4xl"><DailyWelcomeCeremony next={search.next ?? SAFE_MEMBER_DESTINATION} /></div></main>;
+  }
+
 
   useEffect(() => {
     setSound(ambienceEnabled());
@@ -179,11 +184,6 @@ function WelcomeHallPage() {
 
 
       {/* FRASS-0569 — 🌅 Welcome Hall One. Frassy greets first; the Daily follows. */}
-      {search.welcome === "daily" && (
-        <div className="mx-auto max-w-[1100px] px-6 pt-24 lg:px-10">
-          <DailyWelcomeCeremony next={search.next ?? SAFE_MEMBER_DESTINATION} />
-        </div>
-      )}
       {/* The gates */}
       <header
         className="relative min-h-[86vh] overflow-hidden"
