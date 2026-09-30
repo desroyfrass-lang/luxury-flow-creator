@@ -1,7 +1,7 @@
 /**
  * FRASS root arrival — destination markers.
  *
- * Three hand-crafted symbols that belong to one family: same 64-unit canvas,
+ * Four destination symbols that belong to one family: same 64-unit canvas,
  * same dimensional depth, same soft shadow, same edge polish. They are markers,
  * never buttons — the entrance buttons stay the single visible set.
  */
@@ -89,6 +89,18 @@ export function HillSymbol() {
         <path d="M48 18l1.4 3.6L53 23l-3.6 1.4L48 28l-1.4-3.6L43 23l3.6-1.4L48 18Z" />
         <path d="M17 40l.9 2.3 2.3.9-2.3.9-.9 2.3-.9-2.3-2.3-.9 2.3-.9.9-2.3Z" opacity="0.8" />
       </g>
+    </svg>
+  );
+}
+
+/** Explore Frass Hill — the town's paths beneath its skyline. */
+export function ExploreSymbol() {
+  return (
+    <svg viewBox="0 0 64 64" className={SHARED} aria-hidden="true" focusable="false">
+      <path d="M7 45 19 28l10 9 13-20 15 28" fill="none" stroke="var(--gold-soft)" strokeWidth="3" strokeLinejoin="round" strokeLinecap="round" />
+      <path d="M8 47h48M15 47V37h10v10m14 0V34h11v13" fill="none" stroke="var(--chrome)" strokeWidth="2.5" strokeLinejoin="round" />
+      <path d="M30 56c2-5 4-8 9-9" fill="none" stroke="var(--gold)" strokeWidth="3" strokeLinecap="round" />
+      <circle cx="45" cy="12" r="4" fill="var(--gold)" />
     </svg>
   );
 }

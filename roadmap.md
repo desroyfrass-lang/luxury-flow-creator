@@ -17,3 +17,4 @@
 - [x] Login & Access Recovery Step 1 (approved): reproduce access bypass + inventory every Founder/internal route's live server check. Report only; no repairs.
 - [x] Narrow navigation repair (approved): make the existing /admin/feedback inbox visibly reachable as "Tester Feedback" from the Founder/Admin nav. No new feedback system; no other defect repairs.
 - [x] Welcome Hall consolidation (approved): Explore goes straight to town; voice choice inside Frassy's welcome; brochure Hall = About page; retire /arrival, room-classic, old gates. Stop before Daily/Workshop.
+- [x] Front door: four purposeful choices to existing Shop, Opportunity Center, town, and Kids routes; preserve signed-out access flows and verify in Preview.

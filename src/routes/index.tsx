@@ -5,16 +5,17 @@ import { useServerFn } from "@tanstack/react-start";
 import { getHillEntry } from "@/lib/arrival.functions";
 import { welcomedToday } from "@/lib/welcome-hall/daily-welcome";
 import archHero from "@/assets/frass-three-doors-arrival-v3.png";
-import { DistrictSymbol, HillSymbol, KidsSymbol } from "@/components/entrance/door-symbols";
+import { DistrictSymbol, HillSymbol, ExploreSymbol, KidsSymbol } from "@/components/entrance/door-symbols";
+import { Button } from "@/components/ui/button";
 
 
 
 /**
  * FRASS-0923 / FRASS-0471 — The Frass Entrance Experience.
  *
- * The ceremonial gateway into the Frass ecosystem: one daylight archway, three
- * equal doors — Frass District (shopping), Frass Hill (community) and Frass
- * Kids (the children's world). This page never auto-redirects: frasskicks.com
+ * The ceremonial gateway into the Frass ecosystem: one daylight archway, four
+ * choices — shop, make money, explore the town, or enter the children's world.
+ * This page never auto-redirects: frasskicks.com
  * is always "Welcome to FrassKicks".
  *
  * Brand lock: the FrassKicks mark is the exact approved logo asset overlaid on
@@ -24,17 +25,17 @@ import { DistrictSymbol, HillSymbol, KidsSymbol } from "@/components/entrance/do
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Welcome to FrassKicks — District, Hill or Kids" },
+      { title: "Welcome to FrassKicks — Shop, Build, Explore or Kids" },
       {
         name: "description",
         content:
-          "The daylight entrance to FrassKicks. Three doors under one Caribbean archway: the storefronts of the Frass District, the living town of Frass Hill, and Kids Valley in Frass Kids.",
+          "The daylight entrance to FrassKicks. Shop Frass Kicks, make money in Frass Hill, explore the town or discover Frass Kids.",
       },
       { property: "og:title", content: "Welcome to FrassKicks" },
       {
         property: "og:description",
         content:
-          "Three ways in: the Frass District, Frass Hill and Frass Kids. One account covers all three.",
+          "Four ways in: shop, make money, explore Frass Hill or enter Frass Kids. One account connects them.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -67,28 +68,38 @@ function EntrancePage() {
   };
 
   /**
-   * Hill door: a stranger goes to the Welcome Hall registration; a member goes
-   * to the Hall's first-arrival state, which decides first-time vs returning.
+   * Make Money door: a signed-in member opens the existing Opportunity Center.
+   * Signed-out visitors use the existing sign-in/arrival continuation, which
+   * preserves the first-arrival interview for new members.
    */
-  const goHill = async () => {
+  const goMakeMoney = async () => {
     if (enteringHill) return;
     setEnteringHill(true);
     try {
       const { data } = await supabase.auth.getSession();
       if (!data.session) {
-        navigate({ to: "/join/frass-hill" });
+        navigate({ to: "/auth", search: { next: "/opportunity" } });
         return;
       }
-      const entry = await hillEntry();
-      if (!entry.returning) navigate({ to: "/welcome-hall", search: { arrival: "first" } });
-      else if (welcomedToday()) navigate({ to: "/daily" });
-      else navigate({ to: "/welcome-hall", search: { welcome: "daily" } });
+      navigate({ to: "/opportunity" });
     } catch {
-      // Fail closed: never assume completion or a Founder role on lookup failure.
-      navigate({ to: "/welcome-hall", search: { arrival: "first" } });
+      navigate({ to: "/auth", search: { next: "/opportunity" } });
     } finally {
       setEnteringHill(false);
     }
+  };
+
+  /** The ordinary daily entrance remains available through the existing arrival authority. */
+  const goDailyEntrance = async () => {
+    const { data } = await supabase.auth.getSession();
+    if (!data.session) {
+      navigate({ to: "/join/frass-hill" });
+      return;
+    }
+    const entry = await hillEntry();
+    if (!entry.returning) navigate({ to: "/welcome-hall", search: { arrival: "first" } });
+    else if (welcomedToday()) navigate({ to: "/daily" });
+    else navigate({ to: "/welcome-hall", search: { welcome: "daily" } });
   };
 
   /** Kids door: the children's world has its own welcome and its own passport. */
@@ -97,8 +108,8 @@ function EntrancePage() {
   };
 
   return (
-    <main className="relative min-h-screen overflow-hidden bg-[#faf7f0]">
-      <section className="relative mx-auto flex min-h-screen w-full flex-col items-center justify-center gap-6 py-6">
+    <main className="relative min-h-screen overflow-hidden bg-background">
+      <section className="relative mx-auto flex min-h-screen w-full flex-col items-center justify-center gap-5 py-5">
         <h1 className="sr-only">Welcome to FrassKicks</h1>
 
         {/* The archway — full-bleed edge to edge, always shown complete.
@@ -106,26 +117,32 @@ function EntrancePage() {
         <div className="gateway-rise relative w-screen overflow-hidden">
           <img
             src={archHero}
-            alt="The FrassKicks archway in daylight with three entrances: Frass District, Frass Hill and Frass Kids"
+            alt="The FrassKicks archway in daylight"
             width={1376}
             height={768}
             fetchPriority="high"
-            className="arrival-breathe block h-auto w-full object-cover"
+            className="arrival-breathe mx-auto block h-auto max-h-[min(54vh,580px)] w-full object-contain"
           />
         </div>
 
         {/* Visible entrance buttons — the only set. Each carries its marker. */}
-        <div className="gateway-rise flex w-full max-w-[1100px] flex-col gap-3 px-4 sm:flex-row sm:justify-center">
+        <div className="gateway-rise grid w-full max-w-[1280px] grid-cols-1 gap-3 px-4 sm:grid-cols-2 xl:grid-cols-4">
           <DoorButton onClick={goShop} tone="district" symbol={<DistrictSymbol />}>
-            Enter Frass District
-            <span className="block text-[10px] font-normal tracking-[0.3em] text-[#e8c96a] opacity-95 sm:text-xs">
-              Shop. Style. Elevate.
+            Enter Frass Kicks
+            <span className="block text-[10px] font-normal text-gold-soft opacity-95 sm:text-xs">
+              Shop
             </span>
           </DoorButton>
-          <DoorButton onClick={() => void goHill()} tone="hill" symbol={<HillSymbol />}>
+          <DoorButton onClick={() => void goMakeMoney()} tone="hill" symbol={<HillSymbol />}>
             {enteringHill ? "Opening Frass Hill…" : "Enter Frass Hill"}
-            <span className="block text-[10px] font-normal tracking-[0.3em] text-[#e8c96a] opacity-95 sm:text-xs">
-              Build. Connect. Grow.
+            <span className="block text-[10px] font-normal text-gold-soft opacity-95 sm:text-xs">
+              Make Money
+            </span>
+          </DoorButton>
+          <DoorButton onClick={() => navigate({ to: "/frass-hill" })} tone="explore" symbol={<ExploreSymbol />}>
+            Explore Frass Hill
+            <span className="block text-[10px] font-normal text-gold-soft opacity-95 sm:text-xs">
+              Explore the Town
             </span>
           </DoorButton>
           <DoorButton onClick={goKids} tone="kids" symbol={<KidsSymbol />}>
@@ -139,14 +156,14 @@ function EntrancePage() {
                 <span className="text-[#ffd34d]">ds</span>
               </span>
             </span>
-            <span className="block text-[10px] font-normal tracking-[0.3em] text-[#e8c96a] opacity-95 sm:text-xs">
+            <span className="block text-[10px] font-normal text-gold-soft opacity-95 sm:text-xs">
               Wonder. Adventure. Play.
             </span>
           </DoorButton>
         </div>
 
         <p className="gateway-rise text-center text-[10px] uppercase tracking-[0.35em] text-[#8a7134] sm:text-xs">
-          Three doors. One account. Choose the world you want to walk into.
+          Four doors. One account. Choose where you want to go.
         </p>
       </section>
     </main>
@@ -164,21 +181,20 @@ function DoorButton({
   children,
 }: {
   onClick: () => void;
-  tone: "district" | "hill" | "kids";
+  tone: "district" | "hill" | "explore" | "kids";
   symbol: React.ReactNode;
   children: React.ReactNode;
 }) {
   return (
-    <button
+    <Button
       type="button"
       onClick={onClick}
       data-tone={tone}
-      className="door-glass group relative flex flex-1 flex-col items-center justify-center gap-2 overflow-hidden rounded-2xl border border-[#d4af37]/70 bg-[#0e7490]/30 px-5 py-4 text-center font-[var(--font-display,'Archivo_Black',sans-serif)] text-base font-bold uppercase tracking-[0.2em] text-[#f4d35e] drop-shadow-[0_1px_2px_rgba(0,0,0,0.85)] shadow-[0_10px_40px_-16px_rgba(8,80,110,0.65)] backdrop-blur-xl transition-all duration-300 ease-out hover:-translate-y-0.5 hover:border-[#f4d35e] hover:bg-[#0e7490]/45 hover:shadow-[0_16px_50px_-16px_rgba(103,232,249,0.7)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#f4d35e] motion-reduce:transition-none"
+      className="door-glass group relative flex h-[126px] min-w-0 flex-col gap-2 overflow-hidden rounded-md border border-gold/70 bg-secondary/80 px-3 py-3 text-center font-display text-base font-bold uppercase text-gold shadow-luxury backdrop-blur-xl transition-all duration-300 ease-out hover:-translate-y-0.5 hover:border-gold-soft hover:bg-secondary focus-visible:ring-2 focus-visible:ring-gold motion-reduce:transition-none whitespace-normal [&_svg]:size-10 sm:[&_svg]:size-12"
     >
-      <span className="pointer-events-none absolute inset-0 rounded-2xl bg-[linear-gradient(120deg,transparent_30%,rgba(255,255,255,0.18)_50%,transparent_70%)] opacity-70" />
-      <span className="relative flex flex-col items-center">{children}</span>
+      <span className="relative flex flex-col items-center leading-tight">{children}</span>
       <span className="relative">{symbol}</span>
-    </button>
+    </Button>
   );
 }
 
