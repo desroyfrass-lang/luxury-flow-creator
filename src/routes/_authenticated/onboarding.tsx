@@ -12,6 +12,7 @@ import {
   setJourneyStage,
   startJourneyTrack,
   journeyOpening,
+  getJourneyReview,
   type ConversationDiagnostics,
   type JourneyMessage,
 } from "@/lib/journey.functions";
@@ -40,6 +41,9 @@ import { Copy, Volume2, VolumeX } from "lucide-react";
 import frassyStanding from "@/assets/frassy-standing-ea.png.asset.json";
 
 export const Route = createFileRoute("/_authenticated/onboarding")({
+  validateSearch: (search: Record<string, unknown>): { review?: boolean } => ({
+    ...(search["review"] === "founder" ? { review: true } : {}),
+  }),
   head: () => ({
     meta: [
       { title: "Founder Commissioning | Frass OS" },
@@ -59,8 +63,31 @@ export const Route = createFileRoute("/_authenticated/onboarding")({
       { name: "robots", content: "noindex,nofollow" },
     ],
   }),
-  component: OnboardingPage,
+  component: OnboardingEntry,
 });
+
+function OnboardingEntry() {
+  const { review } = Route.useSearch();
+  return review ? <FounderInterviewReview /> : <OnboardingPage />;
+}
+
+function FounderInterviewReview() {
+  const reviewFn = useServerFn(getJourneyReview);
+  const { data, isLoading, error } = useQuery({ queryKey: ["founder-interview-review"], queryFn: () => reviewFn(), retry: false });
+  const { isAdmin, loading } = useIsAdminStatus();
+  return <SiteShell><main className="mx-auto min-h-screen max-w-6xl px-4 py-8">
+    {loading || isLoading ? <p>Opening your interview record…</p> : error || !isAdmin ? <p>This review is restricted to the Founder.</p> : <>
+      <div className="mb-6 flex items-center justify-between gap-4"><h1 className="font-display text-2xl">Frassy interview · review</h1><Link to="/daily" className="text-sm underline">Back to Daily</Link></div>
+      <div className="grid gap-6 lg:grid-cols-[minmax(280px,380px)_1fr]">
+        <img src={frassyStanding.url} alt="Frassy standing with her tablet" className="w-full rounded-sm object-cover lg:sticky lg:top-24 lg:h-[calc(100vh-8rem)]" />
+        <section aria-label="Saved interview" className="space-y-5">
+          <p className="text-sm text-muted-foreground">Read-only review · {data?.journey?.status ?? "Not started"} · {data?.journey?.current_stage ?? "No current stage"}. Your interview stays exactly as it is.</p>
+          {data?.messages?.length ? data.messages.filter((m) => !isTeleporterAuditTurn(m.content)).map((m) => <p key={m.id} className="border-b border-border pb-4 text-sm leading-relaxed"><strong>{m.role === "assistant" ? "Frassy" : "You"}</strong><span className="block whitespace-pre-wrap">{m.content}</span></p>) : <p className="text-sm text-muted-foreground">No conversation saved yet.</p>}
+        </section>
+      </div>
+    </>}
+  </main></SiteShell>;
+}
 
 type ThreadMessage = {
   key: string;

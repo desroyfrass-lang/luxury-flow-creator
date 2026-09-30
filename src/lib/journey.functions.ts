@@ -65,6 +65,22 @@ export type ConversationDiagnostics = {
   historyMessages: number;
 };
 
+/** Founder preview of the existing interview record. No journey initialization or writes. */
+export const getJourneyReview = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }) => {
+    const checks = await Promise.all(["admin", "super_admin"].map((_role) =>
+      context.supabase.rpc("has_role", { _user_id: context.userId, _role })
+    ));
+    if (checks.some((check) => check.error) || !checks.some((check) => check.data)) throw new Error("Forbidden");
+    const [journey, messages] = await Promise.all([
+      context.supabase.from("builder_journeys").select("status,current_stage,stage_progress").eq("user_id", context.userId).maybeSingle(),
+      context.supabase.from("builder_journey_messages").select("id,role,content,stage,created_at").eq("user_id", context.userId).order("created_at", { ascending: true }),
+    ]);
+    if (journey.error || messages.error) throw new Error("Could not read your interview.");
+    return { journey: journey.data, messages: messages.data ?? [] };
+  });
+
 export const getBuilderJourney = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }): Promise<JourneyState> => {
