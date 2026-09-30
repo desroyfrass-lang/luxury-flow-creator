@@ -374,7 +374,7 @@ export const WORLD_ROUTES: WorldRoute[] = [
     "component": "ArrivalPage",
     "file": "arrival.tsx",
     "district": "Arrival & Welcome",
-    "status": "retired",
+    "status": "legacy",
     "refs": 0,
     "redirect": true
   },
