@@ -1,5 +1,5 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import archHero from "@/assets/frass-three-doors-arrival-v3.png";
 import { DistrictSymbol, HillSymbol, ExploreSymbol, KidsSymbol } from "@/components/entrance/door-symbols";
@@ -43,24 +43,16 @@ export const Route = createFileRoute("/")({
 
 function EntrancePage() {
   const navigate = useNavigate();
-  const [signedIn, setSignedIn] = useState<boolean | null>(null);
   const [enteringHill, setEnteringHill] = useState(false);
 
-  // FRASS-0471: the entrance never redirects on its own. Typing frasskicks.com
-  // always shows this welcome — first visit, tenth visit, signed in or not.
-  useEffect(() => {
-    let alive = true;
-    supabase.auth.getSession().then(({ data }) => {
-      if (alive) setSignedIn(Boolean(data.session));
-    });
-    return () => {
-      alive = false;
-    };
-  }, []);
-
   /** Shopping door: a customer profile comes first, then the district. */
-  const goShop = () => {
-    navigate({ to: signedIn ? "/frass-district" : "/join/frasskicks" });
+  const goShop = async () => {
+    try {
+      const { data } = await supabase.auth.getSession();
+      navigate({ to: data.session ? "/frass-district" : "/join/frasskicks" });
+    } catch {
+      navigate({ to: "/join/frasskicks" });
+    }
   };
 
   /**
@@ -110,7 +102,7 @@ function EntrancePage() {
 
         {/* Visible entrance buttons — the only set. Each carries its marker. */}
         <div className="gateway-rise grid w-full max-w-[1280px] grid-cols-1 gap-3 px-4 sm:grid-cols-2 xl:grid-cols-4">
-          <DoorButton onClick={goShop} tone="district" symbol={<DistrictSymbol />}>
+          <DoorButton onClick={() => void goShop()} tone="district" symbol={<DistrictSymbol />}>
             Enter Frass Kicks
             <span className="block text-[10px] font-normal text-gold-soft opacity-95 sm:text-xs">
               Shop
