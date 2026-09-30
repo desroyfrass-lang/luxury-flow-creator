@@ -5254,7 +5254,7 @@ a.ps-row:hover {
 
 /* The canonical Daily and Workshop share the earliest bright luxury palette.
    Scoped to their shell: other districts keep their own visual identities. */
-.working-room-light {
+:is(.working-room-light, .working-room-trail) {
   --background: oklch(0.995 0.002 90);
   --foreground: oklch(0.16 0.01 250);
   --card: oklch(1 0 0);
@@ -5277,6 +5277,10 @@ a.ps-row:hover {
   --accent-foreground: oklch(0.16 0.01 250);
   background: var(--background);
   color: var(--foreground);
+}
+
+.working-room-trail {
+  background: transparent;
 }
 
 .working-room-light .daily-light {
