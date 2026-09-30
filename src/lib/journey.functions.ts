@@ -69,7 +69,7 @@ export type ConversationDiagnostics = {
 export const getJourneyReview = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
-    const checks = await Promise.all(["admin", "super_admin"].map((_role) =>
+    const checks = await Promise.all((["admin", "super_admin"] as const).map((_role) =>
       context.supabase.rpc("has_role", { _user_id: context.userId, _role })
     ));
     if (checks.some((check) => check.error) || !checks.some((check) => check.data)) throw new Error("Forbidden");
