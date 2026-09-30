@@ -82,8 +82,18 @@ export function FirstArrivalCeremony({ next }: { next?: string }) {
   useEffect(() => {
     if (!state || state.firstArrival) return;
     const t = setTimeout(() => {
-      const destination = next ?? (state.returnToDaily ? "/daily" : "/onboarding");
-      navigate({ to: destination, replace: true });
+      // Returning members get the normal returning Welcome Hall, then Daily
+      // (or the page they were explicitly heading to). Unfinished ordinary
+      // journeys continue the existing onboarding interview.
+      if (state.returnToDaily) {
+        navigate({
+          to: "/welcome-hall",
+          search: { welcome: "daily" as const, ...(next ? { next } : {}) },
+          replace: true,
+        });
+      } else {
+        navigate({ to: next ?? "/onboarding", replace: true });
+      }
     }, 1600);
     return () => clearTimeout(t);
   }, [state, navigate, next]);

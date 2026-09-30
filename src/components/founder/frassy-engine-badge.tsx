@@ -20,13 +20,18 @@ export function FrassyEngineBadge() {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const { isAdmin } = useIsAdminStatus();
   const [live, setLive] = useState<FrassyEngineDiagnostics | null>(null);
-  const [open, setOpen] = useState(true);
+  // Hidden by default. A Founder turns it on deliberately with ?engine=on
+  // (and off with ?engine=off); the server-verified Founder check below still
+  // decides whether it can ever render.
+  const [open, setOpen] = useState(false);
 
   useEffect(() => subscribeEngineDiagnostics(setLive), []);
 
   useEffect(() => {
     try {
-      setOpen(window.localStorage.getItem(STORAGE_KEY) !== "off");
+      const flag = new URLSearchParams(window.location.search).get("engine");
+      if (flag === "on" || flag === "off") window.localStorage.setItem(STORAGE_KEY, flag);
+      setOpen(window.localStorage.getItem(STORAGE_KEY) === "on");
     } catch {
       /* private mode — badge simply stays open */
     }
@@ -57,16 +62,7 @@ export function FrassyEngineBadge() {
     }
   };
 
-  if (!open) {
-    return (
-      <button
-        onClick={toggle}
-        className="fixed bottom-2 left-2 z-[60] rounded-full border border-border/60 bg-background/80 px-2 py-1 text-[10px] font-mono uppercase tracking-widest text-muted-foreground backdrop-blur"
-      >
-        engine
-      </button>
-    );
-  }
+  if (!open) return null;
 
   return (
     <div className="fixed bottom-2 left-2 z-[60] max-w-[240px] rounded-md border border-border/60 bg-background/85 px-3 py-2 font-mono text-[10px] leading-relaxed text-muted-foreground shadow-lg backdrop-blur">

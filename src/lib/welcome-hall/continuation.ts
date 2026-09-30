@@ -4,11 +4,11 @@
 // A continuation destination is only honoured when it is a real internal
 // address that is not the Welcome Hall itself (or one of its aliases), not the
 // sign-in door, and not the onboarding conversation. Anything else falls back
-// to the member's own workspace — the canonical member destination in the
-// navigation registry (`my-workspace` → /room).
+// to the member's Daily — the canonical returning-member front door. The
+// Workshop is entered from the Daily, never as the default return.
 
 /** Where a member goes when there is nowhere sensible to send them back to. */
-export const SAFE_MEMBER_DESTINATION = "/room";
+export const SAFE_MEMBER_DESTINATION = "/daily";
 
 /** Welcome Hall and every equivalent arrival address. */
 const WELCOME_HALL_ALIASES = ["/welcome-hall", "/welcome", "/arrival"];
