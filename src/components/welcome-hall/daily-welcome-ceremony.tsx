@@ -24,6 +24,7 @@ import {
 } from "@/lib/welcome-hall/daily-welcome";
 import { FrassyLook } from "@/components/frassy/frassy-look";
 import { t as copy } from "@/lib/i18n";
+import { Button } from "@/components/ui/button";
 
 export function DailyWelcomeCeremony({ next = SAFE_MEMBER_DESTINATION }: { next?: string }) {
   // Atlas Recovery Phase 1 — never continue back into the Welcome Hall itself.
@@ -219,13 +220,13 @@ export function DailyWelcomeCeremony({ next = SAFE_MEMBER_DESTINATION }: { next?
       )}
 
       <div className="mt-9 flex flex-wrap gap-3">
-        <button
+        <Button
           type="button"
           onClick={() => leave(destination)}
           className="lux-press inline-flex items-center gap-2 rounded-sm border border-[color:var(--hill-gold)] bg-[color:var(--hill-gold)] px-7 py-3.5 text-[11px] font-bold uppercase tracking-[0.3em] text-[color:var(--ink)]"
         >
           Start my day <ArrowRight className="h-3.5 w-3.5" />
-        </button>
+        </Button>
       </div>
 
       <div className="mt-8 border-t border-border/60 pt-6">
