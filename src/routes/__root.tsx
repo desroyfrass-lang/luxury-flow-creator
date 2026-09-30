@@ -26,7 +26,6 @@ import { FrassyHost } from "@/components/frassy-host";
 // Step 2 — existing Frassy systems, revived: the voice transport, the consent
 // moment, and the one-Frassy-at-a-time stage rule.
 import { FrassyConversationDock } from "@/components/voice/frassy-conversation-dock";
-import { FrassyConsentGate } from "@/components/frassy/frassy-consent-gate";
 import {
   isEntranceActive,
   isEntranceActiveServer,
@@ -178,7 +177,6 @@ function RootComponent() {
         {/* Step 2 — one dock, globally mounted, self-gated by the surface rules. */}
         <FrassyConversationDock />
         {/* Step 2 — the visitor chooses voice before she ever speaks. */}
-        <FrassyConsentGate />
         {/* FRASS-0560 — every build begins at the front door. */}
         <FounderPreviewReset />
         {/* FRASS-0562 — simulate the state of a member, never a second account. */}

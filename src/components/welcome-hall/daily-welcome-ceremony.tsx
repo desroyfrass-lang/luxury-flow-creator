@@ -23,6 +23,7 @@ import {
   type WelcomeTier,
 } from "@/lib/welcome-hall/daily-welcome";
 import { FrassyLook } from "@/components/frassy/frassy-look";
+import { VoiceChoiceInline } from "@/components/welcome-hall/voice-choice-inline";
 import { t as copy } from "@/lib/i18n";
 import { Button } from "@/components/ui/button";
 
@@ -150,6 +151,13 @@ export function DailyWelcomeCeremony({ next = SAFE_MEMBER_DESTINATION }: { next?
           ))}
         </div>
       </div>
+
+      <VoiceChoiceInline
+        onChosen={(mode) => {
+          if (mode === "silent") return;
+          void speak(script.lines.join(" "), `choice:${Date.now()}`);
+        }}
+      />
 
       {/* The browser's autoplay rules mean the first sound sometimes needs a
           click. Frassy never stays silent without saying why. */}

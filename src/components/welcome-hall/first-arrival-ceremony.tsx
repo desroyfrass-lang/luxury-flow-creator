@@ -2,6 +2,7 @@ import { Link, useNavigate } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { ArrivalCinematic } from "@/components/welcome-hall/arrival-cinematic";
+import { VoiceChoiceInline } from "@/components/welcome-hall/voice-choice-inline";
 import { Volume2, VolumeX, ArrowRight } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { getArrivalState, type ArrivalState } from "@/lib/arrival.functions";
@@ -29,7 +30,7 @@ function firstArrivalLines(name: string, designationLabel: string | null): strin
       ? `I've been looking forward to meeting you — you arrive here as our ${designationLabel}.`
       : "I've been looking forward to meeting you.",
     "I'm Frassy. I host this place. I'll explain everything twice if that's what it takes, and I'll never rush you.",
-    "Let me walk you into the Welcome Hall, then we'll set your business up together. Your Daily comes last — that's your desk, not your front door.",
+    "Let's sit down together and set your business up. Your Daily comes right after — that's your desk, not your front door.",
   ];
 }
 
@@ -177,6 +178,15 @@ export function FirstArrivalCeremony({ next }: { next?: string }) {
         </div>
       </div>
 
+      <VoiceChoiceInline
+        onChosen={(mode) => {
+          if (mode === "silent" || muted) return;
+          void speakWithGuarantee(lines.join(" "), { owner: "first-arrival" }).then(({ notice }) =>
+            setVoiceNotice(notice),
+          );
+        }}
+      />
+
       {voiceNotice && (
         <p
           role="status"
@@ -200,25 +210,12 @@ export function FirstArrivalCeremony({ next }: { next?: string }) {
       </button>
 
       <div className="mt-10 flex flex-wrap gap-3">
-        <button
-          type="button"
-          onClick={() => {
-            stopSpeech("walked into the Hall");
-            navigate({
-              to: "/welcome-hall",
-              search: next ? { next } : {},
-              replace: true,
-            });
-          }}
-          className="lux-press inline-flex items-center gap-2 rounded-sm border border-[color:var(--gold)] bg-[color:var(--gold)] px-7 py-3.5 text-[11px] font-bold uppercase tracking-[0.3em] text-[color:var(--ink)]"
-        >
-          Walk into the Welcome Hall <ArrowRight className="h-3.5 w-3.5" />
-        </button>
         <Link
           to="/onboarding"
-          className="lux-press rounded-sm border border-border px-7 py-3.5 text-[11px] font-bold uppercase tracking-[0.3em] hover:border-[color:var(--gold)]"
+          onClick={() => stopSpeech("sat down with Frassy")}
+          className="lux-press inline-flex items-center gap-2 rounded-sm border border-[color:var(--gold)] bg-[color:var(--gold)] px-7 py-3.5 text-[11px] font-bold uppercase tracking-[0.3em] text-[color:var(--ink)]"
         >
-          Sit down with Frassy
+          Sit down with Frassy <ArrowRight className="h-3.5 w-3.5" />
         </Link>
       </div>
 

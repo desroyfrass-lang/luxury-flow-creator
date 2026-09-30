@@ -1,7 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { GatewayNav } from "@/components/gateway-nav";
-import { DailyWelcomeGate } from "@/components/welcome-hall/daily-welcome-gate";
 import { FirstOverlook } from "@/components/hill/first-overlook";
 import { HillSightlines } from "@/components/hill-sightlines";
 import { StudioEntryCard } from "@/components/studio-entry-card";
@@ -81,7 +80,7 @@ export const Route = createFileRoute("/frass-hill")({
 // Frassy/Daily journey decision. Here the town simply opens, after the
 // once-a-day Welcome Hall greeting (which returns the member here).
 function HillEntry() {
-  return <DailyWelcomeGate><FrassHillPage /></DailyWelcomeGate>;
+  return <FrassHillPage />;
 }
 
 function FrassHillPage() {

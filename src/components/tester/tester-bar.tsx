@@ -14,7 +14,7 @@ import type { TesterExperience } from "@/lib/roles";
 
 /** Journey order and the existing Member pages each experience lives on. */
 const JOURNEY: { exp: TesterExperience; label: string; to: string }[] = [
-  { exp: "welcome_hall", label: "Welcome Hall", to: "/welcome-hall" },
+  { exp: "welcome_hall", label: "Welcome Hall", to: "/welcome-hall?welcome=daily" },
   { exp: "onboarding", label: "Frassy interview", to: "/onboarding" },
   { exp: "daily", label: "Start My Day", to: "/daily" },
   { exp: "workshop", label: "Workshop", to: "/workshop" },
