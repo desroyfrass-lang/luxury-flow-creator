@@ -106,8 +106,14 @@ export function setWelcomeTier(tier: WelcomeTier) {
   }
 }
 
+// The member's own calendar day, not UTC. Using UTC meant an evening welcome
+// in Jamaica (after 7pm) counted as "tomorrow", silently skipping the next
+// morning's greeting.
 function today(): string {
-  return new Date().toISOString().slice(0, 10);
+  const d = new Date();
+  const m = String(d.getMonth() + 1).padStart(2, "0");
+  const day = String(d.getDate()).padStart(2, "0");
+  return `${d.getFullYear()}-${m}-${day}`;
 }
 
 /** True once the member has been welcomed (or has skipped) today. */

@@ -30,10 +30,12 @@ export function FrassyEngineBadge() {
   useEffect(() => {
     try {
       const flag = new URLSearchParams(window.location.search).get("engine");
-      if (flag === "on" || flag === "off") window.localStorage.setItem(STORAGE_KEY, flag);
-      setOpen(window.localStorage.getItem(STORAGE_KEY) === "on");
+      // Retire the old long-lived switch so a stale "on" can never linger.
+      window.localStorage.removeItem(STORAGE_KEY);
+      if (flag === "on" || flag === "off") window.sessionStorage.setItem(STORAGE_KEY, flag);
+      setOpen(window.sessionStorage.getItem(STORAGE_KEY) === "on");
     } catch {
-      /* private mode — badge simply stays open */
+      /* private mode — badge stays hidden */
     }
   }, []);
 
@@ -56,7 +58,7 @@ export function FrassyEngineBadge() {
     const next = !open;
     setOpen(next);
     try {
-      window.localStorage.setItem(STORAGE_KEY, next ? "on" : "off");
+      window.sessionStorage.setItem(STORAGE_KEY, next ? "on" : "off");
     } catch {
       /* nothing to persist */
     }
