@@ -73,6 +73,7 @@ export function TesterBar() {
           <li key={s.exp}>
             <Link
               to={s.to}
+              {...(s.exp === "welcome_hall" ? { search: { welcome: "daily" as const } } : {})}
               className={`block rounded px-2 py-1 hover:bg-foreground/5 ${here?.exp === s.exp ? "text-[color:var(--gold)]" : "text-foreground/80"}`}
             >
               {i + 1}. {s.label}

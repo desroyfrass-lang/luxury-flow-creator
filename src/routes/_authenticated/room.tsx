@@ -1,7 +1,7 @@
 // LEGACY REDIRECT — /room was "My Workspace".
 // There is now one Workshop (/workshop) and one Daily (/daily), so this old
 // entry point sends the member to the canonical Workshop instead of a second
-// competing workspace. The original room is preserved at /room-classic.
+// competing workspace. /room-classic is retired and also redirects to the Workshop.
 
 import { createFileRoute, redirect } from "@tanstack/react-router";
 

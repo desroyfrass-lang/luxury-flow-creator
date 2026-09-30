@@ -284,8 +284,8 @@ export function GatewayNav({ mode }: { mode: "shop" | "world" }) {
         <div className="flex items-center justify-end gap-2">
           <Link
             to="/welcome-hall"
-            aria-label="Welcome Hall"
-            title="Welcome Hall"
+            aria-label="About the Welcome Hall"
+            title="About the Welcome Hall"
             className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-border transition hover:border-[color:var(--gold)]"
           >
             <Landmark className="h-4 w-4" />
@@ -482,7 +482,7 @@ function AccountNavSection() {
       {open && (
         <div className="absolute right-0 top-full z-50 mt-2 w-60 rounded-lg border border-border/70 bg-background/95 p-2 shadow-xl backdrop-blur-xl">
           <Link to="/welcome-hall" className="block rounded-sm px-3 py-2 text-[10px] uppercase tracking-[0.2em] text-muted-foreground transition hover:bg-foreground/5 hover:text-foreground">
-            Welcome Hall
+            About the Welcome Hall
           </Link>
           {section.items.map((i) => (
             <Link

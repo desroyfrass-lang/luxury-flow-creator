@@ -61,7 +61,7 @@ export function WelcomeTierPicker() {
       <div className="mt-5 flex flex-wrap gap-3">
         <Link
           to="/welcome-hall"
-          search={{ welcome: "daily" as const, next: "/room" }}
+          search={{ welcome: "daily" as const, next: "/daily" }}
           className="rounded-full border border-border px-5 py-2 text-[10px] font-bold uppercase tracking-[0.25em] hover:border-[color:var(--hill-gold)]"
         >
           Preview my welcome

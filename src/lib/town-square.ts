@@ -119,7 +119,7 @@ export const SQUARE_PRESENCES: SquarePresence[] = [
   // Community
   { id: "co-forus", kind: "community", name: "For Us", line: "The Community Hall — today's stories from the Hill.", to: "/for-us", glyph: "🌅", status: "Updated today" },
   { id: "co-forme", kind: "community", name: "For Me", line: "Your own page. Everything about you, in one place.", to: "/for-me", glyph: "🪪", status: "Yours" },
-  { id: "co-welcome", kind: "community", name: "Welcome Hall", line: "The gates: registration and arrival into Frass Hill.", to: "/welcome-hall", glyph: "🚪", status: "The gates" },
+  { id: "co-welcome", kind: "community", name: "About the Welcome Hall", line: "How the gates, registration and arrival into Frass Hill work.", to: "/welcome-hall", glyph: "🚪", status: "The gates" },
   { id: "co-blog", kind: "community", name: "Brand Journal", line: "Longer writing from the Hill.", to: "/blog", glyph: "📰", status: "Weekly" },
 
   // Foundation

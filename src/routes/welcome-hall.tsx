@@ -179,7 +179,7 @@ function InformationalWelcomeHall({ search }: { search: { arrival?: "first"; nex
     <div className="min-h-screen bg-background text-foreground">
       <nav aria-label="Welcome Hall navigation" className="fixed left-4 top-4 z-40 flex items-center gap-2 rounded-full border border-border/70 bg-background/75 px-2 py-1.5 text-[10px] uppercase tracking-[0.18em] text-muted-foreground backdrop-blur-xl">
         <Link to="/" aria-label="Site Home" title="Site Home" className="inline-flex h-8 w-8 items-center justify-center rounded-full hover:text-foreground"><Home className="h-4 w-4" /></Link>
-        <span className="hidden sm:inline">Welcome Hall</span>
+        <span className="hidden sm:inline">About the Welcome Hall</span>
       </nav>
       {/* FRASS-0517 — choose how Frass feels before you even begin. */}
       <ViewModeToggle className="fixed right-4 top-4 z-40" />

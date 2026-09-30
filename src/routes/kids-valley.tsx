@@ -86,7 +86,7 @@ function KidsValleyPage() {
             to="/welcome-hall"
             className="text-[10px] uppercase tracking-[0.3em] text-muted-foreground hover:text-foreground"
           >
-            ← Welcome Hall
+            ← About the Welcome Hall
           </Link>
           <h1 className="mt-4 text-5xl font-black uppercase leading-[0.95] tracking-tight md:text-7xl">
             Kids Valley
