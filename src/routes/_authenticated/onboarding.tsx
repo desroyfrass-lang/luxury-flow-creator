@@ -93,7 +93,7 @@ function OnboardingPage({ reviewMode = false }: { reviewMode?: boolean }) {
   const openConversation = useServerFn(journeyOpening);
   const { isAdmin, loading: roleLoading } = useIsAdminStatus();
 
-  const { data, isLoading, refetch } = useQuery({
+  const { data, isLoading, isError, refetch } = useQuery({
     queryKey: reviewMode ? ["founder-interview-review"] : ["builder-journey"],
     queryFn: () => reviewMode ? reviewJourney() : loadJourney(),
     retry: reviewMode ? false : 3,
@@ -106,8 +106,9 @@ function OnboardingPage({ reviewMode = false }: { reviewMode?: boolean }) {
   // a message can only change status, never disappear.
   const [journal, setJournal] = useState<JournalEntry[]>([]);
   useEffect(() => {
+    if (reviewMode) return;
     setJournal(loadJournal(JOURNAL_SCOPE));
-  }, []);
+  }, [reviewMode]);
   const [diagnostics, setDiagnostics] = useState<ConversationDiagnostics | null>(null);
   const [draft, setDraft] = useState("");
   // Presentation only: Journey/Progress secondary view.
@@ -150,7 +151,7 @@ function OnboardingPage({ reviewMode = false }: { reviewMode?: boolean }) {
       at: m.created_at,
       status: "synced" as const,
     }));
-    const fromJournal: ThreadMessage[] = journal
+    const fromJournal: ThreadMessage[] = (reviewMode ? [] : journal)
       .filter((e) => !(e.serverId && savedIds.has(e.serverId)))
       .filter((e) => !isTeleporterAuditTurn(e.content))
       .map((e) => ({
@@ -163,7 +164,7 @@ function OnboardingPage({ reviewMode = false }: { reviewMode?: boolean }) {
         clientId: e.clientId,
       }));
     return [...fromServer, ...fromJournal].sort((a, b) => a.at.localeCompare(b.at));
-  }, [data?.messages, journal]);
+  }, [data?.messages, journal, reviewMode]);
 
   // FRASS-0572A — publish which engine is answering, so the Founder can see it.
   const auditTurnsFiltered = useMemo(
@@ -173,6 +174,7 @@ function OnboardingPage({ reviewMode = false }: { reviewMode?: boolean }) {
     [data?.messages],
   );
   useEffect(() => {
+    if (reviewMode) return;
     publishEngineDiagnostics({
       pipeline: "journey",
       mode: "journey",
@@ -182,7 +184,7 @@ function OnboardingPage({ reviewMode = false }: { reviewMode?: boolean }) {
       path: "/onboarding",
     });
     return () => clearEngineDiagnostics();
-  }, [messages.length, auditTurnsFiltered]);
+  }, [messages.length, auditTurnsFiltered, reviewMode]);
 
   const messagesRef = useRef<ThreadMessage[]>(messages);
   messagesRef.current = messages;
@@ -333,6 +335,7 @@ function OnboardingPage({ reviewMode = false }: { reviewMode?: boolean }) {
   // Nothing is lost to a dropped connection: anything still unsaved is sent
   // again by itself as soon as the network comes back.
   useEffect(() => {
+    if (reviewMode) return;
     if (typeof window === "undefined") return;
     const onOnline = () => {
       const stuck = loadJournal(JOURNAL_SCOPE).filter(
@@ -345,7 +348,7 @@ function OnboardingPage({ reviewMode = false }: { reviewMode?: boolean }) {
     };
     window.addEventListener("online", onOnline);
     return () => window.removeEventListener("online", onOnline);
-  }, [deliver]);
+  }, [deliver, reviewMode]);
 
   async function toggleMic() {
     if (voice.phase === "speaking") {
@@ -358,6 +361,10 @@ function OnboardingPage({ reviewMode = false }: { reviewMode?: boolean }) {
       return;
     }
     if (voice.phase === "idle" && !busy) await voice.startRecording();
+  }
+
+  if (reviewMode && (isError || (!isLoading && (roleLoading || isAdmin !== true)))) {
+    return <SiteShell><main className="mx-auto max-w-3xl px-6 py-16 text-sm text-muted-foreground">This review is restricted to the Founder. <Link to="/daily" className="underline">Back to Daily</Link></main></SiteShell>;
   }
 
   return (
@@ -491,7 +498,7 @@ function OnboardingPage({ reviewMode = false }: { reviewMode?: boolean }) {
             </div>
           )}
 
-          {isOwnerTrack && (
+          {!reviewMode && isOwnerTrack && (
             <Link
               to="/control-room"
               className="mt-8 block rounded-sm border border-border px-4 py-3 text-center text-[11px] font-bold uppercase tracking-[0.28em] text-muted-foreground hover:border-[color:var(--gold)] hover:text-[color:var(--gold)]"
@@ -500,7 +507,7 @@ function OnboardingPage({ reviewMode = false }: { reviewMode?: boolean }) {
             </Link>
           )}
 
-          {finished && (
+          {!reviewMode && finished && (
             <Link
               to="/builder-hall"
               className="mt-8 block rounded-sm border border-[color:var(--gold)] px-4 py-3 text-center text-[11px] font-bold uppercase tracking-[0.28em] text-[color:var(--gold)]"
@@ -661,6 +668,7 @@ function OnboardingPage({ reviewMode = false }: { reviewMode?: boolean }) {
               {isLoading && (
                 <p className="text-sm text-muted-foreground">Bringing your journey back…</p>
               )}
+              {reviewMode && !isLoading && messages.length === 0 && <p className="text-sm text-muted-foreground">No conversation saved yet.</p>}
               {messages.map((m) => (
                 <div key={m.key} className={m.role === "user" ? "flex justify-end" : ""}>
                   <div
@@ -700,7 +708,7 @@ function OnboardingPage({ reviewMode = false }: { reviewMode?: boolean }) {
                       >
                         <Copy className="h-3 w-3" /> Copy
                       </button>
-                      {m.status === "failed" && m.role === "user" && m.clientId && (
+                      {!reviewMode && m.status === "failed" && m.role === "user" && m.clientId && (
                         <button
                           type="button"
                           disabled={busy}

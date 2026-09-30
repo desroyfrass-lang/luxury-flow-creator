@@ -82,7 +82,7 @@ export const getJourneyReview = createServerFn({ method: "GET" })
     return {
       status: journey.data?.status ?? "not_started",
       currentStage: journey.data?.current_stage ?? FIRST_OWNER_STAGE,
-      stageProgress: journey.data?.stage_progress ?? {},
+      stageProgress: (journey.data?.stage_progress && typeof journey.data.stage_progress === "object" && !Array.isArray(journey.data.stage_progress) ? journey.data.stage_progress : {}) as JourneyState["stageProgress"],
       startedAt: "",
       lastActiveAt: "",
       completedAt: null,
