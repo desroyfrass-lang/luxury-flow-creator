@@ -68,25 +68,7 @@ export const Route = createFileRoute("/_authenticated/onboarding")({
 
 function OnboardingEntry() {
   const { review } = Route.useSearch();
-  return review === "founder" ? <FounderInterviewReview /> : <OnboardingPage />;
-}
-
-function FounderInterviewReview() {
-  const reviewFn = useServerFn(getJourneyReview);
-  const { data, isLoading, error } = useQuery({ queryKey: ["founder-interview-review"], queryFn: () => reviewFn(), retry: false });
-  const { isAdmin, loading } = useIsAdminStatus();
-  return <SiteShell><main className="mx-auto min-h-screen max-w-6xl px-4 py-8">
-    {loading || isLoading ? <p>Opening your interview record…</p> : error || !isAdmin ? <p>This review is restricted to the Founder.</p> : <>
-      <div className="mb-6 flex items-center justify-between gap-4"><h1 className="font-display text-2xl">Frassy interview · review</h1><Link to="/daily" className="text-sm underline">Back to Daily</Link></div>
-      <div className="grid gap-6 lg:grid-cols-[minmax(280px,380px)_1fr]">
-        <img src={frassyStanding.url} alt="Frassy standing with her tablet" className="w-full rounded-sm object-cover lg:sticky lg:top-24 lg:h-[calc(100vh-8rem)]" />
-        <section aria-label="Saved interview" className="space-y-5">
-          <p className="text-sm text-muted-foreground">Read-only review · {data?.journey?.status ?? "Not started"} · {data?.journey?.current_stage ?? "No current stage"}. Your interview stays exactly as it is.</p>
-          {data?.messages?.length ? data.messages.filter((m) => !isTeleporterAuditTurn(m.content)).map((m) => <p key={m.id} className="border-b border-border pb-4 text-sm leading-relaxed"><strong>{m.role === "assistant" ? "Frassy" : "You"}</strong><span className="block whitespace-pre-wrap">{m.content}</span></p>) : <p className="text-sm text-muted-foreground">No conversation saved yet.</p>}
-        </section>
-      </div>
-    </>}
-  </main></SiteShell>;
+  return <OnboardingPage reviewMode={review === "founder"} />;
 }
 
 type ThreadMessage = {
@@ -102,8 +84,9 @@ type ThreadMessage = {
 
 const JOURNAL_SCOPE = "journey";
 
-function OnboardingPage() {
+function OnboardingPage({ reviewMode = false }: { reviewMode?: boolean }) {
   const loadJourney = useServerFn(getBuilderJourney);
+  const reviewJourney = useServerFn(getJourneyReview);
   const jumpStage = useServerFn(setJourneyStage);
   const takeTurn = useServerFn(journeyTurn);
   const switchTrack = useServerFn(startJourneyTrack);
@@ -111,8 +94,9 @@ function OnboardingPage() {
   const { isAdmin, loading: roleLoading } = useIsAdminStatus();
 
   const { data, isLoading, refetch } = useQuery({
-    queryKey: ["builder-journey"],
-    queryFn: () => loadJourney(),
+    queryKey: reviewMode ? ["founder-interview-review"] : ["builder-journey"],
+    queryFn: () => reviewMode ? reviewJourney() : loadJourney(),
+    retry: reviewMode ? false : 3,
   });
 
   const [busy, setBusy] = useState(false);
@@ -220,7 +204,7 @@ function OnboardingPage() {
 
   // Founders land in the Commissioning Journey, not the Builder Journey.
   useEffect(() => {
-    if (isLoading || roleLoading || !data || founderRef.current || isAdmin !== true) return;
+    if (reviewMode || isLoading || roleLoading || !data || founderRef.current || isAdmin !== true) return;
     if (trackOf(data.currentStage) === "owner") {
       founderRef.current = true;
       return;
@@ -230,13 +214,13 @@ function OnboardingPage() {
       await switchTrack({ data: { track: "owner" } });
       await refetch();
     })();
-  }, [isLoading, roleLoading, data, isAdmin, switchTrack, refetch]);
+  }, [reviewMode, isLoading, roleLoading, data, isAdmin, switchTrack, refetch]);
 
   // FRASS-0563 — Frassy always speaks first. If this conversation has no
   // messages yet, she opens it herself (aloud when voice is permitted) rather
   // than leaving a new member staring at an empty box.
   useEffect(() => {
-    if (isLoading || roleLoading || !data || openedRef.current) return;
+    if (reviewMode || isLoading || roleLoading || !data || openedRef.current) return;
     if (messages.length > 0) return;
     openedRef.current = true;
     setBusy(true);
@@ -262,7 +246,7 @@ function OnboardingPage() {
         openedRef.current = false;
       })
       .finally(() => setBusy(false));
-  }, [isLoading, roleLoading, data, messages.length, openConversation, refetch, speakReplies, voice]);
+  }, [reviewMode, isLoading, roleLoading, data, messages.length, openConversation, refetch, speakReplies, voice]);
 
   /**
    * Delivers one Founder message. The message is already in the journal under
@@ -469,7 +453,7 @@ function OnboardingPage() {
                   )}
                   <button
                     type="button"
-                    disabled={busy || (!done && i > idx)}
+                    disabled={reviewMode || busy || (!done && i > idx)}
                     onClick={async () => {
                       await jumpStage({ data: { stageId: s.id } });
                       await refetch();
@@ -526,11 +510,11 @@ function OnboardingPage() {
           )}
           <div className="mt-8 space-y-8">
             {/* FRASS-0519 — the Founder walks the same front door, with validation attached. */}
-            {isAdmin && isOwnerTrack && (
+            {!reviewMode && isAdmin && isOwnerTrack && (
               <FounderWalkthrough stepId={stage.id} stepLabel={stage.title} />
             )}
 
-            {isOwnerTrack && (
+            {!reviewMode && isOwnerTrack && (
               <LaunchReadiness
                 eyebrow="Commissioning Dashboard"
                 heading="Platform Readiness"
@@ -569,7 +553,7 @@ function OnboardingPage() {
                   Frassy
                 </div>
                 <div className="truncate text-xs text-muted-foreground">
-                  {completedCount} of {stages.length} {isOwnerTrack ? "steps" : "chapters"} · saved
+                  {reviewMode ? "Founder review · read only" : `${completedCount} of ${stages.length} ${isOwnerTrack ? "steps" : "chapters"} · saved`}
                 </div>
               </div>
               <button
@@ -738,7 +722,7 @@ function OnboardingPage() {
               <div ref={endRef} />
             </div>
 
-            <div className="sticky bottom-0 border-t border-border bg-background px-4 py-3 sm:px-6">
+            {reviewMode ? <div className="sticky bottom-0 border-t border-border bg-background px-4 py-4 text-sm text-muted-foreground sm:px-6">Review only. Nothing you do here changes your journey. <Link to="/daily" className="underline">Back to Daily</Link></div> : <div className="sticky bottom-0 border-t border-border bg-background px-4 py-3 sm:px-6">
               {(voice.voiceError) && (
                 <p className="mb-2 text-xs text-destructive">{voice.voiceError}</p>
               )}
@@ -752,7 +736,7 @@ function OnboardingPage() {
                 micAvailable={voice.voiceAvailable}
                 micActive={voice.phase === "recording"}
               />
-            </div>
+            </div>}
           </section>
         </div>
       </div>
