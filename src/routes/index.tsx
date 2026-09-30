@@ -1,9 +1,6 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import { useServerFn } from "@tanstack/react-start";
-import { getHillEntry } from "@/lib/arrival.functions";
-import { welcomedToday } from "@/lib/welcome-hall/daily-welcome";
 import archHero from "@/assets/frass-three-doors-arrival-v3.png";
 import { DistrictSymbol, HillSymbol, ExploreSymbol, KidsSymbol } from "@/components/entrance/door-symbols";
 import { Button } from "@/components/ui/button";
@@ -48,7 +45,6 @@ function EntrancePage() {
   const navigate = useNavigate();
   const [signedIn, setSignedIn] = useState<boolean | null>(null);
   const [enteringHill, setEnteringHill] = useState(false);
-  const hillEntry = useServerFn(getHillEntry);
 
   // FRASS-0471: the entrance never redirects on its own. Typing frasskicks.com
   // always shows this welcome — first visit, tenth visit, signed in or not.
@@ -87,19 +83,6 @@ function EntrancePage() {
     } finally {
       setEnteringHill(false);
     }
-  };
-
-  /** The ordinary daily entrance remains available through the existing arrival authority. */
-  const goDailyEntrance = async () => {
-    const { data } = await supabase.auth.getSession();
-    if (!data.session) {
-      navigate({ to: "/join/frass-hill" });
-      return;
-    }
-    const entry = await hillEntry();
-    if (!entry.returning) navigate({ to: "/welcome-hall", search: { arrival: "first" } });
-    else if (welcomedToday()) navigate({ to: "/daily" });
-    else navigate({ to: "/welcome-hall", search: { welcome: "daily" } });
   };
 
   /** Kids door: the children's world has its own welcome and its own passport. */
