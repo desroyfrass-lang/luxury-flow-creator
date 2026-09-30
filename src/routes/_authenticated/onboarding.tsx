@@ -41,8 +41,8 @@ import { Copy, Volume2, VolumeX } from "lucide-react";
 import frassyStanding from "@/assets/frassy-standing-ea.png.asset.json";
 
 export const Route = createFileRoute("/_authenticated/onboarding")({
-  validateSearch: (search: Record<string, unknown>): { review?: boolean } => ({
-    ...(search["review"] === "founder" ? { review: true } : {}),
+  validateSearch: (search: Record<string, unknown>): { review?: "founder" } => ({
+    ...(search["review"] === "founder" ? { review: "founder" as const } : {}),
   }),
   head: () => ({
     meta: [
@@ -68,7 +68,7 @@ export const Route = createFileRoute("/_authenticated/onboarding")({
 
 function OnboardingEntry() {
   const { review } = Route.useSearch();
-  return review ? <FounderInterviewReview /> : <OnboardingPage />;
+  return review === "founder" ? <FounderInterviewReview /> : <OnboardingPage />;
 }
 
 function FounderInterviewReview() {

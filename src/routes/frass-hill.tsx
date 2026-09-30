@@ -99,7 +99,7 @@ function HillEntry() {
         else if (welcomedToday()) navigate({ to: "/daily", replace: true });
         else navigate({ to: "/welcome-hall", search: { welcome: "daily" }, replace: true });
       } catch {
-        if (alive) setShowPlan(true);
+        if (alive) navigate({ to: "/welcome-hall", search: { arrival: "first" }, replace: true });
       }
     })();
     return () => { alive = false; };
