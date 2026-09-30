@@ -583,6 +583,7 @@ export function SiteShell({
   // Kids World is a place of its own, so it wears its own chrome: a child-first
   // header, no adult footer, no shopping fab.
   const kids = path === "/kids-world" || path.startsWith("/kids-world/");
+  const workingRoom = path === "/daily" || path === "/workshop";
 
   if (kids) {
     return (
@@ -597,9 +598,9 @@ export function SiteShell({
 
   return (
     <div
-      className={`relative min-h-screen ${path === "/studio" ? "site-shell-studio overflow-x-clip" : ""}`}
+      className={`relative min-h-screen ${path === "/studio" ? "site-shell-studio overflow-x-clip" : ""} ${workingRoom ? "working-room-light" : ""}`}
     >
-      {background && <LuxuryBackground />}
+      {background && !workingRoom && <LuxuryBackground />}
       {preHeader}
       <Header />
       <main className="relative">{children}</main>
