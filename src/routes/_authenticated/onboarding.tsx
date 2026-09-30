@@ -348,9 +348,32 @@ function OnboardingPage() {
 
   return (
     <SiteShell>
-      <div className="mx-auto grid max-w-7xl gap-8 px-6 py-12 lg:grid-cols-[300px_1fr]">
-        {/* Journey map */}
-        <aside className="lg:sticky lg:top-24 lg:self-start">
+      <div className="mx-auto w-full max-w-[1600px] px-3 py-4 sm:px-6 sm:py-6">
+        {/* Journey / Progress — secondary view. Always mounted; only hidden. */}
+        <div
+          className={`fixed inset-0 z-50 bg-background/70 backdrop-blur-sm transition-opacity ${
+            journeyOpen ? "opacity-100" : "pointer-events-none opacity-0"
+          }`}
+          onClick={() => setJourneyOpen(false)}
+          aria-hidden
+        />
+        <aside
+          role="dialog"
+          aria-label="Journey and progress"
+          aria-hidden={!journeyOpen}
+          className={`fixed inset-y-0 left-0 z-50 w-full max-w-md overflow-y-auto border-r border-border bg-background px-6 py-6 shadow-2xl transition-transform ${
+            journeyOpen ? "translate-x-0" : "-translate-x-full"
+          }`}
+        >
+          <div className="mb-4 flex justify-end">
+            <button
+              type="button"
+              onClick={() => setJourneyOpen(false)}
+              className="rounded-full border border-border px-4 py-1.5 text-[11px] uppercase tracking-[0.2em] text-muted-foreground hover:border-[color:var(--gold)] hover:text-[color:var(--gold)]"
+            >
+              Back to Frassy
+            </button>
+          </div>
           <div className="text-[11px] uppercase tracking-[0.3em] text-[color:var(--gold)]">
             Frass Operating System
           </div>
