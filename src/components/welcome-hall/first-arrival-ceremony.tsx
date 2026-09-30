@@ -82,7 +82,7 @@ export function FirstArrivalCeremony({ next }: { next?: string }) {
   useEffect(() => {
     if (!state || state.firstArrival) return;
     const t = setTimeout(() => {
-      const destination = next ?? (state.journeyComplete ? "/room" : "/onboarding");
+      const destination = next ?? (state.returnToDaily ? "/daily" : "/onboarding");
       navigate({ to: destination, replace: true });
     }, 1600);
     return () => clearTimeout(t);

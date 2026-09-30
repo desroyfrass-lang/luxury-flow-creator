@@ -19,6 +19,8 @@ export type ArrivalState = {
   journeyComplete: boolean;
   journeyStarted: boolean;
   emailVerified: boolean;
+  /** Returning destination is the Daily: journey complete, or server-verified Founder/Admin. */
+  returnToDaily: boolean;
 };
 
 const MEMORY_CATEGORY = "arrival";
@@ -89,6 +91,21 @@ export const getArrivalState = createServerFn({ method: "POST" })
 
     const status = (journeyRes.data?.status as string | null) ?? null;
 
+    // Founder/Admin is verified live on the server as the signed-in account —
+    // never from email or client state. An unfinished Builder journey must not
+    // trap a Founder in onboarding; they return to the normal Daily instead.
+    let founder = false;
+    for (const role of ["admin", "super_admin"] as const) {
+      const { data } = await context.supabase.rpc("has_role", {
+        _user_id: userId,
+        _role: role,
+      });
+      if (data) {
+        founder = true;
+        break;
+      }
+    }
+
     return {
       firstArrival,
       displayName:
@@ -100,5 +117,6 @@ export const getArrivalState = createServerFn({ method: "POST" })
       journeyComplete: status === "complete",
       journeyStarted: Boolean(status),
       emailVerified,
+      returnToDaily: status === "complete" || founder,
     };
   });
