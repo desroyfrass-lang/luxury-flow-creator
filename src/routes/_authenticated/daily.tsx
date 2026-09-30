@@ -15,6 +15,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
+import { markWelcomedToday } from "@/lib/welcome-hall/daily-welcome";
 import { SiteShell } from "@/components/site-shell";
 import { WorkCard } from "@/components/daily/work-card";
 import { getDailyBoard, type DailyCard } from "@/lib/daily/board.functions";
@@ -335,6 +336,11 @@ function DailyBody() {
 }
 
 function DailyPage() {
+  // Reaching the Daily is today's arrival, however the member got here —
+  // so the front door never sends them back through a second welcome today.
+  useEffect(() => {
+    markWelcomedToday();
+  }, []);
   return (
     <SiteShell>
       <DailyCustomizationProvider>

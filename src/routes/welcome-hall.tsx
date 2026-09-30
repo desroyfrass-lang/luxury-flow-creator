@@ -10,7 +10,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { onboardingDestination } from "@/lib/navigation/core-routes";
 import { ViewModeToggle } from "@/components/view-mode/view-mode-toggle";
 import { DailyWelcomeCeremony } from "@/components/welcome-hall/daily-welcome-ceremony";
-import { WELCOME_HALL_PURPOSES } from "@/lib/welcome-hall/daily-welcome";
+import { WELCOME_HALL_PURPOSES, welcomedToday } from "@/lib/welcome-hall/daily-welcome";
 import { safeContinuation, SAFE_MEMBER_DESTINATION } from "@/lib/welcome-hall/continuation";
 import { FirstArrivalCeremony } from "@/components/welcome-hall/first-arrival-ceremony";
 import { useMyRoles } from "@/hooks/use-my-roles";
@@ -128,9 +128,22 @@ function useArrivalStage() {
 function WelcomeHallPage() {
   const search = Route.useSearch();
   if (search.welcome === "daily") {
-    return <main className="flex min-h-screen items-center justify-center bg-background px-4 py-8 text-foreground"><div className="w-full max-w-4xl"><DailyWelcomeCeremony next={search.next ?? SAFE_MEMBER_DESTINATION} /></div></main>;
+    return <DailyWelcomeOnce next={search.next} />;
   }
   return <InformationalWelcomeHall search={search} />;
+}
+
+/** The daily greeting happens once. A stale link after that goes on to the Daily. */
+function DailyWelcomeOnce({ next }: { next?: string }) {
+  const navigate = Route.useNavigate();
+  const destination = safeContinuation(next ?? SAFE_MEMBER_DESTINATION);
+  const [ready, setReady] = useState(false);
+  useEffect(() => {
+    if (welcomedToday()) navigate({ href: destination, replace: true });
+    else setReady(true);
+  }, [navigate, destination]);
+  if (!ready) return <main className="min-h-screen bg-background" />;
+  return <main className="flex min-h-screen items-center justify-center bg-background px-4 py-8 text-foreground"><div className="w-full max-w-4xl"><DailyWelcomeCeremony next={destination} /></div></main>;
 }
 
 function InformationalWelcomeHall({ search }: { search: { arrival?: "first"; next?: string } }) {
