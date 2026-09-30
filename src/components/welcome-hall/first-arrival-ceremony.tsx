@@ -1,6 +1,7 @@
 import { Link, useNavigate } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { ArrivalCinematic } from "@/components/welcome-hall/arrival-cinematic";
 import { Volume2, VolumeX, ArrowRight } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { getArrivalState, type ArrivalState } from "@/lib/arrival.functions";
@@ -41,6 +42,8 @@ export function FirstArrivalCeremony({ next }: { next?: string }) {
   const [muted, setMuted] = useState(false);
   const spoken = useRef(false);
   const [voiceNotice, setVoiceNotice] = useState<string | null>(null);
+  const [cinematicDone, setCinematicDone] = useState(false);
+  const finishCinematic = useCallback(() => setCinematicDone(true), []);
 
   // Wait for the session (the email link hydrates it), then ask the backend.
   useEffect(() => {
@@ -106,7 +109,7 @@ export function FirstArrivalCeremony({ next }: { next?: string }) {
   // FRASS-0475 — the shared speaking guarantee. Voice gets one retry; if it
   // still cannot start, Frassy says so in words rather than going quiet.
   useEffect(() => {
-    if (!state?.firstArrival || spoken.current || muted) return;
+    if (!state?.firstArrival || !cinematicDone || spoken.current || muted) return;
     spoken.current = true;
     let alive = true;
     void speakWithGuarantee(lines.join(" "), { owner: "first-arrival" }).then(({ notice }) => {
@@ -115,13 +118,13 @@ export function FirstArrivalCeremony({ next }: { next?: string }) {
     return () => {
       alive = false;
     };
-  }, [state, muted, lines]);
+  }, [state, muted, lines, cinematicDone]);
 
   useEffect(() => {
-    if (!state?.firstArrival) return;
+    if (!state?.firstArrival || !cinematicDone) return;
     const timers = lines.map((_, i) => setTimeout(() => setLine(i), i * 3200));
     return () => timers.forEach(clearTimeout);
-  }, [state, lines.length]);
+  }, [state, lines.length, cinematicDone]);
 
   if (!state) {
     return (
@@ -138,6 +141,9 @@ export function FirstArrivalCeremony({ next }: { next?: string }) {
       <Shell><p className="text-sm text-muted-foreground">Opening your day…</p></Shell>
     );
   }
+
+  // FRASS-0924 — genuine first arrivals journey beneath the arch first.
+  if (!cinematicDone) return <ArrivalCinematic onDone={finishCinematic} />;
 
   return (
     <Shell>
