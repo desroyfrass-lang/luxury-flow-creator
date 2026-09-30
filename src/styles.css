@@ -5252,22 +5252,55 @@ a.ps-row:hover {
   }
 }
 
-/* ─────────────────────────────────────────────────────────────────────────────
-   FRASS DAILY — the light planning room.
-   The Daily is an intentional light-room exception (Founder decision, Phase 2):
-   white/ivory, calm, premium assistant room. Scoped to .daily-light so the rest
-   of the platform keeps the dark streetwear treatment.
-   ───────────────────────────────────────────────────────────────────────────── */
-.daily-light {
-  --background: oklch(0.975 0.008 95);
-  --foreground: oklch(0.28 0.02 265);
-  --card: oklch(0.995 0.004 95);
-  --card-foreground: oklch(0.28 0.02 265);
-  --muted: oklch(0.94 0.008 95);
-  --muted-foreground: oklch(0.5 0.02 265);
-  --border: oklch(0.9 0.01 95);
-  --accent: oklch(0.94 0.02 90);
-  --accent-foreground: oklch(0.28 0.02 265);
+/* The canonical Daily and Workshop share the earliest bright luxury palette.
+   Scoped to their shell: other districts keep their own visual identities. */
+:is(.working-room-light, .working-room-trail) {
+  --background: oklch(0.995 0.002 90);
+  --foreground: oklch(0.16 0.01 250);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.16 0.01 250);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.16 0.01 250);
+  --primary: oklch(0.16 0.01 250);
+  --primary-foreground: oklch(0.99 0.002 90);
+  --secondary: oklch(0.97 0.003 250);
+  --secondary-foreground: oklch(0.16 0.01 250);
+  --muted: oklch(0.96 0.003 250);
+  --muted-foreground: oklch(0.48 0.01 250);
+  --border: oklch(0.92 0.005 250);
+  --input: oklch(0.92 0.005 250);
+  --ring: oklch(0.82 0.14 80);
+  --gold: oklch(0.82 0.14 80);
+  --gold-soft: oklch(0.92 0.08 85);
+  --ink: oklch(0.12 0.01 250);
+  --accent: oklch(0.82 0.14 80);
+  --accent-foreground: oklch(0.16 0.01 250);
   background: var(--background);
   color: var(--foreground);
+}
+
+.working-room-trail {
+  background: transparent;
+}
+
+.working-room-light .daily-light {
+  background: transparent;
+  color: inherit;
+}
+
+.working-room-light main [class~="bg-background/70"] {
+  background: var(--card);
+  box-shadow: var(--shadow-luxury);
+}
+
+.working-room-light main [class~="bg-[color:var(--gold)]"] {
+  color: var(--ink);
+}
+
+.working-room-light [class~="text-[color:var(--gold)]"] {
+  color: color-mix(in oklab, var(--gold) 55%, var(--ink));
+}
+
+.working-room-light :is(.site-header, footer) {
+  background: var(--background);
 }
