@@ -4,7 +4,8 @@
 import { Link, useRouterState } from "@tanstack/react-router";
 import { ArrowLeft, Home } from "lucide-react";
 import { useChromeOffset } from "@/hooks/use-chrome-offset";
-import { intentionalParent, orientationFor } from "@/lib/navigation/hierarchy";
+import { orientationFor } from "@/lib/navigation/hierarchy";
+import { useAdultBack } from "@/lib/navigation/smart-back";
 
 /** Routes that are deliberately immersive / full-bleed and own their own exits. */
 const HIDDEN_PREFIXES = [
@@ -106,6 +107,7 @@ export function FrassTrail() {
   const workingRoom = pathname === "/daily" || pathname === "/workshop";
   // FRASS-0553 — the trail sits under the site header, never behind it.
   const top = useChromeOffset(["header"]);
+  const { goBack } = useAdultBack();
 
   if (pathname === "/" || HIDDEN_PREFIXES.some((p) => pathname === p || pathname.startsWith(p + "/") || pathname.startsWith(p))) {
     return null;
@@ -114,7 +116,6 @@ export function FrassTrail() {
   const segments = pathname.split("/").filter(Boolean);
   if (segments.length === 0) return null;
   const orientation = orientationFor(pathname);
-  const parentHref = intentionalParent(pathname);
 
   // FRASS-0557 §7 — a compact chip in the upper-left corner: Back · Home · here.
   // It never centres over content and never repeats the whole path.
@@ -127,15 +128,16 @@ export function FrassTrail() {
       className={`pointer-events-none fixed left-0 z-40 pl-3 sm:pl-6 lg:pl-12 ${workingRoom ? "working-room-trail" : ""}`}
     >
       <div className={`pointer-events-auto flex w-fit max-w-[min(22rem,calc(100vw-1.5rem))] items-center gap-1 rounded-full border px-1.5 py-1 text-[10px] uppercase tracking-[0.16em] shadow-md backdrop-blur-xl ${workingRoom ? "border-border bg-card text-muted-foreground" : "border-border/60 bg-background/75 text-muted-foreground"}`}>
-        <Link
-          to={parentHref as never}
+        <button
+          type="button"
+          onClick={goBack}
           aria-label="Go back to the previous page"
-          title="Back to the parent place"
+          title="Back to where you were"
           className="inline-flex shrink-0 items-center gap-1 rounded-full px-2 py-0.5 text-foreground transition hover:text-[color:var(--gold)]"
         >
           <ArrowLeft className="h-3.5 w-3.5" />
           <span className="hidden sm:inline">Back</span>
-        </Link>
+        </button>
 
         <Link
           to="/"
