@@ -38,6 +38,7 @@ import { AuthIdentityWatcher } from "@/lib/auth/identity-watch";
 import { TesterBar } from "@/components/tester/tester-bar";
 import { RewardsRibbon } from "@/components/rewards-ribbon";
 import { FrassTrail } from "@/components/frass-trail";
+import { NavHistoryTracker } from "@/lib/navigation/smart-back";
 import { ViewModeProvider } from "@/lib/view-mode/view-mode";
 
 function NotFoundComponent() {
@@ -166,6 +167,7 @@ function RootComponent() {
       <AuthIdentityWatcher />
       <ViewModeProvider>
         <RewardsRibbon />
+        <NavHistoryTracker />
         <FrassTrail />
         <Outlet />
         <WelcomeLinkClaim />

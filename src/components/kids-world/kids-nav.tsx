@@ -10,6 +10,7 @@
  */
 import { Link, useRouterState } from "@tanstack/react-router";
 import { KIDS_WORLDS } from "@/lib/kids-world";
+import { useKidsBack } from "@/lib/navigation/smart-back";
 
 /** The six established Frass Kids age bands. */
 export type KidsBand = {
@@ -56,6 +57,8 @@ export function KidsNav() {
   const band = bandForWorld(worldSlug);
   const atHome = path === "/kids-world" || path === "/kids-world/";
   const accent = band?.colour ?? "#ffd34d";
+  // Locked mode: Back only ever returns to an earlier Kids World page.
+  const { goBack } = useKidsBack();
 
   return (
     <header
@@ -74,15 +77,16 @@ export function KidsNav() {
         </Link>
 
         {!atHome && (
-          <Link
-            to="/kids-world"
+          <button
+            type="button"
+            onClick={goBack}
             aria-label="Go back"
             className="inline-flex min-h-[64px] min-w-[64px] items-center justify-center gap-2 rounded-3xl border-4 px-4 text-3xl transition active:scale-95"
             style={{ borderColor: accent, color: accent }}
           >
             <span aria-hidden>⬅️</span>
             <span className="hidden text-base font-black uppercase tracking-wide sm:inline">Back</span>
-          </Link>
+          </button>
         )}
 
         {band && (
@@ -109,7 +113,6 @@ export function KidsNav() {
           <div className="mx-auto flex max-w-[1400px] gap-2 overflow-x-auto px-3 pb-3 pt-2 sm:px-6">
             <KidsChip to="/kids-world/street" emoji="🏘" label="Frass Street" accent={accent} />
             <KidsChip to="/kids-world/discover" emoji="✨" label="Discover" accent={accent} />
-            <KidsChip to="/frass-kids" emoji="🛍" label="Shop Kids" accent={accent} />
           </div>
         </div>
       )}
@@ -141,7 +144,7 @@ function KidsChip({
 }
 
 /**
- * The Kids World footer: one enormous way out, for a grown-up.
+ * The Kids World footer: the Grown-ups corner, still inside Kids World.
  * Children never see Founder, Admin, Studios, Vault or adult social exits.
  */
 export function KidsFooter() {
@@ -153,14 +156,8 @@ export function KidsFooter() {
       >
         👨‍👩‍👧 Grown-ups
       </Link>
-      <div className="mt-4">
-        <Link
-          to="/welcome-hall"
-          className="text-xs uppercase tracking-[0.25em] text-muted-foreground hover:text-foreground"
-        >
-          Leave Kids World
-        </Link>
-      </div>
+      {/* Locked mode: no ordinary child link leaves Kids World. A grown-up
+          gated exit is designed in a later phase. */}
     </footer>
   );
 }

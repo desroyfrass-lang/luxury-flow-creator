@@ -107,12 +107,6 @@ function PlacePage() {
           >
             ← Back to {world.title}
           </Link>
-          <Link
-            to="/frass-kids"
-            className="rounded-full border border-[color:var(--gold)]/50 px-7 py-3 text-[11px] font-bold uppercase tracking-[0.26em] text-[color:var(--gold)]"
-          >
-            🛍 Shop Kids
-          </Link>
         </div>
       </section>
 

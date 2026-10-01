@@ -164,20 +164,6 @@ function KidsWorldHome() {
             celebrate milestones at their own pace. Along the way they meet small ideas about
             helping others, protecting nature and working together — never a request, never guilt.
           </p>
-          <div className="mt-8 flex flex-wrap gap-3">
-            <Link
-              to="/frass-kids"
-              className="rounded-full border border-primary/50 px-7 py-3 text-[11px] font-bold uppercase tracking-[0.26em] text-primary"
-            >
-              🛍 Shop Kids
-            </Link>
-            <Link
-              to="/frass-hill"
-              className="rounded-full border border-border px-7 py-3 text-[11px] font-bold uppercase tracking-[0.26em]"
-            >
-              🗺 Frass Hill map
-            </Link>
-          </div>
         </div>
       </section>
 
