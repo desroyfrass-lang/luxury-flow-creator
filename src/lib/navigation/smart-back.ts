@@ -88,7 +88,7 @@ export function useAdultBack() {
       router.history.back();
       return;
     }
-    void router.navigate({ to: fallback as never });
+    void router.navigate({ to: fallback as never, replace: true });
   }, [router, fallback]);
   return { goBack, fallback };
 }
@@ -104,7 +104,7 @@ export function useKidsBack() {
       return;
     }
     if (pathname !== KIDS_HOME && pathname !== `${KIDS_HOME}/`) {
-      void router.navigate({ to: KIDS_HOME });
+      void router.navigate({ to: KIDS_HOME, replace: true });
     }
   }, [router, pathname]);
   return { goBack };
