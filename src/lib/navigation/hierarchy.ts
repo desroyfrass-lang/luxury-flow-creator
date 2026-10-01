@@ -25,7 +25,7 @@ export type NavigationPlace = {
 const PLACES: NavigationPlace[] = [
   // Founder Architecture Amendment — Founder Hall is the headquarters; the
   // Control Room is one of its protected rooms, not the front door.
-  { match: "/founder", label: "Founder Hall Home", hall: "Founder Hall", hallPath: "/founder", parent: "/welcome-hall", audience: "FOUNDER", exact: true },
+  { match: "/founder", label: "Founder Hall Home", hall: "Founder Hall", hallPath: "/founder", parent: "/", audience: "FOUNDER", exact: true },
   { match: "/control-room", label: "Control Room", hall: "Founder Hall", hallPath: "/founder", parent: "/founder", audience: "FOUNDER", exact: true },
   { match: "/studios", label: "Frassy Studios", hall: "Founder Hall", hallPath: "/founder", parent: "/founder", audience: "FOUNDER", exact: true },
   { match: "/studios/production/", label: "Production", hall: "Frassy Studios", hallPath: "/studios", parent: "/studios/productions", audience: "FOUNDER" },
@@ -33,21 +33,21 @@ const PLACES: NavigationPlace[] = [
   { match: "/studios/distribution/", label: "Destination Matrix", hall: "Frassy Studios", hallPath: "/studios", parent: "/studios/distribution", audience: "FOUNDER" },
   { match: "/studios/", label: "Studio", hall: "Frassy Studios", hallPath: "/studios", parent: "/studios", audience: "FOUNDER" },
   { match: "/admin", label: "Site Management", hall: "Founder Hall", hallPath: "/founder", parent: "/founder", audience: "ADMIN" },
-  { match: "/frass-hill", label: "Frass Hill", hall: "Frass Hill", hallPath: "/frass-hill", parent: "/welcome-hall", audience: "PUBLIC" },
+  { match: "/frass-hill", label: "Frass Hill", hall: "Frass Hill", hallPath: "/frass-hill", parent: "/", audience: "PUBLIC" },
   { match: "/town-square", label: "Town Square", hall: "Frass Hill", hallPath: "/frass-hill", parent: "/frass-hill", audience: "PUBLIC" },
   { match: "/for-us", label: "For Us", hall: "Community Hall", hallPath: "/for-us", parent: "/town-square", audience: "PUBLIC" },
   { match: "/for-me", label: "For Me", hall: "Frass Hill", hallPath: "/frass-hill", parent: "/town-square", audience: "MEMBER" },
   { match: "/academy", label: "Academy", hall: "Builders Village", hallPath: "/academy", parent: "/frass-hill", audience: "MEMBER" },
   { match: "/opportunity", label: "Opportunity Centre", hall: "Builders Village", hallPath: "/opportunity", parent: "/frass-hill", audience: "MEMBER" },
-  { match: "/daily", label: "Frass Daily", hall: "Builders Village", hallPath: "/daily", parent: "/welcome-hall", audience: "MEMBER" },
+  { match: "/daily", label: "Frass Daily", hall: "Builders Village", hallPath: "/daily", parent: "/", audience: "MEMBER" },
   { match: "/workshop", label: "Workshop", hall: "Builders Village", hallPath: "/daily", parent: "/daily", audience: "MEMBER" },
   { match: "/workspace", label: "My Workspace", hall: "Builders Village", hallPath: "/daily", parent: "/workshop", audience: "MEMBER" },
-  { match: "/builder-hall", label: "My Builder Hall", hall: "Builders Village", hallPath: "/builder-hall", parent: "/welcome-hall", audience: "MEMBER" },
+  { match: "/builder-hall", label: "My Builder Hall", hall: "Builders Village", hallPath: "/builder-hall", parent: "/", audience: "MEMBER" },
   { match: "/studio", label: "FV Studios", hall: "Studio District", hallPath: "/studio", parent: "/frass-hill", audience: "CREATOR" },
   { match: "/fv-studios", label: "Frass Vision Studios", hall: "Studio District", hallPath: "/studio", parent: "/frass-hill", audience: "PUBLIC" },
   { match: "/frass-radio", label: "Frass Radio", hall: "Studio District", hallPath: "/studio", parent: "/studio", audience: "PUBLIC" },
-  { match: "/kids-world", label: "Kids World", hall: "Children's Village", hallPath: "/kids-world", parent: "/welcome-hall", audience: "KIDS" },
-  { match: "/kids-valley", label: "Kids Valley", hall: "Children's Village", hallPath: "/kids-world", parent: "/welcome-hall", audience: "KIDS" },
+  { match: "/kids-world", label: "Kids World", hall: "Children's Village", hallPath: "/kids-world", parent: "/", audience: "KIDS" },
+  { match: "/kids-valley", label: "Kids Valley", hall: "Children's Village", hallPath: "/kids-world", parent: "/kids-world", audience: "KIDS" },
   { match: "/frass-kids", label: "Frass Kids", hall: "Frass District", hallPath: "/frass-district", parent: "/frass-district", audience: "CUSTOMER" },
   { match: "/frass-luxury-house", label: "Frass Luxury House", hall: "Frass District", hallPath: "/frass-district", parent: "/frass-district", audience: "CUSTOMER" },
   { match: "/bridal", label: "Frass Bridal", hall: "Frass District", hallPath: "/frass-district", parent: "/frass-district", audience: "CUSTOMER" },
@@ -58,11 +58,54 @@ const PLACES: NavigationPlace[] = [
   { match: "/bare-drip", label: "Bare Drip", hall: "Frass District", hallPath: "/frass-district", parent: "/frass-district", audience: "CUSTOMER" },
   { match: "/social-media-virals", label: "Social Media Virals", hall: "Frass District", hallPath: "/frass-district", parent: "/frass-district", audience: "CUSTOMER" },
   { match: "/sales-clearance", label: "The Liquidation Room", hall: "Frass District", hallPath: "/frass-district", parent: "/frass-district", audience: "CUSTOMER" },
-  { match: "/frass-district", label: "Frass District", hall: "Frass District", hallPath: "/frass-district", parent: "/welcome-hall", audience: "PUBLIC" },
+  { match: "/frass-district", label: "Frass District", hall: "Frass District", hallPath: "/frass-district", parent: "/", audience: "PUBLIC" },
   { match: "/health-wellness", label: "Health & Wellness", hall: "Frass Hill", hallPath: "/frass-hill", parent: "/frass-hill", audience: "PUBLIC" },
   { match: "/financial-center", label: "Financial Center", hall: "Builders Village", hallPath: "/daily", parent: "/workshop", audience: "MEMBER" },
   { match: "/vaults", label: "My Vaults", hall: "Builders Village", hallPath: "/daily", parent: "/workshop", audience: "MEMBER" },
   { match: "/vault", label: "Builder Vault", hall: "Builders Village", hallPath: "/daily", parent: "/workshop", audience: "MEMBER" },
+  // Phase 1 — every active place has a home, so Back never falls to Welcome Hall.
+  { match: "/welcome-hall", label: "Welcome Hall", hall: "Welcome Hall", hallPath: "/welcome-hall", parent: "/", audience: "PUBLIC", exact: true },
+  { match: "/money-moves", label: "Money Moves", hall: "Builders Village", hallPath: "/daily", parent: "/daily", audience: "MEMBER" },
+  { match: "/journal", label: "My Journal", hall: "Builders Village", hallPath: "/daily", parent: "/daily", audience: "MEMBER" },
+  { match: "/notifications", label: "Notifications", hall: "Builders Village", hallPath: "/daily", parent: "/daily", audience: "MEMBER" },
+  { match: "/onboarding", label: "Onboarding with Frassy", hall: "Builders Village", hallPath: "/daily", parent: "/daily", audience: "MEMBER" },
+  { match: "/first-30-days", label: "First 30 Days", hall: "Builders Village", hallPath: "/daily", parent: "/daily", audience: "MEMBER" },
+  { match: "/launch-accelerator", label: "Launch Accelerator", hall: "Builders Village", hallPath: "/daily", parent: "/daily", audience: "MEMBER" },
+  { match: "/business-vaults", label: "Vault Ideas Library", hall: "Builders Village", hallPath: "/daily", parent: "/vaults", audience: "MEMBER" },
+  { match: "/try-on", label: "Try On", hall: "Frass District", hallPath: "/frass-district", parent: "/frass-district", audience: "MEMBER" },
+  { match: "/collection", label: "Collection", hall: "Frass District", hallPath: "/frass-district", parent: "/frass-district", audience: "CUSTOMER" },
+  { match: "/creation", label: "Creation District", hall: "Frass Hill", hallPath: "/frass-hill", parent: "/frass-hill", audience: "MEMBER" },
+  { match: "/manufacturing", label: "Creator Manufacturing Network", hall: "Frass Hill", hallPath: "/frass-hill", parent: "/frass-hill", audience: "MEMBER" },
+  { match: "/services", label: "Frass Services", hall: "Frass Hill", hallPath: "/frass-hill", parent: "/frass-hill", audience: "PUBLIC" },
+  { match: "/frass-hosting", label: "Frass Hosting", hall: "Frass Hill", hallPath: "/frass-hill", parent: "/frass-hill", audience: "PUBLIC" },
+  { match: "/live", label: "Frass Live", hall: "Community Hall", hallPath: "/for-us", parent: "/town-square", audience: "PUBLIC" },
+  { match: "/music-media", label: "Music & Media", hall: "Community Hall", hallPath: "/for-us", parent: "/town-square", audience: "PUBLIC" },
+  { match: "/blog", label: "Frass Blog", hall: "Community Hall", hallPath: "/for-us", parent: "/town-square", audience: "PUBLIC" },
+  { match: "/brand-partnerships", label: "Brand Partnerships", hall: "Community Hall", hallPath: "/for-us", parent: "/town-square", audience: "PUBLIC" },
+  { match: "/fresh-start", label: "Fresh Start", hall: "Frass Hill", hallPath: "/frass-hill", parent: "/frass-hill", audience: "PUBLIC" },
+  { match: "/capsules", label: "Lookbooks & Capsules", hall: "Frass District", hallPath: "/frass-district", parent: "/frass-district", audience: "CUSTOMER" },
+  { match: "/lookbook", label: "Lookbook", hall: "Frass District", hallPath: "/frass-district", parent: "/frass-district", audience: "CUSTOMER" },
+  { match: "/rewards", label: "Rewards", hall: "Frass District", hallPath: "/frass-district", parent: "/frass-district", audience: "CUSTOMER" },
+  { match: "/visual-search", label: "Visual Search", hall: "Frass District", hallPath: "/frass-district", parent: "/frass-district", audience: "CUSTOMER" },
+  { match: "/frass-shape", label: "Frass Shape", hall: "Frass District", hallPath: "/frass-district", parent: "/frass-district", audience: "CUSTOMER" },
+  { match: "/plus-size", label: "Plus Size", hall: "Frass District", hallPath: "/frass-district", parent: "/frass-plus", audience: "CUSTOMER" },
+  { match: "/bridal-boutique", label: "Bridal Boutique", hall: "Frass District", hallPath: "/frass-district", parent: "/bridal", audience: "CUSTOMER" },
+  { match: "/product", label: "Product", hall: "Frass District", hallPath: "/frass-district", parent: "/frass-district", audience: "CUSTOMER" },
+  { match: "/checkout", label: "Checkout", hall: "Frass District", hallPath: "/frass-district", parent: "/frass-district", audience: "CUSTOMER" },
+  { match: "/gallery", label: "Gallery", hall: "Studio District", hallPath: "/studio", parent: "/fv-studios", audience: "PUBLIC" },
+  { match: "/card", label: "Frass Card", hall: "Frass Hill", hallPath: "/frass-hill", parent: "/frass-hill", audience: "PUBLIC" },
+  { match: "/link", label: "Frass Link", hall: "Frass Hill", hallPath: "/frass-hill", parent: "/frass-hill", audience: "PUBLIC" },
+  { match: "/builder", label: "Builder", hall: "Frass Hill", hallPath: "/frass-hill", parent: "/frass-hill", audience: "PUBLIC" },
+  { match: "/legal", label: "Agreements", hall: "Frass Hill", hallPath: "/", parent: "/", audience: "PUBLIC" },
+  { match: "/join", label: "Join", hall: "Frass Hill", hallPath: "/", parent: "/", audience: "PUBLIC" },
+  // Founder-only rooms — server-guarded; Founder Hall is their home, not anyone else's.
+  { match: "/business-builder", label: "Business Builder", hall: "Founder Hall", hallPath: "/founder", parent: "/founder", audience: "FOUNDER" },
+  { match: "/frassy", label: "Frassy", hall: "Founder Hall", hallPath: "/founder", parent: "/founder", audience: "FOUNDER" },
+  { match: "/global-operations", label: "Global Operations", hall: "Founder Hall", hallPath: "/founder", parent: "/founder", audience: "FOUNDER" },
+  { match: "/blueprints", label: "Blueprints", hall: "Founder Hall", hallPath: "/founder", parent: "/founder", audience: "FOUNDER" },
+  { match: "/visual-review", label: "Visual Review", hall: "Founder Hall", hallPath: "/founder", parent: "/founder", audience: "FOUNDER" },
+  { match: "/payment-providers", label: "Payment Providers", hall: "Founder Hall", hallPath: "/founder", parent: "/founder", audience: "FOUNDER" },
+  { match: "/commerce-simulation", label: "Commerce Simulation", hall: "Founder Hall", hallPath: "/founder", parent: "/founder", audience: "FOUNDER" },
 ];
 
 const normalize = (pathname: string) => pathname.length > 1 ? pathname.replace(/\/+$/, "") : pathname;
@@ -81,8 +124,19 @@ export function intentionalParent(pathname: string): string {
     if (path !== place.match && !place.exact && place.parent === place.match) return place.match;
     return place.parent;
   }
-  return "/welcome-hall";
+  // Unlisted page: walk up its address to the nearest listed place, else the
+  // front door. Welcome Hall is never a generic fallback.
+  const segments = path.split("/").filter(Boolean);
+  while (segments.length > 1) {
+    segments.pop();
+    const up = `/${segments.join("/")}`;
+    if (navigationPlace(up)) return up;
+  }
+  return "/";
 }
+
+/** Count of active places in the registry (for audits). */
+export const PLACE_COUNT = PLACES.length;
 
 export function orientationFor(pathname: string) {
   const place = navigationPlace(pathname);
