@@ -341,6 +341,49 @@ export const finalizeA1CleanJob = createServerFn({ method: "POST" })
     return result as { charged: number; replayed: boolean; assetId: string; balance: number; verifiedAt: string };
   });
 
+/** FRASS Native Motion Rig — confirm the job is queued for this machine and hand out the storage path. */
+export const prepareMotionRigJob = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((input: { jobId: string }) => {
+    if (!input?.jobId) throw new Error("Which Motion Rig job?");
+    return input;
+  })
+  .handler(async ({ data, context }) => {
+    const sb = context.supabase as unknown as Db;
+    const { MOTION_RIG_ENGINE, motionRigPaths } = await import("@/lib/studio/motion-rig");
+    const { data: job, error } = await sb.from("studio_generation_jobs")
+      .select("id,created_by,engine_slug,engine_type,status,charge_state")
+      .eq("id", data.jobId).maybeSingle();
+    if (error) throw new Error(error.message);
+    if (!job || job.created_by !== context.userId) throw new Error("That Motion Rig job is not yours.");
+    if (job.engine_type !== MOTION_RIG_ENGINE.type || job.engine_slug !== MOTION_RIG_ENGINE.slug) throw new Error("That job is not assigned to the Motion Rig.");
+    if (job.status !== "queued" || job.charge_state !== "unbilled") throw new Error("That job is not waiting for a new Motion Rig output.");
+    return { ...motionRigPaths(context.userId, job.id), engine: MOTION_RIG_ENGINE };
+  });
+
+/** Verify the stored motion file is a real WebM video, then register and settle it. */
+export const finalizeMotionRigJob = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((input: { jobId: string; outputPath: string; outputBytes: number; durationSeconds: number; width: number; height: number; sourceAsset: string; processedAt: string; testWaiver?: boolean }) => input)
+  .handler(async ({ data, context }) => {
+    const { MOTION_RIG_ENGINE, MOTION_RIG_BUCKET } = await import("@/lib/studio/motion-rig");
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    // Server-side file check: the stored bytes must start with the WebM/EBML signature.
+    const { data: file, error: dlErr } = await supabaseAdmin.storage.from(MOTION_RIG_BUCKET).download(data.outputPath);
+    if (dlErr || !file) throw new Error("The motion file could not be read back from Studio storage.");
+    const head = new Uint8Array(await file.slice(0, 4).arrayBuffer());
+    if (!(head[0] === 0x1a && head[1] === 0x45 && head[2] === 0xdf && head[3] === 0xa3)) throw new Error("The stored file is not a real WebM video.");
+    if (file.size !== data.outputBytes) throw new Error("Stored motion size does not match.");
+    const { data: result, error } = await (supabaseAdmin as any).rpc("finalize_frass_native_motion_rig", {
+      _job_id: data.jobId, _user_id: context.userId, _output_path: data.outputPath, _output_bytes: data.outputBytes,
+      _duration_seconds: data.durationSeconds, _width: data.width, _height: data.height, _source_asset: data.sourceAsset.slice(0, 200),
+      _engine_slug: MOTION_RIG_ENGINE.slug, _engine_version: MOTION_RIG_ENGINE.version, _processed_at: data.processedAt,
+      _test_waiver: data.testWaiver === true,
+    });
+    if (error) throw new Error(error.message);
+    return result as { charged: number; waived: boolean; replayed: boolean; assetId: string; animationId: string; balance: number; verifiedAt: string };
+  });
+
 export const getStudioA1Evidence = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .inputValidator((input: { productionId?: string | null }) => input)
