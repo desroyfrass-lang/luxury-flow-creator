@@ -48,6 +48,7 @@ import {
 } from "@/components/ui/dialog";
 import { ControlDepthBar } from "@/components/studio/control-depth-bar";
 import { A1MasterPanel } from "@/components/studio/a1-master-panel";
+import { MotionRigTest } from "@/components/studio/motion-rig-test";
 import studioEntry from "@/assets/studio-entry.jpg";
 import { FV_STUDIOS_FRASSY_LOOK } from "@/lib/frassy/room-looks";
 import type { QualityReport } from "@/lib/studio/phone-content-mode";
@@ -707,6 +708,7 @@ function StudioPage() {
                     Source files you bring in are preserved. Cleaned outputs are saved as separate,
                     owned versions.
                   </p>
+                  {isAdmin ? <MotionRigTest projectId={active?.id ?? null} /> : null}
                 </div>
               ) : null}
               {tab === "edit" ? <EditWorkspace directed={directed} audioLane={audioLane} /> : null}

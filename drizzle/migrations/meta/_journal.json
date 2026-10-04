@@ -127,6 +127,13 @@
       "when": 1790559479060,
       "tag": "0017_step8_legacy_role_cleanup",
       "breakpoints": true
+    },
+    {
+      "idx": 18,
+      "version": "7",
+      "when": 1791101607846,
+      "tag": "0018_frass_native_motion_rig_v1",
+      "breakpoints": true
     }
   ]
 }
