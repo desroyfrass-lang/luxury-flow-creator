@@ -1,81 +1,71 @@
-# Welcome Hall / Frassy Welcome — Audit Report and Recovery Order
+# Animation Engine Forensic Audit — Result (read-only, nothing changed)
 
-Read-only audit. Nothing changed. Files/data changed: NONE. Revision: 92aba0407583672840bba148db9eafd58a31de83. Publish/Deploy: NO.
-Evidence labels: [CODE] = read in the code this turn; [BROWSER] = seen in earlier browser checks as Founder; [UNPROVEN] = not seen in a browser.
+## Verdict: C. SCAFFOLDED / PLANNED ONLY — confidence high (about 90%)
 
-## 1) Entry path
+The Founder's memory is correct that real animation-related work was done. That work built the **sockets and the stage** for an animation engine. It never built the **machine** that makes movement. No hidden, renamed, deleted or disconnected generator exists to reconnect.
 
-Routes that act as the way into Frass Hill:
-- `/` front door, "Enter Frass Hill" button [CODE]: signed out → `/join/frass-hill`. Signed in → asks the server "returning?" → not returning → `/welcome-hall?arrival=first`; returning and already welcomed today → `/daily`; returning, not yet welcomed → `/welcome-hall?welcome=daily`. If the check fails it sends the member to first arrival (fails safe, never assumes Founder).
-- `/welcome-hall` has three modes [CODE]: `?welcome=daily` shows only the daily greeting; `?arrival=first` shows only the first-arrival ceremony (arch cinematic, then personal welcome); no flag shows the old informational Hall (gate picture, brochure sections).
-- `/frass-hill` town page [CODE]: wrapped in the daily greeting gate — a signed-in member not yet welcomed today is sent to `/welcome-hall?welcome=daily&next=/frass-hill` before the town appears.
-- Redirects: `/welcome` → first-arrival mode; `/gateway` → `/welcome-hall`; `/frass-world` → `/frass-hill`.
-- `/arrival` (cinematic "Act II") [CODE]: still a full separate page. No member navigation links to it; reachable only by typing it or through the Founder teleporter. Orphaned but protected.
-- `/frass-hill-journey` (Walk page) [CODE]: separate page, links to the town.
+## What was built, and when
 
-What normal navigation leads to [CODE]: site top bar links "Frass Hill" → `/frass-hill` and a "Welcome Hall" link → `/welcome-hall` (the old brochure mode). Kids Valley, Town Square list and the Tester bar also link to plain `/welcome-hall`. The join-shop page sends to first arrival with next = Frass District.
+| Date | Work | What it really is |
+|---|---|---|
+| 2026-08-25 | "Added cinematic breathing motion" (front door) | Styling motion on the front-door symbols. Not a generator. |
+| Late Aug–Sep | FV Studios Generation Router (`src/lib/studios/generation-layer.ts`), production engine (13 server functions) | Writes scripts and scene plans, including an "[ANIMATION]" direction line per scene. That is text only. |
+| Sep | Commissioning pass 1 (`src/lib/studios/native-engines.ts`) | A list of nine machine slots: image, video, **animation**, voice, music, sound, audio repair, finishing, writing. The file itself says: "nothing in this file performs generation." |
+| Sep | A1 Clean (`frass_a1_clean_web_audio_v1`) | The **only** Frass-built media machine. It repairs audio, not animation. |
+| 2026-09-20 | "State-driven / non-collapsing motion slot" (`src/lib/frassy/room-looks.ts`, `frassy-chat.tsx`, `styles.css`) | A ready-made socket for Frassy's states: idle, listening, thinking, speaking, gesturing, working. Every state still shows the one approved seated picture. The pass reported plainly: "No body distortion or fake lip-sync." |
 
-First-time vs returning [CODE]: "returning" = journey finished, or (first-arrival note exists AND server-confirmed Founder/Admin). Everyone else sees first arrival → interview → Daily.
+## Evidence checked
 
-## 2) Frassy layers during entry
+- **Code:** no animation or video libraries are installed (no Lottie, Rive, Remotion, Three, Pixi, GSAP or ffmpeg). No sprite, rig, mouth-shape, lip-sync or frame-rendering code exists. The only drawing surface is the Gallery drawing pad.
+- **Git:** 4,214 commits searched. No deleted or renamed file names an animator, rig, sprite or lip-sync. The only "motion" commits are the three listed above.
+- **Chat history:** the earlier wishes were "a subtle blink, a tiny breathing animation" and "a future Frassy motion layer." Later Founder direction (around chat line 215544) said full lip-sync and animation are "later commissioning." No message asks for, or completes, an actual animation engine.
+- **Database:**
+  - `animation_provider_slot`: not configured and switched off.
+  - `studio_animations`: 0 rows.
+  - `studio_generation_jobs`: 1 job, waiting for a machine, never charged.
+  - No completed animation jobs. No animation or video output files.
+- **File storage:** nine private storage areas. None is for animation; `studio-audio` belongs to A1 Clean.
 
-| Layer | Trigger | Saved marker | Order |
-|---|---|---|---|
-| Arch cinematic (captions, 4 lines) | first-arrival mode, genuine first arrival only | none of its own | 1st for new members |
-| Personal welcome | first-arrival mode, after cinematic | server first-arrival date written | 2nd |
-| Interview (onboarding) | after personal welcome | server journey rows | 3rd |
-| Daily greeting | returning member, not welcomed today (front door or town gate) | browser "welcomed today" note, saved only on Start my day | 1st for returning |
-| Voice-choice window | any page Frassy is allowed on, until a voice choice is made; waits while the entrance is playing | browser voice choice; "later" lasts this tab only | appears on top of whatever is showing |
-| Into Daily | Start my day / end of interview | — | last |
-| Into town | Explore Frass Hill, via greeting gate first | same "welcomed today" note | after greeting |
+## Where the Studio's Animation path stops today
 
-Overlaps [CODE + BROWSER]:
-- The voice-choice window sits on top (layer 70) and needs a choice. Welcome Hall, Daily and onboarding are all counted as "Frassy pages", so it can cover the daily greeting, the personal welcome or the town until answered. It only holds back while the entrance "is playing" signal is on — the daily greeting does not appear to raise that signal. [BROWSER: seen covering Daily and the Tester panel earlier.]
-- Clicking "Explore Frass Hill" as a returning member first meets the daily greeting, not the town — so the town can feel blocked. [BROWSER: seen in last check.]
+```text
+Animation choice -> Frassy plans it (REAL) -> job request (REAL)
+  -> routeToEngine("animation") -> NOT INSTALLED (stops here, honestly)
+  -> [missing] engine that makes the motion
+  -> [missing] check that the file really plays
+  -> save to Assets + charge credits (REAL logic, already used by A1 Clean)
+```
 
-## 3) Current behaviour vs recorded intent
+## What works today, what is waiting, what is only a frame
 
-Recorded decisions found (memory FRASS-0569, 0923/0924, 0475, and earlier approvals in this chat):
-- Welcome Hall is the front entrance; the member may skip it, the platform may never bypass it; Daily follows it. — Mostly met.
-- Frassy must actually speak; silence never allowed. — Code tries to speak with a fallback; spoken audio in the Hall is [UNPROVEN].
-- Four greeting styles (Quick, Motivational, Conversation, Celebration). — Picker exists; its link goes to the brochure Hall, not the greeting (known wrong link).
-- "Every first arrival is a journey" (FRASS-0924). — Now transferred into first arrival; not written down in permanent memory yet.
-- FRASS-0923 memory says Enter Frass Hill → `/arrival`. — Out of date.
+- **Works today:** Studio screens, Frassy as director, scripts and scene plans, cost estimate, credit wallet, job queue, the "no charge without a checked result" rule, the A1 Clean pattern, the Frassy state socket, and Studio presence motion (gentle drift and light).
+- **Waiting (ready, no machine behind it):** the animation slot, the Animation Library table, and the Frassy state list. All of them fall back to one picture.
+- **Frame only:** scene "animation notes", which are words, not movement.
 
-Conflicts:
-1. Voice-choice window can appear over the greeting/first arrival/town and block them (not in any recorded decision).
-2. Deliberate Explore of the town is interrupted by the daily greeting; recorded decision said deliberate exploring should not be mixed up with the front door.
-3. Plain `/welcome-hall` (brochure) is what the top bar, Kids Valley, Town Square and Tester bar open — members reach the old Hall, not the current welcome.
-4. Two cinematic versions exist (`/arrival` and the transferred one).
+## Can anything be reconnected instead of rebuilt?
 
-## 4) Frassy presence
+There is no engine to reconnect. What **can** be reused without rebuilding:
 
-- Daily greeting shows Frassy's picture, lines and a "Hear Frassy" button [CODE]; greeting shown alone [BROWSER]. Her voice actually playing: [UNPROVEN].
-- First-arrival cinematic shows captions and text lines only, no voice by design [CODE]; never seen in a browser for a new member [UNPROVEN].
-- Brochure Hall: a picture of the gates; no visible Frassy greeting as the main moment [CODE].
+1. the slot and routing rules
+2. the job queue and the check-before-charge rule (copy the A1 Clean pattern)
+3. the Frassy state socket, which a motion rig can plug straight into
+4. the Animation Library table, to register finished movements
 
-## 5) Routing / duplication causing the disconnected feel
+## Missing pieces, in order
 
-- One address, three different experiences (`/welcome-hall`), picked by a hidden flag.
-- Two greeting gates: the front-door check and the town-page gate.
-- Old gate component `WelcomeGate` (only on the old room page) and old `/room-classic` workspace still exist.
-- `/arrival` and the Walk page are separate journeys outside the canonical path.
+1. A real animation machine. Your choice from last time: the Frass motion rig (option 2) or an outside service (option 1).
+2. Register it as a Frass-owned machine and switch it on.
+3. A step that checks each result is a real, playable file.
+4. Save results to Assets and the Animation Library.
+5. Connect approved results to the Frassy states on the site.
 
-## 6) Classification
+## Safest next action (not done)
 
-- KEEP: front door `/`; `/welcome-hall` daily mode and first-arrival mode; DailyWelcomeCeremony; FirstArrivalCeremony + arrival-cinematic; daily-welcome note; continuation helper; interview; redirects `/welcome`, `/gateway`, `/room`; Frass Gateway Arch photo.
-- AMEND: voice-choice gate (wait during the greeting and first arrival, never cover the town); town-page greeting gate (decision needed: keep or let deliberate Explore through); top-bar/Kids/Town Square/Tester "Welcome Hall" links; greeting-style picker link; FRASS-0923 memory (needs approval).
-- CONSOLIDATE: brochure Hall content — keep as informational page for signed-out/first-time visitors only, reached deliberately.
-- RETIRE (only after the protected transfer is verified): `/arrival`; `WelcomeGate`; `/room-classic`; unused `daily-welcome-gate` behaviour if Explore is freed.
+Approve **option 2: a Frass-owned motion rig**, built the A1 Clean way. Prove it first with a disposable test movement. Do not touch the live Frassy picture. Founder review comes before anything goes on the site.
 
-## Proposed recovery order (Welcome Hall only, not implemented)
+## Technical notes
 
-1. Founder decisions: (a) should Explore Frass Hill skip the daily greeting? (b) should the voice choice be asked inside the greeting instead of a pop-up?
-2. Stop the voice-choice window from covering the greeting, first arrival and town.
-3. Point the top-bar, Kids, Town Square, Tester and greeting-style links to the right place.
-4. Apply decision (a) to the town-page gate.
-5. Browser-verify Frassy's voice in the greeting and the new-member path (needs approval card).
-6. Update FRASS-0923/0924 memory (with approval).
-7. Then the protected `/arrival` retirement batches from the earlier audit.
-
-Implementation ⏳ none (audit) / Type Check ✅ earlier / Build ✅ earlier / Preview ✅ / Production ⏳ unpublished / Constitution Updated ❌ / Project Memory Updated ❌ / Requires Founder Testing ⚠️
+- Key files: `src/lib/studios/native-engines.ts`, `src/lib/studios/generation-layer.ts`, `src/lib/studios/production-engine.functions.ts`, `src/lib/studio.functions.ts`, `src/lib/studio/engine-truth.test.ts`, `src/lib/frassy/room-looks.ts`, `src/components/frassy-chat.tsx`.
+- Commits: `fcfcb117`, `56de9c9e`, `061b538f`.
+- Database tables: `studio_providers`, `studio_generation_jobs`, `studio_animations`, `studio_assets`.
+- Changes made in this audit: none. Publish/Deploy: NO.
