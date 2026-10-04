@@ -9025,6 +9025,23 @@ export type Database = {
         }
         Returns: Json
       }
+      finalize_frass_native_motion_rig: {
+        Args: {
+          _duration_seconds: number
+          _engine_slug: string
+          _engine_version: string
+          _height: number
+          _job_id: string
+          _output_bytes: number
+          _output_path: string
+          _processed_at: string
+          _source_asset: string
+          _test_waiver: boolean
+          _user_id: string
+          _width: number
+        }
+        Returns: Json
+      }
       gallery_is_public: { Args: { _gallery_id: string }; Returns: boolean }
       gallery_own_contact_email: {
         Args: { _gallery_id: string }
