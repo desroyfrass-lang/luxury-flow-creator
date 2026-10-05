@@ -34,7 +34,7 @@ describe("recovered Daily Frassy presentation boundaries", () => {
     expect(mobile).toContain(".working-room-light:has(.daily-light)");
     expect(mobile).toContain("height: calc(100dvh - 12rem - env(safe-area-inset-bottom))");
     expect(mobile).toContain("overflow-y: auto");
-    expect(mobile).toContain("height: calc(12rem + env(safe-area-inset-bottom))");
+    expect(mobile).not.toContain("::after");
     expect(mobile).toContain("height: 9.5rem;");
     expect(mobile).toContain("bottom: calc(11.5rem + env(safe-area-inset-bottom))");
   });
