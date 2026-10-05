@@ -21,5 +21,5 @@
 - [x] Restore approved Daily portrait entrance and persistent bottom-right companion without replacing real records or attaching motion.
 - [x] Restore existing in-room text conversation and verify Founder desktop, phone, and repeat Daily visits; Preview only.
 - [x] Identify approved ivory-suit Daily original: Founder upload `Seated_Frassy_Exact_Original.png`, explicitly assigned to Daily on 30 Sep. Original is opaque with office background.
-- [ ] Obtain a reliable exact-character mask — non-generative extraction passed unchanged-RGB/canvas checks but failed visual edge separation; rejected and stopped for Founder review.
-- [ ] After reliable mask validation, correct only Daily and verify desktop/phone, entrance, recognizable assistant home and in-room conversation — blocked by failed visual mask validation. No Workshop, motion or production changes.
+- [x] Replace blocked extraction with Founder-approved unchanged original-background + CSS perimeter-only soft blend, using `Seated_Frassy_Exact_Original-2.png` only in Daily.
+- [ ] Founder review required: soft-edge original-background candidate browser-tested at 1280×900, 1280×1800 and 390×844; ivory identity, timing, chat typing and repeat visits work, but scene remains photograph-like and overlaps phone Daily text. Stopped without broad redesign. Current Preview candidate is not visually approved; production unchanged.

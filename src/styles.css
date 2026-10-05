@@ -1458,14 +1458,14 @@
   height: 3.5rem;
 }
 
-/* Recovered Daily entrance: full portrait, never the old overlay or gold mark.
-   Interpolate numeric anchors so the move itself is visible (not auto → jump). */
+/* Exact Founder original, unedited: only the outer perimeter alpha fades.
+   The central image remains sharp, with no filter, crop or radial/profile mask. */
 .daily-frassy-restored {
   position: fixed;
   z-index: 50;
-  right: calc(50% - 4.875rem);
+  right: calc(50% - 6.5rem);
   bottom: calc(62dvh - 6.5rem);
-  width: 9.75rem;
+  width: calc(13rem * 1025 / 1024);
   height: 13rem;
   padding: 0;
   border: 0;
@@ -1474,22 +1474,41 @@
   transition: right 900ms var(--ease-luxury), bottom 900ms var(--ease-luxury), width 900ms var(--ease-luxury), height 900ms var(--ease-luxury);
 }
 .daily-frassy-restored:hover { background: transparent; }
-.daily-frassy-restored img { width: 100%; height: 100%; object-fit: contain; }
+.daily-frassy-restored img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  mask-image: linear-gradient(to right, transparent, var(--foreground) 9%, var(--foreground) 91%, transparent), linear-gradient(to bottom, transparent, var(--foreground) 8%, var(--foreground) 92%, transparent);
+  mask-composite: intersect;
+  -webkit-mask-image: linear-gradient(to right, transparent, var(--foreground) 9%, var(--foreground) 91%, transparent), linear-gradient(to bottom, transparent, var(--foreground) 8%, var(--foreground) 92%, transparent);
+  -webkit-mask-composite: source-in;
+}
 .daily-frassy-restored.is-small {
   right: max(1.25rem, env(safe-area-inset-right));
   bottom: max(1.25rem, env(safe-area-inset-bottom));
-  width: 2.625rem;
-  height: 3.5rem;
+  width: calc(12rem * 1025 / 1024);
+  height: 12rem;
 }
 .frassy-daily-conversation {
   right: max(1.25rem, env(safe-area-inset-right));
-  bottom: calc(5.5rem + env(safe-area-inset-bottom));
-  max-height: calc(100dvh - 7rem - env(safe-area-inset-bottom));
+  bottom: calc(14rem + env(safe-area-inset-bottom));
+  max-height: calc(100dvh - 15.5rem - env(safe-area-inset-bottom));
 }
 .frassy-daily-conversation [data-frassy-toolbar] { grid-template-columns: minmax(0, 1fr) auto; }
 .frassy-daily-conversation [data-frassy-voice] { gap: 0; }
 @media (max-width: 639px) {
-  .frassy-daily-conversation { width: calc(100% - 2.5rem); }
+  .daily-frassy-restored.is-small {
+    right: max(1rem, env(safe-area-inset-right));
+    bottom: max(1rem, env(safe-area-inset-bottom));
+    width: calc(9.5rem * 1025 / 1024);
+    height: 9.5rem;
+  }
+  .daily-light { padding-bottom: 12rem; }
+  .frassy-daily-conversation {
+    width: calc(100% - 2.5rem);
+    bottom: calc(11.5rem + env(safe-area-inset-bottom));
+    max-height: calc(100dvh - 13rem - env(safe-area-inset-bottom));
+  }
 }
 @media (prefers-reduced-motion: reduce) {
   .daily-frassy-restored { transition: none; }
