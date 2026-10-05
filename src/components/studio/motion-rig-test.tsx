@@ -11,7 +11,7 @@ import {
   renderIdleBreathing,
   verifyPlayable,
 } from "@/lib/studio/motion-rig";
-import seatedStudioLook from "@/assets/frassy-fv-studios-seated.png.asset.json";
+import dailyOriginal from "@/assets/frassy-daily-seated-exact-original.png.asset.json";
 
 /**
  * Founder-only commissioning test for the FRASS Native Motion Rig.
@@ -32,12 +32,13 @@ export function MotionRigTest({ projectId }: { projectId: string | null }) {
       if (!projectId) throw new Error("Open a production first.");
       setResult(null);
       setStatus("Asking the Studio which machine does animation…");
-      const forecast = buildForecast("Motion Rig test", [{ key: "ai-animation", qty: MOTION_LOOP_SECONDS }]);
+      if (result) throw new Error("This disposable test has already been made.");
+      const forecast = buildForecast("Daily ivory-suit motion TEST", [{ key: "ai-animation", qty: MOTION_LOOP_SECONDS }]);
       const queued = await runOp({
         data: {
           projectId,
-          request: "TEST — Frassy idle breathing loop, 3 seconds (disposable)",
-          label: "Motion Rig test",
+          request: "TEST ONLY — exact Daily ivory-suit seated Frassy, idle breathing loop, 3 seconds (disposable, private, not approved for Daily attachment)",
+          label: "Daily ivory-suit motion TEST",
           lines: forecast.lines.map((l) => ({ key: l.key, label: l.label, credits: l.credits, qty: l.qty })),
           total: forecast.total,
           seconds: forecast.seconds,
@@ -46,7 +47,7 @@ export function MotionRigTest({ projectId }: { projectId: string | null }) {
       if (queued.status === "blocked") throw new Error(queued.message);
       const prepared = await prepare({ data: { jobId: queued.jobId } });
       setStatus("Rendering frames on this device…");
-      const video = await renderIdleBreathing(seatedStudioLook.url);
+      const video = await renderIdleBreathing(dailyOriginal.url);
       setStatus("Checking the file really plays…");
       const check = await verifyPlayable(video);
       const up = await supabase.storage
@@ -62,7 +63,7 @@ export function MotionRigTest({ projectId }: { projectId: string | null }) {
           durationSeconds: check.durationSeconds,
           width: check.width,
           height: check.height,
-          sourceAsset: seatedStudioLook.original_filename,
+          sourceAsset: dailyOriginal.original_filename,
           processedAt: new Date().toISOString(),
           testWaiver: true,
         },
@@ -71,7 +72,7 @@ export function MotionRigTest({ projectId }: { projectId: string | null }) {
       if (!signed.data?.signedUrl) throw new Error("The verified motion could not be opened for preview.");
       return {
         url: signed.data.signedUrl,
-        note: `${check.durationSeconds}s · ${check.width}×${check.height} WebM · ${
+        note: `Daily ivory-suit TEST · ${check.durationSeconds}s · ${check.width}×${check.height} WebM · ${video.size} bytes · ${
           verified.waived ? "test — no credits taken" : `${verified.charged} credits charged after verification`
         } · saved to Assets and the Animation Library (not approved for live use)`,
       };
@@ -87,13 +88,9 @@ export function MotionRigTest({ projectId }: { projectId: string | null }) {
 
   return (
     <section aria-label="Motion Rig test" className="rounded-lg border border-border p-4 sm:col-span-2">
-      <p className="font-semibold">Motion Rig test (Founder only)</p>
-      <p className="mt-1 text-sm text-muted-foreground">
-        Makes a disposable 3-second idle breathing loop from the approved seated Studio Frassy. The live Frassy is not
-        changed.
-      </p>
-      <Button type="button" className="mt-3" disabled={make.isPending || !projectId} onClick={() => make.mutate()}>
-        {make.isPending ? "Making…" : "Make test motion"}
+      <p className="font-semibold">Daily ivory-suit motion TEST (Founder only)</p>
+      <Button type="button" className="mt-3" disabled={make.isPending || !projectId || !!result} onClick={() => make.mutate()}>
+        {make.isPending ? "Making…" : result ? "Test saved" : "Make ivory-suit test motion"}
       </Button>
       {status ? <p className="mt-2 text-sm" role="status">{status}</p> : null}
       {result ? (
