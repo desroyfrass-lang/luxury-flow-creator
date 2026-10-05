@@ -12,6 +12,7 @@ import {
   verifyPlayable,
 } from "@/lib/studio/motion-rig";
 import dailyOriginal from "@/assets/frassy-daily-seated-exact-original.png.asset.json";
+import { useAuthUserId } from "@/lib/auth/identity-watch";
 
 /**
  * Founder-only commissioning test for the FRASS Native Motion Rig.
@@ -24,11 +25,12 @@ export function MotionRigTest({ projectId }: { projectId: string | null }) {
   const prepare = useServerFn(prepareMotionRigJob);
   const finalize = useServerFn(finalizeMotionRigJob);
   const qc = useQueryClient();
+  const { userId } = useAuthUserId();
   const [status, setStatus] = useState<string | null>(null);
   const [result, setResult] = useState<{ url: string; note: string } | null>(null);
   const saved = useQuery({
-    queryKey: ["studio", "daily-ivory-motion-test", projectId],
-    enabled: !!projectId,
+    queryKey: ["studio", "daily-ivory-motion-test", userId, projectId],
+    enabled: !!projectId && !!userId,
     queryFn: async () => {
       const { data: auth } = await supabase.auth.getUser();
       if (!auth.user) throw new Error("Sign in to view your test.");
