@@ -21,5 +21,5 @@
 - [x] Restore approved Daily portrait entrance and persistent bottom-right companion without replacing real records or attaching motion.
 - [x] Restore existing in-room text conversation and verify Founder desktop, phone, and repeat Daily visits; Preview only.
 - [x] Identify approved ivory-suit Daily original: Founder upload `Seated_Frassy_Exact_Original.png`, explicitly assigned to Daily on 30 Sep. Original is opaque with office background.
-- [ ] Create and validate Founder-approved background-only transparent copy of the exact seated ivory-suit original; stop if character details change.
-- [ ] After cutout validation, correct only Daily and verify desktop/phone, entrance, recognizable assistant home and in-room conversation. No Workshop, motion or production changes.
+- [ ] Obtain a valid exact-character transparent copy — first edit rejected for inventing desk-obscured forearm/sleeve and chair details; stopped pending Founder direction, no retry or substitution.
+- [ ] After cutout validation, correct only Daily and verify desktop/phone, entrance, recognizable assistant home and in-room conversation — blocked by rejected cutout. No Workshop, motion or production changes.
