@@ -17,6 +17,7 @@ export const IDENTITY_QUERY_PREFIXES = [
   "my-roles",
   "workspace-roles",
   "tester-commissions",
+  "daily-motion-test",
 ] as const;
 
 let currentUserId: string | null = null;
