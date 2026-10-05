@@ -14,7 +14,7 @@ describe("recovered Daily Frassy presentation boundaries", () => {
     expect(companion).toContain("src={dailyOriginal.url}");
     expect(companion).toContain("width={1025} height={1024}");
     expect(companion).not.toMatch(/frassyLook|frassy-look-daily|frassy-gold/);
-    const imageRules = css.split(".daily-frassy-restored img {")[1]?.split("}")[0];
+    const imageRules = css.split(".daily-frassy-restored img, .daily-frassy-restored video {")[1]?.split("}")[0];
     expect(imageRules).toContain("object-fit: contain");
     expect(imageRules).toContain("mask-composite: intersect");
     expect(imageRules).not.toContain("filter:");
@@ -39,13 +39,27 @@ describe("recovered Daily Frassy presentation boundaries", () => {
     expect(mobile).toContain("bottom: calc(11.5rem + env(safe-area-inset-bottom))");
   });
 
-  it("preserves the canonical board and Welcome Hall ownership without motion", () => {
+  it("preserves the canonical board and Welcome Hall ownership", () => {
     expect(daily).toContain("boardFn()");
     expect(daily).toContain("markWelcomedToday()");
     expect(daily).not.toContain("<FrassDaily");
     expect(daily).not.toContain("to=\"/frassy\"");
-    expect(companion).not.toMatch(/motion-rig|studio-motion|\.webm|DailyWelcomeCeremony/);
+    expect(companion).not.toMatch(/renderIdleBreathing|DailyWelcomeCeremony/);
     expect(frassySurface("/daily")).toBe("workspace");
+  });
+
+  it("plays only the saved private ivory test after docking, with the original fallback", () => {
+    const saved = readFileSync("src/lib/daily/saved-motion-test.ts", "utf8");
+    expect(saved).toContain('assetId: "c999a3c6-ef8b-42da-94be-22ebdfd3556e"');
+    expect(saved).toContain('.eq("created_by", userId)');
+    expect(saved).toContain('source_asset: dailyOriginal.original_filename');
+    expect(saved).toContain('auth.user?.id !== userId');
+    expect(saved).toContain('gcTime: 0');
+    expect(saved).not.toMatch(/renderIdleBreathing|finalizeMotionRigJob|runStudioOperation/);
+    expect(companion).toContain('setDocked(true), 900');
+    expect(companion).toContain('autoPlay muted playsInline loop');
+    expect(companion).toContain('onPlaying={() => setPlaying(true)}');
+    expect(companion).toContain('onError={() => setFailed(true)}');
   });
 
   it("reuses conversation without startup scripts, voice or automatic departure", () => {
