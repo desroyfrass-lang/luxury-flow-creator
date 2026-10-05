@@ -29,6 +29,16 @@ describe("recovered Daily Frassy presentation boundaries", () => {
     expect(css).toContain("bottom: max(1.25rem, env(safe-area-inset-bottom));");
   });
 
+  it("reserves a mobile viewport dock at every scroll position without shrinking Frassy", () => {
+    const mobile = css.split("@media (max-width: 639px) {")[1]?.split("@media (prefers-reduced-motion: reduce)")[0];
+    expect(mobile).toContain(".working-room-light:has(.daily-light)");
+    expect(mobile).toContain("height: calc(100dvh - 12rem - env(safe-area-inset-bottom))");
+    expect(mobile).toContain("overflow-y: auto");
+    expect(mobile).toContain("height: calc(12rem + env(safe-area-inset-bottom))");
+    expect(mobile).toContain("height: 9.5rem;");
+    expect(mobile).toContain("bottom: calc(11.5rem + env(safe-area-inset-bottom))");
+  });
+
   it("preserves the canonical board and Welcome Hall ownership without motion", () => {
     expect(daily).toContain("boardFn()");
     expect(daily).toContain("markWelcomedToday()");
