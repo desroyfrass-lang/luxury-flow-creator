@@ -27,6 +27,8 @@ import {
 } from "@/components/workspace/daily-customization";
 import type { SectionId } from "@/lib/daily/customization";
 import { useIsAdmin } from "@/hooks/use-is-admin";
+import { DailyFrassy } from "@/components/daily/daily-frassy";
+import { Button } from "@/components/ui/button";
 
 export const Route = createFileRoute("/_authenticated/daily")({
   head: () => ({
@@ -181,7 +183,7 @@ function FounderPanel() {
   );
 }
 
-function DailyBody() {
+function DailyBody({ onOpenFrassy }: { onOpenFrassy: () => void }) {
   const boardFn = useServerFn(getDailyBoard);
   const stateFn = useServerFn(setWorkItemState);
   const qc = useQueryClient();
@@ -246,12 +248,13 @@ function DailyBody() {
             >
               Go to Workshop
             </Link>
-            <Link
-              to="/frassy"
-              className="rounded-full border border-border/70 px-5 py-2 text-xs uppercase tracking-[0.2em]"
+            <Button
+              variant="outline"
+              onClick={onOpenFrassy}
+              className="h-auto rounded-full px-5 py-2 text-xs uppercase tracking-[0.2em]"
             >
               Ask Frassy about today
-            </Link>
+            </Button>
             <Link
               to="/workspace/daily-design"
               className="rounded-full border border-border/70 px-5 py-2 text-xs uppercase tracking-[0.2em] text-muted-foreground"
@@ -336,6 +339,8 @@ function DailyBody() {
 }
 
 function DailyPage() {
+  const [frassyOpenSignal, setFrassyOpenSignal] = useState(0);
+  const openFrassy = () => setFrassyOpenSignal((signal) => signal + 1);
   // Reaching the Daily is today's arrival, however the member got here —
   // so the front door never sends them back through a second welcome today.
   useEffect(() => {
@@ -344,7 +349,8 @@ function DailyPage() {
   return (
     <SiteShell>
       <DailyCustomizationProvider>
-        <DailyBody />
+        <DailyBody onOpenFrassy={openFrassy} />
+        <DailyFrassy openSignal={frassyOpenSignal} onOpen={openFrassy} />
       </DailyCustomizationProvider>
     </SiteShell>
   );

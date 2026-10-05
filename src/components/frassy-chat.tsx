@@ -175,9 +175,10 @@ export function FrassyChat({
   hideBeacon?: boolean;
   workspaceContext?: string;
   openSignal?: number;
-  presentation?: "default" | "studio";
+  presentation?: "default" | "studio" | "daily";
   onOpenChange?: (open: boolean) => void;
 } = {}) {
+  const dailyPresentation = presentation === "daily";
   const navigate = useNavigate();
   const ctx = useFrassyContext();
   // FRASS-0551 — only the Founder Control Room stays dark. Every member surface
@@ -277,9 +278,10 @@ export function FrassyChat({
   // yet said yes to voice. This control is also how the choice is changed later.
   const [speakReplies, setSpeakReplies] = useState(false);
   useEffect(() => {
+    if (dailyPresentation) return;
     setSpeakReplies(voiceAllowed());
     return subscribeVoiceConsent(() => setSpeakReplies(voiceAllowed()));
-  }, []);
+  }, [dailyPresentation]);
 
   const items = useCartStore((s) => s.items);
   const { isAdmin } = useIsAdminStatus();
@@ -294,6 +296,7 @@ export function FrassyChat({
   // which do not pass through send(). Existing replies are detected verbatim,
   // so normal text+voice responses never appear twice.
   useEffect(() => {
+    if (dailyPresentation) return;
     const spoken = voice.spokenText.trim();
     if (!spoken || voice.speechRunId <= 0 || lastRecordedSpeechRun.current === voice.speechRunId) {
       return;
@@ -307,7 +310,7 @@ export function FrassyChat({
       }
       return [...prev, { id: nextId(), role: "assistant", content: spoken }];
     });
-  }, [voice.speechRunId, voice.spokenText]);
+  }, [dailyPresentation, voice.speechRunId, voice.spokenText]);
 
   // Welcome Hall is Frassy's front desk. Open the one shared panel there;
   // every other public page keeps the unobtrusive companion beacon.
@@ -327,7 +330,7 @@ export function FrassyChat({
   const startup = useFrassyStartup({
     panelRef,
     embedded,
-    active: open || embedded,
+    active: !dailyPresentation && (open || embedded),
     contextReady: Boolean(ctx),
     speechAllowed: speakReplies,
   });
@@ -349,13 +352,14 @@ export function FrassyChat({
   }, [speakReplies, startup, voice]);
 
   useEffect(() => {
+    if (dailyPresentation) return;
     const enableVoice = () => {
       setSpeakReplies(true);
       void startup.speakGreetingNow();
     };
     window.addEventListener("frassy-voice-enable", enableVoice);
     return () => window.removeEventListener("frassy-voice-enable", enableVoice);
-  }, [startup]);
+  }, [dailyPresentation, startup]);
 
   // FRASS-0553 — dock microphone → this conversation. The ref keeps the
   // listener bound to the current turn state without re-subscribing.
@@ -369,10 +373,11 @@ export function FrassyChat({
   useEffect(
     () =>
       onTalkRequest(() => {
+        if (dailyPresentation) return;
         if (!embedded && embeddedSurfaces > 0) return;
         micHandlerRef.current();
       }),
-    [embedded],
+    [dailyPresentation, embedded],
   );
 
   useEffect(() => {
@@ -621,7 +626,7 @@ export function FrassyChat({
       // asked to type a path; if the place needs a session, she routes through
       // sign-in and comes straight back to it.
       const place = data.navigate;
-      if (place) {
+      if (place && !dailyPresentation) {
         let target = place.path;
         if (place.requiresAuth) {
           const { data: session } = await supabase.auth.getSession();
@@ -637,7 +642,7 @@ export function FrassyChat({
         }, 600);
       }
 
-      if ((spoken || speakReplies) && voice.voiceAvailable) {
+      if (!dailyPresentation && (spoken || speakReplies) && voice.voiceAvailable) {
         setLoading(false);
         await voice.speak(reply);
         // Playback finished → conversation waits. The mic stays closed.
@@ -781,8 +786,8 @@ export function FrassyChat({
       data-frassy-phase={startup.phase}
       data-voice-phase={voice.phase}
       data-presence-state={studioPresenceState}
-      aria-busy={startup.phase === "verifying" || startup.phase === "recovering"}
-      className={`${presentation !== "studio" && (startup.phase === "verifying" || startup.phase === "recovering") ? "invisible pointer-events-none" : "visible"} frass-workspace ${dark ? "ws-dark" : ""} ${presentation === "studio" ? "frassy-studio-conversation" : ""} ${
+      aria-busy={dailyPresentation ? loading : startup.phase === "verifying" || startup.phase === "recovering"}
+      className={`${!dailyPresentation && presentation !== "studio" && (startup.phase === "verifying" || startup.phase === "recovering") ? "invisible pointer-events-none" : "visible"} frass-workspace ${dailyPresentation ? "frassy-daily-conversation" : ""} ${dark ? "ws-dark" : ""} ${presentation === "studio" ? "frassy-studio-conversation" : ""} ${
         expanded
           ? "fixed inset-3 z-[60] flex flex-col overflow-hidden rounded-lg border border-[color:var(--ws-line)] shadow-2xl sm:inset-6"
           : embedded || auditCard
@@ -800,7 +805,7 @@ export function FrassyChat({
         className="grid shrink-0 grid-cols-[minmax(0,1fr)_auto] items-center gap-2 border-b border-[color:var(--ws-line)] px-4 py-3"
       >
         <div className="flex min-w-0 items-center gap-3">
-          <img
+          {!dailyPresentation && <img
             src={presentation === "studio" ? FV_STUDIOS_FRASSY_LOOK.image : symbolAsset.url}
             alt={presentation === "studio" ? "Frassy" : ""}
             className={
@@ -808,7 +813,7 @@ export function FrassyChat({
                 ? "h-12 w-12 rounded-full object-cover object-[50%_14%]"
                 : "h-6 w-6 object-contain"
             }
-          />
+          />}
           <div>
             <div className="text-sm font-semibold text-[color:var(--ws-ink)]">
               {presentation === "studio" ? "Frassy · Studio Director" : "Frassy"}
@@ -854,7 +859,7 @@ export function FrassyChat({
         </div>
         <div data-frassy-voice className="flex shrink-0 items-center gap-1">
           {/* FRASS-0558 §9 — one voice control with a truthful live state. */}
-          <button
+          {!dailyPresentation && <button
             type="button"
             onClick={() => void toggleMic()}
             title="Talk to Frassy"
@@ -877,7 +882,7 @@ export function FrassyChat({
                   : voice.phase === "speaking"
                     ? "Speaking"
                     : "Talk to Frassy"}
-          </button>
+          </button>}
 
           {/* FRASS-0558 §10 — a clear exit. Voice stops, the mic closes, the
               conversation stays saved for later. */}
@@ -894,7 +899,7 @@ export function FrassyChat({
           )}
 
           {/* Voice preference stays secondary in Studio; other rooms retain it here. */}
-          {presentation !== "studio" ? (
+          {!dailyPresentation && presentation !== "studio" ? (
             <button
               type="button"
               onClick={toggleReplyVoice}
@@ -989,7 +994,7 @@ export function FrassyChat({
           >
             <ConversationContent className="gap-5 px-4 py-5 pb-8">
               {/* FRASS-0551 — conversation first: the room is never an empty box. */}
-              {!messages.length && (startup.greeting || startup.phase === "greeted") && (
+              {!dailyPresentation && !messages.length && (startup.greeting || startup.phase === "greeted") && (
                 <div className="frassy-bubble w-fit max-w-[min(46rem,95%)] rounded-lg bg-[color:var(--ws-accent-bg)] px-4 py-3 text-sm leading-relaxed text-[color:var(--ws-ink)]">
                   <p className="whitespace-pre-wrap">
                     {startup.greeting ??
@@ -998,7 +1003,7 @@ export function FrassyChat({
                 </div>
               )}
 
-              {startup.notice && (
+              {!dailyPresentation && startup.notice && (
                 <div className="rounded-sm border border-[color:var(--gold)]/30 bg-[color:var(--gold)]/10 px-3 py-2 text-xs text-[color:var(--ws-ink)]">
                   {startup.notice}
                 </div>
@@ -1219,14 +1224,14 @@ export function FrassyChat({
             </div>
           )}
 
-          {voice.isSpeaking || voice.isPaused ? (
+          {!dailyPresentation && (voice.isSpeaking || voice.isPaused) ? (
             <div className="shrink-0 border-t border-[color:var(--ws-line)] px-3 py-2">
               <SpeechControls />
             </div>
           ) : null}
 
           {/* FRASS-0412 — temporary launch feedback program */}
-          {presentation !== "studio" ? (
+          {!dailyPresentation && presentation !== "studio" ? (
             <div className="shrink-0 border-t border-[color:var(--ws-line)] px-3 py-2">
               <VoiceFeedbackButton source="chat" />
             </div>
@@ -1239,12 +1244,12 @@ export function FrassyChat({
               onSend={() => void send()}
               loading={loading}
               placeholder="Ask Frassy anything…"
-              onMic={() => void toggleMic()}
+              onMic={dailyPresentation ? undefined : () => void toggleMic()}
               micAvailable={voice.voiceAvailable}
               micActive={voice.phase === "recording"}
-              tools={presentation === "studio" ? ["files", "audio", "documents"] : undefined}
-              studio={presentation !== "studio"}
-              showToolRail={presentation !== "studio"}
+              tools={dailyPresentation ? [] : presentation === "studio" ? ["files", "audio", "documents"] : undefined}
+              studio={!dailyPresentation && presentation !== "studio"}
+              showToolRail={!dailyPresentation && presentation !== "studio"}
             />
           </div>
         </div>
