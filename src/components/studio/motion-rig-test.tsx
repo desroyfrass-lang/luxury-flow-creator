@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
@@ -26,13 +26,32 @@ export function MotionRigTest({ projectId }: { projectId: string | null }) {
   const qc = useQueryClient();
   const [status, setStatus] = useState<string | null>(null);
   const [result, setResult] = useState<{ url: string; note: string } | null>(null);
+  const saved = useQuery({
+    queryKey: ["studio", "daily-ivory-motion-test", projectId],
+    enabled: !!projectId,
+    queryFn: async () => {
+      const { data: auth } = await supabase.auth.getUser();
+      if (!auth.user) throw new Error("Sign in to view your test.");
+      const { data, error } = await supabase.from("studio_assets")
+        .select("file_url,generation_info")
+        .eq("created_by", auth.user.id)
+        .contains("generation_info", { source_asset: dailyOriginal.original_filename, test: true })
+        .order("created_at", { ascending: false }).limit(1).maybeSingle();
+      if (error) throw new Error(error.message);
+      if (!data?.file_url) return null;
+      const signed = await supabase.storage.from(MOTION_RIG_BUCKET).createSignedUrl(data.file_url, 3600);
+      if (!signed.data?.signedUrl) throw new Error("The saved test could not be opened.");
+      return { url: signed.data.signedUrl, note: "Daily ivory-suit TEST · saved in Assets and Animation Library · no credits taken · not approved for live use" };
+    },
+    staleTime: 30 * 60 * 1000,
+  });
+  const preview = result ?? saved.data;
 
   const make = useMutation({
     mutationFn: async () => {
       if (!projectId) throw new Error("Open a production first.");
-      setResult(null);
+      if (preview || saved.isPending || saved.error) throw new Error("View the saved disposable test; do not make another.");
       setStatus("Asking the Studio which machine does animation…");
-      if (result) throw new Error("This disposable test has already been made.");
       const forecast = buildForecast("Daily ivory-suit motion TEST", [{ key: "ai-animation", qty: MOTION_LOOP_SECONDS }]);
       const queued = await runOp({
         data: {
@@ -89,15 +108,16 @@ export function MotionRigTest({ projectId }: { projectId: string | null }) {
   return (
     <section aria-label="Motion Rig test" className="rounded-lg border border-border p-4 sm:col-span-2">
       <p className="font-semibold">Daily ivory-suit motion TEST (Founder only)</p>
-      <Button type="button" className="mt-3" disabled={make.isPending || !projectId || !!result} onClick={() => make.mutate()}>
-        {make.isPending ? "Making…" : result ? "Test saved" : "Make ivory-suit test motion"}
+      <Button type="button" className="mt-3" disabled={make.isPending || !projectId || !!preview || saved.isPending || !!saved.error} onClick={() => make.mutate()}>
+        {make.isPending ? "Making…" : preview ? "Test saved" : "Make ivory-suit test motion"}
       </Button>
+      {saved.error ? <p role="alert" className="mt-2 text-sm">{saved.error.message}</p> : null}
       {status ? <p className="mt-2 text-sm" role="status">{status}</p> : null}
-      {result ? (
+      {preview ? (
         <div className="mt-3">
           <video
             data-testid="motion-rig-output"
-            src={result.url}
+            src={preview.url}
             controls
             loop
             muted
@@ -105,7 +125,7 @@ export function MotionRigTest({ projectId }: { projectId: string | null }) {
             autoPlay
             className="w-full max-w-xs rounded-md"
           />
-          <p className="mt-2 text-xs text-muted-foreground">{result.note}</p>
+          <p className="mt-2 text-xs text-muted-foreground">{preview.note}</p>
         </div>
       ) : null}
     </section>
