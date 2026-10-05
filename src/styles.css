@@ -1474,7 +1474,7 @@
   transition: right 900ms var(--ease-luxury), bottom 900ms var(--ease-luxury), width 900ms var(--ease-luxury), height 900ms var(--ease-luxury);
 }
 .daily-frassy-restored:hover { background: transparent; }
-.daily-frassy-restored img {
+.daily-frassy-restored img, .daily-frassy-restored video {
   width: 100%;
   height: 100%;
   object-fit: contain;
@@ -1483,6 +1483,8 @@
   -webkit-mask-image: linear-gradient(to right, transparent, var(--foreground) 9%, var(--foreground) 91%, transparent), linear-gradient(to bottom, transparent, var(--foreground) 8%, var(--foreground) 92%, transparent);
   -webkit-mask-composite: source-in;
 }
+.daily-frassy-motion { position: absolute; inset: 0; opacity: 0; pointer-events: none; }
+.daily-frassy-motion.is-playing { opacity: 1; }
 .daily-frassy-restored.is-small {
   right: max(1.25rem, env(safe-area-inset-right));
   bottom: max(1.25rem, env(safe-area-inset-bottom));
