@@ -20,3 +20,5 @@
 - [x] Front door: four purposeful choices to existing Shop, Opportunity Center, town, and Kids routes; preserve signed-out access flows and verify in Preview.
 - [x] Restore approved Daily portrait entrance and persistent bottom-right companion without replacing real records or attaching motion.
 - [x] Restore existing in-room text conversation and verify Founder desktop, phone, and repeat Daily visits; Preview only.
+- [ ] Verify the exact approved existing ivory-suit Daily Frassy and clean cutout; stop for Founder review if provenance or compositing is blocked.
+- [ ] Correct only Daily after conclusive asset verification, preserving conversation/timing/real data; verify desktop and phone. No Workshop, motion or production changes.
