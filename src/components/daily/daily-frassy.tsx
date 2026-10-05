@@ -1,11 +1,10 @@
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { FrassyChat } from "@/components/frassy-chat";
-import { frassyLook } from "@/lib/frassy/wardrobe";
+import dailyOriginal from "@/assets/frassy-daily-seated-exact-original.png.asset.json";
 
 /** Presentation only: the canonical Daily and Welcome Hall keep their own state. */
 export function DailyFrassy({ openSignal, onOpen }: { openSignal: number; onOpen: () => void }) {
-  const look = frassyLook("daily");
   const [loaded, setLoaded] = useState(false);
   const [settled, setSettled] = useState(false);
 
@@ -26,7 +25,7 @@ export function DailyFrassy({ openSignal, onOpen }: { openSignal: number; onOpen
         onClick={onOpen}
         data-daily-frassy={settled ? "settled" : "entrance"}
       >
-        <img src={look.image} alt={look.alt} width={768} height={1024} loading="eager" onLoad={() => setLoaded(true)} />
+        <img src={dailyOriginal.url} alt="Frassy in her approved ivory suit, seated with her tablet in her office" width={1025} height={1024} loading="eager" onLoad={() => setLoaded(true)} />
       </Button>
       <div id="daily-frassy-conversation">
         <FrassyChat tone="light" hideBeacon workspaceContext="The Daily — help me with today's real work while I stay in my Daily." presentation="daily" openSignal={openSignal} />

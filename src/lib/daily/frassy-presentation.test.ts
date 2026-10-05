@@ -1,6 +1,6 @@
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
-import { frassyLook } from "@/lib/frassy/wardrobe";
+import dailyOriginal from "@/assets/frassy-daily-seated-exact-original.png.asset.json";
 import { frassySurface } from "@/lib/frassy/surfaces";
 
 const companion = readFileSync("src/components/daily/daily-frassy.tsx", "utf8");
@@ -9,17 +9,23 @@ const css = readFileSync("src/styles.css", "utf8");
 const chat = readFileSync("src/components/frassy-chat.tsx", "utf8");
 
 describe("recovered Daily Frassy presentation boundaries", () => {
-  it("uses the registered Daily portrait without substitution or cropping", () => {
-    expect(frassyLook("daily").image).toContain("frassy-look-daily.jpg");
-    expect(companion).toContain('frassyLook("daily")');
-    expect(css).toContain(".daily-frassy-restored img { width: 100%; height: 100%; object-fit: contain; }");
+  it("uses only the exact ivory-suit original with perimeter-only blending", () => {
+    expect(dailyOriginal.original_filename).toBe("frassy-daily-seated-exact-original.png");
+    expect(companion).toContain("src={dailyOriginal.url}");
+    expect(companion).toContain("width={1025} height={1024}");
+    expect(companion).not.toMatch(/frassyLook|frassy-look-daily|frassy-gold/);
+    const imageRules = css.split(".daily-frassy-restored img {")[1]?.split("}")[0];
+    expect(imageRules).toContain("object-fit: contain");
+    expect(imageRules).toContain("mask-composite: intersect");
+    expect(imageRules).not.toContain("filter:");
   });
 
   it("keeps recovered timing and dimensions with safe-area-aware home", () => {
     expect(companion).toContain("setSettled(true), 1900");
     expect(css).toContain("right 900ms var(--ease-luxury)");
     expect(css).toContain("height: 13rem;");
-    expect(css).toContain("height: 3.5rem;");
+    expect(css).toContain("height: 12rem;");
+    expect(css).toContain("height: 9.5rem;");
     expect(css).toContain("bottom: max(1.25rem, env(safe-area-inset-bottom));");
   });
 
