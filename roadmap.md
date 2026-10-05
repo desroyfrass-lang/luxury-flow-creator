@@ -22,4 +22,4 @@
 - [x] Restore existing in-room text conversation and verify Founder desktop, phone, and repeat Daily visits; Preview only.
 - [x] Identify approved ivory-suit Daily original: Founder upload `Seated_Frassy_Exact_Original.png`, explicitly assigned to Daily on 30 Sep. Original is opaque with office background.
 - [x] Replace blocked extraction with Founder-approved unchanged original-background + CSS perimeter-only soft blend, using `Seated_Frassy_Exact_Original-2.png` only in Daily.
-- [ ] Verify ivory-suit Daily entrance, transition, recognizable bottom-right home, in-room typing and repeat visits on desktop/phone. No Workshop, motion or production changes.
+- [ ] Founder review required: soft-edge original-background candidate browser-tested at 1280×900, 1280×1800 and 390×844; ivory identity, timing, chat typing and repeat visits work, but scene remains photograph-like and overlaps phone Daily text. Stopped without broad redesign. Current Preview candidate is not visually approved; production unchanged.
