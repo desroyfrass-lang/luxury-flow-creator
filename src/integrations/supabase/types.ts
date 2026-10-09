@@ -1210,8 +1210,91 @@ export type Database = {
         }
         Relationships: []
       }
+      canonical_product_media: {
+        Row: {
+          created_at: string
+          id: string
+          position: number
+          product_id: string
+          source: string
+          url: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          position?: number
+          product_id: string
+          source?: string
+          url: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          position?: number
+          product_id?: string
+          source?: string
+          url?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "canonical_product_media_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "canonical_products"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      canonical_product_variants: {
+        Row: {
+          created_at: string
+          currency: string
+          id: string
+          image_url: string | null
+          option_label: string | null
+          product_id: string
+          sku: string | null
+          source_variant_ref: string
+          supplier_cost: number | null
+          weight_grams: number | null
+        }
+        Insert: {
+          created_at?: string
+          currency?: string
+          id?: string
+          image_url?: string | null
+          option_label?: string | null
+          product_id: string
+          sku?: string | null
+          source_variant_ref: string
+          supplier_cost?: number | null
+          weight_grams?: number | null
+        }
+        Update: {
+          created_at?: string
+          currency?: string
+          id?: string
+          image_url?: string | null
+          option_label?: string | null
+          product_id?: string
+          sku?: string | null
+          source_variant_ref?: string
+          supplier_cost?: number | null
+          weight_grams?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "canonical_product_variants_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "canonical_products"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       canonical_products: {
         Row: {
+          category_key: string | null
           created_at: string
           created_by: string
           decided_at: string | null
@@ -1222,11 +1305,13 @@ export type Database = {
           overlays: string[]
           primary_store: string | null
           publication_status: string
+          supplier_original_name: string | null
           title: string
           updated_at: string
           vendor_id: string
         }
         Insert: {
+          category_key?: string | null
           created_at?: string
           created_by: string
           decided_at?: string | null
@@ -1237,11 +1322,13 @@ export type Database = {
           overlays?: string[]
           primary_store?: string | null
           publication_status?: string
+          supplier_original_name?: string | null
           title: string
           updated_at?: string
           vendor_id: string
         }
         Update: {
+          category_key?: string | null
           created_at?: string
           created_by?: string
           decided_at?: string | null
@@ -1252,6 +1339,7 @@ export type Database = {
           overlays?: string[]
           primary_store?: string | null
           publication_status?: string
+          supplier_original_name?: string | null
           title?: string
           updated_at?: string
           vendor_id?: string
@@ -9281,6 +9369,22 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      create_classified_product_draft: {
+        Args: {
+          _category_key: string
+          _description: string
+          _media?: Json
+          _offer?: Json
+          _primary_store: string
+          _source_ref: string
+          _source_type: string
+          _supplier_original_name: string
+          _title: string
+          _variants?: Json
+          _vendor_id: string
+        }
+        Returns: string
+      }
       create_product_draft: {
         Args: {
           _description: string
