@@ -6,7 +6,6 @@ DECLARE
   tgt uuid := (SELECT id FROM public.profiles WHERE id NOT IN (SELECT user_id FROM public.user_roles) ORDER BY id OFFSET 2 LIMIT 1);
   res text[] := '{}'; n int;
 BEGIN
-  -- Setup as owner (mirrors the reviewed-migration bootstrap path).
   INSERT INTO public.user_roles(user_id, role) VALUES (adm,'admin'), (sup,'super_admin');
   PERFORM set_config('role','authenticated',true);
 
