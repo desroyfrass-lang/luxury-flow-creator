@@ -1,113 +1,105 @@
--- Universal Vendor Phase A — RLS + approval behaviour test.
--- Runs entirely inside one transaction and ROLLS BACK: nothing is kept.
--- Usage: psql -v ON_ERROR_STOP=1 -f supabase/tests/universal-vendor-phase-a.sql
-BEGIN;
+-- Universal Vendor Phase A — RLS + Founder approval behaviour test.
+-- One DO block that ALWAYS ends with RAISE EXCEPTION, so every write is rolled
+-- back atomically; the results are reported in the exception message.
+DO $test$
+DECLARE
+  founder uuid := (SELECT user_id FROM public.user_roles WHERE role = 'admin' LIMIT 1);
+  tester  uuid := (SELECT user_id FROM public.user_roles WHERE role = 'tester' LIMIT 1);
+  vend    uuid := gen_random_uuid();
+  other   uuid := gen_random_uuid();
+  v_id uuid; p_id uuid; n int; s text;
+  res text[] := '{}';
+  PROCEDURE_DUMMY int;
+BEGIN
+  -- helper: act as a signed-in user
+  PERFORM set_config('role', 'authenticated', true);
 
-CREATE TEMP TABLE t_results(name text, ok boolean) ON COMMIT DROP;
-GRANT ALL ON t_results TO authenticated, anon;
+  -- 1 vendor creates profile trying to self-verify
+  PERFORM set_config('request.jwt.claims', json_build_object('sub', vend, 'role','authenticated')::text, true);
+  INSERT INTO public.vendor_profiles(owner_id, display_name, verification_status)
+    VALUES (vend, 'Test Bag Maker', 'verified') RETURNING id, verification_status INTO v_id, s;
+  res := res || ('self-verify-insert-blocked=' || (s = 'pending'));
+  UPDATE public.vendor_profiles SET verification_status = 'verified' WHERE id = v_id;
+  SELECT verification_status INTO s FROM public.vendor_profiles WHERE id = v_id;
+  res := res || ('self-verify-update-blocked=' || (s = 'pending'));
 
--- Founder = an existing admin; tester = an existing tester; vendor/other = fake ids.
-CREATE TEMP TABLE t_ids ON COMMIT DROP AS SELECT
-  (SELECT user_id FROM public.user_roles WHERE role = 'admin' LIMIT 1) AS founder,
-  (SELECT user_id FROM public.user_roles WHERE role = 'tester' LIMIT 1) AS tester,
-  gen_random_uuid() AS vendor_user,
-  gen_random_uuid() AS other_user;
-GRANT SELECT ON t_ids TO authenticated;
+  INSERT INTO public.canonical_products(vendor_id, created_by, title) VALUES (v_id, vend, 'Test Leather Tote') RETURNING id INTO p_id;
+  INSERT INTO public.vendor_offers(product_id, vendor_id, sku, unit_cost, fulfillment_mode, lead_time_min_days, lead_time_max_days)
+    VALUES (p_id, v_id, 'TOTE-1', 42.00, 'made_to_order', 14, 21);
+  INSERT INTO public.product_sources(product_id, source_type, source_ref, created_by) VALUES (p_id, 'artisan', 'test-tote-ref', vend);
 
-CREATE OR REPLACE FUNCTION pg_temp.act_as(_uid uuid) RETURNS void LANGUAGE sql AS $$
-  SELECT set_config('request.jwt.claims', json_build_object('sub', _uid, 'role', 'authenticated')::text, true);
-$$;
+  BEGIN
+    INSERT INTO public.product_sources(product_id, source_type, source_ref, created_by) VALUES (p_id, 'artisan', 'test-tote-ref', vend);
+    res := res || 'duplicate-source-rejected=false'::text;
+  EXCEPTION WHEN unique_violation THEN res := res || 'duplicate-source-rejected=true'::text; END;
 
-SET LOCAL ROLE authenticated;
+  BEGIN
+    UPDATE public.canonical_products SET draft_status = 'founder_review' WHERE id = p_id;
+    res := res || 'unverified-vendor-blocked-from-review=false'::text;
+  EXCEPTION WHEN raise_exception THEN res := res || 'unverified-vendor-blocked-from-review=true'::text; END;
 
--- Vendor creates profile (status forced to pending) and a draft product.
-SELECT pg_temp.act_as(vendor_user) FROM t_ids;
-INSERT INTO public.vendor_profiles(owner_id, display_name, verification_status)
-  SELECT vendor_user, 'Test Bag Maker', 'verified' FROM t_ids;
-INSERT INTO t_results SELECT 'vendor cannot self-verify on insert',
-  (SELECT verification_status FROM public.vendor_profiles WHERE display_name = 'Test Bag Maker') = 'pending';
+  BEGIN
+    UPDATE public.canonical_products SET draft_status = 'approved' WHERE id = p_id;
+    res := res || 'vendor-cannot-approve=false'::text;
+  EXCEPTION WHEN raise_exception THEN res := res || 'vendor-cannot-approve=true'::text; END;
 
-UPDATE public.vendor_profiles SET verification_status = 'verified' WHERE display_name = 'Test Bag Maker';
-INSERT INTO t_results SELECT 'vendor cannot self-verify on update',
-  (SELECT verification_status FROM public.vendor_profiles WHERE display_name = 'Test Bag Maker') = 'pending';
+  BEGIN
+    UPDATE public.canonical_products SET publication_status = 'published' WHERE id = p_id;
+    res := res || 'vendor-cannot-publish=false'::text;
+  EXCEPTION WHEN raise_exception THEN res := res || 'vendor-cannot-publish=true'::text; END;
 
-INSERT INTO public.canonical_products(vendor_id, created_by, title)
-  SELECT v.id, i.vendor_user, 'Test Leather Tote' FROM public.vendor_profiles v, t_ids i WHERE v.display_name = 'Test Bag Maker';
-INSERT INTO public.vendor_offers(product_id, vendor_id, sku, unit_cost, fulfillment_mode, lead_time_min_days, lead_time_max_days)
-  SELECT p.id, p.vendor_id, 'TOTE-1', 42.00, 'made_to_order', 14, 21 FROM public.canonical_products p WHERE p.title = 'Test Leather Tote';
-INSERT INTO public.product_sources(product_id, source_type, source_ref, created_by)
-  SELECT p.id, 'artisan', 'test-tote-ref', i.vendor_user FROM public.canonical_products p, t_ids i WHERE p.title = 'Test Leather Tote';
+  BEGIN
+    PERFORM public.founder_decide_product(p_id, 'approved', '');
+    res := res || 'vendor-cannot-call-founder-decision=false'::text;
+  EXCEPTION WHEN raise_exception THEN res := res || 'vendor-cannot-call-founder-decision=true'::text; END;
 
--- Duplicate source rejected.
-DO $$ BEGIN
-  INSERT INTO public.product_sources(product_id, source_type, source_ref, created_by)
-    SELECT p.id, 'artisan', 'test-tote-ref', i.vendor_user FROM public.canonical_products p, t_ids i WHERE p.title = 'Test Leather Tote';
-  INSERT INTO t_results VALUES ('duplicate source rejected', false);
-EXCEPTION WHEN unique_violation THEN INSERT INTO t_results VALUES ('duplicate source rejected', true); END $$;
+  -- 2 other member and tester see nothing
+  PERFORM set_config('request.jwt.claims', json_build_object('sub', other, 'role','authenticated')::text, true);
+  SELECT (SELECT count(*) FROM public.canonical_products WHERE id = p_id)
+       + (SELECT count(*) FROM public.vendor_offers WHERE product_id = p_id)
+       + (SELECT count(*) FROM public.product_sources WHERE product_id = p_id)
+       + (SELECT count(*) FROM public.vendor_profiles WHERE id = v_id) INTO n;
+  res := res || ('other-member-sees-nothing=' || (n = 0));
+  PERFORM set_config('request.jwt.claims', json_build_object('sub', tester, 'role','authenticated')::text, true);
+  SELECT (SELECT count(*) FROM public.canonical_products WHERE id = p_id)
+       + (SELECT count(*) FROM public.vendor_offers WHERE product_id = p_id) INTO n;
+  res := res || ('tester-sees-nothing=' || (n = 0));
+  BEGIN
+    PERFORM public.founder_set_vendor_verification(v_id, 'verified', '');
+    res := res || 'tester-cannot-verify-vendor=false'::text;
+  EXCEPTION WHEN raise_exception THEN res := res || 'tester-cannot-verify-vendor=true'::text; END;
 
--- Unverified vendor cannot submit for review.
-DO $$ BEGIN
-  UPDATE public.canonical_products SET draft_status = 'founder_review' WHERE title = 'Test Leather Tote';
-  INSERT INTO t_results VALUES ('unverified vendor blocked from review', false);
-EXCEPTION WHEN raise_exception THEN INSERT INTO t_results VALUES ('unverified vendor blocked from review', true); END $$;
+  -- 3 Founder verifies vendor -> ledger
+  PERFORM set_config('request.jwt.claims', json_build_object('sub', founder, 'role','authenticated')::text, true);
+  PERFORM public.founder_set_vendor_verification(v_id, 'verified', 'phase A test');
+  SELECT count(*) INTO n FROM public.founder_audit_ledger WHERE card_key = 'vendor-verification:' || v_id;
+  res := res || ('founder-verification-writes-ledger=' || (n = 1));
 
--- Vendor cannot approve, cannot publish.
-DO $$ BEGIN
-  UPDATE public.canonical_products SET draft_status = 'approved' WHERE title = 'Test Leather Tote';
-  INSERT INTO t_results VALUES ('vendor cannot approve', false);
-EXCEPTION WHEN raise_exception THEN INSERT INTO t_results VALUES ('vendor cannot approve', true); END $$;
-DO $$ BEGIN
-  UPDATE public.canonical_products SET publication_status = 'published' WHERE title = 'Test Leather Tote';
-  INSERT INTO t_results VALUES ('vendor cannot publish', false);
-EXCEPTION WHEN raise_exception THEN INSERT INTO t_results VALUES ('vendor cannot publish', true); END $$;
-DO $$ BEGIN
-  PERFORM public.founder_decide_product((SELECT id FROM public.canonical_products WHERE title = 'Test Leather Tote'), 'approved', '');
-  INSERT INTO t_results VALUES ('vendor cannot call Founder decision', false);
-EXCEPTION WHEN raise_exception THEN INSERT INTO t_results VALUES ('vendor cannot call Founder decision', true); END $$;
+  -- 4 vendor submits; offers locked
+  PERFORM set_config('request.jwt.claims', json_build_object('sub', vend, 'role','authenticated')::text, true);
+  UPDATE public.canonical_products SET draft_status = 'founder_review' WHERE id = p_id;
+  BEGIN
+    UPDATE public.vendor_offers SET unit_cost = 1 WHERE product_id = p_id;
+    res := res || 'offers-locked-during-review=false'::text;
+  EXCEPTION WHEN raise_exception THEN res := res || 'offers-locked-during-review=true'::text; END;
 
--- Other vendor / tester see nothing (no cost leakage).
-SELECT pg_temp.act_as(other_user) FROM t_ids;
-INSERT INTO t_results SELECT 'other member sees no products/offers/sources',
-  (SELECT count(*) FROM public.canonical_products WHERE title = 'Test Leather Tote') = 0
-  AND (SELECT count(*) FROM public.vendor_offers WHERE sku = 'TOTE-1') = 0
-  AND (SELECT count(*) FROM public.product_sources WHERE source_ref = 'test-tote-ref') = 0;
-SELECT pg_temp.act_as(tester) FROM t_ids;
-INSERT INTO t_results SELECT 'tester sees no products/offers',
-  (SELECT count(*) FROM public.canonical_products WHERE title = 'Test Leather Tote') = 0
-  AND (SELECT count(*) FROM public.vendor_offers WHERE sku = 'TOTE-1') = 0;
+  -- 5 Founder approves atomically; stays unpublished
+  PERFORM set_config('request.jwt.claims', json_build_object('sub', founder, 'role','authenticated')::text, true);
+  PERFORM public.founder_decide_product(p_id, 'approved', 'phase A test');
+  SELECT count(*) INTO n FROM public.founder_audit_ledger WHERE card_key = 'product-decision:' || p_id;
+  SELECT draft_status || '/' || publication_status INTO s FROM public.canonical_products WHERE id = p_id;
+  res := res || ('founder-approval-with-ledger-unpublished=' || (n = 1 AND s = 'approved/unpublished'));
 
--- Founder verifies vendor (ledger entry atomically).
-SELECT pg_temp.act_as(founder) FROM t_ids;
-SELECT public.founder_set_vendor_verification((SELECT id FROM public.vendor_profiles WHERE display_name = 'Test Bag Maker'), 'verified', 'test');
-INSERT INTO t_results SELECT 'Founder verification writes ledger',
-  (SELECT count(*) FROM public.founder_audit_ledger l, public.vendor_profiles v
-     WHERE v.display_name = 'Test Bag Maker' AND l.card_key = 'vendor-verification:' || v.id) = 1;
+  -- 6 anonymous visitors: no table privilege
+  PERFORM set_config('role', 'anon', true);
+  BEGIN
+    PERFORM 1 FROM public.canonical_products LIMIT 1;
+    res := res || 'anon-no-access=false'::text;
+  EXCEPTION WHEN insufficient_privilege THEN res := res || 'anon-no-access=true'::text; END;
 
--- Vendor submits for review; offers then locked.
-SELECT pg_temp.act_as(vendor_user) FROM t_ids;
-UPDATE public.canonical_products SET draft_status = 'founder_review' WHERE title = 'Test Leather Tote';
-DO $$ BEGIN
-  UPDATE public.vendor_offers SET unit_cost = 1 WHERE sku = 'TOTE-1';
-  INSERT INTO t_results VALUES ('offers locked during review', false);
-EXCEPTION WHEN raise_exception THEN INSERT INTO t_results VALUES ('offers locked during review', true); END $$;
-
--- Founder approves; ledger entry; still unpublished.
-SELECT pg_temp.act_as(founder) FROM t_ids;
-SELECT public.founder_decide_product((SELECT id FROM public.canonical_products WHERE title = 'Test Leather Tote'), 'approved', 'test');
-INSERT INTO t_results SELECT 'Founder approval atomic with ledger and stays unpublished',
-  (SELECT draft_status = 'approved' AND publication_status = 'unpublished' FROM public.canonical_products WHERE title = 'Test Leather Tote')
-  AND (SELECT count(*) FROM public.founder_audit_ledger l, public.canonical_products p
-         WHERE p.title = 'Test Leather Tote' AND l.card_key = 'product-decision:' || p.id) = 1;
-
--- Anonymous visitors have no table access at all.
-RESET ROLE;
-SET LOCAL ROLE anon;
-DO $$ BEGIN
-  PERFORM 1 FROM public.canonical_products LIMIT 1;
-  INSERT INTO t_results VALUES ('anon has no access', false);
-EXCEPTION WHEN insufficient_privilege THEN INSERT INTO t_results VALUES ('anon has no access', true); END $$;
-RESET ROLE;
-
-SELECT name, ok FROM t_results ORDER BY name;
-SELECT CASE WHEN bool_and(ok) AND count(*) = 14 THEN 'ALL PASS' ELSE 'FAILURES' END AS summary FROM t_results;
-ROLLBACK;
+  RAISE EXCEPTION 'PHASE_A_RESULTS total=% failures=% :: %',
+    array_length(res, 1),
+    (SELECT count(*) FROM unnest(res) x WHERE x LIKE '%=false'),
+    array_to_string(res, ' | ');
+END
+$test$;
