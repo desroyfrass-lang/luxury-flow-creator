@@ -31,6 +31,8 @@ BEGIN
   BEGIN INSERT INTO public.user_roles(user_id,role) VALUES (tgt,'super_admin'); res := res||'service-direct-blocked=false'::text;
   EXCEPTION WHEN raise_exception THEN res := res||'service-direct-blocked=true'::text; END;
 
+  BEGIN DELETE FROM public.user_roles WHERE user_id=sup AND role='super_admin'; res := res||'service-delete-blocked=false'::text;
+  EXCEPTION WHEN raise_exception THEN res := res||'service-delete-blocked=true'::text; END;
   PERFORM set_config('role','postgres',true);
   res := res||('admin-lower-role-ok='||EXISTS(SELECT 1 FROM public.user_roles WHERE user_id=tgt AND role='tester'));
   res := res||('super-grant-admin-ok='||EXISTS(SELECT 1 FROM public.user_roles WHERE user_id=tgt AND role='admin'));
