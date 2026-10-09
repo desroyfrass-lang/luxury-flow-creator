@@ -9347,6 +9347,15 @@ export type Database = {
         Args: { _decision: string; _note?: string; _rule_id: string }
         Returns: Json
       }
+      founder_set_role: {
+        Args: {
+          _grant: boolean
+          _note?: string
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: Json
+      }
       founder_set_vendor_verification: {
         Args: { _note?: string; _status: string; _vendor_id: string }
         Returns: Json

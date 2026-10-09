@@ -19,6 +19,7 @@
 - [x] Welcome Hall consolidation (approved): Explore goes straight to town; voice choice inside Frassy's welcome; brochure Hall = About page; retire /arrival, room-classic, old gates. Stop before Daily/Workshop.
 - [x] Front door: four purposeful choices to existing Shop, Opportunity Center, town, and Kids routes; preserve signed-out access flows and verify in Preview.
 - [x] Global Restrictions panel in Control Room → Commissioning; Founder (super_admin)-only approval in database.
+- [x] Roles & Access hardening (Step 1): super_admin-only privileged role changes, audited, last-super_admin protected. Step 2 elevation awaits Founder.
 - [x] Restore approved Daily portrait entrance and persistent bottom-right companion without replacing real records or attaching motion.
 - [x] Restore existing in-room text conversation and verify Founder desktop, phone, and repeat Daily visits; Preview only.
 - [x] Identify approved ivory-suit Daily original: Founder upload `Seated_Frassy_Exact_Original.png`, explicitly assigned to Daily on 30 Sep. Original is opaque with office background.
