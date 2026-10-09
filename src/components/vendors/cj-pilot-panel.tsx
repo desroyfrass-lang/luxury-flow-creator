@@ -1,7 +1,7 @@
 // Pilot P1 — one CJ product, sorted and named, Founder-only.
 // Reads CJ (read-only), suggests names with Frassy, and creates ONE private,
 // unpublished draft only after the Founder ticks both confirmations.
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { toast } from "sonner";
@@ -10,6 +10,7 @@ import { Input } from "@/components/ui/input";
 import { PRIMARY_STORES, TAXONOMY, getTaxonomyNode } from "@/lib/taxonomy/registry";
 import { PILOT_CATEGORY, PILOT_CJ_PID, type NameSuggestion } from "@/lib/vendors/cj-pilot";
 import { createPilotDraft, getCjPilotDetail, suggestPilotNames } from "@/lib/vendors/cj-pilot.functions";
+import { createVendorProfile } from "@/lib/vendors/products.functions";
 
 const STYLE_LABEL: Record<string, string> = {
   simple_elegant: "Simple & elegant",
@@ -23,6 +24,7 @@ export function CjPilotPanel({ supplierBrands, onCreated }: { supplierBrands: Br
   const detailFn = useServerFn(getCjPilotDetail);
   const namesFn = useServerFn(suggestPilotNames);
   const createFn = useServerFn(createPilotDraft);
+  const createBrandFn = useServerFn(createVendorProfile);
 
   const [open, setOpen] = useState(false);
   const detail = useQuery({ queryKey: ["cj-pilot", PILOT_CJ_PID], queryFn: () => detailFn(), enabled: open, retry: false, staleTime: 300_000 });
@@ -31,11 +33,23 @@ export function CjPilotPanel({ supplierBrands, onCreated }: { supplierBrands: Br
   const [category, setCategory] = useState<string>(PILOT_CATEGORY.categoryKey);
   const [suggestions, setSuggestions] = useState<NameSuggestion[]>([]);
   const [recommended, setRecommended] = useState<string | null>(null);
-  const [finalName, setFinalName] = useState("");
+  const [finalName, setFinalName] = useState("Soft Life Chiffon");
   const [vendorId, setVendorId] = useState("");
   const [confirmName, setConfirmName] = useState(false);
   const [confirmCategory, setConfirmCategory] = useState(false);
   const [createdId, setCreatedId] = useState<string | null>(null);
+  const [newBrandName, setNewBrandName] = useState("CJ Dropshipping");
+
+  // Remember the supplier brand: auto-pick when exactly one exists.
+  useEffect(() => {
+    if (!vendorId && supplierBrands.length === 1) setVendorId(supplierBrands[0].id);
+  }, [supplierBrands, vendorId]);
+
+  const addBrand = useMutation({
+    mutationFn: () => createBrandFn({ data: { displayName: newBrandName.trim(), vendorKind: "supplier" } }),
+    onSuccess: (row) => { setVendorId(row.id); toast.success("Supplier brand created — pending, not verified."); onCreated(); },
+    onError: (e: Error) => toast.error(`Could not create the supplier brand: ${e.message}`),
+  });
 
   const suggest = useMutation({
     mutationFn: () => namesFn(),
@@ -59,7 +73,14 @@ export function CjPilotPanel({ supplierBrands, onCreated }: { supplierBrands: Br
   const categories = TAXONOMY.filter((n) => n.store === store && n.kind !== "service");
   const node = getTaxonomyNode(category);
   const d = detail.data;
-  const ready = Boolean(d && vendorId && finalName.trim().length >= 3 && confirmName && confirmCategory && !createdId);
+  const missing = [
+    !vendorId && "choose or create a supplier brand",
+    finalName.trim().length < 3 && "enter a final name (3+ letters)",
+    category !== PILOT_CATEGORY.categoryKey && "choose Work Blouses as the category",
+    !confirmName && "tick the name confirmation",
+    !confirmCategory && "tick the category confirmation",
+  ].filter(Boolean) as string[];
+  const ready = Boolean(d && missing.length === 0 && !createdId);
 
   return (
     <section className="mt-12 rounded-xl border border-[color:var(--gold)]/50 p-5" aria-labelledby="cj-pilot-h">
@@ -138,12 +159,28 @@ export function CjPilotPanel({ supplierBrands, onCreated }: { supplierBrands: Br
             </label>
           </div>
 
-          <label className="block text-[10px] uppercase tracking-[0.2em] text-muted-foreground">Supplier brand (yours, stays unverified until you verify it)
-            <select className="mt-1 w-full rounded-sm border border-border bg-background px-2 py-2 text-sm normal-case tracking-normal" value={vendorId} onChange={(e) => setVendorId(e.target.value)}>
-              <option value="">{supplierBrands.length ? "Choose…" : "No supplier brand yet — add one above as kind “supplier”"}</option>
-              {supplierBrands.map((b) => <option key={b.id} value={b.id}>{b.display_name} ({b.verification_status})</option>)}
-            </select>
-          </label>
+          <div>
+            <label className="block text-[10px] uppercase tracking-[0.2em] text-muted-foreground">Supplier brand (yours, stays pending until you verify it)
+              <select className="mt-1 w-full rounded-sm border border-border bg-background px-2 py-2 text-sm normal-case tracking-normal" value={vendorId} onChange={(e) => setVendorId(e.target.value)}>
+                <option value="">{supplierBrands.length ? "Choose…" : "No supplier brand yet — create one below"}</option>
+                {supplierBrands.map((b) => <option key={b.id} value={b.id}>{b.display_name} ({b.verification_status})</option>)}
+              </select>
+            </label>
+            {!vendorId && (
+              <div className="mt-3 rounded-sm border border-dashed border-border p-3">
+                <div className="text-xs">Create a pending supplier brand here (kind: supplier, owner: you, not verified).</div>
+                <p className="mt-1 text-xs text-muted-foreground">
+                  Truthfully: CJ Dropshipping is the sourcing intermediary you buy through, not the maker. The actual manufacturer is unknown and is not claimed.
+                </p>
+                <div className="mt-2 flex flex-col gap-2 sm:flex-row">
+                  <Input value={newBrandName} maxLength={160} onChange={(e) => setNewBrandName(e.target.value)} aria-label="Supplier brand name" />
+                  <Button variant="outline" disabled={newBrandName.trim().length < 2 || addBrand.isPending} onClick={() => addBrand.mutate()}>
+                    {addBrand.isPending ? "Creating…" : "Create pending supplier brand"}
+                  </Button>
+                </div>
+              </div>
+            )}
+          </div>
 
           <div className="space-y-2 text-sm">
             <label className="flex gap-2"><input type="checkbox" checked={confirmName} disabled={finalName.trim().length < 3} onChange={(e) => setConfirmName(e.target.checked)} />
@@ -155,7 +192,13 @@ export function CjPilotPanel({ supplierBrands, onCreated }: { supplierBrands: Br
           {createdId ? (
             <p className="text-sm">Draft created privately. It appears in your brand list above as a draft. Not published.</p>
           ) : (
-            <Button disabled={!ready || create.isPending} onClick={() => create.mutate()}>Create one private draft</Button>
+            <div>
+              <Button disabled={!ready || create.isPending} onClick={() => create.mutate()}>
+                {create.isPending ? "Saving…" : "Create one private draft"}
+              </Button>
+              {missing.length > 0 && <p className="mt-2 text-xs text-[color:var(--gold)]">Before saving: {missing.join(" · ")}.</p>}
+              {create.error && <p className="mt-2 text-xs text-destructive">Not saved: {(create.error as Error).message}</p>}
+            </div>
           )}
         </div>
       ) : null}
