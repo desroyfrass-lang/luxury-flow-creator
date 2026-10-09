@@ -20,6 +20,10 @@ import {
 } from "@/lib/drip-catalog";
 import { KIDS_SEGMENTS, KIDS_COLLECTIONS, kidsHandle } from "@/lib/frass-kids";
 import { toPlusHandle } from "@/lib/frass-plus";
+import { SHAPE_MEN_CATEGORIES, SHAPE_WOMEN_CATEGORIES, shapeHandle } from "@/lib/shape-catalog";
+import { LUXURY_COLLECTIONS } from "@/lib/luxury-house";
+import { MARKETPLACE_GROUPS } from "@/lib/bridal";
+import { SERVICE_CATEGORIES } from "@/lib/services/marketplace";
 
 export const PRIMARY_STORES = [
   { id: "marketplace", title: "FRASS Marketplace" },
@@ -29,6 +33,8 @@ export const PRIMARY_STORES = [
   { id: "kids", title: "Frass Kids" },
   { id: "plus", title: "Frass Plus+" },
   { id: "luxury-house", title: "Luxury House" },
+  { id: "bridal", title: "Frass Bridal" },
+  { id: "shape", title: "Frass Shape" },
 ] as const;
 export type PrimaryStoreId = (typeof PRIMARY_STORES)[number]["id"];
 
@@ -50,6 +56,8 @@ export interface TaxonomyNode {
   /** Existing storefront collection handle, when one already exists. */
   handle?: string;
   status: "active" | "provisional" | "pending";
+  /** Physical goods vs bookable services. Products may only use "product". */
+  kind: "product" | "service";
   /** Product cannot be drafted into this node without passing this gate. */
   safetyGate?: SafetyGate;
 }
@@ -72,6 +80,7 @@ function marketplaceNodes(): TaxonomyNode[] {
     store: "marketplace",
     title,
     status: "provisional",
+    kind: "product",
   }));
   // Non-fashion infant swim gear (floats, vests) lives here, NOT in Kids or
   // Bare Drip, and always requires a safety review.
@@ -80,6 +89,7 @@ function marketplaceNodes(): TaxonomyNode[] {
     store: "marketplace",
     title: "Swimming & Water Play",
     status: "provisional",
+    kind: "product",
     safetyGate: "infant-water-safety",
   });
   nodes.push({
@@ -87,6 +97,7 @@ function marketplaceNodes(): TaxonomyNode[] {
     store: "marketplace",
     title: "Remaining Marketplace subcategories (awaiting Founder confirmation)",
     status: "pending",
+    kind: "product",
   });
   return nodes;
 }
@@ -102,7 +113,7 @@ function standardFashionNodes(): TaxonomyNode[] {
   for (const [prefix, drip, bare, g] of GENDERS) {
     for (const [section, title] of KICKS_SECTIONS) {
       const handle = `${section}-kicks-${g}`;
-      out.push({ key: `kicks/${handle}`, store: "kicks", title: `${title} Kicks (${g})`, handle, status: "active" });
+      out.push({ key: `kicks/${handle}`, store: "kicks", title: `${title} Kicks (${g})`, handle, status: "active", kind: "product" });
     }
     for (const [cat, def] of Object.entries(drip)) {
       for (const [slug, title, override] of def.subs) {
@@ -110,13 +121,13 @@ function standardFashionNodes(): TaxonomyNode[] {
         // Shared collections (e.g. frass-drip-90s-*) serve both genders on the
         // live site; classify them once.
         if (out.some((n) => n.handle === handle)) continue;
-        out.push({ key: `drip/${handle}`, store: "drip", title: `${def.title} — ${title}`, handle, status: "active" });
+        out.push({ key: `drip/${handle}`, store: "drip", title: `${def.title} — ${title}`, handle, status: "active", kind: "product" });
       }
     }
     for (const [cat, def] of Object.entries(bare)) {
       for (const [slug, title] of def.subs) {
         const handle = `${prefix}-bare-drip-${cat}-${slug}`;
-        out.push({ key: `bare-drip/${handle}`, store: "bare-drip", title: `${def.title} — ${title}`, handle, status: "active" });
+        out.push({ key: `bare-drip/${handle}`, store: "bare-drip", title: `${def.title} — ${title}`, handle, status: "active", kind: "product" });
       }
     }
   }
@@ -129,7 +140,7 @@ function kidsNodes(): TaxonomyNode[] {
     for (const col of KIDS_COLLECTIONS) {
       for (const [sub, title] of col.subs) {
         const handle = kidsHandle(seg, col.slug, sub);
-        out.push({ key: `kids/${handle}`, store: "kids", title: `${seg.title} ${col.title} — ${title}`, handle, status: "active" });
+        out.push({ key: `kids/${handle}`, store: "kids", title: `${seg.title} ${col.title} — ${title}`, handle, status: "active", kind: "product" });
       }
     }
   }
@@ -142,17 +153,80 @@ function plusNodes(standard: TaxonomyNode[]): TaxonomyNode[] {
     .filter((n) => n.handle && (n.store === "kicks" || n.store === "drip" || n.store === "bare-drip"))
     .map((n) => {
       const handle = toPlusHandle(n.handle!);
-      return { key: `plus/${handle}`, store: "plus" as const, title: `${n.title} Plus+`, handle, status: "active" as const };
+      return { key: `plus/${handle}`, store: "plus" as const, title: `${n.title} Plus+`, handle, status: "active" as const, kind: "product" as const };
     });
 }
 
+/** Luxury House: the six existing East/West Wing collections, exact handles. */
 function luxuryNodes(): TaxonomyNode[] {
-  return [{ key: "luxury-house/_categories", store: "luxury-house", title: "Luxury House categories (awaiting Founder confirmation)", status: "pending" }];
+  return (["men", "women"] as const).flatMap((g) =>
+    LUXURY_COLLECTIONS[g].map((c) => ({
+      key: `luxury-house/${c.handle}`,
+      store: "luxury-house" as const,
+      title: `Luxury House ${g === "men" ? "Men" : "Women"} — ${c.title}`,
+      handle: c.handle,
+      status: "active" as const,
+      kind: "product" as const,
+    })),
+  );
+}
+
+/** Frass Shape: derived from the existing men's/women's storefront definitions. */
+function shapeNodes(): TaxonomyNode[] {
+  const out: TaxonomyNode[] = [];
+  for (const [g, cats] of [["men", SHAPE_MEN_CATEGORIES], ["women", SHAPE_WOMEN_CATEGORIES]] as const) {
+    for (const [cat, def] of Object.entries(cats)) {
+      for (const [sub, title] of def.subs) {
+        const handle = shapeHandle(g, cat, sub);
+        out.push({ key: `shape/${handle}`, store: "shape", title: `${def.title} — ${title}`, handle, status: "active", kind: "product" });
+      }
+    }
+  }
+  return out;
+}
+
+/**
+ * Frass Bridal wedding-marketplace labels that are bookable SERVICES (people,
+ * venues, travel, food prepared for the day). Every other label in the
+ * existing Bridal list is a physical product.
+ */
+export const BRIDAL_SERVICE_LABELS = new Set<string>([
+  "Reception", "Cake", "Catering",
+  "Photography", "Videography", "Hair", "Makeup", "Wedding Planners", "Officiants",
+  "DJs", "Bands", "Musicians", "Entertainment", "Transportation",
+  "Honeymoon", "Hotels", "Destination Weddings", "Guest Accommodation", "Rentals",
+]);
+
+const slugify = (t: string) => t.toLowerCase().replace(/&/g, "and").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+
+/** Bridal: mirrors the existing Wedding Marketplace groups (no Shopify handles yet). */
+function bridalNodes(): TaxonomyNode[] {
+  return MARKETPLACE_GROUPS.flatMap((g) =>
+    g.items.map((item) => ({
+      key: `bridal/${slugify(g.group)}/${slugify(item)}`,
+      store: "bridal" as const,
+      title: `${g.group} — ${item}`,
+      status: "provisional" as const,
+      kind: BRIDAL_SERVICE_LABELS.has(item) ? ("service" as const) : ("product" as const),
+    })),
+  );
+}
+
+/** Marketplace services: the already-built Services Marketplace categories. */
+function marketplaceServiceNodes(): TaxonomyNode[] {
+  return SERVICE_CATEGORIES.map((c) => ({
+    key: `marketplace-services/${c.id}`,
+    store: "marketplace" as const,
+    title: c.label,
+    status: "active" as const,
+    kind: "service" as const,
+  }));
 }
 
 export function buildTaxonomy(): TaxonomyNode[] {
   const standard = standardFashionNodes();
-  return [...marketplaceNodes(), ...standard, ...kidsNodes(), ...plusNodes(standard), ...luxuryNodes()];
+  return [...marketplaceNodes(), ...standard, ...kidsNodes(), ...plusNodes(standard),
+    ...luxuryNodes(), ...shapeNodes(), ...bridalNodes(), ...marketplaceServiceNodes()];
 }
 
 export const TAXONOMY: readonly TaxonomyNode[] = buildTaxonomy();
@@ -181,6 +255,7 @@ export function validateClassification(c: ProductClassification): string[] {
   if (!node) errors.push("unknown_category");
   else {
     if (node.store !== c.primaryStore) errors.push("category_not_in_primary_store");
+    if (node.kind === "service") errors.push("service_category_not_for_products");
     if (node.status === "pending") errors.push("category_pending_founder_confirmation");
     if (node.safetyGate && c.safetyGateCleared !== node.safetyGate) errors.push("safety_gate_required");
   }
