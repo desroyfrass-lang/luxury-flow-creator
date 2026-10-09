@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { evaluateRestrictions, isVerified, ruleShapeErrors, type RestrictionRule } from "./restriction-policy";
+import { evaluateRestrictions, isVerified, ruleShapeErrors, type RestrictionRule, type RestrictionSubject } from "./restriction-policy";
 import { inspectShipment } from "./trade-intelligence";
 
 const now = new Date("2026-10-09T00:00:00Z");
@@ -12,7 +12,7 @@ const base = {
 const rule = (r: Partial<RestrictionRule> & Pick<RestrictionRule, "id" | "target" | "effect" | "reason">): RestrictionRule =>
   ({ country: "JM", ...base, ...r }) as RestrictionRule;
 
-const subj = { kind: "product" as const, listingId: "p1", offerId: "o1", variantId: "v1", vendorId: "vend1", categoryKey: "drip/mens-work-drip-dress-shirts" };
+const subj: RestrictionSubject = { kind: "product", listingId: "p1", offerId: "o1", variantId: "v1", vendorId: "vend1", categoryKey: "drip/mens-work-drip-dress-shirts" };
 const JM = { country: "JM" };
 const ev = (rules: RestrictionRule[], s = subj, d: { country: string; subdivision?: string } = JM, ctx = {}) =>
   evaluateRestrictions(s, d, rules, { now, ...ctx });

@@ -223,8 +223,10 @@ export function evaluateRestrictions(
     reasons.push(relevant.length ? "unverified_rule" : "no_verified_rule");
     return done("REVIEW_REQUIRED");
   }
-  const top = Math.max(...verified.map(rank));
-  const topRules = verified.filter((r) => rank(r) === top);
+  // Satisfied age gates are not conflicts.
+  const decisive = verified.filter((r) => r.reason !== "age_gated");
+  const top = Math.max(...decisive.map(rank));
+  const topRules = decisive.filter((r) => rank(r) === top);
   if (topRules.some((r) => r.effect === "prohibit")) {
     reasons.push("conflicting_rules");
     return done("REVIEW_REQUIRED", topRules);
