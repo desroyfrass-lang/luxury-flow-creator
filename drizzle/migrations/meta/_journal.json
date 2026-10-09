@@ -169,6 +169,13 @@
       "when": 1791582463513,
       "tag": "0023_restriction_rules_super_admin_decisions",
       "breakpoints": true
+    },
+    {
+      "idx": 24,
+      "version": "7",
+      "when": 1791583209333,
+      "tag": "0024_secure_privileged_role_changes",
+      "breakpoints": true
     }
   ]
 }
