@@ -17,7 +17,6 @@ BEGIN
   BEGIN PERFORM public.founder_set_role(sup,'super_admin',false,''); res := res||'admin-revoke-super-blocked=false'::text;
   EXCEPTION WHEN raise_exception THEN res := res||'admin-revoke-super-blocked=true'::text; END;
   PERFORM public.founder_set_role(tgt,'tester',true,'');
-  res := res||('admin-lower-role-ok='||EXISTS(SELECT 1 FROM public.user_roles WHERE user_id=tgt AND role='tester'));
 
   PERFORM set_config('request.jwt.claims', json_build_object('sub',tgt,'role','authenticated')::text, true);
   BEGIN PERFORM public.founder_set_role(tgt,'admin',true,''); res := res||'member-blocked=false'::text;
@@ -27,13 +26,14 @@ BEGIN
   BEGIN PERFORM public.founder_set_role(sup,'super_admin',false,''); res := res||'last-super-protected=false'::text;
   EXCEPTION WHEN raise_exception THEN res := res||'last-super-protected=true'::text; END;
   PERFORM public.founder_set_role(tgt,'admin',true,'');
-  res := res||('super-grant-admin-ok='||EXISTS(SELECT 1 FROM public.user_roles WHERE user_id=tgt AND role='admin'));
 
   PERFORM set_config('role','service_role',true);
   BEGIN INSERT INTO public.user_roles(user_id,role) VALUES (tgt,'super_admin'); res := res||'service-direct-blocked=false'::text;
   EXCEPTION WHEN raise_exception THEN res := res||'service-direct-blocked=true'::text; END;
 
   PERFORM set_config('role','postgres',true);
+  res := res||('admin-lower-role-ok='||EXISTS(SELECT 1 FROM public.user_roles WHERE user_id=tgt AND role='tester'));
+  res := res||('super-grant-admin-ok='||EXISTS(SELECT 1 FROM public.user_roles WHERE user_id=tgt AND role='admin'));
   SELECT count(*) INTO n FROM public.founder_audit_ledger WHERE card_key LIKE 'role-change:'||tgt||'%';
   res := res||('audit-rows='||n);
   RAISE EXCEPTION 'RESULT %', res;
