@@ -95,7 +95,7 @@ export function CjPilotPanel({ supplierBrands, onCreated }: { supplierBrands: Br
             <label className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground">Department
               <select className="mt-1 w-full rounded-sm border border-border bg-background px-2 py-2 text-sm normal-case tracking-normal" value={store}
                 onChange={(e) => { setStore(e.target.value); setCategory(""); setConfirmCategory(false); }}>
-                {PRIMARY_STORES.map((s) => <option key={s.id} value={s.id}>{s.label}</option>)}
+                {PRIMARY_STORES.map((s) => <option key={s.id} value={s.id}>{s.title}</option>)}
               </select>
             </label>
             <label className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground">Category
