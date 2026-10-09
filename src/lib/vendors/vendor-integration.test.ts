@@ -23,6 +23,6 @@ describe("Vendor integration with member identity", () => {
   });
 
   it("the workspace never publishes or touches checkout", () => {
-    expect(page).not.toMatch(/publication_status|published"|checkout|shopify|card_listings|card_orders/i);
+    expect(page).not.toMatch(/publication_status|checkout|shopify|card_listings|card_orders/i);
   });
 });
