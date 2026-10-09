@@ -118,6 +118,19 @@ function WorkspacePage() {
                 </div>
               </div>
             </Link>
+            <Link to="/workspace/vendors">
+              <div className="flex items-center justify-between rounded-xl border border-border/70 bg-background/70 px-5 py-4 backdrop-blur transition hover:border-[color:var(--gold)]">
+                <div>
+                  <div className="font-display text-lg">Vendor Brands</div>
+                  <div className="text-xs text-muted-foreground">
+                    Your brands, private product drafts and Founder verification status.
+                  </div>
+                </div>
+                <div className="text-[10px] uppercase tracking-[0.3em] text-[color:var(--gold)]">
+                  Enter →
+                </div>
+              </div>
+            </Link>
             <Link to="/workspace/insights">
               <div className="flex items-center justify-between rounded-xl border border-border/70 bg-background/70 px-5 py-4 backdrop-blur transition hover:border-[color:var(--gold)]">
                 <div>
