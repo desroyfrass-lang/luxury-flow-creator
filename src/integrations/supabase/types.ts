@@ -1210,6 +1210,62 @@ export type Database = {
         }
         Relationships: []
       }
+      canonical_products: {
+        Row: {
+          created_at: string
+          created_by: string
+          decided_at: string | null
+          decided_by: string | null
+          description: string
+          draft_status: string
+          id: string
+          overlays: string[]
+          primary_store: string | null
+          publication_status: string
+          title: string
+          updated_at: string
+          vendor_id: string
+        }
+        Insert: {
+          created_at?: string
+          created_by: string
+          decided_at?: string | null
+          decided_by?: string | null
+          description?: string
+          draft_status?: string
+          id?: string
+          overlays?: string[]
+          primary_store?: string | null
+          publication_status?: string
+          title: string
+          updated_at?: string
+          vendor_id: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string
+          decided_at?: string | null
+          decided_by?: string | null
+          description?: string
+          draft_status?: string
+          id?: string
+          overlays?: string[]
+          primary_store?: string | null
+          publication_status?: string
+          title?: string
+          updated_at?: string
+          vendor_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "canonical_products_vendor_id_fkey"
+            columns: ["vendor_id"]
+            isOneToOne: false
+            referencedRelation: "vendor_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       capsule_items: {
         Row: {
           capsule_id: string
@@ -4733,6 +4789,41 @@ export type Database = {
             columns: ["product_id"]
             isOneToOne: false
             referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      product_sources: {
+        Row: {
+          created_at: string
+          created_by: string
+          id: string
+          product_id: string
+          source_ref: string
+          source_type: string
+        }
+        Insert: {
+          created_at?: string
+          created_by: string
+          id?: string
+          product_id: string
+          source_ref: string
+          source_type: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string
+          id?: string
+          product_id?: string
+          source_ref?: string
+          source_type?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "product_sources_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "canonical_products"
             referencedColumns: ["id"]
           },
         ]
@@ -8714,6 +8805,108 @@ export type Database = {
         }
         Relationships: []
       }
+      vendor_offers: {
+        Row: {
+          active: boolean
+          created_at: string
+          currency: string
+          fulfillment_mode: string
+          id: string
+          ip_protection_level: string
+          lead_time_max_days: number | null
+          lead_time_min_days: number | null
+          product_id: string
+          sku: string | null
+          stock_quantity: number | null
+          unit_cost: number | null
+          updated_at: string
+          vendor_id: string
+        }
+        Insert: {
+          active?: boolean
+          created_at?: string
+          currency?: string
+          fulfillment_mode?: string
+          id?: string
+          ip_protection_level?: string
+          lead_time_max_days?: number | null
+          lead_time_min_days?: number | null
+          product_id: string
+          sku?: string | null
+          stock_quantity?: number | null
+          unit_cost?: number | null
+          updated_at?: string
+          vendor_id: string
+        }
+        Update: {
+          active?: boolean
+          created_at?: string
+          currency?: string
+          fulfillment_mode?: string
+          id?: string
+          ip_protection_level?: string
+          lead_time_max_days?: number | null
+          lead_time_min_days?: number | null
+          product_id?: string
+          sku?: string | null
+          stock_quantity?: number | null
+          unit_cost?: number | null
+          updated_at?: string
+          vendor_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "vendor_offers_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "canonical_products"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "vendor_offers_vendor_id_fkey"
+            columns: ["vendor_id"]
+            isOneToOne: false
+            referencedRelation: "vendor_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      vendor_profiles: {
+        Row: {
+          created_at: string
+          display_name: string
+          id: string
+          owner_id: string
+          updated_at: string
+          vendor_kind: string
+          verification_status: string
+          verified_at: string | null
+          verified_by: string | null
+        }
+        Insert: {
+          created_at?: string
+          display_name: string
+          id?: string
+          owner_id: string
+          updated_at?: string
+          vendor_kind?: string
+          verification_status?: string
+          verified_at?: string | null
+          verified_by?: string | null
+        }
+        Update: {
+          created_at?: string
+          display_name?: string
+          id?: string
+          owner_id?: string
+          updated_at?: string
+          vendor_kind?: string
+          verification_status?: string
+          verified_at?: string | null
+          verified_by?: string | null
+        }
+        Relationships: []
+      }
       verified_feedback: {
         Row: {
           author_id: string
@@ -9042,6 +9235,14 @@ export type Database = {
         }
         Returns: Json
       }
+      founder_decide_product: {
+        Args: { _decision: string; _note?: string; _product_id: string }
+        Returns: Json
+      }
+      founder_set_vendor_verification: {
+        Args: { _note?: string; _status: string; _vendor_id: string }
+        Returns: Json
+      }
       gallery_is_public: { Args: { _gallery_id: string }; Returns: boolean }
       gallery_own_contact_email: {
         Args: { _gallery_id: string }
@@ -9092,7 +9293,12 @@ export type Database = {
         }
         Returns: number
       }
+      owns_canonical_product: {
+        Args: { _product_id: string }
+        Returns: boolean
+      }
       owns_gallery: { Args: { _gallery_id: string }; Returns: boolean }
+      owns_vendor: { Args: { _vendor_id: string }; Returns: boolean }
       platform_domain_paused: { Args: { _domain: string }; Returns: boolean }
       purge_expired_visual_uploads: { Args: never; Returns: number }
       read_email_batch: {

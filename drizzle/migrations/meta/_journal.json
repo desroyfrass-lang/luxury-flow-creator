@@ -134,6 +134,20 @@
       "when": 1791101607846,
       "tag": "0018_frass_native_motion_rig_v1",
       "breakpoints": true
+    },
+    {
+      "idx": 19,
+      "version": "7",
+      "when": 1791560787689,
+      "tag": "0019_universal_vendor_phase_a",
+      "breakpoints": true
+    },
+    {
+      "idx": 20,
+      "version": "7",
+      "when": 1791560935785,
+      "tag": "0020_universal_vendor_phase_a_revoke_anon",
+      "breakpoints": true
     }
   ]
 }
