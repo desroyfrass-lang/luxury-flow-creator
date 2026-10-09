@@ -14,6 +14,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useAuthUserId } from "@/lib/auth/identity-watch";
 import { useIsAdmin } from "@/hooks/use-is-admin";
+import { CjPilotPanel } from "@/components/vendors/cj-pilot-panel";
 import {
   FULFILLMENT_MODES,
   VENDOR_KINDS,
@@ -161,6 +162,12 @@ function VendorWorkspace() {
           </>
         )}
 
+        {isFounder && data ? (
+          <CjPilotPanel
+            supplierBrands={data.vendors.filter((v) => v.vendor_kind === "supplier")}
+            onCreated={refresh}
+          />
+        ) : null}
         {isFounder ? <FounderReview /> : null}
       </div>
     </SiteShell>

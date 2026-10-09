@@ -41,7 +41,7 @@ async function cjLogin(): Promise<string> {
   return json.data.accessToken;
 }
 
-async function cjGet<T = unknown>(path: string, params: Record<string, string | number> = {}): Promise<T> {
+export async function cjGet<T = unknown>(path: string, params: Record<string, string | number> = {}): Promise<T> {
   const token = await cjLogin();
   const url = new URL(`${CJ_BASE}${path}`);
   for (const [k, v] of Object.entries(params)) url.searchParams.set(k, String(v));
