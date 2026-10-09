@@ -29,6 +29,7 @@ import { FounderSuccessPanel } from "@/components/founder/success-dashboard-pane
 import { ExperienceSimulator } from "@/components/founder/experience-simulator";
 import { SeedVaultsPanel } from "@/components/founder/seed-vaults-panel";
 import { CommissioningPanel } from "@/components/founder/commissioning-panel";
+import { RestrictionsPanel } from "@/components/founder/restrictions-panel";
 import { WorldTeleporterPanel } from "@/components/founder/world-teleporter-panel";
 import { AuditLedgerPanel } from "@/components/founder/audit-ledger-panel";
 import { FounderAiStatusPanel } from "@/components/founder/founder-ai-status-panel";
@@ -250,7 +251,12 @@ function ControlRoom() {
           </>
         )}
 
-        {active === "commissioning" && <CommissioningPanel />}
+        {active === "commissioning" && (
+          <div className="space-y-12">
+            <CommissioningPanel />
+            <RestrictionsPanel />
+          </div>
+        )}
 
         {active === "world-teleporter" && (
           <div className="space-y-10">
