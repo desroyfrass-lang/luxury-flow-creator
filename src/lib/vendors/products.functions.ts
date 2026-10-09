@@ -28,24 +28,57 @@ export const createVendorProfile = createServerFn({ method: "POST" })
     return row;
   });
 
+/**
+ * The member's own vendor workspace. Identity is the ONE existing member:
+ * the same auth account, profile handle/bio and Frass Card — no second
+ * onboarding. partner_vendors free-text IDs are never used as authority here.
+ */
 export const listMyVendorWorkspace = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
-    const { data: vendors, error } = await context.supabase
-      .from("vendor_profiles")
-      .select("id, display_name, vendor_kind, verification_status")
-      .eq("owner_id", context.userId);
+    const sb = context.supabase;
+    const [{ data: profile }, { data: card }, { data: vendors, error }] = await Promise.all([
+      sb.from("profiles").select("display_name, handle, bio").eq("id", context.userId).maybeSingle(),
+      sb.from("business_cards").select("is_published, commerce_enabled").eq("user_id", context.userId).maybeSingle(),
+      sb
+        .from("vendor_profiles")
+        .select("id, display_name, vendor_kind, verification_status, verified_at, created_at")
+        .eq("owner_id", context.userId)
+        .order("created_at", { ascending: true }),
+    ]);
     if (error) throw new Error(error.message);
+    const identity = {
+      displayName: profile?.display_name ?? null,
+      handle: profile?.handle ?? null,
+      bio: profile?.bio ?? null,
+      cardPublished: card?.is_published ?? false,
+      cardCommerceEnabled: card?.commerce_enabled ?? false,
+    };
     const ids = (vendors ?? []).map((v) => v.id);
-    if (ids.length === 0) return { vendors: [], products: [] };
-    const { data: products, error: pErr } = await context.supabase
+    if (ids.length === 0) return { identity, vendors: [], products: [] };
+    const { data: products, error: pErr } = await sb
       .from("canonical_products")
       .select("id, vendor_id, title, primary_store, overlays, draft_status, publication_status, vendor_offers(id, sku, unit_cost, currency, stock_quantity, lead_time_min_days, lead_time_max_days, fulfillment_mode, ip_protection_level, active), product_sources(source_type, source_ref)")
       .in("vendor_id", ids)
       .order("created_at", { ascending: false })
       .limit(200);
     if (pErr) throw new Error(pErr.message);
-    return { vendors: vendors ?? [], products: products ?? [] };
+    return { identity, vendors: vendors ?? [], products: products ?? [] };
+  });
+
+/** Founder: vendors waiting for (or holding) a verification decision. */
+export const founderListVendors = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }) => {
+    const { data: isFounder } = await context.supabase.rpc("has_role", { _user_id: context.userId, _role: "admin" });
+    if (isFounder !== true) return [];
+    const { data, error } = await context.supabase
+      .from("vendor_profiles")
+      .select("id, display_name, vendor_kind, verification_status, verified_at, created_at")
+      .order("created_at", { ascending: true })
+      .limit(200);
+    if (error) throw new Error(error.message);
+    return data ?? [];
   });
 
 export const createProductDraft = createServerFn({ method: "POST" })
@@ -73,48 +106,33 @@ export const createProductDraft = createServerFn({ method: "POST" })
       .parse(i),
   )
   .handler(async ({ data, context }) => {
-    const sb = context.supabase;
-    // Duplicate check first, for a clear message; the unique index is the real guard.
-    const { data: existing } = await sb
-      .from("product_sources")
-      .select("product_id")
-      .eq("source_type", data.source.type)
-      .eq("source_ref", data.source.ref)
-      .maybeSingle();
-    if (existing) throw new Error("This source is already linked to a product.");
-
-    const { data: product, error } = await sb
-      .from("canonical_products")
-      .insert({ vendor_id: data.vendorId, created_by: context.userId, title: data.title, description: data.description })
-      .select("id, draft_status, publication_status")
-      .single();
-    if (error) throw new Error(error.message);
-
-    const { error: sErr } = await sb.from("product_sources").insert({
-      product_id: product.id,
-      source_type: data.source.type,
-      source_ref: data.source.ref,
-      created_by: context.userId,
+    // One database transaction (create_product_draft): product, source and
+    // offer are saved together or not at all — no orphan drafts.
+    const o = data.offer;
+    const { data: productId, error } = await context.supabase.rpc("create_product_draft", {
+      _vendor_id: data.vendorId,
+      _title: data.title,
+      _description: data.description,
+      _source_type: data.source.type,
+      _source_ref: data.source.ref,
+      _offer: o
+        ? {
+            sku: o.sku ?? null,
+            unit_cost: o.unitCost ?? null,
+            currency: o.currency,
+            stock_quantity: o.stockQuantity ?? null,
+            lead_time_min_days: o.leadTimeMinDays ?? null,
+            lead_time_max_days: o.leadTimeMaxDays ?? null,
+            fulfillment_mode: o.fulfillmentMode,
+            ip_protection_level: o.ipProtectionLevel,
+          }
+        : undefined,
     });
-    if (sErr) throw new Error(sErr.message);
-
-    if (data.offer) {
-      const o = data.offer;
-      const { error: oErr } = await sb.from("vendor_offers").insert({
-        product_id: product.id,
-        vendor_id: data.vendorId,
-        sku: o.sku ?? null,
-        unit_cost: o.unitCost ?? null,
-        currency: o.currency,
-        stock_quantity: o.stockQuantity ?? null,
-        lead_time_min_days: o.leadTimeMinDays ?? null,
-        lead_time_max_days: o.leadTimeMaxDays ?? null,
-        fulfillment_mode: o.fulfillmentMode,
-        ip_protection_level: o.ipProtectionLevel,
-      });
-      if (oErr) throw new Error(oErr.message);
+    if (error) {
+      if (error.code === "23505") throw new Error("This source is already linked to a product.");
+      throw new Error(error.message);
     }
-    return product;
+    return { id: productId as string, draft_status: "draft" as const, publication_status: "unpublished" as const };
   });
 
 /** Vendor moves its own draft (draft ↔ prepared → founder_review). Never approve/publish. */
