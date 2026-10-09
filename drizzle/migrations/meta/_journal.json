@@ -176,6 +176,13 @@
       "when": 1791583209333,
       "tag": "0024_secure_privileged_role_changes",
       "breakpoints": true
+    },
+    {
+      "idx": 25,
+      "version": "7",
+      "when": 1791583388785,
+      "tag": "0025_privileged_roles_guard_invoker",
+      "breakpoints": true
     }
   ]
 }
