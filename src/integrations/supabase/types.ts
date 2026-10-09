@@ -9188,6 +9188,17 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      create_product_draft: {
+        Args: {
+          _description: string
+          _offer?: Json
+          _source_ref: string
+          _source_type: string
+          _title: string
+          _vendor_id: string
+        }
+        Returns: string
+      }
       delete_email: {
         Args: { message_id: number; queue_name: string }
         Returns: boolean

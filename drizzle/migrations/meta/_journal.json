@@ -148,6 +148,13 @@
       "when": 1791560935785,
       "tag": "0020_universal_vendor_phase_a_revoke_anon",
       "breakpoints": true
+    },
+    {
+      "idx": 21,
+      "version": "7",
+      "when": 1791561682283,
+      "tag": "0021_vendor_atomic_draft_creation",
+      "breakpoints": true
     }
   ]
 }
