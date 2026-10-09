@@ -5,7 +5,6 @@ DECLARE
   fdr uuid := gen_random_uuid();
   rid uuid; s text; n int; res text[] := '{}';
 BEGIN
-  INSERT INTO public.user_roles(user_id, role) SELECT id, 'admin' FROM auth.users LIMIT 0; -- no-op shape check
   -- Fake users need auth rows for FK on user_roles.
   INSERT INTO auth.users(id, email) VALUES (adm, 'adm-test@example.invalid'), (fdr, 'fdr-test@example.invalid');
   INSERT INTO public.user_roles(user_id, role) VALUES (adm, 'admin'), (fdr, 'super_admin');
