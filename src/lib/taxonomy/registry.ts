@@ -56,8 +56,11 @@ export interface TaxonomyNode {
   /** Existing storefront collection handle, when one already exists. */
   handle?: string;
   status: "active" | "provisional" | "pending";
-  /** Physical goods vs bookable services. Products may only use "product". */
-  kind: "product" | "service";
+  /**
+   * Physical goods vs bookable services. "product-or-service" allows either,
+   * chosen explicitly per listing (currently Bridal Wedding Cakes only).
+   */
+  kind: "product" | "service" | "product-or-service";
   /** Product cannot be drafted into this node without passing this gate. */
   safetyGate?: SafetyGate;
 }
@@ -191,13 +194,16 @@ function shapeNodes(): TaxonomyNode[] {
  * existing Bridal list is a physical product.
  */
 export const BRIDAL_SERVICE_LABELS = new Set<string>([
-  "Reception", "Cake", "Catering",
+  "Reception", "Catering",
   "Photography", "Videography", "Hair", "Makeup", "Wedding Planners", "Officiants",
   "DJs", "Bands", "Musicians", "Entertainment", "Transportation",
   "Honeymoon", "Hotels", "Destination Weddings", "Guest Accommodation", "Rentals",
 ]);
 
 const slugify = (t: string) => t.toLowerCase().replace(/&/g, "and").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+
+/** Bridal labels a vendor may list either as a ready product or a custom-order service. */
+export const BRIDAL_DUAL_LABELS = new Set<string>(["Cake"]);
 
 /** Bridal: mirrors the existing Wedding Marketplace groups (no Shopify handles yet). */
 function bridalNodes(): TaxonomyNode[] {
@@ -207,7 +213,11 @@ function bridalNodes(): TaxonomyNode[] {
       store: "bridal" as const,
       title: `${g.group} — ${item}`,
       status: "provisional" as const,
-      kind: BRIDAL_SERVICE_LABELS.has(item) ? ("service" as const) : ("product" as const),
+      kind: BRIDAL_DUAL_LABELS.has(item)
+        ? ("product-or-service" as const)
+        : BRIDAL_SERVICE_LABELS.has(item)
+          ? ("service" as const)
+          : ("product" as const),
     })),
   );
 }
@@ -242,6 +252,11 @@ export interface ProductClassification {
   overlays?: string[];
   /** Founder/reviewer confirmed the safety gate for this node. */
   safetyGateCleared?: SafetyGate;
+  /**
+   * What this listing is. Defaults to "product". Must be stated explicitly
+   * for "product-or-service" categories (e.g. Wedding Cakes).
+   */
+  listingKind?: "product" | "service";
 }
 
 const PRIMARY_IDS = new Set<string>(PRIMARY_STORES.map((s) => s.id));
@@ -255,7 +270,14 @@ export function validateClassification(c: ProductClassification): string[] {
   if (!node) errors.push("unknown_category");
   else {
     if (node.store !== c.primaryStore) errors.push("category_not_in_primary_store");
-    if (node.kind === "service") errors.push("service_category_not_for_products");
+    const listing = c.listingKind ?? "product";
+    if (node.kind === "product-or-service") {
+      if (!c.listingKind) errors.push("listing_kind_required");
+    } else if (node.kind === "service" && listing === "product") {
+      errors.push("service_category_not_for_products");
+    } else if (node.kind === "product" && listing === "service") {
+      errors.push("product_category_not_for_services");
+    }
     if (node.status === "pending") errors.push("category_pending_founder_confirmation");
     if (node.safetyGate && c.safetyGateCleared !== node.safetyGate) errors.push("safety_gate_required");
   }

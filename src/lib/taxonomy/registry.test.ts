@@ -97,6 +97,26 @@ describe("FRASS taxonomy registry", () => {
       .toContain("category_not_in_primary_store");
   });
 
+  it("Wedding Cakes accept an explicit product or service listing in one category", () => {
+    const key = "bridal/the-day/cake";
+    expect(TAXONOMY.filter((n) => n.store === "bridal" && /cake/.test(n.key)).length).toBe(1);
+    expect(getTaxonomyNode(key)?.kind).toBe("product-or-service");
+    expect(validateClassification({ primaryStore: "bridal", categoryKey: key, listingKind: "product" })).toEqual([]);
+    expect(validateClassification({ primaryStore: "bridal", categoryKey: key, listingKind: "service" })).toEqual([]);
+    expect(validateClassification({ primaryStore: "bridal", categoryKey: key })).toContain("listing_kind_required");
+  });
+
+  it("service-only categories still reject physical products; product categories reject services", () => {
+    for (const key of ["bridal/the-day/catering", "bridal/craft-and-capture/photography", "marketplace-services/photography"]) {
+      const store = key.startsWith("bridal") ? "bridal" : "marketplace";
+      expect(validateClassification({ primaryStore: store, categoryKey: key, listingKind: "product" }))
+        .toContain("service_category_not_for_products");
+      expect(validateClassification({ primaryStore: store, categoryKey: key, listingKind: "service" })).toEqual([]);
+    }
+    expect(validateClassification({ primaryStore: "bridal", categoryKey: "bridal/attire/veils", listingKind: "service" }))
+      .toContain("product_category_not_for_services");
+  });
+
   it("Marketplace services stay separate from general goods and reject products", () => {
     const svc = getTaxonomyNode("marketplace-services/photography");
     expect(svc?.kind).toBe("service");
