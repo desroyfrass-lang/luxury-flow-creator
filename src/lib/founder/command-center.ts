@@ -422,6 +422,12 @@ export const COMMAND_SECTIONS: CommandSection[] = [
         amendment: "FRASS-0303",
       },
       {
+        id: "global-restrictions",
+        label: "Global Restrictions",
+        plain: "What may be sold or shipped where. Team drafts; only the Founder approves.",
+        kind: "panel",
+      },
+      {
         id: "global-operations",
         label: "Global Operations",
         plain: "Canada, United Kingdom and United States — capability, campaigns and analytics.",
