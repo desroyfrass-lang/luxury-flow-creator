@@ -4,7 +4,7 @@
 // confirms the final name and category, and CJ data is re-read on the server
 // (never trusted from the browser).
 import { createServerFn } from "@tanstack/react-start";
-import { generateText, Output } from "ai";
+import { streamText, Output } from "ai";
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import { validateClassification } from "@/lib/taxonomy/registry";
@@ -58,13 +58,26 @@ export const suggestPilotNames = createServerFn({ method: "POST" })
 
     const key = process.env.LOVABLE_API_KEY;
     if (!key) throw new Error("Naming assistant unavailable right now.");
-    const { createLovableAiGatewayProvider } = await import("@/lib/ai-gateway.server");
-    const gateway = createLovableAiGatewayProvider(key);
-    const { output } = await generateText({
-      model: gateway("google/gemini-3.6-flash"),
+    const { createOpenAI } = await import("@ai-sdk/openai");
+    const openai = createOpenAI({
+      baseURL: "https://ai.gateway.lovable.dev/v1",
+      apiKey: key,
+      headers: { "Lovable-API-Key": key, "X-Lovable-AIG-SDK": "vercel-ai-sdk" },
+    });
+    const result = streamText({
+      model: openai.responses("openai/gpt-6-astra"),
+      providerOptions: {
+        openai: {
+          forceReasoning: true,
+          reasoningEffort: "low",
+          reasoningSummary: "auto",
+          store: false,
+          include: ["reasoning.encrypted_content"],
+        },
+      },
       output: Output.object({
         schema: z.object({
-          suggestions: z.array(z.object({ style: z.enum(NAME_STYLES), name: z.string(), why: z.string() })).length(3),
+          suggestions: z.array(z.object({ style: z.enum(NAME_STYLES), name: z.string(), why: z.string() })),
           recommended: z.enum(NAME_STYLES),
         }),
       }),
@@ -77,6 +90,7 @@ export const suggestPilotNames = createServerFn({ method: "POST" })
         examples.length ? `Match the tone of these existing store names: ${examples.join(" | ")}` : "No existing store names were available; keep the tone clean and confident.",
       ].join("\n"),
     });
+    const output = await result.output;
     const suggestions = cleanSuggestions(output.suggestions, detail.originalName);
     return {
       suggestions,
