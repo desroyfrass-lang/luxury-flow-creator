@@ -16,8 +16,7 @@ const subj = { kind: "product" as const, listingId: "p1", offerId: "o1", variant
 const JM = { country: "JM" };
 const ev = (rules: RestrictionRule[], s = subj, d: { country: string; subdivision?: string } = JM, ctx = {}) =>
   evaluateRestrictions(s, d, rules, { now, ...ctx });
-const allowListing = rule({ id: "a", target: { level: "listing", id: "p1" }, effect: "allow", reason: "needs_review" });
-const allow = { ...allowListing, reason: "legal_prohibition" as const }; // verified allow
+const allow = rule({ id: "a", target: { level: "listing", id: "p1" }, effect: "allow", reason: "verified_permitted" });
 
 describe("restriction policy (R1)", () => {
   it("no rules → REVIEW_REQUIRED, never ALLOWED", () => {

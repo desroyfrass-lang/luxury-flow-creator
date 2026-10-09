@@ -23,7 +23,8 @@ export type RestrictionReason =
   | "legal_prohibition" // verified law of the destination
   | "shipping_unavailable" // this vendor/offer cannot deliver there
   | "age_gated" // buyer must meet a minimum age
-  | "needs_review"; // flagged for human review
+  | "needs_review" // flagged for human review
+  | "verified_permitted"; // evidence that the item may be sold/shipped there
 
 /** What a rule is attached to. More specific targets win (see SPECIFICITY). */
 export type RuleTarget =
