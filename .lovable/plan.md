@@ -152,3 +152,78 @@ These estimates allow for verification and fix rounds. Fresh issues can push the
 5. **Item from a vendor without image consent, or an unapproved product:** it cannot be added to the look.
 6. **Privacy:** a tester or vendor account sees only its own group. No other vendor's costs or contacts are visible.
 7. **No real effects:** no Shopify write call, no payout record and no shipment anywhere in the prototype.
+
+## 8. Phase 0 and H0 read-only audit results (9 Oct 2026)
+
+Nothing was written or changed. No supplier or store call was made except one attempted product count on Shopify, which failed before reading anything.
+
+### (a) CJ "Added Products" (the Founder's own CJ list)
+- **Verified:** the CJ login details (email and key) are stored securely. `cj.functions.ts` calls only CJ's **general catalog search** (`GET /product/list`, with an optional name keyword). There is no function for CJ's "My Products" list. All 20 queue rows are `pending`.
+- **Unverified:** whether this CJ login is allowed to read the Founder's own list. Checking it needs **one live read-only call to CJ** through a temporary admin-only function. That counts as code, so it was not done.
+- **Blocker:** the first CJ test product cannot be confirmed until that one read is approved, or until the Founder gives the CJ product ID or SKU by hand.
+
+### (b) Shop categories and pages (taxonomy)
+- **Verified page groups:**
+  - `shop`, `shop-frass`, `collection.$handle`
+  - `frass-plus.*` and `plus-size.*`
+  - `frass-luxury-house.*` (men and women)
+  - `frass-kids.*` (boys and girls, age groups, kicks)
+  - `social-media-virals.*`, `capsules.*`, `lookbook.*`
+  - `afro-designers.*` and `bridal.*` (marketplace and collections)
+  - Kids World is the activity area, not a shop.
+- **Category lists in the code:**
+  - `drip-catalog.ts`: Men's and Women's Drip, Kicks sections, Bare rooms
+  - `frass-plus.ts`: the Plus+ copy of the standard stores, with handles ending `-plus`
+  - `shape-catalog.ts` and `kids/` files
+  - `shopify.ts`: a fixed collection list that finds products by Shopify vendor and tag, including `new-arrivals` and `best-sellers`
+- **There is no single master list.** **Missing:**
+  - A FRASS Marketplace general-goods shop. `services/marketplace.ts` lists services, not goods.
+  - Any **Founder Picks** overlay.
+  - An official list of Luxury House categories.
+- **Overlays not yet set up as overlays:** New Arrivals and Best Sellers currently pull every FRASS KICKS product, and Social Media Virals is a separate area backed by the `viral_products` table.
+
+### (c) Looks, cart, checkout and split delivery
+- **Verified:**
+  - Capsule items point to Shopify product and variant IDs (0 capsules exist).
+  - Lookbook stories are fixed text in `lookbook.ts` with no product links.
+  - Try-on looks save their cart items.
+  - The cart (`cart-store.ts`) and `/checkout` hand the shopper to **one Shopify checkout**, adding the discount code and a donation note.
+  - FRASS `orders` and `order_items` have 0 rows and no vendor columns.
+- **No code** handles shipping locations, fulfillment, delivery groups or made-to-order selling plans. Split shipments and multiple locations are **not used anywhere** in the app.
+- **Blocker:** checking what the store itself supports (locations, delivery profiles, product count) needs the Shopify account to be reconnected. The Shopify tool returned "authentication required". The store's own key exists, but using it means a new admin-only read.
+
+### (d) Roles, approvals, security and pricing
+- **Verified:**
+  - People hold only two roles today: `admin` (the Founder) and `tester`. `has_role` checks run on the server.
+  - The CJ queue is admin-only.
+  - `release_approvals` and `founder_audit_ledger` exist and are empty.
+  - `partner_vendors` controls access only. Nothing records whether a vendor is verified.
+  - `product_economics` has 0 rows. It is missing duties, refund reserve, offer link, delivery-promise data and vendor payout.
+  - `expected_platform_allocation` keeps the platform share separate.
+- **Assumption (not tested):** these row rules block testers from cost data in practice. A live test with the tester account is planned in Phase A.
+
+### Smallest safe Phase A (needs explicit approval)
+1. One migration, adding new tables only and changing no existing table:
+   - `canonical_products`
+   - `vendor_profiles`, with verification status pending, verified or suspended
+   - `vendor_offers`, holding SKU, cost, stock, lead time, fulfillment mode and IP level
+   - Source links, with one unique key per source to stop duplicates
+   - Grants and row rules: vendors see only their own rows, admin reads, only the Founder approves (a trigger enforces it), and nothing is public until published.
+2. Server functions in a `products.functions.ts` file with the existing login check. A Founder approval writes to `founder_audit_ledger`.
+3. **No** CJ, Shopify, AI or image calls. No changes to pages or the shop.
+4. Estimated cost: about 15–25 credits.
+
+**Phase A test checklist:**
+- The Founder creates a test vendor and a draft. A tester cannot read it.
+- A vendor cannot approve its own work.
+- A second draft with the same source is rejected.
+- A product from an unverified vendor cannot go to review.
+- An approval adds one ledger entry.
+- Signed-out visitors see nothing.
+- The CJ queue status is unchanged.
+- The tests run in the project and the build passes.
+
+### Separate small approvals still needed
+1. One read-only CJ "My Products" check, through an admin-only function that is then removed.
+2. Reconnect the Shopify account to read locations, delivery profiles and the product count.
+3. The Founder confirms the categories for Luxury House, Marketplace and Founder Picks.
