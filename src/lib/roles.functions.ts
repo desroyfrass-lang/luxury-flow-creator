@@ -59,44 +59,31 @@ export const listUsersWithRoles = createServerFn({ method: "GET" })
     }));
   });
 
-/** Admin-only: grant a role to a user. */
+/**
+ * Grant or revoke a role. Runs as the signed-in user through the database
+ * function founder_set_role, which enforces: admins manage lower roles only;
+ * admin/super_admin changes need super_admin; the last super_admin cannot be
+ * removed; every change is written to founder_audit_ledger in the same step.
+ */
+async function setRole(context: { supabase: any }, data: { userId: string; role: AppRole }, grant: boolean) {
+  const { error } = await context.supabase.rpc("founder_set_role", {
+    _user_id: data.userId,
+    _role: data.role,
+    _grant: grant,
+    _note: "",
+  });
+  if (error) throw new Error(error.message);
+  return { ok: true };
+}
+
+/** Grant a role (rules enforced in the database). */
 export const grantRole = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((data: unknown) => roleSchema.parse(data))
-  .handler(async ({ context, data }) => {
-    // Step 8 — Founder rule: admin OR super_admin, checked live on the server.
-    const [a, s] = await Promise.all([
-      context.supabase.rpc("has_role", { _user_id: context.userId, _role: "admin" }),
-      context.supabase.rpc("has_role", { _user_id: context.userId, _role: "super_admin" }),
-    ]);
-    if (a.error || s.error || !(a.data || s.data)) throw new Error("Forbidden");
+  .handler(({ context, data }) => setRole(context, data, true));
 
-    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-    const { error } = await supabaseAdmin
-      .from("user_roles")
-      .insert({ user_id: data.userId, role: data.role });
-    if (error && !error.message.includes("duplicate")) throw error;
-    return { ok: true };
-  });
-
-/** Admin-only: revoke a role from a user. */
+/** Revoke a role (rules enforced in the database). */
 export const revokeRole = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((data: unknown) => roleSchema.parse(data))
-  .handler(async ({ context, data }) => {
-    // Step 8 — Founder rule: admin OR super_admin, checked live on the server.
-    const [a, s] = await Promise.all([
-      context.supabase.rpc("has_role", { _user_id: context.userId, _role: "admin" }),
-      context.supabase.rpc("has_role", { _user_id: context.userId, _role: "super_admin" }),
-    ]);
-    if (a.error || s.error || !(a.data || s.data)) throw new Error("Forbidden");
-
-    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-    const { error } = await supabaseAdmin
-      .from("user_roles")
-      .delete()
-      .eq("user_id", data.userId)
-      .eq("role", data.role);
-    if (error) throw error;
-    return { ok: true };
-  });
+  .handler(({ context, data }) => setRole(context, data, false));
