@@ -1,78 +1,86 @@
-# Universal Vendor and Product Readiness: Architecture Plan (read-only)
+# Universal Vendor and Product Readiness: Revised Architecture Plan (read-only, v2)
 
-Nothing has been changed. This is a plan for the Founder to review. Each phase needs its own approval.
+Nothing has been changed: no code, database, settings, products or integrations. This version adds the Founder's 10 corrections. Every claim below is labelled **Verified** (checked in the code or the live database on 9 Oct 2026) or **Unverified**.
 
-## 1. What already works (found in the code)
+## 1. What works today vs what is unverified
 
-| Area | What it does | Where it lives |
+| Area | Status | Evidence |
 |---|---|---|
-| CJ import queue | An admin pulls CJ product pages into a review queue (no duplicates), suggests a 2.5x price, then sorts each product by brand, gender, category and tags, or skips it | `src/lib/cj.functions.ts`, `/admin/cj-import`, table `cj_import_queue` |
-| Storefront catalog | Reads products and collections from Shopify for the shop pages; Frassy can look up an order status | `src/lib/shopify.ts`, `src/lib/frassy-tools.server.ts` (order lookup) |
-| Partner vendor access | The Founder or admin can give a partner access to selected vendors, or take it away | `src/lib/partner-vendors.functions.ts`, `/admin/partner-vendors`, table `partner_vendors` |
-| Print-on-demand and merch | Slogans, logo placements, quality tiers, POD providers and merch proposals, each with a review status | `src/lib/merch.functions.ts`, `/workspace/merch`, tables `pod_providers`, `merch_blanks`, `merch_proposals` |
-| Member products | Members create their own products, collections and drops | `src/lib/creation.functions.ts`, `builder_products`, `builder_collections`, `builder_drops` |
-| Card storefront | Members sell listings through their Frass Card and receive orders | `src/lib/card-commerce.functions.ts`, `src/lib/collection-builder.functions.ts`, `card_listings`, `card_orders` |
-| Custom orders | Commission requests, protected by an insert rule and a validation check | table `commission_requests` (see `src/lib/security/regressions.ts`) |
-| Making products | A shared manufacturing pipeline for every category, with compliance checks for kids and beauty | `src/lib/manufacturing/network.ts`, `/manufacturing` |
-| Design ownership (IP) | Protection levels, licences and rules about who owns a design | `src/lib/rights/protection.ts` |
-| Private workspaces | Member vaults with member lists and an activity log | `vaults`, `vault_members`, `vault_items`, `/vaults/*` |
-| Catalog checks | Tools that audit the catalog | `src/lib/mcp/tools/audit-catalog.ts` |
+| CJ review queue | **Verified, partly working.** There are 20 rows and every one is still `pending`. No code ever sets `imported`. The queue pulls CJ's general catalog search (`/product/list`), not the Founder's own "My Products / Added Products" list. | `src/lib/cj.functions.ts`, `/admin/cj-import`, `cj_import_queue`, policy "Admins manage CJ queue" |
+| Shopify | **Verified: read only.** The shop reads products from Shopify. Collections are found by Shopify vendor and tag searches in a fixed list (`STATIC_MAP`). Frassy can look up an order status (Admin API read). No code creates products in Shopify. | `src/lib/shopify.ts`, `src/lib/frassy-tools.server.ts` |
+| Shop categories (taxonomy) | **Verified: spread across several files, with no single registry.** `drip-catalog.ts` (Drip, Kicks, Bare), `frass-plus.ts` (Plus+), `shape-catalog.ts`, `frass-kids.ts` / `kids/`, `shopify.ts` STATIC_MAP (collection searches, including `new-arrivals` and `best-sellers`). Luxury House, Marketplace general goods, Social Media Virals and Founder Picks are not in one shared list. | listed files |
+| Profit and pricing calculator | **Verified: exists but unused.** The `product_economics` table has 0 rows. Its columns cover cost of goods, packaging, shipping, other costs, payment fee, marketplace fee, tax, discount, target margin, affiliate settings and commission. There are no columns for duties, refund reserve or vendor offers. Owners manage their own rows; admins can read them. | `product_economics`, `src/lib/affiliate.functions.ts` |
+| Platform allocation | **Verified (separate logic):** the database function `expected_platform_allocation(_gross)`. | database function list |
+| Roles | **Verified:** the live `user_roles` table contains only `admin` and `tester` (the Founder holds admin). The database also defines other roles (super_admin, staff, partner, designer and more) that nobody holds yet. Role checks run on the server through `has_role`. | live query |
+| Approval records | **Verified: they exist and are empty.** `release_approvals` has 0 rows (Founder insert and read only). `founder_audit_ledger` has 0 rows (`src/lib/founder/audit-ledger*.ts`). | live query |
+| Partner vendor access | **Verified:** the admin gives or removes a partner's access to vendors. This is about access only. It does not verify the vendor or approve products. | `partner-vendors.functions.ts`, `partner_vendors` |
+| POD, merch, member products, card storefront, custom orders, manufacturing, IP, private vaults | **Verified to exist** in the files named in v1. Their end-to-end order flow has not been tested. | as in v1 |
+| Product image and video generation | **Unverified for products.** Only try-on (`tryon.functions.ts`) shows image AI use. No product image or video generator is proven to be connected, so the plan assumes none is. | search |
+| Deposits for custom work | **Unverified.** `payment_requests` exists, but there is no proof of a conditional deposit flow. | table list |
 
-## 2. Gaps
-
-1. **CJ stops after sorting.** The queue has an "imported" status, but no code ever moves a product into it. Nothing reaches the shop yet.
-2. **No shared product shape.** CJ items, member products, card listings and merch proposals each store products their own way. There is no single "ready for the shop" record.
-3. **CJ is the only supplier connection.** Other suppliers would each need their own code.
-4. **No way to add products by hand from a phone.** Artisans who don't use supplier connections can't send in photos, materials, sizes, made-to-order lead times and custom options in one guided step.
-5. **No product-level fulfillment fields.** There is nowhere to record made-to-order, lead time, who ships, or a split between several vendors.
-6. **No step that adds products to Shopify.** Shopify is only read today.
-7. **Design ownership (IP) isn't attached to products.** Artisan designs have no protection level attached.
-
-## 3. Smallest reusable plan (no rebuilding)
+## 2. Source of truth and Shopify (correction 10)
 
 ```text
-Supplier source ──> Adapter ──> Normalized Product Draft ──> Frassy prep ──> Founder approval ──> (later) Shopify
- CJ (existing queue)    cj        one shared shape         category, copy,     approve, edit,      publish, one
- Artisan (manual/phone) manual    + source reference       checks, flags       reject             product at a time
- POD (existing)         pod
+Source records (unchanged)          FRASS canonical product (new, one per real product)        Shopify (publication only)
+ cj_import_queue  ─┐                  product + variants + taxonomy placement + overlays           created/updated ONLY after
+ artisan intake   ─┼─> adapters ──>   vendor_offers[] (vendor, SKU, cost, stock, fulfillment) ──>  Founder approval; stores
+ merch_proposals  ─┘                  status: draft → prepared → founder_review → approved           shopify_product_id back;
+                                       → published  (separate from source & vendor status)           storefront keeps reading Shopify
 ```
 
-- **Adapter:** a small code contract with one job, `toDraft(sourceRecord) -> ProductDraft`. Three adapters to start: CJ (reads the existing `cj_import_queue`), manual artisan, and POD (reads `merch_proposals`). Adding a supplier later means adding one adapter file, never a new page.
-- **One new draft table.** It holds the source, a source reference, the vendor, the existing shop categories, the variants, the price and cost, the fulfillment mode (stocked, dropship, POD, made-to-order), the lead time in days, custom options, the IP protection level, the status (draft, prepared, founder_review, approved, rejected, published) and notes from Frassy's checks. Existing tables stay where they are, and the new table points back to them.
-- **Artisan intake** reuses the existing private vault, the protected uploads (`src/lib/uploads.ts`) and the rights levels. It adds one guided form that works well on a phone. The artisan sees only their own drafts.
-- **Frassy's preparation** reuses the AI gateway and the approved shop structure in `mem://features/frass-product-population-brief`. She suggests where a product goes and checks for missing details. She never invents prices, materials or claims.
-- **Shopify publishing** is a later, separate phase. It needs a Shopify Admin credential with write access, and the Founder approves each product.
+- **FRASS is the source of truth** for product identity, vendor offers, cost and approval. **Shopify is the place products are published** and the checkout. The storefront keeps reading from Shopify, so the shop pages don't change.
+- **Three separate statuses (correction 1):**
+  - Source status stays in the source table.
+  - Draft status lives on the canonical product.
+  - Published status means Shopify has confirmed the product.
+  - CJ's `imported` is set **only** after Shopify confirms the product was created, never when a draft is made.
 
-## 4. Safety, permission and Founder approval gates
+## 3. Minimal changes
 
-- Every action is checked on the server with the existing role check (Zero Trust). Artisans can see and change only their own vault and drafts.
-- **Nothing reaches the public shop** without Founder approval, recorded in the existing approval and audit ledgers.
-- **Money rules:** cost and price come only from the supplier's data or the Founder. Seller declarations and forecasts are never treated as verified. No affiliate option appears before a profitability check, and the 10% platform allocation stays separate.
-- **Public data:** the public shop shows display details only. No vendor IDs, costs, private notes or artisan contact details (FRASS-0536).
-- **IP:** artisan designs stay private by default. The artisan chooses the protection level, and the existing rights rules apply.
-- **Kids and beauty products** must pass the existing compliance checks before review.
-- **Hard stops:** adding a new supplier login, Shopify write access, payment payouts to vendors, or any bulk import each need separate Founder approval.
+1. **Canonical product plus vendor offers (correction 2).** One product can have many offers. Each offer has its own vendor, SKU, cost, stock, lead time and fulfillment mode (dropship, POD, stocked, made-to-order, made-to-measure). A uniqueness check on the source reference and duplicate detection prevent a second listing for the same product.
+2. **Vendor verification separate from product approval (correction 3).** Vendor status goes pending → verified → suspended. A product from an unverified vendor cannot reach Founder review. Vendors read and write only their own offers and drafts. Admin reads. Only the Founder (checked through `has_role(auth.uid(),'admin')`) approves. **No new roles are proposed.** Existing roles are reused.
+3. **One taxonomy registry (correction 4).** Create a single read-only registry that **imports** the existing catalog files rather than rewriting them. Primary stores: FRASS Marketplace (general goods), Frass Kicks, Frass Drip, Bare Drip, Kids fashion, Plus+, Luxury House. Overlays that are never primary stores: Social Media Virals, Founder Picks, New Arrivals (Best Sellers too). Luxury House and Marketplace are currently missing from the code lists. **The Founder confirms their categories** before they are added.
+4. **Artisan offers (correction 5).** The offer gains these fields: mode (made-to-order, made-to-measure, customizable), custom options, a measurements form, production capacity per week, a lead-time range, an IP permission level (existing `rights/protection.ts`) and a deposit rule. Deposits stay **off** until a separate payments phase is approved.
+5. **Pricing (correction 8).** Extend `product_economics` instead of building a new calculator. Add duties, a refund or return reserve, and a link to the offer. A product cannot reach Founder review until its margin is calculated. The affiliate option appears only if the margin is still healthy after commission. The 10% platform allocation stays in its existing separate function.
+6. **Media accuracy (correction 9).** Only supplier or artisan photos go in. Any edited or AI image is labelled and needs Founder review. Frassy flags images that don't match the description. No generator is used until one is proven in a separate step.
+
+## 4. Approval gates
+
+- **G1 Vendor verified (Founder).** Then **G2 Product approved (Founder),** recorded in `founder_audit_ledger`. Then **G3 Shopify publish (Founder, one product at a time).** Each gate is enforced on the server and by database row rules. Every gate is separate.
+- **Hard stops, each needing separate approval:**
+  - A Shopify write credential.
+  - A CJ "My Products" connection, if the current CJ login can't read it.
+  - Deposits or payouts.
+  - Any bulk import.
+  - Any image or video generation.
+- **Public views** show display details only. No costs, vendor IDs, artisan contacts or notes (FRASS-0536).
 
 ## 5. Phases (each stops for Founder review)
 
-| Phase | Scope | Estimated credits |
-|---|---|---|
-| A | Draft table with permissions and audit, adapter contract, CJ adapter (existing queue becomes a draft), tests | about 8–15 |
-| B | Manual artisan intake from a phone inside their private vault, lead times and custom options, IP level | about 12–20 |
-| C | Frassy preparation checks, a Founder review screen reusing the admin approvals, approve or reject | about 10–15 |
-| D | Publish one approved draft to Shopify (needs a write credential, approval per product) | about 8–12 |
-| E | Fulfillment routing per vendor and order splitting; payouts stay out of scope | about 15–25, planned later |
+| Phase | Scope | Depends on | Estimated credits |
+|---|---|---|---|
+| 0 | Read-only checks: can the current CJ login read the Founder's Added Products list; full taxonomy inventory for the Founder to confirm (including Luxury House and Marketplace) | none | about 3–6 |
+| A | Canonical product, vendor offers, vendor verification status, statuses, row rules, tests | 0 | about 15–25 |
+| B | Taxonomy registry (importing existing files) and overlays | 0 plus Founder confirmation | about 6–10 |
+| C | CJ adapter for **Added Products only** (draft only, never `imported`), duplicate check | A, B | about 8–12 |
+| D | Artisan intake on a phone in their private vault: made-to-order, made-to-measure, capacity, lead time, IP; deposits off | A, B | about 15–25 |
+| E | Pricing extension and margin gate; Frassy preparation and media checks; Founder review using the audit ledger | A | about 12–20 |
+| F | Publish one approved product to Shopify, save the Shopify ID, then mark the source `imported` | E plus a credential | about 10–15 |
+| G (later) | Order routing across several vendors, deposits, payouts | F plus separate approval | about 25–40 |
 
-These are rough estimates. Actual use depends on fixes and verification rounds.
+These estimates allow for verification and fix rounds. Fresh issues can push them higher.
 
-## 6. Proposed first test (after Phases A–C only, nothing published)
+## 6. First test (after Phases 0–E, nothing published)
 
-1. **One CJ product.** The Founder picks one product that is already sorted in the queue. It becomes a draft, Frassy prepares it, and it waits for Founder review. Check that the cost stays hidden from public views and the shop structure is correct. Then the Founder approves or rejects it.
-2. **One private artisan.** The Founder invites one artisan, for example a bag maker. The test uses a test account, not a real member, unless the Founder names one. On a phone, the artisan uploads photos, materials, a 14-day lead time and one custom option, and chooses an IP level. Check that no other account can see the draft, Frassy flags any missing details, and the draft waits for Founder review.
-3. Nothing goes to Shopify or the public shop. Both tests are checked in the browser on desktop and on a 390x844 phone screen, and a test record is kept.
+- **CJ product.** One product the Founder names from his **CJ Added Products** list, checked by its CJ ID, not from the general queue.
+  - Pass if: one draft with one offer; source status unchanged (not `imported`); placed in the correct primary store with any overlays kept separate; full pricing breakdown with the margin; costs hidden from a signed-out view and from a tester account; waits at G2.
+- **Private artisan.** A test artisan account, or a real one the Founder names, verified at G1 first.
+  - On a 390x844 phone screen: photos, a made-to-order offer with a 14–21 day lead time, capacity of 3 a week, one custom option and an IP level.
+  - Pass if: another vendor or tester cannot read it; it is blocked from review until the vendor is verified; Frassy flags missing details without inventing any; deposit shows as off.
+- **Both tests:** desktop and phone screenshots, entries in the audit ledger, no Shopify calls, no generated media.
 
-## Technical details
+## Technical notes
 
-- The CJ adapter reads `cj_import_queue` rows with status `categorized`. Moving a row to `imported` happens only when the draft insert succeeds.
-- The draft table uses row rules: the owner reads and writes their own drafts; staff and admin read; only the Founder (checked through `has_role`) sets `approved` or `published`. A trigger stops anyone from changing their own status to approved or published.
-- Existing tables are not changed. The draft's `source_ref` points to the existing records.
+- Existing tables are not changed except for the additions to `product_economics` (Phase E). Source tables link to the canonical product through `source_type` and `source_ref`, with a unique index.
+- The vendor-scoped row rule uses `vendor_owner = auth.uid()`. An update trigger stops anyone except the Founder from setting `approved` or `published`.
+- The `roadmap.md` entry for this request is added when the build starts, because plan mode allows editing only the plan file.
