@@ -162,6 +162,13 @@
       "when": 1791580726979,
       "tag": "0022_restriction_rules_r2",
       "breakpoints": true
+    },
+    {
+      "idx": 23,
+      "version": "7",
+      "when": 1791582463513,
+      "tag": "0023_restriction_rules_super_admin_decisions",
+      "breakpoints": true
     }
   ]
 }
