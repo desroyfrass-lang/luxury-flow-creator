@@ -1,37 +1,49 @@
-# Read-only audit: where a Founder Global Restrictions dashboard belongs
+# Read-only security audit: Founder identity and role granting (before any super_admin grant)
 
-## Verdict
-No restrictions dashboard exists today. The best home is the existing **Founder Control Room** (`/control-room`), inside its **Business → Commissioning** section, as one new inline panel. No new page, route or menu door is needed.
+Nothing was changed. Database checks were read-only lookups.
 
-## Verified current state (R2)
-- Database: `restriction_rules` = 0 rows, `restriction_rule_history` = 0 rows, `founder_audit_ledger` = 0 rows. Nothing seeded.
-- Row rules present: rules — read/insert/update for signed-in users, limited by admin checks; history — read only. No delete rule (deletion blocked).
-- Approval only through database function `founder_decide_restriction_rule` (writes audit ledger in the same step).
-- Code: `src/lib/compliance/restriction-policy.ts` (decision logic), `restriction-preflight.ts` + `restriction-preflight.functions.ts` (checkout check, only `restrictionPreflight` exported), wired into `src/routes/checkout.tsx`.
-- UI: **none**. No screen lists, edits, approves or shows history of rules. No server functions exist for listing/editing rules.
+## Current state (verified)
+- Role holders: admin = 1 account, super_admin = **0**, tester = 2. No other roles held.
+- The one admin account has a confirmed email and last signed in today (2026-10-09). This audit cannot prove that account belongs to the Founder. Only the Founder can confirm that (see "What the Founder must verify").
+- Roles live only in `public.user_roles`. Signed-in users and visitors have no write access to that table at all, and the only read rule is "you may see your own roles". Nobody can write roles directly from a browser.
+- Signing up (`handle_new_user`) creates a profile only. It never gives a role and never reads user-supplied details to decide privileges.
+- `has_role` reads the table live with elevated database rights. Roles are never taken from the login token (JWT), the browser, storage or cookies.
+- The old "claim site ownership" shortcut has been removed (`src/lib/admin.functions.ts`). There is no self-service bootstrap path.
+- The key with full database rights (service role) is used only inside server functions (about 20 `*.functions.ts` / `*.server.ts` files) and is loaded inside handlers. It is not sent to the browser.
+- Founder-only pages check access on the server (`src/lib/founder/route-guard.ts` -> `checkIsAdmin`, which accepts admin OR super_admin). The Control Room adds an identity re-check (`IdentityGate`).
+- Teleport (`src/lib/founder/teleport-session.ts`) only remembers navigation in the browser. It does not impersonate other users or change who the server thinks you are.
+- Restriction approval (`founder_decide_restriction_rule` and the matching guard) requires super_admin inside the database. Because nobody holds super_admin, nobody can approve rules today.
 
-## Candidates compared
-| Place | Fit | Why |
-|---|---|---|
-| Founder Control Room `/control-room` → Commissioning | Best | Already Founder-only twice (server door `requireFounderRoute` + `IdentityGate`), registry-driven (`src/lib/founder/command-center.ts`), already lists Payment Providers and Global Operations as launch-commerce tools |
-| Global Operations `/global-operations` | Second | Founder-guarded, market-themed, but its settings are stored only in the browser; mixing server-audited rules there invites confusion |
-| Founder Hall `/founder` | No | Navigation layer only, by rule never hosts tools |
-| `/admin/*` console | No | Redirects into Control Room; would create a second home |
-| Onboarding Room `/onboarding` | No | Member system, not administration |
+## Risks found
+1. **High — any admin can promote anyone to super_admin, including themselves.** `grantRole` in `src/lib/roles.functions.ts` accepts admin OR super_admin, then writes with full database rights for any role in the list, super_admin included. The new "super_admin only" approval rule therefore holds only while no extra admin exists. `revokeRole` has the same gap, so an admin could also remove the Founder's super_admin role.
+2. **Medium — role changes leave no audit trail.** `grantRole` and `revokeRole` write nothing to `founder_audit_ledger` or any history table, so there is no record of who granted what, or when.
+3. **Medium — self-lockout is possible.** Nothing stops revoking the last super_admin or the last admin.
+4. **Low — admin and super_admin are treated the same almost everywhere.** Page guards, `listUsersWithRoles` and `listPageFeedback` accept either role. That is acceptable for viewing, but it is the reason risk 1 exists.
+5. **Low — the Roles screen shows every member's email to every admin.** `listUsersWithRoles` returns up to 200 accounts with their emails. That is fine while the only admin is the Founder.
+6. **Note — the role tables have no row-level rules for writing.** Writes are blocked because signed-in users have no write access to the table, not by a written policy. Safe today, but fragile if someone later adds write access by mistake.
 
-## Recommended future implementation (not authorized)
-1. Register one tool `global-restrictions` (kind: panel) in the Commissioning section of `command-center.ts`; render it in `control-room.tsx` like other panels.
-2. New panel `src/components/founder/restrictions-panel.tsx`: rule list (status, country/region, target, reason, evidence, expiry), draft/edit form, Approve/Reject buttons, history view, current enforcement mode (off / shadow / enforce) shown read-only.
-3. New Founder-only server functions `src/lib/compliance/restriction-rules.functions.ts`: list, create draft, edit, decide (calls `founder_decide_restriction_rule`), history. Each re-checks admin on the server; relies on existing row rules.
-4. Add a link card from Global Operations to the panel (optional, no duplicate UI).
-5. No database migration expected.
+## Recommended safe steps (each needs separate Founder approval)
+1. **Lock role granting (small migration + code change):** add a database function `founder_set_role(user, role, grant/revoke, note)` that:
+   - requires super_admin to grant or revoke admin or super_admin;
+   - refuses removing the last super_admin;
+   - writes `founder_audit_ledger` in the same step.
+   Then switch `grantRole`/`revokeRole` to call it instead of writing with full database rights. Admins could still manage lower roles, and that would be audited too.
+2. **One-time Founder elevation via a reviewed migration**, after step 1. It inserts super_admin only for the account the Founder has confirmed, only if no super_admin exists yet, and writes an audit-ledger entry. The account's ID appears only inside the migration, never in chat. This is the only bootstrap path, because without step 1 any grant through the Roles screen would rely on the gap in risk 1.
+3. Afterwards, decide whether the Founder keeps the admin role as well. Recommended: keep it, so nothing else breaks.
+4. Add tests:
+   - an admin trying to grant super_admin is refused;
+   - an admin trying to revoke the Founder is refused;
+   - removing the last super_admin is refused;
+   - every role change appears in the audit ledger.
+5. Update the R2 test script so its approval step runs as super_admin.
 
-## Security concerns
-- Admin vs Founder: `checkIsAdmin` treats admin and super_admin the same. Approval of legal rules should stay that way only if Founder accepts it; otherwise approval must check super_admin inside the database function (would need a migration — separate approval).
-- Control Room uses `IdentityGate` re-confirmation; keep it for approve actions.
-- Enforcement mode stays a server setting; the panel must never let anyone switch it.
-- Never show buyer data; rules contain no personal info.
+## What the Founder must verify personally
+- In Preview, signed in, that the account shown on your Account / Identity page is yours: your email and sign-in method. Confirm it in chat as "yes, the signed-in admin account is mine". Do not paste the email.
+- That you have access to that email inbox and that two-step sign-in or a passkey is turned on, if available.
+- That no one else knows the password, and that none of the 2 tester accounts are yours unintentionally.
+- That you approve step 1 before step 2. Elevation should not happen while risk 1 is still open.
 
 ## Approval boundary
-- Phase R2-UI (panel + server functions + tests): needs explicit Founder approval. Estimated 3–6 credits.
-- Separately approved: super_admin-only approval change, enforcement activation, R3 (Shopify direct-checkout bypass), seeding real rules.
+- This audit: complete, no changes.
+- Next, if approved: step 1 (lock role granting, plus tests). Estimate 2–4 credits.
+- Then: step 2 (one-time super_admin grant to the confirmed Founder account), only after your explicit go-ahead.
