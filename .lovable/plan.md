@@ -84,3 +84,71 @@ These estimates allow for verification and fix rounds. Fresh issues can push the
 - Existing tables are not changed except for the additions to `product_economics` (Phase E). Source tables link to the canonical product through `source_type` and `source_ref`, with a unique index.
 - The vendor-scoped row rule uses `vendor_owner = auth.uid()`. An update trigger stops anyone except the Founder from setting `approved` or `published`.
 - The `roadmap.md` entry for this request is added when the build starts, because plan mode allows editing only the plan file.
+
+## 7. Amendment: Shoppable looks across several vendors and split delivery (required)
+
+### What exists today (checked 9 Oct 2026)
+
+| Area | Status |
+|---|---|
+| Capsules | **Verified.** Each capsule item already points to a Shopify `product_id` and `variant_id`, with a slot and a required flag. There are 0 capsules in the database. It does not point to a vendor or a vendor offer. |
+| Lookbook | **Verified: a fixed list of stories in code** (`src/lib/lookbook.ts`). Nothing in it links to products. |
+| Try-On | **Verified.** `generateTryOn` saves a try-on look and keeps `cart_items` on it. Whether the AI keeps product images accurate is **unverified** (see section 3, item 6). |
+| Cart and checkout | **Verified.** One cart (`cart-store.ts`) and one Shopify checkout (`/checkout`, through Shopify's cart). FRASS `orders` and `order_items` have 0 rows. Order items have no vendor, offer or fulfillment group. |
+| Splitting an order by vendor, tracking per vendor, delivery estimates, holding stock, vendor payouts | **Unverified or missing.** Shopify can ship parts of one order separately, but this app has never used that, so it is untested. |
+
+### Rules
+
+- **Looks point to products, never copies.** Every item in a look (capsule, lookbook, try-on or haul) points to a canonical product, its variant and the vendor offer. No inventory is duplicated. If an item becomes unavailable, Frassy suggests a replacement and the shopper must agree before it goes in the cart.
+- **One checkout, many vendors.** A shopper can buy the whole look or pick single pieces, each with its own size and variant. Each cart line keeps its product, offer, vendor, IP licence and affiliate link.
+- **Delivery estimate per item, shown before payment:**
+  - Each item shows a delivery window, where it ships from (when appropriate), the shipping charge, and a clear note: "Pieces may arrive separately."
+  - The window comes only from verified facts: the vendor's production lead time, stock, shipping service, destination and order cutoff time.
+  - If any of those facts is missing, the item shows **"Estimate unavailable"**. Nothing is invented.
+  - The estimate is recalculated at checkout. A single shipment is never implied.
+- **After purchase:**
+  - One customer order, linked to one fulfillment group per vendor (a sub-order for each seller).
+  - Each group has its own status, tracking, and return and cancellation rules.
+  - Made-to-order groups show their production stage.
+  - The customer sees one order page with separate tracking for each group.
+- **Money:**
+  - Stock is held per offer during checkout and released if payment fails.
+  - Commission is paid once per line item, and the affiliate is credited once per line, never twice.
+  - Discounts and bundles that span vendors are shared across lines by a set rule the Founder approves.
+  - Vendor payouts are based only on verified paid orders, never on the cart or on what a seller declares.
+  - The 10% platform allocation stays separate.
+- **Vendor consent:** an item can join a styled look only if its vendor has a verified licence or consent for that use of its images and the product itself is approved (G1 and G2). The look must show the item accurately.
+
+### Prototype vs real fulfillment
+
+- **Prototype (Phase H):**
+  - Looks point to canonical items, and each cart line keeps who made it.
+  - Delivery estimates are calculated and shown, or show "Estimate unavailable".
+  - Fulfillment groups are created only from **test orders**.
+  - No real shipping, holds on live stock, or payouts.
+- **Real fulfillment (Phase I, separate Founder approval):**
+  - Shopify write access and real fulfillment groups.
+  - Delivery-rate and cutoff settings for each vendor.
+  - Returns, cancellations and payouts.
+  - Requires Phase F and Phase G.
+
+### Added phases
+
+| Phase | Scope | Depends on | Estimated credits |
+|---|---|---|---|
+| H0 | Read-only check of what Shopify can do in practice: splitting orders by location, shipping parts separately, delivery-rate settings; how Capsules and Try-On would link to canonical items | A | about 3–6 |
+| H | Prototype: looks point to canonical items; each cart line keeps vendor and offer; delivery estimate service (shows "unavailable" if facts are missing); test-only fulfillment groups; replacing an item needs consent | A–E, H0 | about 25–40 |
+| I | Real split fulfillment, holding stock, returns and cancellations, payout and commission records | F, G, H plus approval | about 35–60 |
+
+### Acceptance tests (prototype, test orders only)
+
+1. **One look with 4 vendors:**
+   - Items: CJ sneakers (dropship), private-artisan bag (made-to-order, 14–21 days), Afro designer dress (stocked), FRASS Drip accessory (POD).
+   - Before payment, each item shows its own delivery window, origin and shipping charge, plus the note that pieces may arrive separately.
+   - Remove one fact (for example the artisan's shipping service). That item shows "Estimate unavailable".
+2. **Buy the full look:** creates one customer order and 4 linked fulfillment groups, each with its own status and tracking field. Each line credits the vendor and affiliate once. A discount on the whole look splits across the lines exactly as the rule says.
+3. **Buy only 2 pieces:** creates only 2 groups, and only those offers have stock held.
+4. **Mark the artisan item unavailable:** the look shows a replacement suggestion, and the cart stays unchanged until the shopper agrees.
+5. **Item from a vendor without image consent, or an unapproved product:** it cannot be added to the look.
+6. **Privacy:** a tester or vendor account sees only its own group. No other vendor's costs or contacts are visible.
+7. **No real effects:** no Shopify write call, no payout record and no shipment anywhere in the prototype.
