@@ -1,12 +1,10 @@
 -- Founder-only approval test. Ends with RAISE EXCEPTION so everything rolls back.
 DO $test$
 DECLARE
-  adm uuid := gen_random_uuid();
-  fdr uuid := gen_random_uuid();
+  adm uuid := (SELECT id FROM public.profiles WHERE id NOT IN (SELECT user_id FROM public.user_roles WHERE role IN ('admin','super_admin')) ORDER BY id LIMIT 1);
+  fdr uuid := (SELECT id FROM public.profiles WHERE id NOT IN (SELECT user_id FROM public.user_roles WHERE role IN ('admin','super_admin')) ORDER BY id OFFSET 1 LIMIT 1);
   rid uuid; s text; n int; res text[] := '{}';
 BEGIN
-  -- Fake users need auth rows for FK on user_roles.
-  INSERT INTO auth.users(id, email) VALUES (adm, 'adm-test@example.invalid'), (fdr, 'fdr-test@example.invalid');
   INSERT INTO public.user_roles(user_id, role) VALUES (adm, 'admin'), (fdr, 'super_admin');
   PERFORM set_config('role', 'authenticated', true);
 

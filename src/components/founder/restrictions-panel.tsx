@@ -111,7 +111,7 @@ export function RestrictionsPanel() {
       {data && data.rules.length > 0 && (
         <div className="space-y-2">
           {data.rules.map((r: Row) => {
-            const blockers = approvalBlockers(r);
+            const blockers = approvalBlockers(r as Parameters<typeof approvalBlockers>[0]);
             return (
               <div key={r.id} className="rounded-sm border border-border bg-background/40 p-3 text-sm">
                 <div className="flex flex-wrap items-center gap-2">

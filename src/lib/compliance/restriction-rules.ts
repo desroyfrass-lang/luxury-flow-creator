@@ -42,7 +42,7 @@ export function parseRuleDraft(input: unknown, now = new Date()): { ok: true; dr
   const reason = oneOf(REASONS, o.reason);
   const applies_to = oneOf(APPLIES_TO, o.applies_to ?? "both");
   const target_ref = str(o.target_ref, 200);
-  const country = str(o.country, 2).toUpperCase();
+  const country = str(o.country, 10).toUpperCase();
   const subdivision = opt(o.subdivision, 6)?.toUpperCase() ?? null;
   const minRaw = o.min_age === "" || o.min_age == null ? null : Number(o.min_age);
   const verified_at = isoDate(o.verified_at);
