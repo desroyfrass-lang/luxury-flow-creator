@@ -4,7 +4,7 @@
 BEGIN;
 
 CREATE TEMP TABLE t_results(name text, ok boolean) ON COMMIT DROP;
-GRANT ALL ON t_results TO authenticated;
+GRANT ALL ON t_results TO authenticated, anon;
 
 -- Founder = an existing admin; tester = an existing tester; vendor/other = fake ids.
 CREATE TEMP TABLE t_ids ON COMMIT DROP AS SELECT
