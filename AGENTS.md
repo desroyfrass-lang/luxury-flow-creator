@@ -19,3 +19,5 @@
 - Product taxonomy lives in src/lib/taxonomy/registry.ts and derives every node from existing store definitions (drip-catalog, frass-kids, frass-plus, shape-catalog, luxury-house, bridal, services marketplace); service categories can never hold products; overlays are never primary stores. Why: one classification map without duplicating storefront navigation.
 
 - Restriction decisions come from the pure evaluator in src/lib/compliance/restriction-policy.ts (ALLOWED/RESTRICTED/REVIEW_REQUIRED); unverified or missing rules never yield ALLOWED and advisory trade keywords never change a decision. Why: one auditable policy model before any cart/checkout wiring.
+
+- Checkout restriction preflight runs server-side in src/lib/compliance/restriction-preflight.functions.ts: cart lines come from Shopify, approved rules from restriction_rules (Founder-only, approval only via founder_decide_restriction_rule with audit ledger); mode is host-resolved (production off unless RESTRICTIONS_ENFORCEMENT_PRODUCTION=enforce, preview shadow unless RESTRICTIONS_ENFORCEMENT_PREVIEW=enforce). Why: staged activation without breaking live checkout.

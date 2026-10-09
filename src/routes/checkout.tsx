@@ -8,6 +8,9 @@ import { useEffect, useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import { validateCoupon } from "@/lib/rewards.functions";
 import { toast } from "sonner";
+import { restrictionPreflight } from "@/lib/compliance/restriction-preflight.functions";
+import { blockedMessage, isProductionHost } from "@/lib/compliance/restriction-preflight";
+import { useRegion } from "@/lib/region";
 
 export const Route = createFileRoute("/checkout")({
   head: () => ({
@@ -26,6 +29,9 @@ function CheckoutPage() {
   const updateQuantity = useCartStore((s) => s.updateQuantity);
   const getCheckoutUrl = useCartStore((s) => s.getCheckoutUrl);
   const isLoading = useCartStore((s) => s.isLoading);
+  const cartId = useCartStore((s) => s.cartId);
+  const { region } = useRegion();
+  const preflight = useServerFn(restrictionPreflight);
 
   const subtotal = items.reduce((s, i) => s + parseFloat(i.price.amount) * i.quantity, 0);
   const currency = items[0]?.price.currencyCode ?? "USD";
@@ -82,13 +88,30 @@ function CheckoutPage() {
     }
   };
 
-  const handleCheckout = () => {
+  const handleCheckout = async () => {
     const checkoutUrl = getCheckoutUrl();
     if (!checkoutUrl) {
       toast.error("Cart is not ready. Try adding an item again.");
       return;
     }
     setRedirecting(true);
+    // Restriction preflight (R2). Re-runs on every checkout attempt with the
+    // currently selected delivery country.
+    try {
+      const result = await preflight({ data: { cartId, destination: { country: region.code } } });
+      if (!result.allowCheckout) {
+        setRedirecting(false);
+        toast.error(blockedMessage(result));
+        return;
+      }
+    } catch {
+      // Production enforcement is off until Founder activation; elsewhere fail closed.
+      if (!isProductionHost(window.location.hostname)) {
+        setRedirecting(false);
+        toast.error("We couldn't confirm delivery eligibility right now. Please try again shortly.");
+        return;
+      }
+    }
     const url = new URL(checkoutUrl);
     url.searchParams.set("channel", "online_store");
     if (applied?.code) {

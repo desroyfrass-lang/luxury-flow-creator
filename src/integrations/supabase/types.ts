@@ -5293,6 +5293,99 @@ export type Database = {
         }
         Relationships: []
       }
+      restriction_rule_history: {
+        Row: {
+          action: string
+          actor: string | null
+          created_at: string
+          id: string
+          rule_id: string
+          snapshot: Json
+        }
+        Insert: {
+          action: string
+          actor?: string | null
+          created_at?: string
+          id?: string
+          rule_id: string
+          snapshot: Json
+        }
+        Update: {
+          action?: string
+          actor?: string | null
+          created_at?: string
+          id?: string
+          rule_id?: string
+          snapshot?: Json
+        }
+        Relationships: []
+      }
+      restriction_rules: {
+        Row: {
+          applies_to: string
+          approval: string
+          approved_at: string | null
+          approved_by: string | null
+          country: string
+          created_at: string
+          created_by: string
+          effect: string
+          evidence_reference: string | null
+          evidence_source: string | null
+          expires_at: string | null
+          id: string
+          min_age: number | null
+          reason: string
+          subdivision: string | null
+          target_level: string
+          target_ref: string
+          updated_at: string
+          verified_at: string | null
+        }
+        Insert: {
+          applies_to?: string
+          approval?: string
+          approved_at?: string | null
+          approved_by?: string | null
+          country: string
+          created_at?: string
+          created_by?: string
+          effect: string
+          evidence_reference?: string | null
+          evidence_source?: string | null
+          expires_at?: string | null
+          id?: string
+          min_age?: number | null
+          reason: string
+          subdivision?: string | null
+          target_level: string
+          target_ref: string
+          updated_at?: string
+          verified_at?: string | null
+        }
+        Update: {
+          applies_to?: string
+          approval?: string
+          approved_at?: string | null
+          approved_by?: string | null
+          country?: string
+          created_at?: string
+          created_by?: string
+          effect?: string
+          evidence_reference?: string | null
+          evidence_source?: string | null
+          expires_at?: string | null
+          id?: string
+          min_age?: number | null
+          reason?: string
+          subdivision?: string | null
+          target_level?: string
+          target_ref?: string
+          updated_at?: string
+          verified_at?: string | null
+        }
+        Relationships: []
+      }
       reward_coupons: {
         Row: {
           code: string
@@ -9248,6 +9341,10 @@ export type Database = {
       }
       founder_decide_product: {
         Args: { _decision: string; _note?: string; _product_id: string }
+        Returns: Json
+      }
+      founder_decide_restriction_rule: {
+        Args: { _decision: string; _note?: string; _rule_id: string }
         Returns: Json
       }
       founder_set_vendor_verification: {

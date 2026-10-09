@@ -155,6 +155,13 @@
       "when": 1791561682283,
       "tag": "0021_vendor_atomic_draft_creation",
       "breakpoints": true
+    },
+    {
+      "idx": 22,
+      "version": "7",
+      "when": 1791580726979,
+      "tag": "0022_restriction_rules_r2",
+      "breakpoints": true
     }
   ]
 }
