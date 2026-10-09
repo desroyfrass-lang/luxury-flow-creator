@@ -39,14 +39,14 @@ describe("restriction policy (R1)", () => {
   });
 
   it("unverified prohibition blocks ALLOWED but does not RESTRICT", () => {
-    const p = rule({ id: "p", target: { level: "category", key: subj.categoryKey }, effect: "prohibit", reason: "legal_prohibition", approval: "pending" });
+    const p = rule({ id: "p", target: { level: "category", key: subj.categoryKey! }, effect: "prohibit", reason: "legal_prohibition", approval: "pending" });
     const r = ev([allow, p]);
     expect(r.decision).toBe("REVIEW_REQUIRED");
     expect(r.reasons).toContain("unverified_rule");
   });
 
   it("verified legal prohibition beats a more specific allow", () => {
-    const law = rule({ id: "law", target: { level: "category", key: subj.categoryKey }, effect: "prohibit", reason: "legal_prohibition" });
+    const law = rule({ id: "law", target: { level: "category", key: subj.categoryKey! }, effect: "prohibit", reason: "legal_prohibition" });
     const vAllow = { ...allow, id: "va", target: { level: "variant" as const, id: "v1" } };
     const r = ev([law, vAllow]);
     expect(r.decision).toBe("RESTRICTED");
