@@ -1,4 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { LUXURY_COLLECTIONS } from "@/lib/luxury-house";
 import { SiteShell } from "@/components/site-shell";
 import { LuxuryCollectionCard, type LuxCollection } from "@/components/luxury-collection-card";
 import wing from "@/assets/lux-west-wing.jpg";
@@ -29,22 +30,19 @@ export const Route = createFileRoute("/frass-luxury-house/women")({
 
 const COLLECTIONS: LuxCollection[] = [
   {
-    handle: "womens-luxury-footwear",
-    title: "Luxury Footwear",
+    ...LUXURY_COLLECTIONS.women[0],
     blurb:
       "Designer heels, pumps, flats and evening shoes — hand-lasted, balanced to be worn all night.",
     image: footwear,
   },
   {
-    handle: "womens-luxury-dresses",
-    title: "Dresses",
+    ...LUXURY_COLLECTIONS.women[1],
     blurb:
       "Evening gowns, cocktail and resort dressing in silk, crepe and hand-finished couture seams.",
     image: dresses,
   },
   {
-    handle: "womens-luxury-tailoring",
-    title: "Tailoring",
+    ...LUXURY_COLLECTIONS.women[2],
     blurb:
       "Suits, blazers and trousers cut for quiet power — the sharpest thing in any room.",
     image: tailoring,
