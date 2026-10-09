@@ -107,6 +107,9 @@ function standardFashionNodes(): TaxonomyNode[] {
     for (const [cat, def] of Object.entries(drip)) {
       for (const [slug, title, override] of def.subs) {
         const handle = override ?? `${prefix}-${cat}-drip-${slug}`;
+        // Shared collections (e.g. frass-drip-90s-*) serve both genders on the
+        // live site; classify them once.
+        if (out.some((n) => n.handle === handle)) continue;
         out.push({ key: `drip/${handle}`, store: "drip", title: `${def.title} — ${title}`, handle, status: "active" });
       }
     }
