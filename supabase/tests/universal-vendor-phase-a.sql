@@ -9,7 +9,6 @@ DECLARE
   other   uuid := gen_random_uuid();
   v_id uuid; p_id uuid; n int; s text;
   res text[] := '{}';
-  PROCEDURE_DUMMY int;
 BEGIN
   -- helper: act as a signed-in user
   PERFORM set_config('role', 'authenticated', true);
