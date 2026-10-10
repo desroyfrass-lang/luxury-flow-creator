@@ -36,3 +36,4 @@
 - [x] Universal Vendor Phase A (Founder-approved, done 9 Oct; awaiting review): backend-only canonical products, vendor profiles/verification, vendor offers, source dedup, RLS, Founder decision functions with atomic audit-ledger entry, server functions, tests. No CJ/Shopify/media/payments/UI. Stop for review.
 - [x] Vendor integration with member identity/Frass Card, atomic draft creation, /workspace/vendors with Founder review (9 Oct; awaiting review).
 - [x] Pilot P1: one CJ draft (2606050313341622800) with server-validated category, media/variants, Frassy naming; Founder confirms before draft.
+- [x] P2-0 secure product handoff (read-only, Founder/owner, from saved records); P2-1/2/3 not started.
