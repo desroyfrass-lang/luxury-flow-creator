@@ -1,46 +1,63 @@
-# Read-only audit: product intake, sorting and placement (one CJ pilot item)
+# P2 Integration Audit (read-only) and proposed phases
 
-Nothing was changed. Database checks were read-only lookups.
+Nothing was changed. No code, data, media, credits, Shopify or deploys were touched. P1/P2a stays frozen.
 
-## What exists today (verified)
-| Piece | Where | State |
-|---|---|---|
-| Category map: 9 departments (Marketplace, Kicks, Drip, Bare Drip, Kids, Plus+, Luxury House, Bridal, Shape) plus promotional overlays | `src/lib/taxonomy/registry.ts` (`validateClassification`) | Works, as code only. Nothing saves a category yet |
-| Pilot category exists | `src/lib/drip-catalog.ts` -> Women -> Work Drip -> `work-blouses` | Confirmed |
-| CJ connection | `src/lib/cj.functions.ts` | Login works. It only reads CJ's general catalog (`/product/list`). There is **no saved function** for your selected My Products list (`/product/myProduct/query`) or for single-product details. The earlier check of your 495 items was a one-time test |
-| Old CJ queue screen | `/admin/cj-import` (`admin.cj-import.tsx`, table `cj_import_queue`) | Works, but holds 20 general-catalog items, not your picks. Its brand/gender text fields don't connect to the new category map. Not used for the pilot |
-| New product foundation | tables `vendor_profiles`, `canonical_products`, `vendor_offers`, `product_sources`; atomic `create_product_draft` | Works. All four tables are empty (0 rows) |
-| Product/vendor screen | `/workspace/vendors` (`workspace.vendors.tsx`) | Works for creating a brand and a basic draft, owner-only. Founder verify/review buttons exist |
-| Access rules | Owner-only row rules; Founder checks use `has_role(admin)` | Sound. Approve/verify lives in database functions and writes the audit ledger |
+## What the product looks like today
+- Soft Life Chiffon: a private draft in the new product tables, with 5 CJ photos and 6 sizes. Colour is Sky Blue, S–3XL, and one real CJ photo is linked to all six.
+- The colour/size picker keeps your choice only on screen. Nothing saves it, and nothing passes it on yet.
 
-## Confirmed blockers for the one-item pilot
-1. **No CJ vendor brand.** You would need a "CJ Dropshipping" supplier brand owned by your account. It starts as *pending* (unverified). Drafts are allowed, but sending to Founder review needs a verified vendor. That is correct and stays.
-2. **Nowhere to save the category.** `canonical_products` has `primary_store` and `overlays` columns but no category field, and `create_product_draft` doesn't accept a store or category.
-3. **Nowhere to save photos or sizes/colours for new products.** The existing `product_images` and `product_variants` tables belong to the old `products` table, not the new one. The pilot has 5 photos and 6 variants.
-4. **No saved CJ detail fetch.** The real name, photos, variants and price must be pulled by a small, admin-only, read-only server function, fetching one product ID, not the list.
-5. **Delivery time and stock are unknown.** CJ shipping needs a destination country, and stock wasn't returned. Per your rules these stay blank ("estimate unavailable"), never invented.
-6. **No sorting screen.** Nothing on `/workspace/vendors` lets you pick a department or category yet.
+## The three tools, as they really are
 
-## What works end-to-end today
-Create a vendor brand, then a text-only draft (title, source, one offer), visible only to you. There is no category, photos, variants or CJ data pull.
+| Tool | Works today? | Can it take Soft Life Chiffon? | Why not |
+|---|---|---|---|
+| FV Studios (`/studios/*`) | Yes, for shows and episodes. It has an Assets library (2 items) with approve and reuse switches | No | Studios starts from a story idea. Its assets are linked to shows and scenes, not to products |
+| Admin Capsules (`/admin/capsules`) | Yes. 1 capsule exists. You can publish or unpublish, and upload a cover image | No | Capsule items must point at the old live-shop product list, enforced by the database. A draft can't be added |
+| Try-on (`/try-on`) | Yes, but it's the shopper version | Only with retyping | It needs a customer photo plus garment images and names. It saves each attempt under the person's account (0 saved so far). Each try uses an AI image request on your workspace balance, and members' Frass credit wallets are not charged |
 
-## Proposed next step (needs separate Founder approval)
-"Pilot P1: one CJ draft, sorted, private"
-1. Small additive migration:
-   - add `category_key` to `canonical_products`, checked against the category map on the server;
-   - add `canonical_product_media` (image URL, position) and `canonical_product_variants` (CJ variant id, option labels, supplier cost, weight), owner-only rules like the offers table;
-   - extend `create_product_draft` to accept store, category, media and variants in the same single transaction.
-2. One admin-only read-only server function that fetches details for one CJ product ID and refuses anything not in your My Products list.
-3. On `/workspace/vendors`, add a "Sort this draft" picker: department -> category, overlays as optional tags, using `validateClassification`. No new page.
-4. You create the pending "CJ Dropshipping" supplier brand yourself on that screen. It is not auto-verified.
-5. Create exactly one draft for pid 2606050313341622800: Frass Drip -> Women -> Work Drip -> Work Blouses. Supplier cost $6.97, delivery and stock left blank, draft status only, unpublished.
-6. Tests:
-   - one-item limit;
-   - the same source can't be used twice;
-   - only real categories are accepted;
-   - other vendors and testers can't read it;
-   - no publish path.
+Today, the "Make image/video", "Send to capsules" and "Send to try-ons" buttons only open these pages. They honestly say "Not connected yet."
 
-Nothing else is imported: the other 494 stay untouched, and there are no queue writes, Shopify, publishing, pricing or restriction rules.
+## Does size matter for try-on?
+No. The try-on only looks at the photo and garment name. Size makes no visible difference. Colour matters, and it is the Sky Blue photo. Size would only matter later for a capsule or cart line.
 
-Estimate: 4–7 credits.
+## Proposed phases (each needs its own approval)
+
+**P2-0 Shared product context (about 2–3 credits)**
+- A small, read-only "product handoff" bundle: product ID, saved name, category path, chosen variant (colour, size, SKU) and the authentic photo for that variant.
+- It is built on the server from saved records only, and only for the Founder or the brand's owner. Nothing in the browser is trusted.
+- No database changes.
+
+**P2-1 Capsules (about 3–5 credits)**
+- Let a capsule item point at either an old shop product or a new draft and its variant. This is one small, additive database change.
+- A draft in a capsule stays hidden from shoppers until the product is approved and published.
+- The "Send to capsules" button opens the admin capsule builder with this product already chosen. You still click Add.
+
+**P2-2 Admin try-on preview (about 3–5 build credits; each try is also a paid AI image request)**
+- A Founder-only preview that reuses the existing try-on engine. It fills in the variant's authentic photo and name, so nothing is retyped.
+- Every try needs an explicit "Generate (uses AI)" click. Nothing runs automatically.
+- Results are saved privately and are visible to you only. The shopper try-on is left as it is.
+
+**P2-3 FV Studios (about 4–6 credits)**
+- "Make image/video" opens Studios with this product's handoff attached as a reference.
+- Results are saved as private studio assets, tagged with the product ID and not approved.
+- You choose "Attach to product". That adds a new product photo that can't come from a supplier and is marked as yours. The CJ photos are never replaced.
+
+Total: about 12–19 build credits, plus whatever AI image requests you choose to run.
+
+## Safety rules for every phase
+- CJ name, photos, sizes, cost and source link never change. The existing database locks stay.
+- Nothing publishes, charges or generates without your click. Shopify is untouched.
+- Shopper pages behave exactly as they do now.
+
+## Tests and rollback
+- Tests: only the owner or Founder can build a handoff; a draft in a capsule never shows publicly; try-on can't run without the explicit click; attaching a result never changes the CJ records; the P1/P2a regression list still passes.
+- Rollback: each phase sits behind its own button. The P2-1 database change only adds things and can be reversed by removing the new link column.
+
+## Decisions for the Founder
+1. Should a draft in a capsule stay hidden until the product is approved? (Recommended: yes.)
+2. Should try-on results be visible to you only, or to brand owners too?
+3. Should Studios results stay in Studios until you click "Attach", or attach automatically? (Recommended: stay until you click.)
+4. Which phase goes first? (Recommended: P2-0, then capsules.)
+
+## Technical details
+- Likely files: `src/lib/vendors/product-handoff.functions.ts` (new), `src/components/vendors/cj-pilot-panel.tsx` (wire the 3 buttons), `src/routes/_authenticated/admin.capsules.tsx`, a new migration adding a nullable `canonical_product_id`/`canonical_variant_id` to `capsule_items` with a check that exactly one product link is set, `src/lib/tryon.functions.ts` (reuse `generateTryOn`; admin wrapper), `src/routes/_authenticated/studios.create.tsx` and `studios.assets.tsx` (reference context, product tag).
+- Evidence: `capsule_items.product_id` has a foreign key to `products` (1 capsule exists). `tryon_looks` holds `user_id`, `source_photo_url` and `cart_items` jsonb (0 rows). `generateTryOn` calls `google/gemini-3.1-flash-image` through the gateway with no ledger debit. `studio_assets` holds `series_id`, `approved` and `reuse_allowed`, with usage linked to productions and scenes (2 rows).
