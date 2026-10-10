@@ -829,7 +829,7 @@ export const Route = createFileRoute("/api/chat")({
           } catch (e) {
             verifiedFashionContext = "";
             const msg = e instanceof Error ? e.message : "";
-            fashionHandoffStatus = { verified: false, reason: /not allowed|own|access/i.test(msg) ? "You are not allowed to use this product here." : /not found|variant|match/i.test(msg) ? "This product or size was not found among your saved drafts." : /publish|reject|locked/i.test(msg) ? "This product is no longer an open draft, so it was not shared." : "The product could not be verified, so it was not shared." };
+            fashionHandoffStatus = { verified: false, reason: /Only the Founder/.test(msg) ? "You are not allowed to use this product here." : /not found|does not belong/i.test(msg) ? "This product or size was not found among your saved drafts." : /private drafts|reject|category/i.test(msg) ? "This product is no longer an open draft, so it was not shared." : "The product could not be verified, so it was not shared." };
           }
         }
 
