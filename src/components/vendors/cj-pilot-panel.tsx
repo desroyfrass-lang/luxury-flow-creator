@@ -245,7 +245,8 @@ function PilotSaved({ draft: initialDraft, justCreated, onSaved }: { draft: Save
     onError: (e: Error) => toast.error(e.message),
   });
   const [draft, setDraft] = useState<SavedDraft>(initialDraft);
-  useEffect(() => setDraft(initialDraft), [initialDraft.id, initialDraft.title, initialDraft.category_key]);
+  // Re-sync when the refetched record brings its saved variants (first save shows none yet).
+  useEffect(() => setDraft(initialDraft), [initialDraft.id, initialDraft.title, initialDraft.category_key, initialDraft.variants?.length]);
   const [editing, setEditing] = useState(false);
   const [name, setName] = useState(draft.title);
   const [store, setStore] = useState(draft.category_key?.split("/")[0] ?? "");
@@ -297,7 +298,7 @@ function PilotSaved({ draft: initialDraft, justCreated, onSaved }: { draft: Save
         <div className="text-xs text-muted-foreground">{classificationBreadcrumb(draft.category_key)} · Draft ID {draft.id.slice(0, 8)}…</div>
         <div className="mt-3 text-[10px] uppercase tracking-[0.2em] text-muted-foreground">Saved name above · supplier's original name (private): <span className="normal-case tracking-normal">{draft.originalName ?? "not recorded"}</span></div>
         <SupplierPhotos urls={draft.media ?? []} />
-        <SupplierVariantPicker key={draft.id} productId={draft.id} onHandoff={setHandoff} variants={(draft.variants ?? []).map((v) => ({ id: v.id, ref: v.source_variant_ref, sku: v.sku, label: v.option_label, image: v.image_url ?? null }))} />
+        <SupplierVariantPicker key={`${draft.id}-${draft.variants?.length ?? 0}`} productId={draft.id} onHandoff={setHandoff} variants={(draft.variants ?? []).map((v) => ({ id: v.id, ref: v.source_variant_ref, sku: v.sku, label: v.option_label, image: v.image_url ?? null }))} />
         {draft.variants && draft.variants.length > 0 && (
           <details className="mt-2 text-xs"><summary className="cursor-pointer text-muted-foreground">{draft.variants.length} sizes/colours · supplier cost {draft.cost != null ? `$${Number(draft.cost).toFixed(2)}` : "unknown"} (permanent)</summary>
             <ul className="mt-1 space-y-0.5">{draft.variants.map((v) => <li key={v.source_variant_ref}>{v.option_label ?? v.sku ?? v.source_variant_ref} · {v.supplier_cost != null ? `${v.currency} ${Number(v.supplier_cost).toFixed(2)}` : "cost unknown"}</li>)}</ul>
