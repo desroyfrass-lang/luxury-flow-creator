@@ -16,6 +16,7 @@ import { useAuthUserId } from "@/lib/auth/identity-watch";
 import { useIsAdmin } from "@/hooks/use-is-admin";
 import { CjPilotPanel } from "@/components/vendors/cj-pilot-panel";
 import { PILOT_CJ_PID } from "@/lib/vendors/cj-pilot";
+import { classificationBreadcrumb } from "@/lib/taxonomy/hierarchy";
 import {
   FULFILLMENT_MODES,
   VENDOR_KINDS,
@@ -183,6 +184,7 @@ type Vendor = { id: string; display_name: string; vendor_kind: string; verificat
 type Product = {
   id: string;
   title: string;
+  category_key?: string | null;
   draft_status: string;
   vendor_offers: { id: string; sku: string | null; unit_cost: number | null; currency: string; fulfillment_mode: string; lead_time_min_days: number | null; lead_time_max_days: number | null }[];
   product_sources: { source_type: string; source_ref: string }[];
@@ -217,6 +219,7 @@ function BrandCard(props: {
               <span className="font-medium">{p.title}</span>
               <Badge status={p.draft_status} />
             </div>
+            {p.category_key && <div className="mt-1 text-xs text-muted-foreground">{classificationBreadcrumb(p.category_key)}</div>}
             {p.vendor_offers.map((o) => (
               <div key={o.id} className="mt-1 text-xs text-muted-foreground">
                 Private offer: {o.sku ?? "no SKU"} · {o.unit_cost != null ? `${o.currency} ${o.unit_cost} cost` : "cost not set"} · {o.fulfillment_mode.replaceAll("_", " ")}
@@ -235,6 +238,9 @@ function BrandCard(props: {
         ))}
       </ul>
 
+      <details className="mt-5 border-t border-border pt-4">
+        <summary className="cursor-pointer text-sm font-medium">Manual product entry (not connected to CJ Pilot P1)</summary>
+        <p className="mt-2 text-xs text-muted-foreground">A separate product entered by hand. These blank fields do not edit or save the CJ blouse. Use Founder · Pilot P1 below for that item.</p>
       <div className="mt-4 grid gap-2 sm:grid-cols-2">
         <Input placeholder="Product name" value={title} onChange={(e) => setTitle(e.target.value)} maxLength={200} />
         <Input placeholder="Your SKU (optional)" value={sku} onChange={(e) => setSku(e.target.value)} maxLength={120} />
@@ -267,8 +273,9 @@ function BrandCard(props: {
           setTitle(""); setSku(""); setCost(""); setLead({ min: "", max: "" });
         }}
       >
-        Save private draft
+        Save separate manual draft
       </Button>
+      </details>
     </div>
   );
 }

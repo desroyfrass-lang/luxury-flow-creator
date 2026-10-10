@@ -8,7 +8,9 @@ import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Link } from "@tanstack/react-router";
-import { TAXONOMY, getTaxonomyNode } from "@/lib/taxonomy/registry";
+import { getTaxonomyNode } from "@/lib/taxonomy/registry";
+import { classificationBreadcrumb } from "@/lib/taxonomy/hierarchy";
+import { PilotCategoryPicker } from "./pilot-category-picker";
 import { PILOT_CATEGORY, PILOT_CJ_PID, isPilotCategoryAllowed, type NameSuggestion } from "@/lib/vendors/cj-pilot";
 import { createPilotDraft, getCjPilotDetail, suggestPilotNames } from "@/lib/vendors/cj-pilot.functions";
 import { createVendorProfile } from "@/lib/vendors/products.functions";
@@ -34,7 +36,7 @@ export function CjPilotPanel({ supplierBrands, existingDraft, onCreated }: {
   const [open, setOpen] = useState(false);
   const detail = useQuery({ queryKey: ["cj-pilot", PILOT_CJ_PID], queryFn: () => detailFn(), enabled: open, retry: false, staleTime: 300_000 });
 
-  const store = PILOT_CATEGORY.primaryStore; // locked: Pilot P1 is Frass Drip → Women only
+  const [store, setStore] = useState<string>(PILOT_CATEGORY.primaryStore);
   const [category, setCategory] = useState<string>(PILOT_CATEGORY.categoryKey);
   const [suggestions, setSuggestions] = useState<NameSuggestion[]>([]);
   const [recommended, setRecommended] = useState<string | null>(null);
@@ -79,13 +81,14 @@ export function CjPilotPanel({ supplierBrands, existingDraft, onCreated }: {
     onError: (e: Error) => toast.error(e.message),
   });
 
-  const categories = TAXONOMY.filter((n) => n.kind === "product" && n.status === "active" && isPilotCategoryAllowed(store, n.key));
   const node = getTaxonomyNode(category);
+  const categoryAllowed = isPilotCategoryAllowed(store, category);
   const d = detail.data;
   const missing = [
     !effectiveVendorId && "create or choose a supplier brand",
     finalName.trim().length < 3 && "enter a final name (3+ letters)",
     !node && "choose a category",
+    node && !categoryAllowed && "choose a supported Women's Frass Drip product category for Pilot P1",
     !confirmName && "tick the name confirmation",
     !confirmCategory && "tick the category confirmation",
   ].filter(Boolean) as string[];
@@ -126,16 +129,9 @@ export function CjPilotPanel({ supplierBrands, existingDraft, onCreated }: {
 
           <div>
             <div className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground">Where it goes</div>
-            <p className="mt-1 text-xs text-muted-foreground">
-              This pilot is limited to <strong>Frass Drip → Women</strong>. You choose the exact category; only Women's Drip categories are listed, so every choice here is valid. Frassy's starting suggestion is Work Blouses.
-            </p>
-            <label className="mt-2 block text-[10px] uppercase tracking-[0.2em] text-muted-foreground">Category
-              <select className="mt-1 w-full rounded-sm border border-border bg-background px-2 py-2 text-sm normal-case tracking-normal" value={category}
-                onChange={(e) => { setCategory(e.target.value); setConfirmCategory(false); }}>
-                <option value="">Choose…</option>
-                {categories.map((n) => <option key={n.key} value={n.key}>{n.title}{n.key === PILOT_CATEGORY.categoryKey ? " (Frassy's suggestion)" : ""}</option>)}
-              </select>
-            </label>
+            <PilotCategoryPicker store={store} category={category} onChange={(s, c) => {
+              setStore(s); setCategory(c); setConfirmCategory(false);
+            }} />
           </div>
 
           <div>
@@ -192,8 +188,8 @@ export function CjPilotPanel({ supplierBrands, existingDraft, onCreated }: {
           <div className="space-y-2 text-sm">
             <label className="flex gap-2"><input type="checkbox" checked={confirmName} disabled={finalName.trim().length < 3} onChange={(e) => setConfirmName(e.target.checked)} />
               I confirm the final name: <strong>{finalName || "—"}</strong></label>
-            <label className="flex gap-2"><input type="checkbox" checked={confirmCategory} disabled={!node} onChange={(e) => setConfirmCategory(e.target.checked)} />
-              I confirm the category: <strong>{node?.title ?? "—"}</strong></label>
+            <label className="flex gap-2"><input type="checkbox" checked={confirmCategory} disabled={!categoryAllowed} onChange={(e) => setConfirmCategory(e.target.checked)} />
+              I confirm the category: <strong>{category ? classificationBreadcrumb(category) : "—"}</strong></label>
           </div>
 
           {createdId ? null : (
@@ -213,7 +209,6 @@ export function CjPilotPanel({ supplierBrands, existingDraft, onCreated }: {
 
 /** After saving: honest next steps. Only real, existing tools; nothing auto-generates, charges or publishes. */
 function PilotSaved({ draft, justCreated }: { draft: { id: string; title: string; category_key: string | null }; justCreated: boolean }) {
-  const node = draft.category_key ? getTaxonomyNode(draft.category_key) : null;
   const steps = [
     {
       title: "Make image / video",
@@ -239,7 +234,7 @@ function PilotSaved({ draft, justCreated }: { draft: { id: string; title: string
       <div className="rounded-sm border border-[color:var(--gold)]/60 p-4">
         <div className="text-[10px] uppercase tracking-[0.2em] text-[color:var(--gold)]">{justCreated ? "Saved just now" : "Already saved"} · private · not published</div>
         <div className="mt-1 font-display text-2xl">{draft.title}</div>
-        <div className="text-xs text-muted-foreground">{node?.title ?? draft.category_key ?? "No category"} · Draft ID {draft.id.slice(0, 8)}…</div>
+        <div className="text-xs text-muted-foreground">{classificationBreadcrumb(draft.category_key)} · Draft ID {draft.id.slice(0, 8)}…</div>
         <p className="mt-2 text-xs text-muted-foreground">It also appears under your supplier brand above. Supplier stays unverified until you verify it.</p>
       </div>
       <div>
