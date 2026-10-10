@@ -21,11 +21,52 @@ const STYLE_LABEL: Record<string, string> = {
   caribbean_frass: "Caribbean / Frass spirit",
 };
 
+type SavedVariant = { source_variant_ref: string; sku: string | null; option_label: string | null; supplier_cost: number | null; currency: string };
+export type SavedDraft = { id: string; title: string; category_key: string | null; originalName?: string | null; media?: string[]; variants?: SavedVariant[]; cost?: number | null };
+
+/** Supplier photos with a visible fallback when a CJ link fails — never silently dropped. */
+export function SupplierPhotos({ urls }: { urls: string[] }) {
+  const [failed, setFailed] = useState<string[]>([]);
+  if (urls.length === 0) return <p className="mt-2 text-xs text-destructive" role="status">No supplier photos are saved for this product.</p>;
+  return (
+    <div>
+      <div className="mt-3 flex gap-2 overflow-x-auto" aria-label="Supplier photos">
+        {urls.map((u, i) => failed.includes(u) ? (
+          <a key={u} href={u} target="_blank" rel="noreferrer" className="flex h-24 w-20 shrink-0 items-center justify-center rounded-sm border border-dashed border-destructive p-1 text-center text-[10px] text-destructive">Photo {i + 1} did not load — open link</a>
+        ) : (
+          <img key={u} src={u} alt={`Supplier product photo ${i + 1}`} className="h-24 w-20 shrink-0 rounded-sm object-cover" loading="lazy" onError={() => setFailed((f) => [...f, u])} />
+        ))}
+      </div>
+      <div className="mt-1 text-[10px] text-muted-foreground">{urls.length - failed.length} of {urls.length} photos showing{failed.length ? " · CJ did not deliver some photos; they are still saved" : ""}</div>
+    </div>
+  );
+}
+
+function NameSuggestions({ suggestions, recommended, selected, onPick }: { suggestions: NameSuggestion[]; recommended: string | null; selected: string; onPick: (n: string) => void }) {
+  if (!suggestions.length) return null;
+  return (
+    <ul className="mt-3 space-y-2" aria-label="Frassy name suggestions">
+      {suggestions.map((s) => (
+        <li key={s.style}>
+          <button type="button" onClick={() => onPick(s.name)}
+            className={`w-full rounded-sm border px-3 py-2 text-left text-sm ${selected === s.name ? "border-[color:var(--gold)]" : "border-border"}`}>
+            <div className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground">
+              Suggestion · {STYLE_LABEL[s.style]}{recommended === s.style ? " · Frassy recommends" : ""}
+            </div>
+            <div className="font-display text-lg">{s.name}</div>
+            <div className="text-xs text-muted-foreground">{s.why}</div>
+          </button>
+        </li>
+      ))}
+    </ul>
+  );
+}
+
 type Brand = { id: string; display_name: string; verification_status: string };
 
 export function CjPilotPanel({ supplierBrands, existingDraft, onCreated }: {
   supplierBrands: Brand[];
-  existingDraft: { id: string; title: string; category_key: string | null } | null;
+  existingDraft: SavedDraft | null;
   onCreated: () => void;
 }) {
   const detailFn = useServerFn(getCjPilotDetail);
@@ -93,7 +134,7 @@ export function CjPilotPanel({ supplierBrands, existingDraft, onCreated }: {
     !confirmCategory && "tick the category confirmation",
   ].filter(Boolean) as string[];
   const ready = Boolean(d && missing.length === 0 && !createdId);
-  const saved = createdId ? { id: createdId, title: finalName.trim(), category_key: category } : existingDraft;
+  const saved: SavedDraft | null = existingDraft ?? (createdId ? { id: createdId, title: finalName.trim(), category_key: category, originalName: d?.originalName, media: d?.images, cost: d?.supplierCost } : null);
 
   return (
     <section className="mt-12 rounded-xl border border-[color:var(--gold)]/50 p-5" aria-labelledby="cj-pilot-h">
@@ -120,11 +161,7 @@ export function CjPilotPanel({ supplierBrands, existingDraft, onCreated }: {
               CJ {d.sku} · supplier cost {d.supplierCost != null ? `$${d.supplierCost.toFixed(2)}` : "unknown"} · {d.variants.length} variants · {d.images.length} photos ·
               stock and delivery time: unknown (needs destination, never guessed)
             </div>
-            <div className="mt-3 flex gap-2 overflow-x-auto">
-              {d.images.slice(0, 6).map((u) => (
-                <img key={u} src={u} alt="Supplier product photo" className="h-24 w-20 shrink-0 rounded-sm object-cover" loading="lazy" />
-              ))}
-            </div>
+            <SupplierPhotos urls={d.images} />
           </div>
 
           <div>
@@ -141,22 +178,7 @@ export function CjPilotPanel({ supplierBrands, existingDraft, onCreated }: {
               </Button>
               {suggest.isPending && <span className="text-xs text-muted-foreground">Frassy is thinking…</span>}
             </div>
-            {suggestions.length > 0 && (
-              <ul className="mt-3 space-y-2">
-                {suggestions.map((s) => (
-                  <li key={s.style}>
-                    <button type="button" onClick={() => { setFinalName(s.name); setConfirmName(false); }}
-                      className={`w-full rounded-sm border px-3 py-2 text-left text-sm ${finalName === s.name ? "border-[color:var(--gold)]" : "border-border"}`}>
-                      <div className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground">
-                        {STYLE_LABEL[s.style]}{recommended === s.style ? " · Frassy recommends" : ""}
-                      </div>
-                      <div className="font-display text-lg">{s.name}</div>
-                      <div className="text-xs text-muted-foreground">{s.why}</div>
-                    </button>
-                  </li>
-                ))}
-              </ul>
-            )}
+            <NameSuggestions suggestions={suggestions} recommended={recommended} selected={finalName} onPick={(n) => { setFinalName(n); setConfirmName(false); }} />
             <label className="mt-3 block text-[10px] uppercase tracking-[0.2em] text-muted-foreground">Final name (edit freely)
               <Input className="mt-1" value={finalName} maxLength={120} onChange={(e) => { setFinalName(e.target.value); setConfirmName(false); }} />
             </label>
@@ -208,9 +230,17 @@ export function CjPilotPanel({ supplierBrands, existingDraft, onCreated }: {
 }
 
 /** After saving: honest next steps. Only real, existing tools; nothing auto-generates, charges or publishes. */
-function PilotSaved({ draft: initialDraft, justCreated, onSaved }: { draft: { id: string; title: string; category_key: string | null }; justCreated: boolean; onSaved: () => void }) {
+function PilotSaved({ draft: initialDraft, justCreated, onSaved }: { draft: SavedDraft; justCreated: boolean; onSaved: () => void }) {
   const updateFn = useServerFn(updatePilotDraft);
-  const [draft, setDraft] = useState(initialDraft);
+  const namesFn = useServerFn(suggestPilotNames);
+  const [suggestions, setSuggestions] = useState<NameSuggestion[]>([]);
+  const [recommended, setRecommended] = useState<string | null>(null);
+  const suggest = useMutation({
+    mutationFn: () => namesFn(),
+    onSuccess: (r) => { setSuggestions(r.suggestions); setRecommended(r.recommended); },
+    onError: (e: Error) => toast.error(e.message),
+  });
+  const [draft, setDraft] = useState<SavedDraft>(initialDraft);
   useEffect(() => setDraft(initialDraft), [initialDraft.id, initialDraft.title, initialDraft.category_key]);
   const [editing, setEditing] = useState(false);
   const [name, setName] = useState(draft.title);
@@ -220,7 +250,7 @@ function PilotSaved({ draft: initialDraft, justCreated, onSaved }: { draft: { id
   const startEdit = () => { setName(draft.title); setStore(draft.category_key?.split("/")[0] ?? ""); setCat(draft.category_key ?? ""); setConfirm(false); setEditing(true); };
   const save = useMutation({
     mutationFn: () => updateFn({ data: { productId: draft.id, finalName: name.trim(), primaryStore: store, categoryKey: cat, confirm: true } }),
-    onSuccess: (r) => { setDraft({ id: r.id, title: r.title, category_key: r.category_key }); setEditing(false); toast.success("Draft updated. Still private, not published."); onSaved(); },
+    onSuccess: (r) => { setDraft((d) => ({ ...d, title: r.title, category_key: r.category_key })); setEditing(false); toast.success("Draft updated. Still private, not published."); onSaved(); },
     onError: (e: Error) => toast.error(e.message),
   });
   const unchanged = name.trim() === draft.title && cat === draft.category_key;
@@ -257,12 +287,25 @@ function PilotSaved({ draft: initialDraft, justCreated, onSaved }: { draft: { id
         <div className="text-[10px] uppercase tracking-[0.2em] text-[color:var(--gold)]">{justCreated ? "Saved just now" : "Already saved"} · private · not published</div>
         <div className="mt-1 font-display text-2xl">{draft.title}</div>
         <div className="text-xs text-muted-foreground">{classificationBreadcrumb(draft.category_key)} · Draft ID {draft.id.slice(0, 8)}…</div>
+        <div className="mt-3 text-[10px] uppercase tracking-[0.2em] text-muted-foreground">Saved name above · supplier's original name (private): <span className="normal-case tracking-normal">{draft.originalName ?? "not recorded"}</span></div>
+        <SupplierPhotos urls={draft.media ?? []} />
+        {draft.variants && draft.variants.length > 0 && (
+          <details className="mt-2 text-xs"><summary className="cursor-pointer text-muted-foreground">{draft.variants.length} sizes/colours · supplier cost {draft.cost != null ? `$${Number(draft.cost).toFixed(2)}` : "unknown"} (permanent)</summary>
+            <ul className="mt-1 space-y-0.5">{draft.variants.map((v) => <li key={v.source_variant_ref}>{v.option_label ?? v.sku ?? v.source_variant_ref} · {v.supplier_cost != null ? `${v.currency} ${Number(v.supplier_cost).toFixed(2)}` : "cost unknown"}</li>)}</ul>
+          </details>
+        )}
         <p className="mt-2 text-xs text-muted-foreground">It also appears under your supplier brand above. Supplier stays unverified until you verify it. CJ's original name, photos, sizes/colours and cost are permanent and cannot be edited.</p>
         {!editing ? (
           <Button className="mt-3" variant="outline" size="sm" onClick={startEdit}>Edit name and category</Button>
         ) : (
           <div className="mt-4 space-y-4 border-t border-border pt-4">
-            <label className="block text-xs">Product name
+            <div>
+              <Button variant="outline" size="sm" disabled={suggest.isPending} onClick={() => suggest.mutate()}>{suggestions.length ? "Ask Frassy again" : "Ask Frassy for 3 names"}</Button>
+              {suggest.isPending && <span className="ml-2 text-xs text-muted-foreground">Frassy is thinking…</span>}
+              <p className="mt-1 text-[10px] text-muted-foreground">Suggestions only. Nothing changes until you pick or type a name, confirm and save.</p>
+              <NameSuggestions suggestions={suggestions} recommended={recommended} selected={name} onPick={(n) => { setName(n); setConfirm(false); }} />
+            </div>
+            <label className="block text-xs">Product name (your final say)
               <Input aria-label="Product name" className="mt-1" value={name} maxLength={120} onChange={(e) => { setName(e.target.value); setConfirm(false); }} />
             </label>
             <PilotCategoryPicker mode="edit" store={store} category={cat} onChange={(s, c) => { setStore(s); setCat(c); setConfirm(false); }} />
