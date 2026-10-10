@@ -46,3 +46,4 @@
 - [x] R2 persisted fashion design brief
 - [x] Step 1: correct Frassy platform map (Try-On, Frass Shape, Fashion Studio, FV Studios)
 - [x] Virtual Try-On Phase A (Founder-approved, 10 Oct): removed admin read access to customer try-on photos and results; owner-only access kept. Stop for review.
+- [x] Virtual Try-On Phase B (Founder-approved, 10 Oct): private Try-On Preparation Studio at /admin/tryon-prep, readiness records, audited decisions, re-review on photo/size/category change. No try-on run. Stop for review.

@@ -8799,6 +8799,69 @@ export type Database = {
           },
         ]
       }
+      tryon_readiness: {
+        Row: {
+          approved_fingerprint: string | null
+          approved_image_url: string | null
+          created_at: string
+          current_fingerprint: string
+          id: string
+          method: string | null
+          product_id: string
+          review_note: string
+          reviewed_at: string | null
+          reviewed_by: string | null
+          status: string
+          updated_at: string
+          variant_id: string
+        }
+        Insert: {
+          approved_fingerprint?: string | null
+          approved_image_url?: string | null
+          created_at?: string
+          current_fingerprint?: string
+          id?: string
+          method?: string | null
+          product_id: string
+          review_note?: string
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          status?: string
+          updated_at?: string
+          variant_id: string
+        }
+        Update: {
+          approved_fingerprint?: string | null
+          approved_image_url?: string | null
+          created_at?: string
+          current_fingerprint?: string
+          id?: string
+          method?: string | null
+          product_id?: string
+          review_note?: string
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          status?: string
+          updated_at?: string
+          variant_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tryon_readiness_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "canonical_products"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "tryon_readiness_variant_id_fkey"
+            columns: ["variant_id"]
+            isOneToOne: true
+            referencedRelation: "canonical_product_variants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       user_passkeys: {
         Row: {
           backed_up: boolean
@@ -9556,6 +9619,15 @@ export type Database = {
         Args: { _decision: string; _note?: string; _rule_id: string }
         Returns: Json
       }
+      founder_decide_tryon_readiness: {
+        Args: {
+          _method: string
+          _note: string
+          _status: string
+          _variant_id: string
+        }
+        Returns: Json
+      }
       founder_set_role: {
         Args: {
           _grant: boolean
@@ -9634,6 +9706,14 @@ export type Database = {
           msg_id: number
           read_ct: number
         }[]
+      }
+      tryon_refresh_product: {
+        Args: { _product_id: string }
+        Returns: undefined
+      }
+      tryon_variant_fingerprint: {
+        Args: { _variant_id: string }
+        Returns: string
       }
       update_classified_product_draft: {
         Args: {

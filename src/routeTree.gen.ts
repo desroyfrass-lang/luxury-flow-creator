@@ -185,6 +185,7 @@ import { Route as AuthenticatedAdminPartnerVendorsRouteImport } from './routes/_
 import { Route as AuthenticatedAdminPartnersRouteImport } from './routes/_authenticated/admin.partners'
 import { Route as AuthenticatedAdminRolesRouteImport } from './routes/_authenticated/admin.roles'
 import { Route as AuthenticatedAdminTextRouteImport } from './routes/_authenticated/admin.text'
+import { Route as AuthenticatedAdminTryonPrepRouteImport } from './routes/_authenticated/admin.tryon-prep'
 import { Route as AuthenticatedAdminViralsRouteImport } from './routes/_authenticated/admin.virals'
 import { Route as AuthenticatedAdminVisualIndexRouteImport } from './routes/_authenticated/admin.visual-index'
 import { Route as AuthenticatedAdminVoiceRouteImport } from './routes/_authenticated/admin.voice'
@@ -1176,6 +1177,12 @@ const AuthenticatedAdminTextRoute = AuthenticatedAdminTextRouteImport.update({
   path: '/text',
   getParentRoute: () => AuthenticatedAdminRoute,
 } as any)
+const AuthenticatedAdminTryonPrepRoute =
+  AuthenticatedAdminTryonPrepRouteImport.update({
+    id: '/tryon-prep',
+    path: '/tryon-prep',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
 const AuthenticatedAdminViralsRoute =
   AuthenticatedAdminViralsRouteImport.update({
     id: '/virals',
@@ -1792,6 +1799,7 @@ export interface FileRoutesByFullPath {
   '/admin/partners': typeof AuthenticatedAdminPartnersRoute
   '/admin/roles': typeof AuthenticatedAdminRolesRoute
   '/admin/text': typeof AuthenticatedAdminTextRoute
+  '/admin/tryon-prep': typeof AuthenticatedAdminTryonPrepRoute
   '/admin/virals': typeof AuthenticatedAdminViralsRoute
   '/admin/visual-index': typeof AuthenticatedAdminVisualIndexRoute
   '/admin/voice': typeof AuthenticatedAdminVoiceRoute
@@ -2023,6 +2031,7 @@ export interface FileRoutesByTo {
   '/admin/partners': typeof AuthenticatedAdminPartnersRoute
   '/admin/roles': typeof AuthenticatedAdminRolesRoute
   '/admin/text': typeof AuthenticatedAdminTextRoute
+  '/admin/tryon-prep': typeof AuthenticatedAdminTryonPrepRoute
   '/admin/virals': typeof AuthenticatedAdminViralsRoute
   '/admin/visual-index': typeof AuthenticatedAdminVisualIndexRoute
   '/admin/voice': typeof AuthenticatedAdminVoiceRoute
@@ -2278,6 +2287,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/partners': typeof AuthenticatedAdminPartnersRoute
   '/_authenticated/admin/roles': typeof AuthenticatedAdminRolesRoute
   '/_authenticated/admin/text': typeof AuthenticatedAdminTextRoute
+  '/_authenticated/admin/tryon-prep': typeof AuthenticatedAdminTryonPrepRoute
   '/_authenticated/admin/virals': typeof AuthenticatedAdminViralsRoute
   '/_authenticated/admin/visual-index': typeof AuthenticatedAdminVisualIndexRoute
   '/_authenticated/admin/voice': typeof AuthenticatedAdminVoiceRoute
@@ -2534,6 +2544,7 @@ export interface FileRouteTypes {
     | '/admin/partners'
     | '/admin/roles'
     | '/admin/text'
+    | '/admin/tryon-prep'
     | '/admin/virals'
     | '/admin/visual-index'
     | '/admin/voice'
@@ -2765,6 +2776,7 @@ export interface FileRouteTypes {
     | '/admin/partners'
     | '/admin/roles'
     | '/admin/text'
+    | '/admin/tryon-prep'
     | '/admin/virals'
     | '/admin/visual-index'
     | '/admin/voice'
@@ -3019,6 +3031,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/partners'
     | '/_authenticated/admin/roles'
     | '/_authenticated/admin/text'
+    | '/_authenticated/admin/tryon-prep'
     | '/_authenticated/admin/virals'
     | '/_authenticated/admin/visual-index'
     | '/_authenticated/admin/voice'
@@ -4417,6 +4430,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminTextRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
+    '/_authenticated/admin/tryon-prep': {
+      id: '/_authenticated/admin/tryon-prep'
+      path: '/tryon-prep'
+      fullPath: '/admin/tryon-prep'
+      preLoaderRoute: typeof AuthenticatedAdminTryonPrepRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
     '/_authenticated/admin/virals': {
       id: '/_authenticated/admin/virals'
       path: '/virals'
@@ -4980,6 +5000,7 @@ interface AuthenticatedAdminRouteChildren {
   AuthenticatedAdminPartnersRoute: typeof AuthenticatedAdminPartnersRoute
   AuthenticatedAdminRolesRoute: typeof AuthenticatedAdminRolesRoute
   AuthenticatedAdminTextRoute: typeof AuthenticatedAdminTextRoute
+  AuthenticatedAdminTryonPrepRoute: typeof AuthenticatedAdminTryonPrepRoute
   AuthenticatedAdminViralsRoute: typeof AuthenticatedAdminViralsRoute
   AuthenticatedAdminVisualIndexRoute: typeof AuthenticatedAdminVisualIndexRoute
   AuthenticatedAdminVoiceRoute: typeof AuthenticatedAdminVoiceRoute
@@ -5008,6 +5029,7 @@ const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
   AuthenticatedAdminPartnersRoute: AuthenticatedAdminPartnersRoute,
   AuthenticatedAdminRolesRoute: AuthenticatedAdminRolesRoute,
   AuthenticatedAdminTextRoute: AuthenticatedAdminTextRoute,
+  AuthenticatedAdminTryonPrepRoute: AuthenticatedAdminTryonPrepRoute,
   AuthenticatedAdminViralsRoute: AuthenticatedAdminViralsRoute,
   AuthenticatedAdminVisualIndexRoute: AuthenticatedAdminVisualIndexRoute,
   AuthenticatedAdminVoiceRoute: AuthenticatedAdminVoiceRoute,
