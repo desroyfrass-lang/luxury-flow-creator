@@ -30,7 +30,8 @@ export const PLATFORM_ATLAS: AtlasEntry[] = [
   { name: "Academy", path: "/academy", purpose: "Builder Paths and project-based lessons, used just-in-time — never as homework." },
 
   // Creation
-  { name: "FV Studios", path: "/studio", purpose: "Frass Vision Studios — AI video, content, Phone Content Mode, credits." },
+  { name: "FV Studios", path: "/studio", purpose: "Frass Vision Studios — content, Phone Content Mode, credits. AI image and video generation is NOT configured yet; never offer to make images or video." },
+  { name: "Fashion Studio", path: "/studios/fashion", purpose: "The Founder's central fashion creative desk — verified product handoff, design briefs, approvals. Try-on, image/video and capsules are not connected here yet." },
   { name: "Builder Vault", path: "/vault", purpose: "Every asset, findable — files, notes, brand kits, knowledge." },
   { name: "Affiliate", path: "/workspace/affiliate", purpose: "Campaigns, links, commission simulator, attribution." },
   { name: "Brand Partnerships", path: "/brand-partnerships", purpose: "Brands, creators and campaign collaborations." },
@@ -50,7 +51,8 @@ export const PLATFORM_ATLAS: AtlasEntry[] = [
   { name: "Frass Kicks", path: "/frass-district/men", purpose: "Sneaker district — Casual, Classic, Street." },
   { name: "Frass Drip / Bare Drip / Plus+", path: "/frass-district", purpose: "Apparel houses, mirrored architecture across Plus+ and Bare Drip." },
   { name: "Frass Kids", path: "/frass-kids", purpose: "Kids Valley — eight departments by age and gender, School Drip architecture." },
-  { name: "Frass Shape", path: "/frass-shape", purpose: "Shapewear and wellness flagship with the AI Fit Assistant." },
+  { name: "Frass Shape", path: "/frass-shape", purpose: "The shapewear department — shop by goal and fit guidance. Not the try-on room." },
+  { name: "Try-On", path: "/try-on", purpose: "The shared Frass virtual try-on for signed-in members, using live-shop cart items. Unpublished supplier drafts cannot use it yet." },
   { name: "Bridal", path: "/bridal", purpose: "The Wedding Village — checklist, concierge, vault, marketplace." },
   { name: "Afro Designers", path: "/afro-designers", purpose: "Designer house and collections." },
   { name: "Lookbooks & Capsules", path: "/capsules", purpose: "Seasonal capsules and lookbooks." },
