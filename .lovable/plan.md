@@ -1,30 +1,18 @@
-# Shopify reconnected — resume the CJ one-product pilot
+# CJ pilot — Step 2 (one unpublished Shopify draft), awaiting Founder decisions
 
-## Plain English first
-Your Shopify store (3hekgw-kr.myshopify.com) is connected to Lovable again — the expired temporary pass is replaced and new access is stored securely. The blocker that stopped the CJ import is gone. What's next: verify the connection with a harmless read, confirm the pilot product's details, then create ONE unpublished draft from the real CJ My Products record using the existing agreed pricing logic.
+## Step 1 results (read-only, done)
+- Shopify admin access: AUTHORIZED. Read 1 product worked; the store has 79 products.
+- Pilot saved record: Soft Life Chiffon Top, draft, unpublished, 6 variants (Sky Blue S–3XL), all 6 share 1 photo. Its saved category is Women's Vacay Drip > Vacation Fits.
+- Platform allocation in the database: 8% (last changed 7 Aug 2026). Memory says 10%.
+- Matching Shopify collection exists: `womens-vacay-drip-vacation-fits` (Women's Vacay Drip - Vacation Fits). Another option is `womens-work-drip-work-blouses`, which was the original P1 classification.
+- Not re-checked live this turn: the CJ My Products listing itself (no read-only path from chat). Step 2 re-reads it on the server before anything is written.
 
-## Current state (verified earlier, to re-confirm)
-- CJ pilot product: CJQB2922537 — Soft Life Chiffon Top, already saved privately as an unpublished draft in /workspace/vendors. CJ cost $6.97, lowest US shipping $7.35 → landed cost $14.32.
-- Pricing floor logic exists: src/lib/commerce/pricing-floor.ts (minimum guardrail only, not a final price).
-- Conflicting platform-allocation values: database setting says 8%, project memory says 10%. Must be settled before any price is written.
+## Founder decisions needed before Step 2
+1. Allocation: 8% (floor $21.15) or 10% (floor $21.79), based on $14.32 landed cost.
+2. Retail price at or above that floor. The floor is a minimum, not a price.
+3. Collection: Vacation Fits (matches the saved category) or Work Blouses.
 
-## Step 1 — Harmless read-only verification (no writes)
-- Read 1 product through the app's existing Shopify admin path to confirm authorization works.
-- Confirm the pilot CJQB2922537 record in CJ My Products and its variants/images are reachable.
-- Re-read the saved pricing allocation value and the target collection; if the 8%/10% conflict or the collection is still unresolved, STOP and report — no product is created.
-
-## Step 2 — One unpublished Shopify draft (only if Step 1 fully passes)
-- Use the real CJ My Products record: accurate variants, images, stable CJ supplier references, canonical link to the saved draft.
-- Apply the existing pricing engine's floor/guardrails; no invented prices.
-- Save the per-product editable Frassy hashtag list with the product.
-- Verify by reading the draft back from Shopify: product, variants, images, collection match.
-- Only after a successful readback, mark the corresponding INTERNAL queue record imported. Never touch CJ's own My Products list.
-
-## Hard rules (unchanged)
-- Never publish the draft, never bulk import the other 494 products, never delete or clear CJ My Products, never deploy to production, no AI image generation.
-- Try-On work stays paused.
-- If any dependency fails verification, STOP and report instead of inventing data.
-
-## Founder decisions still needed before Step 2
-1. Platform allocation: 8% (database) or 10% (memory)?
-2. Target Shopify collection for the pilot product.
+## Step 2 (only after approval)
+- Server re-reads CJ My Products for CJQB2922537, then creates ONE draft (unpublished) Shopify product with the 6 variants, the real photo, CJ supplier references, the chosen collection, the approved price and the editable Frassy hashtags.
+- Read it back from Shopify to confirm. Only after that, mark the internal queue record as imported.
+- Never publish, never clear CJ, no bulk import, no deploy, no AI images. Try-On stays paused.
