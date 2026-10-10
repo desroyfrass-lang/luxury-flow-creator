@@ -1,5 +1,8 @@
 # Roadmap
 
+- [x] Narrow variant picker: verified one Sky Blue image linked to S/M/L/XL/2XL/3XL, added local-only selection alongside unchanged gallery; 41 focused/regression tests and isolated desktop/phone component browser checks passed, including image decoding and missing/broken-image fallbacks; automatic build OK. No product writes or P2 connections.
+- [ ] Founder browser verification of saved-card variant selection alongside gallery/naming/edit controls — authenticated workspace flow not tested in this pass.
+
 - [x] Pilot P1: restore cascading taxonomy choices and breadcrumb, separate manual entry, verify saved product read-only, and validate without creating records (32 tests passed; automatic build OK).
 - [ ] Founder browser verification of Pilot P1 category choices and collapsed manual entry — automated browser stops at the existing device/password identity check; no bypass permitted.
 
