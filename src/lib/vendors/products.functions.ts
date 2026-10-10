@@ -58,7 +58,7 @@ export const listMyVendorWorkspace = createServerFn({ method: "GET" })
     if (ids.length === 0) return { identity, vendors: [], products: [] };
     const { data: products, error: pErr } = await sb
       .from("canonical_products")
-      .select("id, vendor_id, title, primary_store, overlays, draft_status, publication_status, vendor_offers(id, sku, unit_cost, currency, stock_quantity, lead_time_min_days, lead_time_max_days, fulfillment_mode, ip_protection_level, active), product_sources(source_type, source_ref)")
+      .select("id, vendor_id, title, primary_store, category_key, overlays, draft_status, publication_status, vendor_offers(id, sku, unit_cost, currency, stock_quantity, lead_time_min_days, lead_time_max_days, fulfillment_mode, ip_protection_level, active), product_sources(source_type, source_ref)")
       .in("vendor_id", ids)
       .order("created_at", { ascending: false })
       .limit(200);

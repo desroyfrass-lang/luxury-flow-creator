@@ -7,8 +7,9 @@ import { useServerFn } from "@tanstack/react-start";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { PRIMARY_STORES, TAXONOMY, getTaxonomyNode } from "@/lib/taxonomy/registry";
-import { PILOT_CATEGORY, PILOT_CJ_PID, type NameSuggestion } from "@/lib/vendors/cj-pilot";
+import { Link } from "@tanstack/react-router";
+import { TAXONOMY, getTaxonomyNode } from "@/lib/taxonomy/registry";
+import { PILOT_CATEGORY, PILOT_CJ_PID, isPilotCategoryAllowed, type NameSuggestion } from "@/lib/vendors/cj-pilot";
 import { createPilotDraft, getCjPilotDetail, suggestPilotNames } from "@/lib/vendors/cj-pilot.functions";
 import { createVendorProfile } from "@/lib/vendors/products.functions";
 
@@ -20,7 +21,11 @@ const STYLE_LABEL: Record<string, string> = {
 
 type Brand = { id: string; display_name: string; verification_status: string };
 
-export function CjPilotPanel({ supplierBrands, onCreated }: { supplierBrands: Brand[]; onCreated: () => void }) {
+export function CjPilotPanel({ supplierBrands, existingDraft, onCreated }: {
+  supplierBrands: Brand[];
+  existingDraft: { id: string; title: string; category_key: string | null } | null;
+  onCreated: () => void;
+}) {
   const detailFn = useServerFn(getCjPilotDetail);
   const namesFn = useServerFn(suggestPilotNames);
   const createFn = useServerFn(createPilotDraft);
@@ -29,7 +34,7 @@ export function CjPilotPanel({ supplierBrands, onCreated }: { supplierBrands: Br
   const [open, setOpen] = useState(false);
   const detail = useQuery({ queryKey: ["cj-pilot", PILOT_CJ_PID], queryFn: () => detailFn(), enabled: open, retry: false, staleTime: 300_000 });
 
-  const [store, setStore] = useState<string>(PILOT_CATEGORY.primaryStore);
+  const store = PILOT_CATEGORY.primaryStore; // locked: Pilot P1 is Frass Drip → Women only
   const [category, setCategory] = useState<string>(PILOT_CATEGORY.categoryKey);
   const [suggestions, setSuggestions] = useState<NameSuggestion[]>([]);
   const [recommended, setRecommended] = useState<string | null>(null);
@@ -40,7 +45,11 @@ export function CjPilotPanel({ supplierBrands, onCreated }: { supplierBrands: Br
   const [createdId, setCreatedId] = useState<string | null>(null);
   const [newBrandName, setNewBrandName] = useState("CJ Dropshipping");
 
-  // Remember the supplier brand: auto-pick when exactly one exists.
+  // Remember the supplier brand: a saved brand is picked automatically when it is the only one.
+  const effectiveVendorId =
+    vendorId && supplierBrands.some((b) => b.id === vendorId) ? vendorId
+    : supplierBrands.length === 1 ? supplierBrands[0].id
+    : vendorId;
   useEffect(() => {
     if (!vendorId && supplierBrands.length === 1) setVendorId(supplierBrands[0].id);
   }, [supplierBrands, vendorId]);
@@ -65,22 +74,23 @@ export function CjPilotPanel({ supplierBrands, onCreated }: { supplierBrands: Br
 
   const create = useMutation({
     mutationFn: () =>
-      createFn({ data: { vendorId, finalName, primaryStore: store, categoryKey: category, confirmName: true, confirmCategory: true } }),
+      createFn({ data: { vendorId: effectiveVendorId, finalName: finalName.trim(), primaryStore: store, categoryKey: category, confirmName: true, confirmCategory: true } }),
     onSuccess: (r) => { setCreatedId(r.id); toast.success("Private draft created. Nothing was published."); onCreated(); },
     onError: (e: Error) => toast.error(e.message),
   });
 
-  const categories = TAXONOMY.filter((n) => n.store === store && n.kind !== "service");
+  const categories = TAXONOMY.filter((n) => n.kind === "product" && n.status === "active" && isPilotCategoryAllowed(store, n.key));
   const node = getTaxonomyNode(category);
   const d = detail.data;
   const missing = [
-    !vendorId && "choose or create a supplier brand",
+    !effectiveVendorId && "create or choose a supplier brand",
     finalName.trim().length < 3 && "enter a final name (3+ letters)",
-    category !== PILOT_CATEGORY.categoryKey && "choose Work Blouses as the category",
+    !node && "choose a category",
     !confirmName && "tick the name confirmation",
     !confirmCategory && "tick the category confirmation",
   ].filter(Boolean) as string[];
   const ready = Boolean(d && missing.length === 0 && !createdId);
+  const saved = createdId ? { id: createdId, title: finalName.trim(), category_key: category } : existingDraft;
 
   return (
     <section className="mt-12 rounded-xl border border-[color:var(--gold)]/50 p-5" aria-labelledby="cj-pilot-h">
@@ -90,7 +100,9 @@ export function CjPilotPanel({ supplierBrands, onCreated }: { supplierBrands: Br
         Only this one item from your CJ My Products. The other 494 stay untouched. Nothing is published.
       </p>
 
-      {!open ? (
+      {saved ? (
+        <PilotSaved draft={saved} justCreated={Boolean(createdId)} />
+      ) : !open ? (
         <Button className="mt-4" variant="outline" onClick={() => setOpen(true)}>Read it from CJ</Button>
       ) : detail.isLoading ? (
         <p className="mt-4 text-sm text-muted-foreground">Checking it is in your CJ My Products, then reading details…</p>
@@ -112,24 +124,19 @@ export function CjPilotPanel({ supplierBrands, onCreated }: { supplierBrands: Br
             </div>
           </div>
 
-          <div className="grid gap-3 sm:grid-cols-2">
-            <label className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground">Department
-              <select className="mt-1 w-full rounded-sm border border-border bg-background px-2 py-2 text-sm normal-case tracking-normal" value={store}
-                onChange={(e) => { setStore(e.target.value); setCategory(""); setConfirmCategory(false); }}>
-                {PRIMARY_STORES.map((s) => <option key={s.id} value={s.id}>{s.title}</option>)}
-              </select>
-            </label>
-            <label className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground">Category
+          <div>
+            <div className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground">Where it goes</div>
+            <p className="mt-1 text-xs text-muted-foreground">
+              This pilot is limited to <strong>Frass Drip → Women</strong>. You choose the exact category; only Women's Drip categories are listed, so every choice here is valid. Frassy's starting suggestion is Work Blouses.
+            </p>
+            <label className="mt-2 block text-[10px] uppercase tracking-[0.2em] text-muted-foreground">Category
               <select className="mt-1 w-full rounded-sm border border-border bg-background px-2 py-2 text-sm normal-case tracking-normal" value={category}
                 onChange={(e) => { setCategory(e.target.value); setConfirmCategory(false); }}>
                 <option value="">Choose…</option>
-                {categories.map((n) => <option key={n.key} value={n.key}>{n.title}</option>)}
+                {categories.map((n) => <option key={n.key} value={n.key}>{n.title}{n.key === PILOT_CATEGORY.categoryKey ? " (Frassy's suggestion)" : ""}</option>)}
               </select>
             </label>
           </div>
-          {category && category !== PILOT_CATEGORY.categoryKey && (
-            <p className="text-xs text-[color:var(--gold)]">The pilot is approved only for Women's Work Drip — Work Blouses. Other choices will be refused.</p>
-          )}
 
           <div>
             <div className="flex flex-wrap items-center gap-2">
@@ -161,12 +168,12 @@ export function CjPilotPanel({ supplierBrands, onCreated }: { supplierBrands: Br
 
           <div>
             <label className="block text-[10px] uppercase tracking-[0.2em] text-muted-foreground">Supplier brand (yours, stays pending until you verify it)
-              <select className="mt-1 w-full rounded-sm border border-border bg-background px-2 py-2 text-sm normal-case tracking-normal" value={vendorId} onChange={(e) => setVendorId(e.target.value)}>
+              <select className="mt-1 w-full rounded-sm border border-border bg-background px-2 py-2 text-sm normal-case tracking-normal" value={effectiveVendorId} onChange={(e) => setVendorId(e.target.value)}>
                 <option value="">{supplierBrands.length ? "Choose…" : "No supplier brand yet — create one below"}</option>
                 {supplierBrands.map((b) => <option key={b.id} value={b.id}>{b.display_name} ({b.verification_status})</option>)}
               </select>
             </label>
-            {!vendorId && (
+            {!effectiveVendorId && supplierBrands.length === 0 && (
               <div className="mt-3 rounded-sm border border-dashed border-border p-3">
                 <div className="text-xs">Create a pending supplier brand here (kind: supplier, owner: you, not verified).</div>
                 <p className="mt-1 text-xs text-muted-foreground">
@@ -189,9 +196,7 @@ export function CjPilotPanel({ supplierBrands, onCreated }: { supplierBrands: Br
               I confirm the category: <strong>{node?.title ?? "—"}</strong></label>
           </div>
 
-          {createdId ? (
-            <p className="text-sm">Draft created privately. It appears in your brand list above as a draft. Not published.</p>
-          ) : (
+          {createdId ? null : (
             <div>
               <Button disabled={!ready || create.isPending} onClick={() => create.mutate()}>
                 {create.isPending ? "Saving…" : "Create one private draft"}
@@ -203,5 +208,55 @@ export function CjPilotPanel({ supplierBrands, onCreated }: { supplierBrands: Br
         </div>
       ) : null}
     </section>
+  );
+}
+
+/** After saving: honest next steps. Only real, existing tools; nothing auto-generates, charges or publishes. */
+function PilotSaved({ draft, justCreated }: { draft: { id: string; title: string; category_key: string | null }; justCreated: boolean }) {
+  const node = draft.category_key ? getTaxonomyNode(draft.category_key) : null;
+  const steps = [
+    {
+      title: "Make image / video",
+      tool: "FV Studios → Create",
+      to: "/studios/create" as const,
+      blocker: "Studio productions start from a story brief, not a product. It cannot receive this draft's photos yet, so nothing would be carried over.",
+    },
+    {
+      title: "Send to capsules",
+      tool: "Capsule builder",
+      to: "/admin/capsules" as const,
+      blocker: "Capsules can only hold items from the existing live shop list. This draft lives in the new product list, so it cannot be added until the two are linked.",
+    },
+    {
+      title: "Send to try-ons",
+      tool: "Fitting Room",
+      to: "/try-on" as const,
+      blocker: "The Fitting Room only uses items in a shopper's cart from the live shop, and only accepts photos from trusted image hosts. CJ photos and unpublished drafts are not accepted yet.",
+    },
+  ];
+  return (
+    <div className="mt-5 space-y-5">
+      <div className="rounded-sm border border-[color:var(--gold)]/60 p-4">
+        <div className="text-[10px] uppercase tracking-[0.2em] text-[color:var(--gold)]">{justCreated ? "Saved just now" : "Already saved"} · private · not published</div>
+        <div className="mt-1 font-display text-2xl">{draft.title}</div>
+        <div className="text-xs text-muted-foreground">{node?.title ?? draft.category_key ?? "No category"} · Draft ID {draft.id.slice(0, 8)}…</div>
+        <p className="mt-2 text-xs text-muted-foreground">It also appears under your supplier brand above. Supplier stays unverified until you verify it.</p>
+      </div>
+      <div>
+        <div className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground">Next steps for this product</div>
+        <ul className="mt-2 space-y-2">
+          {steps.map((s) => (
+            <li key={s.title} className="rounded-sm border border-border p-3">
+              <div className="flex flex-wrap items-center justify-between gap-2">
+                <div className="text-sm font-medium">{s.title}</div>
+                <span className="rounded-full border border-border px-2 py-0.5 text-[10px] uppercase tracking-[0.2em] text-muted-foreground">Not connected yet</span>
+              </div>
+              <p className="mt-1 text-xs text-muted-foreground">{s.blocker}</p>
+              <Link to={s.to} className="mt-2 inline-block text-xs underline">Open {s.tool} on its own (this product will not be carried over)</Link>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
   );
 }
