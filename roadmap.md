@@ -42,4 +42,4 @@
 - [x] F1 Fashion Studio room at /studios/fashion (Founder/admin only, P2-0 handoff, honest sections, Fashionista Frassy greeting with core Frassy; denim-blue asset missing).
 - [x] Fashion Studio greeting uses Founder-approved Fashionista_Frassy_in_Frass_Studios.png (unmodified).
 - [x] R1 connection correction: preview picker label, visible verification status, no browser product claims
-- [ ] Restore creative cards, unchanged-edit Done, visible preselected handoff + refetch after save
+- [x] Restore creative cards, unchanged-edit Done, visible preselected handoff + refetch after save
