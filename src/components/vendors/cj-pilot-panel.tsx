@@ -14,6 +14,7 @@ import { PilotCategoryPicker } from "./pilot-category-picker";
 import { PILOT_CATEGORY, PILOT_CJ_PID, isPilotCategoryAllowed, isEditableProductCategory, type NameSuggestion } from "@/lib/vendors/cj-pilot";
 import { createPilotDraft, getCjPilotDetail, suggestPilotNames, updatePilotDraft } from "@/lib/vendors/cj-pilot.functions";
 import { createVendorProfile } from "@/lib/vendors/products.functions";
+import { SupplierVariantPicker } from "./supplier-variant-picker";
 
 const STYLE_LABEL: Record<string, string> = {
   simple_elegant: "Simple & elegant",
@@ -21,7 +22,7 @@ const STYLE_LABEL: Record<string, string> = {
   caribbean_frass: "Caribbean / Frass spirit",
 };
 
-type SavedVariant = { source_variant_ref: string; sku: string | null; option_label: string | null; supplier_cost: number | null; currency: string };
+type SavedVariant = { source_variant_ref: string; sku: string | null; option_label: string | null; supplier_cost: number | null; currency: string; image_url?: string | null };
 export type SavedDraft = { id: string; title: string; category_key: string | null; originalName?: string | null; media?: string[]; variants?: SavedVariant[]; cost?: number | null; draftStatus?: string; publicationStatus?: string };
 
 /** Supplier photos with a visible fallback when a CJ link fails — never silently dropped. */
@@ -162,6 +163,7 @@ export function CjPilotPanel({ supplierBrands, existingDraft, onCreated }: {
               stock and delivery time: unknown (needs destination, never guessed)
             </div>
             <SupplierPhotos urls={d.images} />
+            <SupplierVariantPicker variants={d.variants} />
           </div>
 
           <div>
@@ -290,6 +292,7 @@ function PilotSaved({ draft: initialDraft, justCreated, onSaved }: { draft: Save
         <div className="text-xs text-muted-foreground">{classificationBreadcrumb(draft.category_key)} · Draft ID {draft.id.slice(0, 8)}…</div>
         <div className="mt-3 text-[10px] uppercase tracking-[0.2em] text-muted-foreground">Saved name above · supplier's original name (private): <span className="normal-case tracking-normal">{draft.originalName ?? "not recorded"}</span></div>
         <SupplierPhotos urls={draft.media ?? []} />
+        <SupplierVariantPicker key={draft.id} variants={(draft.variants ?? []).map((v) => ({ ref: v.source_variant_ref, sku: v.sku, label: v.option_label, image: v.image_url ?? null }))} />
         {draft.variants && draft.variants.length > 0 && (
           <details className="mt-2 text-xs"><summary className="cursor-pointer text-muted-foreground">{draft.variants.length} sizes/colours · supplier cost {draft.cost != null ? `$${Number(draft.cost).toFixed(2)}` : "unknown"} (permanent)</summary>
             <ul className="mt-1 space-y-0.5">{draft.variants.map((v) => <li key={v.source_variant_ref}>{v.option_label ?? v.sku ?? v.source_variant_ref} · {v.supplier_cost != null ? `${v.currency} ${Number(v.supplier_cost).toFixed(2)}` : "cost unknown"}</li>)}</ul>

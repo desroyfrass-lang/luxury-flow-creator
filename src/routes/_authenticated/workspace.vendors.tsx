@@ -170,7 +170,7 @@ function VendorWorkspace() {
             existingDraft={(() => {
               const p = data.products.find((x) => x.product_sources?.some((src) => src.source_type === "cj" && src.source_ref === PILOT_CJ_PID));
               if (!p) return null;
-              const x = p as typeof p & { category_key?: string | null; supplier_original_name?: string | null; canonical_product_media?: Array<{ url: string; position: number; source: string }>; canonical_product_variants?: Array<{ source_variant_ref: string; sku: string | null; option_label: string | null; supplier_cost: number | null; currency: string }> };
+              const x = p as typeof p & { category_key?: string | null; supplier_original_name?: string | null; canonical_product_media?: Array<{ url: string; position: number; source: string }>; canonical_product_variants?: Array<{ source_variant_ref: string; sku: string | null; option_label: string | null; supplier_cost: number | null; currency: string; image_url: string | null }> };
               return {
                 id: p.id, title: p.title, category_key: x.category_key ?? null,
                 originalName: x.supplier_original_name ?? null,
