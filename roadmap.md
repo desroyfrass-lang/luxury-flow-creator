@@ -41,4 +41,4 @@
 - [x] P2-0 secure product handoff (read-only, Founder/owner, from saved records); P2-1/2/3 not started.
 - [x] F1 Fashion Studio room at /studios/fashion (Founder/admin only, P2-0 handoff, honest sections, Fashionista Frassy greeting with core Frassy; denim-blue asset missing).
 - [x] Fashion Studio greeting uses Founder-approved Fashionista_Frassy_in_Frass_Studios.png (unmodified).
-- [ ] R1 connection correction: preview picker label, visible verification status, no browser product claims
+- [x] R1 connection correction: preview picker label, visible verification status, no browser product claims
