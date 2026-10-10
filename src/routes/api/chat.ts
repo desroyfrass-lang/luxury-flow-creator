@@ -774,7 +774,12 @@ export const Route = createFileRoute("/api/chat")({
         // becomes trusted background only after this endpoint re-reads the saved
         // private product, owner and variant with the verified caller's session.
         let verifiedFashionContext = "";
+        // Safe, non-sensitive status the Fashion room shows; never silent.
+        let fashionHandoffStatus: { verified: boolean; reason: string } | null = null;
         const fashionIds = body.verifiedFashionHandoff;
+        if (fashionIds && body.districtPath?.toLowerCase() === "/studios/fashion") {
+          fashionHandoffStatus = { verified: false, reason: !verifiedToken ? "You are not signed in, so the product could not be checked." : "The product link is incomplete or malformed." };
+        }
         const uuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
         if (
           verifiedToken &&
@@ -800,7 +805,9 @@ export const Route = createFileRoute("/api/chat")({
                 fashionClient.from("canonical_products").select("id,title,category_key,draft_status,publication_status,vendor_id,vendor_profiles(owner_id)").eq("id", fashionIds.productId).maybeSingle(),
                 fashionClient.from("canonical_product_variants").select("id,product_id,source_variant_ref,sku,option_label,image_url").eq("id", fashionIds.variantId).maybeSingle(),
               ]);
-              if (!a.error && !s.error && !p.error && !v.error) {
+              if (a.error || s.error || p.error || v.error) {
+                fashionHandoffStatus = { verified: false, reason: "The saved product could not be checked right now. Please try again." };
+              } else {
                 const row = p.data as Record<string, unknown> | null;
                 const vendor = row?.vendor_profiles as { owner_id?: string } | null | undefined;
                 const product = row ? { ...row, vendor_owner_id: vendor?.owner_id ?? null } : null;
@@ -814,10 +821,15 @@ export const Route = createFileRoute("/api/chat")({
                   `Status: ${handoff.status.draft}; ${handoff.status.publication}`,
                   "Read-only. No image/video, capsule, try-on, order, charge, save, or publication action is connected.",
                 ].join("\n");
+                fashionHandoffStatus = { verified: true, reason: `Frassy can see ${handoff.name} (${handoff.variant.colour}${handoff.variant.size ? ` / ${handoff.variant.size}` : ""}).` };
               }
+            } else {
+              fashionHandoffStatus = { verified: false, reason: "Your sign-in could not be confirmed, so the product was not shared." };
             }
-          } catch {
+          } catch (e) {
             verifiedFashionContext = "";
+            const msg = e instanceof Error ? e.message : "";
+            fashionHandoffStatus = { verified: false, reason: /not allowed|own|access/i.test(msg) ? "You are not allowed to use this product here." : /not found|variant|match/i.test(msg) ? "This product or size was not found among your saved drafts." : /publish|reject|locked/i.test(msg) ? "This product is no longer an open draft, so it was not shared." : "The product could not be verified, so it was not shared." };
           }
         }
 
@@ -1076,7 +1088,9 @@ consolidated implementation prompt from the accumulated ledger.`
           ]),
           verifiedFashionContext
             ? `=== SERVER-VERIFIED FASHION HANDOFF — READ-ONLY BACKGROUND ===\n${verifiedFashionContext}\n=== END SERVER-VERIFIED FASHION HANDOFF ===`
-            : "",
+            : fashionHandoffStatus && !fashionHandoffStatus.verified
+              ? `=== FASHION HANDOFF NOT VERIFIED ===\nNo product facts are available. Reason: ${fashionHandoffStatus.reason} Do not guess or describe any product; say plainly you cannot see it.\n=== END ===`
+              : "",
           attachmentContext,
         ]
           .filter(Boolean)
@@ -1621,6 +1635,7 @@ the next move toward Legacy is. Never stop at helping someone earn a living.`;
             // FRASS-0556 — which brain answered, and why.
             router: { task: decision.task, provider: usedModel, why: decision.why },
             ...(auditReceipt ? { auditReceipt } : {}),
+            ...(fashionHandoffStatus ? { fashionHandoff: fashionHandoffStatus } : {}),
             ...(experienceContext === "founder"
               ? {
                   diagnostics: {
