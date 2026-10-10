@@ -218,6 +218,13 @@
       "when": 1791661478592,
       "tag": "0030_tryon_readiness_phase_b",
       "breakpoints": true
+    },
+    {
+      "idx": 31,
+      "version": "7",
+      "when": 1791661607490,
+      "tag": "0031_tryon_readiness_revoke_writes",
+      "breakpoints": true
     }
   ]
 }
