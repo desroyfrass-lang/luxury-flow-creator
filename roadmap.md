@@ -49,3 +49,5 @@
 - [x] Virtual Try-On Phase B (Founder-approved, 10 Oct): private Try-On Preparation Studio at /admin/tryon-prep, readiness records, audited decisions, re-review on photo/size/category change. No try-on run. Stop for review.
 - [x] Virtual Try-On Phase C technical setup (Founder-approved, 10 Oct): Founder-only CJ photo check on Try-On Prep; CJ servers allowed only on this pilot path. No AI generation. Next: separate approval for one generated pilot.
 - [ ] CJ one-product pilot — BLOCKED: Shopify reconnect needed; no approved retail markup exists (only profit guardrail: floor helper added in src/lib/commerce/pricing-floor.ts); allocation rate conflict 8% (DB) vs 10% (memory); CJ removal API unconfirmed.
+
+- [ ] CJ My Products -> ONE unpublished Shopify draft (blocked until Lovable Shopify admin authorization is restored)
