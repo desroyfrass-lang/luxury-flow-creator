@@ -1,23 +1,30 @@
-# Shopify reconnection — read-only diagnosis
+# Shopify reconnected — resume the CJ one-product pilot
 
 ## Plain English first
-No, I can't reconnect Shopify without you. The store's temporary pass has expired. Shopify only gives a new pass when the store owner signs in and approves it. It works like a hotel key card: once it runs out, the front desk (Shopify) only issues a new one to the guest whose name is on the booking (you). I can't print one myself.
+Your Shopify store (3hekgw-kr.myshopify.com) is connected to Lovable again — the expired temporary pass is replaced and new access is stored securely. The blocker that stopped the CJ import is gone. What's next: verify the connection with a harmless read, confirm the pilot product's details, then create ONE unpublished draft from the real CJ My Products record using the existing agreed pricing logic.
 
-## Verified evidence (checked today)
-- Authorization status: the store is claimed, but your Shopify account was never connected. Lovable was running on a temporary store token.
-- A harmless read (list 1 product) failed: "Online access token expired or missing." So the temporary token has expired.
-- There is no refresh key that would let the backend renew access on its own. A new approval needs your Shopify login.
+## Current state (verified earlier, to re-confirm)
+- CJ pilot product: CJQB2922537 — Soft Life Chiffon Top, already saved privately as an unpublished draft in /workspace/vendors. CJ cost $6.97, lowest US shipping $7.35 → landed cost $14.32.
+- Pricing floor logic exists: src/lib/commerce/pricing-floor.ts (minimum guardrail only, not a final price).
+- Conflicting platform-allocation values: database setting says 8%, project memory says 10%. Must be settled before any price is written.
 
-## Two separate Shopify connections in the app
-1. Storefront (the shop customers see): `src/lib/shopify.ts` uses the public storefront token. It is unaffected, so the live shop keeps showing products.
-2. Admin access (needed to create CJ draft products): this is the Lovable Shopify tool connection that just expired. Some app code (`rewards.functions.ts`, `frassy-tools.server.ts`) also mentions an admin token, `SHOPIFY_ACCESS_TOKEN`. I have not confirmed whether that token is saved or still valid, and I did not read or change it.
+## Step 1 — Harmless read-only verification (no writes)
+- Read 1 product through the app's existing Shopify admin path to confirm authorization works.
+- Confirm the pilot CJQB2922537 record in CJ My Products and its variants/images are reachable.
+- Re-read the saved pricing allocation value and the target collection; if the 8%/10% conflict or the collection is still unresolved, STOP and report — no product is created.
 
-CJ import needs #2 (admin access), not the storefront.
+## Step 2 — One unpublished Shopify draft (only if Step 1 fully passes)
+- Use the real CJ My Products record: accurate variants, images, stable CJ supplier references, canonical link to the saved draft.
+- Apply the existing pricing engine's floor/guardrails; no invented prices.
+- Save the per-product editable Frassy hashtag list with the product.
+- Verify by reading the draft back from Shopify: product, variants, images, collection match.
+- Only after a successful readback, mark the corresponding INTERNAL queue record imported. Never touch CJ's own My Products list.
 
-## What you need to do (one step)
-Approve this plan. I will then bring up Shopify's "Connect your Shopify account" approval card in chat. Sign in to Shopify as the store owner and click Approve. There is no separate web link: the approval card is the official path. If you prefer, you can also start it from the Shopify button in the editor's top bar.
+## Hard rules (unchanged)
+- Never publish the draft, never bulk import the other 494 products, never delete or clear CJ My Products, never deploy to production, no AI image generation.
+- Try-On work stays paused.
+- If any dependency fails verification, STOP and report instead of inventing data.
 
-## After you approve, and only then
-- Repeat the harmless read (list 1 product) to confirm access is back. Nothing gets written.
-- Report the result. No products are created, published or deleted. No credentials are changed or shown. Nothing is deployed.
-- The CJ pilot draft stays blocked until you confirm the pricing allocation (8% in the database vs 10% in memory) and the collection.
+## Founder decisions still needed before Step 2
+1. Platform allocation: 8% (database) or 10% (memory)?
+2. Target Shopify collection for the pilot product.
