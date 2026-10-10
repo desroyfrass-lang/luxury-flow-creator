@@ -45,3 +45,4 @@
 - [x] Restore creative cards, unchanged-edit Done, visible preselected handoff + refetch after save
 - [x] R2 persisted fashion design brief
 - [x] Step 1: correct Frassy platform map (Try-On, Frass Shape, Fashion Studio, FV Studios)
+- [x] Virtual Try-On Phase A (Founder-approved, 10 Oct): removed admin read access to customer try-on photos and results; owner-only access kept. Stop for review.
