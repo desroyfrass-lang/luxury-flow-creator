@@ -196,6 +196,7 @@ import { Route as AuthenticatedStudiosCalendarRouteImport } from './routes/_auth
 import { Route as AuthenticatedStudiosCharactersRouteImport } from './routes/_authenticated/studios.characters'
 import { Route as AuthenticatedStudiosConnectionsRouteImport } from './routes/_authenticated/studios.connections'
 import { Route as AuthenticatedStudiosCreateRouteImport } from './routes/_authenticated/studios.create'
+import { Route as AuthenticatedStudiosFashionRouteImport } from './routes/_authenticated/studios.fashion'
 import { Route as AuthenticatedStudiosJobsRouteImport } from './routes/_authenticated/studios.jobs'
 import { Route as AuthenticatedStudiosMonetizationRouteImport } from './routes/_authenticated/studios.monetization'
 import { Route as AuthenticatedStudiosPerformanceRouteImport } from './routes/_authenticated/studios.performance'
@@ -1240,6 +1241,12 @@ const AuthenticatedStudiosCreateRoute =
     path: '/create',
     getParentRoute: () => AuthenticatedStudiosRoute,
   } as any)
+const AuthenticatedStudiosFashionRoute =
+  AuthenticatedStudiosFashionRouteImport.update({
+    id: '/fashion',
+    path: '/fashion',
+    getParentRoute: () => AuthenticatedStudiosRoute,
+  } as any)
 const AuthenticatedStudiosJobsRoute =
   AuthenticatedStudiosJobsRouteImport.update({
     id: '/jobs',
@@ -1795,6 +1802,7 @@ export interface FileRoutesByFullPath {
   '/studios/characters': typeof AuthenticatedStudiosCharactersRoute
   '/studios/connections': typeof AuthenticatedStudiosConnectionsRoute
   '/studios/create': typeof AuthenticatedStudiosCreateRoute
+  '/studios/fashion': typeof AuthenticatedStudiosFashionRoute
   '/studios/jobs': typeof AuthenticatedStudiosJobsRoute
   '/studios/monetization': typeof AuthenticatedStudiosMonetizationRoute
   '/studios/performance': typeof AuthenticatedStudiosPerformanceRoute
@@ -2025,6 +2033,7 @@ export interface FileRoutesByTo {
   '/studios/characters': typeof AuthenticatedStudiosCharactersRoute
   '/studios/connections': typeof AuthenticatedStudiosConnectionsRoute
   '/studios/create': typeof AuthenticatedStudiosCreateRoute
+  '/studios/fashion': typeof AuthenticatedStudiosFashionRoute
   '/studios/jobs': typeof AuthenticatedStudiosJobsRoute
   '/studios/monetization': typeof AuthenticatedStudiosMonetizationRoute
   '/studios/performance': typeof AuthenticatedStudiosPerformanceRoute
@@ -2279,6 +2288,7 @@ export interface FileRoutesById {
   '/_authenticated/studios/characters': typeof AuthenticatedStudiosCharactersRoute
   '/_authenticated/studios/connections': typeof AuthenticatedStudiosConnectionsRoute
   '/_authenticated/studios/create': typeof AuthenticatedStudiosCreateRoute
+  '/_authenticated/studios/fashion': typeof AuthenticatedStudiosFashionRoute
   '/_authenticated/studios/jobs': typeof AuthenticatedStudiosJobsRoute
   '/_authenticated/studios/monetization': typeof AuthenticatedStudiosMonetizationRoute
   '/_authenticated/studios/performance': typeof AuthenticatedStudiosPerformanceRoute
@@ -2534,6 +2544,7 @@ export interface FileRouteTypes {
     | '/studios/characters'
     | '/studios/connections'
     | '/studios/create'
+    | '/studios/fashion'
     | '/studios/jobs'
     | '/studios/monetization'
     | '/studios/performance'
@@ -2764,6 +2775,7 @@ export interface FileRouteTypes {
     | '/studios/characters'
     | '/studios/connections'
     | '/studios/create'
+    | '/studios/fashion'
     | '/studios/jobs'
     | '/studios/monetization'
     | '/studios/performance'
@@ -3017,6 +3029,7 @@ export interface FileRouteTypes {
     | '/_authenticated/studios/characters'
     | '/_authenticated/studios/connections'
     | '/_authenticated/studios/create'
+    | '/_authenticated/studios/fashion'
     | '/_authenticated/studios/jobs'
     | '/_authenticated/studios/monetization'
     | '/_authenticated/studios/performance'
@@ -4481,6 +4494,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedStudiosCreateRouteImport
       parentRoute: typeof AuthenticatedStudiosRoute
     }
+    '/_authenticated/studios/fashion': {
+      id: '/_authenticated/studios/fashion'
+      path: '/fashion'
+      fullPath: '/studios/fashion'
+      preLoaderRoute: typeof AuthenticatedStudiosFashionRouteImport
+      parentRoute: typeof AuthenticatedStudiosRoute
+    }
     '/_authenticated/studios/jobs': {
       id: '/_authenticated/studios/jobs'
       path: '/jobs'
@@ -5005,6 +5025,7 @@ interface AuthenticatedStudiosRouteChildren {
   AuthenticatedStudiosCharactersRoute: typeof AuthenticatedStudiosCharactersRoute
   AuthenticatedStudiosConnectionsRoute: typeof AuthenticatedStudiosConnectionsRoute
   AuthenticatedStudiosCreateRoute: typeof AuthenticatedStudiosCreateRoute
+  AuthenticatedStudiosFashionRoute: typeof AuthenticatedStudiosFashionRoute
   AuthenticatedStudiosJobsRoute: typeof AuthenticatedStudiosJobsRoute
   AuthenticatedStudiosMonetizationRoute: typeof AuthenticatedStudiosMonetizationRoute
   AuthenticatedStudiosPerformanceRoute: typeof AuthenticatedStudiosPerformanceRoute
@@ -5031,6 +5052,7 @@ const AuthenticatedStudiosRouteChildren: AuthenticatedStudiosRouteChildren = {
   AuthenticatedStudiosCharactersRoute: AuthenticatedStudiosCharactersRoute,
   AuthenticatedStudiosConnectionsRoute: AuthenticatedStudiosConnectionsRoute,
   AuthenticatedStudiosCreateRoute: AuthenticatedStudiosCreateRoute,
+  AuthenticatedStudiosFashionRoute: AuthenticatedStudiosFashionRoute,
   AuthenticatedStudiosJobsRoute: AuthenticatedStudiosJobsRoute,
   AuthenticatedStudiosMonetizationRoute: AuthenticatedStudiosMonetizationRoute,
   AuthenticatedStudiosPerformanceRoute: AuthenticatedStudiosPerformanceRoute,

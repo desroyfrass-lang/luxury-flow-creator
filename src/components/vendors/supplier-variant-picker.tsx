@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { useServerFn } from "@tanstack/react-start";
+import { Link } from "@tanstack/react-router";
 import { getProductHandoff } from "@/lib/vendors/product-handoff.functions";
 import type { ProductHandoff } from "@/lib/vendors/product-handoff";
 import { groupVisualVariants, selectedVisualVariant, type VisualVariant } from "@/lib/vendors/variant-selection";
@@ -73,6 +74,7 @@ export function SupplierVariantPicker({ variants, productId }: { variants: reado
                   <div>{handoff.name} · {handoff.categoryPath}</div>
                   <div>{handoff.variant.colour}{handoff.variant.size ? ` / ${handoff.variant.size}` : ""} · SKU {handoff.variant.sku ?? "not supplied"} · variant {handoff.variant.sourceVariantRef}</div>
                   <div>Photo: {"reason" in handoff.photo ? handoff.photo.reason : "authentic supplier variant photo"}</div>
+                  <Link to="/studios/fashion" search={{ productId: handoff.productId, variantId: handoff.variant.id }} className="inline-block pt-1 underline">Open in Fashion Studio (re-checked there)</Link>
                 </div>
               ) : null}
               <p className="text-[10px] text-muted-foreground">Checks only. Nothing is sent to Capsules, Try-On or FV Studios yet, and nothing is saved or charged.</p>

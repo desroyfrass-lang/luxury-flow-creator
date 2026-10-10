@@ -267,20 +267,20 @@ function PilotSaved({ draft: initialDraft, justCreated, onSaved }: { draft: Save
   const steps = [
     {
       title: "Make image / video",
-      tool: "FV Studios → Create",
-      to: "/studios/create" as const,
-      blocker: "Studio productions start from a story brief, not a product. It cannot receive this draft's photos yet, so nothing would be carried over.",
+      tool: "FV Studios → Fashion Studio",
+      to: "/studios/fashion" as const,
+      blocker: "Fashion Studio can show this product once you pick a colour/size and press \"Prepare verified handoff\". Image/video making is not connected yet.",
     },
     {
       title: "Send to capsules",
-      tool: "Capsule builder",
-      to: "/admin/capsules" as const,
+      tool: "FV Studios → Fashion Studio",
+      to: "/studios/fashion" as const,
       blocker: "Capsules can only hold items from the existing live shop list. This draft lives in the new product list, so it cannot be added until the two are linked.",
     },
     {
       title: "Send to try-ons",
-      tool: "Fitting Room",
-      to: "/try-on" as const,
+      tool: "FV Studios → Fashion Studio",
+      to: "/studios/fashion" as const,
       blocker: "The Fitting Room only uses items in a shopper's cart from the live shop, and only accepts photos from trusted image hosts. CJ photos and unpublished drafts are not accepted yet.",
     },
   ];

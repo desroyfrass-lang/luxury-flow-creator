@@ -43,10 +43,11 @@ export const STUDIO_NAV: StudioNavItem[] = [
   { id: "jobs", label: "Generation Queue", icon: "⏳", to: "/studios/jobs", plain: "Every job waiting, running or failed." },
   { id: "providers", label: "Generation Services", icon: "🔧", to: "/studios/providers", plain: "Which service does which job." },
   { id: "usage", label: "Generation Usage", icon: "⚡", to: "/studios/usage", plain: "What generation costs, and what reuse saved." },
+  { id: "fashion", label: "Fashion Studio", icon: "👗", to: "/studios/fashion", plain: "Fashion projects, product context and approvals." },
   { id: "settings", label: "Settings", icon: "⚙️", to: "/studios/settings", plain: "How the studio behaves." },
 ];
 
-export const STUDIO_PRIMARY_NAV = ["dashboard", "create", "productions", "review", "publishing", "performance"] as const;
+export const STUDIO_PRIMARY_NAV = ["dashboard", "create", "fashion", "productions", "review", "publishing", "performance"] as const;
 
 export const STUDIO_SECONDARY_NAV = [
   { label: "Library", ids: ["assets", "library", "locations", "animation", "music", "thumbnails"] },
