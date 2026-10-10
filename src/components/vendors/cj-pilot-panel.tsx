@@ -15,6 +15,7 @@ import { PILOT_CATEGORY, PILOT_CJ_PID, isPilotCategoryAllowed, isEditableProduct
 import { createPilotDraft, getCjPilotDetail, suggestPilotNames, updatePilotDraft } from "@/lib/vendors/cj-pilot.functions";
 import { createVendorProfile } from "@/lib/vendors/products.functions";
 import { SupplierVariantPicker } from "./supplier-variant-picker";
+import type { ProductHandoff } from "@/lib/vendors/product-handoff";
 
 const STYLE_LABEL: Record<string, string> = {
   simple_elegant: "Simple & elegant",
