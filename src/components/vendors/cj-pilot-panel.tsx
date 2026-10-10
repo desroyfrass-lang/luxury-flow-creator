@@ -164,6 +164,7 @@ export function CjPilotPanel({ supplierBrands, existingDraft, onCreated }: {
             </div>
             <SupplierPhotos urls={d.images} />
             <SupplierVariantPicker variants={d.variants} />
+            <p className="mt-2 rounded-sm border border-dashed border-border p-2 text-xs" role="note">Preview from CJ, not yet a saved product. Save this product first; the verified Fashion Studio handoff is on the saved product card.</p>
           </div>
 
           <div>

@@ -2,12 +2,12 @@
 // server-verified). Shows a verified product handoff read-only; no writes,
 // generation, charges, provider orders or publishing.
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { getProductHandoff } from "@/lib/vendors/product-handoff.functions";
 import { FASHION_SECTIONS, parseFashionSearch } from "@/lib/studios/fashion-studio";
 import { FrassyChat } from "@/components/frassy-chat";
-import type { ProductHandoff } from "@/lib/vendors/product-handoff";
 
 export const Route = createFileRoute("/_authenticated/studios/fashion")({
   validateSearch: parseFashionSearch,
@@ -34,6 +34,7 @@ function FashionStudio() {
     enabled: Boolean(productId && variantId),
     retry: false,
   });
+  const [frassySees, setFrassySees] = useState<{ verified: boolean; reason: string } | null>(null);
 
   return (
     <div className="fashion-studio-light space-y-8 rounded-sm p-4 sm:p-6">
@@ -75,9 +76,19 @@ function FashionStudio() {
           tone="light"
           presentation="studio"
           presentationRoom="fashion"
-          workspaceContext={handoff.data ? fashionHandoffContext(handoff.data) : "Fashion Studio. No verified product handoff is present. Do not assume a product or claim any fashion action has been completed."}
+          workspaceContext={FASHION_ROOM_CONTEXT}
           verifiedFashionHandoff={productId && variantId ? { productId, variantId } : undefined}
+          onFashionHandoffStatus={setFrassySees}
         />
+        <p className="mt-2 text-xs text-muted-foreground" role="status" aria-label="What Frassy can see">
+          {!productId || !variantId
+            ? "Frassy sees no product: none was brought in."
+            : !frassySees
+              ? "Frassy checks the product on the server when you send your first message."
+              : frassySees.verified
+                ? `Verified on the server. ${frassySees.reason}`
+                : `Frassy cannot see this product. ${frassySees.reason}`}
+        </p>
       </section>
 
       <section aria-label="Fashion project sections" className="grid gap-3 sm:grid-cols-2">
@@ -97,15 +108,7 @@ function FashionStudio() {
   );
 }
 
-function fashionHandoffContext(handoff: ProductHandoff) {
-  return [
-    "Fashion Studio read-only product handoff verified again on the server.",
-    `Saved product: ${handoff.name}`,
-    `Classification: ${handoff.categoryPath}`,
-    `Selected supplier variant: ${handoff.variant.colour}${handoff.variant.size ? ` / ${handoff.variant.size}` : ""}`,
-    `SKU: ${handoff.variant.sku ?? "not supplied"}`,
-    `Supplier variant ID: ${handoff.variant.sourceVariantRef}`,
-    `Status: ${handoff.status.draft}; ${handoff.status.publication}`,
-    "This is background only. No image/video, capsule, try-on, order, charge, save, or publication tool is connected here.",
-  ].join("\n");
-}
+// Neutral room text only. Product facts reach Frassy solely through the
+// server-reverified handoff block in /api/chat, never from this browser.
+const FASHION_ROOM_CONTEXT =
+  "Fashion Studio. Product facts, if any, are supplied only by the server-verified handoff block. No image/video, capsule, try-on, order, charge, save, or publication tool is connected here.";
