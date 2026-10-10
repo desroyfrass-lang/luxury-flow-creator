@@ -43,3 +43,4 @@
 - [x] Fashion Studio greeting uses Founder-approved Fashionista_Frassy_in_Frass_Studios.png (unmodified).
 - [x] R1 connection correction: preview picker label, visible verification status, no browser product claims
 - [x] Restore creative cards, unchanged-edit Done, visible preselected handoff + refetch after save
+- [x] R2 persisted fashion design brief
