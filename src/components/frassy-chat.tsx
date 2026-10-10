@@ -168,6 +168,7 @@ export function FrassyChat({
   hideBeacon = false,
   workspaceContext,
   verifiedFashionHandoff,
+  onFashionHandoffStatus,
   openSignal = 0,
   presentation = "default",
   presentationRoom = "studio",
@@ -178,6 +179,7 @@ export function FrassyChat({
   hideBeacon?: boolean;
   workspaceContext?: string;
   verifiedFashionHandoff?: { productId: string; variantId: string };
+  onFashionHandoffStatus?: (status: { verified: boolean; reason: string }) => void;
   openSignal?: number;
   presentation?: "default" | "studio" | "daily";
   presentationRoom?: FrassyPresentationRoom;
@@ -541,6 +543,7 @@ export function FrassyChat({
           path: string;
           requiresAuth: boolean;
         } | null;
+        fashionHandoff?: { verified: boolean; reason: string };
         auditReceipt?: {
           engine: string;
           blocked?: boolean;
@@ -562,6 +565,7 @@ export function FrassyChat({
 
       // Stale-turn guard: a superseded or stopped turn can never write to the UI.
       if (turnRef.current !== myTurn) return;
+      if (data.fashionHandoff) onFashionHandoffStatus?.(data.fashionHandoff);
 
       // FRASS-0576 — a blocked audit never reaches the AI or the ledger. Show
       // the diagnostic and stop; the Founder must repair the registry or return
