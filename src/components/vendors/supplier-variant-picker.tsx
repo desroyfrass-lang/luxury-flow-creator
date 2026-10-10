@@ -72,7 +72,7 @@ export function SupplierVariantPicker({ variants, productId }: { variants: reado
                   <div className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground">Verified from saved records · ready for future tools</div>
                   <div>{handoff.name} · {handoff.categoryPath}</div>
                   <div>{handoff.variant.colour}{handoff.variant.size ? ` / ${handoff.variant.size}` : ""} · SKU {handoff.variant.sku ?? "not supplied"} · variant {handoff.variant.sourceVariantRef}</div>
-                  <div>Photo: {handoff.photo.url ? "authentic supplier variant photo" : handoff.photo.reason}</div>
+                  <div>Photo: {"reason" in handoff.photo ? handoff.photo.reason : "authentic supplier variant photo"}</div>
                 </div>
               ) : null}
               <p className="text-[10px] text-muted-foreground">Checks only. Nothing is sent to Capsules, Try-On or FV Studios yet, and nothing is saved or charged.</p>
