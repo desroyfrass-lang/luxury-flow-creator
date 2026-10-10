@@ -1,6 +1,7 @@
 # Roadmap
 
-- [ ] Pilot P1: restore cascading taxonomy choices and breadcrumb, separate manual entry, verify saved product read-only, and validate without creating records.
+- [x] Pilot P1: restore cascading taxonomy choices and breadcrumb, separate manual entry, verify saved product read-only, and validate without creating records (32 tests passed; automatic build OK).
+- [ ] Founder browser verification of Pilot P1 category choices and collapsed manual entry — automated browser stops at the existing device/password identity check; no bypass permitted.
 
 - [x] Revamp the existing `/studio` into a cinematic, creation-first FV Studios working room without changing commissioning safeguards.
 - [x] Add an authorized Founder Originals doorway into the existing protected `/studios` production system, preserving FRASS Chronicles, Frass Street, Frassy Street, and I Am Not My Hair as distinct originals.
