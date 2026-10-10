@@ -211,6 +211,13 @@
       "when": 1791660363598,
       "tag": "0029_tryon_privacy_phase_a",
       "breakpoints": true
+    },
+    {
+      "idx": 30,
+      "version": "7",
+      "when": 1791661478592,
+      "tag": "0030_tryon_readiness_phase_b",
+      "breakpoints": true
     }
   ]
 }
