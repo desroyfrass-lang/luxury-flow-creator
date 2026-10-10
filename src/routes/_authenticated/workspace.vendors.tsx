@@ -15,6 +15,7 @@ import { Input } from "@/components/ui/input";
 import { useAuthUserId } from "@/lib/auth/identity-watch";
 import { useIsAdmin } from "@/hooks/use-is-admin";
 import { CjPilotPanel } from "@/components/vendors/cj-pilot-panel";
+import { PILOT_CJ_PID } from "@/lib/vendors/cj-pilot";
 import {
   FULFILLMENT_MODES,
   VENDOR_KINDS,
@@ -165,6 +166,10 @@ function VendorWorkspace() {
         {isFounder && data ? (
           <CjPilotPanel
             supplierBrands={data.vendors.filter((v) => v.vendor_kind === "supplier")}
+            existingDraft={(() => {
+              const p = data.products.find((x) => x.product_sources?.some((src) => src.source_type === "cj" && src.source_ref === PILOT_CJ_PID));
+              return p ? { id: p.id, title: p.title, category_key: (p as { category_key?: string | null }).category_key ?? null } : null;
+            })()}
             onCreated={refresh}
           />
         ) : null}
