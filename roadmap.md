@@ -1,5 +1,7 @@
 # Roadmap
 
+- [ ] Narrow variant picker: verify saved colour/image mapping, add local-only colour/size selection alongside unchanged gallery, run focused tests; no product writes or P2 connections.
+
 - [x] Pilot P1: restore cascading taxonomy choices and breadcrumb, separate manual entry, verify saved product read-only, and validate without creating records (32 tests passed; automatic build OK).
 - [ ] Founder browser verification of Pilot P1 category choices and collapsed manual entry — automated browser stops at the existing device/password identity check; no bypass permitted.
 
