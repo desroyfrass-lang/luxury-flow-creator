@@ -8,7 +8,7 @@ import { streamText, Output } from "ai";
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import { validateClassification } from "@/lib/taxonomy/registry";
-import { PILOT_CJ_PID, isPilotCategoryAllowed, cleanSuggestions, isInMyProducts, mapCjDetail, NAME_STYLES, type PilotDetail } from "./cj-pilot";
+import { PILOT_CJ_PID, isPilotCategoryAllowed, isEditableProductCategory, cleanSuggestions, isInMyProducts, mapCjDetail, NAME_STYLES, type PilotDetail } from "./cj-pilot";
 
 async function requireFounderStaff(ctx: { supabase: any; userId: string }) {
   const [a, s] = await Promise.all([
