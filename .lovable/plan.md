@@ -1,69 +1,85 @@
-# Fashion Studio Destination Audit (read-only)
+# Fashion Creator Workspace: Reconciliation Audit (read-only)
 
-Nothing was changed, generated or charged.
+Nothing was changed, connected, generated, charged or published. The CJ pilot (Soft Life Chiffon) and the secure product handoff (P2-0) are frozen.
 
-## Short answer
-- There is no Fashion Studio room today, and no "Fashionista Frassy" anywhere. A search for "fashionista" across the whole app finds nothing.
-- Fashion pieces exist, but they're scattered across separate places. None of them can receive the verified product handoff yet.
-- Recommendation: one new private room inside the existing Frassy Studios, called Fashion Studio. It hosts the handoff and reuses the existing engines. Same Frassy, with "stylist" as a role she plays.
+## 1. What already exists (checked in code and data)
 
-## Where the buttons go today
-On the saved product card, the three buttons open:
-- "Make image/video" → `/studios/create`, the story/episode brief form
-- "Send to capsules" → `/admin/capsules`
-- "Send to try-ons" → `/try-on`, the shopper version
+| System | Route | Status | Data it owns | Reusable for fashion? |
+|---|---|---|---|---|
+| Merchandise Studio | `/workspace/merch` | REAL review layer, no publishing | `slogans` (257), `logo_treatments` (0), `merch_proposals` (0), `merch_blanks` (0), `pod_providers` (3), with role checks on the server | Yes: slogans, logo placement, proposal approval |
+| POD providers | inside Merch Studio | LISTED ONLY. Printful, Printify and Gelato appear as "available", with no live connection or API calls | `pod_providers` | Yes, as adapter slots |
+| Tapstitch | none | NOT BUILT. It appears nowhere in code or data | none | Would be one optional adapter |
+| CJ Dropshipping | `/admin/cj-import`, `/workspace/vendors` | REAL, read-only. Old queue holds 20 general items; the pilot has 1 private draft | `cj_import_queue`, canonical product tables | Yes: supplier adapter (pattern proven) |
+| Shopify | storefront and checkout | REAL for the live shop. Nothing writes drafts to it | external | Publication channel only, later |
+| Canonical products | `/workspace/vendors` | REAL: owner-only drafts, locked supplier records, change history, P2-0 handoff | `canonical_products`, media, variants, offers, sources | Yes: the master product record |
+| FV Studios (member) | `/studio` | REAL. Projects, AI credit wallet and ledger, studio operations | `studio_projects` (1), credit tables | Yes: charge-before-work credit rule |
+| Founder production studio | `/studios/*` | REAL engines (briefs, scenes, characters, assets, animations, review queue, providers), organised around shows and episodes | `studio_*` tables (2 assets) | Yes: asset library, review queue, characters, provider slots |
+| Studio Review Queue | `/studios/review` | REAL. Nothing publishes just because it was generated | `studio_reviews` | Yes: approval history |
+| Visual Review | `/visual-review` | REAL Founder page (server-checked) | `visual_uploads` (0) | Partly |
+| Founder Review Center / approvals | `/admin/approvals`, Control Room | REAL | `release_approvals` (0), `founder_audit_ledger` | Yes: final sign-off |
+| Creative / Frass Card | `/workspace/card`, `/card/$handle` | REAL: member card, profile, analytics | `business_cards` | Brand identity for designers |
+| Business Vaults | `/vaults/*`, `/business-vaults` | REAL. The Seamstress Vault is the engine behind Afro Designers ("one catalog, one inventory") | `vaults`, `vault_*`, `future_business_vaults` | Yes: designer business home |
+| Money Moves | `/money-moves` | REAL income planner | work items, launch state | Yes: links products to income |
+| Margins | `product_economics` table | TABLE ONLY. Exists with 0 rows; no screen fills it | `product_economics` | Yes: cost, fees and 10% platform share later |
+| Lookbook | `/lookbook/*` | Public display only, no builder | `lookbook_story_images` | Display layer |
+| Capsules | `/capsules`, `/admin/capsules` | REAL. Items must be old shop products (1 capsule exists) | `capsules`, `capsule_items` | Needs the draft link (P2-1) |
+| Try-on | `/try-on` | REAL shopper engine, paid AI image per try | `tryon_looks` (0) | Needs a Founder wrapper (P2-2) |
+| Afro Designers | `/afro-designers/*`, `/join` | REAL public showcase plus sign-up | designer data | Public face for designers |
+| Fashionista Frassy | none | NOT BUILT. No "fashionista" anywhere; no denim-blue couture look stored in code | none | Must be provided as an approved reference image |
 
-The product is never carried over, and the card says so.
+## 2. Gaps and conflicts found
+- Designs, artwork and garment specifications have no home of their own. Slogans and logos live in Merch, products in the vendor tables, and assets in Studios.
+- Supplier and printer adapters are listed but none is connected. Tapstitch doesn't exist.
+- Margins have a table but no way to fill it.
+- Naming conflict: project memory says the old name "Frassy Studio" is retired, but the private `/studios` area still calls itself "Frassy Studios". This needs your ruling before any new room is named.
+- Designers have no workspace with brand isolation. Product drafts are owner-only, but Merch and Studios are Founder/staff-only.
 
-## What exists today
+## 3. Recommendation: one private Fashion Studio at `/studios/fashion`
+One room, run by Fashionista Frassy, with sections chosen by role. It reuses what exists rather than building new engines.
 
-| Place | Route | What it really is | Fashion-ready? |
-|---|---|---|---|
-| Frass Vision Studios | `/fv-studios` | Public brochure for the creator company. No tools, no Frassy greeting | No |
-| Frassy Studios | `/studios/*`, private | Real production studio: briefs, scenes, characters, assets, animations, publishing, all built for shows and episodes. Has an embedded "Ask Frassy" chat panel | Partly. The engines are real, but organised around episodes |
-| Studio Characters | `/studios/characters` | Real. Locks a character's look, voice and wardrobe notes | Yes, for keeping Frassy's look consistent |
-| Admin Capsules | `/admin/capsules` | Real builder. Items must be old live-shop products | Not for drafts |
-| Try-on | `/try-on` | Real shopper engine with one AI image per try, under the shopper's account | Shopper only |
-| Lookbook | `/lookbook`, `/lookbook/$story` | Public lookbook stories with their own image table | Display only, no builder |
-| Collection Builder | `/collection` | Real "one piece at a time" flow: photograph a piece, Frassy writes the page, Founder approves | Closest existing "Frassy helps with fashion" flow, but built for a vintage boutique |
-| Frassy's room outfits | `frassy-look` and its outfit list | Dresses Frassy per room (hall, daily, workshop, freedom, celebration) and links her outfit to shop pieces | No studio or fashion room yet |
+```text
+Fashion Studio (private)
+ ├─ Designs & Artwork  -> Merch slogans/logos + Studio assets (FRASS-owned)
+ ├─ Garment Specs      -> new spec record linked to canonical product
+ ├─ Mockups            -> Studio assets, labelled "MOCKUP - not a sample"
+ ├─ Samples            -> real physical samples, logged separately
+ ├─ Products           -> canonical products + P2-0 handoff (CJ pilot intact)
+ ├─ Looks/Capsules/Try-on -> P2-1 / P2-2 (later)
+ ├─ Approvals          -> Studio Review Queue + Founder audit ledger
+ └─ Makers & Fulfilment -> adapter slots: CJ, Printful, Printify, Gelato,
+                           Tapstitch (optional), local makers, Seamstress Vault
+```
 
-## Why Frassy didn't appear when you arrived
-- Frassy's arrival greetings are a fixed list of rooms: Welcome Hall, home, Frass Hill, District, Kicks, Luxury House, Frass Drip, Bare Drip, Afro Designers, Capsules and others.
-- `/fv-studios`, `/studios` and `/try-on` are not on that list. A greeting was never built for them.
-- `/fv-studios` only mentions Frassy in its text. Inside `/studios` she's only an embedded chat box, not a welcome.
-- So nothing broke. The greeting simply never existed on those pages.
+- **Ownership:** Frass keeps the master copy of every design, artwork file, spec, mockup and approval. Providers only receive copies to produce.
+- **Who sees what:** the Founder and admins see everything. Each designer, brand or stylist sees only their own brand. This uses the same owner check the vendor tables already use.
+- **Portability limits:** a design file and spec can move between providers. Provider-specific items cannot: blank catalogue IDs, print-area templates, colour profiles, provider mockups, prices and delivery times. Each adapter keeps those fields separately and they must be re-checked when switching.
+- **Mockups vs samples:** a mockup is a picture; a sample is a physical item someone received and checked. Only a logged sample can mark a design "production-verified".
+- **Nothing automatic:** no AI images, no provider orders, no costs, no Shopify and no publishing without an explicit Founder click and its own approval step.
+- **Fashionista Frassy:** her approved denim-blue couture look is a design requirement, kept as her studio room look. Same core Frassy, with stylist as a role. Nothing is generated now; the approved image must be supplied or chosen from your existing files.
 
-## Recommended home
-One private Founder room: **Frassy Studios → Fashion Studio** (`/studios/fashion`). It is reached from the existing Studios menu and from the product card. It holds:
-1. The verified product and size the handoff brings in, shown read-only.
-2. Four tabs, each reusing an existing engine: Looks & Lookbook, Capsules, Try-on/Haul, Product image/video.
-3. Frassy greeting you as the stylist. It's the same character and model, with the stylist role added to her greeting and the room's outfit list, and her approved look kept.
+## 4. Phases (each needs your separate approval)
 
-No new engines and no shopper changes.
+| Phase | What | Credits (approx.) |
+|---|---|---|
+| F0 | Your decisions below and the naming ruling | 0 |
+| F1 | Private Fashion Studio shell: role-based sections, Fashionista Frassy greeting using the approved image, P2-0 handoff shown read-only, all other sections "Not connected yet" | 2-4 |
+| F2 | Design & spec record (Frass-owned), reusing Merch slogans/logos; brand isolation | 4-6 |
+| F3 | Mockup vs sample tracking and approval history through the Review Queue | 3-5 |
+| F4 | Margin calculator filling `product_economics` (cost, shipping, duties, fees, refunds, affiliate, 10% platform share); no live prices | 3-5 |
+| F5 | Provider adapter contract, plus ONE read-only adapter of your choice (no orders) | 4-8 |
+| F6 | Capsules, try-on and image/video tabs (P2-1, P2-2, P2-3) | 10-16 |
+| F7 | Designer and stylist onboarding (own brand, own uploads) | 6-10 |
 
-## Gaps to close (later approvals)
-- No `/studios/fashion` room or menu link.
-- No stylist greeting, and no room outfit for the studio.
-- Capsules can't hold drafts (the P2-1 database change).
-- No Founder-only try-on wrapper (P2-2).
-- Studio assets can't be tagged to a product (P2-3).
-- The lookbook has no builder. Possible later reuse of the Collection Builder pattern.
+Suggested order to save credits: F0 → F1 → F2 → F4 → F3 → F5 → F6 → F7.
 
-## Phased recommendation
-- **F1 Fashion Studio room** (about 2–4 credits): private page inside Frassy Studios, menu link, receives the P2-0 handoff, stylist greeting. Tabs say "Not connected yet" until their phase is done. Product card buttons point here.
-- **F2 Capsules tab** = P2-1 (about 3–5 credits).
-- **F3 Try-on/Haul tab** = P2-2 (about 3–5 credits, plus each AI image you choose to run).
-- **F4 Image/video tab** = P2-3 (about 4–6 credits).
-- **F5 Lookbook builder** (optional, about 4–6 credits): reuses the Collection Builder approval pattern.
-
-## Decisions for the Founder
-1. Room name: "Fashion Studio", "Frassy's Fitting Room", or something else?
-2. Stylist role: a new outfit for Frassy, or her approved look with a stylist greeting only?
-3. Should the product card buttons go to the new room once F1 exists? (Recommended: yes.)
-4. Should F1 be Founder-only, or also open to brand owners?
+## 5. Founder decisions
+1. Name: keep "Frassy Studios" for `/studios`, or rename it under "FV Studios" (memory says "Frassy Studio" is retired)?
+2. Fashionista Frassy image: which existing approved file is the denim-blue couture look? None is stored in code today.
+3. Who joins first after admins: designers, stylists or brands?
+4. Which provider gets the first read-only adapter: CJ (already proven), Printful, Printify, Gelato, or Tapstitch?
+5. Should physical samples be required before any made-to-order design can be published?
 
 ## Technical details
-- Files for F1: new `src/routes/_authenticated/studios.fashion.tsx`; a menu entry in `src/routes/_authenticated/studios.tsx`; a `/studios` greeting entry in `src/lib/frassy-destinations.ts`; a `studio` room in `src/lib/frassy/wardrobe.ts` if approved; links in `src/components/vendors/cj-pilot-panel.tsx`; reuse `getProductHandoff`.
-- Tests: Founder-only access, handoff loads only verified IDs, the greeting keeps the core character, existing studio and shopper routes stay the same.
-- Rollback: remove the one room file and menu link. No database changes in F1.
+- Evidence: `src/routes/_authenticated/workspace.merch.tsx` (724 lines, `merch.functions.ts` with server role checks); `pod_providers` rows Printful/Printify/Gelato "available"; no "tapstitch" match in `src`; `product_economics` and `release_approvals` hold 0 rows; `src/routes/_authenticated/studios.tsx` uses `requireFounderRoute` and an admin gate; `/studio` uses credit wallet and ledger functions; `src/lib/frassy/room-looks.ts` holds only the approved seated FV Studios look; `wardrobe.ts` rooms are hall, daily, workshop, freedom and celebration.
+- Likely F1 files: new `src/routes/_authenticated/studios.fashion.tsx`; `src/lib/studios/studios.ts` (menu); `src/lib/frassy/room-looks.ts` (add a fashion room look once the image is approved); reuse `getProductHandoff`.
+- Rollback for each phase: its own route or section and additive tables only; existing shopper, Merch, CJ and Studios flows stay as they are.
