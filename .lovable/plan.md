@@ -1,88 +1,88 @@
-# Frass Try-On Preparation Studio: staged plan (no building yet)
+# CJ to frasskicks.com: read-only audit and phased import plan
 
-## Plain English summary
-Customers keep shopping where they shop today. There is no "Try-On Mall". On any product that's ready, and in the cart, a customer presses "Try it on". That uses one private photo of themselves, which they can replace at any time.
+Virtual try-on work is paused. Nothing was changed while preparing this plan.
 
-Behind the scenes, a Founder/admin-only **Try-On Preparation Studio** checks each fashion product once: photos, sizes and suitability. Once checked, the product gets a **Try-On Ready** tag. It stays in its own collection and is never listed twice. The tag is removed only if the product's photos or sizes really change. Soft Life Chiffon Top is the pilot.
+## Plain-English summary
+There are two separate "queues":
+- **CJ's own list.** This is your "My Products" list inside your CJ account (about 495 items mentioned earlier; not re-counted today).
+- **Frass's internal review list** (`cj_import_queue`). It holds 20 items, all still "pending".
 
-Analogy: a fitting-room attendant checks each garment once before it goes on the shop floor. Customers never visit the back room.
+These 20 were not taken from your My Products list. They came from CJ's general public catalogue (`/product/list`). Several are clearly unsuitable for the shop: an adult toy, a tuning fork, a camping cart, thank-you cards and hang tags.
 
-## What exists today (checked in code and database)
-- **Try-On page** `/try-on`, signed-in members only.
-  - The engine is `generateTryOn` (`src/lib/tryon.functions.ts`). It runs only when the customer presses the button, uses Lovable AI image generation and saves results to `tryon_looks`.
-  - The cart drawer links to it (`cart-drawer.tsx` line 128). Product pages have no try-on button.
-- **Customer photos** live in the `customer_photos` table and the private `tryon-photos` storage. Customers can add and delete their own. **Admins can also view all customer photos and looks** (policies "Admins view all photos/looks"). That conflicts with "private photo" and is flagged below.
-- **Approved image sources** for try-on: Supabase, Shopify, Unsplash and Lovable only. **CJ photo servers are not allowed**, so the pilot can't be tried on yet.
-- **Size data:**
-  - New supplier sizes (`canonical_product_variants`) have size label, SKU, weight and photo, but no measurements.
-  - Live-shop sizes (`product_variants`) have options, price and availability, but no measurements.
-- **Founder/admin checks:** `has_role` checked on the server (`checkIsAdmin`, `requireFounderRoute`). Role changes go only through `founder_set_role`.
-- **R1 handoff, R2 design brief and the Step 1 map wording** all stay as they are.
+Today, nothing in Frass turns a reviewed item into a real shop product. The review screen can only mark an item "categorized" or "skipped". No code ever marks an item "imported", and nothing creates it in the Shopify store. So the queue can't empty itself on a verified import, because no import exists yet.
 
-## What I propose (new)
-### Data model (additive only)
-- `tryon_readiness` holds one record per product variant, covering both the live shop and new supplier products.
-  - Status: queued, in review, ready, needs re-review, or not supported.
-  - It also stores the try-on method, the approved garment photo, who approved it and when, and a short **fingerprint** of the photo and size details.
-- `variant_fit_measurements` (optional) holds measurements in cm/in per size (bust, waist, hip, length, foot length) and where each figure came from: supplier, measured or unknown.
-- **Automatic re-review:** if a variant's photo or size details change, the database moves it back to "needs re-review". Price or stock changes never do.
-- **Who can do what:** only Founder/admin can write readiness records. Shoppers can read only "ready" tags, with no internal notes. The approval itself happens through one audited database function, written to `founder_audit_ledger`.
+Analogy: we have a clipboard of items picked off a wholesaler's shelf, but no loading dock to put anything on the shop floor.
 
-### Which method fits which category
-| Category | Method | At first |
+## Verified facts (code and database reads)
+| Area | Finding | Evidence |
 |---|---|---|
-| Tops, dresses, bottoms, plus size, luxury | Full-body garment try-on (existing engine) | Supported |
-| Bridal gowns | Full-body, with an extra Founder review | Supported after testing |
-| Shoes / Kicks | Feet-and-legs photo method | Later; needs separate testing |
-| Shapewear / swim / intimates | Careful-content policy needed first | Paused |
-| Wigs / hair | Head-and-shoulders method | Later |
-| Kids | Not supported (child photo safety) | Excluded |
+| Internal queue | 20 rows, all `pending`; columns include cj_pid, cj_data, title, image, source/suggested price, brand, gender, category, tags, status, decided_by/at | DB query, `cj_import_queue` |
+| Queue source | `importCjPage` pulls CJ `/product/list` (public catalogue, keyword search), not My Products; skips duplicates by cj_pid | `src/lib/cj.functions.ts` 99-143 |
+| Statuses used | pending, categorized, skipped. "imported" is counted but never set | `cj.functions.ts` 90, 169, 195 |
+| Admin check | CJ queue functions check `admin` only, not `super_admin` (other rooms accept both) | `cj.functions.ts` 63-67 and others |
+| Prices | Suggested price = 2.5x CJ price, minimum $9.99. This is a guess, not a confirmed retail price | `cj.functions.ts` 123-124 |
+| CJ API calls in use | Read-only: get access token, `/product/list`, `/product/myProduct/query`, `/product/query`. No write or delete call exists | `cj.functions.ts`, `src/lib/vendors/cj-pilot.functions.ts` |
+| CJ token | Kept in memory per server instance only; a fresh login per cold start | `cj.functions.ts` 13-42 |
+| Shop product creation | No code creates Shopify products. The only Shopify admin use is order lookup | `src/lib/frassy-tools.server.ts` 162-176 |
+| Frass's own product records (canonical) | 1 product (Soft Life Chiffon Top), 1 source link; the draft path is wired only to the pilot CJ product | DB query, `cj-pilot.functions.ts` |
+| Stock and price sync | None exists, from CJ or anywhere else | code search |
+| Restriction checks | Rules exist but enforcement is off; the adult item in the queue would not be blocked automatically | project rules (R1/R2) |
 
-### Safeguards against false fit claims
-- Results are labelled **"Style preview, not a fit guarantee"**. No "perfect fit" or "your size" claims unless real measurements exist, and even then they're shown as guidance.
-- Frassy and the page copy must never claim exact fit. A test enforces that wording.
-- Nothing is generated until the customer presses "Try it on". Each press shows that it uses AI.
-- Customers can replace or delete their photo at any time. Photos are never used for anything else.
+## Not verified (needs proof before any claim)
+- **Whether CJ lets us remove items from your My Products list through its API, and which exact action is safe.** No such call exists in the code, and I have not confirmed one in CJ's documentation. Until it's confirmed in writing and tested on one item, Frass will **never claim the CJ-side list was cleared**. Only the internal Frass list can be marked processed.
+- How many items are in My Products today. A read-only page count is possible on request.
+- How the shop's collections are set up in Shopify, and whether they map to the Frass category list.
+- Live stock and shipping times from CJ.
 
-## Stages (each needs your separate approval)
-1. **Privacy first.** Remove admins' ability to view customer photos and looks, or limit it to a logged support request. Your decision. No new features in this stage.
-2. **Readiness records and the Preparation Studio** (Founder/admin only, inside the existing Studios area):
-   - the queue fills automatically from fashion products;
-   - review of photo, sizes and method;
-   - an audited "Mark Try-On Ready" step.
+## Blocking defects
+1. No import step exists, so nothing reaches the shop or marks an item imported.
+2. The internal list is fed from the public catalogue, not from your chosen My Products.
+3. Suggested prices are a rule of thumb, not approved prices; selling at them would mean inventing prices.
+4. No duplicate guard exists against the Shopify store, only within the internal list.
+5. Unsuitable items sit in the list, and restriction checks are off.
+6. No stock or price refresh exists, so prices and stock could go stale after import.
+7. Errors are thrown to the screen; there is no import record for retries.
 
-   No generation. Pilot: Soft Life Chiffon Top.
-3. **Pilot test try-on (Founder only).**
-   - Allow CJ photo servers, for approved ready photos only.
-   - Run one Founder-pressed test with your own photo, using the existing engine. It costs AI usage per press.
-   - You approve the result before the Ready tag is shown to anyone.
-4. **Customer launch points.**
-   - A "Try it on" button on product pages, and per item in the cart, shown only when the item is Ready.
-   - One saved try-on photo, with Replace and Delete.
-   - Ready items stay in their collections; no new shop page.
+## Phased plan (each phase needs your separate approval)
+**Phase 0. Read-only counts (no writes).**
+- Count your CJ My Products list page by page.
+- List the shop's current Shopify collections.
+- Confirm in CJ's documentation whether removing an item from My Products is supported, and record the exact action. Report only.
 
-   This can only go live for items that are published to the shop, and the pilot draft isn't published.
-5. **Measurements and more categories** (shoes, bridal, wigs), each tested and approved separately.
+**Phase 1. One product, end to end.**
+- Pick one fashion item from My Products. You approve its name, category, collection and **retail price**.
+- The server re-reads it from CJ, creates one **draft** in Shopify (variants, all photos, supplier SKU/ID kept privately), and links it to the matching Frass product record.
+- It then reads the product back from Shopify and checks: variant count matches CJ, image count matches, collection assigned, supplier ID recorded.
+- Only after every check passes is the internal list item marked "imported", with the Shopify product ID and check results stored. If any check fails, it stays pending, with the reason recorded.
+- Nothing is published until you press publish.
 
-## Costs
-- Stages 1–2: none beyond building.
-- Stage 3 onward: one Lovable AI image request per press. Each one is shown, never automatic, and nothing runs in bulk.
+**Phase 2. Make it safe to repeat.**
+- One CJ product can only ever create one shop product, enforced by the database.
+- A record per import attempt, safe retries, restriction pre-checks (unsuitable items blocked), and super_admin accepted alongside admin.
 
-## Testing per stage
-- Database tests:
-  - only Founder/admin can mark items Ready;
-  - shoppers can read only "ready" tags, with no internal notes;
-  - a photo or size change resets the tag;
-  - a price change doesn't.
-- Images are refused unless they are approved ready photos from allowed sources.
-- Wording check: no fit-guarantee claims.
-- A walkthrough by you on desktop and phone.
+**Phase 3. Small batches.**
+- Batches of 10 from My Products that you've reviewed. The same per-item verification runs, and a summary report is produced.
 
-## Open decisions for you
-1. Should admins keep any access to customer try-on photos (for example support only, logged), or none?
-2. Is full-body clothing the only method for the pilot? (Recommended.)
-3. Keep the name "Frass Try-On Preparation Studio"?
+**Phase 4. Price and stock refresh.**
+- A scheduled read of CJ cost and stock. Changes are flagged for your approval; nothing is repriced automatically.
 
-## Verified vs not
-- **Checked:** storage is private; who can see customer photos; which size details exist; the cart link; that CJ photo servers are refused; the role checks.
-- **Not tested:** any live try-on, result quality, the CJ photo server setup, cost per use.
+**Phase 5 (only if Phase 0 proves it is supported).**
+- Remove an item from the CJ-side My Products list only after it is verified imported. Test it once on one item, with proof shown to you.
+
+## What you must approve before any writes
+1. Which list is the source: My Products (recommended) or the current 20-item list.
+2. What to do with the 20 current items: keep, skip, or review.
+3. The pricing rule, or approval of each price.
+4. Whether imported products start as Shopify drafts (recommended).
+5. Collection mapping for the first product.
+6. Any CJ-side removal, only after Phase 0 proves the exact safe action.
+
+## Parked: "Mark Try-On Ready" seems not to respond (read-only, not fixed)
+- Evidence: your audit ledger shows two successful "Start review" clicks (Sky Blue S and M, 20:05–20:06 UTC). It shows no Ready decision, and the database logs show no rejected Ready attempt.
+- Likely cause (unconfirmed): Ready needs a review note of at least 10 characters. Any refusal message shows only as small grey text under the buttons, so it's easy to miss.
+- A second possibility: the request didn't reach the database at all. That needs a browser check to confirm.
+- Parked until try-on work resumes.
+
+## Tested vs untested
+- Tested: database reads (queue counts and contents, product and source counts, audit ledger), plus code inspection.
+- Untested: any CJ API call today, Shopify collection reads, CJ removal support, and the Ready button in a browser.
