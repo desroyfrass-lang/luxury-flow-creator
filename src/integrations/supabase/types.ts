@@ -2135,6 +2135,60 @@ export type Database = {
         }
         Relationships: []
       }
+      fashion_design_briefs: {
+        Row: {
+          concept: string
+          created_at: string
+          created_by: string
+          id: string
+          notes: string
+          product_id: string
+          styling_direction: string
+          updated_at: string
+          updated_by: string
+          variant_id: string
+        }
+        Insert: {
+          concept?: string
+          created_at?: string
+          created_by: string
+          id?: string
+          notes?: string
+          product_id: string
+          styling_direction?: string
+          updated_at?: string
+          updated_by: string
+          variant_id: string
+        }
+        Update: {
+          concept?: string
+          created_at?: string
+          created_by?: string
+          id?: string
+          notes?: string
+          product_id?: string
+          styling_direction?: string
+          updated_at?: string
+          updated_by?: string
+          variant_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fashion_design_briefs_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "canonical_products"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fashion_design_briefs_variant_id_fkey"
+            columns: ["variant_id"]
+            isOneToOne: false
+            referencedRelation: "canonical_product_variants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       fast_track_progress: {
         Row: {
           completed_at: string | null
@@ -9416,6 +9470,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      can_access_fashion_brief: {
+        Args: { _product_id: string }
+        Returns: boolean
+      }
       create_classified_product_draft: {
         Args: {
           _category_key: string
