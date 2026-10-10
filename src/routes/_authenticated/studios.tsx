@@ -11,7 +11,7 @@ import { Button } from "@/components/ui/button";
 
 export const Route = createFileRoute("/_authenticated/studios")({
   // Atlas Recovery Phase 1 — server-verified Founder door before anything loads.
-  beforeLoad: requireFounderRoute,
+  beforeLoad: ({ location }) => requireFounderRoute({ location }),
   head: () => ({
     meta: [
       { title: "Frassy Studios | Frass Hill" },
@@ -95,7 +95,7 @@ function StudiosShell() {
         <div className="min-w-0 flex-1">
           <Outlet />
 
-          <section className="mt-14 rounded-lg border border-border/70 bg-card/40 p-5">
+          {pathname !== "/studios/fashion" ? <section className="mt-14 rounded-lg border border-border/70 bg-card/40 p-5">
             <div className="text-[10px] uppercase tracking-[0.3em] text-[color:var(--gold)]">Your production assistant</div>
             <h2 className="mt-1 font-display text-xl uppercase tracking-tight">Ask Frassy</h2>
             <p className="mt-1 text-sm text-muted-foreground">
@@ -105,7 +105,7 @@ function StudiosShell() {
             <div className="mt-4">
               <FrassyChat embedded tone="dark" />
             </div>
-          </section>
+          </section> : null}
         </div>
       </div>
     </main>

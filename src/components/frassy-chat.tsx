@@ -85,8 +85,9 @@ import {
 } from "@/components/ai-elements/conversation";
 import { Message, MessageContent } from "@/components/ai-elements/message";
 import {
-  FV_STUDIOS_FRASSY_LOOK,
+  frassyLookForRoom,
   studioPresenceFor,
+  type FrassyPresentationRoom,
   type FrassyStudioPresenceState,
 } from "@/lib/frassy/room-looks";
 import { studioConversationPresentation } from "@/lib/studio/studio-ui";
@@ -166,16 +167,20 @@ export function FrassyChat({
   tone,
   hideBeacon = false,
   workspaceContext,
+  verifiedFashionHandoff,
   openSignal = 0,
   presentation = "default",
+  presentationRoom = "studio",
   onOpenChange,
 }: {
   embedded?: boolean;
   tone?: "light" | "dark";
   hideBeacon?: boolean;
   workspaceContext?: string;
+  verifiedFashionHandoff?: { productId: string; variantId: string };
   openSignal?: number;
   presentation?: "default" | "studio" | "daily";
+  presentationRoom?: FrassyPresentationRoom;
   onOpenChange?: (open: boolean) => void;
 } = {}) {
   const dailyPresentation = presentation === "daily";
@@ -521,6 +526,7 @@ export function FrassyChat({
             momentumContext(readMomentum(readBalanceSignals() ?? NO_SIGNALS, loadMomentum())) ||
             undefined,
           memoryContext: workspaceContext || undefined,
+          verifiedFashionHandoff,
           stream: false,
         }),
       });
@@ -778,6 +784,8 @@ export function FrassyChat({
           ? "speaking"
           : "idle";
   const studioPresence = studioPresenceFor(studioPresenceState);
+  const presentationLook = frassyLookForRoom(presentationRoom);
+  const studioTitle = presentationRoom === "fashion" ? "Frassy · Fashionista Creative Director" : "Frassy · Studio Director";
 
   return (
     <div
@@ -806,7 +814,7 @@ export function FrassyChat({
       >
         <div className="flex min-w-0 items-center gap-3">
           {!dailyPresentation && <img
-            src={presentation === "studio" ? FV_STUDIOS_FRASSY_LOOK.image : symbolAsset.url}
+            src={presentation === "studio" ? presentationLook.image : symbolAsset.url}
             alt={presentation === "studio" ? "Frassy" : ""}
             className={
               presentation === "studio"
@@ -816,7 +824,7 @@ export function FrassyChat({
           />}
           <div>
             <div className="text-sm font-semibold text-[color:var(--ws-ink)]">
-              {presentation === "studio" ? "Frassy · Studio Director" : "Frassy"}
+              {presentation === "studio" ? studioTitle : "Frassy"}
             </div>
             <div className="text-xs text-[color:var(--ws-soft)]">
               {presentation === "studio"
@@ -974,17 +982,17 @@ export function FrassyChat({
 
       <div className={presentation === "studio" ? "frassy-studio-body min-h-0 flex-1" : "contents"}>
         {presentation === "studio" ? (
-          <div className="frassy-studio-director" aria-label="Frassy, FV Studios AI Director">
+          <div className="frassy-studio-director" aria-label={presentationRoom === "fashion" ? "Fashionista Frassy, Fashion Studio creative director" : "Frassy, FV Studios AI Director"}>
             <div className="frassy-studio-director-light" aria-hidden="true" />
             <div className="frassy-studio-presence">
-              <img src={studioPresence.image} alt={studioPresence.alt} />
+              <img src={presentationRoom === "fashion" ? presentationLook.image : studioPresence.image} alt={presentationRoom === "fashion" ? presentationLook.alt : studioPresence.alt} />
             </div>
             <div className="frassy-studio-voicewave" aria-hidden="true">
               {[0, 1, 2, 3, 4, 5, 6].map((bar) => (
                 <span key={bar} />
               ))}
             </div>
-            <p>AI Director · {studioVoiceLabel}</p>
+            <p>{presentationRoom === "fashion" ? "Creative Director" : "AI Director"} · {studioVoiceLabel}</p>
           </div>
         ) : null}
         <div className={presentation === "studio" ? "frassy-studio-dialogue" : "contents"}>

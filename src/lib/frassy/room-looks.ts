@@ -22,6 +22,8 @@ export type FrassyStudioPresenceAsset = FrassyRoomLook & {
   states: readonly FrassyStudioPresenceState[];
 };
 
+export type FrassyPresentationRoom = "studio" | "fashion";
+
 export const FV_STUDIOS_FRASSY_LOOK: FrassyRoomLook = {
   id: "fv-studios-approved-seated",
   room: "studio",
@@ -60,4 +62,9 @@ export function studioPresenceFor(state: FrassyStudioPresenceState): FrassyStudi
       states: ["idle"],
     }
   );
+}
+
+/** Presentation-only room choice. It never changes Frassy's engine or identity. */
+export function frassyLookForRoom(room: FrassyPresentationRoom): FrassyRoomLook {
+  return room === "fashion" ? FASHION_STUDIO_FRASSY_LOOK : FV_STUDIOS_FRASSY_LOOK;
 }

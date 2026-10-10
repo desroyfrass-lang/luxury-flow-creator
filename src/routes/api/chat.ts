@@ -18,6 +18,7 @@ import { LEARNING_LEVELS_ENGINE } from "@/lib/frassy/learning-levels";
 import { MOMENTUM_ENGINE } from "@/lib/frassy/momentum";
 import { FOUNDER_EXPLANATION_STANDARD } from "@/lib/founder/explanation-standard";
 import { clientHintFrom } from "@/lib/frassy-repair-tools.server";
+import { buildProductHandoff } from "@/lib/vendors/product-handoff";
 import {
   resolveAuditIdentity,
   resolveCanonicalCard,
@@ -696,6 +697,7 @@ export const Route = createFileRoute("/api/chat")({
           messages?: SimpleMessage[];
           cartContext?: string;
           memoryContext?: string;
+          verifiedFashionHandoff?: { productId?: string; variantId?: string };
           modeContext?: string;
           seasonContext?: string;
           experienceContext?: "founder" | "builder" | "storefront";
@@ -765,6 +767,57 @@ export const Route = createFileRoute("/api/chat")({
             } catch {
               experienceContext = "storefront";
             }
+          }
+        }
+
+        // R1 — product IDs from the browser are pointers only. Fashion context
+        // becomes trusted background only after this endpoint re-reads the saved
+        // private product, owner and variant with the verified caller's session.
+        let verifiedFashionContext = "";
+        const fashionIds = body.verifiedFashionHandoff;
+        const uuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+        if (
+          verifiedToken &&
+          body.districtPath?.toLowerCase() === "/studios/fashion" &&
+          typeof fashionIds?.productId === "string" &&
+          typeof fashionIds.variantId === "string" &&
+          uuid.test(fashionIds.productId) &&
+          uuid.test(fashionIds.variantId)
+        ) {
+          try {
+            const { createClient } = await import("@supabase/supabase-js");
+            const fashionClient = createClient(
+              process.env.SUPABASE_URL!,
+              process.env.SUPABASE_PUBLISHABLE_KEY!,
+              { global: { headers: { Authorization: `Bearer ${verifiedToken}` } }, auth: { persistSession: false, autoRefreshToken: false } },
+            );
+            const claims = await fashionClient.auth.getClaims(verifiedToken);
+            const userId = claims.data?.claims?.sub;
+            if (userId) {
+              const [a, s, p, v] = await Promise.all([
+                fashionClient.rpc("has_role", { _user_id: userId, _role: "admin" }),
+                fashionClient.rpc("has_role", { _user_id: userId, _role: "super_admin" }),
+                fashionClient.from("canonical_products").select("id,title,category_key,draft_status,publication_status,vendor_id,vendor_profiles(owner_id)").eq("id", fashionIds.productId).maybeSingle(),
+                fashionClient.from("canonical_product_variants").select("id,product_id,source_variant_ref,sku,option_label,image_url").eq("id", fashionIds.variantId).maybeSingle(),
+              ]);
+              if (!a.error && !s.error && !p.error && !v.error) {
+                const row = p.data as Record<string, unknown> | null;
+                const vendor = row?.vendor_profiles as { owner_id?: string } | null | undefined;
+                const product = row ? { ...row, vendor_owner_id: vendor?.owner_id ?? null } : null;
+                const handoff = buildProductHandoff({ userId, isFounderStaff: Boolean(a.data || s.data) }, product as never, v.data as never);
+                verifiedFashionContext = [
+                  `Saved product: ${handoff.name}`,
+                  `Classification: ${handoff.categoryPath}`,
+                  `Selected supplier variant: ${handoff.variant.colour}${handoff.variant.size ? ` / ${handoff.variant.size}` : ""}`,
+                  `SKU: ${handoff.variant.sku ?? "not supplied"}`,
+                  `Supplier variant ID: ${handoff.variant.sourceVariantRef}`,
+                  `Status: ${handoff.status.draft}; ${handoff.status.publication}`,
+                  "Read-only. No image/video, capsule, try-on, order, charge, save, or publication action is connected.",
+                ].join("\n");
+              }
+            }
+          } catch {
+            verifiedFashionContext = "";
           }
         }
 
@@ -1021,6 +1074,9 @@ consolidated implementation prompt from the accumulated ledger.`
             ["Balance context", body.balanceContext],
             ["Momentum context", body.momentumContext],
           ]),
+          verifiedFashionContext
+            ? `=== SERVER-VERIFIED FASHION HANDOFF — READ-ONLY BACKGROUND ===\n${verifiedFashionContext}\n=== END SERVER-VERIFIED FASHION HANDOFF ===`
+            : "",
           attachmentContext,
         ]
           .filter(Boolean)

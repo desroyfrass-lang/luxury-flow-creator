@@ -268,19 +268,16 @@ function PilotSaved({ draft: initialDraft, justCreated, onSaved }: { draft: Save
     {
       title: "Make image / video",
       tool: "FV Studios → Fashion Studio",
-      to: "/studios/fashion" as const,
       blocker: "Fashion Studio can show this product once you pick a colour/size and press \"Prepare verified handoff\". Image/video making is not connected yet.",
     },
     {
       title: "Send to capsules",
       tool: "FV Studios → Fashion Studio",
-      to: "/studios/fashion" as const,
       blocker: "Capsules can only hold items from the existing live shop list. This draft lives in the new product list, so it cannot be added until the two are linked.",
     },
     {
       title: "Send to try-ons",
       tool: "FV Studios → Fashion Studio",
-      to: "/studios/fashion" as const,
       blocker: "The Fitting Room only uses items in a shopper's cart from the live shop, and only accepts photos from trusted image hosts. CJ photos and unpublished drafts are not accepted yet.",
     },
   ];
@@ -336,7 +333,7 @@ function PilotSaved({ draft: initialDraft, justCreated, onSaved }: { draft: Save
                 <span className="rounded-full border border-border px-2 py-0.5 text-[10px] uppercase tracking-[0.2em] text-muted-foreground">Not connected yet</span>
               </div>
               <p className="mt-1 text-xs text-muted-foreground">{s.blocker}</p>
-              <Link to={s.to} className="mt-2 inline-block text-xs underline">Open {s.tool} on its own (this product will not be carried over)</Link>
+               {s.title === "Make image / video" ? <p className="mt-2 text-xs font-medium">To carry this product over, choose its colour and size above, then use “Prepare verified handoff”.</p> : null}
             </li>
           ))}
         </ul>

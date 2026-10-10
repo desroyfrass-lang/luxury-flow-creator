@@ -9,14 +9,17 @@
 import { redirect } from "@tanstack/react-router";
 import { checkIsAdmin } from "@/lib/admin.functions";
 
-export async function requireFounderRoute(): Promise<void> {
-  let allowed = false;
+export async function requireFounderRoute({ location }: { location?: { pathname: string; searchStr?: string } } = {}): Promise<void> {
+  let allowed: boolean;
   try {
     allowed = Boolean(await checkIsAdmin());
-  } catch {
-    allowed = false;
+  } catch (error) {
+    console.error("Founder route verification is temporarily unavailable", error);
+    const next = location ? location.pathname + (location.searchStr ?? "") : "";
+    throw redirect({ to: "/auth", search: { next }, replace: true });
   }
   if (!allowed) {
-    throw redirect({ to: "/", replace: true });
+    const next = location ? location.pathname + (location.searchStr ?? "") : "";
+    throw redirect({ to: "/auth", search: { next }, replace: true });
   }
 }

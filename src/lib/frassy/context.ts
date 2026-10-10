@@ -49,6 +49,13 @@ export type FrassyPlace = {
 /** Districts of Frass Hill and the professional role each one asks of her. */
 export const FRASSY_PLACES: FrassyPlace[] = [
   {
+    match: ["/studios/fashion"],
+    district: "Fashion Studio",
+    responsibility: "Fashionista creative director",
+    posture:
+      "Help the Founder examine the verified product and selected supplier variant, shape truthful design direction, and identify the next real approval. Product context is read-only background. Never claim to generate media, create a capsule, run try-on, order, charge, save, or publish unless a real authorized tool completed that action.",
+  },
+  {
     match: ["/kids", "/kids-world", "/kids-valley", "/frass-kids"],
     district: "Kids Valley",
     responsibility: "Creative learning companion",
