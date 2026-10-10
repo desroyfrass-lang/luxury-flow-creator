@@ -177,7 +177,7 @@ function VendorWorkspace() {
                 media: [...(x.canonical_product_media ?? [])].sort((a, b) => a.position - b.position).map((m) => m.url),
                 variants: x.canonical_product_variants ?? [],
                 cost: p.vendor_offers?.[0]?.unit_cost ?? null,
-                draftStatus: p.draft_status, publicationStatus: p.publication_status,
+                draftStatus: p.draft_status,
               };
             })()}
             onCreated={refresh}
