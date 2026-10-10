@@ -156,6 +156,13 @@ function AdminLayout() {
               Visual Index
             </Link>
             <Link
+              to="/admin/tryon-prep"
+              activeProps={{ className: "text-[color:var(--gold)]" }}
+              className="text-muted-foreground hover:text-foreground"
+            >
+              Try-On Prep
+            </Link>
+            <Link
               to="/admin/roles"
               activeProps={{ className: "text-[color:var(--gold)]" }}
               className="text-muted-foreground hover:text-foreground"
