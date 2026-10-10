@@ -1,63 +1,69 @@
-# P2 Integration Audit (read-only) and proposed phases
+# Fashion Studio Destination Audit (read-only)
 
-Nothing was changed. No code, data, media, credits, Shopify or deploys were touched. P1/P2a stays frozen.
+Nothing was changed, generated or charged.
 
-## What the product looks like today
-- Soft Life Chiffon: a private draft in the new product tables, with 5 CJ photos and 6 sizes. Colour is Sky Blue, S–3XL, and one real CJ photo is linked to all six.
-- The colour/size picker keeps your choice only on screen. Nothing saves it, and nothing passes it on yet.
+## Short answer
+- There is no Fashion Studio room today, and no "Fashionista Frassy" anywhere. A search for "fashionista" across the whole app finds nothing.
+- Fashion pieces exist, but they're scattered across separate places. None of them can receive the verified product handoff yet.
+- Recommendation: one new private room inside the existing Frassy Studios, called Fashion Studio. It hosts the handoff and reuses the existing engines. Same Frassy, with "stylist" as a role she plays.
 
-## The three tools, as they really are
+## Where the buttons go today
+On the saved product card, the three buttons open:
+- "Make image/video" → `/studios/create`, the story/episode brief form
+- "Send to capsules" → `/admin/capsules`
+- "Send to try-ons" → `/try-on`, the shopper version
 
-| Tool | Works today? | Can it take Soft Life Chiffon? | Why not |
+The product is never carried over, and the card says so.
+
+## What exists today
+
+| Place | Route | What it really is | Fashion-ready? |
 |---|---|---|---|
-| FV Studios (`/studios/*`) | Yes, for shows and episodes. It has an Assets library (2 items) with approve and reuse switches | No | Studios starts from a story idea. Its assets are linked to shows and scenes, not to products |
-| Admin Capsules (`/admin/capsules`) | Yes. 1 capsule exists. You can publish or unpublish, and upload a cover image | No | Capsule items must point at the old live-shop product list, enforced by the database. A draft can't be added |
-| Try-on (`/try-on`) | Yes, but it's the shopper version | Only with retyping | It needs a customer photo plus garment images and names. It saves each attempt under the person's account (0 saved so far). Each try uses an AI image request on your workspace balance, and members' Frass credit wallets are not charged |
+| Frass Vision Studios | `/fv-studios` | Public brochure for the creator company. No tools, no Frassy greeting | No |
+| Frassy Studios | `/studios/*`, private | Real production studio: briefs, scenes, characters, assets, animations, publishing, all built for shows and episodes. Has an embedded "Ask Frassy" chat panel | Partly. The engines are real, but organised around episodes |
+| Studio Characters | `/studios/characters` | Real. Locks a character's look, voice and wardrobe notes | Yes, for keeping Frassy's look consistent |
+| Admin Capsules | `/admin/capsules` | Real builder. Items must be old live-shop products | Not for drafts |
+| Try-on | `/try-on` | Real shopper engine with one AI image per try, under the shopper's account | Shopper only |
+| Lookbook | `/lookbook`, `/lookbook/$story` | Public lookbook stories with their own image table | Display only, no builder |
+| Collection Builder | `/collection` | Real "one piece at a time" flow: photograph a piece, Frassy writes the page, Founder approves | Closest existing "Frassy helps with fashion" flow, but built for a vintage boutique |
+| Frassy's room outfits | `frassy-look` and its outfit list | Dresses Frassy per room (hall, daily, workshop, freedom, celebration) and links her outfit to shop pieces | No studio or fashion room yet |
 
-Today, the "Make image/video", "Send to capsules" and "Send to try-ons" buttons only open these pages. They honestly say "Not connected yet."
+## Why Frassy didn't appear when you arrived
+- Frassy's arrival greetings are a fixed list of rooms: Welcome Hall, home, Frass Hill, District, Kicks, Luxury House, Frass Drip, Bare Drip, Afro Designers, Capsules and others.
+- `/fv-studios`, `/studios` and `/try-on` are not on that list. A greeting was never built for them.
+- `/fv-studios` only mentions Frassy in its text. Inside `/studios` she's only an embedded chat box, not a welcome.
+- So nothing broke. The greeting simply never existed on those pages.
 
-## Does size matter for try-on?
-No. The try-on only looks at the photo and garment name. Size makes no visible difference. Colour matters, and it is the Sky Blue photo. Size would only matter later for a capsule or cart line.
+## Recommended home
+One private Founder room: **Frassy Studios → Fashion Studio** (`/studios/fashion`). It is reached from the existing Studios menu and from the product card. It holds:
+1. The verified product and size the handoff brings in, shown read-only.
+2. Four tabs, each reusing an existing engine: Looks & Lookbook, Capsules, Try-on/Haul, Product image/video.
+3. Frassy greeting you as the stylist. It's the same character and model, with the stylist role added to her greeting and the room's outfit list, and her approved look kept.
 
-## Proposed phases (each needs its own approval)
+No new engines and no shopper changes.
 
-**P2-0 Shared product context (about 2–3 credits)**
-- A small, read-only "product handoff" bundle: product ID, saved name, category path, chosen variant (colour, size, SKU) and the authentic photo for that variant.
-- It is built on the server from saved records only, and only for the Founder or the brand's owner. Nothing in the browser is trusted.
-- No database changes.
+## Gaps to close (later approvals)
+- No `/studios/fashion` room or menu link.
+- No stylist greeting, and no room outfit for the studio.
+- Capsules can't hold drafts (the P2-1 database change).
+- No Founder-only try-on wrapper (P2-2).
+- Studio assets can't be tagged to a product (P2-3).
+- The lookbook has no builder. Possible later reuse of the Collection Builder pattern.
 
-**P2-1 Capsules (about 3–5 credits)**
-- Let a capsule item point at either an old shop product or a new draft and its variant. This is one small, additive database change.
-- A draft in a capsule stays hidden from shoppers until the product is approved and published.
-- The "Send to capsules" button opens the admin capsule builder with this product already chosen. You still click Add.
-
-**P2-2 Admin try-on preview (about 3–5 build credits; each try is also a paid AI image request)**
-- A Founder-only preview that reuses the existing try-on engine. It fills in the variant's authentic photo and name, so nothing is retyped.
-- Every try needs an explicit "Generate (uses AI)" click. Nothing runs automatically.
-- Results are saved privately and are visible to you only. The shopper try-on is left as it is.
-
-**P2-3 FV Studios (about 4–6 credits)**
-- "Make image/video" opens Studios with this product's handoff attached as a reference.
-- Results are saved as private studio assets, tagged with the product ID and not approved.
-- You choose "Attach to product". That adds a new product photo that can't come from a supplier and is marked as yours. The CJ photos are never replaced.
-
-Total: about 12–19 build credits, plus whatever AI image requests you choose to run.
-
-## Safety rules for every phase
-- CJ name, photos, sizes, cost and source link never change. The existing database locks stay.
-- Nothing publishes, charges or generates without your click. Shopify is untouched.
-- Shopper pages behave exactly as they do now.
-
-## Tests and rollback
-- Tests: only the owner or Founder can build a handoff; a draft in a capsule never shows publicly; try-on can't run without the explicit click; attaching a result never changes the CJ records; the P1/P2a regression list still passes.
-- Rollback: each phase sits behind its own button. The P2-1 database change only adds things and can be reversed by removing the new link column.
+## Phased recommendation
+- **F1 Fashion Studio room** (about 2–4 credits): private page inside Frassy Studios, menu link, receives the P2-0 handoff, stylist greeting. Tabs say "Not connected yet" until their phase is done. Product card buttons point here.
+- **F2 Capsules tab** = P2-1 (about 3–5 credits).
+- **F3 Try-on/Haul tab** = P2-2 (about 3–5 credits, plus each AI image you choose to run).
+- **F4 Image/video tab** = P2-3 (about 4–6 credits).
+- **F5 Lookbook builder** (optional, about 4–6 credits): reuses the Collection Builder approval pattern.
 
 ## Decisions for the Founder
-1. Should a draft in a capsule stay hidden until the product is approved? (Recommended: yes.)
-2. Should try-on results be visible to you only, or to brand owners too?
-3. Should Studios results stay in Studios until you click "Attach", or attach automatically? (Recommended: stay until you click.)
-4. Which phase goes first? (Recommended: P2-0, then capsules.)
+1. Room name: "Fashion Studio", "Frassy's Fitting Room", or something else?
+2. Stylist role: a new outfit for Frassy, or her approved look with a stylist greeting only?
+3. Should the product card buttons go to the new room once F1 exists? (Recommended: yes.)
+4. Should F1 be Founder-only, or also open to brand owners?
 
 ## Technical details
-- Likely files: `src/lib/vendors/product-handoff.functions.ts` (new), `src/components/vendors/cj-pilot-panel.tsx` (wire the 3 buttons), `src/routes/_authenticated/admin.capsules.tsx`, a new migration adding a nullable `canonical_product_id`/`canonical_variant_id` to `capsule_items` with a check that exactly one product link is set, `src/lib/tryon.functions.ts` (reuse `generateTryOn`; admin wrapper), `src/routes/_authenticated/studios.create.tsx` and `studios.assets.tsx` (reference context, product tag).
-- Evidence: `capsule_items.product_id` has a foreign key to `products` (1 capsule exists). `tryon_looks` holds `user_id`, `source_photo_url` and `cart_items` jsonb (0 rows). `generateTryOn` calls `google/gemini-3.1-flash-image` through the gateway with no ledger debit. `studio_assets` holds `series_id`, `approved` and `reuse_allowed`, with usage linked to productions and scenes (2 rows).
+- Files for F1: new `src/routes/_authenticated/studios.fashion.tsx`; a menu entry in `src/routes/_authenticated/studios.tsx`; a `/studios` greeting entry in `src/lib/frassy-destinations.ts`; a `studio` room in `src/lib/frassy/wardrobe.ts` if approved; links in `src/components/vendors/cj-pilot-panel.tsx`; reuse `getProductHandoff`.
+- Tests: Founder-only access, handoff loads only verified IDs, the greeting keeps the core character, existing studio and shopper routes stay the same.
+- Rollback: remove the one room file and menu link. No database changes in F1.
