@@ -1,53 +1,88 @@
-# Read-only integration audit: Fashion Studio as one creative desk
+# Frass Try-On Preparation Studio: staged plan (no building yet)
 
-Nothing was changed. Every finding comes from the current code and read-only database queries. I did no live, signed-in testing, so anything not marked "verified" is unproven.
+## Plain English summary
+Customers keep shopping where they shop today. There is no "Try-On Mall". On any product that's ready, and in the cart, a customer presses "Try it on". That uses one private photo of themselves, which they can replace at any time.
 
-## Plain-English summary
-- **Image and video making in FV Studios is not connected.** The image and video engine slots exist but are switched off ("not configured"). There is nothing to reuse yet. Turning one on means choosing a provider and accepting its costs.
-- **Virtual try-on exists in one real place**, the member Try-On page (`/try-on`). It uses Lovable AI, charges against AI usage, and only takes shop-cart items with photos from approved image sources. **CJ photos are not on that approved list**, so the Soft Life Chiffon Top cannot be tried on today.
-- **Frass Shape is not a try-on engine.** It is the shapewear department. Its "Fit Assistant" is a text card telling people to ask Frassy.
-- **Frassy sends try-on to Frass Shape because of her written map, not a technical rule.** Her platform map describes Frass Shape as having an "AI Fit Assistant" and doesn't list the real Try-On page at all, so she guesses.
-- **Capsules and lookbooks** are a public storefront for live-shop products: 1 capsule, 0 items. They cannot hold the new draft products.
-- **Frassy sees product text, not photos.** In Fashion Studio she receives server-checked words only. She can look at images only when you attach one in the chat yourself.
+Behind the scenes, a Founder/admin-only **Try-On Preparation Studio** checks each fashion product once: photos, sizes and suitability. Once checked, the product gets a **Try-On Ready** tag. It stays in its own collection and is never listed twice. The tag is removed only if the product's photos or sizes really change. Soft Life Chiffon Top is the pilot.
 
-Analogy: the Fashion Studio desk is built and the product arrives on it, but the camera, the fitting mirror and the capsule rail are in other rooms. Two of them can't accept this kind of product yet, and the camera has no power.
+Analogy: a fitting-room attendant checks each garment once before it goes on the shop floor. Customers never visit the back room.
 
-## Findings with evidence
-| Area | Status | Evidence |
+## What exists today (checked in code and database)
+- **Try-On page** `/try-on`, signed-in members only.
+  - The engine is `generateTryOn` (`src/lib/tryon.functions.ts`). It runs only when the customer presses the button, uses Lovable AI image generation and saves results to `tryon_looks`.
+  - The cart drawer links to it (`cart-drawer.tsx` line 128). Product pages have no try-on button.
+- **Customer photos** live in the `customer_photos` table and the private `tryon-photos` storage. Customers can add and delete their own. **Admins can also view all customer photos and looks** (policies "Admins view all photos/looks"). That conflicts with "private photo" and is flagged below.
+- **Approved image sources** for try-on: Supabase, Shopify, Unsplash and Lovable only. **CJ photo servers are not allowed**, so the pilot can't be tried on yet.
+- **Size data:**
+  - New supplier sizes (`canonical_product_variants`) have size label, SKU, weight and photo, but no measurements.
+  - Live-shop sizes (`product_variants`) have options, price and availability, but no measurements.
+- **Founder/admin checks:** `has_role` checked on the server (`checkIsAdmin`, `requireFounderRoute`). Role changes go only through `founder_set_role`.
+- **R1 handoff, R2 design brief and the Step 1 map wording** all stay as they are.
+
+## What I propose (new)
+### Data model (additive only)
+- `tryon_readiness` holds one record per product variant, covering both the live shop and new supplier products.
+  - Status: queued, in review, ready, needs re-review, or not supported.
+  - It also stores the try-on method, the approved garment photo, who approved it and when, and a short **fingerprint** of the photo and size details.
+- `variant_fit_measurements` (optional) holds measurements in cm/in per size (bust, waist, hip, length, foot length) and where each figure came from: supplier, measured or unknown.
+- **Automatic re-review:** if a variant's photo or size details change, the database moves it back to "needs re-review". Price or stock changes never do.
+- **Who can do what:** only Founder/admin can write readiness records. Shoppers can read only "ready" tags, with no internal notes. The approval itself happens through one audited database function, written to `founder_audit_ledger`.
+
+### Which method fits which category
+| Category | Method | At first |
 |---|---|---|
-| FV Studios image generation | Not connected (slot only) | `studio_providers`: `image_provider_slot` and `video_provider_slot` are `not_configured` and disabled. `native-engines.ts` line 139 reports "NOT INSTALLED". |
-| FV Studios text and Motion Rig animation | Working engines (shown by records, not tested here) | `lovable_text`, `frass_motion_rig_v1`: available and enabled |
-| Virtual try-on | Real, member-scoped, AI-charged | `src/lib/tryon.functions.ts`: `generateTryOn` requires sign-in, takes up to 4 items, sends them to Lovable AI image generation and writes to `tryon_looks` (0 rows). Used only by `routes/_authenticated/try-on.tsx`. |
-| Try-on photo sources | Blocks CJ | Approved image sources (lines 22–31): Supabase, Shopify, Unsplash and Lovable only. The saved product's photos are on `cf.cjdropshipping.com` / `oss-cf.cjdropshipping.com`, so they would be refused. |
-| Frass Shape | Department, no engine | `routes/frass-shape.$gender.index.tsx` lines 138–148 show a static "Fit Assistant" card |
-| Capsules and lookbooks | Storefront for live-shop products only | `src/lib/capsules.ts` links to live-shop products. The database has 1 capsule and 0 items. Public routes `/capsules`, `/lookbook`. |
-| Fashion Studio | Working (from code; not tested signed in) | Server-verified handoff, design brief (R2) and the shared Frassy, as built and tested in code |
-| Frassy try-on routing | Prompt/knowledge cause | `platform-atlas.ts` line 53: Frass Shape described as having an "AI Fit Assistant"; no `/try-on` entry. FV Studios is listed as `/studio` with "AI video", which overstates it. |
-| Frassy and photos | Text only | The handoff block in `api/chat.ts` (lines ~806–823) passes name, size, SKU and status. The photo link is fetched but never shown to her. Images reach her only as chat attachments (lines 1264–1272). |
+| Tops, dresses, bottoms, plus size, luxury | Full-body garment try-on (existing engine) | Supported |
+| Bridal gowns | Full-body, with an extra Founder review | Supported after testing |
+| Shoes / Kicks | Feet-and-legs photo method | Later; needs separate testing |
+| Shapewear / swim / intimates | Careful-content policy needed first | Paused |
+| Wigs / hair | Head-and-shoulders method | Later |
+| Kids | Not supported (child photo safety) | Excluded |
 
-## Smallest reuse-first plan (each step needs separate approval)
-1. **Correct Frassy's map (copy only, no cost).**
-   - Add the real Try-On page.
-   - Describe Frass Shape as the shapewear department.
-   - Describe FV Studios' image and video as "not connected yet".
-   - Fashion Studio becomes the place for Founder creative work.
-2. **Let Frassy see the verified variant photo (small AI cost per message).** After the server check, attach that single CJ photo to her message. The server fetches it, only from the CJ image servers, with the same size and type checks try-on already uses.
-3. **Founder try-on from Fashion Studio (reuse `generateTryOn`; AI cost per try-on).**
-   - Allow the two CJ image servers for verified saved drafts only.
-   - Add a "Try on" button in Fashion Studio that passes the verified variant photo and one of your own saved photos to the existing engine. Results stay private.
-   - Needs your decision on cost and on which photos may be used.
-4. **Capsules and lookbooks:** a private "Fashion capsule" list attached to briefs, separate from public capsules. Public capsules stay unchanged until drafts are linked to the live shop.
-5. **Model photography and video:** blocked until a provider is chosen for the image or video slot. That's an outside service, its cost and its terms. It's a separate Founder decision.
+### Safeguards against false fit claims
+- Results are labelled **"Style preview, not a fit guarantee"**. No "perfect fit" or "your size" claims unless real measurements exist, and even then they're shown as guidance.
+- Frassy and the page copy must never claim exact fit. A test enforces that wording.
+- Nothing is generated until the customer presses "Try it on". Each press shows that it uses AI.
+- Customers can replace or delete their photo at any time. Photos are never used for anything else.
 
-## Security, permissions and cost
-- Adding CJ image servers must be limited to verified, saved draft photos so the server can't be tricked into fetching other addresses.
-- Try-on and image viewing spend Lovable AI usage. Each button needs a clear cost label, and nothing should run automatically.
-- Personal photos for try-on stay owner-only, as they are today.
-- Public capsules must never show unpublished drafts.
+## Stages (each needs your separate approval)
+1. **Privacy first.** Remove admins' ability to view customer photos and looks, or limit it to a logged support request. Your decision. No new features in this stage.
+2. **Readiness records and the Preparation Studio** (Founder/admin only, inside the existing Studios area):
+   - the queue fills automatically from fashion products;
+   - review of photo, sizes and method;
+   - an audited "Mark Try-On Ready" step.
 
-## Verified vs untested
-- **Verified from code and database:** engine slot status, try-on's approved image sources, CJ photo hosts, capsule counts, Frassy's map wording, and that the handoff sends text only.
-- **Untested:** any live try-on run, image quality, live Fashion Studio behaviour while signed in, and actual AI cost per use.
+   No generation. Pilot: Soft Life Chiffon Top.
+3. **Pilot test try-on (Founder only).**
+   - Allow CJ photo servers, for approved ready photos only.
+   - Run one Founder-pressed test with your own photo, using the existing engine. It costs AI usage per press.
+   - You approve the result before the Ready tag is shown to anyone.
+4. **Customer launch points.**
+   - A "Try it on" button on product pages, and per item in the cart, shown only when the item is Ready.
+   - One saved try-on photo, with Replace and Delete.
+   - Ready items stay in their collections; no new shop page.
 
-## Awaiting approval
-I'll make no changes until you approve one specific step above.
+   This can only go live for items that are published to the shop, and the pilot draft isn't published.
+5. **Measurements and more categories** (shoes, bridal, wigs), each tested and approved separately.
+
+## Costs
+- Stages 1–2: none beyond building.
+- Stage 3 onward: one Lovable AI image request per press. Each one is shown, never automatic, and nothing runs in bulk.
+
+## Testing per stage
+- Database tests:
+  - only Founder/admin can mark items Ready;
+  - shoppers can read only "ready" tags, with no internal notes;
+  - a photo or size change resets the tag;
+  - a price change doesn't.
+- Images are refused unless they are approved ready photos from allowed sources.
+- Wording check: no fit-guarantee claims.
+- A walkthrough by you on desktop and phone.
+
+## Open decisions for you
+1. Should admins keep any access to customer try-on photos (for example support only, logged), or none?
+2. Is full-body clothing the only method for the pilot? (Recommended.)
+3. Keep the name "Frass Try-On Preparation Studio"?
+
+## Verified vs not
+- **Checked:** storage is private; who can see customer photos; which size details exist; the cart link; that CJ photo servers are refused; the role checks.
+- **Not tested:** any live try-on, result quality, the CJ photo server setup, cost per use.
