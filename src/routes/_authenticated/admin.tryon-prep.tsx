@@ -4,6 +4,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useMemo, useState } from "react";
 import { listTryOnQueue, decideTryOnReadiness, type QueueRow } from "@/lib/tryon/readiness.functions";
 import { READINESS_LABEL, SUPPORT_LABEL, departmentOf, tryOnAdapter, type ReadinessStatus } from "@/lib/tryon/readiness";
+import { checkPilotVariantImage, type PilotImageCheck } from "@/lib/tryon/pilot-image.functions";
 
 export const Route = createFileRoute("/_authenticated/admin/tryon-prep")({
   head: () => ({
@@ -124,6 +125,36 @@ function QueueCard({ row }: { row: QueueRow }) {
           <button disabled={busy} onClick={() => decide("not_supported")} className="rounded border border-border px-3 py-1.5">Not supported</button>
         </div>
         {msg && <p className="mt-2 text-xs text-muted-foreground" role="status">{msg}</p>}
+        <PhotoCheck variantId={row.variantId} />
+      </div>
+    </div>
+  );
+}
+
+function PhotoCheck({ variantId }: { variantId: string }) {
+  const checkFn = useServerFn(checkPilotVariantImage);
+  const [busy, setBusy] = useState(false);
+  const [res, setRes] = useState<PilotImageCheck | null>(null);
+  const [err, setErr] = useState<string | null>(null);
+  async function run() {
+    setBusy(true); setErr(null);
+    try { setRes(await checkFn({ data: { variantId } })); }
+    catch (e) { setErr(e instanceof Error ? e.message : "Could not check."); }
+    finally { setBusy(false); }
+  }
+  return (
+    <div className="mt-3 rounded border border-dashed border-border p-2 text-xs">
+      <button disabled={busy} onClick={run} className="rounded border border-border px-3 py-1.5">
+        {busy ? "Checking…" : "Check supplier photo (no AI)"}
+      </button>
+      {err && <p className="mt-2 text-destructive" role="status">{err}</p>}
+      {res && (
+        <p className="mt-2" role="status">
+          {res.ok
+            ? `✓ Real ${res.fileType?.toUpperCase()} photo from ${res.host} · ${res.width ?? "?"}×${res.height ?? "?"} px · ${Math.round((res.bytes ?? 0) / 1024)} KB · fingerprint ${res.sha256}. File checked only — no try-on has been run.`
+            : `✗ ${res.reason}`}
+        </p>
+      )}
       </div>
     </div>
   );
