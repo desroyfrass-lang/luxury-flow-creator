@@ -1,6 +1,6 @@
 # Roadmap
 
-- [ ] R1 Fashion Studio recovery: room-only white/gold theme, one Fashionista Frassy using the shared engine with server-verified handoff context, and transparent UUID-preserving handoff access. Stop after focused/regression verification; no R2.
+- [x] R1 Fashion Studio recovery: room-only white/gold theme, one Fashionista Frassy using the shared engine with server-verified handoff context, and transparent UUID-preserving handoff access. 253 regression tests, typecheck, and automatic build passed; authenticated browser reached the required Founder identity check, so post-check desktop/mobile room verification remains Founder-required. No R2.
 
 - [x] Narrow variant picker: verified one Sky Blue image linked to S/M/L/XL/2XL/3XL, added local-only selection alongside unchanged gallery; 41 focused/regression tests and isolated desktop/phone component browser checks passed, including image decoding and missing/broken-image fallbacks; automatic build OK. No product writes or P2 connections.
 - [ ] Founder browser verification of saved-card variant selection alongside gallery/naming/edit controls — authenticated workspace flow not tested in this pass.
