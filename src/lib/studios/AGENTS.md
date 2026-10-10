@@ -1,0 +1,1 @@
+- Fashion briefs (fashion_design_briefs, one per product+variant) load/save only via fashion-brief.functions.ts after buildProductHandoff re-verification; a DB trigger enforces variant match and open drafts. Why: no brief on unseen or mismatched products.
