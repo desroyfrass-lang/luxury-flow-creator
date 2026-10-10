@@ -27,4 +27,4 @@
 - Sorted product drafts are created only through create_classified_product_draft (product, category, private supplier name, offer, photos, variants in one transaction, caller's row rules apply); CJ data for a draft is re-read on the server after a My Products ownership check, never taken from the browser. Why: truthful provenance and no partial drafts.
 
 - SupplierVariantPicker uses only variant-linked photos and component-local selections, never gallery colour guesses or writes. Why: reusable previews preserve immutable supplier data.
-- Fashion design briefs live in fashion_design_briefs keyed to one canonical product + variant; reads/saves go through src/lib/studios/fashion-brief.functions.ts, which re-verifies Founder/owner access via buildProductHandoff, and a DB trigger enforces variant match and open-draft only. Why: briefs must never attach to a product the caller cannot see or to a mismatched size.
+- Fashion briefs (fashion_design_briefs, one per product+variant) load/save only via fashion-brief.functions.ts after buildProductHandoff re-verification; a DB trigger enforces variant match and open drafts. Why: no brief on unseen or mismatched products.
