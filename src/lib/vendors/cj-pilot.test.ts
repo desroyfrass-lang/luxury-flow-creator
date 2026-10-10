@@ -20,6 +20,9 @@ describe("Pilot P1 data truthfulness", () => {
     expect(isInMyProducts([{ productId: PILOT_CJ_PID }])).toBe(true);
     expect(isInMyProducts([{ productId: "123", sku: "CJX" }])).toBe(false);
   });
+  it("rejects invented Women's categories even when their prefix looks allowed", () => {
+    expect(isPilotCategoryAllowed("drip", "drip/womens-invented-category")).toBe(false);
+  });
   it("refuses a CJ response for a different product", () => {
     expect(() => mapCjDetail({ pid: "999" })).toThrow();
   });
