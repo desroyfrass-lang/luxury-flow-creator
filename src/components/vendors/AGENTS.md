@@ -1,0 +1,1 @@
+- SupplierVariantPicker uses only variant-linked photos and component-local selections, never gallery colour guesses or writes. Why: reusable previews preserve immutable supplier data.

@@ -8,6 +8,7 @@ import { useServerFn } from "@tanstack/react-start";
 import { getProductHandoff } from "@/lib/vendors/product-handoff.functions";
 import { FASHION_SECTIONS, parseFashionSearch } from "@/lib/studios/fashion-studio";
 import { FrassyChat } from "@/components/frassy-chat";
+import { FashionBriefPanel } from "@/components/studios/fashion-brief-panel";
 
 export const Route = createFileRoute("/_authenticated/studios/fashion")({
   validateSearch: parseFashionSearch,
@@ -69,6 +70,8 @@ function FashionStudio() {
           </div>
         ) : null}
       </section>
+
+      {handoff.data && productId && variantId ? <FashionBriefPanel productId={productId} variantId={variantId} /> : null}
 
       <section aria-label="Fashionista Frassy assistant">
         <FrassyChat
