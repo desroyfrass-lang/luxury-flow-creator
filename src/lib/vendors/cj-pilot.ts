@@ -2,6 +2,11 @@
 export const PILOT_CJ_PID = "2606050313341622800";
 export const PILOT_CJ_SKU = "CJQB2922537";
 export const PILOT_CATEGORY = { primaryStore: "drip", categoryKey: "drip/womens-work-drip-work-blouses" } as const;
+/** Pilot P1 may only be placed in Frass Drip → Women's product categories (Founder picks which). */
+export const PILOT_CATEGORY_PREFIX = "drip/womens-";
+export function isPilotCategoryAllowed(primaryStore: string, categoryKey: string): boolean {
+  return primaryStore === PILOT_CATEGORY.primaryStore && categoryKey.startsWith(PILOT_CATEGORY_PREFIX);
+}
 
 export type PilotVariant = { ref: string; sku: string | null; label: string | null; cost: number | null; weight: number | null; image: string | null };
 export type PilotDetail = {

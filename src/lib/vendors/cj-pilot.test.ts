@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { readFileSync } from "node:fs";
-import { PILOT_CATEGORY, PILOT_CJ_PID, cleanSuggestions, isInMyProducts, mapCjDetail } from "./cj-pilot";
+import { PILOT_CATEGORY, PILOT_CJ_PID, isPilotCategoryAllowed, cleanSuggestions, isInMyProducts, mapCjDetail } from "./cj-pilot";
 import { validateClassification } from "@/lib/taxonomy/registry";
 
 const fnSrc = readFileSync("src/lib/vendors/cj-pilot.functions.ts", "utf8");
@@ -9,6 +9,12 @@ const migration = readFileSync("drizzle/migrations/0026_product_pilot_classifica
 describe("Pilot P1 data truthfulness", () => {
   it("pilot category is a real, active category in the registry", () => {
     expect(validateClassification(PILOT_CATEGORY)).toEqual([]);
+  });
+  it("pilot accepts Women's Drip categories the Founder picks and refuses others", () => {
+    expect(isPilotCategoryAllowed("drip", "drip/womens-work-drip-work-blouses")).toBe(true);
+    expect(isPilotCategoryAllowed("drip", "drip/womens-vacay-drip-vacation-fits")).toBe(true);
+    expect(isPilotCategoryAllowed("drip", "drip/mens-work-drip-shirts")).toBe(false);
+    expect(isPilotCategoryAllowed("kids", "drip/womens-work-drip-work-blouses")).toBe(false);
   });
   it("ownership check matches only the pilot product", () => {
     expect(isInMyProducts([{ productId: PILOT_CJ_PID }])).toBe(true);
@@ -42,7 +48,7 @@ describe("Pilot P1 safety", () => {
   it("draft needs both Founder confirmations and is pinned to the pilot category", () => {
     expect(fnSrc).toContain("confirmName: z.literal(true)");
     expect(fnSrc).toContain("confirmCategory: z.literal(true)");
-    expect(fnSrc).toContain("Pilot P1 only allows");
+    expect(fnSrc).toContain("isPilotCategoryAllowed(data.primaryStore, data.categoryKey)");
   });
   it("re-reads CJ on the server and checks My Products before any draft", () => {
     expect(fnSrc).toContain("/product/myProduct/query");

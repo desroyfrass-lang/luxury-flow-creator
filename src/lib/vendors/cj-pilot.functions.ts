@@ -8,7 +8,7 @@ import { streamText, Output } from "ai";
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import { validateClassification } from "@/lib/taxonomy/registry";
-import { PILOT_CATEGORY, PILOT_CJ_PID, cleanSuggestions, isInMyProducts, mapCjDetail, NAME_STYLES, type PilotDetail } from "./cj-pilot";
+import { PILOT_CJ_PID, isPilotCategoryAllowed, cleanSuggestions, isInMyProducts, mapCjDetail, NAME_STYLES, type PilotDetail } from "./cj-pilot";
 
 async function requireFounderStaff(ctx: { supabase: any; userId: string }) {
   const [a, s] = await Promise.all([
@@ -113,9 +113,9 @@ export const createPilotDraft = createServerFn({ method: "POST" })
   )
   .handler(async ({ data, context }) => {
     await requireFounderStaff(context);
-    // Pilot P1 is pinned to the Founder-approved category.
-    if (data.primaryStore !== PILOT_CATEGORY.primaryStore || data.categoryKey !== PILOT_CATEGORY.categoryKey)
-      throw new Error("Pilot P1 only allows Frass Drip → Women → Work Drip → Work Blouses.");
+    // Pilot P1 is limited to Frass Drip → Women's product categories; the Founder picks which.
+    if (!isPilotCategoryAllowed(data.primaryStore, data.categoryKey))
+      throw new Error("Pilot P1 only allows a Frass Drip → Women's category.");
     const errs = validateClassification({ primaryStore: data.primaryStore, categoryKey: data.categoryKey });
     if (errs.length) throw new Error(`Category not valid: ${errs.join(", ")}`);
 
