@@ -15,7 +15,8 @@ export async function requireFounderRoute({ location }: { location?: { pathname:
     allowed = Boolean(await checkIsAdmin());
   } catch (error) {
     console.error("Founder route verification is temporarily unavailable", error);
-    return;
+    const next = location ? location.pathname + (location.searchStr ?? "") : "";
+    throw redirect({ to: "/auth", search: { next }, replace: true });
   }
   if (!allowed) {
     const next = location ? location.pathname + (location.searchStr ?? "") : "";
