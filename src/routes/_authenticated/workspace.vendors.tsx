@@ -177,6 +177,7 @@ function VendorWorkspace() {
                 media: [...(x.canonical_product_media ?? [])].sort((a, b) => a.position - b.position).map((m) => m.url),
                 variants: x.canonical_product_variants ?? [],
                 cost: p.vendor_offers?.[0]?.unit_cost ?? null,
+                draftStatus: p.draft_status,
               };
             })()}
             onCreated={refresh}
@@ -218,7 +219,7 @@ function BrandCard(props: {
         <div className="font-display text-xl">{vendor.display_name}</div>
         <Badge status={vendor.verification_status} />
       </div>
-      <div className="text-xs text-muted-foreground">{vendor.vendor_kind.replace("_", " ")}</div>
+      <div className="text-xs text-muted-foreground">Brand details · {vendor.vendor_kind.replace("_", " ")}</div>
 
       <ul className="mt-4 space-y-3">
         {products.map((p) => (

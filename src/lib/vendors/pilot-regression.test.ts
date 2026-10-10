@@ -44,3 +44,14 @@ describe("Pilot regression inventory", () => {
     expect(page).toContain("not connected to CJ Pilot P1");
   });
 });
+
+describe("Pilot status locks in the screen", () => {
+  it("8. Edit is hidden with an explanation when the product is not a private draft", () => {
+    expect(saved).toContain('["draft", "prepared"].includes(draft.draftStatus)');
+    expect(saved).toContain("Editing is locked");
+    expect(page).toContain("draftStatus: p.draft_status");
+  });
+  it("9. brand details are labelled separately from manual entry", () => {
+    expect(page).toContain("Brand details ·");
+  });
+});

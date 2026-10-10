@@ -22,7 +22,7 @@ const STYLE_LABEL: Record<string, string> = {
 };
 
 type SavedVariant = { source_variant_ref: string; sku: string | null; option_label: string | null; supplier_cost: number | null; currency: string };
-export type SavedDraft = { id: string; title: string; category_key: string | null; originalName?: string | null; media?: string[]; variants?: SavedVariant[]; cost?: number | null };
+export type SavedDraft = { id: string; title: string; category_key: string | null; originalName?: string | null; media?: string[]; variants?: SavedVariant[]; cost?: number | null; draftStatus?: string; publicationStatus?: string };
 
 /** Supplier photos with a visible fallback when a CJ link fails — never silently dropped. */
 export function SupplierPhotos({ urls }: { urls: string[] }) {
@@ -253,6 +253,7 @@ function PilotSaved({ draft: initialDraft, justCreated, onSaved }: { draft: Save
     onSuccess: (r) => { setDraft((d) => ({ ...d, title: r.title, category_key: r.category_key })); setEditing(false); toast.success("Draft updated. Still private, not published."); onSaved(); },
     onError: (e: Error) => toast.error(e.message),
   });
+  const locked = (draft.draftStatus != null && !["draft", "prepared"].includes(draft.draftStatus)) || (draft.publicationStatus != null && draft.publicationStatus !== "unpublished");
   const unchanged = name.trim() === draft.title && cat === draft.category_key;
   const editMissing = [
     name.trim().length < 3 && "enter a name (3+ letters)",
@@ -295,7 +296,9 @@ function PilotSaved({ draft: initialDraft, justCreated, onSaved }: { draft: Save
           </details>
         )}
         <p className="mt-2 text-xs text-muted-foreground">It also appears under your supplier brand above. Supplier stays unverified until you verify it. CJ's original name, photos, sizes/colours and cost are permanent and cannot be edited.</p>
-        {!editing ? (
+        {!editing && locked ? (
+          <p className="mt-3 text-xs text-muted-foreground" role="status">Editing is locked: this product is {draft.draftStatus?.replaceAll("_", " ")}{draft.publicationStatus && draft.publicationStatus !== "unpublished" ? `, ${draft.publicationStatus}` : ""}. Only private drafts can be edited.</p>
+        ) : !editing ? (
           <Button className="mt-3" variant="outline" size="sm" onClick={startEdit}>Edit name and category</Button>
         ) : (
           <div className="mt-4 space-y-4 border-t border-border pt-4">
