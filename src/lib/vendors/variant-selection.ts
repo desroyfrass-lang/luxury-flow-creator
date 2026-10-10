@@ -1,5 +1,5 @@
 /** Presentation-only supplier options. Unknown label formats stay intact. */
-export type VisualVariant = { ref: string; sku: string | null; label: string | null; image: string | null };
+export type VisualVariant = { id?: string; ref: string; sku: string | null; label: string | null; image: string | null };
 export type VariantGroup = { colour: string; variants: Array<VisualVariant & { size: string | null }> };
 
 export function groupVisualVariants(variants: readonly VisualVariant[]): VariantGroup[] {
