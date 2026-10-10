@@ -30,6 +30,7 @@ export function minimumGuardrailPrice(i: FloorInput): FloorResult {
   // Smallest whole cent that the existing engine itself confirms meets the margin.
   let p = Math.ceil(((landed + BLANK_ECONOMICS.payment_fee_fixed) / (1 - pct)) * 100) / 100;
   for (let k = 0; k < 20 && !meetsMargin(p, cost, ship, i.currency, policy); k++) p = Math.round((p + 0.01) * 100) / 100;
+  for (let k = 0; k < 20 && p > 0.01 && meetsMargin(Math.round((p - 0.01) * 100) / 100, cost, ship, i.currency, policy); k++) p = Math.round((p - 0.01) * 100) / 100;
   return { floorPrice: p, landedCost: landed, reason: null };
 }
 
