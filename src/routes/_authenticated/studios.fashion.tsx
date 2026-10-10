@@ -76,6 +76,7 @@ function FashionStudio() {
           presentation="studio"
           presentationRoom="fashion"
           workspaceContext={handoff.data ? fashionHandoffContext(handoff.data) : "Fashion Studio. No verified product handoff is present. Do not assume a product or claim any fashion action has been completed."}
+          verifiedFashionHandoff={productId && variantId ? { productId, variantId } : undefined}
         />
       </section>
 

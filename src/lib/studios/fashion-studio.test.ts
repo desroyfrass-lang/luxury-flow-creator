@@ -59,9 +59,13 @@ describe("F1 Fashion Studio", () => {
     const route = readFileSync("src/routes/_authenticated/studios.fashion.tsx", "utf8");
     expect(route).toContain("<FrassyChat");
     expect(route).toContain("fashionHandoffContext(handoff.data)");
+    expect(route).toContain("verifiedFashionHandoff={productId && variantId");
     expect(route).toContain("verified again on the server");
     expect(route).toContain("No image/video, capsule, try-on, order, charge, save, or publication tool is connected here.");
     expect(route).not.toMatch(/\.(insert|update|upsert|delete)\(/);
+    const api = readFileSync("src/routes/api/chat.ts", "utf8");
+    expect(api).toContain("SERVER-VERIFIED FASHION HANDOFF");
+    expect(api).toContain("buildProductHandoff");
   });
   it("adds Fashion-specific responsibility before the broader Studios context", () => {
     const context = readFileSync("src/lib/frassy/context.ts", "utf8");

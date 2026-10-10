@@ -167,6 +167,7 @@ export function FrassyChat({
   tone,
   hideBeacon = false,
   workspaceContext,
+  verifiedFashionHandoff,
   openSignal = 0,
   presentation = "default",
   presentationRoom = "studio",
@@ -176,6 +177,7 @@ export function FrassyChat({
   tone?: "light" | "dark";
   hideBeacon?: boolean;
   workspaceContext?: string;
+  verifiedFashionHandoff?: { productId: string; variantId: string };
   openSignal?: number;
   presentation?: "default" | "studio" | "daily";
   presentationRoom?: FrassyPresentationRoom;
@@ -524,6 +526,7 @@ export function FrassyChat({
             momentumContext(readMomentum(readBalanceSignals() ?? NO_SIGNALS, loadMomentum())) ||
             undefined,
           memoryContext: workspaceContext || undefined,
+          verifiedFashionHandoff,
           stream: false,
         }),
       });
