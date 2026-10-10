@@ -81,3 +81,8 @@ export function cleanSuggestions(list: NameSuggestion[], originalName: string): 
   }
   return out;
 }
+
+/** P2a: a saved draft may move to any real, confirmed product category (never services/pending/gated). */
+export function isEditableProductCategory(primaryStore: string, categoryKey: string): boolean {
+  return validateClassification({ primaryStore, categoryKey, listingKind: "product" }).length === 0;
+}

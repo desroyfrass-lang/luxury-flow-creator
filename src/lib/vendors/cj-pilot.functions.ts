@@ -150,3 +150,25 @@ export const createPilotDraft = createServerFn({ method: "POST" })
     }
     return { id: productId as string, draft_status: "draft" as const, publication_status: "unpublished" as const };
   });
+
+/** P2a: Founder + owner edit of a saved private draft's name and classification (history via database trigger). */
+export const updatePilotDraft = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((i: unknown) =>
+    z.object({
+      productId: z.string().uuid(),
+      finalName: z.string().trim().min(3).max(120),
+      primaryStore: z.string(),
+      categoryKey: z.string(),
+      confirm: z.literal(true),
+    }).parse(i),
+  )
+  .handler(async ({ data, context }) => {
+    await requireFounderStaff(context);
+    if (!isEditableProductCategory(data.primaryStore, data.categoryKey)) throw new Error("That category is not a confirmed product category.");
+    const { data: row, error } = await context.supabase.rpc("update_classified_product_draft", {
+      _product_id: data.productId, _title: data.finalName, _primary_store: data.primaryStore, _category_key: data.categoryKey,
+    });
+    if (error) throw new Error(error.message);
+    return row as { id: string; title: string; primary_store: string; category_key: string };
+  });

@@ -1210,6 +1210,53 @@ export type Database = {
         }
         Relationships: []
       }
+      canonical_product_history: {
+        Row: {
+          actor_id: string | null
+          after_category_key: string | null
+          after_primary_store: string | null
+          after_title: string | null
+          before_category_key: string | null
+          before_primary_store: string | null
+          before_title: string | null
+          changed_at: string
+          id: string
+          product_id: string
+        }
+        Insert: {
+          actor_id?: string | null
+          after_category_key?: string | null
+          after_primary_store?: string | null
+          after_title?: string | null
+          before_category_key?: string | null
+          before_primary_store?: string | null
+          before_title?: string | null
+          changed_at?: string
+          id?: string
+          product_id: string
+        }
+        Update: {
+          actor_id?: string | null
+          after_category_key?: string | null
+          after_primary_store?: string | null
+          after_title?: string | null
+          before_category_key?: string | null
+          before_primary_store?: string | null
+          before_title?: string | null
+          changed_at?: string
+          id?: string
+          product_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "canonical_product_history_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "canonical_products"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       canonical_product_media: {
         Row: {
           created_at: string
@@ -9529,6 +9576,15 @@ export type Database = {
           msg_id: number
           read_ct: number
         }[]
+      }
+      update_classified_product_draft: {
+        Args: {
+          _category_key: string
+          _primary_store: string
+          _product_id: string
+          _title: string
+        }
+        Returns: Json
       }
     }
     Enums: {
