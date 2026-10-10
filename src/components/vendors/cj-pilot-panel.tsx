@@ -11,8 +11,8 @@ import { Link } from "@tanstack/react-router";
 import { getTaxonomyNode } from "@/lib/taxonomy/registry";
 import { classificationBreadcrumb } from "@/lib/taxonomy/hierarchy";
 import { PilotCategoryPicker } from "./pilot-category-picker";
-import { PILOT_CATEGORY, PILOT_CJ_PID, isPilotCategoryAllowed, type NameSuggestion } from "@/lib/vendors/cj-pilot";
-import { createPilotDraft, getCjPilotDetail, suggestPilotNames } from "@/lib/vendors/cj-pilot.functions";
+import { PILOT_CATEGORY, PILOT_CJ_PID, isPilotCategoryAllowed, isEditableProductCategory, type NameSuggestion } from "@/lib/vendors/cj-pilot";
+import { createPilotDraft, getCjPilotDetail, suggestPilotNames, updatePilotDraft } from "@/lib/vendors/cj-pilot.functions";
 import { createVendorProfile } from "@/lib/vendors/products.functions";
 
 const STYLE_LABEL: Record<string, string> = {
@@ -104,7 +104,7 @@ export function CjPilotPanel({ supplierBrands, existingDraft, onCreated }: {
       </p>
 
       {saved ? (
-        <PilotSaved draft={saved} justCreated={Boolean(createdId)} />
+        <PilotSaved draft={saved} justCreated={Boolean(createdId)} onSaved={onCreated} />
       ) : !open ? (
         <Button className="mt-4" variant="outline" onClick={() => setOpen(true)}>Read it from CJ</Button>
       ) : detail.isLoading ? (
@@ -208,7 +208,29 @@ export function CjPilotPanel({ supplierBrands, existingDraft, onCreated }: {
 }
 
 /** After saving: honest next steps. Only real, existing tools; nothing auto-generates, charges or publishes. */
-function PilotSaved({ draft, justCreated }: { draft: { id: string; title: string; category_key: string | null }; justCreated: boolean }) {
+function PilotSaved({ draft: initialDraft, justCreated, onSaved }: { draft: { id: string; title: string; category_key: string | null }; justCreated: boolean; onSaved: () => void }) {
+  const updateFn = useServerFn(updatePilotDraft);
+  const [draft, setDraft] = useState(initialDraft);
+  useEffect(() => setDraft(initialDraft), [initialDraft.id, initialDraft.title, initialDraft.category_key]);
+  const [editing, setEditing] = useState(false);
+  const [name, setName] = useState(draft.title);
+  const [store, setStore] = useState(draft.category_key?.split("/")[0] ?? "");
+  const [cat, setCat] = useState(draft.category_key ?? "");
+  const [confirm, setConfirm] = useState(false);
+  const startEdit = () => { setName(draft.title); setStore(draft.category_key?.split("/")[0] ?? ""); setCat(draft.category_key ?? ""); setConfirm(false); setEditing(true); };
+  const save = useMutation({
+    mutationFn: () => updateFn({ data: { productId: draft.id, finalName: name.trim(), primaryStore: store, categoryKey: cat, confirm: true } }),
+    onSuccess: (r) => { setDraft({ id: r.id, title: r.title, category_key: r.category_key }); setEditing(false); toast.success("Draft updated. Still private, not published."); onSaved(); },
+    onError: (e: Error) => toast.error(e.message),
+  });
+  const unchanged = name.trim() === draft.title && cat === draft.category_key;
+  const editMissing = [
+    name.trim().length < 3 && "enter a name (3+ letters)",
+    !cat && "choose a subcategory",
+    cat && !isEditableProductCategory(store, cat) && "choose a confirmed product category",
+    unchanged && "change the name or category",
+    !confirm && "tick the confirmation",
+  ].filter(Boolean) as string[];
   const steps = [
     {
       title: "Make image / video",
@@ -235,7 +257,25 @@ function PilotSaved({ draft, justCreated }: { draft: { id: string; title: string
         <div className="text-[10px] uppercase tracking-[0.2em] text-[color:var(--gold)]">{justCreated ? "Saved just now" : "Already saved"} · private · not published</div>
         <div className="mt-1 font-display text-2xl">{draft.title}</div>
         <div className="text-xs text-muted-foreground">{classificationBreadcrumb(draft.category_key)} · Draft ID {draft.id.slice(0, 8)}…</div>
-        <p className="mt-2 text-xs text-muted-foreground">It also appears under your supplier brand above. Supplier stays unverified until you verify it.</p>
+        <p className="mt-2 text-xs text-muted-foreground">It also appears under your supplier brand above. Supplier stays unverified until you verify it. CJ's original name, photos, sizes/colours and cost are permanent and cannot be edited.</p>
+        {!editing ? (
+          <Button className="mt-3" variant="outline" size="sm" onClick={startEdit}>Edit name and category</Button>
+        ) : (
+          <div className="mt-4 space-y-4 border-t border-border pt-4">
+            <label className="block text-xs">Product name
+              <Input aria-label="Product name" className="mt-1" value={name} maxLength={120} onChange={(e) => { setName(e.target.value); setConfirm(false); }} />
+            </label>
+            <PilotCategoryPicker mode="edit" store={store} category={cat} onChange={(s, c) => { setStore(s); setCat(c); setConfirm(false); }} />
+            <label className="flex gap-2 text-sm"><input type="checkbox" checked={confirm} onChange={(e) => setConfirm(e.target.checked)} />
+              I confirm: <strong>{name.trim() || "—"}</strong> in <strong>{cat ? classificationBreadcrumb(cat) : "—"}</strong></label>
+            <div className="flex flex-wrap gap-2">
+              <Button size="sm" disabled={editMissing.length > 0 || save.isPending} onClick={() => save.mutate()}>{save.isPending ? "Saving…" : "Save changes"}</Button>
+              <Button size="sm" variant="ghost" disabled={save.isPending} onClick={() => setEditing(false)}>Cancel</Button>
+            </div>
+            {editMissing.length > 0 && <p className="text-xs text-[color:var(--gold)]">Before saving: {editMissing.join(" · ")}</p>}
+            {save.error && <p className="text-xs text-destructive" role="alert">{(save.error as Error).message}</p>}
+          </div>
+        )}
       </div>
       <div>
         <div className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground">Next steps for this product</div>

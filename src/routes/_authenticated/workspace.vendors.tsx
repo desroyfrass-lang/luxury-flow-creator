@@ -238,8 +238,8 @@ function BrandCard(props: {
         ))}
       </ul>
 
-      <details className="mt-5 border-t border-border pt-4">
-        <summary className="cursor-pointer text-sm font-medium">Manual product entry (not connected to CJ Pilot P1)</summary>
+      <details className="mt-5 rounded-sm border border-dashed border-border bg-muted/30 p-3">
+        <summary className="cursor-pointer text-sm font-medium text-muted-foreground">Manual product entry — separate tool, not connected to CJ Pilot P1 (click to open)</summary>
         <p className="mt-2 text-xs text-muted-foreground">A separate product entered by hand. These blank fields do not edit or save the CJ blouse. Use Founder · Pilot P1 below for that item.</p>
       <div className="mt-4 grid gap-2 sm:grid-cols-2">
         <Input placeholder="Product name" value={title} onChange={(e) => setTitle(e.target.value)} maxLength={200} />

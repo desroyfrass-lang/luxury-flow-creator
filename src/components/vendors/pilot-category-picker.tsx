@@ -1,11 +1,13 @@
 import { useState } from "react";
 import { PRIMARY_STORES } from "@/lib/taxonomy/registry";
 import { TAXONOMY_PATHS, classificationBreadcrumb } from "@/lib/taxonomy/hierarchy";
-import { isPilotCategoryAllowed } from "@/lib/vendors/cj-pilot";
+import { isPilotCategoryAllowed, isEditableProductCategory } from "@/lib/vendors/cj-pilot";
 
-export function PilotCategoryPicker({ store, category, onChange }: {
-  store: string; category: string; onChange: (store: string, category: string) => void;
+export function PilotCategoryPicker({ store, category, onChange, mode = "pilot" }: {
+  store: string; category: string; onChange: (store: string, category: string) => void; mode?: "pilot" | "edit";
 }) {
+  const edit = mode === "edit";
+  const pilotNote = (ok: boolean) => (edit || ok ? "" : " — not supported for Pilot P1");
   const initial = TAXONOMY_PATHS.find((p) => p.node.key === category);
   const [audience, setAudience] = useState(initial?.audience ?? "");
   const [collection, setCollection] = useState(initial?.collection ?? "");
@@ -14,17 +16,18 @@ export function PilotCategoryPicker({ store, category, onChange }: {
   const collectionPaths = audiencePaths.filter((p) => p.collection === collection);
   const choices = (values: string[]) => [...new Set(values)];
   const selectedStore = PRIMARY_STORES.find((s) => s.id === store)?.title;
-  const supported = store === "drip" && audience === "Women";
+  const supported = edit || (store === "drip" && audience === "Women");
   const selectClass = "mt-1 w-full rounded-sm border border-border bg-background px-2 py-2 text-sm";
   return (
     <div className="space-y-3">
-      <p className="text-xs text-muted-foreground">Browse all nine departments below. This one CJ blouse pilot is approved to save only Frass Drip → Women product categories.</p>
+      {!edit && <p className="text-xs text-muted-foreground">Browse all nine departments below. This one CJ blouse pilot is approved to save only Frass Drip → Women product categories.</p>}
+      {edit && <p className="text-xs text-muted-foreground">Any confirmed product category in the nine departments. Service, pending and age-gated categories cannot be saved.</p>}
       <div className="grid gap-3 sm:grid-cols-2">
         <label className="text-xs">Department
           <select aria-label="Department" className={selectClass} value={store} onChange={(e) => {
             setAudience(""); setCollection(""); onChange(e.target.value, "");
           }}>
-            {PRIMARY_STORES.map((s) => <option key={s.id} value={s.id}>{s.title}{s.id !== "drip" ? " — not supported for Pilot P1" : ""}</option>)}
+            {PRIMARY_STORES.map((s) => <option key={s.id} value={s.id}>{s.title}{pilotNote(s.id === "drip")}</option>)}
           </select>
         </label>
         <label className="text-xs">Audience / gender
@@ -32,7 +35,7 @@ export function PilotCategoryPicker({ store, category, onChange }: {
             setAudience(e.target.value); setCollection(""); onChange(store, "");
           }}>
             <option value="">Choose audience…</option>
-            {choices(departmentPaths.map((p) => p.audience)).map((a) => <option key={a} value={a}>{a}{store !== "drip" || a !== "Women" ? " — not supported for Pilot P1" : ""}</option>)}
+            {choices(departmentPaths.map((p) => p.audience)).map((a) => <option key={a} value={a}>{a}{pilotNote(store === "drip" && a === "Women")}</option>)}
           </select>
         </label>
         <label className="text-xs">Collection
@@ -46,7 +49,7 @@ export function PilotCategoryPicker({ store, category, onChange }: {
         <label className="text-xs">Subcategory
           <select aria-label="Subcategory" className={selectClass} disabled={!collection} value={category} onChange={(e) => onChange(store, e.target.value)}>
             <option value="">Choose subcategory…</option>
-            {collectionPaths.map((p) => <option key={p.node.key} value={p.node.key}>{p.subcategory}{!isPilotCategoryAllowed(store, p.node.key) ? " — not supported for Pilot P1" : ""}</option>)}
+            {collectionPaths.map((p) => <option key={p.node.key} value={p.node.key}>{p.subcategory}{edit ? (isEditableProductCategory(store, p.node.key) ? "" : " — not a product category") : pilotNote(isPilotCategoryAllowed(store, p.node.key))}</option>)}
           </select>
         </label>
       </div>
