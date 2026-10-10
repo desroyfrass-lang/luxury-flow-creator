@@ -7,6 +7,7 @@ import { useServerFn } from "@tanstack/react-start";
 import { getProductHandoff } from "@/lib/vendors/product-handoff.functions";
 import { FASHION_SECTIONS, parseFashionSearch } from "@/lib/studios/fashion-studio";
 import { FASHION_STUDIO_FRASSY_LOOK } from "@/lib/frassy/room-looks";
+import { FrassyChat } from "@/components/frassy-chat";
 
 export const Route = createFileRoute("/_authenticated/studios/fashion")({
   validateSearch: parseFashionSearch,
@@ -35,16 +36,13 @@ function FashionStudio() {
   });
 
   return (
-    <div className="space-y-8">
+    <div className="fashion-studio-light space-y-8 rounded-sm p-4 sm:p-6">
       <nav aria-label="Fashion Studio location" className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground">FV Studios → <span className="text-[color:var(--gold)]">Fashion Studio</span></nav>
 
-      <section className="flex flex-col gap-4 rounded-lg border border-border/70 bg-card/40 p-5 sm:flex-row" aria-label="Fashionista Frassy greeting">
-        <img src={FASHION_STUDIO_FRASSY_LOOK.image} alt={FASHION_STUDIO_FRASSY_LOOK.alt} className="h-56 w-full shrink-0 rounded-sm object-cover object-top sm:w-48" />
-        <div>
-          <div className="text-[10px] uppercase tracking-[0.3em] text-[color:var(--gold)]">Fashionista Frassy · creative director</div>
-          <h1 className="mt-1 font-display text-2xl uppercase tracking-tight">Welcome to the Fashion Studio</h1>
-          <p className="mt-2 text-sm text-muted-foreground">Same Frassy, today wearing her creative director hat. Bring me a verified product and we'll plan the looks, the specs and the approvals together. Nothing gets made, ordered, charged or published from here without your word.</p>
-        </div>
+      <section className="fashion-studio-welcome" aria-label="Fashionista Frassy greeting">
+        <div className="text-[10px] uppercase tracking-[0.3em] text-[color:var(--gold)]">Fashionista Frassy · creative director</div>
+        <h1 className="mt-1 font-display text-2xl uppercase tracking-tight">Welcome to the Fashion Studio</h1>
+        <p className="mt-2 max-w-3xl text-sm text-muted-foreground">Same Frassy, wearing her creative director hat. Nothing gets made, ordered, charged or published from here without your word.</p>
       </section>
 
       <section aria-label="Product in this project" className="rounded-lg border border-border/70 p-5">
@@ -71,6 +69,16 @@ function FashionStudio() {
         ) : null}
       </section>
 
+      <section aria-label="Fashionista Frassy assistant">
+        <FrassyChat
+          embedded
+          tone="light"
+          presentation="studio"
+          presentationRoom="fashion"
+          workspaceContext={handoff.data ? fashionHandoffContext(handoff.data) : "Fashion Studio. No verified product handoff is present. Do not assume a product or claim any fashion action has been completed."}
+        />
+      </section>
+
       <section aria-label="Fashion project sections" className="grid gap-3 sm:grid-cols-2">
         {FASHION_SECTIONS.map((s) => (
           <div key={s.id} className="rounded-lg border border-border/70 p-4">
@@ -86,4 +94,17 @@ function FashionStudio() {
       </section>
     </div>
   );
+}
+
+function fashionHandoffContext(handoff: Awaited<ReturnType<typeof getProductHandoff>>) {
+  return [
+    "Fashion Studio read-only product handoff verified again on the server.",
+    `Saved product: ${handoff.name}`,
+    `Classification: ${handoff.categoryPath}`,
+    `Selected supplier variant: ${handoff.variant.colour}${handoff.variant.size ? ` / ${handoff.variant.size}` : ""}`,
+    `SKU: ${handoff.variant.sku ?? "not supplied"}`,
+    `Supplier variant ID: ${handoff.variant.sourceVariantRef}`,
+    `Status: ${handoff.status.draft}; ${handoff.status.publication}`,
+    "This is background only. No image/video, capsule, try-on, order, charge, save, or publication tool is connected here.",
+  ].join("\n");
 }
