@@ -15,7 +15,6 @@ BEGIN
   INSERT INTO auth.users (id, email) VALUES (owner_id, owner_id||'@t.test'), (other_id, other_id||'@t.test');
   INSERT INTO public.customer_photos (user_id, image_url) VALUES (owner_id, 'x');
   INSERT INTO public.tryon_looks (user_id, source_photo_url, cart_items, status) VALUES (owner_id, 'x', '[]', 'ready');
-  INSERT INTO public.user_roles (user_id, role) SELECT other_id, 'admin' WHERE false; -- role rows guarded by trigger; admin check covered by policy scan above
 
   PERFORM set_config('role', 'authenticated', true);
   PERFORM set_config('request.jwt.claims', json_build_object('sub', owner_id, 'role','authenticated')::text, true);
