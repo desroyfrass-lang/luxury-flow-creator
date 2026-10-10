@@ -3,10 +3,11 @@
 // changes Frassy's identity. FV Studios now uses the Founder-approved seated
 // transparent derivative of the locked character board.
 import seatedStudioLook from "@/assets/frassy-fv-studios-seated.png.asset.json";
+import fashionistaLook from "@/assets/frassy-fashionista-studios.png.asset.json";
 
 export type FrassyRoomLook = {
   id: string;
-  room: "studio";
+  room: "studio" | "fashion";
   image: string;
   alt: string;
   status: "temporary" | "approved";
@@ -28,6 +29,16 @@ export const FV_STUDIOS_FRASSY_LOOK: FrassyRoomLook = {
   alt: "Frassy seated in her FV Studios chair",
   status: "approved",
   position: "seated",
+};
+
+/** Founder-approved Fashionista Frassy (denim-blue couture), Fashion Studio only. */
+export const FASHION_STUDIO_FRASSY_LOOK: FrassyRoomLook = {
+  id: "fashion-studio-approved-fashionista",
+  room: "fashion",
+  image: fashionistaLook.url,
+  alt: "Fashionista Frassy in denim-blue couture, Frass Studios",
+  status: "approved",
+  position: "standing",
 };
 
 // One stable room contract for future Founder-approved poses or motion clips.

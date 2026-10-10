@@ -34,6 +34,3 @@ export function parseFashionSearch(s: Record<string, unknown>): { productId?: st
   const variantId = typeof s.variantId === "string" && uuid.test(s.variantId) ? s.variantId : undefined;
   return productId && variantId ? { productId, variantId } : {};
 }
-
-/** The approved denim-blue couture look is not stored yet; core Frassy stands in. */
-export const FASHIONISTA_LOOK_MISSING = "Fashionista Frassy denim-blue couture image (Founder-approved) — please upload it so it can replace the stand-in.";

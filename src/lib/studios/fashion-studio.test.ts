@@ -33,6 +33,12 @@ describe("F1 Fashion Studio", () => {
     expect(src).not.toMatch(/\.(insert|update|upsert|delete)\(|generateTryOn|images\/generations/);
     expect(readFileSync("src/routes/_authenticated/studios.tsx", "utf8")).toContain("requireFounderRoute");
   });
+  it("greeting uses the approved Fashionista look, no missing-image note", () => {
+    const src = readFileSync("src/routes/_authenticated/studios.fashion.tsx", "utf8");
+    expect(src).toContain("FASHION_STUDIO_FRASSY_LOOK");
+    expect(src).not.toMatch(/Missing image|FASHIONISTA_LOOK_MISSING|FV_STUDIOS_FRASSY_LOOK/);
+    expect(readFileSync("src/assets/frassy-fashionista-studios.png.asset.json", "utf8")).toContain("Fashionista_Frassy_in_Frass_Studios.png");
+  });
   it("product card buttons point to Fashion Studio without claiming integration", () => {
     const panel = readFileSync("src/components/vendors/cj-pilot-panel.tsx", "utf8");
     expect(panel.match(/to: "\/studios\/fashion" as const/g)?.length).toBe(3);

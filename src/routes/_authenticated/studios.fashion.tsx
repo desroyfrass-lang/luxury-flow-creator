@@ -5,8 +5,8 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { getProductHandoff } from "@/lib/vendors/product-handoff.functions";
-import { FASHION_SECTIONS, FASHIONISTA_LOOK_MISSING, parseFashionSearch } from "@/lib/studios/fashion-studio";
-import { FV_STUDIOS_FRASSY_LOOK } from "@/lib/frassy/room-looks";
+import { FASHION_SECTIONS, parseFashionSearch } from "@/lib/studios/fashion-studio";
+import { FASHION_STUDIO_FRASSY_LOOK } from "@/lib/frassy/room-looks";
 
 export const Route = createFileRoute("/_authenticated/studios/fashion")({
   validateSearch: parseFashionSearch,
@@ -39,12 +39,11 @@ function FashionStudio() {
       <nav aria-label="Fashion Studio location" className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground">FV Studios → <span className="text-[color:var(--gold)]">Fashion Studio</span></nav>
 
       <section className="flex flex-col gap-4 rounded-lg border border-border/70 bg-card/40 p-5 sm:flex-row" aria-label="Fashionista Frassy greeting">
-        <img src={FV_STUDIOS_FRASSY_LOOK.image} alt={`${FV_STUDIOS_FRASSY_LOOK.alt} (stand-in for Fashionista look)`} className="h-40 w-32 shrink-0 object-contain" />
+        <img src={FASHION_STUDIO_FRASSY_LOOK.image} alt={FASHION_STUDIO_FRASSY_LOOK.alt} className="h-56 w-full shrink-0 rounded-sm object-cover object-top sm:w-48" />
         <div>
           <div className="text-[10px] uppercase tracking-[0.3em] text-[color:var(--gold)]">Fashionista Frassy · creative director</div>
           <h1 className="mt-1 font-display text-2xl uppercase tracking-tight">Welcome to the Fashion Studio</h1>
           <p className="mt-2 text-sm text-muted-foreground">Same Frassy, today wearing her creative director hat. Bring me a verified product and we'll plan the looks, the specs and the approvals together. Nothing gets made, ordered, charged or published from here without your word.</p>
-          <p className="mt-2 text-xs text-[color:var(--gold)]" role="note">Missing image: {FASHIONISTA_LOOK_MISSING}</p>
         </div>
       </section>
 
