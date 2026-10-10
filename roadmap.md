@@ -44,3 +44,4 @@
 - [x] R1 connection correction: preview picker label, visible verification status, no browser product claims
 - [x] Restore creative cards, unchanged-edit Done, visible preselected handoff + refetch after save
 - [x] R2 persisted fashion design brief
+- [x] Step 1: correct Frassy platform map (Try-On, Frass Shape, Fashion Studio, FV Studios)
