@@ -35,13 +35,36 @@ describe("F1 Fashion Studio", () => {
   });
   it("greeting uses the approved Fashionista look, no missing-image note", () => {
     const src = readFileSync("src/routes/_authenticated/studios.fashion.tsx", "utf8");
-    expect(src).toContain("FASHION_STUDIO_FRASSY_LOOK");
+    expect(src).toContain('presentationRoom="fashion"');
     expect(src).not.toMatch(/Missing image|FASHIONISTA_LOOK_MISSING|FV_STUDIOS_FRASSY_LOOK/);
     expect(readFileSync("src/assets/frassy-fashionista-studios.png.asset.json", "utf8")).toContain("Fashionista_Frassy_in_Frass_Studios.png");
   });
-  it("product card buttons point to Fashion Studio without claiming integration", () => {
+  it("only the verified variant handoff carries product context into Fashion Studio", () => {
     const panel = readFileSync("src/components/vendors/cj-pilot-panel.tsx", "utf8");
-    expect(panel.match(/to: "\/studios\/fashion" as const/g)?.length).toBe(3);
     expect(panel).toContain("Not connected yet");
+    expect(panel).not.toContain('to: "/studios/fashion" as const');
+    const picker = readFileSync("src/components/vendors/supplier-variant-picker.tsx", "utf8");
+    expect(picker).toContain('to="/studios/fashion"');
+    expect(picker).toContain("productId: handoff.productId, variantId: handoff.variant.id");
+  });
+  it("uses a room-only light scope and suppresses the parent assistant only in Fashion", () => {
+    const route = readFileSync("src/routes/_authenticated/studios.fashion.tsx", "utf8");
+    const shell = readFileSync("src/routes/_authenticated/studios.tsx", "utf8");
+    const css = readFileSync("src/styles.css", "utf8");
+    expect(route).toContain("fashion-studio-light");
+    expect(css).toContain(".fashion-studio-light");
+    expect(shell).toContain('pathname !== "/studios/fashion"');
+  });
+  it("uses one shared Frassy engine with verified read-only handoff context", () => {
+    const route = readFileSync("src/routes/_authenticated/studios.fashion.tsx", "utf8");
+    expect(route).toContain("<FrassyChat");
+    expect(route).toContain("fashionHandoffContext(handoff.data)");
+    expect(route).toContain("verified again on the server");
+    expect(route).toContain("No image/video, capsule, try-on, order, charge, save, or publication tool is connected here.");
+    expect(route).not.toMatch(/\.(insert|update|upsert|delete)\(/);
+  });
+  it("adds Fashion-specific responsibility before the broader Studios context", () => {
+    const context = readFileSync("src/lib/frassy/context.ts", "utf8");
+    expect(context.indexOf('["/studios/fashion"]')).toBeLessThan(context.indexOf('["/fv-studios", "/studio", "/studios"'));
   });
 });

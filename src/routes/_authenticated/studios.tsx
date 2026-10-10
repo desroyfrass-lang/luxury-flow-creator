@@ -11,7 +11,7 @@ import { Button } from "@/components/ui/button";
 
 export const Route = createFileRoute("/_authenticated/studios")({
   // Atlas Recovery Phase 1 — server-verified Founder door before anything loads.
-  beforeLoad: requireFounderRoute,
+  beforeLoad: ({ location }) => requireFounderRoute({ location }),
   head: () => ({
     meta: [
       { title: "Frassy Studios | Frass Hill" },

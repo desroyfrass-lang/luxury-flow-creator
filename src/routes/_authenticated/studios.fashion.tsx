@@ -6,8 +6,8 @@ import { useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { getProductHandoff } from "@/lib/vendors/product-handoff.functions";
 import { FASHION_SECTIONS, parseFashionSearch } from "@/lib/studios/fashion-studio";
-import { FASHION_STUDIO_FRASSY_LOOK } from "@/lib/frassy/room-looks";
 import { FrassyChat } from "@/components/frassy-chat";
+import type { ProductHandoff } from "@/lib/vendors/product-handoff";
 
 export const Route = createFileRoute("/_authenticated/studios/fashion")({
   validateSearch: parseFashionSearch,
@@ -96,7 +96,7 @@ function FashionStudio() {
   );
 }
 
-function fashionHandoffContext(handoff: Awaited<ReturnType<typeof getProductHandoff>>) {
+function fashionHandoffContext(handoff: ProductHandoff) {
   return [
     "Fashion Studio read-only product handoff verified again on the server.",
     `Saved product: ${handoff.name}`,
