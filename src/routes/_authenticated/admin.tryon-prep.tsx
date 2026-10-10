@@ -155,7 +155,6 @@ function PhotoCheck({ variantId }: { variantId: string }) {
             : `✗ ${res.reason}`}
         </p>
       )}
-      </div>
     </div>
   );
 }
