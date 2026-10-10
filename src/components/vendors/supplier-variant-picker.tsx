@@ -7,18 +7,19 @@ import type { ProductHandoff } from "@/lib/vendors/product-handoff";
 import { groupVisualVariants, selectedVisualVariant, type VisualVariant } from "@/lib/vendors/variant-selection";
 
 /** Local selection only: no writes, creative calls or gallery-to-colour guesses. */
-export function SupplierVariantPicker({ variants, productId }: { variants: readonly VisualVariant[]; productId?: string }) {
-  const [selectedRef, setSelectedRef] = useState<string | null>(null);
+export function SupplierVariantPicker({ variants, productId, onHandoff }: { variants: readonly VisualVariant[]; productId?: string; onHandoff?: (h: ProductHandoff | null) => void }) {
+  // Saved card only: preselect the first saved variant so the handoff is visible at once.
+  const [selectedRef, setSelectedRef] = useState<string | null>(() => (productId ? variants.find((v) => v.id)?.ref ?? null : null));
   const [handoff, setHandoff] = useState<ProductHandoff | null>(null);
   const [handoffError, setHandoffError] = useState<string | null>(null);
   const [checking, setChecking] = useState(false);
   const fetchHandoff = useServerFn(getProductHandoff);
-  const choose = (ref: string) => { setSelectedRef(ref); setHandoff(null); setHandoffError(null); };
+  const choose = (ref: string) => { setSelectedRef(ref); setHandoff(null); onHandoff?.(null); setHandoffError(null); };
   const prepare = async (variantId: string) => {
     if (!productId) return;
     setChecking(true); setHandoffError(null);
-    try { setHandoff(await fetchHandoff({ data: { productId, variantId } })); }
-    catch (e) { setHandoff(null); setHandoffError(e instanceof Error ? e.message : "Could not check this selection."); }
+    try { const h = await fetchHandoff({ data: { productId, variantId } }); setHandoff(h); onHandoff?.(h); }
+    catch (e) { setHandoff(null); onHandoff?.(null); setHandoffError(e instanceof Error ? e.message : "Could not check this selection."); }
     finally { setChecking(false); }
   };
   const [failed, setFailed] = useState<string[]>([]);
@@ -29,7 +30,7 @@ export function SupplierVariantPicker({ variants, productId }: { variants: reado
   if (!groups.length) return null;
 
   return (
-    <div className="mt-4 space-y-3" aria-label="Supplier colour and size selection">
+    <div id={productId ? `variant-picker-${productId}` : undefined} className="mt-4 space-y-3" aria-label="Supplier colour and size selection">
       <div className="text-xs font-medium">Colour / size</div>
       <div className="flex flex-wrap gap-2">
         {groups.map((g) => {
@@ -50,11 +51,6 @@ export function SupplierVariantPicker({ variants, productId }: { variants: reado
       </div>
       {selected && group ? (
         <div className="space-y-3">
-          <div className="flex aspect-square w-full max-w-sm items-center justify-center border border-border bg-background" aria-label="Selected variant preview">
-            {selected.image && !failed.includes(selected.image) ? (
-              <img src={selected.image} alt={`Selected CJ variant ${selected.label ?? selected.ref}`} className="h-full w-full object-contain" onError={() => { if (selected.image) markFailed(selected.image); }} />
-            ) : <p className="p-4 text-center text-xs text-muted-foreground">{selected.image ? "CJ variant photo did not load." : "No authentic photo is linked to this variant."} The general gallery stays separate.</p>}
-          </div>
           <div className="flex flex-wrap gap-2" aria-label="Saved size combinations">
             {group.variants.map((v) => (
               <Button key={v.ref} type="button" size="sm" variant="outline" aria-label={`Select variant ${v.label ?? v.ref}`} aria-pressed={selected.ref === v.ref}
@@ -80,6 +76,11 @@ export function SupplierVariantPicker({ variants, productId }: { variants: reado
               <p className="text-[10px] text-muted-foreground">Checks only. Nothing is sent to Capsules, Try-On or FV Studios yet, and nothing is saved or charged.</p>
             </div>
           ) : null}
+          <div className="flex aspect-square w-full max-w-sm items-center justify-center border border-border bg-background" aria-label="Selected variant preview">
+            {selected.image && !failed.includes(selected.image) ? (
+              <img src={selected.image} alt={`Selected CJ variant ${selected.label ?? selected.ref}`} className="h-full w-full object-contain" onError={() => { if (selected.image) markFailed(selected.image); }} />
+            ) : <p className="p-4 text-center text-xs text-muted-foreground">{selected.image ? "CJ variant photo did not load." : "No authentic photo is linked to this variant."} The general gallery stays separate.</p>}
+          </div>
         </div>
       ) : null}
       <p className="text-[10px] text-muted-foreground">CJ-listed combinations only; stock and delivery are not verified. Selection stays on this screen, resets on reload, and is not sent to other tools.</p>

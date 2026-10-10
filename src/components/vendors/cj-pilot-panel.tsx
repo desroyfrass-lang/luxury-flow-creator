@@ -15,6 +15,7 @@ import { PILOT_CATEGORY, PILOT_CJ_PID, isPilotCategoryAllowed, isEditableProduct
 import { createPilotDraft, getCjPilotDetail, suggestPilotNames, updatePilotDraft } from "@/lib/vendors/cj-pilot.functions";
 import { createVendorProfile } from "@/lib/vendors/products.functions";
 import { SupplierVariantPicker } from "./supplier-variant-picker";
+import type { ProductHandoff } from "@/lib/vendors/product-handoff";
 
 const STYLE_LABEL: Record<string, string> = {
   simple_elegant: "Simple & elegant",
@@ -244,12 +245,14 @@ function PilotSaved({ draft: initialDraft, justCreated, onSaved }: { draft: Save
     onError: (e: Error) => toast.error(e.message),
   });
   const [draft, setDraft] = useState<SavedDraft>(initialDraft);
-  useEffect(() => setDraft(initialDraft), [initialDraft.id, initialDraft.title, initialDraft.category_key]);
+  // Re-sync when the refetched record brings its saved variants (first save shows none yet).
+  useEffect(() => setDraft(initialDraft), [initialDraft.id, initialDraft.title, initialDraft.category_key, initialDraft.variants?.length]);
   const [editing, setEditing] = useState(false);
   const [name, setName] = useState(draft.title);
   const [store, setStore] = useState(draft.category_key?.split("/")[0] ?? "");
   const [cat, setCat] = useState(draft.category_key ?? "");
   const [confirm, setConfirm] = useState(false);
+  const [handoff, setHandoff] = useState<ProductHandoff | null>(null);
   const startEdit = () => { setName(draft.title); setStore(draft.category_key?.split("/")[0] ?? ""); setCat(draft.category_key ?? ""); setConfirm(false); setEditing(true); };
   const save = useMutation({
     mutationFn: () => updateFn({ data: { productId: draft.id, finalName: name.trim(), primaryStore: store, categoryKey: cat, confirm: true } }),
@@ -262,22 +265,27 @@ function PilotSaved({ draft: initialDraft, justCreated, onSaved }: { draft: Save
     name.trim().length < 3 && "enter a name (3+ letters)",
     !cat && "choose a subcategory",
     cat && !isEditableProductCategory(store, cat) && "choose a confirmed product category",
-    unchanged && "change the name or category",
     !confirm && "tick the confirmation",
   ].filter(Boolean) as string[];
   const steps = [
     {
       title: "Make image / video",
+      cta: "Open in Fashion Studio",
+      engine: "image/video",
       tool: "FV Studios → Fashion Studio",
       blocker: "Fashion Studio can show this product once you pick a colour/size and press \"Prepare verified handoff\". Image/video making is not connected yet.",
     },
     {
       title: "Send to capsules",
+      cta: "Open in Fashion Studio for a capsule / lookbook",
+      engine: "capsule or lookbook",
       tool: "FV Studios → Fashion Studio",
       blocker: "Capsules can only hold items from the existing live shop list. This draft lives in the new product list, so it cannot be added until the two are linked.",
     },
     {
       title: "Send to try-ons",
+      cta: "Open in Fashion Studio for a try-on haul",
+      engine: "try-on",
       tool: "FV Studios → Fashion Studio",
       blocker: "The Fitting Room only uses items in a shopper's cart from the live shop, and only accepts photos from trusted image hosts. CJ photos and unpublished drafts are not accepted yet.",
     },
@@ -290,7 +298,7 @@ function PilotSaved({ draft: initialDraft, justCreated, onSaved }: { draft: Save
         <div className="text-xs text-muted-foreground">{classificationBreadcrumb(draft.category_key)} · Draft ID {draft.id.slice(0, 8)}…</div>
         <div className="mt-3 text-[10px] uppercase tracking-[0.2em] text-muted-foreground">Saved name above · supplier's original name (private): <span className="normal-case tracking-normal">{draft.originalName ?? "not recorded"}</span></div>
         <SupplierPhotos urls={draft.media ?? []} />
-        <SupplierVariantPicker key={draft.id} productId={draft.id} variants={(draft.variants ?? []).map((v) => ({ id: v.id, ref: v.source_variant_ref, sku: v.sku, label: v.option_label, image: v.image_url ?? null }))} />
+        <SupplierVariantPicker key={`${draft.id}-${draft.variants?.length ?? 0}`} productId={draft.id} onHandoff={setHandoff} variants={(draft.variants ?? []).map((v) => ({ id: v.id, ref: v.source_variant_ref, sku: v.sku, label: v.option_label, image: v.image_url ?? null }))} />
         {draft.variants && draft.variants.length > 0 && (
           <details className="mt-2 text-xs"><summary className="cursor-pointer text-muted-foreground">{draft.variants.length} sizes/colours · supplier cost {draft.cost != null ? `$${Number(draft.cost).toFixed(2)}` : "unknown"} (permanent)</summary>
             <ul className="mt-1 space-y-0.5">{draft.variants.map((v) => <li key={v.source_variant_ref}>{v.option_label ?? v.sku ?? v.source_variant_ref} · {v.supplier_cost != null ? `${v.currency} ${Number(v.supplier_cost).toFixed(2)}` : "cost unknown"}</li>)}</ul>
@@ -315,11 +323,18 @@ function PilotSaved({ draft: initialDraft, justCreated, onSaved }: { draft: Save
             <PilotCategoryPicker mode="edit" store={store} category={cat} onChange={(s, c) => { setStore(s); setCat(c); setConfirm(false); }} />
             <label className="flex gap-2 text-sm"><input type="checkbox" checked={confirm} onChange={(e) => setConfirm(e.target.checked)} />
               I confirm: <strong>{name.trim() || "—"}</strong> in <strong>{cat ? classificationBreadcrumb(cat) : "—"}</strong></label>
-            <div className="flex flex-wrap gap-2">
-              <Button size="sm" disabled={editMissing.length > 0 || save.isPending} onClick={() => save.mutate()}>{save.isPending ? "Saving…" : "Save changes"}</Button>
-              <Button size="sm" variant="ghost" disabled={save.isPending} onClick={() => setEditing(false)}>Cancel</Button>
-            </div>
-            {editMissing.length > 0 && <p className="text-xs text-[color:var(--gold)]">Before saving: {editMissing.join(" · ")}</p>}
+            {unchanged ? (
+              <div className="flex flex-wrap items-center gap-2">
+                <p className="text-xs" role="status">Already saved — nothing to change.</p>
+                <Button size="sm" variant="outline" onClick={() => setEditing(false)}>Done</Button>
+              </div>
+            ) : (
+              <div className="flex flex-wrap gap-2">
+                <Button size="sm" disabled={editMissing.length > 0 || save.isPending} onClick={() => save.mutate()}>{save.isPending ? "Saving…" : "Save changes"}</Button>
+                <Button size="sm" variant="ghost" disabled={save.isPending} onClick={() => setEditing(false)}>Cancel</Button>
+              </div>
+            )}
+            {!unchanged && editMissing.length > 0 && <p className="text-xs text-[color:var(--gold)]">Before saving: {editMissing.join(" · ")}</p>}
             {save.error && <p className="text-xs text-destructive" role="alert">{(save.error as Error).message}</p>}
           </div>
         )}
@@ -334,7 +349,15 @@ function PilotSaved({ draft: initialDraft, justCreated, onSaved }: { draft: Save
                 <span className="rounded-full border border-border px-2 py-0.5 text-[10px] uppercase tracking-[0.2em] text-muted-foreground">Not connected yet</span>
               </div>
               <p className="mt-1 text-xs text-muted-foreground">{s.blocker}</p>
-               {s.title === "Make image / video" ? <p className="mt-2 text-xs font-medium">To carry this product over, choose its colour and size above, then use “Prepare verified handoff”.</p> : null}
+              {handoff ? (
+                <Link to="/studios/fashion" search={{ productId: handoff.productId, variantId: handoff.variant.id }} className="mt-2 inline-block text-xs font-medium underline">
+                  {s.cta} with {handoff.variant.colour}{handoff.variant.size ? ` / ${handoff.variant.size}` : ""} (opens Fashion Studio only; no {s.engine} engine is connected)
+                </Link>
+              ) : (
+                <button type="button" className="mt-2 text-xs font-medium underline" onClick={() => document.getElementById(`variant-picker-${draft.id}`)?.scrollIntoView({ behavior: "smooth", block: "center" })}>
+                  Choose a colour and size first, then press “Prepare verified handoff”
+                </button>
+              )}
             </li>
           ))}
         </ul>
