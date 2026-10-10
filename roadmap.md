@@ -48,3 +48,4 @@
 - [x] Virtual Try-On Phase A (Founder-approved, 10 Oct): removed admin read access to customer try-on photos and results; owner-only access kept. Stop for review.
 - [x] Virtual Try-On Phase B (Founder-approved, 10 Oct): private Try-On Preparation Studio at /admin/tryon-prep, readiness records, audited decisions, re-review on photo/size/category change. No try-on run. Stop for review.
 - [x] Virtual Try-On Phase C technical setup (Founder-approved, 10 Oct): Founder-only CJ photo check on Try-On Prep; CJ servers allowed only on this pilot path. No AI generation. Next: separate approval for one generated pilot.
+- [ ] CJ one-product pilot — BLOCKED: shop write access expired (Founder must reconnect Shopify); retail price + collection need Founder approval; CJ removal API unconfirmed. Read-only checks done (495 My Products).
