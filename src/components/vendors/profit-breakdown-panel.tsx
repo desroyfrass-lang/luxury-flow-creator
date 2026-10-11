@@ -170,7 +170,7 @@ export function ProfitBreakdownPanel(props: {
   </section>;
 }
 
-function Disclosure({ title, summary, children }: { title: string; summary: string; children: React.ReactNode }) {
+export function Disclosure({ title, summary, children }: { title: string; summary: string; children: React.ReactNode }) {
   return <details className="pricing-disclosure"><summary><span className="pricing-disclosure-label"><strong>{title}</strong><span className="text-muted-foreground">{summary}</span></span><ChevronDown className="pricing-chevron size-5" /></summary><div className="pricing-disclosure-content">{children}</div></details>;
 }
 function CostRow({ label, entry, onChange }: { label: string; entry: { amount: string; state: CostState }; onChange: (e: { amount: string; state: CostState }) => void }) {
