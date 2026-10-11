@@ -1,5 +1,7 @@
 # Roadmap
 
+- [ ] A1 Pricing Room only: compact local white/gold presentation, editable estimated planning costs, costliest-variant recommendations, preserve disclosures/save/quotes, focused tests and browser checks; no deployment.
+
 - [x] Retail 25% minimum margin guardrail (margin after all selling costs, no retail platform cut) + reverse mistaken 8%→10% affiliate allocation edit with audit note.
 - [ ] CJ pilot draft — blocked on Founder: retail sales allocation (not established), packaging/other cost confirmation, final price, collection.
 
