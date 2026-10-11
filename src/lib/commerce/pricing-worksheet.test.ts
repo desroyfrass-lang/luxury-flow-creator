@@ -24,6 +24,27 @@ describe("A1 pricing planning rules", () => {
     expect(a.result.lines.find((x) => x.key === "processingFeePct")?.amount).toBe(.9);
     expect(b.result.lines.find((x) => x.key === "processingFeePct")?.amount).toBe(1.2);
   });
+  it("pilot US shipping and all illustrative costs produce exact projected values", () => {
+    const p = planningBreakdown({ ...base, listPrice: 27.41 });
+    expect(p.profit).toBe(10.97);
+    expect(p.marginPct).toBe(40.01);
+    expect(p.result.totalCost).toBe(16.44);
+    expect(p.result.lines.find((x) => x.key === "shippingCost")?.amount).toBe(7.35);
+    expect(p.result.lines.find((x) => x.key === "processingFeePct")?.amount).toBe(.82);
+    expect(p.result.lines.find((x) => x.key === "processingFeeFixed")?.amount).toBe(.30);
+    expect(p.result.lines.find((x) => x.key === "packagingCost")?.amount).toBe(.50);
+    expect(p.result.lines.find((x) => x.key === "otherCost")?.amount).toBe(.50);
+    expect(p.result.canApprove).toBe(false);
+  });
+  it("10% discount charges percentage fees on discounted revenue, not list price", () => {
+    const p = planningBreakdown({ ...base, listPrice: 40, discountPct: estimate(10), commissionPct: estimate(10) });
+    expect(p.result.charged).toBe(36);
+    expect(p.result.lines.find((x) => x.key === "processingFeePct")?.amount).toBe(1.08);
+    expect(p.result.lines.find((x) => x.key === "commissionPct")?.amount).toBe(3.60);
+    expect(p.profit).toBe(15.70);
+    expect(p.preferred).toBe(36.93);
+    expect(planningBreakdown({ ...base, discountPct: estimate(10), commissionPct: { amount: null, state: "not_applicable" } }).preferred).toBe(30.45);
+  });
   it("discount and applicable commission enter the target equation once", () => {
     const b = { ...base, discountPct: estimate(10), commissionPct: estimate(10) };
     expect(planningBreakdown(b).preferred).toBe(36.93);

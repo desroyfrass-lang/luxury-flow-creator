@@ -86,6 +86,13 @@
 .pricing-room .pricing-breakdown { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 8px 16px; }
 .pricing-room .pricing-breakdown dd { text-align: right; overflow-wrap: anywhere; }
 .pricing-room .pricing-variant[aria-pressed="true"] { border-color: var(--pricing-gold); background: var(--accent); }
+@media (min-width: 1100px) {
+  .pricing-room {
+    width: min(calc(100vw - 160px), 1100px);
+    max-width: none;
+    margin-inline: calc((100% - min(calc(100vw - 160px), 1100px)) / 2);
+  }
+}
 @media (max-width: 640px) {
   .pricing-room .pricing-summary { padding: 12px 12px 0; }
   .pricing-room .pricing-body { padding: 12px; }

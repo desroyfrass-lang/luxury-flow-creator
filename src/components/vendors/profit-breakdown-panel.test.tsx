@@ -53,7 +53,7 @@ describe("variant-specific costs", () => {
   it("unknown costs show readable blocking status, not zeros", () => {
     const html = render();
     expect(html).toContain("Policy not confirmed");
-    expect(html).toContain("Financial approval blocked");
+    expect(html).toContain("Approval blocked");
   });
 });
 
