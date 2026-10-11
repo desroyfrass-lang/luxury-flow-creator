@@ -8,3 +8,4 @@ type: constraint
 - The 10% figure is for COMMISSIONS, not a retail sales cut.
 - Retail sales allocation/platform cut is NOT established — never invent 8% or 10% for retail.
 - affiliate_policy.platform_allocation_rate (8) belongs to the affiliate engine only.
+- Target range (Founder, 2026-10-11): 40% preferred starting target, 30–39.99% acceptable, 25–29.99% needs Founder review, <25% blocked. 40% is a target, never a floor. Recommend a price only when every cost is verified; otherwise show lower-bound estimates labelled not safe/approved.
