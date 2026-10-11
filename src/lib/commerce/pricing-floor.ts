@@ -117,6 +117,8 @@ export type Breakdown = {
   surplus: number | null;
   floorPrice: number | null;
   warnings: string[];
+  /** Always computed from whatever is known; missing costs count as 0, so these are LOWER bounds only. */
+  provisional: { charged: number | null; knownCost: number | null; profitBeforeMissing: number | null; floorOnKnownCosts: number | null; missing: string[] };
 };
 
 const LABELS: Record<string, string> = {
@@ -174,5 +176,21 @@ export function profitBreakdown(i: BreakdownInput): Breakdown {
   else if (incomplete || !m) status = "incomplete";
   else status = estimated ? "protected_estimated" : "protected_verified";
 
-  return { status, canApprove: status === "protected_verified", charged, lines, totalCost, profit, marginPct: m?.marginPct ?? null, protectedProfit, surplus, floorPrice: floor, warnings };
+  const missing = keys.filter((k) => { const e = i[k]; return e.state !== "not_applicable" && (e.state === "missing" || e.state === "pending_policy" || e.amount == null || !Number.isFinite(e.amount)); }).map((k) => LABELS[k]);
+  const z = (e: CostEntry) => { const x = val(e); return x != null && Number.isFinite(x) && e.state !== "missing" && e.state !== "pending_policy" ? x : 0; };
+  const known: RetailCosts = {
+    supplierCost: z(i.supplierCost), shippingCost: z(i.shippingCost), packagingCost: z(i.packagingCost), otherCost: z(i.otherCost),
+    processingFeePct: z(i.processingFeePct), processingFeeFixed: z(i.processingFeeFixed), discountPct: z(i.discountPct), commissionPct: z(i.commissionPct), currency: i.currency,
+  };
+  const pCharged = i.listPrice && i.listPrice > 0 ? r2(i.listPrice * (1 - known.discountPct! / 100)) : null;
+  const pm = pCharged != null && known.supplierCost > 0 ? retailMargin(i.listPrice!, known) : null;
+  const provisional = {
+    charged: pCharged,
+    knownCost: pm?.profit != null && pCharged != null ? r2(pCharged - pm.profit) : null,
+    profitBeforeMissing: pm?.profit ?? null,
+    floorOnKnownCosts: known.supplierCost > 0 ? minimumGuardrailPrice(known).floorPrice : null,
+    missing,
+  };
+
+  return { provisional, status, canApprove: status === "protected_verified", charged, lines, totalCost, profit, marginPct: m?.marginPct ?? null, protectedProfit, surplus, floorPrice: floor, warnings };
 }

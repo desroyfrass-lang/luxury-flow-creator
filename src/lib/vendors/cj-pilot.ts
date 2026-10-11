@@ -86,3 +86,7 @@ export function cleanSuggestions(list: NameSuggestion[], originalName: string): 
 export function isEditableProductCategory(primaryStore: string, categoryKey: string): boolean {
   return validateClassification({ primaryStore, categoryKey, listingKind: "product" }).length === 0;
 }
+
+/** Read-only CJ freight quote for the pilot (lowest US option, read 2026-10-10).
+ *  A quote, not a verified charge — the worksheet treats it as an estimate. */
+export const PILOT_CJ_US_SHIPPING_QUOTE = { amount: 7.35, currency: "USD", note: "CJ freight quote, lowest US option, read 2026-10-10" } as const;

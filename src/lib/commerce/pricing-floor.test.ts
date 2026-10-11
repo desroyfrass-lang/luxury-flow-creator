@@ -117,3 +117,24 @@ describe("Vendor Room protected profit + surplus", () => {
     expect(profitBreakdown({ ...base, listPrice: null }).status).toBe("incomplete");
   });
 });
+
+describe("Vendor Room cascade with missing costs", () => {
+  const partial: BreakdownInput = {
+    ...base, listPrice: 30,
+    processingFeePct: { amount: null, state: "missing" }, processingFeeFixed: { amount: null, state: "missing" },
+    shippingCost: { amount: 7.35, state: "estimated" }, commissionPct: { amount: null, state: "pending_policy" },
+  };
+  it("one price still produces lower-bound numbers but never approves", () => {
+    const b = profitBreakdown(partial);
+    expect(b.canApprove).toBe(false);
+    expect(b.provisional.charged).toBe(30);
+    expect(b.provisional.knownCost).toBe(14.32);
+    expect(b.provisional.profitBeforeMissing).toBe(15.68);
+    expect(b.provisional.missing).toContain("Commission (only if applicable)");
+  });
+  it("floor on known costs is lower than the full floor (missing costs raise it)", () => {
+    const b = profitBreakdown(partial);
+    expect(b.provisional.floorOnKnownCosts).toBe(19.1);
+    expect(b.provisional.floorOnKnownCosts!).toBeLessThan(20.28);
+  });
+});
