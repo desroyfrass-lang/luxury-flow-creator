@@ -128,7 +128,7 @@ function VendorWorkspace() {
                 <p className="text-sm text-muted-foreground">You have no vendor brands yet.</p>
               ) : (
                 data.vendors.map((v) => (
-                  <BrandCard
+                  <BrandCard isFounder={isFounder}
                     key={v.id}
                     vendor={v}
                     products={data.products.filter((p) => p.vendor_id === v.id)}
