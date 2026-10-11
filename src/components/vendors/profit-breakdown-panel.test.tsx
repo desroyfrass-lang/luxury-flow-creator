@@ -7,12 +7,12 @@ const variants = ["S", "M", "L", "XL", "2XL", "3XL"].map((s) => ({ id: s, option
 
 describe("Vendor Room worksheet initial render", () => {
   const html = renderToString(<ProfitBreakdownPanel currency="USD" offerCost={6.97} variants={variants} knownShipping={{ amount: 7.35, note: "quote" }} />);
-  it("customer pays shipping by default: prefills 9.30 (6.97 ÷ 0.75, rounded up)", () => {
-    expect(html).toContain('value="9.30"');
+  it("shipping included: prefills 19.10 ((6.97 + 7.35) ÷ 0.75, rounded up)", () => {
+    expect(html).toContain('value="19.10"');
     expect(html).toContain("provisional-price-note");
   });
   it("fills every variant row without typing, and never shows it as verified", () => {
-    expect(html.match(/USD 9\.30/g)!.length).toBeGreaterThanOrEqual(6);
+    expect(html.match(/USD 19\.10/g)!.length).toBeGreaterThanOrEqual(6);
     expect(html).not.toContain("25% protected profit verified");
   });
   it("recalculates from a changed price", () => {
@@ -32,15 +32,27 @@ describe("target range display", () => {
     const html = renderToString(<ProfitBreakdownPanel currency="USD" offerCost={6.97} variants={variants} knownShipping={{ amount: 7.35, note: "quote" }} />);
     expect(html).toContain("frassy-target-provisional");
     expect(html).not.toContain("frassy-target-verified");
-    expect(html).toContain("USD 11.62");
+    expect(html).toContain("USD 23.87");
   });
 });
 
-describe("shipping responsibility", () => {
-  it("CJ shipping is shown for reference, not as a product cost, by default", () => {
-    const html = renderToString(<ProfitBreakdownPanel currency="USD" offerCost={6.97} variants={variants} knownShipping={{ amount: 7.35, note: "quote" }} />);
-    expect(html).toContain("Customer pays (default)");
-    expect(html).toContain("not a product cost");
-    expect(html).not.toContain("Shipping paid by FRASS");
+describe("standard shipping included", () => {
+  const now = new Date("2026-10-11T10:00:00Z");
+  const q = (price: number, exp: string) => ({ method: "LuWei Ordinary US", price, currency: "USD", fetched_at: "2026-10-11T09:00:00Z", expires_at: exp, aging_days: "5-11" });
+  it("shows shipping as included and never as a checkout charge", () => {
+    const html = renderToString(<ProfitBreakdownPanel currency="USD" offerCost={6.97} variants={variants} knownShipping={{ amount: 7.35, note: "quote" }} now={now} />);
+    expect(html).toContain("Standard shipping included in the price");
+    expect(html).not.toContain("Customer pays (default)");
+  });
+  it("a fresh saved CJ quote replaces the earlier reading: 6.97 + 7.23 → 18.94", () => {
+    const quotes = Object.fromEntries(variants.map((v) => [v.id, [q(7.23, "2026-10-14T09:00:00Z")]]));
+    const html = renderToString(<ProfitBreakdownPanel currency="USD" offerCost={6.97} variants={variants} knownShipping={{ amount: 7.35, note: "quote" }} quotes={quotes} now={now} />);
+    expect(html).toContain('value="18.94"');
+  });
+  it("an expired quote fails closed (no provisional price from shipping)", () => {
+    const quotes = Object.fromEntries(variants.map((v) => [v.id, [q(7.23, "2026-10-11T09:30:00Z")]]));
+    const html = renderToString(<ProfitBreakdownPanel currency="USD" offerCost={6.97} variants={variants} quotes={quotes} now={now} />);
+    expect(html).toContain("Quote expired");
+    expect(html).not.toContain("25% protected profit verified");
   });
 });
