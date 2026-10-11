@@ -75,7 +75,8 @@ export function ProfitBreakdownPanel(props: {
   const setTarget = (p: number | null) => { if (p != null) setTypedPrice(p.toFixed(2)); };
 
   return <section className="pricing-room" data-testid="profit-breakdown" aria-label="Frassy Pricing Room">
-    <header className="flex flex-wrap items-center justify-between gap-2">
+    <div className="pricing-summary" data-testid="pricing-summary">
+    <header className="pricing-header">
       <h3 className="pricing-title">Frassy Pricing Room</h3>
       <span className="pricing-eyebrow">United States · USD · Private planning</span>
     </header>
@@ -86,18 +87,20 @@ export function ProfitBreakdownPanel(props: {
         <p className="mt-2 text-muted-foreground" data-testid="frassy-target-provisional">{isAuto ? "Frassy’s estimated 40% recommendation" : `Frassy’s estimated 40% recommendation: ${money(rec.p40, cur)}`}</p>
       </div>
       <div className="pricing-metrics" aria-live="polite" aria-atomic="true">
-        <div><span className="text-muted-foreground">Projected net profit</span><strong className="pricing-metric" data-testid="projected-profit">{money(profit, cur)}</strong><span className="text-muted-foreground">After planned selling costs</span></div>
+        <div><span className="text-muted-foreground">Projected net profit</span><strong className="pricing-metric" data-testid="projected-profit">{money(profit, cur)}</strong><span className="text-muted-foreground">Costliest variant</span></div>
         <div><span className="text-muted-foreground">Projected net margin</span><strong className="pricing-metric" data-testid="projected-margin">{margin == null ? "Unknown" : `${margin.toFixed(2)}%`}</strong><span className="pricing-gold">{variance == null ? "Needs cost information" : `${variance >= 0 ? "+" : ""}${variance.toFixed(2)} pts vs 40%`}</span></div>
       </div>
     </div>
     <div className="pricing-status">
       <span className={margin != null && margin < 25 ? "text-destructive" : "pricing-gold"}><ShieldCheck className="mr-1 inline size-4" />25% minimum · {margin == null ? "unconfirmed" : margin < 25 ? "below minimum — blocked" : "met on projection"}</span>
       <span><ArrowUpRight className="mr-1 inline size-4" />40% target · {margin == null ? "unconfirmed" : margin >= 40 ? "preferred" : margin >= 30 ? "acceptable 30–39.99%" : margin >= 25 ? "Founder review needed" : "blocked"}</span>
-      <span><Truck className="mr-1 inline size-4" />US standard shipping included</span>
+      <span><Truck className="mr-1 inline size-4" />US shipping included · planning only</span>
     </div>
-    <p className="font-semibold text-destructive">{allApprovable ? "Ready for Founder review." : "Financial approval blocked — planning estimates are not verified."}</p>
-    <p className="mt-1 text-muted-foreground">{projected ? `Price protects the costliest variant (${worst.v.option_label ?? "Product"}).` : "Missing or expired costs prevent a complete projection."} {inputs.commissionPct.state === "pending_policy" ? "Planning assumes no commission; applicability is not confirmed." : ""} Taxes/duties are not included in this estimate; their treatment needs confirmation.</p>
-    <div className="my-3 flex flex-wrap gap-2">
+    </div>
+    <div className="pricing-body">
+    <p className={`font-semibold ${allApprovable ? "pricing-gold" : "text-destructive"}`}>{allApprovable ? "Ready for Founder review." : "Approval blocked · estimates are not verified."}</p>
+    <p className="mt-1 text-muted-foreground">{projected ? `Costliest variant: ${worst.v.option_label ?? "Product"}.` : "Missing or expired costs — projection incomplete."} {inputs.commissionPct.state === "pending_policy" ? "No-commission scenario; policy unconfirmed." : ""} Tax/duties unconfirmed.</p>
+    <div className="pricing-actions">
       <Button type="button" variant="outline" disabled={rec.p40 == null} onClick={() => setTarget(rec.p40)}>Use 40% · {money(rec.p40, cur)}</Button>
       <Button type="button" variant="outline" disabled={rec.p30 == null} onClick={() => setTarget(rec.p30)}>Use 30% · {money(rec.p30, cur)}</Button>
       <Button type="button" variant="outline" disabled={rec.p25 == null} onClick={() => setTarget(rec.p25)}>25% floor · {money(rec.p25, cur)}</Button>
@@ -108,7 +111,7 @@ export function ProfitBreakdownPanel(props: {
     {props.saveError && <p role="alert" className="text-destructive">{props.saveError}</p>}
 
     <Disclosure title="Planning assumptions & fees" summary="Editable estimates · not actual charges">
-      <p className="mb-2 text-muted-foreground">Illustrative planning placeholders: 3% processing + USD 0.30 fixed, USD 0.50 packaging and USD 0.50 other expenses. These are not contracted Shopify fees or supplier charges. Adjust them for your plan. Commission is excluded only as a conditional scenario until policy is confirmed.</p>
+      <p className="mb-2 text-muted-foreground">Illustrative, editable: payment 3% + USD 0.30; packaging USD 0.50; other USD 0.50. Not verified Shopify or supplier charges. Commission applies only when confirmed.</p>
       <CostRow label="Payment processing (%)" entry={inputs.processingFeePct} onChange={setEntry("processingFeePct")} />
       <CostRow label={`Payment fixed fee (${cur})`} entry={inputs.processingFeeFixed} onChange={setEntry("processingFeeFixed")} />
       <CostRow label={`Packaging (${cur})`} entry={inputs.packagingCost} onChange={setEntry("packagingCost")} />
@@ -133,7 +136,7 @@ export function ProfitBreakdownPanel(props: {
       </div>
     </Disclosure>
     <Disclosure title="Shipping & destination" summary="US only · not live at checkout">
-      <div data-testid="shipping-included"><h4 className="font-bold">Standard shipping included in the price (US)</h4><p className="text-muted-foreground">Planned standard delivery is paid from the retail price, not charged shipping again. Shopify checkout settings are unchanged; this offer is not live. Other countries, multi-item shipping and duties/taxes require confirmation.</p>
+      <div data-testid="shipping-included"><h4 className="font-bold">Standard shipping included in the price (US)</h4><p className="text-muted-foreground">Planning: delivery comes from the price, not charged shipping again. Checkout unchanged; offer not live. Other countries and multi-item delivery need confirmation.</p>
       <label className="my-3 flex min-h-11 items-center gap-3"><input type="checkbox" className="size-5" checked={inputs.oversized} onChange={(e) => setInputs({ ...inputs, oversized: e.target.checked })} />Oversized or heavy — needs an individual quote</label>
       {props.onFetchQuotes && <Button type="button" variant="outline" disabled={props.fetchingQuotes} onClick={props.onFetchQuotes}><RefreshCw />{props.fetchingQuotes ? "Asking CJ…" : "Get fresh CJ US shipping quotes (read-only)"}</Button>}
       {props.quoteError && <p role="alert" className="mt-2 text-destructive">{props.quoteError}</p>}
@@ -142,14 +145,15 @@ export function ProfitBreakdownPanel(props: {
     <Disclosure title="Approval checks & calculation" summary={allApprovable ? "Ready for Founder review" : "Verification required"}>
       <p className="text-muted-foreground">Listed price = (supplier + included shipping + packaging + other expenses + fixed fee) ÷ (1 − target margin − processing % − applicable commission %) ÷ (1 − discount %). Rounded up to whole cents for the costliest variant.</p>
       <p className="mt-2 text-muted-foreground">In plain English: the price must leave the target profit after the sale’s costs, like setting aside your share before spending the rest. Estimates are planning only, never permission to publish.</p>
-      <ul className="mt-3 list-disc space-y-1 pl-5">{[...new Set(rows.flatMap((r) => [...r.b.warnings, r.ship.note]))].map((w) => <li key={w}>{w}</li>)}</ul>
-      <p className="mt-3 font-semibold">Tax/duties treatment and standard shipping method remain unconfirmed. No price, checkout or publishing changes are made here.</p>
+      <ul className="mt-3 list-disc space-y-1 pl-5">{[...new Set(rows.flatMap((r) => r.b.warnings))].map((w) => <li key={w}>{w}</li>)}</ul>
+      <p className="mt-3 font-semibold">Tax/duties and standard delivery method unconfirmed. Shop prices and checkout unchanged.</p>
     </Disclosure>
+    </div>
   </section>;
 }
 
 function Disclosure({ title, summary, children }: { title: string; summary: string; children: React.ReactNode }) {
-  return <details className="pricing-disclosure"><summary><span><strong className="block">{title}</strong><span className="text-muted-foreground">{summary}</span></span><ChevronDown className="pricing-chevron size-5" /></summary><div className="pricing-disclosure-content">{children}</div></details>;
+  return <details className="pricing-disclosure"><summary><span className="pricing-disclosure-label"><strong>{title}</strong><span className="text-muted-foreground">{summary}</span></span><ChevronDown className="pricing-chevron size-5" /></summary><div className="pricing-disclosure-content">{children}</div></details>;
 }
 function CostRow({ label, entry, onChange }: { label: string; entry: { amount: string; state: CostState }; onChange: (e: { amount: string; state: CostState }) => void }) {
   const needsAmount = entry.state === "verified" || entry.state === "estimated";

@@ -21,7 +21,13 @@
   border: 1px solid var(--pricing-gold);
   border-top-width: 3px;
   border-radius: 6px;
-  padding: 20px;
+  padding: 0;
+  width: 100%;
+  max-width: 100%;
+  max-height: min(84dvh, 960px);
+  overflow: auto;
+  overscroll-behavior: contain;
+  scrollbar-gutter: stable;
   margin-top: 12px;
   font-family: var(--font-sans);
   font-size: 16px;
@@ -40,6 +46,12 @@
   min-width: 0;
 }
 .pricing-room h3, .pricing-room strong, .pricing-room input { font-family: inherit; }
+.pricing-room .pricing-summary { position: sticky; top: 0; z-index: 2; background: var(--background); padding: 16px 20px 0; border-bottom: 1px solid var(--pricing-gold); }
+.pricing-room .pricing-body { padding: 12px 20px 16px; }
+.pricing-room .pricing-header { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 8px 16px; }
+.pricing-room .pricing-header > :last-child { text-align: right; }
+.pricing-room .pricing-actions { display: flex; flex-wrap: wrap; gap: 8px; margin: 12px 0; }
+.pricing-room :is(input, button, select, summary) { scroll-margin-top: 340px; }
 .pricing-room button, .pricing-room select, .pricing-room summary, .pricing-room input {
   min-height: 44px;
   font-size: 16px;
@@ -56,30 +68,44 @@
 .pricing-room :is(button, select, summary, input):focus-visible { outline: 2px solid var(--pricing-gold-ink); outline-offset: 3px; }
 .pricing-room .pricing-title { font-size: 22px; font-weight: 700; line-height: 1.3; }
 .pricing-room .pricing-eyebrow { color: var(--pricing-gold-ink); font-weight: 700; font-size: 16px; }
-.pricing-room .pricing-dashboard { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: 24px; margin-top: 16px; }
+.pricing-room .pricing-dashboard { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr); gap: 24px; margin-top: 12px; }
 .pricing-room .pricing-final { height: 82px; font-size: 56px; font-weight: 800; line-height: 1.1; background: var(--background); border-color: var(--pricing-gold); width: 100%; font-variant-numeric: tabular-nums; }
 .pricing-room .pricing-metrics { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; align-content: center; }
 .pricing-room .pricing-metric { display: block; font-size: 32px; line-height: 1.25; font-weight: 750; font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
-.pricing-room .pricing-status { display: flex; flex-wrap: wrap; gap: 8px 20px; margin-top: 16px; padding: 12px 0; border-top: 1px solid var(--border); }
+.pricing-room .pricing-status { display: flex; flex-wrap: wrap; gap: 6px 20px; margin-top: 12px; padding: 10px 0; border-top: 1px solid var(--border); }
 .pricing-room .pricing-gold { color: var(--pricing-gold-ink); }
 .pricing-room .pricing-disclosure { border-top: 1px solid var(--border); }
-.pricing-room .pricing-disclosure > summary { display: flex; align-items: center; gap: 12px; justify-content: space-between; padding: 12px 4px; cursor: pointer; list-style: none; border: 1px solid transparent; }
+.pricing-room .pricing-disclosure > summary { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 12px; padding: 10px 4px; cursor: pointer; list-style: none; border: 1px solid transparent; }
+.pricing-room .pricing-disclosure-label { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 16px; }
 .pricing-room .pricing-disclosure > summary::-webkit-details-marker { display: none; }
 .pricing-room .pricing-chevron { flex: none; transition: transform 180ms ease; }
 .pricing-room .pricing-disclosure[open] > summary .pricing-chevron { transform: rotate(180deg); }
 .pricing-room .pricing-disclosure-content { padding: 8px 0 16px; }
-.pricing-room .pricing-cost-row { display: grid; grid-template-columns: minmax(0, 1fr) 100px minmax(0, 210px); gap: 10px; align-items: center; padding: 10px 0; border-bottom: 1px solid var(--border); }
+.pricing-room .pricing-cost-row { display: grid; grid-template-columns: minmax(0, 1fr) 100px minmax(0, 210px); gap: 10px; align-items: center; padding: 6px 0; border-bottom: 1px solid var(--border); }
 .pricing-room .pricing-cost-row select { width: 100%; background: var(--background); color: var(--foreground); border: 1px solid var(--input); border-radius: 4px; padding: 8px; }
 .pricing-room .pricing-breakdown { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 8px 16px; }
 .pricing-room .pricing-breakdown dd { text-align: right; overflow-wrap: anywhere; }
 .pricing-room .pricing-variant[aria-pressed="true"] { border-color: var(--pricing-gold); background: var(--accent); }
 @media (max-width: 640px) {
-  .pricing-room { padding: 16px; }
-  .pricing-room .pricing-dashboard { grid-template-columns: minmax(0, 1fr); gap: 16px; }
-  .pricing-room .pricing-final { font-size: 44px; height: 68px; }
-  .pricing-room .pricing-metric { font-size: 28px; }
+  .pricing-room .pricing-summary { padding: 12px 12px 0; }
+  .pricing-room .pricing-body { padding: 12px; }
+  .pricing-room .pricing-header { grid-template-columns: minmax(0, 1fr); gap: 2px; }
+  .pricing-room .pricing-header > :last-child { text-align: left; }
+  .pricing-room .pricing-dashboard { grid-template-columns: minmax(0, 1fr); gap: 10px; }
+  .pricing-room .pricing-final { font-size: 36px; height: 56px; }
+  .pricing-room .pricing-metric { font-size: 24px; }
+  .pricing-room .pricing-status { gap: 2px 12px; font-size: 14px; }
+  .pricing-room .pricing-dashboard p { margin-top: 4px; }
+  .pricing-room .pricing-actions { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .pricing-room .pricing-cost-row { grid-template-columns: 100px minmax(0, 1fr); }
   .pricing-room .pricing-cost-row > :first-child { grid-column: 1 / -1; }
+}
+@media (min-width: 641px) and (max-width: 900px) {
+  .pricing-room .pricing-header { grid-template-columns: minmax(0, 1fr); }
+  .pricing-room .pricing-header > :last-child { text-align: left; }
+  .pricing-room .pricing-dashboard { gap: 16px; }
+  .pricing-room .pricing-final { font-size: 44px; }
+  .pricing-room .pricing-metric { font-size: 26px; }
 }
 @media (prefers-reduced-motion: reduce) {
   .pricing-room *, .pricing-room *::before, .pricing-room *::after { transition: none; }

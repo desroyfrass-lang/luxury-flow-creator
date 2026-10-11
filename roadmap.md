@@ -1,5 +1,6 @@
 # Roadmap
 
+- [ ] Final A1 room-only refinement: full available inner width, sticky price/profit/margin/targets, compact disclosures; verify math, interactions, saving, contrast, mobile and full tests. No deployment.
 - [x] A1 Pricing Room only: local white/gold compact panel, estimated editable planning costs, costliest-variant recommendations and existing disclosures/save/quotes preserved. 52 focused tests and 327 full-suite tests passed; automatic build OK; isolated desktop/phone interactions passed. No deployment or migration.
 - [ ] A1 real Founder-room preview and saved worksheet reload — blocked by existing device/password identity confirmation; no bypass. Separate typecheck not run (automatic verification only).
 
