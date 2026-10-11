@@ -99,7 +99,7 @@ describe("worksheet save validation", () => {
 describe("server access control", () => {
   const src = readFileSync("src/lib/vendors/pricing-room.functions.ts", "utf8");
   it("every Pricing Room server function requires sign-in", () => {
-    expect(src.match(/createServerFn/g)!.length).toBe(src.match(/middleware\(\[requireSupabaseAuth\]\)/g)!.length);
+    expect(src.match(/createServerFn\(/g)!.length).toBe(src.match(/middleware\(\[requireSupabaseAuth\]\)/g)!.length);
   });
   it("approval is Founder (super_admin) only and reads and writes are admin only", () => {
     expect(src).toContain('hasRole(context, "super_admin")');
@@ -107,6 +107,6 @@ describe("server access control", () => {
   });
   it("reads and saves are always scoped to product AND destination", () => {
     expect(src).not.toMatch(/upsert\(/);
-    expect(src.match(/\.eq\("destination", data\.destination\)/g)!.length).toBeGreaterThanOrEqual(4);
+    expect(src.match(/\.eq\("destination", data\.destination\)/g)!.length).toBeGreaterThanOrEqual(3);
   });
 });

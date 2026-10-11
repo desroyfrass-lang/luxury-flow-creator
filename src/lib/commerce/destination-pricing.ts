@@ -116,7 +116,7 @@ export function computeDestinationPricing(args: {
     req("minimum", `Every variant keeps at least ${RETAIL_MIN_MARGIN_PCT}% verified margin`, variants.length > 0 && variants.every((v) => v.verifiedStatus === "protected_verified"), lowestMarginPct != null ? `Lowest projected margin ${lowestMarginPct}%` : "Not computable"),
   ];
   const ready = requirements.every((r) => r.met);
-  const anyEstimated = variants.some((v) => v.projectedMarginPct != null);
+  const anyEstimated = variants.some((v) => v.preferred != null);
   return {
     destination: dest, retailCurrency, costCurrency: "USD", finalPrice: args.finalPrice, variants,
     costliestVariantId: costliest, recommendedPrice, minimumPrice: mins ? Math.max(...mins) : null,
