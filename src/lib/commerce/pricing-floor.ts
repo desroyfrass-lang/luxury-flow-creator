@@ -64,18 +64,41 @@ export function retailMargin(listPrice: number, c: RetailCosts): SafetyResult {
   };
 }
 
-/** Lowest listed price (whole cents) that keeps the 25% minimum margin. */
-export function minimumGuardrailPrice(c: RetailCosts): FloorResult {
+/** Founder-approved target range (2026-10-11): 40% preferred start, 30–39.99% acceptable,
+ *  25–29.99% Founder review, below 25% blocked. 40% is a target, never a floor. */
+export const RETAIL_TARGET_PREFERRED_PCT = 40;
+export const RETAIL_TARGET_ACCEPTABLE_MIN_PCT = 30;
+export type MarginBand = "preferred" | "acceptable" | "founder_review" | "blocked";
+export function marginBand(marginPct: number): MarginBand {
+  if (marginPct >= RETAIL_TARGET_PREFERRED_PCT - 1e-9) return "preferred";
+  if (marginPct >= RETAIL_TARGET_ACCEPTABLE_MIN_PCT - 1e-9) return "acceptable";
+  if (marginPct >= RETAIL_MIN_MARGIN_PCT - 1e-9) return "founder_review";
+  return "blocked";
+}
+
+/** Lowest listed whole-cent price whose margin (shared retailMargin math) reaches targetPct. */
+export function priceForMargin(c: RetailCosts, targetPct: number): FloorResult {
   const err = missingCost(c);
   const landed = err ? 0 : r2(c.supplierCost + c.shippingCost + c.packagingCost + c.otherCost);
   if (err) return { floorPrice: null, landedCost: landed, reason: err };
-  const keep = 1 - c.processingFeePct / 100 - (c.commissionPct ?? 0) / 100 - RETAIL_MIN_MARGIN_PCT / 100;
+  const keep = 1 - c.processingFeePct / 100 - (c.commissionPct ?? 0) / 100 - targetPct / 100;
   if (keep <= 0) return { floorPrice: null, landedCost: landed, reason: "Fees and margin leave no room for costs." };
+  const ok = (p: number) => (retailMargin(p, c).marginPct ?? -Infinity) >= targetPct - 1e-9 && exactMargin(p, c) >= targetPct - 1e-9;
   const charged = (landed + c.processingFeeFixed) / keep;
   let p = Math.ceil((charged / (1 - (c.discountPct ?? 0) / 100)) * 100) / 100;
-  for (let k = 0; k < 20 && !retailMargin(p, c).safe; k++) p = r2(p + 0.01);
-  for (let k = 0; k < 20 && retailMargin(r2(p - 0.01), c).safe; k++) p = r2(p - 0.01);
+  for (let k = 0; k < 20 && !ok(p); k++) p = r2(p + 0.01);
+  for (let k = 0; k < 20 && ok(r2(p - 0.01)); k++) p = r2(p - 0.01);
   return { floorPrice: p, landedCost: landed, reason: null };
+}
+function exactMargin(listPrice: number, c: RetailCosts): number {
+  const charged = listPrice * (1 - (c.discountPct ?? 0) / 100);
+  const costs = c.supplierCost + c.shippingCost + c.packagingCost + c.otherCost + charged * (c.processingFeePct / 100) + c.processingFeeFixed + charged * ((c.commissionPct ?? 0) / 100);
+  return ((charged - costs) / charged) * 100;
+}
+
+/** Lowest listed price (whole cents) that keeps the 25% minimum margin. */
+export function minimumGuardrailPrice(c: RetailCosts): FloorResult {
+  return priceForMargin(c, RETAIL_MIN_MARGIN_PCT);
 }
 
 /** Call before ANY retail price write. Throws when the price is unsafe or costs are missing. */
@@ -118,7 +141,10 @@ export type Breakdown = {
   floorPrice: number | null;
   warnings: string[];
   /** Always computed from whatever is known; missing costs count as 0, so these are LOWER bounds only. */
-  provisional: { charged: number | null; knownCost: number | null; profitBeforeMissing: number | null; floorOnKnownCosts: number | null; missing: string[] };
+  band: MarginBand | null;
+  /** Only when every cost is verified (none estimated/missing/pending). */
+  targets: { preferred: number | null; acceptableMin: number | null } | null;
+  provisional: { targetPreferredOnKnown: number | null; targetAcceptableOnKnown: number | null; charged: number | null; knownCost: number | null; profitBeforeMissing: number | null; floorOnKnownCosts: number | null; missing: string[] };
 };
 
 const LABELS: Record<string, string> = {
@@ -189,8 +215,21 @@ export function profitBreakdown(i: BreakdownInput): Breakdown {
     knownCost: pm?.profit != null && pCharged != null ? r2(pCharged - pm.profit) : null,
     profitBeforeMissing: pm?.profit ?? null,
     floorOnKnownCosts: known.supplierCost > 0 ? minimumGuardrailPrice(known).floorPrice : null,
+    targetPreferredOnKnown: known.supplierCost > 0 ? priceForMargin(known, RETAIL_TARGET_PREFERRED_PCT).floorPrice : null,
+    targetAcceptableOnKnown: known.supplierCost > 0 ? priceForMargin(known, RETAIL_TARGET_ACCEPTABLE_MIN_PCT).floorPrice : null,
     missing,
   };
 
-  return { provisional, status, canApprove: status === "protected_verified", charged, lines, totalCost, profit, marginPct: m?.marginPct ?? null, protectedProfit, surplus, floorPrice: floor, warnings };
+  const allVerified = costs != null && !incompleteCosts(i) && !estimated;
+  const targets = allVerified ? { preferred: priceForMargin(costs!, RETAIL_TARGET_PREFERRED_PCT).floorPrice, acceptableMin: priceForMargin(costs!, RETAIL_TARGET_ACCEPTABLE_MIN_PCT).floorPrice } : null;
+  const band = m?.marginPct != null ? marginBand(m.marginPct) : null;
+  if (band === "founder_review" && status === "protected_verified") warnings.push("Margin is 25–29.99%: allowed only with Founder review.");
+  const canApprove = status === "protected_verified" && band !== "founder_review";
+
+  return { band, targets, provisional, status, canApprove, charged, lines, totalCost, profit, marginPct: m?.marginPct ?? null, protectedProfit, surplus, floorPrice: floor, warnings };
+}
+
+function incompleteCosts(i: BreakdownInput): boolean {
+  return (["supplierCost", "shippingCost", "packagingCost", "processingFeePct", "processingFeeFixed", "discountPct", "commissionPct", "otherCost"] as const)
+    .some((k) => { const e = i[k]; return e.state !== "not_applicable" && (e.state === "missing" || e.state === "pending_policy" || e.amount == null || !Number.isFinite(e.amount)); });
 }
