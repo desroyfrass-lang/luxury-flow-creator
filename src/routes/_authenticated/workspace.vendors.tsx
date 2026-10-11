@@ -16,7 +16,7 @@ import { useAuthUserId } from "@/lib/auth/identity-watch";
 import { useIsAdmin } from "@/hooks/use-is-admin";
 import { ProfitBreakdownPanel } from "@/components/vendors/profit-breakdown-panel";
 import { CjPilotPanel } from "@/components/vendors/cj-pilot-panel";
-import { PILOT_CJ_PID } from "@/lib/vendors/cj-pilot";
+import { PILOT_CJ_PID, PILOT_CJ_US_SHIPPING_QUOTE } from "@/lib/vendors/cj-pilot";
 import { classificationBreadcrumb } from "@/lib/taxonomy/hierarchy";
 import {
   FULFILLMENT_MODES,
@@ -243,6 +243,7 @@ function BrandCard(props: {
                 currency={p.vendor_offers[0]?.currency ?? p.canonical_product_variants?.[0]?.currency ?? "USD"}
                 offerCost={p.vendor_offers[0]?.unit_cost ?? null}
                 variants={p.canonical_product_variants ?? []}
+                knownShipping={p.product_sources.some((s) => s.source_type === "cj" && s.source_ref === PILOT_CJ_PID) ? PILOT_CJ_US_SHIPPING_QUOTE : null}
               />
             )}
             {(p.draft_status === "draft" || p.draft_status === "prepared" || p.draft_status === "rejected") && (
