@@ -17,23 +17,23 @@ describe("FRASS KICKS retail minimum 25% margin", () => {
     expect(retailMargin(133.34, c).safe).toBe(true);
   });
 
-  it("pilot floor: $14.32 landed + 2.9% + $0.30 → $20.27; one cent less is blocked", () => {
+  it("pilot floor: $14.32 landed + 2.9% + $0.30 → $20.28; one cent less is blocked", () => {
     const r = minimumGuardrailPrice(pilot);
     expect(r.landedCost).toBe(14.32);
-    expect(r.floorPrice).toBe(20.27);
-    expect(retailMargin(20.27, pilot).safe).toBe(true);
-    expect(retailMargin(20.26, pilot).safe).toBe(false);
+    expect(r.floorPrice).toBe(20.28);
+    expect(retailMargin(20.28, pilot).safe).toBe(true);
+    expect(retailMargin(20.27, pilot).safe).toBe(false);
   });
 
   it("a discount raises the listed floor so the charged price still keeps 25%", () => {
     const r = minimumGuardrailPrice({ ...pilot, discountPct: 20 });
-    expect(r.floorPrice!).toBeGreaterThan(20.27);
+    expect(r.floorPrice!).toBeGreaterThan(20.28);
     expect(retailMargin(20.27, { ...pilot, discountPct: 20 }).safe).toBe(false);
     expect(retailMargin(r.floorPrice!, { ...pilot, discountPct: 20 }).safe).toBe(true);
   });
 
   it("packaging and other costs are counted", () => {
-    expect(minimumGuardrailPrice({ ...pilot, packagingCost: 1, otherCost: 0.5 }).floorPrice!).toBeGreaterThan(20.27);
+    expect(minimumGuardrailPrice({ ...pilot, packagingCost: 1, otherCost: 0.5 }).floorPrice!).toBeGreaterThan(20.28);
   });
 
   it("missing costs refuse a price", () => {
@@ -45,7 +45,7 @@ describe("FRASS KICKS retail minimum 25% margin", () => {
 
   it("unsafe retail price writes are blocked", () => {
     expect(() => assertRetailPriceSafe(19.99, pilot)).toThrow(/blocked/);
-    expect(() => assertRetailPriceSafe(20.27, pilot)).not.toThrow();
+    expect(() => assertRetailPriceSafe(20.28, pilot)).not.toThrow();
     expect(() => assertRetailPriceSafe(50, { ...pilot, supplierCost: Number.NaN })).toThrow(/blocked/);
   });
 
