@@ -25,3 +25,4 @@
 - Admin and super_admin roles change only through the database function founder_set_role (super_admin required, last super_admin protected, audited in founder_audit_ledger); a trigger on user_roles blocks every other path, including server code with the service key. Lower roles may be managed by admins through the same function. Why: no admin can elevate themselves or remove the Founder.
 
 - CJ shipping quotes are fetched read-only via CJ freightCalculate by Founder/admin server functions and stored insert-only in cj_shipping_quotes with fetched_at/expires_at; pricing uses only fresh quotes (src/lib/commerce/shipping-zones.ts). Why: auditable shipping inputs that fail closed when stale.
+- Pricing Room presentation scopes its semantic palette to `.pricing-room`; planning estimates reuse the worksheet and shared margin utilities, never approval or checkout writes. Why: keep the redesign isolated and projections separate from verified financial decisions.

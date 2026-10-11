@@ -1,5 +1,8 @@
 # Roadmap
 
+- [x] A1 Pricing Room only: local white/gold compact panel, estimated editable planning costs, costliest-variant recommendations and existing disclosures/save/quotes preserved. 52 focused tests and 327 full-suite tests passed; automatic build OK; isolated desktop/phone interactions passed. No deployment or migration.
+- [ ] A1 real Founder-room preview and saved worksheet reload — blocked by existing device/password identity confirmation; no bypass. Separate typecheck not run (automatic verification only).
+
 - [x] Retail 25% minimum margin guardrail (margin after all selling costs, no retail platform cut) + reverse mistaken 8%→10% affiliate allocation edit with audit note.
 - [ ] CJ pilot draft — blocked on Founder: retail sales allocation (not established), packaging/other cost confirmation, final price, collection.
 
