@@ -246,6 +246,13 @@
       "when": 1791720083216,
       "tag": "0034_pricing_room_tighten_grants",
       "breakpoints": true
+    },
+    {
+      "idx": 35,
+      "version": "7",
+      "when": 1791743707605,
+      "tag": "0035_pricing_room_destinations_approval",
+      "breakpoints": true
     }
   ]
 }
