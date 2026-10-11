@@ -47,7 +47,7 @@ const money = (n: number | null, cur: string) => (n == null ? "—" : `${cur} ${
 export function ProfitBreakdownPanel(props: { currency: string; offerCost: number | null; variants: Variant[]; knownShipping?: { amount: number; note: string } | null }) {
   const cur = props.currency || "USD";
   const blank = (state: CostState = "missing") => ({ amount: "", state });
-  const [price, setPrice] = useState("");
+  const [typedPrice, setTypedPrice] = useState<string | null>(null);
   const [c, setC] = useState({
     shippingCost: props.knownShipping ? { amount: String(props.knownShipping.amount), state: "estimated" as CostState } : blank(), packagingCost: blank(), otherCost: blank(),
     processingFeePct: blank(), processingFeeFixed: blank(),
@@ -56,21 +56,27 @@ export function ProfitBreakdownPanel(props: { currency: string; offerCost: numbe
   const set = (k: keyof typeof c) => (e: { amount: string; state: CostState }) => setC({ ...c, [k]: e });
 
   // Each variant is checked on its own supplier cost; offer cost is the fallback.
-  const rows = useMemo(() => {
-    const vs = props.variants.length ? props.variants : [{ id: "offer", option_label: "Product", sku: null, supplier_cost: props.offerCost, currency: cur }];
-    const lp = price.trim() === "" ? null : Number(price);
-    return vs.map((v) => ({
-      v,
-      b: profitBreakdown({
-        listPrice: lp != null && Number.isFinite(lp) ? lp : null,
+  const vs = useMemo(() => (props.variants.length ? props.variants : [{ id: "offer", option_label: "Product", sku: null, supplier_cost: props.offerCost, currency: cur }]), [props.variants, props.offerCost, cur]);
+  const build = (v: Variant, lp: number | null) => profitBreakdown({
+        listPrice: lp,
         currency: cur,
         supplierCost: v.supplier_cost != null ? { amount: Number(v.supplier_cost), state: "verified" } : { amount: null, state: "missing" },
         shippingCost: toEntry(c.shippingCost), packagingCost: toEntry(c.packagingCost), otherCost: toEntry(c.otherCost),
         processingFeePct: toEntry(c.processingFeePct), processingFeeFixed: toEntry(c.processingFeeFixed),
         discountPct: toEntry(c.discountPct), commissionPct: toEntry(c.commissionPct),
-      }),
-    }));
-  }, [props.variants, props.offerCost, price, c, cur]);
+      });
+  // Provisional suggestion: highest known-costs floor across variants (lower bound, never "safe").
+  const autoPrice = useMemo(() => {
+    const f = vs.map((v) => build(v, null).provisional.floorOnKnownCosts).filter((x): x is number => x != null);
+    return f.length ? Math.max(...f) : null;
+  }, [vs, c, cur]);
+  const isAuto = typedPrice == null;
+  const price = isAuto ? (autoPrice != null ? autoPrice.toFixed(2) : "") : typedPrice;
+  const setPrice = (p: string) => setTypedPrice(p);
+  const rows = useMemo(() => {
+    const lp = price.trim() === "" ? null : Number(price);
+    return vs.map((v) => ({ v, b: build(v, lp != null && Number.isFinite(lp) ? lp : null) }));
+  }, [vs, price, c, cur]);
 
   const worst = rows.reduce((a, r) => ((r.b.profit ?? -Infinity) < (a.b.profit ?? -Infinity) ? r : a), rows[0]);
   const allApprovable = rows.every((r) => r.b.canApprove);
@@ -90,6 +96,12 @@ export function ProfitBreakdownPanel(props: { currency: string; offerCost: numbe
           <Input className="h-8" inputMode="decimal" value={price} onChange={(e) => setPrice(e.target.value)} aria-label="Proposed selling price" />
           <span className="text-muted-foreground">Not saved · applies to every variant</span>
         </div>
+        {isAuto && autoPrice != null && (
+          <div className="text-[11px] text-muted-foreground" data-testid="provisional-price-note">
+            Frassy's provisional starting price — lower bound only, not safe or approved: known costs ÷ 0.75 (25% kept), rounded up to the cent. Processing, packaging, commission and other unknown costs will raise it.
+          </div>
+        )}
+        {!isAuto && <button type="button" className="text-left text-[11px] underline" onClick={() => setTypedPrice(null)}>Back to Frassy's provisional price</button>}
         {props.knownShipping && <div className="text-[11px] text-muted-foreground">Shipping prefilled as an estimate: {props.knownShipping.note}. Verify before approval.</div>}
         <Row label="Shipping paid by FRASS" suffix={cur} entry={c.shippingCost} onChange={set("shippingCost")} />
         <Row label="Packaging" suffix={cur} entry={c.packagingCost} onChange={set("packagingCost")} />
