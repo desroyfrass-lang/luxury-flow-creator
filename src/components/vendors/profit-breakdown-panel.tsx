@@ -4,6 +4,7 @@
 // no price is written, nothing is published. Never rendered for shoppers.
 import { useMemo, useState } from "react";
 import { Input } from "@/components/ui/input";
+import { standardQuote, type SavedQuote, QUOTE_TTL_HOURS } from "@/lib/commerce/shipping-zones";
 import { RETAIL_MIN_MARGIN_PCT, RETAIL_TARGET_ACCEPTABLE_MIN_PCT, RETAIL_TARGET_PREFERRED_PCT, profitBreakdown, type CostEntry, type CostState } from "@/lib/commerce/pricing-floor";
 
 type Variant = { id: string; option_label: string | null; sku: string | null; supplier_cost: number | null; currency: string };
@@ -46,20 +47,34 @@ const toEntry = (e: { amount: string; state: CostState }): CostEntry => {
 };
 const money = (n: number | null, cur: string) => (n == null ? "—" : `${cur} ${n.toFixed(2)}`);
 
-export function ProfitBreakdownPanel(props: { currency: string; offerCost: number | null; variants: Variant[]; knownShipping?: { amount: number; note: string } | null }) {
+export type VariantQuotes = Record<string, SavedQuote[]>;
+
+export function ProfitBreakdownPanel(props: {
+  currency: string; offerCost: number | null; variants: Variant[];
+  knownShipping?: { amount: number; note: string } | null;
+  quotes?: VariantQuotes; onFetchQuotes?: () => void; fetchingQuotes?: boolean; quoteError?: string | null;
+  now?: Date;
+}) {
   const cur = props.currency || "USD";
   const blank = (state: CostState = "missing") => ({ amount: "", state });
   const [typedPrice, setTypedPrice] = useState<string | null>(null);
   const [c, setC] = useState({
-    cjShipping: props.knownShipping ? { amount: String(props.knownShipping.amount), state: "estimated" as CostState } : blank(),
-    customerShipping: blank(), subsidy: blank(), packagingCost: blank(), otherCost: blank(),
+    packagingCost: blank(), otherCost: blank(),
     processingFeePct: blank(), processingFeeFixed: blank(),
     discountPct: blank("not_applicable"), commissionPct: blank("pending_policy"),
   });
-  const [shipMode, setShipMode] = useState<"customer_paid" | "free" | "subsidized">("customer_paid");
-  // Customer pays shipping by default; FRASS cost only on free (full CJ charge) or subsidized (net subsidy) offers.
-  const frassShipping: CostEntry = shipMode === "customer_paid" ? { amount: 0, state: "verified" } : shipMode === "free" ? toEntry(c.cjShipping) : toEntry(c.subsidy);
-  const customerCharge: CostEntry = shipMode === "free" ? { amount: null, state: "not_applicable" } : toEntry(c.customerShipping);
+  const [oversized, setOversized] = useState(false);
+  const now = props.now ?? new Date();
+  // Standard Shipping Included: standard US delivery is a FRASS cost built into the price;
+  // the customer is not charged shipping again at checkout (customer charge = not applicable).
+  const shippingFor = (v: Variant): { entry: CostEntry; note: string } => {
+    const q = standardQuote("US", props.quotes?.[v.id] ?? [], now, oversized ? "oversized" : null);
+    if (q.status === "ok") return { entry: { amount: q.quote.price, state: "estimated" }, note: `CJ ${q.quote.method}, ${q.quote.aging_days ?? "?"} days, quoted ${q.quote.fetched_at.slice(0, 16).replace("T", " ")} UTC (cheapest option; standard method not chosen yet)` };
+    if (q.status === "stale") return { entry: { amount: null, state: "missing" }, note: `Quote expired (older than ${QUOTE_TTL_HOURS}h) — refresh` };
+    if (q.status === "quote_required" || q.status === "unsupported") return { entry: { amount: null, state: "missing" }, note: q.reason };
+    if (props.knownShipping) return { entry: { amount: props.knownShipping.amount, state: "estimated" }, note: `${props.knownShipping.note} (earlier reading, not a saved quote)` };
+    return { entry: { amount: null, state: "missing" }, note: "No saved CJ quote yet" };
+  };
   const set = (k: keyof typeof c) => (e: { amount: string; state: CostState }) => setC({ ...c, [k]: e });
 
   // Each variant is checked on its own supplier cost; offer cost is the fallback.
@@ -68,7 +83,7 @@ export function ProfitBreakdownPanel(props: { currency: string; offerCost: numbe
         listPrice: lp,
         currency: cur,
         supplierCost: v.supplier_cost != null ? { amount: Number(v.supplier_cost), state: "verified" } : { amount: null, state: "missing" },
-        shippingCost: frassShipping, customerShippingCharge: customerCharge, packagingCost: toEntry(c.packagingCost), otherCost: toEntry(c.otherCost),
+        shippingCost: shippingFor(v).entry, customerShippingCharge: { amount: null, state: "not_applicable" }, packagingCost: toEntry(c.packagingCost), otherCost: toEntry(c.otherCost),
         processingFeePct: toEntry(c.processingFeePct), processingFeeFixed: toEntry(c.processingFeeFixed),
         discountPct: toEntry(c.discountPct), commissionPct: toEntry(c.commissionPct),
       });
@@ -76,14 +91,14 @@ export function ProfitBreakdownPanel(props: { currency: string; offerCost: numbe
   const autoPrice = useMemo(() => {
     const f = vs.map((v) => build(v, null).provisional.floorOnKnownCosts).filter((x): x is number => x != null);
     return f.length ? Math.max(...f) : null;
-  }, [vs, c, cur, shipMode]);
+  }, [vs, c, cur, oversized, props.quotes]);
   const isAuto = typedPrice == null;
   const price = isAuto ? (autoPrice != null ? autoPrice.toFixed(2) : "") : typedPrice;
   const setPrice = (p: string) => setTypedPrice(p);
   const rows = useMemo(() => {
     const lp = price.trim() === "" ? null : Number(price);
     return vs.map((v) => ({ v, b: build(v, lp != null && Number.isFinite(lp) ? lp : null) }));
-  }, [vs, price, c, cur, shipMode]);
+  }, [vs, price, c, cur, oversized, props.quotes]);
 
   const worst = rows.reduce((a, r) => ((r.b.profit ?? -Infinity) < (a.b.profit ?? -Infinity) ? r : a), rows[0]);
   const allApprovable = rows.every((r) => r.b.canApprove);
@@ -110,23 +125,24 @@ export function ProfitBreakdownPanel(props: { currency: string; offerCost: numbe
         </div>
         {isAuto && autoPrice != null && (
           <div className="text-[11px] text-muted-foreground" data-testid="provisional-price-note">
-            Frassy's provisional starting price — lower bound only, not safe or approved: known costs ÷ 0.75 (25% kept), rounded up to the cent. Processing, packaging, commission and other unknown costs will raise it.
+            Frassy's provisional starting price — lower bound only, not safe or approved: known costs ÷ 0.75 (25% kept), rounded up to the cent. Includes standard shipping. Processing, packaging, commission and other unknown costs will raise it.
           </div>
         )}
         {!isAuto && <button type="button" className="text-left text-[11px] underline" onClick={() => setTypedPrice(null)}>Back to Frassy's provisional price</button>}
-        <div className="grid grid-cols-[1fr_15.5rem] items-center gap-2 text-xs">
-          <span>Who pays shipping</span>
-          <select className="h-8 rounded-md border border-input bg-background px-2" value={shipMode} aria-label="Who pays shipping" onChange={(e) => setShipMode(e.target.value as typeof shipMode)}>
-            <option value="customer_paid">Customer pays (default)</option>
-            <option value="free">Free shipping offer — FRASS pays</option>
-            <option value="subsidized">Partial subsidy — FRASS pays part</option>
-          </select>
+        <div className="rounded-md border border-border p-2 text-[11px]" data-testid="shipping-included">
+          <div className="font-medium">Standard shipping included in the price (US zone)</div>
+          <div className="text-muted-foreground">FRASS pays standard delivery from the price; customers are not charged shipping again at checkout. Shopify checkout settings are not changed yet.</div>
+          <label className="mt-1 flex items-center gap-2"><input type="checkbox" checked={oversized} onChange={(e) => setOversized(e.target.checked)} /> Oversized / heavy — needs individual quote</label>
+          {props.onFetchQuotes && (
+            <button type="button" className="mt-1 underline disabled:opacity-50" disabled={props.fetchingQuotes} onClick={props.onFetchQuotes}>
+              {props.fetchingQuotes ? "Asking CJ…" : "Get fresh CJ US shipping quotes (read-only)"}
+            </button>
+          )}
+          {props.quoteError && <div className="text-destructive">{props.quoteError}</div>}
+          <ul className="mt-1 text-muted-foreground">
+            {vs.map((v) => { const s2 = shippingFor(v); return <li key={v.id}>{v.option_label ?? "Variant"}: {s2.entry.amount != null ? money(s2.entry.amount, cur) : "—"} · {s2.note}</li>; })}
+          </ul>
         </div>
-        <Row label="CJ shipping charge to FRASS" suffix={cur} entry={c.cjShipping} onChange={set("cjShipping")} />
-        {props.knownShipping && <div className="text-[11px] text-muted-foreground">{props.knownShipping.note} (estimate). {shipMode === "customer_paid" ? "Shown for reference only — the customer pays shipping, so it is not a product cost." : ""}</div>}
-        {shipMode !== "free" && <Row label="Customer shipping charge at checkout" suffix={cur} entry={c.customerShipping} onChange={set("customerShipping")} />}
-        {shipMode !== "free" && <div className="text-[11px] text-muted-foreground">Not assumed to equal CJ's charge. Shipping revenue is not product profit; only the card fee on it counts as a cost.</div>}
-        {shipMode === "subsidized" && <Row label="FRASS net shipping subsidy" suffix={cur} entry={c.subsidy} onChange={set("subsidy")} />}
         <Row label="Packaging" suffix={cur} entry={c.packagingCost} onChange={set("packagingCost")} />
         <Row label="Processing" suffix="%" entry={c.processingFeePct} onChange={set("processingFeePct")} />
         <Row label="Processing fixed fee" suffix={cur} entry={c.processingFeeFixed} onChange={set("processingFeeFixed")} />
@@ -138,13 +154,14 @@ export function ProfitBreakdownPanel(props: { currency: string; offerCost: numbe
       <div className="mt-4 overflow-x-auto">
         <table className="w-full text-xs">
           <thead className="text-left text-muted-foreground">
-            <tr><th className="py-1">Variant</th><th>Supplier</th><th>Customer pays</th><th>Total cost</th><th>Profit</th><th>Margin</th><th>Protected (25%)</th><th>Surplus</th><th>Status</th></tr>
+            <tr><th className="py-1">Variant</th><th>Supplier</th><th>Shipping (incl.)</th><th>Customer pays</th><th>Total cost</th><th>Profit</th><th>Margin</th><th>Protected (25%)</th><th>Surplus</th><th>Status</th></tr>
           </thead>
           <tbody>
             {rows.map(({ v, b }) => (
               <tr key={v.id} className="border-t border-border">
                 <td className="py-1">{v.option_label ?? v.sku ?? "Variant"}</td>
                 <td>{money(v.supplier_cost != null ? Number(v.supplier_cost) : null, cur)}</td>
+                <td>{money(shippingFor(v).entry.amount, cur)}</td>
                 <td>{money(b.charged ?? b.provisional.charged, cur)}</td>
                 <td>{b.totalCost != null ? money(b.totalCost, cur) : b.provisional.knownCost != null ? `≥ ${money(b.provisional.knownCost, cur)}` : "—"}</td>
                 <td>{b.profit != null ? money(b.profit, cur) : b.provisional.profitBeforeMissing != null ? `≤ ${money(b.provisional.profitBeforeMissing, cur)}` : "—"}</td>

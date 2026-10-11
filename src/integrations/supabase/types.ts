@@ -1723,6 +1723,59 @@ export type Database = {
         }
         Relationships: []
       }
+      cj_shipping_quotes: {
+        Row: {
+          aging_days: string | null
+          cj_vid: string
+          currency: string
+          dest_country: string
+          expires_at: string
+          fetched_at: string
+          fetched_by: string
+          id: string
+          method: string
+          price: number
+          source: string
+          variant_id: string
+        }
+        Insert: {
+          aging_days?: string | null
+          cj_vid: string
+          currency?: string
+          dest_country: string
+          expires_at: string
+          fetched_at?: string
+          fetched_by: string
+          id?: string
+          method: string
+          price: number
+          source?: string
+          variant_id: string
+        }
+        Update: {
+          aging_days?: string | null
+          cj_vid?: string
+          currency?: string
+          dest_country?: string
+          expires_at?: string
+          fetched_at?: string
+          fetched_by?: string
+          id?: string
+          method?: string
+          price?: number
+          source?: string
+          variant_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "cj_shipping_quotes_variant_id_fkey"
+            columns: ["variant_id"]
+            isOneToOne: false
+            referencedRelation: "canonical_product_variants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       collection_products: {
         Row: {
           collection_id: string

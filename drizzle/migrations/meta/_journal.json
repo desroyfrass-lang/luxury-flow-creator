@@ -225,6 +225,13 @@
       "when": 1791661607490,
       "tag": "0031_tryon_readiness_revoke_writes",
       "breakpoints": true
+    },
+    {
+      "idx": 32,
+      "version": "7",
+      "when": 1791712818485,
+      "tag": "0032_cj_shipping_quotes",
+      "breakpoints": true
     }
   ]
 }
