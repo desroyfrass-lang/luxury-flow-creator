@@ -11,7 +11,7 @@ import "./pricing-room.css";
 
 type Variant = { id: string; option_label: string | null; sku: string | null; supplier_cost: number | null; currency: string };
 export type VariantQuotes = Record<string, SavedQuote[]>;
-type EntryKey = Exclude<keyof WorksheetInputs, "oversized">;
+type EntryKey = Exclude<keyof WorksheetInputs, "oversized" | "shippingMethod">;
 const STATE_LABEL: Record<CostState, string> = { verified: "Verified source", estimated: "Planning estimate", missing: "Missing — blocks approval", not_applicable: "Does not apply", pending_policy: "Policy not confirmed" };
 const toEntry = (e: { amount: string; state: CostState }): CostEntry => ({ amount: e.amount.trim() !== "" && Number.isFinite(Number(e.amount)) ? Number(e.amount) : null, state: e.state });
 const money = (n: number | null | undefined, cur: string) => n == null ? "Not known yet" : `${cur} ${n.toFixed(2)}`;
