@@ -14,6 +14,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useAuthUserId } from "@/lib/auth/identity-watch";
 import { useIsAdmin } from "@/hooks/use-is-admin";
+import { ProfitBreakdownPanel } from "@/components/vendors/profit-breakdown-panel";
 import { CjPilotPanel } from "@/components/vendors/cj-pilot-panel";
 import { PILOT_CJ_PID } from "@/lib/vendors/cj-pilot";
 import { classificationBreadcrumb } from "@/lib/taxonomy/hierarchy";
@@ -127,7 +128,7 @@ function VendorWorkspace() {
                 <p className="text-sm text-muted-foreground">You have no vendor brands yet.</p>
               ) : (
                 data.vendors.map((v) => (
-                  <BrandCard
+                  <BrandCard isFounder={isFounder}
                     key={v.id}
                     vendor={v}
                     products={data.products.filter((p) => p.vendor_id === v.id)}
@@ -197,9 +198,11 @@ type Product = {
   draft_status: string;
   vendor_offers: { id: string; sku: string | null; unit_cost: number | null; currency: string; fulfillment_mode: string; lead_time_min_days: number | null; lead_time_max_days: number | null }[];
   product_sources: { source_type: string; source_ref: string }[];
+  canonical_product_variants?: { id: string; option_label: string | null; sku: string | null; supplier_cost: number | null; currency: string }[];
 };
 
 function BrandCard(props: {
+  isFounder?: boolean;
   vendor: Vendor;
   products: Product[];
   onMove: (id: string, s: "draft" | "prepared" | "founder_review") => void;
@@ -235,6 +238,13 @@ function BrandCard(props: {
                 {o.lead_time_min_days != null ? ` · ${o.lead_time_min_days}–${o.lead_time_max_days ?? o.lead_time_min_days} days` : ""}
               </div>
             ))}
+            {props.isFounder && (
+              <ProfitBreakdownPanel
+                currency={p.vendor_offers[0]?.currency ?? p.canonical_product_variants?.[0]?.currency ?? "USD"}
+                offerCost={p.vendor_offers[0]?.unit_cost ?? null}
+                variants={p.canonical_product_variants ?? []}
+              />
+            )}
             {(p.draft_status === "draft" || p.draft_status === "prepared" || p.draft_status === "rejected") && (
               <div className="mt-2 flex gap-2">
                 <Button size="sm" variant="outline" disabled={!verified} onClick={() => props.onMove(p.id, "founder_review")}>
