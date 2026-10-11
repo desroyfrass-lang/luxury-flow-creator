@@ -115,5 +115,5 @@
   .pricing-room .pricing-metric { font-size: 26px; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .pricing-room *, .pricing-room *::before, .pricing-room *::after { transition: none; }
+  .pricing-room *, .pricing-room *::before, .pricing-room *::after { transition: none !important; animation: none !important; }
 }
