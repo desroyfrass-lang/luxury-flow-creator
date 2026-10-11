@@ -14,7 +14,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useAuthUserId } from "@/lib/auth/identity-watch";
 import { useIsAdmin } from "@/hooks/use-is-admin";
-import { ProfitBreakdownPanel } from "@/components/vendors/profit-breakdown-panel";
+import { ProfitBreakdownWithQuotes } from "@/components/vendors/profit-breakdown-with-quotes";
 import { CjPilotPanel } from "@/components/vendors/cj-pilot-panel";
 import { PILOT_CJ_PID, PILOT_CJ_US_SHIPPING_QUOTE } from "@/lib/vendors/cj-pilot";
 import { classificationBreadcrumb } from "@/lib/taxonomy/hierarchy";
@@ -239,7 +239,9 @@ function BrandCard(props: {
               </div>
             ))}
             {props.isFounder && (
-              <ProfitBreakdownPanel
+              <ProfitBreakdownWithQuotes
+                productId={p.id}
+                canFetch={p.product_sources.some((s) => s.source_type === "cj")}
                 currency={p.vendor_offers[0]?.currency ?? p.canonical_product_variants?.[0]?.currency ?? "USD"}
                 offerCost={p.vendor_offers[0]?.unit_cost ?? null}
                 variants={p.canonical_product_variants ?? []}
