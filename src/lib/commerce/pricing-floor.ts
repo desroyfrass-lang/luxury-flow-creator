@@ -25,7 +25,8 @@ export type RetailCosts = {
 export type FloorResult = { floorPrice: number | null; landedCost: number; reason: string | null };
 export type SafetyResult = { safe: boolean; marginPct: number | null; profit: number | null; reason: string | null };
 
-const r2 = (n: number) => Math.round(n * 100) / 100;
+import { roundMoney } from "./money";
+const r2 = roundMoney;
 const REQUIRED: Array<keyof RetailCosts> = [
   "supplierCost", "shippingCost", "packagingCost", "otherCost", "processingFeePct", "processingFeeFixed",
 ];
