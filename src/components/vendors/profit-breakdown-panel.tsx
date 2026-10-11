@@ -44,12 +44,12 @@ const toEntry = (e: { amount: string; state: CostState }): CostEntry => {
 };
 const money = (n: number | null, cur: string) => (n == null ? "—" : `${cur} ${n.toFixed(2)}`);
 
-export function ProfitBreakdownPanel(props: { currency: string; offerCost: number | null; variants: Variant[] }) {
+export function ProfitBreakdownPanel(props: { currency: string; offerCost: number | null; variants: Variant[]; knownShipping?: { amount: number; note: string } | null }) {
   const cur = props.currency || "USD";
   const blank = (state: CostState = "missing") => ({ amount: "", state });
   const [price, setPrice] = useState("");
   const [c, setC] = useState({
-    shippingCost: blank(), packagingCost: blank(), otherCost: blank(),
+    shippingCost: props.knownShipping ? { amount: String(props.knownShipping.amount), state: "estimated" as CostState } : blank(), packagingCost: blank(), otherCost: blank(),
     processingFeePct: blank(), processingFeeFixed: blank(),
     discountPct: blank("not_applicable"), commissionPct: blank("pending_policy"),
   });
@@ -74,6 +74,9 @@ export function ProfitBreakdownPanel(props: { currency: string; offerCost: numbe
 
   const worst = rows.reduce((a, r) => ((r.b.profit ?? -Infinity) < (a.b.profit ?? -Infinity) ? r : a), rows[0]);
   const allApprovable = rows.every((r) => r.b.canApprove);
+  const safeFull = rows.every((r) => r.b.floorPrice != null) ? Math.max(...rows.map((r) => r.b.floorPrice!)) : null;
+  const safeKnown = rows.some((r) => r.b.provisional.floorOnKnownCosts != null) ? Math.max(...rows.map((r) => r.b.provisional.floorOnKnownCosts ?? 0)) : null;
+  const missing = [...new Set(rows.flatMap((r) => r.b.provisional.missing))];
 
   return (
     <details className="mt-3 rounded-lg border border-primary/30 bg-background/60 p-3" data-testid="profit-breakdown">
@@ -85,8 +88,9 @@ export function ProfitBreakdownPanel(props: { currency: string; offerCost: numbe
         <div className="grid grid-cols-[1fr_6rem_9rem] items-center gap-2 text-xs">
           <span>Proposed selling price ({cur})</span>
           <Input className="h-8" inputMode="decimal" value={price} onChange={(e) => setPrice(e.target.value)} aria-label="Proposed selling price" />
-          <span className="text-muted-foreground">Not saved</span>
+          <span className="text-muted-foreground">Not saved · applies to every variant</span>
         </div>
+        {props.knownShipping && <div className="text-[11px] text-muted-foreground">Shipping prefilled as an estimate: {props.knownShipping.note}. Verify before approval.</div>}
         <Row label="Shipping paid by FRASS" suffix={cur} entry={c.shippingCost} onChange={set("shippingCost")} />
         <Row label="Packaging" suffix={cur} entry={c.packagingCost} onChange={set("packagingCost")} />
         <Row label="Processing" suffix="%" entry={c.processingFeePct} onChange={set("processingFeePct")} />
@@ -106,17 +110,28 @@ export function ProfitBreakdownPanel(props: { currency: string; offerCost: numbe
               <tr key={v.id} className="border-t border-border">
                 <td className="py-1">{v.option_label ?? v.sku ?? "Variant"}</td>
                 <td>{money(v.supplier_cost != null ? Number(v.supplier_cost) : null, cur)}</td>
-                <td>{money(b.charged, cur)}</td>
-                <td>{money(b.totalCost, cur)}</td>
-                <td>{money(b.profit, cur)}</td>
+                <td>{money(b.charged ?? b.provisional.charged, cur)}</td>
+                <td>{b.totalCost != null ? money(b.totalCost, cur) : b.provisional.knownCost != null ? `≥ ${money(b.provisional.knownCost, cur)}` : "—"}</td>
+                <td>{b.profit != null ? money(b.profit, cur) : b.provisional.profitBeforeMissing != null ? `≤ ${money(b.provisional.profitBeforeMissing, cur)}` : "—"}</td>
                 <td>{b.marginPct == null ? "—" : `${b.marginPct}%`}</td>
-                <td>{money(b.protectedProfit, cur)}</td>
+                <td>{money(b.protectedProfit ?? (b.provisional.charged != null ? Math.round(b.provisional.charged * RETAIL_MIN_MARGIN_PCT) / 100 : null), cur)}</td>
                 <td>{money(b.surplus, cur)}</td>
                 <td className={b.canApprove ? "text-primary" : "text-destructive"}>{STATUS_TEXT[b.status]}</td>
               </tr>
             ))}
           </tbody>
         </table>
+      </div>
+
+      <div className="mt-3 rounded-md border border-border p-2 text-xs" data-testid="frassy-recommendation">
+        <div className="font-medium">Frassy's price check</div>
+        <div>Minimum safe price (all variants): {safeFull != null ? money(safeFull, cur) : safeKnown != null ? `at least ${money(safeKnown, cur)} — rises once missing costs are filled in` : "needs supplier cost"}</div>
+        <div>Recommended retail price: not set — the only approved rule is the {RETAIL_MIN_MARGIN_PCT}% minimum; no retail pricing strategy above it has been approved yet.</div>
+        {missing.length > 0 && <div className="text-muted-foreground">Still missing: {missing.join(", ")}.</div>}
+        {safeFull == null && safeKnown != null && (
+          <button type="button" className="mt-1 underline" onClick={() => setPrice(String(safeKnown))}>Try the known-costs minimum ({money(safeKnown, cur)})</button>
+        )}
+        {safeFull != null && <button type="button" className="mt-1 underline" onClick={() => setPrice(String(safeFull))}>Try the minimum safe price</button>}
       </div>
 
       {worst && (
