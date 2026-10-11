@@ -4866,30 +4866,95 @@ export type Database = {
         }
         Relationships: []
       }
+      pricing_approval_events: {
+        Row: {
+          action: string
+          actor: string
+          created_at: string
+          destination: string
+          id: string
+          note: string | null
+          product_id: string
+          revision: number
+          snapshot: Json
+        }
+        Insert: {
+          action: string
+          actor: string
+          created_at?: string
+          destination: string
+          id?: string
+          note?: string | null
+          product_id: string
+          revision: number
+          snapshot: Json
+        }
+        Update: {
+          action?: string
+          actor?: string
+          created_at?: string
+          destination?: string
+          id?: string
+          note?: string | null
+          product_id?: string
+          revision?: number
+          snapshot?: Json
+        }
+        Relationships: [
+          {
+            foreignKeyName: "pricing_approval_events_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "canonical_products"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       pricing_room_worksheets: {
         Row: {
+          approval_status: string
+          approved_at: string | null
+          approved_by: string | null
+          approved_revision: number | null
+          approved_snapshot: Json | null
+          created_at: string
           destination: string
           final_price: number | null
           inputs: Json
           product_id: string
+          revision: number
           summary: Json
           updated_at: string
           updated_by: string
         }
         Insert: {
+          approval_status?: string
+          approved_at?: string | null
+          approved_by?: string | null
+          approved_revision?: number | null
+          approved_snapshot?: Json | null
+          created_at?: string
           destination?: string
           final_price?: number | null
           inputs?: Json
           product_id: string
+          revision?: number
           summary?: Json
           updated_at?: string
           updated_by: string
         }
         Update: {
+          approval_status?: string
+          approved_at?: string | null
+          approved_by?: string | null
+          approved_revision?: number | null
+          approved_snapshot?: Json | null
+          created_at?: string
           destination?: string
           final_price?: number | null
           inputs?: Json
           product_id?: string
+          revision?: number
           summary?: Json
           updated_at?: string
           updated_by?: string
@@ -4898,7 +4963,7 @@ export type Database = {
           {
             foreignKeyName: "pricing_room_worksheets_product_id_fkey"
             columns: ["product_id"]
-            isOneToOne: true
+            isOneToOne: false
             referencedRelation: "canonical_products"
             referencedColumns: ["id"]
           },
@@ -9699,6 +9764,16 @@ export type Database = {
           _test_waiver: boolean
           _user_id: string
           _width: number
+        }
+        Returns: Json
+      }
+      founder_approve_pricing_worksheet: {
+        Args: {
+          _destination: string
+          _expected_revision: number
+          _note: string
+          _product_id: string
+          _snapshot: Json
         }
         Returns: Json
       }

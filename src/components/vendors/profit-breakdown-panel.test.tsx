@@ -67,7 +67,7 @@ describe("money + persistence foundations", () => {
   });
   it("save/load are Founder-only and never write prices, Shopify or CJ", () => {
     const src = readFileSync("src/lib/vendors/pricing-room.functions.ts", "utf8").replace(/^\s*\/\/.*$/gm, "");
-    expect(src.match(/assertFounder\(context\)/g)?.length).toBe(2);
+    expect(src.match(/assertFounder\(context\)/g)?.length).toBe(4);
     expect(src).not.toMatch(/shopify|cjdropshipping|canonical_product_variants"\)\.update|vendor_offers/i);
     const mig = readFileSync("drizzle/migrations/0033_pricing_room_worksheets.sql", "utf8");
     expect(mig).toMatch(/has_role\(auth\.uid\(\), 'admin'\)/);

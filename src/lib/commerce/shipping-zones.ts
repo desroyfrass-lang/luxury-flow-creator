@@ -14,6 +14,11 @@ export type ShippingZone = {
 
 export const SHIPPING_ZONES: ShippingZone[] = [
   { code: "US", name: "United States", countries: ["US"], currency: "USD", liveForShoppers: false },
+  // Read-only quoting/planning only. Retail prices here need a verified FX source,
+  // which does not exist yet, so pricing for these zones fails closed.
+  { code: "CA", name: "Canada", countries: ["CA"], currency: "CAD", liveForShoppers: false },
+  { code: "GB", name: "United Kingdom", countries: ["GB"], currency: "GBP", liveForShoppers: false },
+  { code: "JM", name: "Jamaica", countries: ["JM"], currency: "JMD", liveForShoppers: false },
 ];
 
 /** Saved quotes older than this are stale and refuse a price. */
