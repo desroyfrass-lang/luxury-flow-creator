@@ -1,1 +1,5 @@
-- SupplierVariantPicker uses only variant-linked photos and component-local selections, never gallery colour guesses or writes. Why: reusable previews preserve immutable supplier data.
+# Vendor Room / Pricing Room
+
+- Pricing Room presentation scopes its semantic palette to `.pricing-room`; planning estimates reuse the worksheet and shared margin utilities, never approval or checkout writes. Why: keep the redesign isolated and projections separate from verified financial decisions.
+- Pricing Room uses its own bounded scrolling area with a sticky opaque summary, leaving the surrounding product layout unchanged. Why: keep price, projected results and protections visible without covering detail controls or changing the page shell.
+- The Pricing Room wrapper (profit-breakdown-with-quotes.tsx) owns the destination choice and keys every query and the panel by destination; readiness and approval display only the server's evaluatePricingDestination result for the saved revision. Why: unsaved browser edits or another country's worksheet can never look approved.
