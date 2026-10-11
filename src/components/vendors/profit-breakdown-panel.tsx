@@ -3,7 +3,7 @@ import { useEffect, useId, useState } from "react";
 import { ChevronDown, Save, RefreshCw, ShieldCheck, Truck, ArrowUpRight } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { standardQuote, type SavedQuote, QUOTE_TTL_HOURS } from "@/lib/commerce/shipping-zones";
+import { standardQuote, zoneForCountry, type SavedQuote, QUOTE_TTL_HOURS } from "@/lib/commerce/shipping-zones";
 import { profitBreakdown, type BreakdownInput, type CostEntry, type CostState } from "@/lib/commerce/pricing-floor";
 import { DEFAULT_INPUTS, withPlanningEstimates, planningBreakdown, type WorksheetInputs } from "@/lib/commerce/pricing-worksheet";
 import { pctOf } from "@/lib/commerce/money";
@@ -25,9 +25,20 @@ export function ProfitBreakdownPanel(props: {
   initial?: { finalPrice: number | null; inputs: WorksheetInputs; updatedAt: string } | null;
   onSave?: (p: { finalPrice: number | null; inputs: WorksheetInputs; summary: { status: string; marginPct: number | null; approvable: boolean } }) => void;
   saving?: boolean; saveError?: string | null;
+  /** Destination country (US/CA/GB/JM). Costs never cross destinations. */
+  destination?: string;
+  /** Destination selector and server readiness/approval area, supplied by the wrapper. */
+  destinationControl?: React.ReactNode;
+  serverSection?: React.ReactNode;
+  onDirtyChange?: (dirty: boolean) => void;
 }) {
   const id = useId();
   const cur = props.currency;
+  const dest = (props.destination ?? "US").toUpperCase();
+  const zone = zoneForCountry(dest);
+  const destName = zone?.name ?? dest;
+  // Retail in another currency needs a verified exchange rate; none is connected, so pricing is closed.
+  const fxBlocked = !zone || zone.currency !== cur;
   const [clock, setClock] = useState(() => new Date());
   useEffect(() => { const timer = setInterval(() => setClock(new Date()), 30000); return () => clearInterval(timer); }, []);
   const now = props.now ?? clock;
@@ -36,16 +47,17 @@ export function ProfitBreakdownPanel(props: {
   const [selected, setSelected] = useState<string | null>(null);
   const vs: Variant[] = props.variants.length ? props.variants : [{ id: "offer", option_label: "Product", sku: null, supplier_cost: props.offerCost, currency: cur }];
   const shippingFor = (v: Variant): { entry: CostEntry; note: string } => {
+    if (fxBlocked) return { entry: { amount: null, state: "missing" }, note: `${destName} retail is priced in ${zone?.currency ?? "an unknown currency"}; no verified exchange rate is connected, so no price is calculated.` };
     if (cur !== "USD" || v.currency !== cur) return { entry: { amount: null, state: "missing" }, note: "US pricing requires matching USD supplier and shipping costs; no exchange rate assumed." };
-    const q = standardQuote("US", props.quotes?.[v.id] ?? [], now, inputs.oversized ? "oversized" : null);
+    const q = standardQuote(dest, props.quotes?.[v.id] ?? [], now, inputs.oversized ? "oversized" : null);
     if (q.status === "ok" && q.quote.currency === cur) return { entry: { amount: q.quote.price, state: "estimated" }, note: `CJ ${q.quote.method} · ${q.quote.aging_days ?? "unconfirmed"} days · quoted ${q.quote.fetched_at.slice(0, 16).replace("T", " ")} UTC · expires ${q.quote.expires_at.slice(0, 16).replace("T", " ")} UTC. Cheapest fresh option; standard method awaits Founder confirmation.` };
     if (q.status === "ok") return { entry: { amount: null, state: "missing" }, note: "Shipping quote currency does not match — no conversion assumed." };
     if (q.status === "stale") return { entry: { amount: null, state: "missing" }, note: `Quote expired — ${QUOTE_TTL_HOURS}-hour freshness limit; get a fresh quote.` };
     if (q.status === "quote_required" || q.status === "unsupported") return { entry: { amount: null, state: "missing" }, note: q.reason };
     // Historical product-level reading is explicitly a planning fallback,
     // never represented as a true per-variant quote or financial verification.
-    if (props.knownShipping) return { entry: { amount: props.knownShipping.amount, state: "estimated" }, note: `${props.knownShipping.note} — historical product-level planning reading, not a verified per-variant quote.` };
-    return { entry: { amount: null, state: "missing" }, note: "No CJ shipping quote yet — get a quote." };
+    if (props.knownShipping && dest === "US") return { entry: { amount: props.knownShipping.amount, state: "estimated" }, note: `${props.knownShipping.note} — historical product-level planning reading, not a verified per-variant quote.` };
+    return { entry: { amount: null, state: "missing" }, note: `No CJ ${destName} shipping quote yet — get a quote.` };
   };
   const inputFor = (v: Variant, price: number | null): BreakdownInput => ({
     listPrice: price, currency: cur,
@@ -58,7 +70,7 @@ export function ProfitBreakdownPanel(props: {
   const base = vs.map((v) => planningBreakdown(inputFor(v, null)));
   const rec = { p40: maximum(base.map((b) => b.preferred)), p30: maximum(base.map((b) => b.acceptable)), p25: maximum(base.map((b) => b.minimum)) };
   const isAuto = typedPrice == null;
-  const price = isAuto ? rec.p40?.toFixed(2) ?? "" : typedPrice;
+  const price = fxBlocked ? "" : isAuto ? rec.p40?.toFixed(2) ?? "" : typedPrice;
   const lp = price.trim() !== "" && Number.isFinite(Number(price)) && Number(price) > 0 ? Number(price) : null;
   const rows = vs.map((v) => { const i = inputFor(v, lp); return { v, ship: shippingFor(v), b: profitBreakdown(i), p: planningBreakdown(i) }; });
   const worst = rows.reduce((a, r) => (r.p.profit ?? -Infinity) < (a.p.profit ?? -Infinity) ? r : a, rows[0]);
@@ -72,18 +84,23 @@ export function ProfitBreakdownPanel(props: {
   const setEntry = (key: EntryKey) => (e: { amount: string; state: CostState }) => setInputs((prev) => ({ ...prev, [key]: e }));
   const knownMargins = rows.map((r) => r.p.marginPct).filter((x): x is number => x != null);
   const projection = sel.p.result;
+  const initialSig = JSON.stringify([props.initial?.finalPrice ?? null, withPlanningEstimates(props.initial?.inputs ?? DEFAULT_INPUTS)]);
+  const dirty = JSON.stringify([isAuto ? (props.initial?.finalPrice ?? null) : lp, inputs]) !== initialSig;
+  useEffect(() => { props.onDirtyChange?.(dirty); }, [dirty]); // eslint-disable-line react-hooks/exhaustive-deps
   const setTarget = (p: number | null) => { if (p != null) setTypedPrice(p.toFixed(2)); };
 
   return <section className="pricing-room" data-testid="profit-breakdown" aria-label="Frassy Pricing Room">
     <div className="pricing-summary" data-testid="pricing-summary">
     <header className="pricing-header">
       <h3 className="pricing-title">Frassy Pricing Room</h3>
-      <span className="pricing-eyebrow">United States · USD · Private planning</span>
+      <span className="pricing-eyebrow">{destName} · {fxBlocked ? `${zone?.currency ?? "?"} not priced` : cur} · Private planning</span>
     </header>
+    {props.destinationControl}
     <div className="pricing-dashboard">
       <div>
         <label htmlFor={`${id}-price`} className="pricing-eyebrow block">FINAL SELLING PRICE ({cur})</label>
-        <Input id={`${id}-price`} aria-label="Final selling price" inputMode="decimal" value={price} onChange={(e) => setTypedPrice(e.target.value)} className="pricing-final mt-2" placeholder="Costs needed" />
+        <Input id={`${id}-price`} aria-label="Final selling price" inputMode="decimal" value={price} onChange={(e) => setTypedPrice(e.target.value)} className="pricing-final mt-2" placeholder={fxBlocked ? "Exchange rate needed" : "Costs needed"} disabled={fxBlocked} aria-describedby={fxBlocked ? `${id}-fx` : undefined} />
+        {fxBlocked && <p id={`${id}-fx`} className="mt-2 font-semibold text-destructive" data-testid="fx-blocked">No {destName} price: costs are in {cur} and no verified exchange rate to {zone?.currency ?? "this currency"} is connected. The US price is never copied here.</p>}
         <p className="mt-2 text-muted-foreground" data-testid="frassy-target-provisional">{isAuto ? "Frassy’s estimated 40% recommendation" : `Frassy’s estimated 40% recommendation: ${money(rec.p40, cur)}`}</p>
       </div>
       <div className="pricing-metrics" aria-live="polite" aria-atomic="true">
@@ -94,7 +111,7 @@ export function ProfitBreakdownPanel(props: {
     <div className="pricing-status">
       <span className={margin != null && margin < 25 ? "text-destructive" : "pricing-gold"}><ShieldCheck className="mr-1 inline size-4" />25% minimum · {margin == null ? "unconfirmed" : margin < 25 ? "below minimum — blocked" : "met on projection"}</span>
       <span><ArrowUpRight className="mr-1 inline size-4" />40% target · {margin == null ? "unconfirmed" : margin >= 40 ? "preferred" : margin >= 30 ? "acceptable 30–39.99%" : margin >= 25 ? "Founder review needed" : "blocked"}</span>
-      <span><Truck className="mr-1 inline size-4" />US shipping included · planning only</span>
+      <span><Truck className="mr-1 inline size-4" />{destName} shipping included · planning only</span>
     </div>
     </div>
     <div className="pricing-body">
@@ -105,9 +122,9 @@ export function ProfitBreakdownPanel(props: {
       <Button type="button" variant="outline" disabled={rec.p30 == null} onClick={() => setTarget(rec.p30)}>Use 30% · {money(rec.p30, cur)}</Button>
       <Button type="button" variant="outline" disabled={rec.p25 == null} onClick={() => setTarget(rec.p25)}>25% floor · {money(rec.p25, cur)}</Button>
       {!isAuto && <Button type="button" variant="ghost" onClick={() => setTypedPrice(null)}><RefreshCw />Auto recommendation</Button>}
-      {props.onSave && <Button type="button" disabled={props.saving} onClick={() => props.onSave?.({ finalPrice: isAuto ? null : lp, inputs, summary: summaries })}><Save />{props.saving ? "Saving…" : "Save worksheet"}</Button>}
+      {props.onSave && <Button type="button" disabled={props.saving} onClick={() => props.onSave?.({ finalPrice: isAuto ? null : lp, inputs, summary: summaries })}><Save />{props.saving ? "Saving…" : `Save ${destName} worksheet`}</Button>}
     </div>
-    {props.onSave && <p className="mb-3 text-muted-foreground">{props.initial?.updatedAt ? `Last saved ${props.initial.updatedAt.slice(0, 16).replace("T", " ")} UTC` : "Not saved yet"} · Private worksheet only; shop prices unchanged.</p>}
+    {props.onSave && <p className="mb-3 text-muted-foreground" data-testid="save-state">{dirty ? <strong className="text-destructive">Unsaved changes · </strong> : null}{props.initial?.updatedAt ? `Last saved ${props.initial.updatedAt.slice(0, 16).replace("T", " ")} UTC` : "Not saved yet"} · Private worksheet only; shop prices unchanged.</p>}
     {props.saveError && <p role="alert" className="text-destructive">{props.saveError}</p>}
 
     <Disclosure title="Planning assumptions & fees" summary="Editable estimates · not actual charges">
@@ -135,10 +152,10 @@ export function ProfitBreakdownPanel(props: {
         <p className="text-muted-foreground">Shipping source: {sel.ship.note}</p>
       </div>
     </Disclosure>
-    <Disclosure title="Shipping & destination" summary="US only · not live at checkout">
-      <div data-testid="shipping-included"><h4 className="font-bold">Standard shipping included in the price (US)</h4><p className="text-muted-foreground">Planning: delivery comes from the price, not charged shipping again. Checkout unchanged; offer not live. Other countries and multi-item delivery need confirmation.</p>
+    <Disclosure title="Shipping & destination" summary={`${destName} · not live at checkout`}>
+      <div data-testid="shipping-included"><h4 className="font-bold">Standard shipping included in the price ({destName})</h4><p className="text-muted-foreground">Planning: delivery comes from the price, not charged shipping again. Checkout unchanged; offer not live. Other countries and multi-item delivery need confirmation.</p>
       <label className="my-3 flex min-h-11 items-center gap-3"><input type="checkbox" className="size-5" checked={inputs.oversized} onChange={(e) => setInputs({ ...inputs, oversized: e.target.checked })} />Oversized or heavy — needs an individual quote</label>
-      {props.onFetchQuotes && <Button type="button" variant="outline" disabled={props.fetchingQuotes} onClick={props.onFetchQuotes}><RefreshCw />{props.fetchingQuotes ? "Asking CJ…" : "Get fresh CJ US shipping quotes (read-only)"}</Button>}
+      {props.onFetchQuotes && <Button type="button" variant="outline" disabled={props.fetchingQuotes} onClick={props.onFetchQuotes}><RefreshCw />{props.fetchingQuotes ? "Asking CJ…" : `Get fresh CJ ${destName} shipping quotes (read-only)`}</Button>}
       {props.quoteError && <p role="alert" className="mt-2 text-destructive">{props.quoteError}</p>}
       <p className="mt-2 text-muted-foreground">{sel.ship.note}</p></div>
     </Disclosure>
@@ -148,6 +165,7 @@ export function ProfitBreakdownPanel(props: {
       <ul className="mt-3 list-disc space-y-1 pl-5">{[...new Set(rows.flatMap((r) => r.b.warnings))].map((w) => <li key={w}>{w}</li>)}</ul>
       <p className="mt-3 font-semibold">Tax/duties and standard delivery method unconfirmed. Shop prices and checkout unchanged.</p>
     </Disclosure>
+    {props.serverSection}
     </div>
   </section>;
 }
