@@ -4,7 +4,7 @@
 // no price is written, nothing is published. Never rendered for shoppers.
 import { useMemo, useState } from "react";
 import { Input } from "@/components/ui/input";
-import { RETAIL_MIN_MARGIN_PCT, profitBreakdown, type CostEntry, type CostState } from "@/lib/commerce/pricing-floor";
+import { RETAIL_MIN_MARGIN_PCT, RETAIL_TARGET_ACCEPTABLE_MIN_PCT, RETAIL_TARGET_PREFERRED_PCT, profitBreakdown, type CostEntry, type CostState } from "@/lib/commerce/pricing-floor";
 
 type Variant = { id: string; option_label: string | null; sku: string | null; supplier_cost: number | null; currency: string };
 
@@ -22,6 +22,8 @@ const STATUS_TEXT = {
   below_minimum: `Below the ${RETAIL_MIN_MARGIN_PCT}% minimum — blocked`,
   incomplete: "Costs incomplete — 25% cannot be verified, approval blocked",
 } as const;
+
+const BAND_TEXT = { preferred: "preferred target", acceptable: "acceptable band", founder_review: "needs Founder review", blocked: "blocked" } as const;
 
 function Row(props: { label: string; entry: { amount: string; state: CostState }; onChange: (e: { amount: string; state: CostState }) => void; suffix?: string }) {
   const { entry } = props;
@@ -82,6 +84,11 @@ export function ProfitBreakdownPanel(props: { currency: string; offerCost: numbe
   const allApprovable = rows.every((r) => r.b.canApprove);
   const safeFull = rows.every((r) => r.b.floorPrice != null) ? Math.max(...rows.map((r) => r.b.floorPrice!)) : null;
   const safeKnown = rows.some((r) => r.b.provisional.floorOnKnownCosts != null) ? Math.max(...rows.map((r) => r.b.provisional.floorOnKnownCosts ?? 0)) : null;
+  const maxOf = (xs: Array<number | null>) => (xs.every((x) => x != null) && xs.length ? Math.max(...(xs as number[])) : null);
+  const target40 = maxOf(rows.map((r) => r.b.targets?.preferred ?? null));
+  const target30 = maxOf(rows.map((r) => r.b.targets?.acceptableMin ?? null));
+  const prov40 = maxOf(rows.map((r) => r.b.provisional.targetPreferredOnKnown));
+  const prov30 = maxOf(rows.map((r) => r.b.provisional.targetAcceptableOnKnown));
   const missing = [...new Set(rows.flatMap((r) => r.b.provisional.missing))];
 
   return (
@@ -128,7 +135,7 @@ export function ProfitBreakdownPanel(props: { currency: string; offerCost: numbe
                 <td>{b.marginPct == null ? "—" : `${b.marginPct}%`}</td>
                 <td>{money(b.protectedProfit ?? (b.provisional.charged != null ? Math.round(b.provisional.charged * RETAIL_MIN_MARGIN_PCT) / 100 : null), cur)}</td>
                 <td>{money(b.surplus, cur)}</td>
-                <td className={b.canApprove ? "text-primary" : "text-destructive"}>{STATUS_TEXT[b.status]}</td>
+                <td className={b.canApprove ? "text-primary" : "text-destructive"}>{STATUS_TEXT[b.status]}{b.band && b.status !== "incomplete" ? ` · ${BAND_TEXT[b.band]}` : ""}</td>
               </tr>
             ))}
           </tbody>
@@ -138,7 +145,18 @@ export function ProfitBreakdownPanel(props: { currency: string; offerCost: numbe
       <div className="mt-3 rounded-md border border-border p-2 text-xs" data-testid="frassy-recommendation">
         <div className="font-medium">Frassy's price check</div>
         <div>Minimum safe price (all variants): {safeFull != null ? money(safeFull, cur) : safeKnown != null ? `at least ${money(safeKnown, cur)} — rises once missing costs are filled in` : "needs supplier cost"}</div>
-        <div>Recommended retail price: not set — the only approved rule is the {RETAIL_MIN_MARGIN_PCT}% minimum; no retail pricing strategy above it has been approved yet.</div>
+        {target40 != null && target30 != null ? (
+          <div data-testid="frassy-target-verified">
+            Recommended starting price ({RETAIL_TARGET_PREFERRED_PCT}% target): {money(target40, cur)} · acceptable band ({RETAIL_TARGET_ACCEPTABLE_MIN_PCT}–39.99%) from {money(target30, cur)}. All costs verified. {RETAIL_TARGET_PREFERRED_PCT}% is a target, not a floor.
+            <button type="button" className="ml-2 underline" onClick={() => setPrice(target40.toFixed(2))}>Use {RETAIL_TARGET_PREFERRED_PCT}% target</button>
+          </div>
+        ) : (
+          <div data-testid="frassy-target-provisional">
+            Recommended price: not available until every cost is verified.
+            {prov40 != null && prov30 != null && <> Lower-bound estimate on known costs only — NOT safe or approved: {RETAIL_TARGET_PREFERRED_PCT}% target at least {money(prov40, cur)}, {RETAIL_TARGET_ACCEPTABLE_MIN_PCT}% at least {money(prov30, cur)}.</>}
+          </div>
+        )}
+        <div className="text-muted-foreground">Bands: {RETAIL_TARGET_PREFERRED_PCT}%+ preferred · {RETAIL_TARGET_ACCEPTABLE_MIN_PCT}–39.99% acceptable · {RETAIL_MIN_MARGIN_PCT}–29.99% Founder review · below {RETAIL_MIN_MARGIN_PCT}% blocked.</div>
         {missing.length > 0 && <div className="text-muted-foreground">Still missing: {missing.join(", ")}.</div>}
         {safeFull == null && safeKnown != null && (
           <button type="button" className="mt-1 underline" onClick={() => setPrice(String(safeKnown))}>Try the known-costs minimum ({money(safeKnown, cur)})</button>

@@ -26,3 +26,12 @@ describe("Vendor Room worksheet initial render", () => {
     expect(b.canApprove).toBe(false);
   });
 });
+
+describe("target range display", () => {
+  it("initial pilot render shows only lower-bound target estimates, never a verified recommendation", () => {
+    const html = renderToString(<ProfitBreakdownPanel currency="USD" offerCost={6.97} variants={variants} knownShipping={{ amount: 7.35, note: "quote" }} />);
+    expect(html).toContain("frassy-target-provisional");
+    expect(html).not.toContain("frassy-target-verified");
+    expect(html).toContain("USD 23.87");
+  });
+});
