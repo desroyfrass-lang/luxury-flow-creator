@@ -11,7 +11,7 @@ pick arbitrary percentages.
 **Constitutional principle:** Growth should never come at the expense of sustainability.
 
 **Financial separation (never merge):**
-- System One — Platform Allocation Engine: mandatory, constitutional, fixed 10%, governance controlled.
+- System One — Platform Allocation Engine: mandatory, governance controlled (affiliate_policy.platform_allocation_rate = 8). Founder 2026-10-11: the 10% figure is for COMMISSIONS; no retail sales allocation is established — never apply 8% or 10% to retail pricing.
 - System Two — Affiliate Intelligence Engine: marketing tool, product specific, Builder configurable, AI protected.
 
 **Coverage:** every sellable product across the ecosystem (Kicks, Luxury House, Kids,

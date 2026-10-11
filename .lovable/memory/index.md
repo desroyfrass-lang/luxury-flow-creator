@@ -8,6 +8,7 @@ The Daily is where Builders think. The Workshop is where Builders build. Never b
 Money Moves always nest their Fast Tracks inside the card; never a separate step list.
 Every Business Vault carries one priority: Active, Growing, Future or Archived — it drives Daily, Workshop and fund allocation.
 Never say "deprecated" to a member — say "Retired Systems" or "Legacy Systems".
+Retail: every FRASS KICKS sale keeps ≥25% profit margin after all selling costs; 10% is commission, not a retail cut; no retail sales allocation set. See mem://constraints/retail-minimum-margin
 FRASS-0569: the Welcome Hall is Frass Hill's mandatory front entrance — the Daily never comes first; only the member may skip the welcome.
 FRASS-0562: the Founder is never unintentionally gated, but may voluntarily enter the full onboarding journey through the Experience Simulator.
 FRASS-0562: Simulation Mode simulates a member's STATE, not just the UI — no second email/account; one real test account kept only for release validation (signup, verification, reset, login/logout).
