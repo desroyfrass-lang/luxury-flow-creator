@@ -10,6 +10,8 @@ export const worksheetInputsSchema = z.object({
   packagingCost: entry, otherCost: entry, processingFeePct: entry, processingFeeFixed: entry,
   discountPct: entry, commissionPct: entry,
   oversized: z.boolean(),
+  /** Founder-chosen standard CJ method for this destination; absent = not chosen (estimate only). */
+  shippingMethod: z.string().max(120).optional(),
 });
 export type WorksheetInputs = z.infer<typeof worksheetInputsSchema>;
 
@@ -67,8 +69,14 @@ export function planningBreakdown(input: BreakdownInput) {
   };
 }
 
+export const DESTINATIONS = ["US", "CA", "GB", "JM"] as const;
+export const destinationSchema = z.enum(DESTINATIONS);
+
 export const saveWorksheetSchema = z.object({
   productId: z.string().uuid(),
+  destination: destinationSchema.default("US"),
+  /** Optimistic concurrency: refuse the save if someone else changed it first. */
+  expectedRevision: z.number().int().positive().optional(),
   finalPrice: z.number().positive().max(1_000_000).nullable(),
   inputs: worksheetInputsSchema,
   summary: z.object({ status: z.string().max(40), marginPct: z.number().nullable(), approvable: z.boolean() }),
