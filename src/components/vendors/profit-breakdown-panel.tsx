@@ -42,8 +42,8 @@ export function ProfitBreakdownPanel(props: {
     if (q.status === "ok") return { entry: { amount: null, state: "missing" }, note: "Shipping quote currency does not match — no conversion assumed." };
     if (q.status === "stale") return { entry: { amount: null, state: "missing" }, note: `Quote expired — ${QUOTE_TTL_HOURS}-hour freshness limit; get a fresh quote.` };
     if (q.status === "quote_required" || q.status === "unsupported") return { entry: { amount: null, state: "missing" }, note: q.reason };
-    // Historical product-level reading is usable for a single variant only, not
-    // silently cloned across sizes. The legacy pilot reading explicitly covered all sizes.
+    // Historical product-level reading is explicitly a planning fallback,
+    // never represented as a true per-variant quote or financial verification.
     if (props.knownShipping) return { entry: { amount: props.knownShipping.amount, state: "estimated" }, note: `${props.knownShipping.note} — historical product-level planning reading, not a verified per-variant quote.` };
     return { entry: { amount: null, state: "missing" }, note: "No CJ shipping quote yet — get a quote." };
   };

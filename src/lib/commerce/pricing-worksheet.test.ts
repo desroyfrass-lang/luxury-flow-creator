@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { DEFAULT_INPUTS, ILLUSTRATIVE_INPUTS, planningBreakdown, withPlanningEstimates, parseStoredInputs } from "./pricing-worksheet";
-import { profitBreakdown, retailMargin, type BreakdownInput } from "./pricing-floor";
+import { profitBreakdown, type BreakdownInput } from "./pricing-floor";
 
 const estimate = (amount: number) => ({ amount, state: "estimated" as const });
 const base: BreakdownInput = {
