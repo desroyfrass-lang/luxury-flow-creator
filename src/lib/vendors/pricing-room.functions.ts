@@ -137,7 +137,7 @@ export const approvePricingWorksheet = createServerFn({ method: "POST" })
     const snapshot = { ready: true, evaluatedAt: new Date().toISOString(), pricing };
     const { data: res, error } = await context.supabase.rpc("founder_approve_pricing_worksheet", {
       _product_id: data.productId, _destination: data.destination, _expected_revision: data.expectedRevision,
-      _snapshot: snapshot, _note: data.note ?? null,
+      _snapshot: snapshot, _note: data.note ?? "",
     });
     if (error) throw new Error(error.message);
     return res as { status: string; revision: number; approved_at: string; already: boolean };
