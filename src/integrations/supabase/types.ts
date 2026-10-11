@@ -4866,6 +4866,44 @@ export type Database = {
         }
         Relationships: []
       }
+      pricing_room_worksheets: {
+        Row: {
+          destination: string
+          final_price: number | null
+          inputs: Json
+          product_id: string
+          summary: Json
+          updated_at: string
+          updated_by: string
+        }
+        Insert: {
+          destination?: string
+          final_price?: number | null
+          inputs?: Json
+          product_id: string
+          summary?: Json
+          updated_at?: string
+          updated_by: string
+        }
+        Update: {
+          destination?: string
+          final_price?: number | null
+          inputs?: Json
+          product_id?: string
+          summary?: Json
+          updated_at?: string
+          updated_by?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "pricing_room_worksheets_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: true
+            referencedRelation: "canonical_products"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       product_economics: {
         Row: {
           affiliate_enabled: boolean

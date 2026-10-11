@@ -1,211 +1,239 @@
-// Founder/Admin-only Protected Profit + Surplus Profit breakdown for one product.
-// All math comes from profitBreakdown() in pricing-floor.ts (same source as the
-// 25% retail guardrail). Inputs here are a private worksheet: nothing is saved,
-// no price is written, nothing is published. Never rendered for shoppers.
+// Frassy Pricing Room (Phase 1) — Founder/Admin only, never shown to shoppers.
+// All money math comes from profitBreakdown()/priceForMargin() in pricing-floor.ts
+// (the same source as the 25% retail guardrail). Standard US shipping is INCLUDED
+// in the price as a FRASS cost; checkout is untouched. Nothing here writes a
+// product price, Shopify or CJ — Save stores only this private worksheet.
 import { useMemo, useState } from "react";
 import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 import { standardQuote, type SavedQuote, QUOTE_TTL_HOURS } from "@/lib/commerce/shipping-zones";
-import { RETAIL_MIN_MARGIN_PCT, RETAIL_TARGET_ACCEPTABLE_MIN_PCT, RETAIL_TARGET_PREFERRED_PCT, profitBreakdown, type CostEntry, type CostState } from "@/lib/commerce/pricing-floor";
+import {
+  RETAIL_MIN_MARGIN_PCT, RETAIL_TARGET_ACCEPTABLE_MIN_PCT, RETAIL_TARGET_PREFERRED_PCT,
+  profitBreakdown, type Breakdown, type CostEntry, type CostState,
+} from "@/lib/commerce/pricing-floor";
+import { DEFAULT_INPUTS, type WorksheetInputs } from "@/lib/commerce/pricing-worksheet";
 
 type Variant = { id: string; option_label: string | null; sku: string | null; supplier_cost: number | null; currency: string };
+export type VariantQuotes = Record<string, SavedQuote[]>;
+type EntryKey = Exclude<keyof WorksheetInputs, "oversized">;
 
-const STATES: Array<{ v: CostState; l: string }> = [
-  { v: "missing", l: "Not provided" },
-  { v: "estimated", l: "Estimate" },
-  { v: "verified", l: "Verified" },
-  { v: "not_applicable", l: "Does not apply" },
-  { v: "pending_policy", l: "Waiting on Founder policy" },
-];
-
+const STATE_LABEL: Record<CostState, string> = {
+  verified: "Verified",
+  estimated: "Estimate",
+  missing: "Not decided — blocks approval",
+  not_applicable: "Does not apply",
+  pending_policy: "Waiting on Founder policy — blocks approval",
+};
 const STATUS_TEXT = {
-  protected_verified: "25% protected profit verified",
-  protected_estimated: "Meets 25% on estimates only — cannot approve yet",
+  protected_verified: "Verified — keeps the protected 25%",
+  protected_estimated: "Meets 25% on estimates only — not approved",
   below_minimum: `Below the ${RETAIL_MIN_MARGIN_PCT}% minimum — blocked`,
-  incomplete: "Costs incomplete — 25% cannot be verified, approval blocked",
+  incomplete: "Costs not all known — approval blocked",
 } as const;
-
-const BAND_TEXT = { preferred: "preferred target", acceptable: "acceptable band", founder_review: "needs Founder review", blocked: "blocked" } as const;
-
-function Row(props: { label: string; entry: { amount: string; state: CostState }; onChange: (e: { amount: string; state: CostState }) => void; suffix?: string }) {
-  const { entry } = props;
-  return (
-    <div className="grid grid-cols-[1fr_6rem_9rem] items-center gap-2 text-xs">
-      <span>{props.label}{props.suffix ? ` (${props.suffix})` : ""}</span>
-      <Input className="h-8" inputMode="decimal" value={entry.amount} disabled={entry.state === "not_applicable" || entry.state === "pending_policy"}
-        onChange={(e) => props.onChange({ ...entry, amount: e.target.value })} aria-label={props.label} />
-      <select className="h-8 rounded-md border border-input bg-background px-2" value={entry.state} aria-label={`${props.label} status`}
-        onChange={(e) => props.onChange({ ...entry, state: e.target.value as CostState })}>
-        {STATES.map((s) => <option key={s.v} value={s.v}>{s.l}</option>)}
-      </select>
-    </div>
-  );
-}
+const BAND_TEXT = { preferred: "40%+ preferred", acceptable: "30–39.99% acceptable", founder_review: "25–29.99% needs Founder review", blocked: "Below 25% — blocked" } as const;
 
 const toEntry = (e: { amount: string; state: CostState }): CostEntry => {
   const n = e.amount.trim() === "" ? null : Number(e.amount);
   return { amount: n != null && Number.isFinite(n) ? n : null, state: e.state };
 };
-const money = (n: number | null, cur: string) => (n == null ? "—" : `${cur} ${n.toFixed(2)}`);
-
-export type VariantQuotes = Record<string, SavedQuote[]>;
+const money = (n: number | null | undefined, cur: string) => (n == null ? "Not known yet" : `${cur} ${n.toFixed(2)}`);
+const maxOf = (xs: Array<number | null>) => (xs.length && xs.every((x) => x != null) ? Math.max(...(xs as number[])) : null);
 
 export function ProfitBreakdownPanel(props: {
   currency: string; offerCost: number | null; variants: Variant[];
   knownShipping?: { amount: number; note: string } | null;
   quotes?: VariantQuotes; onFetchQuotes?: () => void; fetchingQuotes?: boolean; quoteError?: string | null;
   now?: Date;
+  initial?: { finalPrice: number | null; inputs: WorksheetInputs; updatedAt: string } | null;
+  onSave?: (p: { finalPrice: number | null; inputs: WorksheetInputs; summary: { status: string; marginPct: number | null; approvable: boolean } }) => void;
+  saving?: boolean; saveError?: string | null;
 }) {
   const cur = props.currency || "USD";
-  const blank = (state: CostState = "missing") => ({ amount: "", state });
-  const [typedPrice, setTypedPrice] = useState<string | null>(null);
-  const [c, setC] = useState({
-    packagingCost: blank(), otherCost: blank(),
-    processingFeePct: blank(), processingFeeFixed: blank(),
-    discountPct: blank("not_applicable"), commissionPct: blank("pending_policy"),
-  });
-  const [oversized, setOversized] = useState(false);
   const now = props.now ?? new Date();
-  // Standard Shipping Included: standard US delivery is a FRASS cost built into the price;
-  // the customer is not charged shipping again at checkout (customer charge = not applicable).
+  const [inputs, setInputs] = useState<WorksheetInputs>(props.initial?.inputs ?? DEFAULT_INPUTS);
+  const [typedPrice, setTypedPrice] = useState<string | null>(props.initial?.finalPrice != null ? props.initial.finalPrice.toFixed(2) : null);
+  const [selected, setSelected] = useState<string | null>(null);
+  const setEntry = (k: EntryKey) => (e: { amount: string; state: CostState }) => setInputs({ ...inputs, [k]: e });
+
+  const vs: Variant[] = useMemo(
+    () => (props.variants.length ? props.variants : [{ id: "offer", option_label: "Product", sku: null, supplier_cost: props.offerCost, currency: cur }]),
+    [props.variants, props.offerCost, cur],
+  );
+
+  // Each variant uses ITS OWN supplier cost and ITS OWN shipping quote.
   const shippingFor = (v: Variant): { entry: CostEntry; note: string } => {
-    const q = standardQuote("US", props.quotes?.[v.id] ?? [], now, oversized ? "oversized" : null);
-    if (q.status === "ok") return { entry: { amount: q.quote.price, state: "estimated" }, note: `CJ ${q.quote.method}, ${q.quote.aging_days ?? "?"} days, quoted ${q.quote.fetched_at.slice(0, 16).replace("T", " ")} UTC (cheapest option; standard method not chosen yet)` };
-    if (q.status === "stale") return { entry: { amount: null, state: "missing" }, note: `Quote expired (older than ${QUOTE_TTL_HOURS}h) — refresh` };
+    const q = standardQuote("US", props.quotes?.[v.id] ?? [], now, inputs.oversized ? "oversized" : null);
+    if (q.status === "ok") return { entry: { amount: q.quote.price, state: "estimated" }, note: `CJ ${q.quote.method}, ${q.quote.aging_days ?? "?"} days, quoted ${q.quote.fetched_at.slice(0, 16).replace("T", " ")} UTC — cheapest option; standard method not chosen yet` };
+    if (q.status === "stale") return { entry: { amount: null, state: "missing" }, note: `Quote expired (older than ${QUOTE_TTL_HOURS} hours) — get a fresh quote` };
     if (q.status === "quote_required" || q.status === "unsupported") return { entry: { amount: null, state: "missing" }, note: q.reason };
-    if (props.knownShipping) return { entry: { amount: props.knownShipping.amount, state: "estimated" }, note: `${props.knownShipping.note} (earlier reading, not a saved quote)` };
-    return { entry: { amount: null, state: "missing" }, note: "No saved CJ quote yet" };
+    if (props.knownShipping) return { entry: { amount: props.knownShipping.amount, state: "estimated" }, note: `${props.knownShipping.note} — earlier reading, not a saved quote` };
+    return { entry: { amount: null, state: "missing" }, note: "No CJ shipping quote yet — get a quote" };
   };
-  const set = (k: keyof typeof c) => (e: { amount: string; state: CostState }) => setC({ ...c, [k]: e });
+  const build = (v: Variant, lp: number | null): Breakdown => profitBreakdown({
+    listPrice: lp, currency: cur,
+    supplierCost: v.supplier_cost != null ? { amount: Number(v.supplier_cost), state: "verified" } : { amount: null, state: "missing" },
+    shippingCost: shippingFor(v).entry, customerShippingCharge: { amount: null, state: "not_applicable" },
+    packagingCost: toEntry(inputs.packagingCost), otherCost: toEntry(inputs.otherCost),
+    processingFeePct: toEntry(inputs.processingFeePct), processingFeeFixed: toEntry(inputs.processingFeeFixed),
+    discountPct: toEntry(inputs.discountPct), commissionPct: toEntry(inputs.commissionPct),
+  });
 
-  // Each variant is checked on its own supplier cost; offer cost is the fallback.
-  const vs = useMemo(() => (props.variants.length ? props.variants : [{ id: "offer", option_label: "Product", sku: null, supplier_cost: props.offerCost, currency: cur }]), [props.variants, props.offerCost, cur]);
-  const build = (v: Variant, lp: number | null) => profitBreakdown({
-        listPrice: lp,
-        currency: cur,
-        supplierCost: v.supplier_cost != null ? { amount: Number(v.supplier_cost), state: "verified" } : { amount: null, state: "missing" },
-        shippingCost: shippingFor(v).entry, customerShippingCharge: { amount: null, state: "not_applicable" }, packagingCost: toEntry(c.packagingCost), otherCost: toEntry(c.otherCost),
-        processingFeePct: toEntry(c.processingFeePct), processingFeeFixed: toEntry(c.processingFeeFixed),
-        discountPct: toEntry(c.discountPct), commissionPct: toEntry(c.commissionPct),
-      });
-  // Provisional suggestion: highest known-costs floor across variants (lower bound, never "safe").
-  const autoPrice = useMemo(() => {
-    const f = vs.map((v) => build(v, null).provisional.floorOnKnownCosts).filter((x): x is number => x != null);
-    return f.length ? Math.max(...f) : null;
-  }, [vs, c, cur, oversized, props.quotes]);
+  // Frassy's recommendation: 40% target across ALL variants (costliest variant decides).
+  const rec = useMemo(() => {
+    const base = vs.map((v) => build(v, null));
+    const v40 = maxOf(base.map((b) => b.targets?.preferred ?? null));
+    const v30 = maxOf(base.map((b) => b.targets?.acceptableMin ?? null));
+    const v25 = maxOf(base.map((b) => b.floorPrice));
+    const p40 = maxOf(base.map((b) => b.provisional.targetPreferredOnKnown));
+    const p30 = maxOf(base.map((b) => b.provisional.targetAcceptableOnKnown));
+    const p25 = maxOf(base.map((b) => b.provisional.floorOnKnownCosts));
+    const verified = v40 != null;
+    return { verified, p40: verified ? v40 : p40, p30: verified ? v30 : p30, p25: verified ? v25 : p25 };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [vs, inputs, props.quotes, props.knownShipping]);
+
   const isAuto = typedPrice == null;
-  const price = isAuto ? (autoPrice != null ? autoPrice.toFixed(2) : "") : typedPrice;
-  const setPrice = (p: string) => setTypedPrice(p);
-  const rows = useMemo(() => {
-    const lp = price.trim() === "" ? null : Number(price);
-    return vs.map((v) => ({ v, b: build(v, lp != null && Number.isFinite(lp) ? lp : null) }));
-  }, [vs, price, c, cur, oversized, props.quotes]);
-
-  const worst = rows.reduce((a, r) => ((r.b.profit ?? -Infinity) < (a.b.profit ?? -Infinity) ? r : a), rows[0]);
+  const price = isAuto ? (rec.p40 != null ? rec.p40.toFixed(2) : "") : typedPrice;
+  const lp = price.trim() === "" ? null : Number(price);
+  const rows = useMemo(
+    () => vs.map((v) => ({ v, ship: shippingFor(v), b: build(v, lp != null && Number.isFinite(lp) && lp > 0 ? lp : null) })),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [vs, lp, inputs, props.quotes, props.knownShipping],
+  );
+  const worst = rows.reduce((a, r) => ((r.b.profit ?? r.b.provisional.profitBeforeMissing ?? Infinity) < (a.b.profit ?? a.b.provisional.profitBeforeMissing ?? Infinity) ? r : a), rows[0]);
   const allApprovable = rows.every((r) => r.b.canApprove);
-  const safeFull = rows.every((r) => r.b.floorPrice != null) ? Math.max(...rows.map((r) => r.b.floorPrice!)) : null;
-  const safeKnown = rows.some((r) => r.b.provisional.floorOnKnownCosts != null) ? Math.max(...rows.map((r) => r.b.provisional.floorOnKnownCosts ?? 0)) : null;
-  const maxOf = (xs: Array<number | null>) => (xs.every((x) => x != null) && xs.length ? Math.max(...(xs as number[])) : null);
-  const target40 = maxOf(rows.map((r) => r.b.targets?.preferred ?? null));
-  const target30 = maxOf(rows.map((r) => r.b.targets?.acceptableMin ?? null));
-  const prov40 = maxOf(rows.map((r) => r.b.provisional.targetPreferredOnKnown));
-  const prov30 = maxOf(rows.map((r) => r.b.provisional.targetAcceptableOnKnown));
+  const sel = rows.find((r) => r.v.id === selected) ?? worst;
   const missing = [...new Set(rows.flatMap((r) => r.b.provisional.missing))];
+  const summary = { status: allApprovable ? "approvable" : worst.b.status, marginPct: worst.b.marginPct, approvable: allApprovable };
 
   return (
-    <details className="mt-3 rounded-lg border border-primary/30 bg-background/60 p-3" data-testid="profit-breakdown">
-      <summary className="cursor-pointer text-sm font-medium">Founder only · Protected Profit &amp; Surplus</summary>
-      <p className="mt-2 text-xs text-muted-foreground">
-        Private worksheet. Nothing here is saved, priced, or shown to shoppers. Protected profit is {RETAIL_MIN_MARGIN_PCT}% of the price the customer actually pays, after every cost. Commission counts once, and only if it applies to this sale.
+    <details className="mt-3 rounded-xl border border-primary/40 bg-background p-4" data-testid="profit-breakdown" open>
+      <summary className="cursor-pointer text-lg font-semibold">Frassy Pricing Room · US · Standard shipping included</summary>
+      <p className="mt-2 text-base text-muted-foreground">
+        Private to you. Nothing here changes the shop price or is shown to shoppers. Standard US delivery is built into the price, so customers are not charged shipping again.
       </p>
-      <div className="mt-3 space-y-2">
-        <div className="grid grid-cols-[1fr_6rem_9rem] items-center gap-2 text-xs">
-          <span>Proposed selling price ({cur})</span>
-          <Input className="h-8" inputMode="decimal" value={price} onChange={(e) => setPrice(e.target.value)} aria-label="Proposed selling price" />
-          <span className="text-muted-foreground">Not saved · applies to every variant</span>
+
+      {/* FINAL SELLING PRICE */}
+      <section className="mt-4 rounded-xl border-2 border-primary p-4">
+        <label htmlFor="final-price" className="block text-base font-semibold uppercase tracking-wide">Final selling price ({cur})</label>
+        <Input id="final-price" aria-label="Final selling price" inputMode="decimal" value={price}
+          onChange={(e) => setTypedPrice(e.target.value)}
+          className="mt-2 h-16 max-w-xs text-4xl font-bold" />
+        <p className="mt-2 text-base" data-testid={rec.verified ? "frassy-target-verified" : "frassy-target-provisional"}>
+          {isAuto ? "Prefilled with " : "Frassy recommends "}
+          <strong>{rec.p40 != null ? money(rec.p40, cur) : "a price once supplier cost is known"}</strong> for a {RETAIL_TARGET_PREFERRED_PCT}% net margin.{" "}
+          {rec.verified
+            ? "All costs verified."
+            : "Provisional — a lower bound, not safe or approved: some costs are still unknown and will raise it."}
+        </p>
+        <div className="mt-3 flex flex-wrap gap-2">
+          {rec.p40 != null && <Button type="button" variant="outline" onClick={() => setTypedPrice(rec.p40!.toFixed(2))}>Use {RETAIL_TARGET_PREFERRED_PCT}% ({money(rec.p40, cur)})</Button>}
+          {rec.p30 != null && <Button type="button" variant="outline" onClick={() => setTypedPrice(rec.p30!.toFixed(2))}>Use {RETAIL_TARGET_ACCEPTABLE_MIN_PCT}% ({money(rec.p30, cur)})</Button>}
+          {rec.p25 != null && <Button type="button" variant="outline" onClick={() => setTypedPrice(rec.p25!.toFixed(2))}>25% minimum ({money(rec.p25, cur)})</Button>}
+          {!isAuto && <Button type="button" variant="ghost" onClick={() => setTypedPrice(null)}>Back to Frassy's recommendation</Button>}
         </div>
-        {isAuto && autoPrice != null && (
-          <div className="text-[11px] text-muted-foreground" data-testid="provisional-price-note">
-            Frassy's provisional starting price — lower bound only, not safe or approved: known costs ÷ 0.75 (25% kept), rounded up to the cent. Includes standard shipping. Processing, packaging, commission and other unknown costs will raise it.
-          </div>
-        )}
-        {!isAuto && <button type="button" className="text-left text-[11px] underline" onClick={() => setTypedPrice(null)}>Back to Frassy's provisional price</button>}
-        <div className="rounded-md border border-border p-2 text-[11px]" data-testid="shipping-included">
-          <div className="font-medium">Standard shipping included in the price (US zone)</div>
-          <div className="text-muted-foreground">FRASS pays standard delivery from the price; customers are not charged shipping again at checkout. Shopify checkout settings are not changed yet.</div>
-          <label className="mt-1 flex items-center gap-2"><input type="checkbox" checked={oversized} onChange={(e) => setOversized(e.target.checked)} /> Oversized / heavy — needs individual quote</label>
-          {props.onFetchQuotes && (
-            <button type="button" className="mt-1 underline disabled:opacity-50" disabled={props.fetchingQuotes} onClick={props.onFetchQuotes}>
-              {props.fetchingQuotes ? "Asking CJ…" : "Get fresh CJ US shipping quotes (read-only)"}
+        <p className={`mt-3 text-lg font-semibold ${allApprovable ? "text-primary" : "text-destructive"}`}>
+          {allApprovable ? "Every variant keeps the protected 25% — ready for your approval." : "Financial approval blocked for this product."}
+        </p>
+        {missing.length > 0 && <p className="text-base text-muted-foreground">Still unknown: {missing.join(", ")}.</p>}
+      </section>
+
+      {/* VARIANTS */}
+      <section className="mt-4">
+        <h3 className="text-lg font-semibold">Variants — tap one to see its own costs</h3>
+        <div className="mt-2 grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
+          {rows.map(({ v, ship, b }) => (
+            <button key={v.id} type="button" onClick={() => setSelected(v.id)} aria-pressed={sel.v.id === v.id}
+              className={`rounded-lg border p-3 text-left text-base ${sel.v.id === v.id ? "border-primary bg-primary/10" : "border-border"}`}>
+              <div className="font-semibold">{v.option_label ?? v.sku ?? "Variant"}</div>
+              <div>Supplier {money(v.supplier_cost != null ? Number(v.supplier_cost) : null, cur)} · Shipping {money(ship.entry.amount, cur)}</div>
+              <div>Profit {b.profit != null ? money(b.profit, cur) : b.provisional.profitBeforeMissing != null ? `at most ${money(b.provisional.profitBeforeMissing, cur)}` : "Not known yet"}
+                {" · "}Margin {b.marginPct != null ? `${b.marginPct}%` : "not known yet"}</div>
+              <div className={b.canApprove ? "text-primary" : "text-destructive"}>{b.band && b.status !== "incomplete" ? BAND_TEXT[b.band] : STATUS_TEXT[b.status]}</div>
             </button>
-          )}
-          {props.quoteError && <div className="text-destructive">{props.quoteError}</div>}
-          <ul className="mt-1 text-muted-foreground">
-            {vs.map((v) => { const s2 = shippingFor(v); return <li key={v.id}>{v.option_label ?? "Variant"}: {s2.entry.amount != null ? money(s2.entry.amount, cur) : "—"} · {s2.note}</li>; })}
-          </ul>
+          ))}
         </div>
-        <Row label="Packaging" suffix={cur} entry={c.packagingCost} onChange={set("packagingCost")} />
-        <Row label="Processing" suffix="%" entry={c.processingFeePct} onChange={set("processingFeePct")} />
-        <Row label="Processing fixed fee" suffix={cur} entry={c.processingFeeFixed} onChange={set("processingFeeFixed")} />
-        <Row label="Discount" suffix="%" entry={c.discountPct} onChange={set("discountPct")} />
-        <Row label="Commission" suffix="%" entry={c.commissionPct} onChange={set("commissionPct")} />
-        <Row label="Other costs" suffix={cur} entry={c.otherCost} onChange={set("otherCost")} />
-      </div>
+      </section>
 
-      <div className="mt-4 overflow-x-auto">
-        <table className="w-full text-xs">
-          <thead className="text-left text-muted-foreground">
-            <tr><th className="py-1">Variant</th><th>Supplier</th><th>Shipping (incl.)</th><th>Customer pays</th><th>Total cost</th><th>Profit</th><th>Margin</th><th>Protected (25%)</th><th>Surplus</th><th>Status</th></tr>
-          </thead>
-          <tbody>
-            {rows.map(({ v, b }) => (
-              <tr key={v.id} className="border-t border-border">
-                <td className="py-1">{v.option_label ?? v.sku ?? "Variant"}</td>
-                <td>{money(v.supplier_cost != null ? Number(v.supplier_cost) : null, cur)}</td>
-                <td>{money(shippingFor(v).entry.amount, cur)}</td>
-                <td>{money(b.charged ?? b.provisional.charged, cur)}</td>
-                <td>{b.totalCost != null ? money(b.totalCost, cur) : b.provisional.knownCost != null ? `≥ ${money(b.provisional.knownCost, cur)}` : "—"}</td>
-                <td>{b.profit != null ? money(b.profit, cur) : b.provisional.profitBeforeMissing != null ? `≤ ${money(b.provisional.profitBeforeMissing, cur)}` : "—"}</td>
-                <td>{b.marginPct == null ? "—" : `${b.marginPct}%`}</td>
-                <td>{money(b.protectedProfit ?? (b.provisional.charged != null ? Math.round(b.provisional.charged * RETAIL_MIN_MARGIN_PCT) / 100 : null), cur)}</td>
-                <td>{money(b.surplus, cur)}</td>
-                <td className={b.canApprove ? "text-primary" : "text-destructive"}>{STATUS_TEXT[b.status]}{b.band && b.status !== "incomplete" ? ` · ${BAND_TEXT[b.band]}` : ""}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+      {/* SELECTED VARIANT BREAKDOWN */}
+      <section className="mt-4 rounded-lg border border-border p-3 text-base" data-testid="variant-detail">
+        <h3 className="text-lg font-semibold">{sel.v.option_label ?? "Variant"} — full breakdown</h3>
+        <dl className="mt-2 grid grid-cols-[1fr_auto] gap-x-4 gap-y-1">
+          <dt>Customer pays</dt><dd className="font-semibold">{money(sel.b.charged ?? sel.b.provisional.charged, cur)}</dd>
+          {sel.b.lines.map((l) => (
+            <div key={l.key} className="contents">
+              <dt>{l.key === "shippingCost" ? "Standard shipping (included)" : l.label}</dt>
+              <dd>{l.state === "not_applicable" ? "Does not apply" : l.amount != null ? `${money(l.amount, cur)}${l.state === "estimated" ? " (estimate)" : ""}` : STATE_LABEL[l.state]}</dd>
+            </div>
+          ))}
+          <dt>Total cost</dt><dd>{sel.b.totalCost != null ? money(sel.b.totalCost, cur) : sel.b.provisional.knownCost != null ? `at least ${money(sel.b.provisional.knownCost, cur)}` : "Not known yet"}</dd>
+          <dt>Profit</dt><dd className="font-semibold">{sel.b.profit != null ? money(sel.b.profit, cur) : sel.b.provisional.profitBeforeMissing != null ? `at most ${money(sel.b.provisional.profitBeforeMissing, cur)}` : "Not known yet"}</dd>
+          <dt>Protected profit (25%)</dt><dd>{money(sel.b.protectedProfit ?? (sel.b.provisional.charged != null ? Math.round(sel.b.provisional.charged * RETAIL_MIN_MARGIN_PCT) / 100 : null), cur)}</dd>
+          <dt>Surplus above 25%</dt><dd>{sel.b.surplus != null ? money(sel.b.surplus, cur) : "Not known yet"}</dd>
+        </dl>
+        <p className="mt-2 text-muted-foreground">Shipping source: {sel.ship.note}</p>
+        {sel.b.warnings.length > 0 && <ul className="mt-2 list-disc pl-5 text-muted-foreground">{sel.b.warnings.map((w) => <li key={w}>{w}</li>)}</ul>}
+      </section>
 
-      <div className="mt-3 rounded-md border border-border p-2 text-xs" data-testid="frassy-recommendation">
-        <div className="font-medium">Frassy's price check</div>
-        <div>Minimum safe price (all variants): {safeFull != null ? money(safeFull, cur) : safeKnown != null ? `at least ${money(safeKnown, cur)} — rises once missing costs are filled in` : "needs supplier cost"}</div>
-        {target40 != null && target30 != null ? (
-          <div data-testid="frassy-target-verified">
-            Recommended starting price ({RETAIL_TARGET_PREFERRED_PCT}% target): {money(target40, cur)} · acceptable band ({RETAIL_TARGET_ACCEPTABLE_MIN_PCT}–39.99%) from {money(target30, cur)}. All costs verified. {RETAIL_TARGET_PREFERRED_PCT}% is a target, not a floor.
-            <button type="button" className="ml-2 underline" onClick={() => setPrice(target40.toFixed(2))}>Use {RETAIL_TARGET_PREFERRED_PCT}% target</button>
-          </div>
-        ) : (
-          <div data-testid="frassy-target-provisional">
-            Recommended price: not available until every cost is verified.
-            {prov40 != null && prov30 != null && <> Lower-bound estimate on known costs only — NOT safe or approved: {RETAIL_TARGET_PREFERRED_PCT}% target at least {money(prov40, cur)}, {RETAIL_TARGET_ACCEPTABLE_MIN_PCT}% at least {money(prov30, cur)}.</>}
-          </div>
+      {/* SHIPPING */}
+      <section className="mt-4 rounded-lg border border-border p-3 text-base" data-testid="shipping-included">
+        <h3 className="text-lg font-semibold">Standard shipping included in the price (US)</h3>
+        <p className="text-muted-foreground">FRASS pays standard delivery out of the price. Shopify checkout settings are not changed in this phase.</p>
+        <label className="mt-2 flex items-center gap-2"><input type="checkbox" className="h-5 w-5" checked={inputs.oversized} onChange={(e) => setInputs({ ...inputs, oversized: e.target.checked })} /> Oversized or heavy — needs an individual quote</label>
+        {props.onFetchQuotes && (
+          <Button type="button" variant="outline" className="mt-2" disabled={props.fetchingQuotes} onClick={props.onFetchQuotes}>
+            {props.fetchingQuotes ? "Asking CJ…" : "Get fresh CJ US shipping quotes (read-only)"}
+          </Button>
         )}
-        <div className="text-muted-foreground">Bands: {RETAIL_TARGET_PREFERRED_PCT}%+ preferred · {RETAIL_TARGET_ACCEPTABLE_MIN_PCT}–39.99% acceptable · {RETAIL_MIN_MARGIN_PCT}–29.99% Founder review · below {RETAIL_MIN_MARGIN_PCT}% blocked.</div>
-        {missing.length > 0 && <div className="text-muted-foreground">Still missing: {missing.join(", ")}.</div>}
-        {safeFull == null && safeKnown != null && (
-          <button type="button" className="mt-1 underline" onClick={() => setPrice(String(safeKnown))}>Try the known-costs minimum ({money(safeKnown, cur)})</button>
-        )}
-        {safeFull != null && <button type="button" className="mt-1 underline" onClick={() => setPrice(String(safeFull))}>Try the minimum safe price</button>}
-      </div>
+        {props.quoteError && <p className="mt-1 text-destructive">{props.quoteError}</p>}
+      </section>
 
-      {worst && (
-        <div className="mt-3 text-xs">
-          <div className="font-medium">{allApprovable ? "Every variant keeps the protected 25%." : "Price approval and publication are blocked for this product."}</div>
-          {worst.b.floorPrice != null && <div className="text-muted-foreground">Lowest safe listed price for the costliest variant: {money(worst.b.floorPrice, cur)}</div>}
-          <ul className="mt-1 list-disc pl-4 text-muted-foreground">
-            {[...new Set(rows.flatMap((r) => r.b.warnings))].map((w) => <li key={w}>{w}</li>)}
-          </ul>
+      {/* SHARED COSTS */}
+      <section className="mt-4 rounded-lg border border-border p-3 text-base">
+        <h3 className="text-lg font-semibold">Costs that apply to every variant</h3>
+        <p className="text-muted-foreground">Nothing is assumed. Anything not decided stays marked and blocks approval.</p>
+        <div className="mt-2 space-y-2">
+          <CostRow label="Card / payment fee (%)" entry={inputs.processingFeePct} onChange={setEntry("processingFeePct")} />
+          <CostRow label={`Card / payment fixed fee (${cur})`} entry={inputs.processingFeeFixed} onChange={setEntry("processingFeeFixed")} />
+          <CostRow label={`Packaging (${cur})`} entry={inputs.packagingCost} onChange={setEntry("packagingCost")} />
+          <CostRow label="Commission, only if it applies (%)" entry={inputs.commissionPct} onChange={setEntry("commissionPct")} />
+          <CostRow label="Discount (%)" entry={inputs.discountPct} onChange={setEntry("discountPct")} />
+          <CostRow label={`Other costs (${cur})`} entry={inputs.otherCost} onChange={setEntry("otherCost")} />
+        </div>
+      </section>
+
+      {props.onSave && (
+        <div className="mt-4 flex flex-wrap items-center gap-3">
+          <Button type="button" size="lg" disabled={props.saving}
+            onClick={() => props.onSave!({ finalPrice: isAuto ? null : (lp != null && Number.isFinite(lp) && lp > 0 ? lp : null), inputs, summary })}>
+            {props.saving ? "Saving…" : "Save this worksheet"}
+          </Button>
+          <span className="text-base text-muted-foreground">
+            {props.initial?.updatedAt ? `Last saved ${props.initial.updatedAt.slice(0, 16).replace("T", " ")} UTC` : "Not saved yet"} · saves only to this private room
+          </span>
+          {props.saveError && <span className="text-base text-destructive">{props.saveError}</span>}
         </div>
       )}
     </details>
+  );
+}
+
+function CostRow(props: { label: string; entry: { amount: string; state: CostState }; onChange: (e: { amount: string; state: CostState }) => void }) {
+  const { entry } = props;
+  const needsAmount = entry.state === "verified" || entry.state === "estimated";
+  return (
+    <div className="grid items-center gap-2 sm:grid-cols-[1fr_8rem_16rem]">
+      <span className="font-medium">{props.label}</span>
+      {needsAmount ? (
+        <Input className="h-11 text-lg" inputMode="decimal" value={entry.amount} placeholder="Enter amount" aria-label={props.label}
+          onChange={(e) => props.onChange({ ...entry, amount: e.target.value })} />
+      ) : (
+        <span className="text-muted-foreground">{entry.state === "not_applicable" ? "—" : "No amount"}</span>
+      )}
+      <select className="h-11 rounded-md border border-input bg-background px-2 text-base" value={entry.state} aria-label={`${props.label} status`}
+        onChange={(e) => props.onChange({ ...entry, state: e.target.value as CostState })}>
+        {(Object.keys(STATE_LABEL) as CostState[]).map((s) => <option key={s} value={s}>{STATE_LABEL[s]}</option>)}
+      </select>
+    </div>
   );
 }

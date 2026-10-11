@@ -232,6 +232,13 @@
       "when": 1791712818485,
       "tag": "0032_cj_shipping_quotes",
       "breakpoints": true
+    },
+    {
+      "idx": 33,
+      "version": "7",
+      "when": 1791719530174,
+      "tag": "0033_pricing_room_worksheets",
+      "breakpoints": true
     }
   ]
 }
