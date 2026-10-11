@@ -22,7 +22,7 @@ export type AffiliatePolicy = {
 };
 
 export const DEFAULT_POLICY: AffiliatePolicy = {
-  platform_allocation_rate: 8,
+  platform_allocation_rate: 10,
   min_commission_rate: 3,
   max_commission_rate: 25,
   default_commission_rate: 12,
