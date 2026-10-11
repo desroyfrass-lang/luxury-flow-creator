@@ -126,6 +126,9 @@ export type BreakdownInput = {
   processingFeeFixed: CostEntry;
   discountPct: CostEntry; // not_applicable = no discount
   commissionPct: CostEntry; // not_applicable = no commission on this sale
+  /** What the CUSTOMER pays for shipping at checkout (customer-paid default). Shipping revenue is
+   *  never counted as product profit; only the processing fee charged on it is a FRASS cost. */
+  customerShippingCharge?: CostEntry;
 };
 export type BreakdownStatus = "protected_verified" | "protected_estimated" | "below_minimum" | "incomplete";
 export type Breakdown = {
@@ -148,15 +151,36 @@ export type Breakdown = {
 };
 
 const LABELS: Record<string, string> = {
-  supplierCost: "Supplier cost", shippingCost: "Shipping paid by FRASS", packagingCost: "Packaging",
+  supplierCost: "Supplier cost", shippingCost: "FRASS net shipping cost (free/subsidy only)", packagingCost: "Packaging",
   processingFeePct: "Payment processing (%)", processingFeeFixed: "Payment processing (fixed)",
   discountPct: "Discount", commissionPct: "Commission (only if applicable)", otherCost: "Other costs",
 };
 
 const val = (e: CostEntry) => (e.state === "not_applicable" ? 0 : e.amount);
 
-export function profitBreakdown(i: BreakdownInput): Breakdown {
-  const warnings: string[] = [];
+const RANK: Record<CostState, number> = { not_applicable: 0, verified: 1, estimated: 2, missing: 3, pending_policy: 4 };
+const worstState = (...xs: CostState[]) => xs.reduce((a, b) => (RANK[b] > RANK[a] ? b : a), "not_applicable" as CostState);
+
+/** Processing fee on the customer's shipping charge, merged into "other costs" (counted once). */
+export function withShippingProcessing(i: BreakdownInput): { input: BreakdownInput; shippingProcessing: number | null; warning: string | null } {
+  const ch = i.customerShippingCharge;
+  if (!ch || ch.state === "not_applicable" || i.processingFeePct.state === "not_applicable") return { input: i, shippingProcessing: 0, warning: null };
+  const chargeOk = ch.state !== "missing" && ch.state !== "pending_policy" && ch.amount != null && Number.isFinite(ch.amount);
+  const pctOk = i.processingFeePct.state !== "missing" && i.processingFeePct.state !== "pending_policy" && i.processingFeePct.amount != null;
+  const fee = chargeOk && pctOk ? r2(ch.amount! * i.processingFeePct.amount! / 100) : null;
+  const other = i.otherCost.state === "not_applicable" ? 0 : i.otherCost.amount;
+  const state = worstState(i.otherCost.state === "not_applicable" ? "verified" : i.otherCost.state, ch.state, i.processingFeePct.state);
+  return {
+    input: { ...i, otherCost: { amount: fee != null && other != null ? r2(other + fee) : null, state } },
+    shippingProcessing: fee,
+    warning: chargeOk ? (ch.state === "estimated" ? "Customer shipping charge is an estimate — end-to-end margin not verified." : null) : "Customer shipping charge at checkout not confirmed — its processing fee is unknown, so end-to-end margin cannot be verified.",
+  };
+}
+
+export function profitBreakdown(raw: BreakdownInput): Breakdown {
+  const sp = withShippingProcessing(raw);
+  const i = sp.input;
+  const warnings: string[] = sp.warning ? [sp.warning] : [];
   const keys = ["supplierCost", "shippingCost", "packagingCost", "processingFeePct", "processingFeeFixed", "discountPct", "commissionPct", "otherCost"] as const;
   let incomplete = false;
   let estimated = false;

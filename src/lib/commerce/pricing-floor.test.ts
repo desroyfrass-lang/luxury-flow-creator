@@ -182,3 +182,29 @@ describe("Founder target range 30–40% (25% stays the hard minimum)", () => {
     expect(b.provisional.targetPreferredOnKnown).toBe(23.87);
   });
 });
+
+describe("shipping responsibility (customer pays by default)", () => {
+  const cust = { ...base, shippingCost: v(0) };
+  it("customer-paid: CJ shipping is not a product cost; only the card fee on the shipping charge is", () => {
+    const b = profitBreakdown({ ...cust, customerShippingCharge: v(8) });
+    const noShip = profitBreakdown({ ...cust, customerShippingCharge: { amount: null, state: "not_applicable" } });
+    expect(Math.round((noShip.profit! - b.profit!) * 100) / 100).toBe(0.23); // 2.9% of 8
+    expect(b.status).toBe("protected_verified");
+  });
+  it("unconfirmed customer shipping charge blocks verified end-to-end margin", () => {
+    const b = profitBreakdown({ ...cust, customerShippingCharge: { amount: null, state: "missing" } });
+    expect(b.canApprove).toBe(false);
+    expect(b.warnings.join(" ")).toMatch(/not confirmed/);
+  });
+  it("free shipping offer counts the full FRASS shipping cost", () => {
+    expect(profitBreakdown({ ...base, customerShippingCharge: { amount: null, state: "not_applicable" } }).profit)
+      .toBe(Math.round((profitBreakdown(cust).profit! - 7.35) * 100) / 100);
+  });
+  it("pilot provisional with customer-paid shipping: 6.97 only → 25% 9.30, 30% 9.96, 40% 11.62", () => {
+    const b = profitBreakdown({ ...cust, listPrice: null, processingFeePct: { amount: null, state: "missing" }, processingFeeFixed: { amount: null, state: "missing" } });
+    expect(b.provisional.floorOnKnownCosts).toBe(9.3);
+    expect(b.provisional.targetAcceptableOnKnown).toBe(9.96);
+    expect(b.provisional.targetPreferredOnKnown).toBe(11.62);
+    expect(b.targets).toBeNull();
+  });
+});

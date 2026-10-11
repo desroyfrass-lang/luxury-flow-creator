@@ -7,12 +7,12 @@ const variants = ["S", "M", "L", "XL", "2XL", "3XL"].map((s) => ({ id: s, option
 
 describe("Vendor Room worksheet initial render", () => {
   const html = renderToString(<ProfitBreakdownPanel currency="USD" offerCost={6.97} variants={variants} knownShipping={{ amount: 7.35, note: "quote" }} />);
-  it("prefills the provisional price 19.10 (14.32 ÷ 0.75, rounded up)", () => {
-    expect(html).toContain('value="19.10"');
+  it("customer pays shipping by default: prefills 9.30 (6.97 ÷ 0.75, rounded up)", () => {
+    expect(html).toContain('value="9.30"');
     expect(html).toContain("provisional-price-note");
   });
   it("fills every variant row without typing, and never shows it as verified", () => {
-    expect(html.match(/USD 19\.10/g)!.length).toBeGreaterThanOrEqual(6);
+    expect(html.match(/USD 9\.30/g)!.length).toBeGreaterThanOrEqual(6);
     expect(html).not.toContain("25% protected profit verified");
   });
   it("recalculates from a changed price", () => {
@@ -32,6 +32,15 @@ describe("target range display", () => {
     const html = renderToString(<ProfitBreakdownPanel currency="USD" offerCost={6.97} variants={variants} knownShipping={{ amount: 7.35, note: "quote" }} />);
     expect(html).toContain("frassy-target-provisional");
     expect(html).not.toContain("frassy-target-verified");
-    expect(html).toContain("USD 23.87");
+    expect(html).toContain("USD 11.62");
+  });
+});
+
+describe("shipping responsibility", () => {
+  it("CJ shipping is shown for reference, not as a product cost, by default", () => {
+    const html = renderToString(<ProfitBreakdownPanel currency="USD" offerCost={6.97} variants={variants} knownShipping={{ amount: 7.35, note: "quote" }} />);
+    expect(html).toContain("Customer pays (default)");
+    expect(html).toContain("not a product cost");
+    expect(html).not.toContain("Shipping paid by FRASS");
   });
 });

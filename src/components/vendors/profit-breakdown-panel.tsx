@@ -51,10 +51,15 @@ export function ProfitBreakdownPanel(props: { currency: string; offerCost: numbe
   const blank = (state: CostState = "missing") => ({ amount: "", state });
   const [typedPrice, setTypedPrice] = useState<string | null>(null);
   const [c, setC] = useState({
-    shippingCost: props.knownShipping ? { amount: String(props.knownShipping.amount), state: "estimated" as CostState } : blank(), packagingCost: blank(), otherCost: blank(),
+    cjShipping: props.knownShipping ? { amount: String(props.knownShipping.amount), state: "estimated" as CostState } : blank(),
+    customerShipping: blank(), subsidy: blank(), packagingCost: blank(), otherCost: blank(),
     processingFeePct: blank(), processingFeeFixed: blank(),
     discountPct: blank("not_applicable"), commissionPct: blank("pending_policy"),
   });
+  const [shipMode, setShipMode] = useState<"customer_paid" | "free" | "subsidized">("customer_paid");
+  // Customer pays shipping by default; FRASS cost only on free (full CJ charge) or subsidized (net subsidy) offers.
+  const frassShipping: CostEntry = shipMode === "customer_paid" ? { amount: 0, state: "verified" } : shipMode === "free" ? toEntry(c.cjShipping) : toEntry(c.subsidy);
+  const customerCharge: CostEntry = shipMode === "free" ? { amount: null, state: "not_applicable" } : toEntry(c.customerShipping);
   const set = (k: keyof typeof c) => (e: { amount: string; state: CostState }) => setC({ ...c, [k]: e });
 
   // Each variant is checked on its own supplier cost; offer cost is the fallback.
@@ -63,7 +68,7 @@ export function ProfitBreakdownPanel(props: { currency: string; offerCost: numbe
         listPrice: lp,
         currency: cur,
         supplierCost: v.supplier_cost != null ? { amount: Number(v.supplier_cost), state: "verified" } : { amount: null, state: "missing" },
-        shippingCost: toEntry(c.shippingCost), packagingCost: toEntry(c.packagingCost), otherCost: toEntry(c.otherCost),
+        shippingCost: frassShipping, customerShippingCharge: customerCharge, packagingCost: toEntry(c.packagingCost), otherCost: toEntry(c.otherCost),
         processingFeePct: toEntry(c.processingFeePct), processingFeeFixed: toEntry(c.processingFeeFixed),
         discountPct: toEntry(c.discountPct), commissionPct: toEntry(c.commissionPct),
       });
@@ -71,14 +76,14 @@ export function ProfitBreakdownPanel(props: { currency: string; offerCost: numbe
   const autoPrice = useMemo(() => {
     const f = vs.map((v) => build(v, null).provisional.floorOnKnownCosts).filter((x): x is number => x != null);
     return f.length ? Math.max(...f) : null;
-  }, [vs, c, cur]);
+  }, [vs, c, cur, shipMode]);
   const isAuto = typedPrice == null;
   const price = isAuto ? (autoPrice != null ? autoPrice.toFixed(2) : "") : typedPrice;
   const setPrice = (p: string) => setTypedPrice(p);
   const rows = useMemo(() => {
     const lp = price.trim() === "" ? null : Number(price);
     return vs.map((v) => ({ v, b: build(v, lp != null && Number.isFinite(lp) ? lp : null) }));
-  }, [vs, price, c, cur]);
+  }, [vs, price, c, cur, shipMode]);
 
   const worst = rows.reduce((a, r) => ((r.b.profit ?? -Infinity) < (a.b.profit ?? -Infinity) ? r : a), rows[0]);
   const allApprovable = rows.every((r) => r.b.canApprove);
@@ -109,8 +114,19 @@ export function ProfitBreakdownPanel(props: { currency: string; offerCost: numbe
           </div>
         )}
         {!isAuto && <button type="button" className="text-left text-[11px] underline" onClick={() => setTypedPrice(null)}>Back to Frassy's provisional price</button>}
-        {props.knownShipping && <div className="text-[11px] text-muted-foreground">Shipping prefilled as an estimate: {props.knownShipping.note}. Verify before approval.</div>}
-        <Row label="Shipping paid by FRASS" suffix={cur} entry={c.shippingCost} onChange={set("shippingCost")} />
+        <div className="grid grid-cols-[1fr_15.5rem] items-center gap-2 text-xs">
+          <span>Who pays shipping</span>
+          <select className="h-8 rounded-md border border-input bg-background px-2" value={shipMode} aria-label="Who pays shipping" onChange={(e) => setShipMode(e.target.value as typeof shipMode)}>
+            <option value="customer_paid">Customer pays (default)</option>
+            <option value="free">Free shipping offer — FRASS pays</option>
+            <option value="subsidized">Partial subsidy — FRASS pays part</option>
+          </select>
+        </div>
+        <Row label="CJ shipping charge to FRASS" suffix={cur} entry={c.cjShipping} onChange={set("cjShipping")} />
+        {props.knownShipping && <div className="text-[11px] text-muted-foreground">{props.knownShipping.note} (estimate). {shipMode === "customer_paid" ? "Shown for reference only — the customer pays shipping, so it is not a product cost." : ""}</div>}
+        {shipMode !== "free" && <Row label="Customer shipping charge at checkout" suffix={cur} entry={c.customerShipping} onChange={set("customerShipping")} />}
+        {shipMode !== "free" && <div className="text-[11px] text-muted-foreground">Not assumed to equal CJ's charge. Shipping revenue is not product profit; only the card fee on it counts as a cost.</div>}
+        {shipMode === "subsidized" && <Row label="FRASS net shipping subsidy" suffix={cur} entry={c.subsidy} onChange={set("subsidy")} />}
         <Row label="Packaging" suffix={cur} entry={c.packagingCost} onChange={set("packagingCost")} />
         <Row label="Processing" suffix="%" entry={c.processingFeePct} onChange={set("processingFeePct")} />
         <Row label="Processing fixed fee" suffix={cur} entry={c.processingFeeFixed} onChange={set("processingFeeFixed")} />
