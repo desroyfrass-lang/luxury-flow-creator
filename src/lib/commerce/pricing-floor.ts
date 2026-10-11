@@ -226,7 +226,7 @@ export function profitBreakdown(i: BreakdownInput): Breakdown {
   if (band === "founder_review" && status === "protected_verified") warnings.push("Margin is 25–29.99%: allowed only with Founder review.");
   const canApprove = status === "protected_verified" && band !== "founder_review";
 
-  return { band, targets, provisional, status, canApprove, canApprove: status === "protected_verified", charged, lines, totalCost, profit, marginPct: m?.marginPct ?? null, protectedProfit, surplus, floorPrice: floor, warnings };
+  return { band, targets, provisional, status, canApprove, charged, lines, totalCost, profit, marginPct: m?.marginPct ?? null, protectedProfit, surplus, floorPrice: floor, warnings };
 }
 
 function incompleteCosts(i: BreakdownInput): boolean {

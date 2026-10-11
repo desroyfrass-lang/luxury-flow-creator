@@ -138,3 +138,47 @@ describe("Vendor Room cascade with missing costs", () => {
     expect(b.provisional.floorOnKnownCosts!).toBeLessThan(20.28);
   });
 });
+
+import { RETAIL_TARGET_PREFERRED_PCT, RETAIL_TARGET_ACCEPTABLE_MIN_PCT, marginBand, priceForMargin } from "./pricing-floor";
+
+describe("Founder target range 30–40% (25% stays the hard minimum)", () => {
+  it("bands", () => {
+    expect(RETAIL_TARGET_PREFERRED_PCT).toBe(40);
+    expect(RETAIL_TARGET_ACCEPTABLE_MIN_PCT).toBe(30);
+    expect(marginBand(40)).toBe("preferred");
+    expect(marginBand(39.99)).toBe("acceptable");
+    expect(marginBand(30)).toBe("acceptable");
+    expect(marginBand(29.99)).toBe("founder_review");
+    expect(marginBand(25)).toBe("founder_review");
+    expect(marginBand(24.99)).toBe("blocked");
+  });
+  it("target prices use the same margin math and reach their target", () => {
+    const p40 = priceForMargin(pilot, 40).floorPrice!;
+    const p30 = priceForMargin(pilot, 30).floorPrice!;
+    expect(retailMargin(p40, pilot).marginPct!).toBeGreaterThanOrEqual(40);
+    expect(retailMargin(p40 - 0.01, pilot).marginPct!).toBeLessThan(40);
+    expect(p30).toBeLessThan(p40);
+    expect(minimumGuardrailPrice(pilot).floorPrice).toBe(20.28);
+  });
+  it("recommendation only when every cost is verified", () => {
+    expect(profitBreakdown(base).targets?.preferred).toBe(priceForMargin(pilot, 40).floorPrice);
+    expect(profitBreakdown({ ...base, shippingCost: { amount: 7.35, state: "estimated" } }).targets).toBeNull();
+    expect(profitBreakdown({ ...base, commissionPct: { amount: null, state: "pending_policy" } }).targets).toBeNull();
+  });
+  it("40% is not a floor: a 35% price is acceptable and approvable", () => {
+    const p = priceForMargin(pilot, 35).floorPrice!;
+    const b = profitBreakdown({ ...base, listPrice: p });
+    expect(b.band).toBe("acceptable");
+    expect(b.canApprove).toBe(true);
+  });
+  it("25–29.99% needs Founder review, not auto-approval", () => {
+    const b = profitBreakdown({ ...base, listPrice: 21 });
+    expect(b.band).toBe("founder_review");
+    expect(b.canApprove).toBe(false);
+  });
+  it("provisional targets are lower bounds when costs are missing", () => {
+    const b = profitBreakdown({ ...base, processingFeePct: { amount: null, state: "missing" }, processingFeeFixed: { amount: null, state: "missing" } });
+    expect(b.targets).toBeNull();
+    expect(b.provisional.targetPreferredOnKnown).toBe(23.87);
+  });
+});
