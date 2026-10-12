@@ -9,6 +9,7 @@ const list = vi.fn(async () => ({ items: Array.from({ length: 20 }, (_, i) => it
 vi.mock("@tanstack/react-start", () => ({ useServerFn: (f: any) => f, createServerFn: () => ({}) }));
 vi.mock("@/lib/auth/identity-watch", () => ({ useAuthUserId: () => ({ userId: "founder", ready: true }) }));
 vi.mock("@/lib/vendors/cj-station.functions", () => ({ listCjStation: () => list(), saveCjStationDraft: vi.fn(), reopenCjStationItem: vi.fn() }));
+vi.mock("@/lib/vendors/cj-detail.functions", () => ({ refreshCjQueueDetail: vi.fn() }));
 vi.mock("./cj-pilot-panel", () => ({ SupplierPhotos: ({ urls }: any) => <div data-testid="photos">{urls.join(",")}</div>, PilotSaved: () => <div>saved</div> }));
 vi.mock("./pilot-category-picker", () => ({ PilotCategoryPicker: () => <div /> }));
 const { CjReviewStation } = await import("./cj-review-station");

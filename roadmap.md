@@ -1,6 +1,7 @@
 # Roadmap
 
-- [ ] Unified Vendor Room full-layout consolidation — preservation inventory complete; blocked on missing queued-product full detail/variant sources and authenticated room reachability. No application edits; stop for Founder review rather than partial redesign.
+- [x] Supplier-data foundation: read-only CJ detail cache for queue (18/20 fetched, 2 removed by CJ). 
+- [ ] Unified Vendor Room full-layout consolidation — awaits separate Founder approval after data foundation review.
 
 - [x] Focused A2 correction: editable product/country assumptions, commission applicability, real quoted method and private notes; authoritative validated saves, dynamic copy and actionable checks. Full suite 369 passed / 0 failed across 45 files; automatic build OK; isolated desktop/phone method selection, cost recalculation, notes/save/remount and focus passed with no overflow/browser errors. Existing Founder device confirmation blocks real-room save/readback; separate typecheck/standalone build not run (harness-managed). No migration, deployment or remote product writes.
 

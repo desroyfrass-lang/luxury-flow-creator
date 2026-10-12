@@ -16,7 +16,7 @@ async function requireFounder(ctx: { supabase: any; userId: string }) {
   if (a.error || s.error || !(a.data || s.data)) throw new Error("Founder access only.");
 }
 
-const COLS = "id, cj_pid, cj_data, title, image_url, source_price, status, created_at";
+const COLS = "id, cj_pid, cj_data, title, image_url, source_price, status, created_at, cj_detail, cj_detail_fetched_at, cj_detail_error";
 
 async function findDraft(supabase: any, pid: string): Promise<string | null> {
   const { data, error } = await supabase.from("product_sources").select("product_id").eq("source_type", "cj").eq("source_ref", pid).limit(1).maybeSingle();
@@ -101,3 +101,4 @@ export const reopenCjStationItem = createServerFn({ method: "POST" })
     if (!row) throw new Error("Only drafted records can be reopened.");
     return { queueStatus: "pending" as const };
   });
+

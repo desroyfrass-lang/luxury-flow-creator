@@ -1665,6 +1665,9 @@ export type Database = {
           brand: string | null
           category: string | null
           cj_data: Json
+          cj_detail: Json | null
+          cj_detail_error: string | null
+          cj_detail_fetched_at: string | null
           cj_pid: string
           created_at: string
           decided_at: string | null
@@ -1685,6 +1688,9 @@ export type Database = {
           brand?: string | null
           category?: string | null
           cj_data: Json
+          cj_detail?: Json | null
+          cj_detail_error?: string | null
+          cj_detail_fetched_at?: string | null
           cj_pid: string
           created_at?: string
           decided_at?: string | null
@@ -1705,6 +1711,9 @@ export type Database = {
           brand?: string | null
           category?: string | null
           cj_data?: Json
+          cj_detail?: Json | null
+          cj_detail_error?: string | null
+          cj_detail_fetched_at?: string | null
           cj_pid?: string
           created_at?: string
           decided_at?: string | null

@@ -11,6 +11,7 @@ import { classificationBreadcrumb } from "@/lib/taxonomy/hierarchy";
 import { isEditableProductCategory } from "@/lib/vendors/cj-pilot";
 import { stationPricing, type StationItem } from "@/lib/vendors/cj-station";
 import { listCjStation, reopenCjStationItem, saveCjStationDraft } from "@/lib/vendors/cj-station.functions";
+import { refreshCjQueueDetail } from "@/lib/vendors/cj-detail.functions";
 import { PilotSaved, SupplierPhotos, type SavedDraft } from "./cj-pilot-panel";
 import { PilotCategoryPicker } from "./pilot-category-picker";
 
@@ -173,7 +174,8 @@ function StationWorkspace({ item, supplierBrands, onSaved }: { item: StationItem
   return (
     <div className="mt-4 grid gap-6 md:grid-cols-2" data-testid="station-workspace">
       <div>
-        <SupplierPhotos urls={item.images} />
+        <SupplierPhotos urls={item.detail && item.detail.images.length ? item.detail.images.map((i) => i.url) : item.images} />
+        <SupplierDetailStatus item={item} />
         <dl className="mt-4 space-y-1 text-sm">
           <div><dt className="inline text-muted-foreground">Supplier original name (unchanged): </dt><dd className="inline" data-testid="station-original">{item.supplierTitle}</dd></div>
           <div><dt className="inline text-muted-foreground">CJ product ID: </dt><dd className="inline" data-testid="station-pid">{item.cjPid}</dd></div>
@@ -214,6 +216,39 @@ function StationWorkspace({ item, supplierBrands, onSaved }: { item: StationItem
           {item.status === "drafted" && <Button variant="outline" disabled={reopen.isPending} onClick={() => reopen.mutate()}>Move back to waiting</Button>}
         </div>
       </div>
+    </div>
+  );
+}
+
+/** Minimal truthful status for the cached read-only CJ detail. */
+function SupplierDetailStatus({ item }: { item: StationItem }) {
+  const qc = useQueryClient();
+  const fn = useServerFn(refreshCjQueueDetail);
+  const [msg, setMsg] = useState<string | null>(null);
+  const m = useMutation({
+    mutationFn: () => fn({ data: { queueId: item.id } }),
+    onSuccess: (r) => { setMsg(`Fetched ${r.images} photos and ${r.variants} variants from CJ.`); qc.invalidateQueries({ queryKey: ["cj-station"] }); },
+    onError: (e) => setMsg(e instanceof Error ? e.message : "CJ details unavailable."),
+  });
+  const d = item.detail;
+  return (
+    <div className="mt-3 rounded-sm border border-border p-3 text-sm" data-testid="station-detail">
+      <div className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground">CJ supplier detail (read-only)</div>
+      {d ? (
+        <ul className="mt-1 space-y-0.5">
+          <li>Fetched from CJ: {new Date(item.detailFetchedAt ?? d.fetchedAt).toLocaleString()}</li>
+          <li>Photos: {d.images.length} original (dimensions not provided by CJ)</li>
+          <li>Variants: {d.variants.length}{d.variants.length ? ` · CJ cost $${Math.min(...d.variants.map((v) => v.cost ?? Infinity)).toFixed(2)}–$${Math.max(...d.variants.map((v) => v.cost ?? 0)).toFixed(2)} USD` : ""}</li>
+          <li>Colours: {d.colours.length ? d.colours.join(", ") : "none listed"}</li>
+          <li>Sizes: {d.sizes.length ? d.sizes.join(", ") : "none listed"}</li>
+          <li>Stock: not fetched</li>
+        </ul>
+      ) : <p className="mt-1">Not fetched yet — showing the stored snapshot only.</p>}
+      {item.detailError && <p className="mt-1 text-destructive">Last fetch failed: {item.detailError}</p>}
+      <Button type="button" size="sm" variant="outline" className="mt-2" disabled={m.isPending} onClick={() => { setMsg(null); m.mutate(); }}>
+        {m.isPending ? "Reading from CJ…" : d ? "Refresh from CJ" : "Fetch full details from CJ"}
+      </Button>
+      {msg && <p className="mt-1 text-xs" role="status">{msg}</p>}
     </div>
   );
 }
