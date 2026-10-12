@@ -4,7 +4,11 @@ import { ILLUSTRATIVE_INPUTS } from "@/lib/commerce/pricing-worksheet";
 vi.mock("@/integrations/supabase/auth-middleware", () => ({ requireSupabaseAuth: {} }));
 vi.mock("@tanstack/react-start", () => ({ createServerFn: () => {
   let validate = (input: unknown): any => input;
-  const chain = { middleware: () => chain, inputValidator: (v: typeof validate) => { validate = v; return chain; }, handler: (h: any) => (arg: any) => h({ ...arg, data: validate(arg.data) }) };
+  const chain = { middleware: () => chain, inputValidator: (v: typeof validate) => { validate = v; return chain; }, handler: (...handlers: any[]) => {
+    const h = handlers[handlers.length - 1];
+    const execute = (arg: any) => h({ ...arg, data: validate(arg.data) });
+    return Object.assign(execute, { __executeServer: execute });
+  } };
   return chain;
 } }));
 const { savePricingWorksheet, getPricingWorksheet, approvePricingWorksheet } = await import("./pricing-room.functions");
