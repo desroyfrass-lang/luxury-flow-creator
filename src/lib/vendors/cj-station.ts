@@ -84,7 +84,7 @@ export function draftPayload(item: StationItem) {
       fulfillment_mode: "dropship", ip_protection_level: "standard",
     },
     media: item.images.map((url) => ({ url })),
-    variants: [] as unknown[],
+    variants: [] as never[],
   };
 }
 
