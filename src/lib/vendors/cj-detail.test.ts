@@ -47,7 +47,7 @@ describe("CJ supplier detail foundation", () => {
 describe("CJ detail refresh boundary", () => {
   it("only reads CJ product detail and never publishes or writes to Shopify", async () => {
     const { readFileSync } = await import("node:fs");
-    const src = readFileSync("src/lib/vendors/cj-detail.functions.ts", "utf8");
+    const src = readFileSync("src/lib/vendors/cj-detail.functions.ts", "utf8").replace(/^\s*\/\/.*$/gm, "");
     expect(src).toMatch(/requireFounder\(context\)/);
     expect(src.match(/cjGet[^(]*\("([^"]+)"/g)).toEqual(['cjGet<Record<string, unknown>>("/product/query"']);
     expect(src).not.toMatch(/shopify|publication_status|create_.*draft|\.insert\(|\.delete\(/i);
