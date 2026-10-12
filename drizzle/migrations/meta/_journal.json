@@ -253,6 +253,13 @@
       "when": 1791743707605,
       "tag": "0035_pricing_room_destinations_approval",
       "breakpoints": true
+    },
+    {
+      "idx": 36,
+      "version": "7",
+      "when": 1791848796025,
+      "tag": "0036_cj_queue_detail_cache",
+      "breakpoints": true
     }
   ]
 }
