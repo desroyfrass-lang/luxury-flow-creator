@@ -60,6 +60,11 @@ describe("destination pricing engine", () => {
     const r = run({ inputs: verified, variants: [v("S", 6.97, [q("US", 5, "Cheap"), q("US", 7.35, "CJPacket")])] });
     expect(r.variants[0].shipping).toEqual({ amount: 7.35, state: "verified" });
   });
+  it("unavailable chosen method blocks readiness, not a cheapest-method substitution", () => {
+    const r = run({ inputs: { ...verified, shippingMethod: "Unavailable" } });
+    expect(r.recommendedPrice).toBeNull();
+    expect(r.requirements.find((x) => x.key === "shipping_method")?.met).toBe(false);
+  });
   it("all verified + price at 40% target is ready", () => {
     const r = run({ inputs: verified, finalPrice: 27.41 });
     expect(r.ready).toBe(true);

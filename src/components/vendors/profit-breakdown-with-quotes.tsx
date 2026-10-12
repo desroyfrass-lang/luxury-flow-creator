@@ -16,7 +16,7 @@ import type { DestinationPricing } from "@/lib/commerce/destination-pricing";
 import { ProfitBreakdownPanel, Disclosure, type VariantQuotes } from "./profit-breakdown-panel";
 
 type PanelProps = React.ComponentProps<typeof ProfitBreakdownPanel>;
-type Props = Omit<PanelProps, "quotes" | "onFetchQuotes" | "fetchingQuotes" | "quoteError" | "initial" | "onSave" | "saving" | "saveError" | "destination" | "destinationControl" | "serverSection" | "onDirtyChange"> & { productId: string; canFetch: boolean };
+type Props = Omit<PanelProps, "quotes" | "onFetchQuotes" | "fetchingQuotes" | "quoteError" | "initial" | "onSave" | "saving" | "saveError" | "saveSuccess" | "destination" | "destinationControl" | "serverSection" | "onDirtyChange"> & { productId: string; canFetch: boolean };
 type Dest = (typeof DESTINATIONS)[number];
 const NAME = (d: string) => SHIPPING_ZONES.find((z) => z.code === d)?.name ?? d;
 
@@ -36,11 +36,11 @@ export function ProfitBreakdownWithQuotes({ productId, canFetch, ...rest }: Prop
   const qKey = ["cj-shipping-quotes", productId, destination];
   const wKey = ["pricing-worksheet", productId, destination];
   const eKey = ["pricing-evaluation", productId, destination];
-  const { data } = useQuery({ queryKey: qKey, queryFn: () => list({ data: { variantIds: ids, country: destination } }), enabled: ids.length > 0 });
+  const quoteQuery = useQuery({ queryKey: qKey, queryFn: () => list({ data: { variantIds: ids, country: destination } }), enabled: ids.length > 0 });
   const ws = useQuery({ queryKey: wKey, queryFn: () => getWs({ data: { productId, destination } }) });
-  const ev = useQuery({ queryKey: eKey, queryFn: () => evalFn({ data: { productId, destination } }) });
+  const ev = useQuery({ queryKey: eKey, queryFn: () => evalFn({ data: { productId, destination } }), refetchInterval: 30000 });
   const quotes: VariantQuotes = {};
-  for (const q of data ?? []) (quotes[q.variant_id] ??= []).push(q);
+  for (const q of quoteQuery.data ?? []) (quotes[q.variant_id] ??= []).push(q);
   const refresh = () => { qc.invalidateQueries({ queryKey: wKey }); qc.invalidateQueries({ queryKey: eKey }); };
   const m = useMutation({
     mutationFn: () => fetchFn({ data: { productId, country: destination } }),
@@ -49,20 +49,20 @@ export function ProfitBreakdownWithQuotes({ productId, canFetch, ...rest }: Prop
   const save = useMutation({
     mutationFn: (p: Parameters<NonNullable<PanelProps["onSave"]>>[0]) =>
       saveWs({ data: { productId, destination, expectedRevision: ws.data?.revision, ...p } }),
-    onSettled: refresh,
+    onSuccess: (row) => { qc.setQueryData(wKey, row); setDirty(false); qc.invalidateQueries({ queryKey: eKey }); },
   });
   const failed = m.data?.results.filter((r) => r.error) ?? [];
-  const err = m.error ? (m.error as Error).message : failed.length ? `${failed.length} variant(s) without a quote: ${failed[0].error}` : null;
+  const err = quoteQuery.error ? (quoteQuery.error as Error).message : m.error ? (m.error as Error).message : failed.length ? `${failed.length} variant(s) without a quote: ${failed[0].error}` : null;
 
   const switchTo = (d: Dest) => {
-    if (d === destination) return;
+    if (d === destination || save.isPending || m.isPending) return;
     if (dirty && typeof window !== "undefined" && !window.confirm(`You have unsaved ${NAME(destination)} changes. Leave without saving?`)) return;
     save.reset(); m.reset(); setDirty(false); setDestination(d);
   };
   const selector = (
     <div className="mb-3 flex flex-wrap gap-2" role="radiogroup" aria-label="Pricing destination" data-testid="destination-selector">
       {DESTINATIONS.map((d) => (
-        <Button key={d} type="button" variant="outline" className="pricing-variant" role="radio" aria-checked={d === destination} onClick={() => switchTo(d)}>
+        <Button key={d} type="button" variant="outline" className="pricing-variant" role="radio" aria-checked={d === destination} disabled={save.isPending || m.isPending} onClick={() => switchTo(d)}>
           {NAME(d)}
         </Button>
       ))}
@@ -91,7 +91,7 @@ export function ProfitBreakdownWithQuotes({ productId, canFetch, ...rest }: Prop
           productId={productId} destination={destination} dirty={dirty} isFounder={isFounder}
           worksheet={ws.data ?? null} evaluation={ev.data?.pricing ?? null} evaluatedAt={ev.data?.evaluatedAt ?? null}
           loading={ev.isLoading || ev.isFetching} error={ev.error ? (ev.error as Error).message : null}
-          approve={(note) => approveFn({ data: { productId, destination, expectedRevision: ws.data!.revision, note: note || undefined } })}
+          approve={(note) => { const revision = ws.data?.revision; if (!revision) return Promise.reject(new Error("Save the worksheet before approving.")); return approveFn({ data: { productId, destination, expectedRevision: revision, note: note || undefined } }); }}
           onApproved={refresh}
         />
       }
@@ -122,7 +122,8 @@ export function ReadinessSection(p: {
   if (e && !e.ready) blockers.push(`${total - met} readiness check(s) not met.`);
   if (e?.requiresReviewNote && !note.trim()) blockers.push("Margin is 25–29.99% — write a review note.");
   if (p.worksheet?.approvalStatus === "approved" && p.worksheet.approvedRevision === p.worksheet.revision) blockers.push("This version is already approved.");
-  if (!e) blockers.push("Server check not available yet.");
+  if (p.loading || p.error) blockers.push("Wait for a current successful server check.");
+   if (!e) blockers.push("Server check not available yet.");
   const canApprove = blockers.length === 0 && !busy;
 
   const onApprove = async () => {
@@ -144,13 +145,13 @@ export function ReadinessSection(p: {
         {e && (
           <>
             <p className="mt-2 text-muted-foreground">
-              Server figures: recommended (40%) {e.recommendedPrice != null ? `USD ${e.recommendedPrice.toFixed(2)}` : "not computable"} · 25% minimum {e.minimumPrice != null ? `USD ${e.minimumPrice.toFixed(2)}` : "not computable"} · basis {e.basis === "verified" ? "verified" : e.basis === "estimated" ? "estimate only" : "blocked"}.
+              Server figures: recommended (40%) {e.recommendedPrice != null ? `${e.costCurrency} ${e.recommendedPrice.toFixed(2)}` : "not computable"} · 25% minimum {e.minimumPrice != null ? `${e.costCurrency} ${e.minimumPrice.toFixed(2)}` : "not computable"} · basis {e.basis === "verified" ? "verified" : e.basis === "estimated" ? "estimate only" : "blocked"}.
             </p>
             <ul className="mt-3 space-y-2" aria-label="Readiness checks">
               {e.requirements.map((r) => (
                 <li key={r.key} className="flex gap-2">
                   {r.met ? <CheckCircle2 className="mt-0.5 size-4 shrink-0 pricing-gold" aria-hidden /> : <CircleAlert className="mt-0.5 size-4 shrink-0 text-destructive" aria-hidden />}
-                  <span><strong>{r.label}</strong> — {r.met ? "met" : "not met"}<span className="block text-muted-foreground">Source: {r.provenance}{r.met ? "" : ` · Action: ${ACTION[r.key] ?? "Resolve before approval."}`}</span></span>
+                  <span><strong>{r.label}</strong> — {r.met ? "met" : "not met"}<span className="block text-muted-foreground">Source: {r.provenance}{r.met ? "" : ` · Action: ${ACTION[r.key] ?? "Resolve before approval."}`}</span>{!r.met && CONTROL[r.key] && <Button type="button" variant="ghost" aria-label={`Open setting: ${r.label}`} onClick={(event) => focusPricingControl(event.currentTarget, CONTROL[r.key])}>Open setting</Button>}</span>
                 </li>
               ))}
             </ul>
@@ -189,3 +190,18 @@ const ACTION: Record<string, string> = {
   final_price: "Type a final selling price and save.",
   minimum: "Raise the price or verify costs until every variant keeps 25%.",
 };
+
+const CONTROL: Record<string, string> = {
+  shipping_fresh: "Shipping & destination", shipping_method: "Standard shipping method preference",
+  processingFeePct: "Payment processing (%)", processingFeeFixed: "Payment fixed fee (USD)",
+  packagingCost: "Packaging (USD)", otherCost: "Other expenses (USD)", discountPct: "Discount (%)",
+  commissionPct: "Commission applicability", final_price: "Final selling price", minimum: "Final selling price",
+};
+function focusPricingControl(button: HTMLElement, label: string) {
+  const room = button.closest(".pricing-room");
+  const control = Array.from(room?.querySelectorAll<HTMLElement>("[aria-label], summary") ?? []).find((el) => el.getAttribute("aria-label") === label || (el.tagName === "SUMMARY" && el.textContent?.includes(label)));
+  if (!control) return;
+  const details = control.closest("details");
+  if (details) details.open = true;
+  control.focus(); control.scrollIntoView({ block: "center", behavior: "instant" });
+}

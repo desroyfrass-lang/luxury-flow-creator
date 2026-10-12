@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { DEFAULT_INPUTS, ILLUSTRATIVE_INPUTS, planningBreakdown, withPlanningEstimates, parseStoredInputs } from "./pricing-worksheet";
+import { DEFAULT_INPUTS, ILLUSTRATIVE_INPUTS, planningBreakdown, withPlanningEstimates, parseStoredInputs, worksheetInputsSchema, assertEditableWorksheet } from "./pricing-worksheet";
 import { profitBreakdown, type BreakdownInput } from "./pricing-floor";
 
 const estimate = (amount: number) => ({ amount, state: "estimated" as const });
@@ -77,5 +77,28 @@ describe("A1 pricing planning rules", () => {
     expect(a.preferred).toBe(27.41);
     expect(b.preferred).toBe(33.16);
     expect(b.result.canApprove).toBe(false);
+  });
+});
+
+describe("editable worksheet safety", () => {
+  it("persists bounded private notes without changing cost math", () => {
+    const i = worksheetInputsSchema.parse({ ...ILLUSTRATIVE_INPUTS, founderNotes: "  Review my costs  ", businessPolicyNotes: "Country policy", taxDutyNotes: "Unconfirmed" });
+    expect(i.founderNotes).toBe("Review my costs");
+    expect(parseStoredInputs(JSON.parse(JSON.stringify(i))).businessPolicyNotes).toBe("Country policy");
+    expect(planningBreakdown(base).preferred).toBe(27.41);
+    expect(() => worksheetInputsSchema.parse({ ...i, founderNotes: "a".repeat(2001) })).toThrow();
+  });
+  it("rejects unsafe numeric settings and extra safety-rule overrides", () => {
+    for (const amount of ["-1", "NaN", "1e4", "1.12345", "1000001"]) expect(() => worksheetInputsSchema.parse({ ...ILLUSTRATIVE_INPUTS, packagingCost: { amount, state: "estimated" } })).toThrow();
+    expect(() => worksheetInputsSchema.parse({ ...ILLUSTRATIVE_INPUTS, discountPct: { amount: "100", state: "estimated" } })).toThrow();
+    expect(() => worksheetInputsSchema.parse({ ...ILLUSTRATIVE_INPUTS, minimumMargin: 5 })).toThrow();
+  });
+  it("edits cannot create or alter a verified fee declaration", () => {
+    const forged = { ...ILLUSTRATIVE_INPUTS, processingFeePct: { amount: "3", state: "verified" as const } };
+    expect(() => assertEditableWorksheet(forged, null)).toThrow("trusted source");
+    expect(() => assertEditableWorksheet(forged, ILLUSTRATIVE_INPUTS)).toThrow();
+    expect(() => assertEditableWorksheet(forged, forged)).not.toThrow();
+    expect(() => assertEditableWorksheet({ ...forged, processingFeePct: { amount: "4", state: "verified" } }, forged)).toThrow();
+    expect(() => assertEditableWorksheet({ ...forged, processingFeePct: { amount: "4", state: "estimated" } }, forged)).not.toThrow();
   });
 });
