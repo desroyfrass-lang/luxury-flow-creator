@@ -1,5 +1,7 @@
 # Roadmap
 
+- [ ] Unified Vendor Room full-layout consolidation — preservation inventory complete; blocked on missing queued-product full detail/variant sources and authenticated room reachability. No application edits; stop for Founder review rather than partial redesign.
+
 - [x] Focused A2 correction: editable product/country assumptions, commission applicability, real quoted method and private notes; authoritative validated saves, dynamic copy and actionable checks. Full suite 369 passed / 0 failed across 45 files; automatic build OK; isolated desktop/phone method selection, cost recalculation, notes/save/remount and focus passed with no overflow/browser errors. Existing Founder device confirmation blocks real-room save/readback; separate typecheck/standalone build not run (harness-managed). No migration, deployment or remote product writes.
 
 - [x] Final A1 room-only refinement: wider desktop inner panel, sticky price/profit/margin/targets, compact disclosures. Full suite 329 passed / 0 failed across 42 files; automatic build OK; isolated desktop/mobile price/fee cascade, variants, all disclosures, simulated save/reload, quote control, sticky/focus, contrast and reduced motion passed. No deployment, remote product writes or migration. Real saved-room testing remains behind the existing Founder identity check; separate typecheck not run by agent (harness-managed).
