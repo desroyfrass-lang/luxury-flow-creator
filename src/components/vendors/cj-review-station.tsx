@@ -1,7 +1,7 @@
 // Founder CJ review station — one stored CJ queue record at a time in the
 // Vendor Room workspace. Back/Next never change status; only a confirmed
 // draft save marks a record "drafted". No import, publish, Shopify or CJ writes.
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, type ReactNode } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
@@ -11,23 +11,43 @@ import { classificationBreadcrumb } from "@/lib/taxonomy/hierarchy";
 import { isEditableProductCategory } from "@/lib/vendors/cj-pilot";
 import { stationPricing, type StationItem } from "@/lib/vendors/cj-station";
 import { listCjStation, reopenCjStationItem, saveCjStationDraft } from "@/lib/vendors/cj-station.functions";
-import { SupplierPhotos } from "./cj-pilot-panel";
+import { PilotSaved, SupplierPhotos, type SavedDraft } from "./cj-pilot-panel";
 import { PilotCategoryPicker } from "./pilot-category-picker";
 
 type Brand = { id: string; display_name: string };
+type Vendor = { id: string; display_name: string; vendor_kind: string; verification_status: string };
+type VendorProduct = { id: string; title: string; vendor_id?: string; draft_status: string };
 
-export function CjReviewStation({ supplierBrands, onSaved }: { supplierBrands: Brand[]; onSaved: () => void }) {
+/**
+ * The original Vendor Room product workspace, now vendor-aware and sequential.
+ * Position 1 is the existing CJ pilot (chiffon) workspace exactly as before;
+ * positions 2+ are the stored CJ queue records. Back/Next never change status.
+ */
+export function CjReviewStation({ vendors, products, cjVendorId, pilot, savedDraftFor, onSaved }: {
+  vendors: Vendor[];
+  products: VendorProduct[];
+  cjVendorId: string | null;
+  pilot: ReactNode;
+  savedDraftFor: (productId: string) => SavedDraft | null;
+  onSaved: () => void;
+}) {
   const { userId } = useAuthUserId();
   const listFn = useServerFn(listCjStation);
   const q = useQuery({ queryKey: ["cj-station", userId], queryFn: () => listFn(), enabled: Boolean(userId) });
   const items = q.data?.items ?? [];
-  const [activeId, setActiveId] = useState<string | null>(null);
-  useEffect(() => {
-    if (!items.length) return;
-    if (!activeId || !items.some((i) => i.id === activeId)) setActiveId((items.find((i) => i.status === "pending") ?? items[0]).id);
-  }, [items, activeId]);
-  const index = items.findIndex((i) => i.id === activeId);
-  const active = index >= 0 ? items[index] : null;
+  const supplierBrands: Brand[] = vendors.filter((v) => v.vendor_kind === "supplier");
+  const [vendorId, setVendorId] = useState<string>(cjVendorId ?? vendors[0]?.id ?? "");
+  useEffect(() => { if (!vendorId && (cjVendorId || vendors[0])) setVendorId(cjVendorId ?? vendors[0].id); }, [cjVendorId, vendors, vendorId]);
+  // Position is kept per vendor, so switching brands never loses your place.
+  const [positions, setPositions] = useState<Record<string, string>>({});
+  const PILOT = "__pilot__";
+  const sequence = [PILOT, ...items.map((i) => i.id)];
+  const activeId = positions[vendorId] && sequence.includes(positions[vendorId]) ? positions[vendorId] : PILOT;
+  const setActiveId = (id: string) => setPositions((p) => ({ ...p, [vendorId]: id }));
+  const index = sequence.indexOf(activeId);
+  const active = items.find((i) => i.id === activeId) ?? null;
+  const isCjVendor = Boolean(vendorId) && vendorId === cjVendorId;
+  const vendor = vendors.find((v) => v.id === vendorId);
 
   const goNextPending = (fromId: string, list: StationItem[]) => {
     const start = list.findIndex((i) => i.id === fromId);
@@ -36,40 +56,82 @@ export function CjReviewStation({ supplierBrands, onSaved }: { supplierBrands: B
   };
 
   return (
-    <section className="mt-12 rounded-xl border border-[color:var(--gold)]/50 p-5" aria-label="CJ product review station">
-      <div className="flex flex-wrap items-start justify-between gap-3">
-        <div>
-          <div className="text-[10px] uppercase tracking-[0.3em] text-[color:var(--gold)]">Founder · CJ product review station</div>
-          <h2 className="mt-2 font-display text-2xl">CJ records, one at a time</h2>
-          <p className="mt-1 text-xs text-muted-foreground">Stored CJ supplier records — not store products. Saving makes a private draft only; nothing is imported, priced or published.</p>
-          {q.data && <p className="mt-2 text-sm" data-testid="station-counts">{q.data.counts.pending} waiting · {q.data.counts.drafted} drafted</p>}
-        </div>
-        <Button size="sm" variant="outline" onClick={() => q.refetch()} disabled={q.isFetching}>{q.isFetching ? "Refreshing…" : "Refresh"}</Button>
-      </div>
-      {q.isLoading && <p className="mt-4 text-sm text-muted-foreground">Loading CJ records…</p>}
-      {q.isError && <p role="alert" className="mt-4 text-sm text-destructive">Could not load the CJ records: {(q.error as Error).message}</p>}
-      {q.data && items.length === 0 && <p className="mt-4 text-sm text-muted-foreground">No CJ records waiting.</p>}
-
-      {items.length > 0 && (
-        <label className="mt-4 block text-xs">Current record
-          <select aria-label="Choose CJ record" className="mt-1 w-full rounded-sm border border-border bg-background px-2 py-2 text-sm" value={activeId ?? ""} onChange={(e) => setActiveId(e.target.value)}>
-            {items.map((i, n) => <option key={i.id} value={i.id}>{n + 1}. {i.workingName ?? i.supplierTitle} — {i.status === "drafted" ? "drafted" : "waiting"}{i.suggestedName ? " · priority" : ""}</option>)}
+    <section className="mt-12" aria-label="Vendor product workspace">
+      <div className="flex flex-wrap items-end justify-between gap-3">
+        <label className="block min-w-[16rem] flex-1 text-[10px] uppercase tracking-[0.2em] text-muted-foreground">Vendor
+          <select aria-label="Vendor" className="mt-1 w-full rounded-sm border border-border bg-background px-2 py-2 text-sm normal-case tracking-normal" value={vendorId} onChange={(e) => setVendorId(e.target.value)}>
+            {vendors.length === 0 && <option value="">No vendor brands saved yet</option>}
+            {vendors.map((v) => <option key={v.id} value={v.id}>{v.display_name} ({v.vendor_kind.replace("_", " ")} · {v.verification_status})</option>)}
+            {(q.data?.podProviders ?? []).map((p) => <option key={`pod-${p.name}`} value="" disabled>{p.name} (print on demand · {p.status === "connected" ? "connected" : "not connected"})</option>)}
           </select>
         </label>
-      )}
+        {isCjVendor && <Button size="sm" variant="outline" onClick={() => q.refetch()} disabled={q.isFetching}>{q.isFetching ? "Refreshing…" : "Refresh"}</Button>}
+      </div>
 
-      {active && (
+      {!isCjVendor ? (
+        <div className="mt-6 rounded-xl border border-dashed border-border p-5 text-sm" data-testid="vendor-empty">
+          {vendor ? (
+            <>
+              <div className="font-display text-lg">{vendor.display_name}</div>
+              <p className="mt-1 text-xs text-muted-foreground">No supplier queue is connected for this vendor. Its saved drafts are below in its brand card.</p>
+              <ul className="mt-2 list-disc pl-5 text-xs">{products.filter((p) => p.vendor_id === vendor.id).map((p) => <li key={p.id}>{p.title} — {p.draft_status}</li>)}</ul>
+              {products.every((p) => p.vendor_id !== vendor.id) && <p className="mt-2 text-xs text-muted-foreground">No drafts yet.</p>}
+            </>
+          ) : <p className="text-xs text-muted-foreground">Choose a vendor.</p>}
+        </div>
+      ) : (
         <>
-          <div className="mt-3 flex items-center justify-between gap-2">
-            <Button size="sm" variant="outline" disabled={index <= 0} onClick={() => setActiveId(items[index - 1].id)}>← Back</Button>
-            <span className="text-xs text-muted-foreground">{index + 1} of {items.length}</span>
-            <Button size="sm" variant="outline" disabled={index >= items.length - 1} onClick={() => setActiveId(items[index + 1].id)}>Next →</Button>
+          <div className="mt-3 text-xs text-muted-foreground">
+            {q.data && <span data-testid="station-counts">CJ queue: {q.data.counts.pending} waiting · {q.data.counts.drafted} drafted · </span>}
+            Stored CJ supplier records — saving makes a private draft only; nothing is imported or published.
           </div>
-          <StationWorkspace key={active.id} item={active} supplierBrands={supplierBrands}
-            onSaved={(list) => { onSaved(); goNextPending(active.id, list); }} />
+          {q.isLoading && <p className="mt-2 text-sm text-muted-foreground">Loading CJ records…</p>}
+          {q.isError && <p role="alert" className="mt-2 text-sm text-destructive">Could not load the CJ records: {(q.error as Error).message}</p>}
+          <label className="mt-3 block text-xs">Product
+            <select aria-label="Choose product" className="mt-1 w-full rounded-sm border border-border bg-background px-2 py-2 text-sm" value={activeId} onChange={(e) => setActiveId(e.target.value)}>
+              <option value={PILOT}>1. CJ pilot product (saved draft)</option>
+              {items.map((i, n) => <option key={i.id} value={i.id}>{n + 2}. {i.workingName ?? i.supplierTitle} — {i.status === "drafted" ? "drafted" : "waiting"}{i.suggestedName ? " · priority" : ""}</option>)}
+            </select>
+          </label>
+          <div className="mt-3 flex items-center justify-between gap-2">
+            <Button size="sm" variant="outline" disabled={index <= 0} onClick={() => setActiveId(sequence[index - 1])}>← Back</Button>
+            <span className="text-xs text-muted-foreground">{index + 1} of {sequence.length}</span>
+            <Button size="sm" variant="outline" disabled={index >= sequence.length - 1} onClick={() => setActiveId(sequence[index + 1])}>Next →</Button>
+          </div>
+          {activeId === PILOT ? pilot : active ? (
+            <div className="mt-6 rounded-xl border border-[color:var(--gold)]/50 p-5">
+              <div className="text-[10px] uppercase tracking-[0.3em] text-[color:var(--gold)]">Founder · CJ product review</div>
+              {active.status === "drafted" && active.draftProductId && savedDraftFor(active.draftProductId) ? (
+                <>
+                  <PilotSaved key={active.draftProductId} draft={savedDraftFor(active.draftProductId)!} justCreated={false} onSaved={onSaved} pilotNames={false} />
+                  <ReopenControl item={active} />
+                </>
+              ) : (
+                <StationWorkspace key={active.id} item={active} supplierBrands={supplierBrands}
+                  onSaved={(list) => { onSaved(); goNextPending(active.id, list); }} />
+              )}
+            </div>
+          ) : null}
         </>
       )}
     </section>
+  );
+}
+
+function ReopenControl({ item }: { item: StationItem }) {
+  const { userId } = useAuthUserId();
+  const qc = useQueryClient();
+  const reopenFn = useServerFn(reopenCjStationItem);
+  const reopen = useMutation({
+    mutationFn: () => reopenFn({ data: { queueId: item.id } }),
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["cj-station", userId] }),
+  });
+  return (
+    <div className="mt-4 flex flex-wrap items-center gap-2 border-t border-border pt-4 text-xs">
+      <span className="text-muted-foreground">Queue status: drafted (private, not published). CJ original: {item.supplierTitle} · CJ {item.cjPid}</span>
+      <Button size="sm" variant="outline" disabled={reopen.isPending} onClick={() => reopen.mutate()}>Move back to waiting</Button>
+      {reopen.error && <span role="alert" className="text-destructive">{(reopen.error as Error).message}</span>}
+    </div>
   );
 }
 

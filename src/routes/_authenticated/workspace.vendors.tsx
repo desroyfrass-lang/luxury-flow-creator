@@ -16,7 +16,7 @@ import { useAuthUserId } from "@/lib/auth/identity-watch";
 import { useIsAdmin } from "@/hooks/use-is-admin";
 import { ProfitBreakdownWithQuotes } from "@/components/vendors/profit-breakdown-with-quotes";
 import { CjReviewStation } from "@/components/vendors/cj-review-station";
-import { CjPilotPanel } from "@/components/vendors/cj-pilot-panel";
+import { CjPilotPanel, type SavedDraft } from "@/components/vendors/cj-pilot-panel";
 import { PILOT_CJ_PID, PILOT_CJ_US_SHIPPING_QUOTE } from "@/lib/vendors/cj-pilot";
 import { classificationBreadcrumb } from "@/lib/taxonomy/hierarchy";
 import {
@@ -166,28 +166,48 @@ function VendorWorkspace() {
           </>
         )}
 
-        {isFounder && data ? (
-          <CjReviewStation supplierBrands={data.vendors.filter((v) => v.vendor_kind === "supplier")} onSaved={refresh} />
-        ) : null}
-        {isFounder && data ? (
-          <CjPilotPanel
-            supplierBrands={data.vendors.filter((v) => v.vendor_kind === "supplier")}
-            existingDraft={(() => {
-              const p = data.products.find((x) => x.product_sources?.some((src) => src.source_type === "cj" && src.source_ref === PILOT_CJ_PID));
-              if (!p) return null;
-              const x = p as typeof p & { category_key?: string | null; supplier_original_name?: string | null; canonical_product_media?: Array<{ url: string; position: number; source: string }>; canonical_product_variants?: Array<{ id: string; source_variant_ref: string; sku: string | null; option_label: string | null; supplier_cost: number | null; currency: string; image_url: string | null }> };
-              return {
-                id: p.id, title: p.title, category_key: x.category_key ?? null,
-                originalName: x.supplier_original_name ?? null,
-                media: [...(x.canonical_product_media ?? [])].sort((a, b) => a.position - b.position).map((m) => m.url),
-                variants: x.canonical_product_variants ?? [],
-                cost: p.vendor_offers?.[0]?.unit_cost ?? null,
-                draftStatus: p.draft_status,
-              };
-            })()}
-            onCreated={refresh}
-          />
-        ) : null}
+        {isFounder && data ? (() => {
+          const toSaved = (p: (typeof data.products)[number]): SavedDraft => {
+            const x = p as typeof p & { category_key?: string | null; supplier_original_name?: string | null; canonical_product_media?: Array<{ url: string; position: number; source: string }>; canonical_product_variants?: Array<{ id: string; source_variant_ref: string; sku: string | null; option_label: string | null; supplier_cost: number | null; currency: string; image_url: string | null }> };
+            return {
+              id: p.id, title: p.title, category_key: x.category_key ?? null,
+              originalName: x.supplier_original_name ?? null,
+              media: [...(x.canonical_product_media ?? [])].sort((m, n) => m.position - n.position).map((m) => m.url),
+              variants: x.canonical_product_variants ?? [],
+              cost: p.vendor_offers?.[0]?.unit_cost ?? null,
+              draftStatus: p.draft_status,
+            };
+          };
+          const pilotProduct = data.products.find((x) => x.product_sources?.some((src) => src.source_type === "cj" && src.source_ref === PILOT_CJ_PID));
+          const suppliers = data.vendors.filter((v) => v.vendor_kind === "supplier");
+          const cjVendorId = (pilotProduct as { vendor_id?: string } | undefined)?.vendor_id ?? (suppliers.length === 1 ? suppliers[0].id : null);
+          return (
+            <CjReviewStation
+              vendors={data.vendors}
+              products={data.products as Array<{ id: string; title: string; vendor_id?: string; draft_status: string }>}
+              cjVendorId={cjVendorId}
+              savedDraftFor={(id) => { const p = data.products.find((x) => x.id === id); return p ? toSaved(p) : null; }}
+              onSaved={refresh}
+              pilot={<CjPilotPanel
+              supplierBrands={data.vendors.filter((v) => v.vendor_kind === "supplier")}
+              existingDraft={(() => {
+                const p = data.products.find((x) => x.product_sources?.some((src) => src.source_type === "cj" && src.source_ref === PILOT_CJ_PID));
+                if (!p) return null;
+                const x = p as typeof p & { category_key?: string | null; supplier_original_name?: string | null; canonical_product_media?: Array<{ url: string; position: number; source: string }>; canonical_product_variants?: Array<{ id: string; source_variant_ref: string; sku: string | null; option_label: string | null; supplier_cost: number | null; currency: string; image_url: string | null }> };
+                return {
+                  id: p.id, title: p.title, category_key: x.category_key ?? null,
+                  originalName: x.supplier_original_name ?? null,
+                  media: [...(x.canonical_product_media ?? [])].sort((a, b) => a.position - b.position).map((m) => m.url),
+                  variants: x.canonical_product_variants ?? [],
+                  cost: p.vendor_offers?.[0]?.unit_cost ?? null,
+                  draftStatus: p.draft_status,
+                };
+              })()}
+              onCreated={refresh}
+            />}
+            />
+          );
+        })() : null}
         {isFounder ? <FounderReview /> : null}
       </div>
     </SiteShell>

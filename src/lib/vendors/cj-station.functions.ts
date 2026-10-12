@@ -26,7 +26,7 @@ async function findDraft(supabase: any, pid: string): Promise<string | null> {
 
 export const listCjStation = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
-  .handler(async ({ context }): Promise<{ items: StationItem[]; counts: { pending: number; drafted: number } }> => {
+  .handler(async ({ context }): Promise<{ items: StationItem[]; counts: { pending: number; drafted: number }; podProviders: Array<{ name: string; status: string }> }> => {
     await requireFounder(context);
     const { data, error } = await context.supabase.from("cj_import_queue").select(COLS)
       .in("status", ["pending", "drafted"]).order("created_at", { ascending: true }).limit(200);
@@ -40,7 +40,10 @@ export const listCjStation = createServerFn({ method: "GET" })
       for (const s of src ?? []) links.set(s.source_ref, s.product_id);
     }
     const items = rows.map((r) => mapQueueRow(r, links.get(r.cj_pid) ?? null));
-    return { items, counts: { pending: items.filter((i) => i.status === "pending").length, drafted: items.filter((i) => i.status === "drafted").length } };
+    // Persisted print-on-demand records, reported with their real status (never implied connected).
+    const { data: pods } = await context.supabase.from("pod_providers").select("name, status").order("name");
+    const podProviders = ((pods ?? []) as any[]).map((x) => ({ name: String(x.name), status: String(x.status) }));
+    return { items, podProviders, counts: { pending: items.filter((i) => i.status === "pending").length, drafted: items.filter((i) => i.status === "drafted").length } };
   });
 
 export const saveCjStationDraft = createServerFn({ method: "POST" })

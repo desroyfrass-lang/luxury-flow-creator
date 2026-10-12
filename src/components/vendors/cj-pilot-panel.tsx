@@ -234,7 +234,8 @@ export function CjPilotPanel({ supplierBrands, existingDraft, onCreated }: {
 }
 
 /** After saving: honest next steps. Only real, existing tools; nothing auto-generates, charges or publishes. */
-function PilotSaved({ draft: initialDraft, justCreated, onSaved }: { draft: SavedDraft; justCreated: boolean; onSaved: () => void }) {
+/** Saved-draft workspace. `pilotNames` keeps Frassy name suggestions (they read the pilot product only) off for other products. */
+export function PilotSaved({ draft: initialDraft, justCreated, onSaved, pilotNames = true }: { draft: SavedDraft; justCreated: boolean; onSaved: () => void; pilotNames?: boolean }) {
   const updateFn = useServerFn(updatePilotDraft);
   const namesFn = useServerFn(suggestPilotNames);
   const [suggestions, setSuggestions] = useState<NameSuggestion[]>([]);
@@ -312,7 +313,7 @@ function PilotSaved({ draft: initialDraft, justCreated, onSaved }: { draft: Save
         ) : (
           <div className="mt-4 space-y-4 border-t border-border pt-4">
             <div>
-              <Button variant="outline" size="sm" disabled={suggest.isPending} onClick={() => suggest.mutate()}>{suggestions.length ? "Ask Frassy again" : "Ask Frassy for 3 names"}</Button>
+              {pilotNames && <Button variant="outline" size="sm" disabled={suggest.isPending} onClick={() => suggest.mutate()}>{suggestions.length ? "Ask Frassy again" : "Ask Frassy for 3 names"}</Button>}
               {suggest.isPending && <span className="ml-2 text-xs text-muted-foreground">Frassy is thinking…</span>}
               <p className="mt-1 text-[10px] text-muted-foreground">Suggestions only. Nothing changes until you pick or type a name, confirm and save.</p>
               <NameSuggestions suggestions={suggestions} recommended={recommended} selected={name} onPick={(n) => { setName(n); setConfirm(false); }} />
