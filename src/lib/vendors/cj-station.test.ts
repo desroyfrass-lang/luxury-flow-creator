@@ -103,7 +103,7 @@ describe("saving drafts", () => {
     await expect(save(uuid(3), { finalName: "Test Name" })).rejects.toThrow("Saving again is safe");
     queueUpdateFail = false;
     const retry = await save(uuid(3), { finalName: "Test Name" });
-    expect(retry.reused).toBe(true); expect(rpcCalls).toBe(1);
+    expect(retry.reused).toBe(true); expect(rpcCalls).toBe(2); expect(sources).toHaveLength(1);
   });
   it("reopen reverses drafted to pending without deleting the draft", async () => {
     await save(uuid(1));
