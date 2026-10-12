@@ -10,7 +10,8 @@ import { useAuthUserId } from "@/lib/auth/identity-watch";
 import { classificationBreadcrumb } from "@/lib/taxonomy/hierarchy";
 import { isEditableProductCategory } from "@/lib/vendors/cj-pilot";
 import { stationPricing, type StationItem } from "@/lib/vendors/cj-station";
-import { listCjStation, refreshCjQueueDetail, reopenCjStationItem, saveCjStationDraft } from "@/lib/vendors/cj-station.functions";
+import { listCjStation, reopenCjStationItem, saveCjStationDraft } from "@/lib/vendors/cj-station.functions";
+import { refreshCjQueueDetail } from "@/lib/vendors/cj-detail.functions";
 import { PilotSaved, SupplierPhotos, type SavedDraft } from "./cj-pilot-panel";
 import { PilotCategoryPicker } from "./pilot-category-picker";
 

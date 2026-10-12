@@ -43,3 +43,13 @@ describe("CJ supplier detail foundation", () => {
     expect(mapQueueRow({ ...base, cj_detail: d, cj_detail_fetched_at: "t" }).detail?.variants.length).toBe(2);
   });
 });
+
+describe("CJ detail refresh boundary", () => {
+  it("only reads CJ product detail and never publishes or writes to Shopify", async () => {
+    const { readFileSync } = await import("node:fs");
+    const src = readFileSync("src/lib/vendors/cj-detail.functions.ts", "utf8");
+    expect(src).toMatch(/requireFounder\(context\)/);
+    expect(src.match(/cjGet[^(]*\("([^"]+)"/g)).toEqual(['cjGet<Record<string, unknown>>("/product/query"']);
+    expect(src).not.toMatch(/shopify|publication_status|create_.*draft|\.insert\(|\.delete\(/i);
+  });
+});
