@@ -4,7 +4,8 @@ import { z } from "zod";
 import { profitBreakdown, type BreakdownInput } from "./pricing-floor";
 
 export const COST_STATES = ["verified", "estimated", "missing", "not_applicable", "pending_policy"] as const;
-const entry = z.object({ amount: z.string().max(20), state: z.enum(COST_STATES) });
+const entry = z.object({ amount: z.string().trim().max(20).refine((s) => s === "" || (/^\d+(\.\d{1,4})?$/.test(s) && Number(s) <= 1_000_000), "Enter a non-negative amount with at most four decimal places."), state: z.enum(COST_STATES) }).strict();
+export const COST_KEYS = ["packagingCost", "otherCost", "processingFeePct", "processingFeeFixed", "discountPct", "commissionPct"] as const;
 
 export const worksheetInputsSchema = z.object({
   packagingCost: entry, otherCost: entry, processingFeePct: entry, processingFeeFixed: entry,
@@ -12,6 +13,17 @@ export const worksheetInputsSchema = z.object({
   oversized: z.boolean(),
   /** Founder-chosen standard CJ method for this destination; absent = not chosen (estimate only). */
   shippingMethod: z.string().max(120).optional(),
+  founderNotes: z.string().trim().max(2000).optional(),
+  businessPolicyNotes: z.string().trim().max(2000).optional(),
+  taxDutyNotes: z.string().trim().max(2000).optional(),
+  feeNotes: z.string().trim().max(1000).optional(),
+}).strict().superRefine((i, ctx) => {
+  for (const key of ["processingFeePct", "discountPct", "commissionPct"] as const) {
+    if (i[key].amount !== "" && Number(i[key].amount) >= 100) ctx.addIssue({ code: "custom", path: [key, "amount"], message: "Percentage must be less than 100." });
+  }
+  for (const key of COST_KEYS) {
+    if (i[key].state === "verified" && i[key].amount === "") ctx.addIssue({ code: "custom", path: [key, "amount"], message: "A verified cost needs an amount." });
+  }
 });
 export type WorksheetInputs = z.infer<typeof worksheetInputsSchema>;
 
@@ -81,6 +93,15 @@ export const saveWorksheetSchema = z.object({
   inputs: worksheetInputsSchema,
   summary: z.object({ status: z.string().max(40), marginPct: z.number().nullable(), approvable: z.boolean() }),
 });
+
+/** No editable worksheet declaration may create or alter verified cost provenance. */
+export function assertEditableWorksheet(next: WorksheetInputs, previous: WorksheetInputs | null) {
+  for (const key of COST_KEYS) {
+    if (next[key].state === "verified" && (previous?.[key].state !== "verified" || previous[key].amount !== next[key].amount)) {
+      throw new Error("Edited costs must be saved as estimates. Verified fees require a trusted source, not a worksheet declaration.");
+    }
+  }
+}
 
 /** Parse stored inputs safely; anything malformed falls back to defaults (fail closed). */
 export function parseStoredInputs(raw: unknown): WorksheetInputs {

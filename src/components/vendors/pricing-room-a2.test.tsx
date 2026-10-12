@@ -39,7 +39,8 @@ vi.mock("@/lib/vendors/pricing-room.functions", () => ({
   approvePricingWorksheet: async ({ data }: any) => {
     calls.push(["approve", data.destination, data.expectedRevision, data.note]);
     if (!roles.includes("super_admin")) throw new Error("Only the Founder can approve a price.");
-    const r = db.get(data.destination)!;
+     const r = db.get(data.destination);
+     if (!r) throw new Error("Save first.");
     if (r.revision !== data.expectedRevision) throw new Error("The worksheet changed since it was checked. Check it again.");
     db.set(data.destination, { ...r, approvalStatus: "approved", approvedRevision: r.revision });
     return { status: "approved" };
@@ -90,7 +91,9 @@ describe("A2 destination selector", () => {
     db.set("US", { finalPrice: 30, inputs: DEFAULT_INPUTS, updatedAt: "2026-10-11T11:00:00Z", revision: 1, approvalStatus: "draft", approvedRevision: null, approvedAt: null });
     mount();
     await waitFor(() => expect(priceBox().value).toBe("30.00"));
-    db.set("US", { ...db.get("US")!, revision: 2 }); // someone else saved
+    const saved = db.get("US");
+    if (!saved) throw new Error("Test setup missing saved row");
+    db.set("US", { ...saved, revision: 2 }); // someone else saved
     fireEvent.change(priceBox(), { target: { value: "32" } });
     fireEvent.click(screen.getByRole("button", { name: /Save United States worksheet/ }));
     await waitFor(() => expect(screen.getByRole("alert").textContent).toContain("changed elsewhere"));
@@ -126,5 +129,60 @@ describe("A2 readiness and approval", () => {
     mount();
     await waitFor(() => screen.getByTestId("destination-selector"));
     for (const n of ["United States", "Canada", "United Kingdom", "Jamaica"]) expect(radio(n).tagName).toBe("BUTTON");
+  });
+});
+
+describe("editable A2 settings", () => {
+  it("saves country/product notes and fee edits, recomputes and restores them without leaking to Canada", async () => {
+    const view = mount();
+    await waitFor(() => expect(priceBox().value).not.toBe(""));
+    const original = priceBox().value;
+    fireEvent.change(screen.getByLabelText("Packaging (USD)"), { target: { value: "2.25" } });
+    fireEvent.change(screen.getByLabelText("Founder explanatory notes"), { target: { value: "Delegate: check supplier packaging" } });
+    fireEvent.change(screen.getByLabelText("Tax / duty planning notes"), { target: { value: "Confirm destination duties before launch" } });
+    fireEvent.change(screen.getByLabelText("Commission applicability"), { target: { value: "none" } });
+    expect(priceBox().value).not.toBe(original);
+    fireEvent.click(screen.getByRole("button", { name: /Save United States worksheet/ }));
+    await waitFor(() => expect(db.get("US")?.inputs.packagingCost.amount).toBe("2.25"));
+    expect(db.get("US")?.inputs.commissionPct.state).toBe("not_applicable");
+    expect(db.get("US")?.finalPrice).not.toBeNull();
+    view.unmount(); mount();
+    await waitFor(() => expect((screen.getByLabelText("Founder explanatory notes") as HTMLTextAreaElement).value).toBe("Delegate: check supplier packaging"));
+    fireEvent.click(radio("Canada"));
+    await waitFor(() => expect((screen.getByLabelText("Founder explanatory notes") as HTMLTextAreaElement).value).toBe(""));
+    expect(priceBox().value).toBe("");
+  });
+  it("failed saves preserve editable draft and do not reset unsaved changes", async () => {
+    db.set("US", { finalPrice: 30, inputs: DEFAULT_INPUTS, updatedAt: "2026-10-11T11:00:00Z", revision: 1, approvalStatus: "draft", approvedRevision: null, approvedAt: null });
+    mount();
+    await waitFor(() => expect(priceBox().value).toBe("30.00"));
+    const previous = db.get("US");
+    if (!previous) throw new Error("Missing test row");
+    db.set("US", { ...previous, revision: 2 });
+    fireEvent.change(screen.getByLabelText("Business policy notes"), { target: { value: "Keep my draft" } });
+    fireEvent.click(screen.getByRole("button", { name: /Save United States worksheet/ }));
+    await waitFor(() => expect(screen.getByRole("alert").textContent).toContain("changed elsewhere"));
+    expect((screen.getByLabelText("Business policy notes") as HTMLTextAreaElement).value).toBe("Keep my draft");
+    expect(screen.getByTestId("save-state").textContent).toContain("Unsaved changes");
+  });
+  it("notes changed after approval become a new unapproved revision", async () => {
+    roles = ["admin", "super_admin"];
+    db.set("US", { finalPrice: 30, inputs: DEFAULT_INPUTS, updatedAt: "2026-10-11T11:00:00Z", revision: 4, approvalStatus: "approved", approvedRevision: 4, approvedAt: null });
+    mount();
+    await waitFor(() => expect(priceBox().value).toBe("30.00"));
+    fireEvent.change(screen.getByLabelText("Business policy notes"), { target: { value: "Revised draft policy" } });
+    fireEvent.click(screen.getByRole("button", { name: /Save United States worksheet/ }));
+    await waitFor(() => expect(db.get("US")?.revision).toBe(5));
+    expect(db.get("US")?.approvalStatus).toBe("revised_after_approval");
+    expect(db.get("US")?.approvedRevision).toBe(4);
+  });
+  it("a checklist action opens the matching cost control and moves keyboard focus", async () => {
+    mount();
+    const action = await screen.findByRole("button", { name: "Open setting: Packaging cost verified" });
+    HTMLElement.prototype.scrollIntoView = vi.fn();
+    fireEvent.click(action);
+    const control = screen.getByLabelText("Packaging (USD)");
+    expect(document.activeElement).toBe(control);
+    expect(control.closest("details")?.open).toBe(true);
   });
 });

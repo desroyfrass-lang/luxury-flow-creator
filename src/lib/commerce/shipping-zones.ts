@@ -44,9 +44,11 @@ export function zoneForCountry(country: string): ShippingZone | null {
 export function standardQuote(country: string, quotes: SavedQuote[], now: Date, exception?: "oversized" | null): QuoteStatus {
   if (!zoneForCountry(country)) return { status: "unsupported", reason: `${country} is not a FRASS shipping zone yet.` };
   if (exception === "oversized") return { status: "quote_required", reason: "Oversized or heavy item — needs an individual quote." };
-  const usable = quotes.filter((q) => Number.isFinite(q.price) && q.price >= 0);
+  const usable = quotes.filter((q) => Number.isFinite(q.price) && q.price >= 0 && q.currency === "USD" && Number.isFinite(Date.parse(q.fetched_at)) && Number.isFinite(Date.parse(q.expires_at)));
   if (!usable.length) return { status: "missing" };
-  const fresh = usable.filter((q) => new Date(q.expires_at).getTime() > now.getTime());
+  // A new quote supersedes older readings for the same method; never price from an older cheaper reading.
+  const latestByMethod = [...usable].sort((a, b) => b.fetched_at.localeCompare(a.fetched_at)).filter((q, index, all) => all.findIndex((x) => x.method === q.method) === index);
+  const fresh = latestByMethod.filter((q) => Date.parse(q.fetched_at) <= now.getTime() && Date.parse(q.expires_at) > now.getTime() && now.getTime() - Date.parse(q.fetched_at) < QUOTE_TTL_HOURS * 3600_000);
   if (!fresh.length) {
     const latest = [...usable].sort((a, b) => b.fetched_at.localeCompare(a.fetched_at))[0];
     return { status: "stale", quote: latest };

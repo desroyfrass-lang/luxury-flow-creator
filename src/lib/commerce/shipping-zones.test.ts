@@ -14,4 +14,17 @@ describe("Standard Shipping Included zones", () => {
     const r = standardQuote("US", [q(9, "2026-10-12T00:00:00Z", "B"), q(7.23, "2026-10-12T00:00:00Z", "A"), q(3, "2026-10-11T09:00:00Z", "C")], now);
     expect(r.status === "ok" && r.quote.price).toBe(7.23);
   });
+  it("newer readings supersede older cheaper quotes for a method", () => {
+    const old = q(5, "2026-10-12T00:00:00Z");
+    const newer = { ...old, price: 9, fetched_at: "2026-10-11T09:30:00Z" };
+    const r = standardQuote("US", [old, newer], now);
+    expect(r.status === "ok" && r.quote.price).toBe(9);
+  });
+  it("future, wrong-currency and over-72-hour quotes cannot price a sale", () => {
+    const future = { ...q(5, "2026-10-12T00:00:00Z"), fetched_at: "2026-10-11T11:00:00Z" };
+    expect(standardQuote("US", [future], now).status).not.toBe("ok");
+    expect(standardQuote("US", [{ ...future, currency: "CAD" }], now).status).toBe("missing");
+    const tooOld = { ...q(5, "2026-10-12T00:00:00Z"), fetched_at: "2026-10-08T09:59:00Z" };
+    expect(standardQuote("US", [tooOld], now).status).toBe("stale");
+  });
 });

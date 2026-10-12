@@ -5,7 +5,7 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
-import { saveWorksheetSchema, parseStoredInputs, destinationSchema, DEFAULT_INPUTS } from "@/lib/commerce/pricing-worksheet";
+import { saveWorksheetSchema, parseStoredInputs, destinationSchema, DEFAULT_INPUTS, assertEditableWorksheet, type WorksheetInputs } from "@/lib/commerce/pricing-worksheet";
 import { computeDestinationPricing } from "@/lib/commerce/destination-pricing";
 
 type Ctx = { supabase: any; userId: string };
@@ -60,10 +60,18 @@ export const savePricingWorksheet = createServerFn({ method: "POST" })
     await assertFounder(context);
     const { data: product } = await context.supabase.from("canonical_products").select("id").eq("id", data.productId).maybeSingle();
     if (!product) throw new Error("Product not found.");
-    const { data: existing, error: readErr } = await context.supabase.from("pricing_room_worksheets").select("revision")
+    const { data: existing, error: readErr } = await context.supabase.from("pricing_room_worksheets").select("revision, inputs")
       .eq("product_id", data.productId).eq("destination", data.destination).maybeSingle();
     if (readErr) throw new Error("Could not read the saved worksheet.");
-    const payload = { final_price: data.finalPrice, inputs: data.inputs, summary: data.summary, updated_by: context.userId };
+    assertEditableWorksheet(data.inputs, existing ? parseStoredInputs(existing.inputs) : null);
+    if (existing && data.expectedRevision == null) throw new Error("Reload the saved worksheet before editing; its version is required.");
+    const { pricing } = await evaluate(context, data.productId, data.destination, { inputs: data.inputs, finalPrice: data.finalPrice });
+    const previousMethod = existing ? parseStoredInputs(existing.inputs).shippingMethod : undefined;
+    if (data.inputs.shippingMethod && data.inputs.shippingMethod !== previousMethod && !pricing.requirements.find((r) => r.key === "shipping_method")?.met) {
+      throw new Error("Choose a standard method with fresh CJ quotes for every variant in this country.");
+    }
+    const summary = { status: pricing.basis, marginPct: pricing.lowestMarginPct, approvable: pricing.ready };
+    const payload = { final_price: data.finalPrice, inputs: data.inputs, summary, updated_by: context.userId };
     let row: any;
     if (!existing) {
       if (data.expectedRevision) throw new Error("This worksheet no longer exists. Reload and try again.");
@@ -86,7 +94,7 @@ export const savePricingWorksheet = createServerFn({ method: "POST" })
     return { destination: data.destination, ...s, changed: !existing || s.revision !== existing.revision };
   });
 
-async function evaluate(ctx: Ctx, productId: string, destination: string) {
+async function evaluate(ctx: Ctx, productId: string, destination: string, draft?: { inputs: WorksheetInputs; finalPrice: number | null }) {
   const [{ data: variants, error: vErr }, { data: ws, error: wErr }] = await Promise.all([
     ctx.supabase.from("canonical_product_variants").select("id, option_label, sku, supplier_cost, currency").eq("product_id", productId).limit(100),
     ctx.supabase.from("pricing_room_worksheets").select(COLS).eq("product_id", productId).eq("destination", destination).maybeSingle(),
@@ -100,7 +108,7 @@ async function evaluate(ctx: Ctx, productId: string, destination: string) {
   if (qErr) throw new Error("Could not read saved shipping quotes.");
   const worksheet = ws ? shape(ws) : null;
   const pricing = computeDestinationPricing({
-    destination, inputs: worksheet?.inputs ?? DEFAULT_INPUTS, finalPrice: worksheet?.finalPrice ?? null, now: new Date(),
+    destination, inputs: draft?.inputs ?? worksheet?.inputs ?? DEFAULT_INPUTS, finalPrice: draft ? draft.finalPrice : worksheet?.finalPrice ?? null, now: new Date(),
     variants: (variants ?? []).map((v: any) => ({
       variantId: v.id, label: v.option_label || v.sku || v.id,
       supplierCost: v.supplier_cost == null ? null : Number(v.supplier_cost), supplierCurrency: v.currency ?? null,

@@ -92,7 +92,7 @@ export function computeDestinationPricing(args: {
   const mins = all(variants.map((v) => v.minimum));
   const margins = all(variants.map((v) => v.projectedMarginPct));
   const recommendedPrice = prefs ? Math.max(...prefs) : null;
-  const costliest = prefs ? variants[prefs.indexOf(recommendedPrice!)].variantId : null;
+  const costliest = prefs && recommendedPrice != null ? variants[prefs.indexOf(recommendedPrice)]?.variantId ?? null : null;
   const lowestMarginPct = margins ? Math.min(...margins) : null;
   const band = lowestMarginPct != null ? marginBand(lowestMarginPct) : null;
 
@@ -105,7 +105,7 @@ export function computeDestinationPricing(args: {
     req("variants", "Product has saved variants", variants.length > 0, `${variants.length} variant(s) on file`),
     req("supplier", "Every variant has a verified USD supplier cost", variants.length > 0 && variants.every((v) => v.supplier.state === "verified"), "canonical_product_variants.supplier_cost (CJ import)"),
     req("shipping_fresh", `Every variant has a fresh ${dest} shipping quote`, variants.length > 0 && variants.every((v) => v.shipping.amount != null), "cj_shipping_quotes (read-only CJ freightCalculate)"),
-    req("shipping_method", "Founder chose the standard shipping method", !!method, method ? `Method "${method}"` : "Not chosen — cheapest quote used as estimate"),
+    req("shipping_method", "Founder chose an available standard shipping method", !!method && variants.length > 0 && variants.every((v) => v.shipping.state === "verified"), method ? `Method "${method}"; fresh destination quotes required for every variant` : "Not chosen — cheapest quote used as estimate"),
     policy("processingFeePct", "Payment processing % verified"),
     policy("processingFeeFixed", "Payment processing fixed fee verified"),
     policy("packagingCost", "Packaging cost verified"),
