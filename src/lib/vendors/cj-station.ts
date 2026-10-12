@@ -28,6 +28,10 @@ export type StationItem = {
   status: StationStatus;
   draftProductId: string | null;
   missing: string[];
+  /** Cached read-only CJ detail (null until fetched). */
+  detail: SupplierDetail | null;
+  detailFetchedAt: string | null;
+  detailError: string | null;
 };
 
 const https = (u: unknown): string | null => (typeof u === "string" && /^https:\/\//.test(u) ? u : null);
@@ -48,7 +52,8 @@ export function snapshotImages(cj: Record<string, unknown>, primary: string | nu
   return [...out].slice(0, 20);
 }
 
-type Row = { id: string; cj_pid: string; cj_data: unknown; title: string | null; image_url: string | null; source_price: number | string | null; status: string };
+type Row = { id: string; cj_pid: string; cj_data: unknown; title: string | null; image_url: string | null; source_price: number | string | null; status: string;
+  cj_detail?: unknown; cj_detail_fetched_at?: string | null; cj_detail_error?: string | null };
 
 /** Map one stored queue row into what the station shows — unknowns stay null and are listed. */
 export function mapQueueRow(row: Row, draftProductId: string | null = null): StationItem {
@@ -58,11 +63,13 @@ export function mapQueueRow(row: Row, draftProductId: string | null = null): Sta
   const sku = typeof cj.productSku === "string" && cj.productSku ? cj.productSku : null;
   const images = snapshotImages(cj, row.image_url);
   const cjCategory = typeof cj.categoryName === "string" ? cj.categoryName : null;
+  const detail = row.cj_detail && typeof row.cj_detail === "object" ? (row.cj_detail as SupplierDetail) : null;
   const missing = [
     !sku && "Source SKU",
     cost == null && "Supplier cost",
     images.length === 0 && "Supplier photos",
-    "Variants / sizes / colours (not in the stored CJ record)",
+    !detail ? "Full CJ detail (gallery, variants, sizes/colours) — not fetched yet" : detail.variants.length === 0 && "Variants (CJ returned none)",
+    detail && "Image dimensions (not provided by CJ)",
     "Shipping quote",
     "Stock",
   ].filter(Boolean) as string[];
@@ -72,6 +79,7 @@ export function mapQueueRow(row: Row, draftProductId: string | null = null): Sta
     suggestedName: SUGGESTED_NAMES[row.cj_pid] ?? null,
     images, supplierCost: cost, currency: "USD", weightGrams: num(cj.productWeight), cjCategory,
     variants: [], status: row.status === "drafted" ? "drafted" : "pending", draftProductId, missing,
+    detail, detailFetchedAt: row.cj_detail_fetched_at ?? null, detailError: row.cj_detail_error ?? null,
   };
 }
 
