@@ -12,6 +12,7 @@ const calls: any[] = [];
 let roles: string[] = ["admin"];
 let forceReady = false;
 let tick = 0;
+let quoteRows: any[] = [];
 const variants = ["S", "3XL"].map((s, i) => ({ id: s, option_label: `Sky Blue ${s}`, sku: null, supplier_cost: i ? 8.5 : 6.97, currency: "USD" }));
 const evaluate = (destination: string) => {
   const w = db.get(destination);
@@ -22,7 +23,7 @@ const evaluate = (destination: string) => {
 vi.mock("@tanstack/react-start", () => ({ useServerFn: (f: any) => f, createServerFn: () => ({}) }));
 vi.mock("@/hooks/use-my-roles", () => ({ useMyRoles: () => ({ roles, signedIn: true, loading: false }) }));
 vi.mock("@/lib/vendors/shipping-quotes.functions", () => ({
-  listCjShippingQuotes: async ({ data }: any) => { calls.push(["quotes", data.country]); return []; },
+  listCjShippingQuotes: async ({ data }: any) => { calls.push(["quotes", data.country]); return quoteRows; },
   fetchCjShippingQuotes: async ({ data }: any) => { calls.push(["fetch", data.country]); return { results: [] }; },
 }));
 vi.mock("@/lib/vendors/pricing-room.functions", () => ({
@@ -55,7 +56,7 @@ const mount = () => {
 const priceBox = () => screen.getByLabelText("Final selling price") as HTMLInputElement;
 const radio = (name: string) => screen.getByRole("radio", { name });
 
-beforeEach(() => { db.clear(); calls.length = 0; roles = ["admin"]; forceReady = false; });
+beforeEach(() => { db.clear(); calls.length = 0; roles = ["admin"]; forceReady = false; quoteRows = []; });
 afterEach(cleanup);
 
 describe("A2 destination selector", () => {
@@ -133,6 +134,22 @@ describe("A2 readiness and approval", () => {
 });
 
 describe("editable A2 settings", () => {
+  it("chooses and persists a genuine common quoted method, immediately pricing each variant's own shipping", async () => {
+    const fetched = new Date().toISOString();
+    const expires = new Date(Date.now() + 3600000).toISOString();
+    quoteRows = variants.flatMap((v) => [
+      { variant_id: v.id, method: "Cheap", price: 5, currency: "USD", fetched_at: fetched, expires_at: expires },
+      { variant_id: v.id, method: "Standard", price: v.id === "S" ? 7.35 : 9.1, currency: "USD", fetched_at: fetched, expires_at: expires },
+    ]);
+    mount();
+    const method = await screen.findByLabelText("Standard shipping method preference");
+    await waitFor(() => expect((method as HTMLSelectElement).disabled).toBe(false));
+    fireEvent.change(method, { target: { value: "Standard" } });
+    expect(priceBox().value).toBe("33.16");
+    fireEvent.click(screen.getByRole("button", { name: /Save United States worksheet/ }));
+    await waitFor(() => expect(db.get("US")?.inputs.shippingMethod).toBe("Standard"));
+    expect(db.get("US")?.finalPrice).toBe(33.16);
+  });
   it("saves country/product notes and fee edits, recomputes and restores them without leaking to Canada", async () => {
     const view = mount();
     await waitFor(() => expect(priceBox().value).not.toBe(""));

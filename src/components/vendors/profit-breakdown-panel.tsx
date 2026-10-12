@@ -13,7 +13,7 @@ type Variant = { id: string; option_label: string | null; sku: string | null; su
 export type VariantQuotes = Record<string, SavedQuote[]>;
 type EntryKey = "packagingCost" | "otherCost" | "processingFeePct" | "processingFeeFixed" | "discountPct" | "commissionPct";
 const STATE_LABEL: Record<CostState, string> = { verified: "Verified source", estimated: "Planning estimate", missing: "Missing — blocks approval", not_applicable: "Does not apply", pending_policy: "Policy not confirmed" };
-const toEntry = (e: { amount: string; state: CostState }): CostEntry => ({ amount: e.amount.trim() !== "" && Number.isFinite(Number(e.amount)) ? Number(e.amount) : null, state: e.state });
+const toEntry = (e: { amount: string; state: CostState }): CostEntry => ({ amount: e.state !== "not_applicable" && e.amount.trim() !== "" && Number.isFinite(Number(e.amount)) && Number(e.amount) >= 0 ? Number(e.amount) : null, state: e.state });
 const money = (n: number | null | undefined, cur: string) => n == null ? "Not known yet" : `${cur} ${n.toFixed(2)}`;
 const maximum = (xs: Array<number | null>) => xs.length && xs.every((x) => x != null) ? Math.max(...xs.filter((x): x is number => x != null)) : null;
 
@@ -38,7 +38,7 @@ export function ProfitBreakdownPanel(props: {
   const zone = zoneForCountry(dest);
   const destName = zone?.name ?? dest;
   // Retail in another currency needs a verified exchange rate; none is connected, so pricing is closed.
-  const fxBlocked = !zone || zone.currency !== cur;
+  const fxBlocked = !zone || zone.currency !== "USD" || cur !== "USD";
   const [clock, setClock] = useState(() => new Date());
   useEffect(() => { const timer = setInterval(() => setClock(new Date()), 30000); return () => clearInterval(timer); }, []);
   const now = props.now ?? clock;
