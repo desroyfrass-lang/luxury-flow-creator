@@ -6,6 +6,7 @@ import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import { isEditableProductCategory } from "./cj-pilot";
+import { cjGet } from "@/lib/cj.functions";
 import { canRefreshDetail, draftPayload, mapCjQueueDetail, mapQueueRow, type StationItem } from "./cj-station";
 
 async function requireFounder(ctx: { supabase: any; userId: string }) {
@@ -112,7 +113,6 @@ export const refreshCjQueueDetail = createServerFn({ method: "POST" })
     if (error) throw new Error(error.message);
     if (!row) throw new Error("Queue record not found.");
     if (!canRefreshDetail(row.cj_detail_fetched_at, Date.now())) throw new Error("Details were fetched less than 10 minutes ago. Try again later.");
-    const { cjGet } = await import("@/lib/cj.functions");
     const fetchedAt = new Date().toISOString();
     try {
       const raw = await cjGet<Record<string, unknown>>("/product/query", { pid: row.cj_pid });
