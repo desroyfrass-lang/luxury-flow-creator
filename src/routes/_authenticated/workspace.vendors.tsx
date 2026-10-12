@@ -15,7 +15,7 @@ import { Input } from "@/components/ui/input";
 import { useAuthUserId } from "@/lib/auth/identity-watch";
 import { useIsAdmin } from "@/hooks/use-is-admin";
 import { ProfitBreakdownWithQuotes } from "@/components/vendors/profit-breakdown-with-quotes";
-import { CjReviewQueue } from "@/components/vendors/cj-review-queue";
+import { CjReviewStation } from "@/components/vendors/cj-review-station";
 import { CjPilotPanel } from "@/components/vendors/cj-pilot-panel";
 import { PILOT_CJ_PID, PILOT_CJ_US_SHIPPING_QUOTE } from "@/lib/vendors/cj-pilot";
 import { classificationBreadcrumb } from "@/lib/taxonomy/hierarchy";
@@ -166,6 +166,9 @@ function VendorWorkspace() {
           </>
         )}
 
+        {isFounder && data ? (
+          <CjReviewStation supplierBrands={data.vendors.filter((v) => v.vendor_kind === "supplier")} onSaved={refresh} />
+        ) : null}
         {isFounder && data ? (
           <CjPilotPanel
             supplierBrands={data.vendors.filter((v) => v.vendor_kind === "supplier")}
@@ -342,8 +345,6 @@ function FounderReview() {
         ))}
         {(vendors.data ?? []).length === 0 && <li className="text-sm text-muted-foreground">No vendors yet.</li>}
       </ul>
-
-      <CjReviewQueue />
 
       <h2 className="mt-8 font-display text-2xl">Draft products waiting for you</h2>
       <ul className="mt-3 space-y-2">

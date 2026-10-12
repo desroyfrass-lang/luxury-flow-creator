@@ -137,7 +137,7 @@ function StationWorkspace({ item, supplierBrands, onSaved }: { item: StationItem
           <Input aria-label="FRASS working name" value={name} maxLength={120} onChange={(e) => setName(e.target.value)} />
         </label>
         <PilotCategoryPicker mode="edit" store={store} category={category} onChange={(s, c) => { setStore(s); setCategory(c); }} />
-        {category && <p className="text-xs text-muted-foreground">{classificationBreadcrumb(category)?.join(" → ") ?? category}</p>}
+        {category && <p className="text-xs text-muted-foreground">{classificationBreadcrumb(category)}</p>}
         <label className="block text-xs">Supplier brand
           <select aria-label="Supplier brand" className="mt-1 w-full rounded-sm border border-border bg-background px-2 py-2 text-sm" value={vendorId} onChange={(e) => setVendorId(e.target.value)}>
             <option value="">Choose…</option>
