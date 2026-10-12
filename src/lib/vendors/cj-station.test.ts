@@ -4,7 +4,7 @@ import { mapQueueRow, stationPricing, SUGGESTED_NAMES } from "./cj-station";
 vi.mock("@/integrations/supabase/auth-middleware", () => ({ requireSupabaseAuth: {} }));
 vi.mock("@tanstack/react-start", () => ({ createServerFn: () => {
   let validate = (input: unknown): any => input;
-  const chain = { middleware: () => chain, inputValidator: (v: typeof validate) => { validate = v; return chain; }, handler: (h: any) => {
+  const chain = { middleware: () => chain, inputValidator: (v: typeof validate) => { validate = v; return chain; }, handler: (...hs: any[]) => { const h = hs[hs.length - 1];
     const execute = (arg: any) => h({ ...arg, data: validate(arg.data) });
     return Object.assign(execute, { __executeServer: execute });
   } };
