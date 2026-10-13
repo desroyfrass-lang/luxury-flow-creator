@@ -1,7 +1,7 @@
 # Roadmap
 
 - [x] Supplier-data foundation: read-only CJ detail cache for queue (18/20 fetched, 2 removed by CJ). 
-- [ ] Stage 2: white/gold unified visual workspace for chiffon and Empress only; preserve all controls and verify galleries/desktop/mobile. Stage 3 pricing/persistence and all-product integration remain unapproved.
+- [x] Stage 2 visual implementation: room-scoped white/gold container, shared chiffon/Empress layout and five-image native galleries, searchable selection and centered navigation; original pricing/save/approval/handoff logic retained. Isolated desktop/phone galleries and zoom verified; real Founder room still blocked by device/password confirmation. Stage 3 pricing/persistence and all-product integration remain unapproved.
 
 - [x] Focused A2 correction: editable product/country assumptions, commission applicability, real quoted method and private notes; authoritative validated saves, dynamic copy and actionable checks. Full suite 369 passed / 0 failed across 45 files; automatic build OK; isolated desktop/phone method selection, cost recalculation, notes/save/remount and focus passed with no overflow/browser errors. Existing Founder device confirmation blocks real-room save/readback; separate typecheck/standalone build not run (harness-managed). No migration, deployment or remote product writes.
 

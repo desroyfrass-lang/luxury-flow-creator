@@ -15,7 +15,7 @@ describe("Pilot regression inventory", () => {
     expect(page).toContain("canonical_product_media");
   });
   it("2. photos render on the saved card and before saving, with visible failure fallback", () => {
-    expect(saved).toContain("<SupplierPhotos urls={draft.media ?? []} />");
+    // Saved-gallery URL retention and zoom are exercised by product-workspace-layout.test.tsx.
     expect(panel).toContain("<SupplierPhotos urls={d.images} />");
     expect(panel).toContain("onError={() => setFailed");
     expect(panel).toContain("did not load");
