@@ -14,6 +14,8 @@ import { listCjStation, reopenCjStationItem, saveCjStationDraft } from "@/lib/ve
 import { refreshCjQueueDetail } from "@/lib/vendors/cj-detail.functions";
 import { PilotSaved, SupplierPhotos, type SavedDraft } from "./cj-pilot-panel";
 import { PilotCategoryPicker } from "./pilot-category-picker";
+import { ProductWorkspaceLayout } from "./product-workspace-layout";
+import { SupplierVariantPicker } from "./supplier-variant-picker";
 
 type Brand = { id: string; display_name: string };
 type Vendor = { id: string; display_name: string; vendor_kind: string; verification_status: string };
@@ -41,6 +43,7 @@ export function CjReviewStation({ vendors, products, cjVendorId, pilot, savedDra
   useEffect(() => { if (!vendorId && (cjVendorId || vendors[0])) setVendorId(cjVendorId ?? vendors[0].id); }, [cjVendorId, vendors, vendorId]);
   // Position is kept per vendor, so switching brands never loses your place.
   const [positions, setPositions] = useState<Record<string, string>>({});
+  const [search, setSearch] = useState("");
   const PILOT = "__pilot__";
   const sequence = [PILOT, ...items.map((i) => i.id)];
   const activeId = positions[vendorId] && sequence.includes(positions[vendorId]) ? positions[vendorId] : PILOT;
@@ -59,8 +62,8 @@ export function CjReviewStation({ vendors, products, cjVendorId, pilot, savedDra
   return (
     <section className="mt-12" aria-label="Vendor product workspace">
       <div className="flex flex-wrap items-end justify-between gap-3">
-        <label className="block min-w-[16rem] flex-1 text-[10px] uppercase tracking-[0.2em] text-muted-foreground">Vendor
-          <select aria-label="Vendor" className="mt-1 w-full rounded-sm border border-border bg-background px-2 py-2 text-sm normal-case tracking-normal" value={vendorId} onChange={(e) => setVendorId(e.target.value)}>
+        <label className="block min-w-[16rem] flex-1 text-muted-foreground">Vendor
+          <select aria-label="Vendor" className="vendor-selector mt-1 w-full rounded-sm border border-border bg-background" value={vendorId} onChange={(e) => { setVendorId(e.target.value); setSearch(""); }}>
             {vendors.length === 0 && <option value="">No vendor brands saved yet</option>}
             {vendors.map((v) => <option key={v.id} value={v.id}>{v.display_name} ({v.vendor_kind.replace("_", " ")} · {v.verification_status})</option>)}
             {(q.data?.podProviders ?? []).map((p) => <option key={`pod-${p.name}`} value="" disabled>{p.name} (print on demand · {p.status === "connected" ? "connected" : "not connected"})</option>)}
@@ -88,23 +91,24 @@ export function CjReviewStation({ vendors, products, cjVendorId, pilot, savedDra
           </div>
           {q.isLoading && <p className="mt-2 text-sm text-muted-foreground">Loading CJ records…</p>}
           {q.isError && <p role="alert" className="mt-2 text-sm text-destructive">Could not load the CJ records: {(q.error as Error).message}</p>}
+          {sequence.length > 1 && <><label className="mt-3 block">Find a product<Input aria-label="Find a product" type="search" value={search} onChange={(e) => setSearch(e.target.value)} /></label>
           <label className="mt-3 block text-xs">Product
             <select aria-label="Choose product" className="mt-1 w-full rounded-sm border border-border bg-background px-2 py-2 text-sm" value={activeId} onChange={(e) => setActiveId(e.target.value)}>
               <option value={PILOT}>1. CJ pilot product (saved draft)</option>
-              {items.map((i, n) => <option key={i.id} value={i.id}>{n + 2}. {i.workingName ?? i.supplierTitle} — {i.status === "drafted" ? "drafted" : "waiting"}{i.suggestedName ? " · priority" : ""}</option>)}
+              {items.filter((i) => i.id === activeId || `${i.workingName ?? ""} ${i.suggestedName ?? ""} ${i.supplierTitle} ${i.cjPid}`.toLowerCase().includes(search.toLowerCase())).map((i) => <option key={i.id} value={i.id}>{sequence.indexOf(i.id) + 1}. {i.workingName ?? i.suggestedName ?? i.supplierTitle} — {i.detailError?.includes("removed") ? "removed from sale · retained" : i.status === "drafted" ? "drafted" : "waiting"}</option>)}
             </select>
-          </label>
-          <div className="mt-3 flex items-center justify-between gap-2">
+          </label></>}
+          <div className="vendor-navigation">
             <Button size="sm" variant="outline" disabled={index <= 0} onClick={() => setActiveId(sequence[index - 1])}>← Back</Button>
             <span className="text-xs text-muted-foreground">{index + 1} of {sequence.length}</span>
             <Button size="sm" variant="outline" disabled={index >= sequence.length - 1} onClick={() => setActiveId(sequence[index + 1])}>Next →</Button>
           </div>
           {activeId === PILOT ? pilot : active ? (
-            <div className="mt-6 rounded-xl border border-[color:var(--gold)]/50 p-5">
+            <div className="mt-6">
               <div className="text-[10px] uppercase tracking-[0.3em] text-[color:var(--gold)]">Founder · CJ product review</div>
               {active.status === "drafted" && active.draftProductId && savedDraftFor(active.draftProductId) ? (
                 <>
-                  <PilotSaved key={active.draftProductId} draft={savedDraftFor(active.draftProductId)!} justCreated={false} onSaved={onSaved} pilotNames={false} />
+                  {(() => { const draft = savedDraftFor(active.draftProductId); return draft ? <PilotSaved key={draft.id} draft={draft} justCreated={false} onSaved={onSaved} pilotNames={false} /> : null; })()}
                   <ReopenControl item={active} />
                 </>
               ) : (
@@ -149,6 +153,7 @@ function StationWorkspace({ item, supplierBrands, onSaved }: { item: StationItem
   const [error, setError] = useState<string | null>(null);
   const [saved, setSaved] = useState<string | null>(null);
   const pricing = useMemo(() => stationPricing(item), [item]);
+  const isAcceptanceProduct = item.cjPid === "2607170938071630700";
 
   const save = useMutation({
     mutationFn: () => saveFn({ data: { queueId: item.id, vendorId, finalName: name.trim(), primaryStore: store, categoryKey: category } }),
@@ -171,10 +176,11 @@ function StationWorkspace({ item, supplierBrands, onSaved }: { item: StationItem
     !vendorId && "a supplier brand",
   ].filter(Boolean) as string[];
 
-  return (
-    <div className="mt-4 grid gap-6 md:grid-cols-2" data-testid="station-workspace">
+  const fields = (
+    <div className={isAcceptanceProduct ? "flex flex-col gap-6" : "mt-4 grid gap-6 md:grid-cols-2"} data-testid="station-workspace">
       <div>
-        <SupplierPhotos urls={item.detail && item.detail.images.length ? item.detail.images.map((i) => i.url) : item.images} />
+        {!isAcceptanceProduct && <SupplierPhotos urls={item.detail && item.detail.images.length ? item.detail.images.map((i) => i.url) : item.images} />}
+        {isAcceptanceProduct && item.detail && <SupplierVariantPicker key={item.id} variants={item.detail.variants.map((v) => ({ ref: v.vid, sku: v.sku, label: v.key ?? v.name, image: v.image }))} />}
         <SupplierDetailStatus item={item} />
         <dl className="mt-4 space-y-1 text-sm">
           <div><dt className="inline text-muted-foreground">Supplier original name (unchanged): </dt><dd className="inline" data-testid="station-original">{item.supplierTitle}</dd></div>
@@ -195,11 +201,12 @@ function StationWorkspace({ item, supplierBrands, onSaved }: { item: StationItem
         </div>
       </div>
 
-      <div className="space-y-4">
+      <div className={isAcceptanceProduct ? "order-first space-y-4" : "space-y-4"}>
         <div className="text-sm">Status: <strong data-testid="station-status">{item.status === "drafted" ? "Drafted (private, not published)" : "Waiting for your review"}</strong></div>
         <label className="block text-xs">FRASS working name{item.suggestedName && !item.workingName ? " (your approved suggestion — not saved yet)" : ""}
           <Input aria-label="FRASS working name" value={name} maxLength={120} onChange={(e) => setName(e.target.value)} />
         </label>
+        {isAcceptanceProduct && <p className="text-muted-foreground">Supplier original: {item.detail?.originalName ?? item.supplierTitle}</p>}
         <PilotCategoryPicker mode="edit" store={store} category={category} onChange={(s, c) => { setStore(s); setCategory(c); }} />
         {category && <p className="text-xs text-muted-foreground">{classificationBreadcrumb(category)}</p>}
         <label className="block text-xs">Supplier brand
@@ -218,6 +225,7 @@ function StationWorkspace({ item, supplierBrands, onSaved }: { item: StationItem
       </div>
     </div>
   );
+  return isAcceptanceProduct ? <ProductWorkspaceLayout title={name || item.supplierTitle} originalName={item.detail?.originalName ?? item.supplierTitle} urls={item.detail?.images.length ? item.detail.images.map((im) => im.url) : item.images} resolutionNote="CJ did not provide dimensions; resolution is not source-verified. Original URLs retained, no upscaling.">{fields}</ProductWorkspaceLayout> : fields;
 }
 
 /** Minimal truthful status for the cached read-only CJ detail. */

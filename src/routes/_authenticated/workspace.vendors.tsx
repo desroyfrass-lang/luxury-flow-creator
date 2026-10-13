@@ -17,6 +17,7 @@ import { useIsAdmin } from "@/hooks/use-is-admin";
 import { ProfitBreakdownWithQuotes } from "@/components/vendors/profit-breakdown-with-quotes";
 import { CjReviewStation } from "@/components/vendors/cj-review-station";
 import { CjPilotPanel, type SavedDraft } from "@/components/vendors/cj-pilot-panel";
+import "@/components/vendors/vendor-workspace.css";
 import { PILOT_CJ_PID, PILOT_CJ_US_SHIPPING_QUOTE } from "@/lib/vendors/cj-pilot";
 import { classificationBreadcrumb } from "@/lib/taxonomy/hierarchy";
 import {
@@ -102,9 +103,9 @@ function VendorWorkspace() {
 
   return (
     <SiteShell>
-      <div className="mx-auto max-w-3xl px-6 py-16">
+      <div className="vendor-workspace">
         <Link to="/workspace" className="text-[10px] uppercase tracking-[0.3em] text-muted-foreground">← Workspace</Link>
-        <h1 className="mt-4 font-display text-4xl">Vendor Brands</h1>
+        <h1 className="mt-4 font-display text-4xl">{isFounder ? "Frass Hill Founder Workspace" : "Frass Hill Workspace"}<span className="block">Vendor Room</span></h1>
         <p className="mt-2 text-sm text-muted-foreground">
           Your brands use the identity you already have. Nothing here is public, and nothing is published.
         </p>
