@@ -15,6 +15,7 @@ import { PILOT_CATEGORY, PILOT_CJ_PID, isPilotCategoryAllowed, isEditableProduct
 import { createPilotDraft, getCjPilotDetail, suggestPilotNames, updatePilotDraft } from "@/lib/vendors/cj-pilot.functions";
 import { createVendorProfile } from "@/lib/vendors/products.functions";
 import { SupplierVariantPicker } from "./supplier-variant-picker";
+import { ProductWorkspaceLayout } from "./product-workspace-layout";
 import type { ProductHandoff } from "@/lib/vendors/product-handoff";
 
 const STYLE_LABEL: Record<string, string> = {
@@ -139,12 +140,12 @@ export function CjPilotPanel({ supplierBrands, existingDraft, onCreated }: {
   const saved: SavedDraft | null = existingDraft ?? (createdId ? { id: createdId, title: finalName.trim(), category_key: category, originalName: d?.originalName, media: d?.images, cost: d?.supplierCost } : null);
 
   return (
-    <section className="mt-12 rounded-xl border border-[color:var(--gold)]/50 p-5" aria-labelledby="cj-pilot-h">
-      <div className="text-[10px] uppercase tracking-[0.3em] text-[color:var(--gold)]">Founder · Pilot P1</div>
+    <section className={saved ? "mt-6" : "mt-12 rounded-xl border border-border p-5"} aria-labelledby={saved ? undefined : "cj-pilot-h"}>
+      {!saved && <><div className="text-[10px] uppercase tracking-[0.3em] text-[color:var(--gold)]">Founder · Pilot P1</div>
       <h2 id="cj-pilot-h" className="mt-1 font-display text-2xl">One CJ product: sort and name</h2>
       <p className="mt-1 text-xs text-muted-foreground">
         Only this one item from your CJ My Products. The other 494 stay untouched. Nothing is published.
-      </p>
+      </p></>}
 
       {saved ? (
         <PilotSaved draft={saved} justCreated={Boolean(createdId)} onSaved={onCreated} />
@@ -292,13 +293,13 @@ export function PilotSaved({ draft: initialDraft, justCreated, onSaved, pilotNam
     },
   ];
   return (
+    <ProductWorkspaceLayout title={draft.title} originalName={draft.originalName} urls={draft.media ?? []}>
     <div className="mt-5 space-y-5">
       <div className="rounded-sm border border-[color:var(--gold)]/60 p-4">
         <div className="text-[10px] uppercase tracking-[0.2em] text-[color:var(--gold)]">{justCreated ? "Saved just now" : "Already saved"} · private · not published</div>
         <div className="mt-1 font-display text-2xl">{draft.title}</div>
         <div className="text-xs text-muted-foreground">{classificationBreadcrumb(draft.category_key)} · Draft ID {draft.id.slice(0, 8)}…</div>
         <div className="mt-3 text-[10px] uppercase tracking-[0.2em] text-muted-foreground">Saved name above · supplier's original name (private): <span className="normal-case tracking-normal">{draft.originalName ?? "not recorded"}</span></div>
-        <SupplierPhotos urls={draft.media ?? []} />
         <SupplierVariantPicker key={`${draft.id}-${draft.variants?.length ?? 0}`} productId={draft.id} onHandoff={setHandoff} variants={(draft.variants ?? []).map((v) => ({ id: v.id, ref: v.source_variant_ref, sku: v.sku, label: v.option_label, image: v.image_url ?? null }))} />
         {draft.variants && draft.variants.length > 0 && (
           <details className="mt-2 text-xs"><summary className="cursor-pointer text-muted-foreground">{draft.variants.length} sizes/colours · supplier cost {draft.cost != null ? `$${Number(draft.cost).toFixed(2)}` : "unknown"} (permanent)</summary>
@@ -364,5 +365,6 @@ export function PilotSaved({ draft: initialDraft, justCreated, onSaved, pilotNam
         </ul>
       </div>
     </div>
+    </ProductWorkspaceLayout>
   );
 }
