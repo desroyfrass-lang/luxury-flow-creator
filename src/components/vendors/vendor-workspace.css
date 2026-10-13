@@ -10,6 +10,7 @@
   color: var(--foreground); background: var(--background);
 }
 .vendor-workspace { width: min(1100px, calc(100% - 32px)); margin: 32px auto; padding: 32px; border: 1px solid var(--gold); border-top: 4px solid var(--gold); border-radius: 6px; }
+.vendor-workspace, .vendor-workspace *, .vendor-image-dialog, .vendor-image-dialog * { box-sizing: border-box; }
 .vendor-workspace * { letter-spacing: 0; min-width: 0; text-shadow: none; }
 .vendor-workspace :is(p, label, li, dt, dd, summary, span, a, select) { font-size: max(14px, 1em); overflow-wrap: anywhere; }
 .vendor-workspace :is(input, select, button) { font-size: 16px; min-height: 44px; }
